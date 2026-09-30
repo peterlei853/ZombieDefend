@@ -107,7 +107,7 @@ export class DefenderGroup {
   /**
    * @param {number} deltaMs
    * @param {import('./Zombie.js').Zombie[]} zombies
-   * @returns {{ gold: number, kills: number }} gold/kills from pet AOE this frame
+   * @returns {{ gold: number, kills: number }} always zero here; pet AOE gold comes from resolveHits
    */
   update(deltaMs, zombies) {
     // Player Y-only move (W/S or up/down). X always tracks barricade edge.
@@ -121,7 +121,7 @@ export class DefenderGroup {
     this._syncPlayerTransform();
     this._syncPetTransform(deltaMs);
 
-    // WeaponSystem owns fire cadence + targeting + pet AOE
+    // WeaponSystem owns fire cadence + targeting; pet spawns PetBullets (AOE on hit only)
     this.weapons.updatePlayerFire(
       deltaMs,
       this.player.x,
@@ -129,30 +129,45 @@ export class DefenderGroup {
       zombies,
       this.bullets
     );
-    const petResult = this.weapons.updatePetAoe(
+    this.weapons.updatePetFire(
       deltaMs,
       this.turret.x,
       this.turret.y,
-      zombies
+      zombies,
+      this.bullets
     );
 
     const leftCull = spawnWorldX() - 50;
-    for (let i = this.bullets.length - 1; i >= 0; i--) {
+    // Collect cull indices first, then remove (safe splice)
+    const cullIdx = [];
+    for (let i = 0; i < this.bullets.length; i++) {
       const b = this.bullets[i];
       b.gfx.x += b.vx * deltaSec;
       b.gfx.y += b.vy * deltaSec;
       b.gfx.setDepth(depthFromY(b.gfx.y));
       if (b.gfx.x < leftCull || b.gfx.y < -30 || b.gfx.y > WORLD_HEIGHT + 30) {
-        b.gfx.destroy();
-        this.bullets.splice(i, 1);
+        cullIdx.push(i);
       }
     }
+    for (let k = cullIdx.length - 1; k >= 0; k--) {
+      const i = cullIdx[k];
+      const b = this.bullets[i];
+      if (b?.gfx) {
+        try {
+          b.gfx.destroy();
+        } catch (_) {
+          /* already destroyed */
+        }
+      }
+      this.bullets.splice(i, 1);
+    }
 
-    return petResult;
+    return { gold: 0, kills: 0 };
   }
 
   /**
-   * Resolve bullet ↔ zombie hits (incl. shotgun splash via WeaponSystem).
+   * Resolve bullet ↔ zombie hits (shotgun splash + pet on-hit AOE via WeaponSystem).
+   * Collect hit bullet indices, apply effects, then remove — never splice mid-scan of zombies.
    * @param {import('./Zombie.js').Zombie[]} zombies
    * @returns {{ gold: number, kills: number }}
    */
@@ -161,11 +176,15 @@ export class DefenderGroup {
     let kills = 0;
     const half = BULLET_SIZE / 2 + 2; // slight forgiveness
 
-    for (let i = this.bullets.length - 1; i >= 0; i--) {
+    /** @type {number[]} */
+    const hitIndices = [];
+
+    for (let i = 0; i < this.bullets.length; i++) {
       const b = this.bullets[i];
+      if (!b?.gfx) continue;
       const bx = b.gfx.x;
       const by = b.gfx.y;
-      let hit = false;
+      let hitZombie = null;
 
       for (const z of zombies) {
         if (!z.alive) continue;
@@ -176,32 +195,76 @@ export class DefenderGroup {
           by + half >= bounds.top &&
           by - half <= bounds.bottom
         ) {
-          const killed = z.takeDamage(b.damage);
-          if (killed) {
-            gold += z.goldValue;
-            kills += 1;
-          }
-          if (b.kind === 'shotgun') {
-            const splash = this.weapons.applyShotgunSplash(z, b.vx, b.vy, zombies);
-            gold += splash.gold;
-            kills += splash.kills;
-          }
-          hit = true;
+          hitZombie = z;
           break;
         }
       }
 
-      if (hit) {
-        b.gfx.destroy();
-        this.bullets.splice(i, 1);
+      if (!hitZombie) continue;
+
+      hitIndices.push(i);
+
+      if (b.kind === 'pet') {
+        // PetBullet: no direct damage; AOE at impact (bullet or zombie pos)
+        const ix = Number.isFinite(bx) ? bx : hitZombie.x;
+        const iy = Number.isFinite(by) ? by : hitZombie.y;
+        const aoe = this.weapons.applyPetAoe(ix, iy, zombies);
+        gold += aoe.gold;
+        kills += aoe.kills;
+      } else if (b.kind === 'shotgun') {
+        // Splash BEFORE direct damage: hitZombie must still be alive so .x/.y
+        // (and applyShotgunSplash null-alive guard) stay valid after kill.
+        const splash = this.weapons.applyShotgunSplash(
+          hitZombie,
+          b.vx,
+          b.vy,
+          zombies
+        );
+        gold += splash.gold;
+        kills += splash.kills;
+        const goldVal = hitZombie.goldValue;
+        const killed = hitZombie.takeDamage(b.damage);
+        if (killed) {
+          gold += goldVal;
+          kills += 1;
+        }
+      } else {
+        const goldVal = hitZombie.goldValue;
+        const killed = hitZombie.takeDamage(b.damage);
+        if (killed) {
+          gold += goldVal;
+          kills += 1;
+        }
       }
+    }
+
+    // Remove hit bullets after all hit resolution (descending indices)
+    for (let k = hitIndices.length - 1; k >= 0; k--) {
+      const i = hitIndices[k];
+      const b = this.bullets[i];
+      if (b?.gfx) {
+        try {
+          b.gfx.destroy();
+        } catch (_) {
+          /* already destroyed */
+        }
+      }
+      this.bullets.splice(i, 1);
     }
 
     return { gold, kills };
   }
 
   destroy() {
-    for (const b of this.bullets) b.gfx.destroy();
+    for (const b of this.bullets) {
+      if (b?.gfx) {
+        try {
+          b.gfx.destroy();
+        } catch (_) {
+          /* already destroyed */
+        }
+      }
+    }
     this.bullets = [];
     this.player.destroy();
     this.turret.destroy();

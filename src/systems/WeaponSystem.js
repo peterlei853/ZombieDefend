@@ -26,11 +26,16 @@ export const SHOTGUN_SPLASH_RADIUS = 120;
 export const SHOTGUN_SPLASH_HALF_ANGLE_RAD = Math.PI / 4; // 90° full cone
 export const SHOTGUN_VFX_MS = 150;
 
-/** Pet AOE pulse every 1.0s: 80px radius centered on nearest zombie, damage 28. */
+/**
+ * Pet: spawn PetBullet every 1.0s toward nearest zombie.
+ * On hit: AOE radius 80px, damage 28 at impact point (not before collision).
+ */
 export const PET_AOE_INTERVAL_MS = 1000;
 export const PET_AOE_RADIUS = 80;
 export const PET_AOE_DAMAGE = 28;
-export const PET_AOE_VFX_MS = 180;
+export const PET_AOE_VFX_MS = 150;
+/** PetBullet direct contact damage (AOE carries the real payload). */
+export const PET_BULLET_DAMAGE = 0;
 
 /**
  * Owns weapon state, nearest-enemy targeting, fire cadence, and splash / AOE math.
@@ -140,34 +145,93 @@ export class WeaponSystem {
   }
 
   /**
-   * Tick pet AOE every 1.0s: damage circle centered on nearest zombie to pet.
+   * Tick pet every 1.0s: spawn PetBullet toward nearest living zombie (no AOE yet).
    * @param {number} deltaMs
    * @param {number} petX
    * @param {number} petY
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
-   * @returns {{ gold: number, kills: number }}
+   * @param {object[]} bullets
    */
-  updatePetAoe(deltaMs, petX, petY, zombies) {
+  updatePetFire(deltaMs, petX, petY, zombies, bullets) {
     this._petCooldown -= deltaMs;
-    if (this._petCooldown > 0) return { gold: 0, kills: 0 };
+    if (this._petCooldown > 0) return;
 
     this._petCooldown = PET_AOE_INTERVAL_MS;
 
     const living = zombies.filter((z) => z.alive);
     const nearest = this.findNearest(living, petX, petY);
-    if (!nearest) return { gold: 0, kills: 0 };
+    if (!nearest) return;
 
-    const cx = nearest.x;
-    const cy = nearest.y;
-    this._drawPetAoeRing(cx, cy);
+    const fromX = petX - 10;
+    const fromY = petY;
+    const { vx, vy } = this.aimVelocity(fromX, fromY, nearest);
+    this._spawnBullet(bullets, fromX, fromY, vx, vy, {
+      damage: PET_BULLET_DAMAGE,
+      kind: 'pet',
+    });
+  }
+
+  /**
+   * After a shotgun bullet's first zombie hit: rearward 90° cone splash.
+   * Cone axis = opposite of bullet incoming velocity; apex = hit zombie.
+   * Filter eligible targets first, then apply damage (never mutate mid-scan).
+   * @param {import('../entities/Zombie.js').Zombie} hitZombie
+   * @param {number} bulletVx
+   * @param {number} bulletVy
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @returns {{ gold: number, kills: number }}
+   */
+  applyShotgunSplash(hitZombie, bulletVx, bulletVy, zombies) {
+    if (!hitZombie || !hitZombie.alive) {
+      return { gold: 0, kills: 0 };
+    }
+
+    const apexX = hitZombie.x;
+    const apexY = hitZombie.y;
+
+    const axisLen = Math.hypot(bulletVx, bulletVy);
+    if (!(axisLen > 0) || !Number.isFinite(axisLen)) {
+      // Still apply splash with default rearward axis (left) if velocity is unusable
+      return this._applyShotgunSplashAt(apexX, apexY, 1, 0, hitZombie, zombies);
+    }
+
+    const invLen = 1 / axisLen;
+    const axisX = -bulletVx * invLen;
+    const axisY = -bulletVy * invLen;
+
+    return this._applyShotgunSplashAt(apexX, apexY, axisX, axisY, hitZombie, zombies);
+  }
+
+  /**
+   * @param {number} apexX
+   * @param {number} apexY
+   * @param {number} axisX
+   * @param {number} axisY
+   * @param {import('../entities/Zombie.js').Zombie} hitZombie
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @returns {{ gold: number, kills: number }}
+   */
+  _applyShotgunSplashAt(apexX, apexY, axisX, axisY, hitZombie, zombies) {
+    this._drawShotgunFan(apexX, apexY, axisX, axisY);
+
+    const cosHalf = Math.cos(SHOTGUN_SPLASH_HALF_ANGLE_RAD);
+
+    // Collect eligible first — never takeDamage while iterating the live list for eligibility
+    const eligible = zombies.filter((z) => {
+      if (!z.alive || z === hitZombie) return false;
+      const dx = z.x - apexX;
+      const dy = z.y - apexY;
+      const dist = Math.hypot(dx, dy);
+      if (dist > SHOTGUN_SPLASH_RADIUS || dist < 0.001) return false;
+      const dot = (dx / dist) * axisX + (dy / dist) * axisY;
+      return dot >= cosHalf;
+    });
 
     let gold = 0;
     let kills = 0;
-    for (const z of living) {
+    for (const z of eligible) {
       if (!z.alive) continue;
-      const dist = Phaser.Math.Distance.Between(cx, cy, z.x, z.y);
-      if (dist > PET_AOE_RADIUS) continue;
-      const killed = z.takeDamage(PET_AOE_DAMAGE);
+      const killed = z.takeDamage(SHOTGUN_SPLASH_DAMAGE);
       if (killed) {
         gold += z.goldValue;
         kills += 1;
@@ -177,39 +241,30 @@ export class WeaponSystem {
   }
 
   /**
-   * After a shotgun bullet's first zombie hit: rearward 90° cone splash.
-   * Cone axis = opposite of bullet incoming velocity; apex = hit zombie.
-   * @param {import('../entities/Zombie.js').Zombie} hitZombie
-   * @param {number} bulletVx
-   * @param {number} bulletVy
+   * PetBullet on-hit AOE at impact point. Filter-then-damage; VFX 150ms then force-destroy.
+   * @param {number} cx
+   * @param {number} cy
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @returns {{ gold: number, kills: number }}
    */
-  applyShotgunSplash(hitZombie, bulletVx, bulletVy, zombies) {
-    const apexX = hitZombie.x;
-    const apexY = hitZombie.y;
+  applyPetAoe(cx, cy, zombies) {
+    if (!Number.isFinite(cx) || !Number.isFinite(cy)) {
+      return { gold: 0, kills: 0 };
+    }
 
-    // Opposite of bullet incoming direction (rearward relative to impact)
-    const invLen = 1 / (Math.hypot(bulletVx, bulletVy) || 1);
-    const axisX = -bulletVx * invLen;
-    const axisY = -bulletVy * invLen;
+    this._drawPetAoeRing(cx, cy);
 
-    this._drawShotgunFan(apexX, apexY, axisX, axisY);
+    const eligible = zombies.filter((z) => {
+      if (!z.alive) return false;
+      const dist = Phaser.Math.Distance.Between(cx, cy, z.x, z.y);
+      return dist <= PET_AOE_RADIUS;
+    });
 
-    const cosHalf = Math.cos(SHOTGUN_SPLASH_HALF_ANGLE_RAD);
     let gold = 0;
     let kills = 0;
-
-    for (const z of zombies) {
-      if (!z.alive || z === hitZombie) continue;
-      const dx = z.x - apexX;
-      const dy = z.y - apexY;
-      const dist = Math.hypot(dx, dy);
-      if (dist > SHOTGUN_SPLASH_RADIUS || dist < 0.001) continue;
-      const dot = (dx / dist) * axisX + (dy / dist) * axisY;
-      if (dot < cosHalf) continue;
-
-      const killed = z.takeDamage(SHOTGUN_SPLASH_DAMAGE);
+    for (const z of eligible) {
+      if (!z.alive) continue;
+      const killed = z.takeDamage(PET_AOE_DAMAGE);
       if (killed) {
         gold += z.goldValue;
         kills += 1;
@@ -224,12 +279,21 @@ export class WeaponSystem {
    * @param {number} y
    * @param {number} vx
    * @param {number} vy
-   * @param {{ damage: number, kind: 'handgun'|'shotgun' }} meta
+   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet' }} meta
    */
   _spawnBullet(bullets, x, y, vx, vy, meta) {
-    // PIXELLAB_HOOK: replace with sprite bullet
-    const color = meta.kind === 'shotgun' ? 0xffcc66 : 0x40c4ff;
-    const gfx = this.scene.add.rectangle(x, y, BULLET_SIZE, BULLET_SIZE, color);
+    let color = 0x40c4ff;
+    if (meta.kind === 'shotgun') {
+      color = 0xffcc66;
+    } else if (meta.kind === 'pet') {
+      // PIXELLAB_HOOK: replace with sprite PetBullet
+      color = 0xb388ff; // purple/cyan pet projectile
+    }
+    const size = meta.kind === 'pet' ? Math.max(6, BULLET_SIZE - 1) : BULLET_SIZE;
+    const gfx = this.scene.add.rectangle(x, y, size, size, color);
+    if (meta.kind === 'pet') {
+      gfx.setStrokeStyle(1, 0x42a5f5);
+    }
     gfx.setDepth(depthFromY(y));
     bullets.push({
       gfx,
@@ -241,7 +305,21 @@ export class WeaponSystem {
   }
 
   /**
+   * Safe unconditional graphics destroy (ignores already-destroyed / inactive).
+   * @param {Phaser.GameObjects.Graphics|null|undefined} g
+   */
+  _safeDestroyGraphics(g) {
+    if (!g) return;
+    try {
+      g.destroy();
+    } catch (_) {
+      /* already destroyed */
+    }
+  }
+
+  /**
    * Temporary translucent yellow 90° sector (shotgun blast viz).
+   * Skips VFX if axis length is 0 / NaN. Always force-destroys after SHOTGUN_VFX_MS.
    * @param {number} x
    * @param {number} y
    * @param {number} axisX
@@ -249,7 +327,14 @@ export class WeaponSystem {
    */
   _drawShotgunFan(x, y, axisX, axisY) {
     // PIXELLAB_HOOK: replace with sprite shotgun fan VFX
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    if (!Number.isFinite(axisX) || !Number.isFinite(axisY)) return;
+    const axisLen = Math.hypot(axisX, axisY);
+    if (!(axisLen > 0)) return;
+
     const mid = Math.atan2(axisY, axisX);
+    if (!Number.isFinite(mid)) return;
+
     const start = mid - SHOTGUN_SPLASH_HALF_ANGLE_RAD;
     const end = mid + SHOTGUN_SPLASH_HALF_ANGLE_RAD;
     const g = this.scene.add.graphics();
@@ -261,17 +346,18 @@ export class WeaponSystem {
     g.fillPath();
     g.setDepth(depthFromY(y, 5));
     this.scene.time.delayedCall(SHOTGUN_VFX_MS, () => {
-      if (g.active) g.destroy();
+      this._safeDestroyGraphics(g);
     });
   }
 
   /**
-   * Brief purple/blue AOE ring centered on the target zombie.
+   * Brief purple/blue AOE ring at impact. Always force-destroys after PET_AOE_VFX_MS (150ms).
    * @param {number} x
    * @param {number} y
    */
   _drawPetAoeRing(x, y) {
     // PIXELLAB_HOOK: replace with sprite pet AOE ring VFX
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     const g = this.scene.add.graphics();
     g.lineStyle(3, 0x7e57c2, 0.85);
     g.strokeCircle(x, y, PET_AOE_RADIUS);
@@ -279,7 +365,7 @@ export class WeaponSystem {
     g.fillCircle(x, y, PET_AOE_RADIUS);
     g.setDepth(depthFromY(y, 5));
     this.scene.time.delayedCall(PET_AOE_VFX_MS, () => {
-      if (g.active) g.destroy();
+      this._safeDestroyGraphics(g);
     });
   }
 }
