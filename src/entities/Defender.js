@@ -1,11 +1,4 @@
-import {
-  PLAYER_FIRE_RATE,
-  PLAYER_BULLET_DAMAGE,
-  TURRET_FIRE_RATE,
-  TURRET_BULLET_DAMAGE,
-  BULLET_SPEED,
-  BULLET_SIZE,
-} from '../data/waves.js';
+import { BULLET_SIZE } from '../data/waves.js';
 import {
   depthFromY,
   scaleFromY,
@@ -15,6 +8,7 @@ import {
   grassYMax,
   barricadeXAtY,
 } from '../systems/DepthView.js';
+import { WeaponSystem } from '../systems/WeaponSystem.js';
 
 /** Player sits this many px right of the grass edge (safe zone). */
 const PLAYER_SAFE_OFFSET = 32;
@@ -27,9 +21,9 @@ const PET_LERP = 0.16;
 const PLAYER_MOVE_SPEED = 180;
 
 /**
- * Auto-firing player + pet turret behind the barricade.
- * Player: Y-only move in safe zone (W/S / arrows). Pet: smooth lerp follow.
- * Fire rates / damage / gold logic unchanged.
+ * Player + pet behind the barricade.
+ * Movement / follow stay here; targeting, fire cadence, splash, pet AOE
+ * live in WeaponSystem.
  */
 export class DefenderGroup {
   /**
@@ -39,6 +33,7 @@ export class DefenderGroup {
   constructor(scene, opts = {}) {
     this.scene = scene;
     this.bullets = [];
+    this.weapons = new WeaponSystem(scene);
 
     const yMin = grassYMin();
     const yMax = grassYMax();
@@ -67,9 +62,6 @@ export class DefenderGroup {
       .setScale(petScale)
       .setDepth(depthFromY(petY, 1));
 
-    this._playerCooldown = 0;
-    this._turretCooldown = 0;
-
     // W/S + arrow keys for Y-only move
     this.cursors = scene.input.keyboard.createCursorKeys();
     this.keys = scene.input.keyboard.addKeys({
@@ -78,29 +70,6 @@ export class DefenderGroup {
       A: Phaser.Input.Keyboard.KeyCodes.A,
       D: Phaser.Input.Keyboard.KeyCodes.D,
     });
-  }
-
-  /**
-   * @param {import('./Zombie.js').Zombie[]} zombies
-   * @param {number} fromX
-   * @param {number} fromY
-   * @param {import('./Zombie.js').Zombie|null} [exclude]
-   */
-  _nearest(zombies, fromX, fromY, exclude = null) {
-    let best = null;
-    let bestDist = Infinity;
-    for (const z of zombies) {
-      if (!z.alive || z === exclude) continue;
-      // Prefer threats closer to the barricade (higher x), break ties by distance
-      const dist = Math.hypot(z.x - fromX, z.y - fromY);
-      // Prefer zombies nearer the barricade / already chewing on it
-      const score = dist - z.x * 0.35 + (z.atBarricade ? -80 : 0);
-      if (score < bestDist) {
-        bestDist = score;
-        best = z;
-      }
-    }
-    return best;
   }
 
   _clampGrassY(y) {
@@ -138,6 +107,7 @@ export class DefenderGroup {
   /**
    * @param {number} deltaMs
    * @param {import('./Zombie.js').Zombie[]} zombies
+   * @returns {{ gold: number, kills: number }} gold/kills from pet AOE this frame
    */
   update(deltaMs, zombies) {
     // Player Y-only move (W/S or up/down). X always tracks barricade edge.
@@ -151,28 +121,20 @@ export class DefenderGroup {
     this._syncPlayerTransform();
     this._syncPetTransform(deltaMs);
 
-    this._playerCooldown -= deltaMs;
-    this._turretCooldown -= deltaMs;
-
-    const living = zombies.filter((z) => z.alive);
-    if (living.length > 0) {
-      if (this._playerCooldown <= 0) {
-        const target = this._nearest(living, this.player.x, this.player.y);
-        if (target) {
-          this._fireAt(this.player.x - 10, this.player.y, target, PLAYER_BULLET_DAMAGE);
-          this._playerCooldown = PLAYER_FIRE_RATE;
-        }
-      }
-      if (this._turretCooldown <= 0) {
-        // Prefer a different target than player when possible
-        const playerTarget = this._nearest(living, this.player.x, this.player.y);
-        const target = this._nearest(living, this.turret.x, this.turret.y, playerTarget) || playerTarget;
-        if (target) {
-          this._fireAt(this.turret.x - 12, this.turret.y, target, TURRET_BULLET_DAMAGE);
-          this._turretCooldown = TURRET_FIRE_RATE;
-        }
-      }
-    }
+    // WeaponSystem owns fire cadence + targeting + pet AOE
+    this.weapons.updatePlayerFire(
+      deltaMs,
+      this.player.x,
+      this.player.y,
+      zombies,
+      this.bullets
+    );
+    const petResult = this.weapons.updatePetAoe(
+      deltaMs,
+      this.turret.x,
+      this.turret.y,
+      zombies
+    );
 
     const leftCull = spawnWorldX() - 50;
     for (let i = this.bullets.length - 1; i >= 0; i--) {
@@ -185,30 +147,12 @@ export class DefenderGroup {
         this.bullets.splice(i, 1);
       }
     }
+
+    return petResult;
   }
 
   /**
-   * @param {number} x
-   * @param {number} y
-   * @param {import('./Zombie.js').Zombie} target
-   * @param {number} damage
-   */
-  _fireAt(x, y, target, damage) {
-    const dx = target.x - x;
-    const dy = target.y - y;
-    const len = Math.hypot(dx, dy) || 1;
-    // Always push leftward component; normalize to BULLET_SPEED
-    const vx = (dx / len) * BULLET_SPEED;
-    const vy = (dy / len) * BULLET_SPEED;
-
-    // PIXELLAB_HOOK: replace with sprite bullet
-    const gfx = this.scene.add.rectangle(x, y, BULLET_SIZE, BULLET_SIZE, 0x40c4ff);
-    gfx.setDepth(depthFromY(y));
-    this.bullets.push({ gfx, damage, vx, vy });
-  }
-
-  /**
-   * Resolve bullet ↔ zombie hits. Returns gold earned this frame from kills.
+   * Resolve bullet ↔ zombie hits (incl. shotgun splash via WeaponSystem).
    * @param {import('./Zombie.js').Zombie[]} zombies
    * @returns {{ gold: number, kills: number }}
    */
@@ -236,6 +180,11 @@ export class DefenderGroup {
           if (killed) {
             gold += z.goldValue;
             kills += 1;
+          }
+          if (b.kind === 'shotgun') {
+            const splash = this.weapons.applyShotgunSplash(z, b.vx, b.vy, zombies);
+            gold += splash.gold;
+            kills += splash.kills;
           }
           hit = true;
           break;

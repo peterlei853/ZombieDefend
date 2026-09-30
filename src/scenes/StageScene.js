@@ -70,6 +70,13 @@ export default class StageScene extends Phaser.Scene {
     this.waveManager = new WaveManager();
 
     this._buildHud();
+
+    // SPACE toggles Handgun ↔ Shotgun (once per press); combat math stays in WeaponSystem
+    this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this._spaceKey.on('down', () => {
+      this.defenders.weapons.toggleWeapon();
+      this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    });
   }
 
   _drawWorld() {
@@ -137,7 +144,14 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudGold = this.add
-      .text(560, 8, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
+      .text(520, 8, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
+      .setScrollFactor(0)
+      .setDepth(d + 1);
+    this.hudWeapon = this.add
+      .text(620, 8, this.defenders.weapons.getWeaponLabel(), {
+        ...style,
+        color: '#90caf9',
+      })
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudStage = this.add
@@ -146,9 +160,9 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d + 1);
 
-    // Tiny move hint
+    // Tiny move / weapon hint
     this.hudHint = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 10, 'W/S move', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 10, 'W/S move · SPACE switch weapon', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '11px',
         color: '#6a7a8a',
@@ -168,6 +182,7 @@ export default class StageScene extends Phaser.Scene {
     this.hudEnemies.setText(`Enemies: ${remaining}`);
     this.hudBarricade.setText(`Barricade: ${Math.ceil(this.barricade.hp)}`);
     this.hudGold.setText(`Gold: ${this.gold}`);
+    this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
   }
 
   update(_time, delta) {
@@ -201,9 +216,10 @@ export default class StageScene extends Phaser.Scene {
       }
     }
 
-    // Defenders fire + hits
-    this.defenders.update(deltaMs, this.zombies);
-    const { gold } = this.defenders.resolveHits(this.zombies);
+    // Defenders fire + hits (WeaponSystem cadence / splash / pet AOE)
+    const petGain = this.defenders.update(deltaMs, this.zombies);
+    const hitGain = this.defenders.resolveHits(this.zombies);
+    const gold = (petGain?.gold || 0) + (hitGain?.gold || 0);
     if (gold > 0) {
       this.gold += gold;
       this.registry.set('gold', this.gold);
