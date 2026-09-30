@@ -1,9 +1,11 @@
 import { getGoldByHP } from '../data/economy.js';
+import { depthFromY, scaleFromY } from '../systems/DepthView.js';
 
 let _zombieId = 0;
 
 /**
  * Red-square zombie placeholder that walks right until barricade contact.
+ * Scale and draw-order follow lane Y (2.5D DepthView).
  */
 export class Zombie {
   /**
@@ -18,23 +20,36 @@ export class Zombie {
     this.speed = cfg.speed;
     this.dps = cfg.dps;
     this.wave = cfg.wave || 1;
-    this.size = cfg.hp >= 150 ? 26 : cfg.hp >= 100 ? 22 : 18;
+    this.baseSize = cfg.hp >= 150 ? 26 : cfg.hp >= 100 ? 22 : 18;
     this.alive = true;
     this.atBarricade = false;
     this.goldValue = getGoldByHP(this.maxHp);
+    this.laneY = cfg.y;
+    this.scale = scaleFromY(cfg.y);
 
     // PIXELLAB_HOOK: replace with sprite zombie
-    this.body = scene.add.rectangle(cfg.x, cfg.y, this.size, this.size, 0xd32f2f);
+    this.body = scene.add.rectangle(cfg.x, cfg.y, this.baseSize, this.baseSize, 0xd32f2f);
     this.body.setStrokeStyle(1, 0x7a1010);
-    this.body.setDepth(10);
+    this.body.setScale(this.scale);
 
-    const barW = Math.max(20, this.size + 6);
-    this.hpBarBg = scene.add.rectangle(cfg.x, cfg.y - this.size / 2 - 8, barW, 5, 0x1a1a1a).setDepth(11);
+    const barW = Math.max(20, this.baseSize + 6) * this.scale;
+    this.hpBarBg = scene.add.rectangle(cfg.x, cfg.y - this.displayHalf - 8 * this.scale, barW, 5 * this.scale, 0x1a1a1a);
     this.hpBarFg = scene.add
-      .rectangle(cfg.x - barW / 2, cfg.y - this.size / 2 - 8, barW, 5, 0xff5252)
-      .setOrigin(0, 0.5)
-      .setDepth(12);
+      .rectangle(cfg.x - barW / 2, cfg.y - this.displayHalf - 8 * this.scale, barW, 5 * this.scale, 0xff5252)
+      .setOrigin(0, 0.5);
     this._barW = barW;
+
+    this._applyDepth();
+  }
+
+  /** Half-extent of the scaled body (hitbox / contact). */
+  get displayHalf() {
+    return (this.baseSize * this.scale) / 2;
+  }
+
+  /** @deprecated use baseSize / displayHalf — kept as alias for callers expecting .size */
+  get size() {
+    return this.baseSize * this.scale;
   }
 
   get x() {
@@ -43,6 +58,14 @@ export class Zombie {
 
   get y() {
     return this.body.y;
+  }
+
+  _applyDepth() {
+    const y = this.body ? this.body.y : this.laneY;
+    const d = depthFromY(y);
+    if (this.body) this.body.setDepth(d);
+    if (this.hpBarBg) this.hpBarBg.setDepth(d + 1);
+    if (this.hpBarFg) this.hpBarFg.setDepth(d + 2);
   }
 
   /**
@@ -54,14 +77,16 @@ export class Zombie {
 
     if (!this.atBarricade) {
       const nextX = this.body.x + this.speed * deltaSec;
-      if (nextX >= contactX - this.size / 2) {
-        this.body.x = contactX - this.size / 2;
+      const halt = contactX - this.displayHalf;
+      if (nextX >= halt) {
+        this.body.x = halt;
         this.atBarricade = true;
       } else {
         this.body.x = nextX;
       }
     }
 
+    this._applyDepth();
     this._syncBars();
   }
 
@@ -99,17 +124,18 @@ export class Zombie {
 
   _syncBars() {
     if (!this.hpBarBg || !this.hpBarFg) return;
+    const barY = this.body.y - this.displayHalf - 8 * this.scale;
     this.hpBarBg.x = this.body.x;
-    this.hpBarBg.y = this.body.y - this.size / 2 - 8;
+    this.hpBarBg.y = barY;
     this.hpBarFg.x = this.body.x - this._barW / 2;
-    this.hpBarFg.y = this.hpBarBg.y;
+    this.hpBarFg.y = barY;
     const ratio = this.maxHp > 0 ? Math.max(0, this.hp / this.maxHp) : 0;
     this.hpBarFg.width = this._barW * ratio;
   }
 
-  /** Axis-aligned hitbox for bullet tests. */
+  /** Axis-aligned hitbox for bullet tests (matches scaled visual size). */
   getBounds() {
-    const h = this.size / 2;
+    const h = this.displayHalf;
     return {
       left: this.body.x - h,
       right: this.body.x + h,

@@ -9,12 +9,24 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
+import {
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+  HORIZON_Y,
+  HUD_DEPTH,
+  depthBands,
+  worldX,
+  spawnWorldX,
+  randomLaneY,
+  cameraScrollX,
+  laneCenters,
+} from '../systems/DepthView.js';
 
 /**
- * Stage combat vertical slice.
+ * Stage combat vertical slice — 2.5D side strip.
  *
- * Reads stage / characterId / gold from scene data or registry so Architect
- * can inject SaveManager progress later.
+ * Camera scrolls X only; Y is the depth/lane axis (DepthView).
+ * Barricade/base are world-anchored on the right.
  *
  * Win:  timer ≥ 90s AND no zombies remain → ShopScene
  * Lose: barricade HP ≤ 0 → Game Over overlay (retry)
@@ -39,34 +51,68 @@ export default class StageScene extends Phaser.Scene {
   }
 
   create() {
-    const w = GAME_WIDTH;
-    const h = GAME_HEIGHT;
+    const barricadeWorldX = worldX(BARRICADE_X);
 
-    // Ground / battlefield
-    this.add.rectangle(w / 2, h / 2, w, h, 0x1a2330);
-    // Dirt strip
-    this.add.rectangle(w / 2, h - 6, w, 12, 0x2e3d2e);
+    this._drawWorld();
 
-    // Subtle lane guides
-    for (let i = 1; i < 4; i++) {
-      const y = 40 + ((h - 50) / 4) * i;
-      this.add.rectangle(w / 2, y, w, 1, 0x243040, 0.5);
-    }
+    // Camera: X scroll only, opening view framed on the base
+    const cam = this.cameras.main;
+    cam.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    cam.setScroll(cameraScrollX(barricadeWorldX), 0);
 
     this.barricade = new Barricade(this, {
-      x: BARRICADE_X,
+      x: barricadeWorldX,
       maxHp: BARRICADE_MAX_HP,
     });
 
     this.defenders = new DefenderGroup(this, {
-      barricadeX: BARRICADE_X,
+      barricadeX: barricadeWorldX,
     });
 
     this.waveManager = new WaveManager();
 
     this._buildHud();
-    this._spawnYMin = 55;
-    this._spawnYMax = h - 30;
+  }
+
+  _drawWorld() {
+    // Sky / atmosphere above the horizon
+    this.add.rectangle(WORLD_WIDTH / 2, HORIZON_Y / 2, WORLD_WIDTH, HORIZON_Y, 0x152238);
+    // Soft horizon glow
+    this.add
+      .rectangle(WORLD_WIDTH / 2, HORIZON_Y, WORLD_WIDTH, 6, 0x3a5a78, 0.55)
+      .setDepth(0);
+
+    // Backdrop under the ground plane (fills side wedges outside trapezoids)
+    this.add
+      .rectangle(
+        WORLD_WIDTH / 2,
+        HORIZON_Y + (WORLD_HEIGHT - HORIZON_Y) / 2,
+        WORLD_WIDTH,
+        WORLD_HEIGHT - HORIZON_Y,
+        0x1a2a20
+      )
+      .setDepth(0);
+
+    // Perspective depth bands (far = higher / narrower)
+    const g = this.add.graphics().setDepth(1);
+    for (const band of depthBands()) {
+      g.fillStyle(band.color, 1);
+      g.beginPath();
+      g.moveTo(band.e0.left, band.y0);
+      g.lineTo(band.e0.right, band.y0);
+      g.lineTo(band.e1.right, band.y1);
+      g.lineTo(band.e1.left, band.y1);
+      g.closePath();
+      g.fillPath();
+    }
+
+    // Subtle lane guides along lane centers
+    const lanes = laneCenters();
+    for (const y of lanes) {
+      this.add
+        .rectangle(WORLD_WIDTH / 2, y, WORLD_WIDTH * 0.92, 1, 0x1e3028, 0.35)
+        .setDepth(2);
+    }
   }
 
   _buildHud() {
@@ -75,17 +121,32 @@ export default class StageScene extends Phaser.Scene {
       fontSize: '14px',
       color: '#e8eef5',
     };
-    this.hudBg = this.add.rectangle(GAME_WIDTH / 2, 16, GAME_WIDTH, 32, 0x0a1018, 0.85).setDepth(50);
+    const d = HUD_DEPTH;
 
-    this.hudTime = this.add.text(12, 8, 'Time: 0s', style).setDepth(51);
-    this.hudWave = this.add.text(120, 8, 'Wave: 1', style).setDepth(51);
-    this.hudEnemies = this.add.text(210, 8, 'Enemies: 0', style).setDepth(51);
-    this.hudBarricade = this.add.text(360, 8, `Barricade: ${BARRICADE_MAX_HP}`, style).setDepth(51);
-    this.hudGold = this.add.text(560, 8, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' }).setDepth(51);
+    this.hudBg = this.add
+      .rectangle(GAME_WIDTH / 2, 16, GAME_WIDTH, 32, 0x0a1018, 0.85)
+      .setScrollFactor(0)
+      .setDepth(d);
+
+    this.hudTime = this.add.text(12, 8, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
+    this.hudWave = this.add.text(120, 8, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
+    this.hudEnemies = this.add
+      .text(210, 8, 'Enemies: 0', style)
+      .setScrollFactor(0)
+      .setDepth(d + 1);
+    this.hudBarricade = this.add
+      .text(360, 8, `Barricade: ${BARRICADE_MAX_HP}`, style)
+      .setScrollFactor(0)
+      .setDepth(d + 1);
+    this.hudGold = this.add
+      .text(560, 8, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
+      .setScrollFactor(0)
+      .setDepth(d + 1);
     this.hudStage = this.add
       .text(GAME_WIDTH - 12, 8, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
       .setOrigin(1, 0)
-      .setDepth(51);
+      .setScrollFactor(0)
+      .setDepth(d + 1);
   }
 
   _refreshHud() {
@@ -102,6 +163,10 @@ export default class StageScene extends Phaser.Scene {
 
   update(_time, delta) {
     if (this.ended) return;
+
+    // Enforce X-only scroll (no Y drift)
+    const cam = this.cameras.main;
+    if (cam.scrollY !== 0) cam.setScroll(cam.scrollX, 0);
 
     const deltaMs = Math.min(delta, 50);
     const deltaSec = deltaMs / 1000;
@@ -154,11 +219,10 @@ export default class StageScene extends Phaser.Scene {
   }
 
   _spawnZombie(intent) {
-    const y =
-      this._spawnYMin + Math.random() * (this._spawnYMax - this._spawnYMin);
+    const y = randomLaneY();
     const arch = intent.archetype;
     const z = new Zombie(this, {
-      x: -10,
+      x: spawnWorldX(),
       y,
       hp: arch.hp,
       speed: arch.speed,
@@ -168,38 +232,45 @@ export default class StageScene extends Phaser.Scene {
     this.zombies.push(z);
   }
 
+  _pinOverlay(go) {
+    go.setScrollFactor(0);
+    return go;
+  }
+
   _onWin() {
     if (this.ended) return;
     this.ended = true;
     this.registry.set('gold', this.gold);
 
-    const overlay = this.add.rectangle(
-      GAME_WIDTH / 2,
-      GAME_HEIGHT / 2,
-      GAME_WIDTH,
-      GAME_HEIGHT,
-      0x000000,
-      0.55
-    ).setDepth(100);
+    const d = HUD_DEPTH + 100;
+    const overlay = this._pinOverlay(
+      this.add
+        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.55)
+        .setDepth(d)
+    );
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.38, 'Stage Clear!', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '36px',
-        color: '#81c784',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5)
-      .setDepth(101);
+    this._pinOverlay(
+      this.add
+        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.38, 'Stage Clear!', {
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: '36px',
+          color: '#81c784',
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5)
+        .setDepth(d + 1)
+    );
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.5, `Gold: ${this.gold}`, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '18px',
-        color: '#ffd54f',
-      })
-      .setOrigin(0.5)
-      .setDepth(101);
+    this._pinOverlay(
+      this.add
+        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.5, `Gold: ${this.gold}`, {
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: '18px',
+          color: '#ffd54f',
+        })
+        .setOrigin(0.5)
+        .setDepth(d + 1)
+    );
 
     this.time.delayedCall(900, () => {
       overlay.destroy();
@@ -216,41 +287,58 @@ export default class StageScene extends Phaser.Scene {
     this.ended = true;
     this.registry.set('gold', this.gold);
 
-    this.add
-      .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x1a0000, 0.7)
-      .setDepth(100);
+    const d = HUD_DEPTH + 100;
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.32, 'Game Over', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '40px',
-        color: '#ef5350',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5)
-      .setDepth(101);
+    this._pinOverlay(
+      this.add
+        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x1a0000, 0.7)
+        .setDepth(d)
+    );
 
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.46, `Survived ${Math.floor(this.waveManager.getElapsed())}s · Gold ${this.gold}`, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '16px',
-        color: '#cfd8dc',
-      })
-      .setOrigin(0.5)
-      .setDepth(101);
+    this._pinOverlay(
+      this.add
+        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.32, 'Game Over', {
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: '40px',
+          color: '#ef5350',
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5)
+        .setDepth(d + 1)
+    );
 
-    const btn = this.add
-      .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 180, 44, 0x455a64)
-      .setInteractive({ useHandCursor: true })
-      .setDepth(101);
-    this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 'Retry', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '18px',
-        color: '#ffffff',
-      })
-      .setOrigin(0.5)
-      .setDepth(102);
+    this._pinOverlay(
+      this.add
+        .text(
+          GAME_WIDTH / 2,
+          GAME_HEIGHT * 0.46,
+          `Survived ${Math.floor(this.waveManager.getElapsed())}s · Gold ${this.gold}`,
+          {
+            fontFamily: 'system-ui, sans-serif',
+            fontSize: '16px',
+            color: '#cfd8dc',
+          }
+        )
+        .setOrigin(0.5)
+        .setDepth(d + 1)
+    );
+
+    const btn = this._pinOverlay(
+      this.add
+        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 180, 44, 0x455a64)
+        .setInteractive({ useHandCursor: true })
+        .setDepth(d + 1)
+    );
+    this._pinOverlay(
+      this.add
+        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 'Retry', {
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: '18px',
+          color: '#ffffff',
+        })
+        .setOrigin(0.5)
+        .setDepth(d + 2)
+    );
 
     btn.on('pointerover', () => btn.setFillStyle(0x546e7a));
     btn.on('pointerout', () => btn.setFillStyle(0x455a64));

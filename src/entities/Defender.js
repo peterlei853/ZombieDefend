@@ -5,12 +5,19 @@ import {
   TURRET_BULLET_DAMAGE,
   BULLET_SPEED,
   BULLET_SIZE,
-  GAME_HEIGHT,
 } from '../data/waves.js';
+import {
+  depthFromY,
+  scaleFromY,
+  laneCenters,
+  spawnWorldX,
+  WORLD_HEIGHT,
+} from '../systems/DepthView.js';
 
 /**
  * Auto-firing player + default turret behind the barricade.
  * Both auto-aim at nearest living zombies and fire blue square bullets toward them.
+ * Placed in world X behind the barricade on different lane Ys (2.5D).
  */
 export class DefenderGroup {
   /**
@@ -22,18 +29,29 @@ export class DefenderGroup {
     this.bullets = [];
 
     const baseX = opts.barricadeX + 40;
+    const lanes = laneCenters();
+    // Player farther lane, turret nearer — different Y for Z-sort
+    const playerY = lanes[Math.min(1, lanes.length - 1)];
+    const turretY = lanes[Math.min(3, lanes.length - 1)];
+    const playerScale = scaleFromY(playerY);
+    const turretScale = scaleFromY(turretY);
 
     // PIXELLAB_HOOK: replace with sprite player
-    this.player = scene.add.rectangle(baseX + 10, GAME_HEIGHT * 0.38, 22, 28, 0x42a5f5);
+    this.player = scene.add.rectangle(baseX + 10, playerY, 22, 28, 0x42a5f5);
     this.player.setStrokeStyle(2, 0x1e88e5);
-    this.player.setDepth(8);
+    this.player.setScale(playerScale);
+    this.player.setDepth(depthFromY(playerY));
 
     // PIXELLAB_HOOK: replace with sprite turret
-    this.turret = scene.add.rectangle(baseX + 30, GAME_HEIGHT * 0.62, 24, 24, 0x78909c);
+    this.turret = scene.add.rectangle(baseX + 30, turretY, 24, 24, 0x78909c);
     this.turret.setStrokeStyle(2, 0x546e7a);
-    this.turret.setDepth(8);
+    this.turret.setScale(turretScale);
+    this.turret.setDepth(depthFromY(turretY));
     // Small barrel marker
-    this.turretBarrel = scene.add.rectangle(baseX + 14, GAME_HEIGHT * 0.62, 14, 6, 0x90a4ae).setDepth(9);
+    this.turretBarrel = scene.add
+      .rectangle(baseX + 14, turretY, 14, 6, 0x90a4ae)
+      .setScale(turretScale)
+      .setDepth(depthFromY(turretY, 1));
 
     this._playerCooldown = 0;
     this._turretCooldown = 0;
@@ -91,11 +109,13 @@ export class DefenderGroup {
     }
 
     const deltaSec = deltaMs / 1000;
+    const leftCull = spawnWorldX() - 50;
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const b = this.bullets[i];
       b.gfx.x += b.vx * deltaSec;
       b.gfx.y += b.vy * deltaSec;
-      if (b.gfx.x < -30 || b.gfx.y < -30 || b.gfx.y > GAME_HEIGHT + 30) {
+      b.gfx.setDepth(depthFromY(b.gfx.y));
+      if (b.gfx.x < leftCull || b.gfx.y < -30 || b.gfx.y > WORLD_HEIGHT + 30) {
         b.gfx.destroy();
         this.bullets.splice(i, 1);
       }
@@ -118,7 +138,7 @@ export class DefenderGroup {
 
     // PIXELLAB_HOOK: replace with sprite bullet
     const gfx = this.scene.add.rectangle(x, y, BULLET_SIZE, BULLET_SIZE, 0x40c4ff);
-    gfx.setDepth(15);
+    gfx.setDepth(depthFromY(y));
     this.bullets.push({ gfx, damage, vx, vy });
   }
 
