@@ -1,0 +1,12 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0b0f14;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+#game-host {
+  width: 800px;
+  height: 450px;
+  margin: 24px auto;
+}
