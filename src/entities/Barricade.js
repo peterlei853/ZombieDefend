@@ -1,53 +1,57 @@
-import { BARRICADE_X, BARRICADE_MAX_HP } from '../data/waves.js';
+import { BARRICADE_MAX_HP } from '../data/waves.js';
 import {
-  WORLD_HEIGHT,
-  HORIZON_Y,
   HUD_DEPTH,
   depthFromY,
-  laneCenters,
   scaleFromY,
+  grassYMin,
+  grassYMax,
+  barricadeXAtY,
 } from '../systems/DepthView.js';
 
 /**
- * Right-side defensive wall. Zombies stop at contactX and deal DPS here.
- * World-anchored; optional lane posts for Z-sort. Contact X / HP / DPS unchanged.
+ * Slanted defensive wall along the grass right edge (2.5D trapezoid).
+ * Posts follow barricadeXAtY(y); zombies halt at contactXAt(zombie.y).
+ * HP / applyDamage API unchanged.
  */
 export class Barricade {
   /**
    * @param {Phaser.Scene} scene
-   * @param {{ maxHp?: number, x?: number }} [opts]
+   * @param {{ maxHp?: number }} [opts]
    */
   constructor(scene, opts = {}) {
     this.scene = scene;
-    this.x = opts.x ?? BARRICADE_X;
     this.maxHp = opts.maxHp ?? BARRICADE_MAX_HP;
     this.hp = this.maxHp;
-    this.width = 28;
-    this.top = HORIZON_Y + 8;
-    this.bottom = WORLD_HEIGHT - 10;
-    this.height = this.bottom - this.top;
+    /** Base post width before scale (shared by draw + contactXAt). */
+    this.baseWidth = 28;
 
     this.posts = [];
     this.contactMarkers = [];
 
-    const lanes = laneCenters();
-    // Segment posts by lane so nearer lanes occlude farther ones.
-    for (let i = 0; i < lanes.length; i++) {
-      const y = lanes[i];
+    const yMin = grassYMin();
+    const yMax = grassYMax();
+
+    // Seamless posts along the slanted grass edge (step ≈ post height with overlap).
+    let y = yMin;
+    let guard = 0;
+    while (y <= yMax + 0.5 && guard < 80) {
+      guard += 1;
       const s = scaleFromY(y);
       const postH = Math.max(36, 52 * s);
-      const postW = this.width * (0.85 + 0.2 * s);
+      const postW = this._postWidthAt(y);
+      const cx = barricadeXAtY(y, postW / 2);
       const d = depthFromY(y, -2);
+      const drawY = y - postH * 0.15;
 
       // PIXELLAB_HOOK: replace with sprite barricade
-      const post = scene.add.rectangle(this.x, y - postH * 0.15, postW, postH, 0x6b4f35);
+      const post = scene.add.rectangle(cx, drawY, postW, postH, 0x6b4f35);
       post.setStrokeStyle(2, 0x9a9a9a);
       post.setDepth(d);
       this.posts.push(post);
 
       const marker = scene.add.rectangle(
-        this.x - postW / 2 - 1,
-        y - postH * 0.15,
+        cx - postW / 2 - 1,
+        drawY,
         3,
         postH * 0.9,
         0xc4c4c4,
@@ -55,33 +59,19 @@ export class Barricade {
       );
       marker.setDepth(d + 1);
       this.contactMarkers.push(marker);
+
+      // Slight overlap so no visible gaps between posts
+      y += postH * 0.52;
     }
 
-    // Continuous contact silhouette behind posts (far depth) so the wall reads as one mass.
-    this.gfx = scene.add.rectangle(
-      this.x,
-      this.top + this.height / 2,
-      this.width * 0.7,
-      this.height,
-      0x4a3724,
-      0.55
-    );
-    this.gfx.setDepth(depthFromY(lanes[0], -4));
-
-    // Thin "XXXXX line" contact marker spanning the wall face
-    this.contactLine = scene.add.rectangle(
-      this.x - this.width / 2 - 1,
-      this.top + this.height / 2,
-      3,
-      this.height,
-      0xc4c4c4,
-      0.35
-    );
-    this.contactLine.setDepth(depthFromY(lanes[0], -3));
+    // Slanted silhouette / contact strip following the polyline (not a vertical rect).
+    this.gfx = scene.add.graphics().setDepth(depthFromY(yMin, -4));
+    this._drawSilhouette(yMin, yMax);
 
     // HP bar: camera-fixed near top of wall (scrollFactor 0)
     const cam = scene.cameras.main;
-    const screenX = this.x - cam.scrollX;
+    const midY = (yMin + yMax) / 2;
+    const screenX = barricadeXAtY(midY) - cam.scrollX;
     const barY = 48;
     this.hpBarBg = scene.add
       .rectangle(screenX, barY, 80, 8, 0x222222)
@@ -94,9 +84,50 @@ export class Barricade {
       .setDepth(HUD_DEPTH + 11);
   }
 
-  /** X where zombies halt and start dealing DPS. */
-  get contactX() {
-    return this.x - this.width / 2;
+  /** Post width at Y (same formula for draw + collision). */
+  _postWidthAt(y) {
+    const s = scaleFromY(y);
+    return this.baseWidth * (0.85 + 0.2 * s);
+  }
+
+  _drawSilhouette(yMin, yMax) {
+    const samples = [];
+    for (let y = yMin; y <= yMax; y += 3) {
+      const postW = this._postWidthAt(y);
+      const cx = barricadeXAtY(y, postW / 2);
+      const half = postW * 0.35;
+      samples.push({ y, left: cx - half, right: cx + half, face: cx - postW / 2 });
+    }
+    if (samples.length < 2) return;
+
+    this.gfx.clear();
+    this.gfx.fillStyle(0x4a3724, 0.55);
+    this.gfx.beginPath();
+    this.gfx.moveTo(samples[0].left, samples[0].y);
+    for (const s of samples) this.gfx.lineTo(s.right, s.y);
+    for (let i = samples.length - 1; i >= 0; i--) {
+      this.gfx.lineTo(samples[i].left, samples[i].y);
+    }
+    this.gfx.closePath();
+    this.gfx.fillPath();
+
+    // Thin contact face along the slanted left edge
+    this.gfx.lineStyle(3, 0xc4c4c4, 0.35);
+    this.gfx.beginPath();
+    this.gfx.moveTo(samples[0].face, samples[0].y);
+    for (const s of samples) this.gfx.lineTo(s.face, s.y);
+    this.gfx.strokePath();
+  }
+
+  /**
+   * Left face of the post at this Y — zombies halt here.
+   * Matches drawn posts (same barricadeXAtY + _postWidthAt).
+   * @param {number} y
+   */
+  contactXAt(y) {
+    const postW = this._postWidthAt(y);
+    // Post center = barricadeXAtY(y, postW/2); left face = center - postW/2
+    return barricadeXAtY(y, postW / 2) - postW / 2;
   }
 
   applyDamage(amount) {
@@ -118,8 +149,7 @@ export class Barricade {
   }
 
   destroy() {
-    this.gfx.destroy();
-    this.contactLine.destroy();
+    if (this.gfx) this.gfx.destroy();
     for (const p of this.posts) p.destroy();
     for (const m of this.contactMarkers) m.destroy();
     this.posts = [];

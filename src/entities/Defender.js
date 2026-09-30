@@ -9,52 +9,75 @@ import {
 import {
   depthFromY,
   scaleFromY,
-  laneCenters,
   spawnWorldX,
   WORLD_HEIGHT,
+  grassYMin,
+  grassYMax,
+  barricadeXAtY,
 } from '../systems/DepthView.js';
 
+/** Player sits this many px right of the grass edge (safe zone). */
+const PLAYER_SAFE_OFFSET = 32;
+/** Pet (turret) offset from player toward the safer side. */
+const PET_OFFSET_X = 25;
+const PET_OFFSET_Y = -15;
+/** Lerp factor per ~16.67ms frame (delta-aware). */
+const PET_LERP = 0.16;
+/** Player vertical move speed (px/s). */
+const PLAYER_MOVE_SPEED = 180;
+
 /**
- * Auto-firing player + default turret behind the barricade.
- * Both auto-aim at nearest living zombies and fire blue square bullets toward them.
- * Placed in world X behind the barricade on different lane Ys (2.5D).
+ * Auto-firing player + pet turret behind the barricade.
+ * Player: Y-only move in safe zone (W/S / arrows). Pet: smooth lerp follow.
+ * Fire rates / damage / gold logic unchanged.
  */
 export class DefenderGroup {
   /**
    * @param {Phaser.Scene} scene
-   * @param {{ barricadeX: number }} opts
+   * @param {{}} [opts]
    */
-  constructor(scene, opts) {
+  constructor(scene, opts = {}) {
     this.scene = scene;
     this.bullets = [];
 
-    const baseX = opts.barricadeX + 40;
-    const lanes = laneCenters();
-    // Player farther lane, turret nearer — different Y for Z-sort
-    const playerY = lanes[Math.min(1, lanes.length - 1)];
-    const turretY = lanes[Math.min(3, lanes.length - 1)];
+    const yMin = grassYMin();
+    const yMax = grassYMax();
+    const playerY = (yMin + yMax) / 2;
+    const playerX = barricadeXAtY(playerY) + PLAYER_SAFE_OFFSET;
     const playerScale = scaleFromY(playerY);
-    const turretScale = scaleFromY(turretY);
 
     // PIXELLAB_HOOK: replace with sprite player
-    this.player = scene.add.rectangle(baseX + 10, playerY, 22, 28, 0x42a5f5);
+    this.player = scene.add.rectangle(playerX, playerY, 22, 28, 0x42a5f5);
     this.player.setStrokeStyle(2, 0x1e88e5);
     this.player.setScale(playerScale);
     this.player.setDepth(depthFromY(playerY));
 
-    // PIXELLAB_HOOK: replace with sprite turret
-    this.turret = scene.add.rectangle(baseX + 30, turretY, 24, 24, 0x78909c);
+    const petX = playerX + PET_OFFSET_X;
+    const petY = playerY + PET_OFFSET_Y;
+    const petScale = scaleFromY(petY);
+
+    // PIXELLAB_HOOK: replace with sprite turret (Pet)
+    this.turret = scene.add.rectangle(petX, petY, 24, 24, 0x78909c);
     this.turret.setStrokeStyle(2, 0x546e7a);
-    this.turret.setScale(turretScale);
-    this.turret.setDepth(depthFromY(turretY));
+    this.turret.setScale(petScale);
+    this.turret.setDepth(depthFromY(petY));
     // Small barrel marker
     this.turretBarrel = scene.add
-      .rectangle(baseX + 14, turretY, 14, 6, 0x90a4ae)
-      .setScale(turretScale)
-      .setDepth(depthFromY(turretY, 1));
+      .rectangle(petX - 16, petY, 14, 6, 0x90a4ae)
+      .setScale(petScale)
+      .setDepth(depthFromY(petY, 1));
 
     this._playerCooldown = 0;
     this._turretCooldown = 0;
+
+    // W/S + arrow keys for Y-only move
+    this.cursors = scene.input.keyboard.createCursorKeys();
+    this.keys = scene.input.keyboard.addKeys({
+      W: Phaser.Input.Keyboard.KeyCodes.W,
+      S: Phaser.Input.Keyboard.KeyCodes.S,
+      A: Phaser.Input.Keyboard.KeyCodes.A,
+      D: Phaser.Input.Keyboard.KeyCodes.D,
+    });
   }
 
   /**
@@ -80,11 +103,54 @@ export class DefenderGroup {
     return best;
   }
 
+  _clampGrassY(y) {
+    return Math.min(grassYMax(), Math.max(grassYMin(), y));
+  }
+
+  _syncPlayerTransform() {
+    const y = this._clampGrassY(this.player.y);
+    this.player.y = y;
+    this.player.x = barricadeXAtY(y) + PLAYER_SAFE_OFFSET;
+    const s = scaleFromY(y);
+    this.player.setScale(s);
+    this.player.setDepth(depthFromY(y));
+  }
+
+  _syncPetTransform(deltaMs) {
+    const targetX = this.player.x + PET_OFFSET_X;
+    const targetY = this._clampGrassY(this.player.y + PET_OFFSET_Y);
+    // Delta-aware lerp (~PET_LERP per 60fps frame)
+    const t = 1 - Math.pow(1 - PET_LERP, deltaMs / (1000 / 60));
+    this.turret.x += (targetX - this.turret.x) * t;
+    this.turret.y += (targetY - this.turret.y) * t;
+    this.turret.y = this._clampGrassY(this.turret.y);
+
+    const s = scaleFromY(this.turret.y);
+    this.turret.setScale(s);
+    this.turret.setDepth(depthFromY(this.turret.y));
+
+    this.turretBarrel.x = this.turret.x - 16;
+    this.turretBarrel.y = this.turret.y;
+    this.turretBarrel.setScale(s);
+    this.turretBarrel.setDepth(depthFromY(this.turret.y, 1));
+  }
+
   /**
    * @param {number} deltaMs
    * @param {import('./Zombie.js').Zombie[]} zombies
    */
   update(deltaMs, zombies) {
+    // Player Y-only move (W/S or up/down). X always tracks barricade edge.
+    const deltaSec = deltaMs / 1000;
+    let dy = 0;
+    if (this.cursors.up.isDown || this.keys.W.isDown) dy -= 1;
+    if (this.cursors.down.isDown || this.keys.S.isDown) dy += 1;
+    if (dy !== 0) {
+      this.player.y += dy * PLAYER_MOVE_SPEED * deltaSec;
+    }
+    this._syncPlayerTransform();
+    this._syncPetTransform(deltaMs);
+
     this._playerCooldown -= deltaMs;
     this._turretCooldown -= deltaMs;
 
@@ -108,7 +174,6 @@ export class DefenderGroup {
       }
     }
 
-    const deltaSec = deltaMs / 1000;
     const leftCull = spawnWorldX() - 50;
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const b = this.bullets[i];

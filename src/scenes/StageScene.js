@@ -3,7 +3,6 @@ import { Barricade } from '../entities/Barricade.js';
 import { Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
-  BARRICADE_X,
   BARRICADE_MAX_HP,
   GAME_WIDTH,
   GAME_HEIGHT,
@@ -15,18 +14,20 @@ import {
   HORIZON_Y,
   HUD_DEPTH,
   depthBands,
-  worldX,
   spawnWorldX,
   randomLaneY,
   cameraScrollX,
   laneCenters,
+  grassYMin,
+  grassYMax,
+  barricadeXAtY,
 } from '../systems/DepthView.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
  *
  * Camera scrolls X only; Y is the depth/lane axis (DepthView).
- * Barricade/base are world-anchored on the right.
+ * Barricade follows the slanted grass right edge; player Y-moves in safe zone.
  *
  * Win:  timer ≥ 90s AND no zombies remain → ShopScene
  * Lose: barricade HP ≤ 0 → Game Over overlay (retry)
@@ -51,23 +52,20 @@ export default class StageScene extends Phaser.Scene {
   }
 
   create() {
-    const barricadeWorldX = worldX(BARRICADE_X);
-
     this._drawWorld();
 
-    // Camera: X scroll only, opening view framed on the base
+    // Frame camera on slanted barricade at mid-grass Y (shared DepthView helpers)
+    const midY = (grassYMin() + grassYMax()) / 2;
+    const barricadeFocusX = barricadeXAtY(midY);
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    cam.setScroll(cameraScrollX(barricadeWorldX), 0);
+    cam.setScroll(cameraScrollX(barricadeFocusX), 0);
 
     this.barricade = new Barricade(this, {
-      x: barricadeWorldX,
       maxHp: BARRICADE_MAX_HP,
     });
 
-    this.defenders = new DefenderGroup(this, {
-      barricadeX: barricadeWorldX,
-    });
+    this.defenders = new DefenderGroup(this, {});
 
     this.waveManager = new WaveManager();
 
@@ -147,6 +145,17 @@ export default class StageScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setScrollFactor(0)
       .setDepth(d + 1);
+
+    // Tiny move hint
+    this.hudHint = this.add
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 10, 'W/S move', {
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: '11px',
+        color: '#6a7a8a',
+      })
+      .setOrigin(0.5, 1)
+      .setScrollFactor(0)
+      .setDepth(d + 1);
   }
 
   _refreshHud() {
@@ -177,12 +186,11 @@ export default class StageScene extends Phaser.Scene {
       this._spawnZombie(intent);
     }
 
-    // Zombies move / contact DPS
+    // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts
     let barricadeDmg = 0;
-    const contactX = this.barricade.contactX;
     for (const z of this.zombies) {
       if (!z.alive) continue;
-      z.update(deltaSec, contactX);
+      z.update(deltaSec, this.barricade.contactXAt(z.y));
       barricadeDmg += z.contactDamage(deltaSec);
     }
     if (barricadeDmg > 0) {

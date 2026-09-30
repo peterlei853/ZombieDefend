@@ -22,6 +22,10 @@ export const SPAWN_LOGICAL_X = -10;
 export const HORIZON_Y = 92;
 export const LANE_COUNT = 5;
 
+/** Padding inset from horizon / bottom for playable grass band. */
+const GRASS_PAD_TOP = 8;
+const GRASS_PAD_BOTTOM = 10;
+
 /** Z samples for the ground plane (larger Z = farther). */
 const GROUND_Z_FAR = 2.45;
 const GROUND_Z_NEAR = 0.78;
@@ -66,6 +70,26 @@ export function groundEdgesAtY(y) {
   const clamped = Math.min(1, Math.max(0, t));
   const inset = (1 - clamped) * WORLD_WIDTH * 0.2;
   return { left: inset, right: WORLD_WIDTH - inset };
+}
+
+/**
+ * Playable grass Y band (shared by barricade posts, player clamp, pet clamp).
+ * Single source of truth — do not duplicate these literals elsewhere.
+ */
+export function grassYMin() {
+  return HORIZON_Y + GRASS_PAD_TOP;
+}
+
+export function grassYMax() {
+  return WORLD_HEIGHT - GRASS_PAD_BOTTOM;
+}
+
+/**
+ * Grass right-edge X at Y (slanted barricade centerline before post inset).
+ * Pass halfPostWidth to inset so a post of that half-width sits ON the edge.
+ */
+export function barricadeXAtY(y, halfPostWidth = 0) {
+  return groundEdgesAtY(y).right - halfPostWidth;
 }
 
 /**
