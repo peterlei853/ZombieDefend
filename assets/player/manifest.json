@@ -1,0 +1,57 @@
+{
+  "character_id": "dd594149-c9d9-468f-9f8c-d4f596675aa7",
+  "frame_size": 92,
+  "phaser_keys": {
+    "player-idle": {
+      "file": "player-idle.png",
+      "frames": 4,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "player-walk-west": {
+      "file": "player-walk-west.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92
+    },
+    "player-walk-east": {
+      "file": "player-walk-east.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92
+    },
+    "player-walk-north": {
+      "file": "player-walk-north.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92
+    },
+    "player-walk-south": {
+      "file": "player-walk-south.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92
+    },
+    "player-handgun-shoot": {
+      "file": "player-handgun-shoot.png",
+      "frames": 4,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "player-shotgun-recoil": {
+      "file": "player-shotgun-recoil.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "handgun": {
+      "file": "handgun.png"
+    },
+    "shotgun": {
+      "file": "shotgun.png"
+    }
+  }
+}
