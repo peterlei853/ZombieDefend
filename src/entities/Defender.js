@@ -313,11 +313,11 @@ export class DefenderGroup {
   }
 
   /**
-   * Handgun holds a raised-gun frame while stopped and walks while moving.
-   * Shots do not replay the one-shot shoot sheet, so the arms stay up.
-   * Shotgun holds the shouldered frame while stopped; the recoil one-shot
-   * plays through. W/S use walk-up / walk-down (aliases of north / south).
-   * The sprite is never flipped — the muzzle stays on the left.
+   * Handgun holds `player-handgun-aim` while stopped (the PixelLab sheet when
+   * it has loaded, otherwise one raised-gun frame of the shoot sheet).
+   * Shots do not leave that pose. Shotgun holds `player-shotgun-hold` the
+   * same way, and plays the recoil one-shot on a volley. W/S use walk-up /
+   * walk-down. The sprite is never flipped — the muzzle stays on the left.
    * @param {number} dy
    * @param {number} dx
    */

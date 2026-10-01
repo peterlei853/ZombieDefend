@@ -37,21 +37,38 @@ export const PLAYER_WEAPON_IMAGES = [
 const ACTION_ANIMS = new Set(['player-handgun-shoot', 'player-shotgun-recoil']);
 
 /**
- * No separate aim sheet. Frame 2 of the west shoot sheet is the raised gun
- * with the barrel out and before the white muzzle-flash frame.
+ * West-facing PixelLab stance sheets. Used when `assets/player/<key>.png`
+ * is present. Until then, a single frame of the shoot / recoil sheet holds
+ * the same pose.
  */
 export const HANDGUN_AIM_KEY = 'player-handgun-aim';
 export const HANDGUN_AIM_TEXTURE = 'player-handgun-shoot';
 export const HANDGUN_AIM_FRAME = 2;
 
-/**
- * No separate two-hand idle sheet. Frame 0 of the recoil sheet is the
- * shouldered pose before the kick frames.
- */
 export const SHOTGUN_HOLD_KEY = 'player-shotgun-hold';
 export const SHOTGUN_HOLD_TEXTURE = 'player-shotgun-recoil';
 export const SHOTGUN_HOLD_FRAME = 0;
 export const SHOTGUN_RECOIL_KEY = 'player-shotgun-recoil';
+
+/**
+ * Optional stance strips. `frameRate` applies when the sheet has more than
+ * one frame; a single frame just holds.
+ * @type {{ key: string, fallbackTexture: string, fallbackFrame: number, frameRate: number }[]}
+ */
+const STANCE_SHEETS = [
+  {
+    key: HANDGUN_AIM_KEY,
+    fallbackTexture: HANDGUN_AIM_TEXTURE,
+    fallbackFrame: HANDGUN_AIM_FRAME,
+    frameRate: 8,
+  },
+  {
+    key: SHOTGUN_HOLD_KEY,
+    fallbackTexture: SHOTGUN_HOLD_TEXTURE,
+    fallbackFrame: SHOTGUN_HOLD_FRAME,
+    frameRate: 8,
+  },
+];
 
 /** Sheets that already draw the gun, so the weapon prop must hide. */
 const WEAPON_DRAWN_ANIMS = new Set([
@@ -124,13 +141,38 @@ export function preloadPlayerAssets(scene) {
     if (scene.textures.exists(img.key)) continue;
     scene.load.image(img.key, `assets/player/${img.file}`);
   }
+  for (const stance of STANCE_SHEETS) {
+    if (scene.textures.exists(stance.key)) continue;
+    const url = `assets/player/${stance.key}.png`;
+    if (!probeAsset(url)) continue;
+    scene.load.spritesheet(stance.key, url, size);
+  }
+}
+
+/**
+ * True when the stance png is already on the server. A missing sheet is a
+ * miss, not a loader error, so BootScene still reaches the stage.
+ * @param {string} url
+ */
+function probeAsset(url) {
+  if (typeof XMLHttpRequest === 'undefined') return false;
+  try {
+    const xhr = new XMLHttpRequest();
+    const probeUrl = `${url}${url.includes('?') ? '&' : '?'}probe=${Date.now()}`;
+    xhr.open('HEAD', probeUrl, false);
+    xhr.send(null);
+    return xhr.status >= 200 && xhr.status < 300;
+  } catch (_) {
+    return false;
+  }
 }
 
 /**
  * Global anims (idempotent) and nearest-neighbor filtering for the pixel sheets.
  * This is the animation registry — there is no AnimationManager module.
- * Also registers walk-up/down aliases and single-frame aim / shotgun hold keys
- * built from sheets that already exist.
+ * Also registers walk-up/down aliases. Stance keys prefer a real
+ * `player-handgun-aim` / `player-shotgun-hold` sheet and otherwise hold one
+ * frame of the shoot / recoil sheet.
  * @param {Phaser.Scene} scene
  */
 export function registerPlayerAnims(scene) {
@@ -155,8 +197,9 @@ export function registerPlayerAnims(scene) {
   for (const alias of WALK_ALIASES) {
     registerAnimAlias(scene, alias.key, alias.source);
   }
-  registerStillAnim(scene, HANDGUN_AIM_KEY, HANDGUN_AIM_TEXTURE, HANDGUN_AIM_FRAME);
-  registerStillAnim(scene, SHOTGUN_HOLD_KEY, SHOTGUN_HOLD_TEXTURE, SHOTGUN_HOLD_FRAME);
+  for (const stance of STANCE_SHEETS) {
+    registerStanceAnim(scene, stance, filter);
+  }
   for (const img of PLAYER_WEAPON_IMAGES) {
     if (!scene.textures.exists(img.key) || filter === undefined) continue;
     const tex = scene.textures.get(img.key);
@@ -188,13 +231,6 @@ function registerAnimAlias(scene, key, sourceKey) {
   });
 }
 
-/**
- * Loop a single existing frame. Missing texture or frame is a no-op.
- * @param {Phaser.Scene} scene
- * @param {string} key
- * @param {string} textureKey
- * @param {number} frame
- */
 function textureHasFrame(tex, frame) {
   if (!tex) return false;
   if (typeof tex.has === 'function' && (tex.has(frame) || tex.has(String(frame)))) return true;
@@ -202,6 +238,56 @@ function textureHasFrame(tex, frame) {
   return names.includes(frame) || names.includes(String(frame));
 }
 
+/**
+ * Prefer the PixelLab stance strip when that texture loaded. Otherwise hold
+ * one frame of the fallback sheet. A previously registered fallback is
+ * replaced once the real texture exists.
+ * @param {Phaser.Scene} scene
+ * @param {{ key: string, fallbackTexture: string, fallbackFrame: number, frameRate: number }} stance
+ * @param {number|undefined} filter
+ */
+function registerStanceAnim(scene, stance, filter) {
+  const { key, fallbackTexture, fallbackFrame, frameRate } = stance;
+  if (!scene?.anims) return;
+  if (scene.textures?.exists?.(key)) {
+    const tex = scene.textures.get(key);
+    if (filter !== undefined && typeof tex.setFilter === 'function') {
+      tex.setFilter(filter);
+    }
+    const count = textureFrameCount(tex);
+    if (count > 0) {
+      const existing = scene.anims.exists(key) ? scene.anims.get(key) : null;
+      const textureKey = existing?.frames?.[0]?.textureKey;
+      if (textureKey === key && existing.frames.length === count) return;
+      if (existing && typeof scene.anims.remove === 'function') {
+        scene.anims.remove(key);
+      }
+      if (!scene.anims.exists(key)) {
+        scene.anims.create({
+          key,
+          frames: scene.anims.generateFrameNumbers(key, { start: 0, end: count - 1 }),
+          frameRate: count > 1 ? frameRate : 1,
+          repeat: -1,
+        });
+      }
+      return;
+    }
+  }
+  registerStillAnim(scene, key, fallbackTexture, fallbackFrame);
+}
+
+function textureFrameCount(tex) {
+  const names = typeof tex?.getFrameNames === 'function' ? tex.getFrameNames() : [];
+  return names.filter((name) => name !== '__BASE').length;
+}
+
+/**
+ * Loop a single existing frame. Missing texture or frame is a no-op.
+ * @param {Phaser.Scene} scene
+ * @param {string} key
+ * @param {string} textureKey
+ * @param {number} frame
+ */
 function registerStillAnim(scene, key, textureKey, frame) {
   if (!scene?.anims || scene.anims.exists(key)) return;
   if (!scene.textures?.exists?.(textureKey)) return;
