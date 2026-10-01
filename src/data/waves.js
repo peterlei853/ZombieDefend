@@ -1,3 +1,5 @@
+import { GAME_CONFIG } from './GameConfig.js';
+
 /**
  * Stage 1 wave schedule (timer 0–90s).
  *
@@ -62,13 +64,14 @@ export const BARRICADE_MAX_HP = 720;
 
 /**
  * Defender combat constants.
- * Fire cadence / weapon switch / pet AOE live in WeaponSystem.js
- * (HANDGUN 500ms, SHOTGUN 2000ms, PET AOE 1000ms). Legacy PLAYER_FIRE_RATE /
- * TURRET_* below are unused by the new system but kept for reference.
+ * Fire cadence / weapon switch / handgun damage live in GameConfig.js.
+ * Pet AOE still lives in WeaponSystem.js (PET AOE 1000ms). Legacy
+ * PLAYER_FIRE_RATE / TURRET_* below are unused by the new system but kept
+ * for reference. PLAYER_BULLET_DAMAGE re-exports handgun damage.
  * Do not change STAGE_DURATION / WAVE_DEFS HP / BARRICADE_MAX_HP / gold tables.
  */
-export const PLAYER_FIRE_RATE = 190;   // ms — superseded by WeaponSystem HANDGUN_FIRE_MS
-export const PLAYER_BULLET_DAMAGE = 30; // reused as handgun damage
+export const PLAYER_FIRE_RATE = 190;   // ms — superseded by GAME_CONFIG.WEAPONS.HANDGUN.FIRE_RATE
+export const PLAYER_BULLET_DAMAGE = GAME_CONFIG.WEAPONS.HANDGUN.DAMAGE;
 export const TURRET_FIRE_RATE = 240;   // ms — superseded by pet AOE interval
 export const TURRET_BULLET_DAMAGE = 22; // superseded by PET_AOE_DAMAGE
 export const BULLET_SPEED = 470;

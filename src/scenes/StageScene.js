@@ -25,6 +25,7 @@ import {
   layoutPx,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 
@@ -229,7 +230,8 @@ export default class StageScene extends Phaser.Scene {
    */
   onShotgunFired() {
     if (this.ended) return;
-    this.cameras.main.shake(150, 0.015);
+    const juice = GAME_CONFIG.JUICE;
+    this.cameras.main.shake(juice.SCREEN_SHAKE_SHOTGUN_MS, juice.SCREEN_SHAKE_SHOTGUN);
   }
 
   update(_time, delta) {

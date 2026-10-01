@@ -1,9 +1,5 @@
-import {
-  PLAYER_BULLET_DAMAGE,
-  BULLET_SPEED,
-  BULLET_SIZE,
-  GAME_WIDTH,
-} from '../data/waves.js';
+import { BULLET_SPEED, BULLET_SIZE, GAME_WIDTH } from '../data/waves.js';
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import {
   depthFromY,
   spawnWorldX,
@@ -18,11 +14,14 @@ import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 export const WEAPON_HANDGUN = /** @type {WeaponId} */ ('Handgun');
 export const WEAPON_SHOTGUN = /** @type {WeaponId} */ ('Shotgun');
 
-/** Handgun: auto-fire every 0.5s, single bullet, damage = PLAYER_BULLET_DAMAGE (30). */
-export const HANDGUN_FIRE_MS = 500;
-export const HANDGUN_DAMAGE = PLAYER_BULLET_DAMAGE;
+const HANDGUN_CFG = GAME_CONFIG.WEAPONS.HANDGUN;
+const SHOTGUN_CFG = GAME_CONFIG.WEAPONS.SHOTGUN;
+
+/** Handgun: auto-fire every 0.5s, single bullet, damage from GAME_CONFIG (30). */
+export const HANDGUN_FIRE_MS = HANDGUN_CFG.FIRE_RATE;
+export const HANDGUN_DAMAGE = HANDGUN_CFG.DAMAGE;
 /** Horizontal shove on a direct handgun hit. Lane Y is unchanged. */
-export const HANDGUN_KNOCKBACK = 10;
+export const HANDGUN_KNOCKBACK = HANDGUN_CFG.KNOCKBACK;
 
 /**
  * Full-screen reference length (viewport width). The handgun bullet itself
@@ -38,22 +37,23 @@ export const HANDGUN_EFFECTIVE_RANGE = GAME_WIDTH;
  * Per-pellet damage is lower than the old 40-point slug so hits stack at close
  * range instead of each grain one-shotting a wave. Knockback is slightly under
  * the handgun's 10 so a faceful shoves harder than one pistol round.
+ * PELLETS (18) is the midpoint; the volley rolls PELLETS_MIN–PELLETS_MAX.
  */
-export const SHOTGUN_FIRE_MS = 2000;
-export const SHOTGUN_PELLET_DAMAGE = 10;
-export const SHOTGUN_PELLET_KNOCKBACK = 8;
-export const SHOTGUN_PELLET_MIN = 16;
-export const SHOTGUN_PELLET_MAX = 20;
+export const SHOTGUN_FIRE_MS = SHOTGUN_CFG.FIRE_RATE;
+export const SHOTGUN_PELLET_DAMAGE = SHOTGUN_CFG.PELLET_DAMAGE;
+export const SHOTGUN_PELLET_KNOCKBACK = SHOTGUN_CFG.PELLET_KNOCKBACK;
+export const SHOTGUN_PELLET_MIN = SHOTGUN_CFG.PELLETS_MIN ?? SHOTGUN_CFG.PELLETS;
+export const SHOTGUN_PELLET_MAX = SHOTGUN_CFG.PELLETS_MAX ?? SHOTGUN_CFG.PELLETS;
 export const SHOTGUN_PELLET_SIZE = 4;
-/** Half of the 70° fan, centered on 180° (straight left). */
-export const SHOTGUN_FAN_HALF_DEG = 35;
+/** Half of the fan, centered on 180° (straight left). */
+export const SHOTGUN_FAN_HALF_DEG = SHOTGUN_CFG.SPREAD_ANGLE / 2;
 export const SHOTGUN_FAN_HALF_RAD = (SHOTGUN_FAN_HALF_DEG * Math.PI) / 180;
 /** Straight left in screen space (0° is +X, +Y is down). */
 export const SHOTGUN_CENTER_ANGLE = Math.PI;
 /** ± this fraction of BULLET_SPEED, rolled per pellet. */
 export const SHOTGUN_SPEED_SPREAD = 0.08;
-export const SHOTGUN_MAX_DISTANCE = HANDGUN_EFFECTIVE_RANGE * 0.25;
-export const SHOTGUN_VFX_MS = 150;
+export const SHOTGUN_MAX_DISTANCE = HANDGUN_EFFECTIVE_RANGE * SHOTGUN_CFG.RANGE_RATIO;
+export const SHOTGUN_VFX_MS = SHOTGUN_CFG.MUZZLE_VFX_MS;
 /** Short muzzle flash; pellets themselves show the travel. */
 export const SHOTGUN_MUZZLE_VFX_RADIUS = 48;
 
