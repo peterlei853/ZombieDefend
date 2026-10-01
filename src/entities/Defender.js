@@ -14,8 +14,16 @@ import {
   PLAYER_FRAME_SIZE,
   PLAYER_ORIGIN_X,
   PLAYER_ORIGIN_Y,
+  HANDGUN_AIM_KEY,
+  HANDGUN_AIM_TEXTURE,
+  HANDGUN_AIM_FRAME,
+  SHOTGUN_HOLD_KEY,
+  SHOTGUN_HOLD_TEXTURE,
+  SHOTGUN_HOLD_FRAME,
+  SHOTGUN_RECOIL_KEY,
+  animDrawsWeapon,
   isPlayerActionAnim,
-  locomotionAnimKey,
+  locomotionAnimCandidates,
   registerPlayerAnims,
 } from '../assets/playerSprites.js';
 
@@ -35,6 +43,7 @@ const PLAYER_MOVE_SPEED = GAME_CONFIG.PLAYER.MOVE_SPEED * LAYOUT_SCALE;
  * Shotgun volley kicks the defender right (they face left to shoot).
  * Distances and durations come from GAME_CONFIG.PLAYER. The kick eases out,
  * then eases back onto the lane so the barricade safe-zone X is not left offset.
+ * Lane input stays locked for SHOTGUN_MOVE_LOCK_MS, which outlasts the kick.
  */
 const SHOTGUN_RECOIL_PX = GAME_CONFIG.PLAYER.SHOTGUN_RECOIL_PX * LAYOUT_SCALE;
 const SHOTGUN_RECOIL_MS = GAME_CONFIG.PLAYER.SHOTGUN_RECOIL_MS;
@@ -74,6 +83,8 @@ export class DefenderGroup {
     this._recoilGen = 0;
     /** @type {Phaser.Tweens.Tween|null} */
     this._recoilTween = null;
+    /** Remaining shotgun post-fire lane lock. Handgun never sets this. */
+    this._shotgunLockMs = 0;
 
     const yMin = grassYMin();
     const yMax = grassYMax();
@@ -201,24 +212,39 @@ export class DefenderGroup {
     // Player Y-only move (W/S, arrows, or the touch stick). X always tracks
     // the barricade edge. A/D, left/right, and stick X only pick a walk sheet.
     const deltaSec = deltaMs / 1000;
-    const { dx, dy } = this._inputAxes();
+    if (this.weapons.getWeapon() !== WEAPON_SHOTGUN) {
+      this._shotgunLockMs = 0;
+    } else if (this._shotgunLockMs > 0) {
+      this._shotgunLockMs = Math.max(0, this._shotgunLockMs - deltaMs);
+    }
+    const { dx, dy: inputDy } = this._inputAxes();
+    // Lane keys (W/S, arrows, joystick Y) drive the defender. A/D and stick X
+    // do not change position, so they do not count as shotgun "moving".
+    const laneHeld = inputDy !== 0;
+    const shotgunLocked = this._shotgunLockMs > 0;
+    const dy = shotgunLocked ? 0 : inputDy;
     if (dy !== 0) {
       this.player.y += dy * PLAYER_MOVE_SPEED * deltaSec;
     }
     this._syncPlayerTransform();
     this._syncPetTransform(deltaMs);
 
-    // WeaponSystem owns fire cadence + targeting; pet spawns PetBullets (AOE on hit only)
+    // Handgun keeps firing while the lane is held. Shotgun waits until the
+    // defender is fully stopped and the post-fire lock has expired.
     const fired = this.weapons.updatePlayerFire(
       deltaMs,
       this.player.x,
       this.player.y,
       zombies,
-      this.bullets
+      this.bullets,
+      {
+        scaleX: this.player.scaleX,
+        scaleY: this.player.scaleY,
+        canFireShotgun: !laneHeld && !shotgunLocked,
+      }
     );
     if (fired === 'shotgun') this._onShotgunVolley();
-    else if (fired === 'handgun') this._playHandgunShootAnim();
-    this._updateLocomotionAnim(dy, dx);
+    this._updateStance(dy, shotgunLocked ? 0 : dx);
     this.weapons.updatePetFire(
       deltaMs,
       this.turret.x,
@@ -230,6 +256,7 @@ export class DefenderGroup {
     // Move only. Range / off-view retirement happens after hit tests so a
     // pellet can still connect on the frame it reaches maxDistance.
     this.weapons.stepBullets(this.bullets, deltaSec);
+    this.weapons.stepCasings(deltaMs);
 
     return { gold: 0, kills: 0 };
   }
@@ -286,28 +313,93 @@ export class DefenderGroup {
   }
 
   /**
-   * Idle / cardinal walk. Shoot and recoil finish before locomotion resumes.
+   * Handgun holds a raised-gun frame while stopped and walks while moving.
+   * Shots do not replay the one-shot shoot sheet, so the arms stay up.
+   * Shotgun holds the shouldered frame while stopped; the recoil one-shot
+   * plays through. W/S use walk-up / walk-down (aliases of north / south).
+   * The sprite is never flipped — the muzzle stays on the left.
    * @param {number} dy
    * @param {number} dx
    */
-  _updateLocomotionAnim(dy, dx) {
-    if (this._actionAnimPlaying()) return;
-    const key = locomotionAnimKey(dy, dx);
-    if (this._currentAnimKey() === key && this.player.anims?.isPlaying) return;
-    this._playAnim(key);
+  _updateStance(dy, dx) {
+    const player = this.player;
+    if (!player) return;
+    if (typeof player.setFlipX === 'function') {
+      player.setFlipX(false);
+      player.setFlipY(false);
+    }
+    if (typeof player.play !== 'function') return;
+
+    const shotgun = this.weapons.getWeapon() === WEAPON_SHOTGUN;
+    if (shotgun && this._recoilAnimPlaying()) {
+      this._syncWeaponProp();
+      return;
+    }
+
+    const moving = dy !== 0 || dx !== 0;
+    if (moving) {
+      this._playFirstExisting(locomotionAnimCandidates(dy, dx));
+    } else if (shotgun) {
+      if (!this._playFirstExisting([SHOTGUN_HOLD_KEY])) {
+        this._holdFrame(SHOTGUN_HOLD_TEXTURE, SHOTGUN_HOLD_FRAME) ||
+          this._playFirstExisting(['player-idle']);
+      }
+    } else if (!this._playFirstExisting([HANDGUN_AIM_KEY])) {
+      this._holdFrame(HANDGUN_AIM_TEXTURE, HANDGUN_AIM_FRAME) ||
+        this._playFirstExisting(['player-idle']);
+    }
     this._syncWeaponProp();
   }
 
-  /** One-shot west-facing handgun sheet, then locomotion takes over. */
-  _playHandgunShootAnim() {
-    this._playAnim('player-handgun-shoot');
-    this._syncWeaponProp();
+  _recoilAnimPlaying() {
+    const anims = this.player?.anims;
+    if (!anims?.isPlaying) return false;
+    return this._currentAnimKey() === SHOTGUN_RECOIL_KEY;
   }
 
   /**
-   * One shotgun volley (not each pellet): guarded recoil anim, +18px kick, camera shake.
+   * @param {string[]} keys
+   * @returns {boolean}
+   */
+  _playFirstExisting(keys) {
+    const anims = this.scene?.anims;
+    if (!anims || typeof anims.exists !== 'function') return false;
+    for (const key of keys) {
+      if (!anims.exists(key)) continue;
+      if (this._currentAnimKey() === key && this.player.anims?.isPlaying) return true;
+      return this._playAnim(key, true);
+    }
+    return false;
+  }
+
+  /**
+   * Freeze one frame when a still-anim key is missing.
+   * @param {string} textureKey
+   * @param {number} frame
+   */
+  _holdFrame(textureKey, frame) {
+    const player = this.player;
+    if (!player || typeof player.setTexture !== 'function') return false;
+    if (!this.scene?.textures?.exists?.(textureKey)) return false;
+    const tex = this.scene.textures.get(textureKey);
+    const hasFrame =
+      typeof tex?.has !== 'function' || tex.has(frame) || tex.has(String(frame));
+    if (!hasFrame) return false;
+    try {
+      player.anims?.stop?.();
+    } catch (_) {
+      /* rectangle / missing anim component */
+    }
+    player.setTexture(textureKey, frame);
+    return true;
+  }
+
+  /**
+   * One shotgun volley (not each pellet): recoil anim, +12px kick, 300ms
+   * lane lock, camera shake. Shell casing and muzzle flash spawn with the fan.
    */
   _onShotgunVolley() {
+    this._shotgunLockMs = GAME_CONFIG.PLAYER.SHOTGUN_MOVE_LOCK_MS;
     this._playShotgunRecoilAnim();
     this._kickShotgunRecoil();
     if (typeof this.scene?.onShotgunFired === 'function') {
@@ -321,7 +413,7 @@ export class DefenderGroup {
    */
   _playShotgunRecoilAnim() {
     // PIXELLAB_HOOK: player-shotgun-recoil
-    this._playAnim('player-shotgun-recoil', true);
+    this._playAnim(SHOTGUN_RECOIL_KEY, false);
     this._syncWeaponProp();
   }
 
@@ -343,11 +435,12 @@ export class DefenderGroup {
     const grip = WEAPON_GRIP[key] ?? WEAPON_GRIP.handgun;
     prop.setOrigin(grip.x, grip.y);
 
-    // Shoot / recoil sheets already include the gun. Other facings turn
-    // away from the west-aimed prop, so it only shows while facing left.
+    // Shoot / recoil / aim / hold sheets already include the gun. Walk-up and
+    // walk-down keep the authored north/south pixels (no flip). The prop only
+    // shows on the west-facing locomotion sheets.
     const facing = this._currentAnimKey();
     const facingWest = !facing || facing === 'player-idle' || facing === 'player-walk-west';
-    prop.setVisible(!this._actionAnimPlaying() && facingWest);
+    prop.setVisible(!animDrawsWeapon(facing) && !this._actionAnimPlaying() && facingWest);
 
     const s = player.scaleX || 1;
     const frameW = player.width || PLAYER_FRAME_SIZE;
@@ -368,8 +461,9 @@ export class DefenderGroup {
   }
 
   /**
-   * Tween the defender body +18px on X (Quad.easeOut, ~100ms), then ease back
-   * to the lane anchor. Y is never part of the tween, so W/S grass clamp holds.
+   * Tween the defender body +12 field px on X (Quad.easeOut, 80ms), then ease
+   * back over 120ms. Y is never part of the tween. Lane input stays locked
+   * separately for SHOTGUN_MOVE_LOCK_MS.
    */
   _kickShotgunRecoil() {
     this._recoilGen += 1;
@@ -512,30 +606,31 @@ export class DefenderGroup {
    */
   _retireBullet(index) {
     const b = this.bullets[index];
-    if (b?.gfx) {
+    this._destroyBulletParts(b);
+    this.bullets.splice(index, 1);
+  }
+
+  /** @param {object|undefined} b */
+  _destroyBulletParts(b) {
+    if (!b) return;
+    for (const key of ['gfx', 'trail']) {
+      if (!b[key]) continue;
       try {
-        b.gfx.destroy();
+        b[key].destroy();
       } catch (_) {
         /* already destroyed */
       }
-      b.gfx = null;
+      b[key] = null;
     }
-    this.bullets.splice(index, 1);
   }
 
   destroy() {
     this._recoilGen += 1;
     this._stopRecoilTween();
     this.recoilX = 0;
-    for (const b of this.bullets) {
-      if (b?.gfx) {
-        try {
-          b.gfx.destroy();
-        } catch (_) {
-          /* already destroyed */
-        }
-      }
-    }
+    this._shotgunLockMs = 0;
+    this.weapons.destroyEffects();
+    for (const b of this.bullets) this._destroyBulletParts(b);
     this.bullets = [];
     this.weaponProp?.destroy();
     this.weaponProp = null;
