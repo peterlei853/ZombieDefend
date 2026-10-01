@@ -257,13 +257,19 @@ export default class StageScene extends Phaser.Scene {
     }
 
     // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts.
+    // X march and the halt test are unchanged. The third arg is shamble feel:
+    // defender Y plus the live list (soft separation). Y freezes on contact.
     // Damage totals still apply every frame; floating numbers pop on the ~1s bite.
     let barricadeDmg = 0;
     /** @type {Zombie[]} */
     const attackBeats = [];
+    const playerY = this.defenders.player.y;
     for (const z of this.zombies) {
       if (!z.alive) continue;
-      z.update(deltaSec, this.barricade.contactXAt(z.y));
+      z.update(deltaSec, this.barricade.contactXAt(z.y), {
+        playerY,
+        peers: this.zombies,
+      });
       const dealt = z.contactDamage(deltaSec);
       barricadeDmg += dealt;
       z.addBarricadeDmg(dealt);
