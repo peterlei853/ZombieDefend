@@ -6,6 +6,7 @@ import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
   LAYOUT_SCALE,
+  layoutPx,
 } from './DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
@@ -83,6 +84,8 @@ export class WeaponSystem {
     this.weapon = WEAPON_HANDGUN;
     this._playerCooldown = 0;
     this._petCooldown = 0;
+    /** @type {{ gfx: Phaser.GameObjects.Rectangle, vx: number, vy: number, life: number, max: number, spin: number }[]} */
+    this._casings = [];
   }
 
   /** @returns {WeaponId} */
@@ -151,30 +154,55 @@ export class WeaponSystem {
   }
 
   /**
+   * Muzzle in world px. Offsets in GameConfig are frame px from the sole;
+   * `scaleX/scaleY` are the defender display scale (includes LAYOUT_SCALE).
+   * Never the sprite origin alone.
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [scaleX]
+   * @param {number} [scaleY]
+   */
+  muzzlePoint(playerX, playerY, scaleX, scaleY) {
+    const cfg = this.weapon === WEAPON_SHOTGUN ? SHOTGUN_CFG : HANDGUN_CFG;
+    const sx = Number.isFinite(scaleX) && scaleX !== 0 ? Math.abs(scaleX) : LAYOUT_SCALE;
+    const sy = Number.isFinite(scaleY) && scaleY !== 0 ? Math.abs(scaleY) : LAYOUT_SCALE;
+    return {
+      x: playerX + (cfg.MUZZLE_OFFSET_X ?? 0) * sx,
+      y: playerY + (cfg.MUZZLE_OFFSET_Y ?? 0) * sy,
+    };
+  }
+
+  /**
    * Tick player weapon cadence; may push bullets into `bullets`.
-   * Handgun: one straight shot at the nearest living zombie (or left).
-   * Shotgun: 16–20 pellets in a fixed 70° fan to the left.
-   * Returns which weapon actually fired this call, once per volley
-   * (shotgun pellets do not each produce a return).
+   * Handgun: one slug from the handgun muzzle, including while the defender moves.
+   * Shotgun: one 16–20 pellet fan from the shotgun muzzle, only when
+   * `canFireShotgun` is not false (caller blocks this while a lane key is held
+   * or the post-fire move lock is active).
+   * Returns which weapon actually fired this call, once per volley.
    * @param {number} deltaMs
    * @param {number} playerX
    * @param {number} playerY
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {object[]} bullets
+   * @param {{ scaleX?: number, scaleY?: number, canFireShotgun?: boolean }} [opts]
    * @returns {'shotgun'|'handgun'|null}
    */
-  updatePlayerFire(deltaMs, playerX, playerY, zombies, bullets) {
+  updatePlayerFire(deltaMs, playerX, playerY, zombies, bullets, opts = {}) {
     this._playerCooldown -= deltaMs;
     if (this._playerCooldown > 0) return null;
     if (!Array.isArray(bullets)) return null;
 
-    const fromX = playerX - 10 * LAYOUT_SCALE;
-    const fromY = playerY;
+    const muzzle = this.muzzlePoint(playerX, playerY, opts.scaleX, opts.scaleY);
 
     if (this.weapon === WEAPON_SHOTGUN) {
+      if (opts.canFireShotgun === false) {
+        this._playerCooldown = 0;
+        return null;
+      }
       this._playerCooldown = SHOTGUN_FIRE_MS;
-      this._spawnShotgunFan(bullets, fromX, fromY);
-      // One signal per volley. Pellet count / fan / damage stay in _spawnShotgunFan.
+      this._spawnShotgunFan(bullets, muzzle.x, muzzle.y);
+      this._spawnMuzzleFlash(muzzle.x, muzzle.y);
+      this._spawnShellCasing(muzzle.x, muzzle.y);
       return 'shotgun';
     }
 
@@ -183,14 +211,15 @@ export class WeaponSystem {
       (z) => z?.alive && z.body
     );
     const target = this.findNearest(living, playerX, playerY);
-    const { vx, vy } = this.aimVelocity(fromX, fromY, target);
-    this._spawnBullet(bullets, fromX, fromY, vx, vy, {
+    const { vx, vy } = this.aimVelocity(muzzle.x, muzzle.y, target);
+    this._spawnBullet(bullets, muzzle.x, muzzle.y, vx, vy, {
       damage: HANDGUN_DAMAGE,
       kind: 'handgun',
-      size: BULLET_SIZE * LAYOUT_SCALE,
+      size: layoutPx(HANDGUN_CFG.BULLET_W),
       maxDistance: null,
       knockback: HANDGUN_KNOCKBACK,
     });
+    this._spawnMuzzleFlash(muzzle.x, muzzle.y);
     return 'handgun';
   }
 
@@ -245,10 +274,51 @@ export class WeaponSystem {
       if (b.maxDistance != null) {
         b.traveled = (b.traveled || 0) + Math.hypot(dx, dy);
       }
+      if (b.kind === 'handgun') {
+        if (typeof b.gfx.setRotation === 'function') {
+          b.gfx.setRotation(Math.atan2(b.vy, b.vx));
+        }
+        this._drawHandgunTrail(b);
+      }
       if (typeof b.gfx.setDepth === 'function') {
         b.gfx.setDepth(depthFromY(b.gfx.y));
       }
     }
+  }
+
+  /**
+   * Integrate ejected shotgun casings (arc under gravity, then fade).
+   * @param {number} deltaMs
+   */
+  stepCasings(deltaMs) {
+    if (!this._casings?.length) return;
+    const dt = (Number.isFinite(deltaMs) ? deltaMs : 0) / 1000;
+    const gravity = SHOTGUN_CFG.CASING_GRAVITY * LAYOUT_SCALE;
+    const alive = [];
+    for (const c of this._casings) {
+      if (!c?.gfx || c.gfx.active === false) continue;
+      c.life -= deltaMs;
+      if (c.life <= 0) {
+        this._safeDestroyGraphics(c.gfx);
+        continue;
+      }
+      c.vy += gravity * dt;
+      c.gfx.x += c.vx * dt;
+      c.gfx.y += c.vy * dt;
+      c.gfx.rotation += c.spin * dt;
+      c.gfx.setAlpha(Math.max(0, c.life / c.max));
+      if (typeof c.gfx.setDepth === 'function') {
+        c.gfx.setDepth(depthFromY(c.gfx.y, 3));
+      }
+      alive.push(c);
+    }
+    this._casings = alive;
+  }
+
+  /** Drop leftover flash/casing objects. Scene shutdown also destroys them. */
+  destroyEffects() {
+    for (const c of this._casings || []) this._safeDestroyGraphics(c?.gfx);
+    this._casings = [];
   }
 
   /**
@@ -391,23 +461,37 @@ export class WeaponSystem {
   _spawnBullet(bullets, x, y, vx, vy, meta) {
     let color = 0x40c4ff;
     let size = meta.size ?? BULLET_SIZE;
-    if (meta.kind === 'shotgun') {
+    let gfx;
+    /** @type {Phaser.GameObjects.Graphics|null} */
+    let trail = null;
+    if (meta.kind === 'handgun') {
+      color = 0xffe14a;
+      const w = layoutPx(HANDGUN_CFG.BULLET_W);
+      const h = layoutPx(HANDGUN_CFG.BULLET_H);
+      size = w;
+      gfx = this.scene.add.rectangle(x, y, w, h, color);
+      gfx.setRotation(Math.atan2(vy, vx));
+      trail = this.scene.add.graphics();
+      trail.setDepth(depthFromY(y));
+    } else if (meta.kind === 'shotgun') {
       color = 0xffaa00;
       size = meta.size ?? SHOTGUN_PELLET_SIZE;
+      gfx = this.scene.add.rectangle(x, y, size, size, color);
+      gfx.setStrokeStyle(1, 0xfff3e0);
     } else if (meta.kind === 'pet') {
       // PIXELLAB_HOOK: replace with sprite PetBullet
       color = 0xb388ff; // purple/cyan pet projectile
       size = meta.size ?? Math.max(6, BULLET_SIZE - 1) * LAYOUT_SCALE;
-    }
-    const gfx = this.scene.add.rectangle(x, y, size, size, color);
-    if (meta.kind === 'pet') {
+      gfx = this.scene.add.rectangle(x, y, size, size, color);
       gfx.setStrokeStyle(1, 0x42a5f5);
-    } else if (meta.kind === 'shotgun') {
-      gfx.setStrokeStyle(1, 0xfff3e0);
+    } else {
+      gfx = this.scene.add.rectangle(x, y, size, size, color);
     }
     gfx.setDepth(depthFromY(y));
     bullets.push({
       gfx,
+      trail,
+      trailPts: [],
       damage: meta.damage,
       vx,
       vy,
@@ -416,6 +500,82 @@ export class WeaponSystem {
       maxDistance: meta.maxDistance == null ? null : meta.maxDistance,
       traveled: 0,
       knockback: meta.knockback || 0,
+    });
+  }
+
+  /**
+   * Short fading streak behind the handgun slug.
+   * @param {object} b
+   */
+  _drawHandgunTrail(b) {
+    const g = b?.trail;
+    if (!g || g.active === false || typeof g.clear !== 'function') return;
+    if (!b.trailPts) b.trailPts = [];
+    b.trailPts.push({ x: b.gfx.x, y: b.gfx.y });
+    const maxPts = 5;
+    if (b.trailPts.length > maxPts) {
+      b.trailPts.splice(0, b.trailPts.length - maxPts);
+    }
+    g.clear();
+    const pts = b.trailPts;
+    for (let i = 1; i < pts.length; i++) {
+      const t = i / (pts.length - 1);
+      g.lineStyle(Math.max(1, layoutPx(1)), 0xffe14a, 0.08 + t * 0.22);
+      g.beginPath();
+      g.moveTo(pts[i - 1].x, pts[i - 1].y);
+      g.lineTo(pts[i].x, pts[i].y);
+      g.strokePath();
+    }
+    if (typeof g.setDepth === 'function') g.setDepth(depthFromY(b.gfx.y));
+  }
+
+  /**
+   * Yellow-white flash at the muzzle. Fades in MUZZLE_FLASH_MS (~50ms).
+   * @param {number} x
+   * @param {number} y
+   */
+  _spawnMuzzleFlash(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    if (!this.scene?.add?.rectangle) return;
+    const ms = GAME_CONFIG.VFX.MUZZLE_FLASH_MS;
+    const flash = this.scene.add.rectangle(x, y, layoutPx(11), layoutPx(7), 0xfff6d0);
+    flash.setDepth(depthFromY(y, 6));
+    const tween = this.scene.tweens?.add?.({
+      targets: flash,
+      alpha: 0,
+      duration: ms,
+      onComplete: () => this._safeDestroyGraphics(flash),
+    });
+    if (!tween && this.scene.time?.delayedCall) {
+      this.scene.time.delayedCall(ms, () => this._safeDestroyGraphics(flash));
+    }
+  }
+
+  /**
+   * Yellow shell from the shotgun muzzle. +X / −Y then gravity, fading out.
+   * @param {number} x
+   * @param {number} y
+   */
+  _spawnShellCasing(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    if (!this.scene?.add?.rectangle) return;
+    const cfg = SHOTGUN_CFG;
+    const gfx = this.scene.add.rectangle(
+      x + cfg.CASING_OFFSET_X * LAYOUT_SCALE,
+      y + cfg.CASING_OFFSET_Y * LAYOUT_SCALE,
+      Math.max(2, layoutPx(cfg.CASING_W)),
+      Math.max(1, layoutPx(cfg.CASING_H)),
+      0xffe14a
+    );
+    gfx.setDepth(depthFromY(y, 4));
+    gfx.setRotation(-0.6);
+    this._casings.push({
+      gfx,
+      vx: cfg.CASING_VEL_X * LAYOUT_SCALE,
+      vy: cfg.CASING_VEL_Y * LAYOUT_SCALE,
+      life: cfg.CASING_LIFE_MS,
+      max: cfg.CASING_LIFE_MS,
+      spin: 9,
     });
   }
 
