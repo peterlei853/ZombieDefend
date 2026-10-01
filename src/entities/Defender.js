@@ -40,8 +40,11 @@ export class DefenderGroup {
     this.scene = scene;
     this.bullets = [];
     this.weapons = new WeaponSystem(scene);
-    /** Additive world-X kick from the latest shotgun volley. Eases back to 0. */
-    this._recoilX = 0;
+    /**
+     * Additive world-X kick from the latest shotgun volley. Eases back to 0.
+     * Not underscored: Phaser skips tween props whose names start with `_`.
+     */
+    this.recoilX = 0;
     /** Bumps when a new volley starts so a stopped tween cannot ease the next one. */
     this._recoilGen = 0;
     /** @type {Phaser.Tweens.Tween|null} */
@@ -97,7 +100,7 @@ export class DefenderGroup {
     const y = this._clampGrassY(this.player.y);
     this.player.y = y;
     // Lane clamp owns X. Shotgun recoil is a temporary +X on this same body.
-    this.player.x = this._laneAnchorX(y) + this._recoilX;
+    this.player.x = this._laneAnchorX(y) + this.recoilX;
     const s = scaleFromY(y);
     this.player.setScale(s);
     this.player.setDepth(depthFromY(y));
@@ -212,7 +215,7 @@ export class DefenderGroup {
 
     this._recoilTween = scene.tweens.add({
       targets: this,
-      _recoilX: SHOTGUN_RECOIL_PX,
+      recoilX: SHOTGUN_RECOIL_PX,
       duration: SHOTGUN_RECOIL_MS,
       ease: 'Quad.easeOut',
       onUpdate: () => {
@@ -231,12 +234,12 @@ export class DefenderGroup {
     const gen = this._recoilGen;
     const scene = this.scene;
     if (!scene?.tweens || !this.player?.active) {
-      this._recoilX = 0;
+      this.recoilX = 0;
       return;
     }
     this._recoilTween = scene.tweens.add({
       targets: this,
-      _recoilX: 0,
+      recoilX: 0,
       duration: SHOTGUN_RECOIL_RETURN_MS,
       ease: 'Quad.easeOut',
       onUpdate: () => {
@@ -245,7 +248,7 @@ export class DefenderGroup {
       },
       onComplete: () => {
         if (gen !== this._recoilGen) return;
-        this._recoilX = 0;
+        this.recoilX = 0;
         this._recoilTween = null;
         this._applyRecoilOffset();
       },
@@ -257,7 +260,7 @@ export class DefenderGroup {
     if (!this.player?.active) return;
     const y = this._clampGrassY(this.player.y);
     this.player.y = y;
-    this.player.x = this._laneAnchorX(y) + this._recoilX;
+    this.player.x = this._laneAnchorX(y) + this.recoilX;
   }
 
   /**
@@ -357,7 +360,7 @@ export class DefenderGroup {
   destroy() {
     this._recoilGen += 1;
     this._stopRecoilTween();
-    this._recoilX = 0;
+    this.recoilX = 0;
     for (const b of this.bullets) {
       if (b?.gfx) {
         try {
