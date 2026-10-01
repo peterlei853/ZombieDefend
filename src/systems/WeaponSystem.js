@@ -68,7 +68,8 @@ export const PET_BULLET_DAMAGE = 0;
 
 /**
  * Owns weapon state, nearest-enemy targeting, fire cadence, and ballistics.
- * DefenderGroup pushes bullets / applies hits; StageScene only toggles SPACE + HUD.
+ * DefenderGroup pushes bullets / applies hits and plays shotgun recoil.
+ * StageScene toggles SPACE, HUD, and the one-per-volley camera shake.
  */
 export class WeaponSystem {
   /**
@@ -149,16 +150,19 @@ export class WeaponSystem {
    * Tick player weapon cadence; may push bullets into `bullets`.
    * Handgun: one straight shot at the nearest living zombie (or left).
    * Shotgun: 16–20 pellets in a fixed 70° fan to the left.
+   * Returns which weapon actually fired this call, once per volley
+   * (shotgun pellets do not each produce a return).
    * @param {number} deltaMs
    * @param {number} playerX
    * @param {number} playerY
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {object[]} bullets
+   * @returns {'shotgun'|'handgun'|null}
    */
   updatePlayerFire(deltaMs, playerX, playerY, zombies, bullets) {
     this._playerCooldown -= deltaMs;
-    if (this._playerCooldown > 0) return;
-    if (!Array.isArray(bullets)) return;
+    if (this._playerCooldown > 0) return null;
+    if (!Array.isArray(bullets)) return null;
 
     const fromX = playerX - 10;
     const fromY = playerY;
@@ -166,7 +170,8 @@ export class WeaponSystem {
     if (this.weapon === WEAPON_SHOTGUN) {
       this._playerCooldown = SHOTGUN_FIRE_MS;
       this._spawnShotgunFan(bullets, fromX, fromY);
-      return;
+      // One signal per volley. Pellet count / fan / damage stay in _spawnShotgunFan.
+      return 'shotgun';
     }
 
     this._playerCooldown = HANDGUN_FIRE_MS;
@@ -182,6 +187,7 @@ export class WeaponSystem {
       maxDistance: null,
       knockback: HANDGUN_KNOCKBACK,
     });
+    return 'handgun';
   }
 
   /**
