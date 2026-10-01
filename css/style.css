@@ -6,12 +6,20 @@ html, body {
   background: #0b0f14;
   overflow: hidden;
   font-family: system-ui, sans-serif;
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 #game-host {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  touch-action: none;
 }
 #game-host canvas {
   display: block;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }

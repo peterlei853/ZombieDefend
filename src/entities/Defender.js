@@ -96,14 +96,22 @@ export class DefenderGroup {
       .setScale(petScale)
       .setDepth(depthFromY(petY, 1));
 
-    // W/S + arrow keys for Y-only move
-    this.cursors = scene.input.keyboard.createCursorKeys();
-    this.keys = scene.input.keyboard.addKeys({
-      W: Phaser.Input.Keyboard.KeyCodes.W,
-      S: Phaser.Input.Keyboard.KeyCodes.S,
-      A: Phaser.Input.Keyboard.KeyCodes.A,
-      D: Phaser.Input.Keyboard.KeyCodes.D,
-    });
+    // W/S + arrow keys for Y-only move. Touch stick is optional (VirtualControls).
+    const keyboard = scene.input.keyboard;
+    if (keyboard) {
+      this.cursors = keyboard.createCursorKeys();
+      this.keys = keyboard.addKeys({
+        W: Phaser.Input.Keyboard.KeyCodes.W,
+        S: Phaser.Input.Keyboard.KeyCodes.S,
+        A: Phaser.Input.Keyboard.KeyCodes.A,
+        D: Phaser.Input.Keyboard.KeyCodes.D,
+      });
+    } else {
+      this.cursors = null;
+      this.keys = null;
+    }
+    /** @type {import('../ui/VirtualControls.js').VirtualControls|null} */
+    this.touchControls = null;
   }
 
   /**
@@ -186,8 +194,8 @@ export class DefenderGroup {
    * @returns {{ gold: number, kills: number }} always zero here; pet AOE gold comes from resolveHits
    */
   update(deltaMs, zombies) {
-    // Player Y-only move (W/S or up/down). X always tracks barricade edge.
-    // A/D and arrows only pick a walk sheet — they do not leave the lane.
+    // Player Y-only move (W/S, arrows, or the touch stick). X always tracks
+    // the barricade edge. A/D, left/right, and stick X only pick a walk sheet.
     const deltaSec = deltaMs / 1000;
     const { dx, dy } = this._inputAxes();
     if (dy !== 0) {
@@ -223,16 +231,25 @@ export class DefenderGroup {
   }
 
   /**
-   * Held keys. dy moves the defender; dx only selects a walk sheet.
+   * Held keys, or the touch stick when that axis is idle.
+   * dy moves the defender (grass clamp is in _syncPlayerTransform).
+   * dx only selects a walk sheet — the player cannot leave the lane.
+   * Full stick deflection matches a held key (±1).
    * @returns {{ dx: number, dy: number }}
    */
   _inputAxes() {
     let dy = 0;
     let dx = 0;
-    if (this.cursors.up.isDown || this.keys.W.isDown) dy -= 1;
-    if (this.cursors.down.isDown || this.keys.S.isDown) dy += 1;
-    if (this.cursors.left.isDown || this.keys.A.isDown) dx -= 1;
-    if (this.cursors.right.isDown || this.keys.D.isDown) dx += 1;
+    if (this.cursors?.up?.isDown || this.keys?.W?.isDown) dy -= 1;
+    if (this.cursors?.down?.isDown || this.keys?.S?.isDown) dy += 1;
+    if (this.cursors?.left?.isDown || this.keys?.A?.isDown) dx -= 1;
+    if (this.cursors?.right?.isDown || this.keys?.D?.isDown) dx += 1;
+
+    const touch = this.touchControls?.getAxes?.();
+    if (touch) {
+      if (dy === 0) dy = touch.dy || 0;
+      if (dx === 0) dx = touch.dx || 0;
+    }
     return { dx, dy };
   }
 
