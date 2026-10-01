@@ -2,14 +2,11 @@ import { BULLET_SIZE } from '../data/waves.js';
 import {
   depthFromY,
   scaleFromY,
-  spawnWorldX,
-  WORLD_HEIGHT,
   grassYMin,
   grassYMax,
   barricadeXAtY,
 } from '../systems/DepthView.js';
 import { WeaponSystem } from '../systems/WeaponSystem.js';
-import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /** Player sits this many px right of the grass edge (safe zone). */
 const PLAYER_SAFE_OFFSET = 32;
@@ -23,7 +20,7 @@ const PLAYER_MOVE_SPEED = 180;
 
 /**
  * Player + pet behind the barricade.
- * Movement / follow stay here; targeting, fire cadence, splash, pet AOE
+ * Movement / follow stay here; targeting, fire cadence, ballistics, pet AOE
  * live in WeaponSystem.
  */
 export class DefenderGroup {
@@ -138,58 +135,46 @@ export class DefenderGroup {
       this.bullets
     );
 
-    const leftCull = spawnWorldX() - 50;
-    // Collect cull indices first, then remove (safe splice)
-    const cullIdx = [];
-    for (let i = 0; i < this.bullets.length; i++) {
-      const b = this.bullets[i];
-      b.gfx.x += b.vx * deltaSec;
-      b.gfx.y += b.vy * deltaSec;
-      b.gfx.setDepth(depthFromY(b.gfx.y));
-      if (b.gfx.x < leftCull || b.gfx.y < -30 || b.gfx.y > WORLD_HEIGHT + 30) {
-        cullIdx.push(i);
-      }
-    }
-    for (let k = cullIdx.length - 1; k >= 0; k--) {
-      const i = cullIdx[k];
-      const b = this.bullets[i];
-      if (b?.gfx) {
-        try {
-          b.gfx.destroy();
-        } catch (_) {
-          /* already destroyed */
-        }
-      }
-      this.bullets.splice(i, 1);
-    }
+    // Move only. Range / off-view retirement happens after hit tests so a
+    // pellet can still connect on the frame it reaches maxDistance.
+    this.weapons.stepBullets(this.bullets, deltaSec);
 
     return { gold: 0, kills: 0 };
   }
 
   /**
-   * Resolve bullet ↔ zombie hits (shotgun splash + pet on-hit AOE via WeaponSystem).
-   * Collect hit bullet indices, apply effects, then remove — never splice mid-scan of zombies.
+   * Resolve bullet ↔ zombie hits (per-pellet shotgun + pet on-hit AOE).
+   * Pair living bodies first, then damage — never splice or takeDamage mid-scan.
+   * A zombie killed by an earlier pellet is skipped by later pellets.
    * @param {import('./Zombie.js').Zombie[]} zombies
    * @returns {{ gold: number, kills: number }}
    */
   resolveHits(zombies) {
     let gold = 0;
     let kills = 0;
-    const half = BULLET_SIZE / 2 + 2; // slight forgiveness
+    const list = Array.isArray(zombies) ? zombies : [];
+    /** @type {Set<number>} */
+    const remove = new Set();
+    /** @type {{ index: number, bullet: object, zombie: import('./Zombie.js').Zombie, bx: number, by: number }[]} */
+    const hits = [];
 
-    /** @type {number[]} */
-    const hitIndices = [];
-
+    // Pass 1 — pair only. Do not takeDamage here; a kill nulls body and would
+    // throw on the next bounds read (the old shotgun hang).
     for (let i = 0; i < this.bullets.length; i++) {
       const b = this.bullets[i];
-      if (!b?.gfx) continue;
+      if (!b?.gfx || b.gfx.active === false) {
+        remove.add(i);
+        continue;
+      }
+      const half = ((b.size ?? BULLET_SIZE) / 2) + 2;
       const bx = b.gfx.x;
       const by = b.gfx.y;
       let hitZombie = null;
 
-      for (const z of zombies) {
-        if (!z.alive) continue;
+      for (const z of list) {
+        if (!z?.alive || !z.body) continue;
         const bounds = z.getBounds();
+        if (!bounds) continue;
         if (
           bx + half >= bounds.left &&
           bx - half <= bounds.right &&
@@ -202,64 +187,53 @@ export class DefenderGroup {
       }
 
       if (!hitZombie) continue;
+      hits.push({ index: i, bullet: b, zombie: hitZombie, bx, by });
+    }
 
-      hitIndices.push(i);
-
+    // Pass 2 — damage / knockback / pet AOE. Later pellets no-op if an earlier
+    // one already destroyed that zombie.
+    for (const hit of hits) {
+      remove.add(hit.index);
+      const b = hit.bullet;
       if (b.kind === 'pet') {
-        // PetBullet: no direct damage; AOE at impact (bullet or zombie pos)
-        const ix = Number.isFinite(bx) ? bx : hitZombie.x;
-        const iy = Number.isFinite(by) ? by : hitZombie.y;
-        const aoe = this.weapons.applyPetAoe(ix, iy, zombies);
+        const z = hit.zombie;
+        const ix = Number.isFinite(hit.bx) ? hit.bx : z?.x;
+        const iy = Number.isFinite(hit.by) ? hit.by : z?.y;
+        const aoe = this.weapons.applyPetAoe(ix, iy, list);
         gold += aoe.gold;
         kills += aoe.kills;
-      } else if (b.kind === 'shotgun') {
-        // Splash BEFORE direct damage: hitZombie must still be alive so .x/.y
-        // (and applyShotgunSplash null-alive guard) stay valid after kill.
-        const splash = this.weapons.applyShotgunSplash(
-          hitZombie,
-          b.vx,
-          b.vy,
-          zombies
-        );
-        gold += splash.gold;
-        kills += splash.kills;
-        const hx = hitZombie.x;
-        const hy = hitZombie.y - hitZombie.displayHalf;
-        const goldVal = hitZombie.goldValue;
-        const killed = hitZombie.takeDamage(b.damage);
-        showDamageText(this.scene, hx, hy, b.damage, DAMAGE_COLORS.shotgun);
-        if (killed) {
-          gold += goldVal;
-          kills += 1;
-        }
       } else {
-        const hx = hitZombie.x;
-        const hy = hitZombie.y - hitZombie.displayHalf;
-        const goldVal = hitZombie.goldValue;
-        const killed = hitZombie.takeDamage(b.damage);
-        showDamageText(this.scene, hx, hy, b.damage, DAMAGE_COLORS.handgun);
-        if (killed) {
-          gold += goldVal;
-          kills += 1;
-        }
+        const gain = this.weapons.applyDirectHit(hit.zombie, b);
+        gold += gain.gold;
+        kills += gain.kills;
       }
     }
 
-    // Remove hit bullets after all hit resolution (descending indices)
-    for (let k = hitIndices.length - 1; k >= 0; k--) {
-      const i = hitIndices[k];
-      const b = this.bullets[i];
-      if (b?.gfx) {
-        try {
-          b.gfx.destroy();
-        } catch (_) {
-          /* already destroyed */
-        }
-      }
-      this.bullets.splice(i, 1);
+    for (let i = 0; i < this.bullets.length; i++) {
+      if (remove.has(i)) continue;
+      if (this.weapons.shouldRetireBullet(this.bullets[i])) remove.add(i);
     }
+
+    const indices = Array.from(remove).sort((a, b) => b - a);
+    for (const i of indices) this._retireBullet(i);
 
     return { gold, kills };
+  }
+
+  /**
+   * @param {number} index
+   */
+  _retireBullet(index) {
+    const b = this.bullets[index];
+    if (b?.gfx) {
+      try {
+        b.gfx.destroy();
+      } catch (_) {
+        /* already destroyed */
+      }
+      b.gfx = null;
+    }
+    this.bullets.splice(index, 1);
   }
 
   destroy() {
