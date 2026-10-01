@@ -21,8 +21,8 @@ const SHOTGUN_CFG = GAME_CONFIG.WEAPONS.SHOTGUN;
 /** Handgun: auto-fire every 0.5s, single bullet, damage from GAME_CONFIG (30). */
 export const HANDGUN_FIRE_MS = HANDGUN_CFG.FIRE_RATE;
 export const HANDGUN_DAMAGE = HANDGUN_CFG.DAMAGE;
-/** Horizontal shove on a direct handgun hit. Lane Y is unchanged. */
-export const HANDGUN_KNOCKBACK = HANDGUN_CFG.KNOCKBACK;
+/** Horizontal shove on a direct handgun hit. Lane Y is unchanged. From JUICE. */
+export const HANDGUN_KNOCKBACK = GAME_CONFIG.JUICE.KNOCKBACK_HANDGUN;
 
 /**
  * Full-screen reference length (viewport width). The handgun bullet itself
@@ -42,7 +42,7 @@ export const HANDGUN_EFFECTIVE_RANGE = GAME_WIDTH;
  */
 export const SHOTGUN_FIRE_MS = SHOTGUN_CFG.FIRE_RATE;
 export const SHOTGUN_PELLET_DAMAGE = SHOTGUN_CFG.PELLET_DAMAGE;
-export const SHOTGUN_PELLET_KNOCKBACK = SHOTGUN_CFG.PELLET_KNOCKBACK;
+export const SHOTGUN_PELLET_KNOCKBACK = GAME_CONFIG.JUICE.KNOCKBACK_SHOTGUN;
 export const SHOTGUN_PELLET_MIN = SHOTGUN_CFG.PELLETS_MIN ?? SHOTGUN_CFG.PELLETS;
 export const SHOTGUN_PELLET_MAX = SHOTGUN_CFG.PELLETS_MAX ?? SHOTGUN_CFG.PELLETS;
 export const SHOTGUN_PELLET_SIZE = 4;
@@ -363,7 +363,7 @@ export class WeaponSystem {
     }
 
     const hx = zombie.x;
-    const hy = zombie.y - (zombie.displayHalf || 0);
+    const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : zombie.y - (zombie.displayHalf || 0);
     const goldVal = zombie.goldValue || 0;
     const knockback = Number(bullet.knockback);
     if (knockback > 0 && typeof zombie.applyKnockback === 'function') {
@@ -374,7 +374,7 @@ export class WeaponSystem {
       return { gold: 0, kills: 0 };
     }
 
-    const killed = zombie.takeDamage(damage);
+    const killed = zombie.takeDamage(damage, { kind: bullet.kind });
     const color =
       bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, damage, color);
@@ -408,9 +408,9 @@ export class WeaponSystem {
     for (const z of eligible) {
       if (!z.alive || !z.body) continue;
       const hx = z.x;
-      const hy = z.y - z.displayHalf;
+      const hy = Number.isFinite(z.visualTop) ? z.visualTop : z.y - z.displayHalf;
       const goldVal = z.goldValue;
-      const killed = z.takeDamage(PET_AOE_DAMAGE);
+      const killed = z.takeDamage(PET_AOE_DAMAGE, { kind: 'pet' });
       showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet);
       if (killed) {
         gold += goldVal;

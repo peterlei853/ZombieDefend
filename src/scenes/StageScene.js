@@ -28,6 +28,8 @@ import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { GAME_CONFIG } from '../data/GameConfig.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
+import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
+import { tickHitlag } from '../systems/combatJuice.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -63,10 +65,12 @@ export default class StageScene extends Phaser.Scene {
     // BootScene loads these first; this covers a direct Stage start / retry
     // after a cache miss without re-queueing keys that already exist.
     preloadPlayerAssets(this);
+    preloadZombieAssets(this);
   }
 
   create() {
     registerPlayerAnims(this);
+    registerZombieAnims(this);
     this._drawWorld();
 
     // Frame camera on slanted barricade at mid-grass Y (shared DepthView helpers)
@@ -235,13 +239,15 @@ export default class StageScene extends Phaser.Scene {
   }
 
   update(_time, delta) {
+    // Restores tween / anim timescale when the overkill hitch ends.
+    const hitlag = tickHitlag(this);
     if (this.ended) return;
 
     // Enforce X-only scroll (no Y drift)
     const cam = this.cameras.main;
     if (cam.scrollY !== 0) cam.setScroll(cam.scrollX, 0);
 
-    const deltaMs = Math.min(delta, 50);
+    const deltaMs = Math.min(delta, 50) * hitlag;
     const deltaSec = deltaMs / 1000;
 
     // Spawns
@@ -321,6 +327,7 @@ export default class StageScene extends Phaser.Scene {
   _spawnZombie(intent) {
     const y = takeEvenLaneY(this._laneCycle);
     const arch = intent.archetype;
+    // Variant is a spawn hook. HP / speed / DPS stay on the wave row.
     const z = new Zombie(this, {
       x: spawnWorldX(),
       y,
@@ -328,6 +335,7 @@ export default class StageScene extends Phaser.Scene {
       speed: arch.speed,
       dps: arch.dps,
       wave: intent.wave,
+      variant: arch.variant,
     });
     this.zombies.push(z);
   }

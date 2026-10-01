@@ -11,6 +11,9 @@ import { GAME_CONFIG } from './GameConfig.js';
  *   Wave 3: HP 105 (gold 15) — first mid-tier
  *   Wave 4: mix — HP 50 (swarm, gold 10), HP 115 (gold 15), HP 165 (gold 20)
  *            weighted toward swarm so Stage 1 stays winnable with default DPS.
+ *
+ * `variant` is a spawn hook only (walker / runner / tank). It does not change
+ * HP, speed, DPS, weight, gold, barricade HP, or stage length.
  */
 export const STAGE_DURATION = 90;
 
@@ -20,21 +23,21 @@ export const WAVE_DEFS = [
     startSec: 0,
     endSec: 20,
     total: 10,
-    archetypes: [{ hp: 40, speed: 38, dps: 11, weight: 1 }],
+    archetypes: [{ hp: 40, speed: 38, dps: 11, weight: 1, variant: 'walker' }],
   },
   {
     wave: 2,
     startSec: 21,
     endSec: 40,
     total: 15,
-    archetypes: [{ hp: 70, speed: 42, dps: 13, weight: 1 }],
+    archetypes: [{ hp: 70, speed: 42, dps: 13, weight: 1, variant: 'walker' }],
   },
   {
     wave: 3,
     startSec: 41,
     endSec: 60,
     total: 20,
-    archetypes: [{ hp: 105, speed: 45, dps: 15, weight: 1 }],
+    archetypes: [{ hp: 105, speed: 45, dps: 15, weight: 1, variant: 'walker' }],
   },
   {
     wave: 4,
@@ -42,9 +45,9 @@ export const WAVE_DEFS = [
     endSec: 90,
     total: 90,
     archetypes: [
-      { hp: 50, speed: 50, dps: 11, weight: 7 },   // swarm
-      { hp: 115, speed: 40, dps: 16, weight: 2 },  // mid
-      { hp: 165, speed: 33, dps: 20, weight: 1 },  // tank
+      { hp: 50, speed: 50, dps: 11, weight: 7, variant: 'runner' }, // swarm
+      { hp: 115, speed: 40, dps: 16, weight: 2, variant: 'walker' }, // mid
+      { hp: 165, speed: 33, dps: 20, weight: 1, variant: 'tank' }, // tank
     ],
   },
 ];
