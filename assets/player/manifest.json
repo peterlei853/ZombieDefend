@@ -66,6 +66,69 @@
       "frameWidth": 92,
       "frameHeight": 92,
       "facing": "west"
+    },
+    "player-handgun-aim-walk-west": {
+      "file": "player-handgun-aim-walk-west.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "player-shotgun-hold-walk-west": {
+      "file": "player-shotgun-hold-walk-west.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "player-handgun-aim-walk-east": {
+      "file": "player-handgun-aim-walk-east.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "east"
+    },
+    "player-shotgun-hold-walk-east": {
+      "file": "player-shotgun-hold-walk-east.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "east"
+    },
+    "player-handgun-aim-walk-north": {
+      "file": "player-handgun-aim-walk-north.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "north"
+    },
+    "player-shotgun-hold-walk-north": {
+      "file": "player-shotgun-hold-walk-north.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "north"
+    },
+    "player-handgun-aim-walk-south": {
+      "file": "player-handgun-aim-walk-south.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "south"
+    },
+    "player-shotgun-hold-walk-south": {
+      "file": "player-shotgun-hold-walk-south.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "south"
+    },
+    "player-shotgun-fire-recoil": {
+      "file": "player-shotgun-fire-recoil.png",
+      "frames": 6,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
     }
   }
 }
