@@ -25,6 +25,7 @@ import {
   layoutPx,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { VirtualControls } from '../ui/VirtualControls.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 
 /**
@@ -84,12 +85,27 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE toggles Handgun ↔ Shotgun (once per press); combat math stays in WeaponSystem
-    this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    this._spaceKey.on('down', () => {
-      this.defenders.weapons.toggleWeapon();
-      this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    // SPACE toggles Handgun ↔ Shotgun (once per press); combat math stays in WeaponSystem.
+    // The touch SWAP button uses the same toggle.
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      this._spaceKey.on('down', () => this._toggleWeapon());
+    }
+
+    this.touchControls = new VirtualControls(this, {
+      onWeapon: () => this._toggleWeapon(),
+      onLayout: (top) => {
+        this.hudHint?.setY(top - layoutPx(6));
+      },
     });
+    this.defenders.touchControls = this.touchControls;
+  }
+
+  /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
+  _toggleWeapon() {
+    this.defenders.weapons.toggleWeapon();
+    this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
   }
 
   _drawWorld() {
@@ -182,9 +198,9 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d + 1);
 
-    // Tiny move / weapon hint
+    // Tiny move / weapon hint. VirtualControls lifts this above the touch row.
     this.hudHint = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S move · SPACE switch weapon', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S or joystick · SPACE or SWAP', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(11)}px`,
         color: '#6a7a8a',
