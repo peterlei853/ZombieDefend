@@ -47,6 +47,8 @@ export class Barricade {
       const post = scene.add.rectangle(cx, drawY, postW, postH, 0x6b4f35);
       post.setStrokeStyle(2, 0x9a9a9a);
       post.setDepth(d);
+      post.setData('logicalY', y);
+      post.setData('baseFill', 0x6b4f35);
       this.posts.push(post);
 
       const marker = scene.add.rectangle(
@@ -134,6 +136,72 @@ export class Barricade {
     this.hp = Math.max(0, this.hp - amount);
     this._refreshHpBar();
     return this.hp <= 0;
+  }
+
+  /**
+   * Red flash on the posts around this Y for 0.1s.
+   * Rects use setTint; fill is restored with the tint so the hit reads bright red.
+   * @param {number} y
+   */
+  flashAtY(y) {
+    let nearest = null;
+    let nearestD = Infinity;
+    for (const post of this.posts) {
+      const py = post.getData('logicalY');
+      const d = Math.abs(py - y);
+      if (d < nearestD) {
+        nearestD = d;
+        nearest = post;
+      }
+    }
+    if (!nearest) return;
+    const band = Math.max(24, nearest.height * 0.55);
+    for (const post of this.posts) {
+      const py = post.getData('logicalY');
+      if (Math.abs(py - y) <= band) this._flashPost(post);
+    }
+  }
+
+  _flashPost(post) {
+    const token = (post.getData('flashToken') || 0) + 1;
+    post.setData('flashToken', token);
+    post.setFillStyle(0xff2a2a);
+    post.setTint(0xff0000);
+    this.scene.time.delayedCall(100, () => {
+      if (!post.active) return;
+      if (post.getData('flashToken') !== token) return;
+      post.clearTint();
+      post.setFillStyle(post.getData('baseFill') ?? 0x6b4f35);
+    });
+  }
+
+  /**
+   * Short red claw / spark at the contact point. Removed after 0.15s.
+   * @param {number} x
+   * @param {number} y
+   */
+  spawnImpact(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    // PIXELLAB_HOOK: replace with sprite claw impact
+    const g = this.scene.add.graphics();
+    g.lineStyle(2, 0xff2200, 1);
+    g.beginPath();
+    g.moveTo(x - 8, y - 7);
+    g.lineTo(x - 1, y + 1);
+    g.lineTo(x - 7, y + 8);
+    g.moveTo(x - 2, y - 9);
+    g.lineTo(x + 5, y - 1);
+    g.lineTo(x - 1, y + 9);
+    g.moveTo(x + 3, y - 7);
+    g.lineTo(x + 9, y + 1);
+    g.lineTo(x + 4, y + 8);
+    g.strokePath();
+    g.fillStyle(0xff5522, 0.95);
+    g.fillCircle(x + 1, y, 2.5);
+    g.setDepth(depthFromY(y, 6));
+    this.scene.time.delayedCall(150, () => {
+      if (g.active) g.destroy();
+    });
   }
 
   _refreshHpBar() {

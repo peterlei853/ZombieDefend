@@ -4,6 +4,7 @@ import {
   BULLET_SIZE,
 } from '../data/waves.js';
 import { depthFromY } from './DepthView.js';
+import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
@@ -231,7 +232,10 @@ export class WeaponSystem {
     let kills = 0;
     for (const z of eligible) {
       if (!z.alive) continue;
+      const hx = z.x;
+      const hy = z.y - z.displayHalf;
       const killed = z.takeDamage(SHOTGUN_SPLASH_DAMAGE);
+      showDamageText(this.scene, hx, hy, SHOTGUN_SPLASH_DAMAGE, DAMAGE_COLORS.shotgun);
       if (killed) {
         gold += z.goldValue;
         kills += 1;
@@ -264,7 +268,10 @@ export class WeaponSystem {
     let kills = 0;
     for (const z of eligible) {
       if (!z.alive) continue;
+      const hx = z.x;
+      const hy = z.y - z.displayHalf;
       const killed = z.takeDamage(PET_AOE_DAMAGE);
+      showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet);
       if (killed) {
         gold += z.goldValue;
         kills += 1;

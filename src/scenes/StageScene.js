@@ -15,13 +15,15 @@ import {
   HUD_DEPTH,
   depthBands,
   spawnWorldX,
-  randomLaneY,
   cameraScrollX,
   laneCenters,
+  takeEvenLaneY,
   grassYMin,
   grassYMax,
   barricadeXAtY,
+  groundEdgesAtY,
 } from '../systems/DepthView.js';
+import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -49,6 +51,8 @@ export default class StageScene extends Phaser.Scene {
     this.ended = false;
     /** @type {Zombie[]} */
     this.zombies = [];
+    /** Shuffled lane cycle so spawns spread across every guide before repeating. */
+    this._laneCycle = { order: [] };
   }
 
   create() {
@@ -111,12 +115,17 @@ export default class StageScene extends Phaser.Scene {
       g.fillPath();
     }
 
-    // Subtle lane guides along lane centers
-    const lanes = laneCenters();
-    for (const y of lanes) {
-      this.add
-        .rectangle(WORLD_WIDTH / 2, y, WORLD_WIDTH * 0.92, 1, 0x1e3028, 0.35)
-        .setDepth(2);
+    // Dark lane guides — one per lane center, clipped to the grass trapezoid.
+    const guides = this.add.graphics().setDepth(2);
+    guides.lineStyle(2, 0x070d0a, 0.88);
+    for (const y of laneCenters()) {
+      const edge = groundEdgesAtY(y);
+      const xEnd = Math.min(edge.right, barricadeXAtY(y));
+      if (xEnd <= edge.left) continue;
+      guides.beginPath();
+      guides.moveTo(edge.left, y);
+      guides.lineTo(xEnd, y);
+      guides.strokePath();
     }
   }
 
@@ -201,19 +210,29 @@ export default class StageScene extends Phaser.Scene {
       this._spawnZombie(intent);
     }
 
-    // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts
+    // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts.
+    // Damage totals still apply every frame; floating numbers pop on the ~1s bite.
     let barricadeDmg = 0;
+    /** @type {Zombie[]} */
+    const attackBeats = [];
     for (const z of this.zombies) {
       if (!z.alive) continue;
       z.update(deltaSec, this.barricade.contactXAt(z.y));
-      barricadeDmg += z.contactDamage(deltaSec);
+      const dealt = z.contactDamage(deltaSec);
+      barricadeDmg += dealt;
+      z.addBarricadeDmg(dealt);
+      if (z.consumeAttackBeat()) attackBeats.push(z);
     }
+    let destroyed = false;
     if (barricadeDmg > 0) {
-      const destroyed = this.barricade.applyDamage(barricadeDmg);
-      if (destroyed) {
-        this._onLose();
-        return;
-      }
+      destroyed = this.barricade.applyDamage(barricadeDmg);
+    }
+    for (const z of attackBeats) {
+      this._onBarricadeAttack(z);
+    }
+    if (destroyed) {
+      this._onLose();
+      return;
     }
 
     // Defenders fire + hits (WeaponSystem cadence / splash / pet AOE)
@@ -242,8 +261,25 @@ export default class StageScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * One bite: punch already played on the zombie. Flash the wall, claw mark,
+   * and a red integer for the HP chewed since the previous bite.
+   * @param {Zombie} z
+   */
+  _onBarricadeAttack(z) {
+    if (!z) return;
+    const y = z.y;
+    const x = this.barricade.contactXAt(y);
+    this.barricade.flashAtY(y);
+    this.barricade.spawnImpact(x, y);
+    const shown = z.popBarricadeDmgInt();
+    if (shown >= 1) {
+      showDamageText(this, x - 10, y - 18, shown, DAMAGE_COLORS.barricade);
+    }
+  }
+
   _spawnZombie(intent) {
-    const y = randomLaneY();
+    const y = takeEvenLaneY(this._laneCycle);
     const arch = intent.archetype;
     const z = new Zombie(this, {
       x: spawnWorldX(),

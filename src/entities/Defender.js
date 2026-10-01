@@ -9,6 +9,7 @@ import {
   barricadeXAtY,
 } from '../systems/DepthView.js';
 import { WeaponSystem } from '../systems/WeaponSystem.js';
+import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /** Player sits this many px right of the grass edge (safe zone). */
 const PLAYER_SAFE_OFFSET = 32;
@@ -222,15 +223,21 @@ export class DefenderGroup {
         );
         gold += splash.gold;
         kills += splash.kills;
+        const hx = hitZombie.x;
+        const hy = hitZombie.y - hitZombie.displayHalf;
         const goldVal = hitZombie.goldValue;
         const killed = hitZombie.takeDamage(b.damage);
+        showDamageText(this.scene, hx, hy, b.damage, DAMAGE_COLORS.shotgun);
         if (killed) {
           gold += goldVal;
           kills += 1;
         }
       } else {
+        const hx = hitZombie.x;
+        const hy = hitZombie.y - hitZombie.displayHalf;
         const goldVal = hitZombie.goldValue;
         const killed = hitZombie.takeDamage(b.damage);
+        showDamageText(this.scene, hx, hy, b.damage, DAMAGE_COLORS.handgun);
         if (killed) {
           gold += goldVal;
           kills += 1;
