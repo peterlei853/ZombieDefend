@@ -2,7 +2,8 @@
  * PixelLab zombie sheets — 64×64, west-facing, foot pivot (0.5, 1.0).
  * The nine strips live in assets/zombies/ (walker / runner / tank ×
  * walk 6×64, attack 4×64, stumble 4×64). Optional `{prefix}-death` is
- * loaded only when that file is already on the server.
+ * is not requested (those files are not in the pack). If a death texture
+ * is already in the cache, it still registers.
  * A missing walk texture keeps the colored-square placeholder.
  */
 
@@ -55,7 +56,8 @@ export function hasZombieAnim(scene, variant, action) {
 
 /**
  * Queue the nine merged strips. Skips cached keys so StageScene can preload
- * after BootScene. Optional death is probed; a miss does not fail the loader.
+ * after BootScene. Death is not fetched; a missing optional strip must
+ * not 404 on boot.
  * @param {Phaser.Scene} scene
  */
 export function preloadZombieAssets(scene) {
@@ -65,8 +67,8 @@ export function preloadZombieAssets(scene) {
     for (const action of ZOMBIE_ACTIONS) {
       const key = zombieSheetKey(variant, action.action);
       if (scene.textures.exists(key)) continue;
+      if (!action.required) continue;
       const url = zombieSheetUrl(variant, action.action);
-      if (!action.required && !probeAsset(url)) continue;
       if (action.action === 'attack') {
         // PIXELLAB_HOOK: attack sheet — assets/zombies/{prefix}-attack.png, 4×64 west, barricade lunge
       }
@@ -101,24 +103,6 @@ export function registerZombieAnims(scene) {
         repeat: action.repeat,
       });
     }
-  }
-}
-
-/**
- * True when the png is already on the server. A missing strip is a miss,
- * not a loader error, so BootScene still reaches the stage.
- * @param {string} url
- */
-function probeAsset(url) {
-  if (typeof XMLHttpRequest === 'undefined') return false;
-  try {
-    const xhr = new XMLHttpRequest();
-    const probeUrl = `${url}${url.includes('?') ? '&' : '?'}probe=${Date.now()}`;
-    xhr.open('HEAD', probeUrl, false);
-    xhr.send(null);
-    return xhr.status >= 200 && xhr.status < 300;
-  } catch (_) {
-    return false;
   }
 }
 
