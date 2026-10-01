@@ -23,6 +23,13 @@ export class Zombie {
     this.baseSize = cfg.hp >= 150 ? 26 : cfg.hp >= 100 ? 22 : 18;
     this.alive = true;
     this.atBarricade = false;
+    /** Seconds until the next barricade bite (punch + hit VFX). */
+    this._attackCooldown = 1;
+    this._attackBeat = false;
+    /** Halt X while chewing, so the punch tween can return here. */
+    this._haltX = null;
+    /** Fractional contact DPS waiting to be shown as an integer. */
+    this.barricadeDmgAccum = 0;
     this.goldValue = getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
     this.scale = scaleFromY(cfg.y);
@@ -81,13 +88,74 @@ export class Zombie {
       if (nextX >= halt) {
         this.body.x = halt;
         this.atBarricade = true;
+        this._haltX = halt;
       } else {
         this.body.x = nextX;
       }
     }
 
+    if (this.atBarricade) {
+      this._attackCooldown -= deltaSec;
+      if (this._attackCooldown <= 0) {
+        this._attackCooldown += 1;
+        if (this._attackCooldown < 0) this._attackCooldown = 0;
+        this._playAttackPunch();
+        this._attackBeat = true;
+      }
+    }
+
     this._applyDepth();
     this._syncBars();
+  }
+
+  /**
+   * True once on each ~1s bite while this zombie is dealing contact DPS.
+   * StageScene uses the beat for flash / claw / damage text; DPS math stays per-frame.
+   */
+  consumeAttackBeat() {
+    const beat = this._attackBeat;
+    this._attackBeat = false;
+    return beat;
+  }
+
+  /** Queue fractional barricade DPS for the next integer floating number. */
+  addBarricadeDmg(amount) {
+    if (amount > 0) this.barricadeDmgAccum += amount;
+  }
+
+  /**
+   * Whole HP lost since the last pop. Remainder stays queued so the readout
+   * tracks applyDamage without printing a fraction every frame.
+   */
+  popBarricadeDmgInt() {
+    const shown = Math.floor(this.barricadeDmgAccum + 1e-6);
+    if (shown <= 0) return 0;
+    this.barricadeDmgAccum -= shown;
+    return shown;
+  }
+
+  /** 6px punch into the barricade, then tween back to the halt X. */
+  _playAttackPunch() {
+    if (!this.alive || !this.body) return;
+    const homeX = this._haltX ?? this.body.x;
+    this.scene.tweens.killTweensOf(this.body);
+    this.body.x = homeX;
+    this.scene.tweens.add({
+      targets: this.body,
+      x: homeX + 6,
+      duration: 80,
+      yoyo: true,
+      ease: 'Quad.easeOut',
+      onUpdate: () => {
+        if (this.alive) this._syncBars();
+      },
+      onComplete: () => {
+        if (this.alive && this.body) {
+          this.body.x = homeX;
+          this._syncBars();
+        }
+      },
+    });
   }
 
   /**
@@ -146,6 +214,7 @@ export class Zombie {
 
   destroyVisuals() {
     if (this.body) {
+      this.scene.tweens.killTweensOf(this.body);
       this.body.destroy();
       this.body = null;
     }

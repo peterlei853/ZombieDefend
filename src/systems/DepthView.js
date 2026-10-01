@@ -20,7 +20,10 @@ export const WORLD_SHIFT_X = WORLD_WIDTH - GAME_WIDTH;
 export const SPAWN_LOGICAL_X = -10;
 
 export const HORIZON_Y = 92;
-export const LANE_COUNT = 5;
+/** Dark walk lanes split evenly across the grass band (upper → lower). */
+export const LANE_COUNT = 9;
+/** Spawn jitter so a lane's zombies are not glued to one pixel row. */
+export const LANE_JITTER_PX = 8;
 
 /** Padding inset from horizon / bottom for playable grass band. */
 const GRASS_PAD_TOP = 8;
@@ -29,9 +32,6 @@ const GRASS_PAD_BOTTOM = 10;
 /** Z samples for the ground plane (larger Z = farther). */
 const GROUND_Z_FAR = 2.45;
 const GROUND_Z_NEAR = 0.78;
-/** Lane samples sit inset from the horizon and the bottom edge. */
-const LANE_Z_FAR = 1.92;
-const LANE_Z_NEAR = 0.9;
 
 const BAND_COUNT = 6;
 const BAND_COLORS = [0x24362c, 0x2e4334, 0x38543c, 0x446848, 0x507a52, 0x5c8c5e];
@@ -114,13 +114,19 @@ export function depthBands() {
   return bands;
 }
 
-/** Lane center Ys, far → near (top → bottom). */
+/**
+ * Lane center Ys, far → near (top → bottom).
+ * The grass band is split into LANE_COUNT strips; each value is that strip's center
+ * so guides stay inside the grass and ±LANE_JITTER_PX cannot leave the band.
+ */
 export function laneCenters() {
+  const y0 = grassYMin();
+  const y1 = grassYMax();
+  const span = y1 - y0;
   const ys = [];
   for (let i = 0; i < LANE_COUNT; i++) {
-    const t = LANE_COUNT === 1 ? 0.5 : i / (LANE_COUNT - 1);
-    const z = LANE_Z_FAR + (LANE_Z_NEAR - LANE_Z_FAR) * t;
-    ys.push(yFromZ(z));
+    const t = (i + 0.5) / LANE_COUNT;
+    ys.push(y0 + span * t);
   }
   return ys;
 }
@@ -129,6 +135,32 @@ export function randomLaneY(rng = Math.random) {
   const lanes = laneCenters();
   const i = Math.min(lanes.length - 1, Math.floor(rng() * lanes.length));
   return lanes[i];
+}
+
+/**
+ * Even lane pick. `cycle` is `{ order: number[] }` owned by the spawner.
+ * Each pass visits every lane once (shuffled) before any lane repeats,
+ * then adds ±LANE_JITTER_PX and clamps to the grass band.
+ * @param {{ order?: number[] }} cycle
+ * @param {() => number} [rng]
+ */
+export function takeEvenLaneY(cycle, rng = Math.random) {
+  if (!cycle.order) cycle.order = [];
+  if (cycle.order.length === 0) {
+    const n = laneCenters().length;
+    cycle.order = Array.from({ length: n }, (_, i) => i);
+    for (let i = n - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const tmp = cycle.order[i];
+      cycle.order[i] = cycle.order[j];
+      cycle.order[j] = tmp;
+    }
+  }
+  const lanes = laneCenters();
+  const idx = cycle.order.pop();
+  const jitter = (rng() * 2 - 1) * LANE_JITTER_PX;
+  const y = lanes[idx] + jitter;
+  return Math.min(grassYMax(), Math.max(grassYMin(), y));
 }
 
 /**
