@@ -1,4 +1,5 @@
 import { BULLET_SIZE } from '../data/waves.js';
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import {
   depthFromY,
   displayScaleFromY,
@@ -25,16 +26,19 @@ const PET_OFFSET_X = layoutPx(25);
 const PET_OFFSET_Y = layoutPx(-15);
 /** Lerp factor per ~16.67ms frame (delta-aware). */
 const PET_LERP = 0.16;
-/** Player vertical move speed (field px/s), scaled so a lane sweep takes the same time. */
-const PLAYER_MOVE_SPEED = 180 * LAYOUT_SCALE;
+/**
+ * Player vertical move speed (field px/s from GAME_CONFIG), scaled so a lane
+ * sweep takes the same time on the 1280 canvas.
+ */
+const PLAYER_MOVE_SPEED = GAME_CONFIG.PLAYER.MOVE_SPEED * LAYOUT_SCALE;
 /**
  * Shotgun volley kicks the defender right (they face left to shoot).
- * Kick is +18 field px / ~100ms Quad.easeOut, then an ease back onto the lane
- * so the barricade safe-zone X is not left permanently offset.
+ * Distances and durations come from GAME_CONFIG.PLAYER. The kick eases out,
+ * then eases back onto the lane so the barricade safe-zone X is not left offset.
  */
-const SHOTGUN_RECOIL_PX = 18 * LAYOUT_SCALE;
-const SHOTGUN_RECOIL_MS = 100;
-const SHOTGUN_RECOIL_RETURN_MS = 140;
+const SHOTGUN_RECOIL_PX = GAME_CONFIG.PLAYER.SHOTGUN_RECOIL_PX * LAYOUT_SCALE;
+const SHOTGUN_RECOIL_MS = GAME_CONFIG.PLAYER.SHOTGUN_RECOIL_MS;
+const SHOTGUN_RECOIL_RETURN_MS = GAME_CONFIG.PLAYER.SHOTGUN_RECOIL_RETURN_MS;
 /**
  * Weapon icon scale relative to the defender's DepthView scale.
  * Grip sits on the west-facing hand; the sheet already shows the gun
