@@ -17,6 +17,14 @@ const PET_OFFSET_Y = -15;
 const PET_LERP = 0.16;
 /** Player vertical move speed (px/s). */
 const PLAYER_MOVE_SPEED = 180;
+/**
+ * Shotgun volley kicks the defender right (they face left to shoot).
+ * Kick is +18px / ~100ms Quad.easeOut, then an ease back onto the lane
+ * so the barricade safe-zone X is not left permanently offset.
+ */
+const SHOTGUN_RECOIL_PX = 18;
+const SHOTGUN_RECOIL_MS = 100;
+const SHOTGUN_RECOIL_RETURN_MS = 140;
 
 /**
  * Player + pet behind the barricade.
@@ -32,6 +40,12 @@ export class DefenderGroup {
     this.scene = scene;
     this.bullets = [];
     this.weapons = new WeaponSystem(scene);
+    /** Additive world-X kick from the latest shotgun volley. Eases back to 0. */
+    this._recoilX = 0;
+    /** Bumps when a new volley starts so a stopped tween cannot ease the next one. */
+    this._recoilGen = 0;
+    /** @type {Phaser.Tweens.Tween|null} */
+    this._recoilTween = null;
 
     const yMin = grassYMin();
     const yMax = grassYMax();
@@ -74,17 +88,24 @@ export class DefenderGroup {
     return Math.min(grassYMax(), Math.max(grassYMin(), y));
   }
 
+  /** Barricade safe-zone X for a lane Y. Recoil is not part of this anchor. */
+  _laneAnchorX(y) {
+    return barricadeXAtY(y) + PLAYER_SAFE_OFFSET;
+  }
+
   _syncPlayerTransform() {
     const y = this._clampGrassY(this.player.y);
     this.player.y = y;
-    this.player.x = barricadeXAtY(y) + PLAYER_SAFE_OFFSET;
+    // Lane clamp owns X. Shotgun recoil is a temporary +X on this same body.
+    this.player.x = this._laneAnchorX(y) + this._recoilX;
     const s = scaleFromY(y);
     this.player.setScale(s);
     this.player.setDepth(depthFromY(y));
   }
 
   _syncPetTransform(deltaMs) {
-    const targetX = this.player.x + PET_OFFSET_X;
+    // Pet stays on the lane anchor — shotgun recoil does not shove the pet.
+    const targetX = this._laneAnchorX(this.player.y) + PET_OFFSET_X;
     const targetY = this._clampGrassY(this.player.y + PET_OFFSET_Y);
     // Delta-aware lerp (~PET_LERP per 60fps frame)
     const t = 1 - Math.pow(1 - PET_LERP, deltaMs / (1000 / 60));
@@ -120,13 +141,14 @@ export class DefenderGroup {
     this._syncPetTransform(deltaMs);
 
     // WeaponSystem owns fire cadence + targeting; pet spawns PetBullets (AOE on hit only)
-    this.weapons.updatePlayerFire(
+    const fired = this.weapons.updatePlayerFire(
       deltaMs,
       this.player.x,
       this.player.y,
       zombies,
       this.bullets
     );
+    if (fired === 'shotgun') this._onShotgunVolley();
     this.weapons.updatePetFire(
       deltaMs,
       this.turret.x,
@@ -140,6 +162,102 @@ export class DefenderGroup {
     this.weapons.stepBullets(this.bullets, deltaSec);
 
     return { gold: 0, kills: 0 };
+  }
+
+  /**
+   * One shotgun volley (not each pellet): guarded recoil anim, +18px kick, camera shake.
+   */
+  _onShotgunVolley() {
+    this._playShotgunRecoilAnim();
+    this._kickShotgunRecoil();
+    if (typeof this.scene?.onShotgunFired === 'function') {
+      this.scene.onShotgunFired();
+    }
+  }
+
+  /**
+   * PixelLab recoil sheet is not shipped. Play only when the anim is registered
+   * and this body can play it (placeholder rectangle has no play).
+   */
+  _playShotgunRecoilAnim() {
+    const player = this.player;
+    if (!player || typeof player.play !== 'function') return;
+    const anims = this.scene?.anims;
+    if (!anims || typeof anims.exists !== 'function') return;
+    if (!anims.exists('player-shotgun-recoil')) return;
+    try {
+      // PIXELLAB_HOOK: player-shotgun-recoil
+      player.play('player-shotgun-recoil', true);
+    } catch (_) {
+      /* missing anim must not throw */
+    }
+  }
+
+  _stopRecoilTween() {
+    if (!this._recoilTween) return;
+    this._recoilTween.stop();
+    this._recoilTween = null;
+  }
+
+  /**
+   * Tween the defender body +18px on X (Quad.easeOut, ~100ms), then ease back
+   * to the lane anchor. Y is never part of the tween, so W/S grass clamp holds.
+   */
+  _kickShotgunRecoil() {
+    this._recoilGen += 1;
+    const gen = this._recoilGen;
+    this._stopRecoilTween();
+    const scene = this.scene;
+    if (!scene?.tweens) return;
+
+    this._recoilTween = scene.tweens.add({
+      targets: this,
+      _recoilX: SHOTGUN_RECOIL_PX,
+      duration: SHOTGUN_RECOIL_MS,
+      ease: 'Quad.easeOut',
+      onUpdate: () => {
+        if (gen !== this._recoilGen) return;
+        this._applyRecoilOffset();
+      },
+      onComplete: () => {
+        if (gen !== this._recoilGen) return;
+        this._recoilTween = null;
+        this._easeRecoilBack();
+      },
+    });
+  }
+
+  _easeRecoilBack() {
+    const gen = this._recoilGen;
+    const scene = this.scene;
+    if (!scene?.tweens || !this.player?.active) {
+      this._recoilX = 0;
+      return;
+    }
+    this._recoilTween = scene.tweens.add({
+      targets: this,
+      _recoilX: 0,
+      duration: SHOTGUN_RECOIL_RETURN_MS,
+      ease: 'Quad.easeOut',
+      onUpdate: () => {
+        if (gen !== this._recoilGen) return;
+        this._applyRecoilOffset();
+      },
+      onComplete: () => {
+        if (gen !== this._recoilGen) return;
+        this._recoilX = 0;
+        this._recoilTween = null;
+        this._applyRecoilOffset();
+      },
+    });
+  }
+
+  /** Re-apply lane anchor + current recoil without touching Y clamp rules. */
+  _applyRecoilOffset() {
+    if (!this.player?.active) return;
+    const y = this._clampGrassY(this.player.y);
+    this.player.y = y;
+    this.player.x = this._laneAnchorX(y) + this._recoilX;
   }
 
   /**
@@ -237,6 +355,9 @@ export class DefenderGroup {
   }
 
   destroy() {
+    this._recoilGen += 1;
+    this._stopRecoilTween();
+    this._recoilX = 0;
     for (const b of this.bullets) {
       if (b?.gfx) {
         try {

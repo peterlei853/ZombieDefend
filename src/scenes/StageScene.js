@@ -194,6 +194,15 @@ export default class StageScene extends Phaser.Scene {
     this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
   }
 
+  /**
+   * One shake per shotgun volley. DefenderGroup calls this after WeaponSystem
+   * fires; pellet fan does not call it.
+   */
+  onShotgunFired() {
+    if (this.ended) return;
+    this.cameras.main.shake(150, 0.015);
+  }
+
   update(_time, delta) {
     if (this.ended) return;
 
