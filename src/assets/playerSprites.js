@@ -27,6 +27,15 @@ export const PLAYER_SHEETS = [
   { key: 'player-walk-south', frames: 6, frameRate: 10, repeat: -1 },
   { key: 'player-handgun-shoot', frames: 4, frameRate: 14, repeat: 0 },
   { key: 'player-shotgun-recoil', frames: 6, frameRate: 12, repeat: 0 },
+  { key: 'player-handgun-aim-walk-west', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-handgun-aim-walk-east', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-handgun-aim-walk-north', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-handgun-aim-walk-south', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-shotgun-hold-walk-west', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-shotgun-hold-walk-east', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-shotgun-hold-walk-north', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-shotgun-hold-walk-south', frames: 6, frameRate: 10, repeat: -1 },
+  { key: 'player-shotgun-fire-recoil', frames: 6, frameRate: 12, repeat: 0 },
 ];
 
 export const PLAYER_WEAPON_IMAGES = [
@@ -34,7 +43,29 @@ export const PLAYER_WEAPON_IMAGES = [
   { key: 'shotgun', file: 'shotgun.png' },
 ];
 
-const ACTION_ANIMS = new Set(['player-handgun-shoot', 'player-shotgun-recoil']);
+/** Prefer this one-shot over `player-shotgun-recoil` when the sheet loaded. */
+export const SHOTGUN_FIRE_RECOIL_KEY = 'player-shotgun-fire-recoil';
+
+/** Armed walks. Keys match the 6-frame PixelLab strips. */
+export const HANDGUN_AIM_WALK = {
+  west: 'player-handgun-aim-walk-west',
+  east: 'player-handgun-aim-walk-east',
+  north: 'player-handgun-aim-walk-north',
+  south: 'player-handgun-aim-walk-south',
+};
+
+export const SHOTGUN_HOLD_WALK = {
+  west: 'player-shotgun-hold-walk-west',
+  east: 'player-shotgun-hold-walk-east',
+  north: 'player-shotgun-hold-walk-north',
+  south: 'player-shotgun-hold-walk-south',
+};
+
+const ACTION_ANIMS = new Set([
+  'player-handgun-shoot',
+  'player-shotgun-recoil',
+  SHOTGUN_FIRE_RECOIL_KEY,
+]);
 
 /**
  * West-facing PixelLab stance sheets. Used when `assets/player/<key>.png`
@@ -49,6 +80,22 @@ export const SHOTGUN_HOLD_KEY = 'player-shotgun-hold';
 export const SHOTGUN_HOLD_TEXTURE = 'player-shotgun-recoil';
 export const SHOTGUN_HOLD_FRAME = 0;
 export const SHOTGUN_RECOIL_KEY = 'player-shotgun-recoil';
+
+/** @param {string|null|undefined} key */
+export function isShotgunRecoilAnim(key) {
+  return key === SHOTGUN_FIRE_RECOIL_KEY || key === SHOTGUN_RECOIL_KEY;
+}
+
+/**
+ * Fire anim for a shotgun volley. The newer west fire-recoil sheet wins
+ * when it is registered; the older recoil sheet remains the fallback.
+ * @param {Phaser.Scene} scene
+ * @returns {string}
+ */
+export function preferredShotgunRecoilKey(scene) {
+  if (scene?.anims?.exists?.(SHOTGUN_FIRE_RECOIL_KEY)) return SHOTGUN_FIRE_RECOIL_KEY;
+  return SHOTGUN_RECOIL_KEY;
+}
 
 /**
  * Optional stance strips. `frameRate` applies when the sheet has more than
@@ -75,7 +122,10 @@ const WEAPON_DRAWN_ANIMS = new Set([
   'player-handgun-shoot',
   HANDGUN_AIM_KEY,
   SHOTGUN_RECOIL_KEY,
+  SHOTGUN_FIRE_RECOIL_KEY,
   SHOTGUN_HOLD_KEY,
+  ...Object.values(HANDGUN_AIM_WALK),
+  ...Object.values(SHOTGUN_HOLD_WALK),
 ]);
 
 /**
@@ -88,20 +138,31 @@ const WALK_ALIASES = [
 ];
 
 /**
- * Idle, or a cardinal walk. Depth + lateral at once keeps the west sheet
- * (the defender faces left to shoot). W/S prefer up/down, then north/south.
+ * Armed walk strips for a stance, or null when the defender is unarmed.
+ * @param {'handgun'|'shotgun'|null|undefined} stance
+ */
+function walkSetForStance(stance) {
+  if (stance === 'shotgun') return SHOTGUN_HOLD_WALK;
+  if (stance === 'handgun') return HANDGUN_AIM_WALK;
+  return null;
+}
+
+/**
+ * Idle, or a cardinal walk. Lane input (W/S, joystick Y) uses north/south
+ * and is never mirrored — those sheets stay as authored. West/east are used
+ * only when the lane axis is idle. In a weapon stance the armed walk is
+ * first, then `player-walk-up` / `down`, then the unarmed cardinal sheet.
  * @param {number} dy -1 up / +1 down / 0
  * @param {number} dx -1 west / +1 east / 0
+ * @param {'handgun'|'shotgun'|null} [stance]
  * @returns {string[]}
  */
-export function locomotionAnimCandidates(dy, dx) {
-  const depth = dy !== 0;
-  const lateral = dx !== 0;
-  if (depth && lateral) return ['player-walk-west'];
-  if (dx < 0) return ['player-walk-west'];
-  if (dx > 0) return ['player-walk-east'];
-  if (dy < 0) return ['player-walk-up', 'player-walk-north'];
-  if (dy > 0) return ['player-walk-down', 'player-walk-south'];
+export function locomotionAnimCandidates(dy, dx, stance = null) {
+  const walks = walkSetForStance(stance);
+  if (dy < 0) return [walks?.north, 'player-walk-up', 'player-walk-north'].filter(Boolean);
+  if (dy > 0) return [walks?.south, 'player-walk-down', 'player-walk-south'].filter(Boolean);
+  if (dx < 0) return [walks?.west, 'player-walk-west'].filter(Boolean);
+  if (dx > 0) return [walks?.east, 'player-walk-east'].filter(Boolean);
   return ['player-idle'];
 }
 
@@ -110,10 +171,11 @@ export function locomotionAnimCandidates(dy, dx) {
  * when that key was not registered.
  * @param {number} dy
  * @param {number} dx
+ * @param {'handgun'|'shotgun'|null} [stance]
  * @returns {string}
  */
-export function locomotionAnimKey(dy, dx) {
-  return locomotionAnimCandidates(dy, dx)[0];
+export function locomotionAnimKey(dy, dx, stance = null) {
+  return locomotionAnimCandidates(dy, dx, stance)[0];
 }
 
 /** @param {string|null|undefined} key */
@@ -170,9 +232,10 @@ function probeAsset(url) {
 /**
  * Global anims (idempotent) and nearest-neighbor filtering for the pixel sheets.
  * This is the animation registry — there is no AnimationManager module.
- * Also registers walk-up/down aliases. Stance keys prefer a real
- * `player-handgun-aim` / `player-shotgun-hold` sheet and otherwise hold one
- * frame of the shoot / recoil sheet.
+ * Also registers walk-up/down aliases (unarmed north/south until a weapon
+ * stance retargets them). Stance keys prefer a real `player-handgun-aim` /
+ * `player-shotgun-hold` sheet and otherwise hold one frame of the shoot /
+ * recoil sheet. Walk and fire-recoil strips register with the other sheets.
  * @param {Phaser.Scene} scene
  */
 export function registerPlayerAnims(scene) {
@@ -210,16 +273,24 @@ export function registerPlayerAnims(scene) {
 /**
  * `player-walk-up` / `player-walk-down` play the north / south frames when
  * those are the only sheets. Skips a key that was already created (a real
- * up/down sheet, or a previous call).
+ * up/down sheet, or a previous call) unless `replace` is set.
  * @param {Phaser.Scene} scene
  * @param {string} key
  * @param {string} sourceKey
+ * @param {{ replace?: boolean }} [opts]
  */
-function registerAnimAlias(scene, key, sourceKey) {
-  if (!scene?.anims || scene.anims.exists(key)) return;
+function registerAnimAlias(scene, key, sourceKey, opts = {}) {
+  if (!scene?.anims) return;
+  if (scene.anims.exists(key)) {
+    if (!opts.replace) return;
+    const textureKey = scene.anims.get(key)?.frames?.[0]?.textureKey;
+    if (textureKey === sourceKey) return;
+    if (typeof scene.anims.remove === 'function') scene.anims.remove(key);
+  }
   if (!scene.anims.exists(sourceKey)) return;
   const meta = PLAYER_SHEETS.find((sheet) => sheet.key === sourceKey);
   if (!meta || !scene.textures.exists(sourceKey)) return;
+  if (scene.anims.exists(key)) return;
   scene.anims.create({
     key,
     frames: scene.anims.generateFrameNumbers(sourceKey, {
@@ -229,6 +300,26 @@ function registerAnimAlias(scene, key, sourceKey) {
     frameRate: meta.frameRate,
     repeat: meta.repeat,
   });
+}
+
+/**
+ * Point `player-walk-up` / `player-walk-down` at the equipped weapon's
+ * north / south walk. Falls back to the unarmed cardinal sheets when the
+ * armed strip is not registered.
+ * @param {Phaser.Scene} scene
+ * @param {'handgun'|'shotgun'} stance
+ */
+export function applyWeaponWalkAliases(scene, stance) {
+  const walks = walkSetForStance(stance);
+  if (!walks) return;
+  const pairs = [
+    { key: 'player-walk-up', source: walks.north, fallback: 'player-walk-north' },
+    { key: 'player-walk-down', source: walks.south, fallback: 'player-walk-south' },
+  ];
+  for (const pair of pairs) {
+    const source = scene?.anims?.exists?.(pair.source) ? pair.source : pair.fallback;
+    registerAnimAlias(scene, pair.key, source, { replace: true });
+  }
 }
 
 function textureHasFrame(tex, frame) {

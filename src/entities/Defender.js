@@ -22,8 +22,11 @@ import {
   SHOTGUN_HOLD_FRAME,
   SHOTGUN_RECOIL_KEY,
   animDrawsWeapon,
+  applyWeaponWalkAliases,
   isPlayerActionAnim,
+  isShotgunRecoilAnim,
   locomotionAnimCandidates,
+  preferredShotgunRecoilKey,
   registerPlayerAnims,
 } from '../assets/playerSprites.js';
 
@@ -313,11 +316,12 @@ export class DefenderGroup {
   }
 
   /**
-   * Handgun holds `player-handgun-aim` while stopped (the PixelLab sheet when
-   * it has loaded, otherwise one raised-gun frame of the shoot sheet).
-   * Shots do not leave that pose. Shotgun holds `player-shotgun-hold` the
-   * same way, and plays the recoil one-shot on a volley. W/S use walk-up /
-   * walk-down. The sprite is never flipped — the muzzle stays on the left.
+   * Handgun holds `player-handgun-aim` while stopped. Lane movement plays
+   * `player-handgun-aim-walk-north` / `south` (west/east only when the lane
+   * axis is idle). Shots do not leave that pose. Shotgun uses the matching
+   * hold / hold-walk sheets, and a volley plays `player-shotgun-fire-recoil`
+   * when that sheet is registered. Depth walks are never flipX'd — the
+   * muzzle stays on the left for combat.
    * @param {number} dy
    * @param {number} dx
    */
@@ -331,6 +335,8 @@ export class DefenderGroup {
     if (typeof player.play !== 'function') return;
 
     const shotgun = this.weapons.getWeapon() === WEAPON_SHOTGUN;
+    const stance = shotgun ? 'shotgun' : 'handgun';
+    applyWeaponWalkAliases(this.scene, stance);
     if (shotgun && this._recoilAnimPlaying()) {
       this._syncWeaponProp();
       return;
@@ -338,7 +344,7 @@ export class DefenderGroup {
 
     const moving = dy !== 0 || dx !== 0;
     if (moving) {
-      this._playFirstExisting(locomotionAnimCandidates(dy, dx));
+      this._playFirstExisting(locomotionAnimCandidates(dy, dx, stance));
     } else if (shotgun) {
       if (!this._playFirstExisting([SHOTGUN_HOLD_KEY])) {
         this._holdFrame(SHOTGUN_HOLD_TEXTURE, SHOTGUN_HOLD_FRAME) ||
@@ -354,7 +360,7 @@ export class DefenderGroup {
   _recoilAnimPlaying() {
     const anims = this.player?.anims;
     if (!anims?.isPlaying) return false;
-    return this._currentAnimKey() === SHOTGUN_RECOIL_KEY;
+    return isShotgunRecoilAnim(this._currentAnimKey());
   }
 
   /**
@@ -412,8 +418,10 @@ export class DefenderGroup {
    * (placeholder rectangle has no play).
    */
   _playShotgunRecoilAnim() {
-    // PIXELLAB_HOOK: player-shotgun-recoil
-    this._playAnim(SHOTGUN_RECOIL_KEY, false);
+    const preferred = preferredShotgunRecoilKey(this.scene);
+    if (!this._playAnim(preferred, false) && preferred !== SHOTGUN_RECOIL_KEY) {
+      this._playAnim(SHOTGUN_RECOIL_KEY, false);
+    }
     this._syncWeaponProp();
   }
 
@@ -435,9 +443,9 @@ export class DefenderGroup {
     const grip = WEAPON_GRIP[key] ?? WEAPON_GRIP.handgun;
     prop.setOrigin(grip.x, grip.y);
 
-    // Shoot / recoil / aim / hold sheets already include the gun. Walk-up and
-    // walk-down keep the authored north/south pixels (no flip). The prop only
-    // shows on the west-facing locomotion sheets.
+    // Aim, hold, armed walks, and recoil sheets already include the gun.
+    // Walk-up and walk-down keep the authored north/south pixels (no flip).
+    // The prop only shows on the unarmed west-facing locomotion sheets.
     const facing = this._currentAnimKey();
     const facingWest = !facing || facing === 'player-idle' || facing === 'player-walk-west';
     prop.setVisible(!animDrawsWeapon(facing) && !this._actionAnimPlaying() && facingWest);
