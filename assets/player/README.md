@@ -11,12 +11,16 @@ Phaser load keys match filenames (without extension) unless noted.
 | `player-walk-south` | player-walk-south.png | 6 | 92×92 |
 | `player-handgun-shoot` | player-handgun-shoot.png | 4 | 92×92 west |
 | `player-shotgun-recoil` | player-shotgun-recoil.png | 6 | 92×92 west |
+| `player-handgun-aim` | player-handgun-aim.png | 4 | 92×92 west (aim idle) |
+| `player-shotgun-hold` | player-shotgun-hold.png | 4 | 92×92 west (two-hand hold) |
 | `handgun` | handgun.png | — | 48×32 |
 | `shotgun` | shotgun.png | — | 64×32 |
 
 ```js
 this.load.spritesheet('player-idle', 'assets/player/player-idle.png', { frameWidth: 92, frameHeight: 92 });
 this.load.spritesheet('player-shotgun-recoil', 'assets/player/player-shotgun-recoil.png', { frameWidth: 92, frameHeight: 92 });
+this.load.spritesheet('player-handgun-aim', 'assets/player/player-handgun-aim.png', { frameWidth: 92, frameHeight: 92 });
+this.load.spritesheet('player-shotgun-hold', 'assets/player/player-shotgun-hold.png', { frameWidth: 92, frameHeight: 92 });
 this.load.image('handgun', 'assets/player/handgun.png');
 this.load.image('shotgun', 'assets/player/shotgun.png');
 ```
