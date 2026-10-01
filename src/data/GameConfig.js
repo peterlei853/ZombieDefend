@@ -18,8 +18,15 @@
  * equivalents so bullets do not leave from the boots.
  *
  * Wave tables, gold-by-HP, barricade max HP, and stage duration stay in
- * waves.js and economy.js.
+ * waves.js and economy.js. Zombie variant labels do not scale those HP
+ * or speed numbers. Walker rows keep the default feel.
+ *
+ * Hit shove, flash, hitlag, shake, and the critical-HP ratio live in JUICE.
+ * WEAPONS knockback mirrors those two shove values so older readers stay put.
  */
+const KNOCKBACK_HANDGUN_PX = 10;
+const KNOCKBACK_SHOTGUN_PX = 8;
+
 export const GAME_CONFIG = {
   PLAYER: {
     /** Field px/s along the lane. Defender multiplies by LAYOUT_SCALE. */
@@ -46,8 +53,8 @@ export const GAME_CONFIG = {
       FIRE_RATE: 500,
       /** waves.js re-exports this as PLAYER_BULLET_DAMAGE. */
       DAMAGE: 30,
-      /** Field px shove on a direct hit. Lane Y is unchanged. */
-      KNOCKBACK: 10,
+      /** Field px shove on a direct hit. Live copy is JUICE.KNOCKBACK_HANDGUN. */
+      KNOCKBACK: KNOCKBACK_HANDGUN_PX,
       /**
        * Muzzle from the sole, left-facing. X matches the barrel tip
        * (~25px left of center). Y lifts from the sole onto that barrel.
@@ -73,8 +80,8 @@ export const GAME_CONFIG = {
       /** Fraction of the handgun's full-screen reference range (viewport width). */
       RANGE_RATIO: 0.25,
       PELLET_DAMAGE: 10,
-      /** Field px per pellet, slightly under the handgun shove. */
-      PELLET_KNOCKBACK: 8,
+      /** Field px per pellet. Live copy is JUICE.KNOCKBACK_SHOTGUN. */
+      PELLET_KNOCKBACK: KNOCKBACK_SHOTGUN_PX,
       /** Muzzle-fan graphic lifetime. The shared yellow-white flash is VFX.MUZZLE_FLASH_MS. */
       MUZZLE_VFX_MS: 150,
       /**
@@ -107,11 +114,14 @@ export const GAME_CONFIG = {
     DAMAGE_TEXT_DURATION_MS: 600,
 
     /**
+     * Field-px shove on a bullet hit. Both sit in the 5–15 band.
+     * WeaponSystem reads these. Tanks scale them by ZOMBIE_TYPES.tank.knockbackMult.
+     */
+    KNOCKBACK_HANDGUN: KNOCKBACK_HANDGUN_PX,
+    KNOCKBACK_SHOTGUN: KNOCKBACK_SHOTGUN_PX,
+    /**
      * Pure-white hit flash on any bullet or pellet.
      * Sprites use tint fill; rectangle placeholders swap fill.
-     * Bullet shove itself stays on WEAPONS.HANDGUN.KNOCKBACK (10) and
-     * WEAPONS.SHOTGUN.PELLET_KNOCKBACK (8) — both inside a 5–15 field-px shove.
-     * Tanks scale that shove by ZOMBIE_TYPES.tank.knockbackMult.
      */
     HIT_FLASH_MS: 50,
     HIT_FLASH_COLOR: 0xffffff,

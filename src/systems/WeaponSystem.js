@@ -21,8 +21,8 @@ const SHOTGUN_CFG = GAME_CONFIG.WEAPONS.SHOTGUN;
 /** Handgun: auto-fire every 0.5s, single bullet, damage from GAME_CONFIG (30). */
 export const HANDGUN_FIRE_MS = HANDGUN_CFG.FIRE_RATE;
 export const HANDGUN_DAMAGE = HANDGUN_CFG.DAMAGE;
-/** Horizontal shove on a direct handgun hit. Lane Y is unchanged. */
-export const HANDGUN_KNOCKBACK = HANDGUN_CFG.KNOCKBACK;
+/** Horizontal shove on a direct handgun hit. Lane Y is unchanged. From JUICE. */
+export const HANDGUN_KNOCKBACK = GAME_CONFIG.JUICE.KNOCKBACK_HANDGUN;
 
 /**
  * Full-screen reference length (viewport width). The handgun bullet itself
@@ -42,7 +42,7 @@ export const HANDGUN_EFFECTIVE_RANGE = GAME_WIDTH;
  */
 export const SHOTGUN_FIRE_MS = SHOTGUN_CFG.FIRE_RATE;
 export const SHOTGUN_PELLET_DAMAGE = SHOTGUN_CFG.PELLET_DAMAGE;
-export const SHOTGUN_PELLET_KNOCKBACK = SHOTGUN_CFG.PELLET_KNOCKBACK;
+export const SHOTGUN_PELLET_KNOCKBACK = GAME_CONFIG.JUICE.KNOCKBACK_SHOTGUN;
 export const SHOTGUN_PELLET_MIN = SHOTGUN_CFG.PELLETS_MIN ?? SHOTGUN_CFG.PELLETS;
 export const SHOTGUN_PELLET_MAX = SHOTGUN_CFG.PELLETS_MAX ?? SHOTGUN_CFG.PELLETS;
 export const SHOTGUN_PELLET_SIZE = 4;

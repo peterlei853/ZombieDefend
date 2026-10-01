@@ -2,8 +2,7 @@
  * PixelLab zombie sheets — 64×64, west-facing, foot pivot (0.5, 1.0).
  * The nine strips live in assets/zombies/ (walker / runner / tank ×
  * walk 6×64, attack 4×64, stumble 4×64). Optional `{prefix}-death` is
- * is not requested (those files are not in the pack). If a death texture
- * is already in the cache, it still registers.
+ * not in that pack. If a death texture is already cached, it still registers.
  * A missing walk texture keeps the colored-square placeholder.
  */
 
