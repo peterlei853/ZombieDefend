@@ -2,8 +2,14 @@ import {
   PLAYER_BULLET_DAMAGE,
   BULLET_SPEED,
   BULLET_SIZE,
+  GAME_WIDTH,
 } from '../data/waves.js';
-import { depthFromY } from './DepthView.js';
+import {
+  depthFromY,
+  spawnWorldX,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from './DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
@@ -14,18 +20,40 @@ export const WEAPON_SHOTGUN = /** @type {WeaponId} */ ('Shotgun');
 /** Handgun: auto-fire every 0.5s, single bullet, damage = PLAYER_BULLET_DAMAGE (30). */
 export const HANDGUN_FIRE_MS = 500;
 export const HANDGUN_DAMAGE = PLAYER_BULLET_DAMAGE;
+/** Horizontal shove on a direct handgun hit. Lane Y is unchanged. */
+export const HANDGUN_KNOCKBACK = 10;
 
 /**
- * Shotgun: auto-fire every 2.0s.
- * Direct hit damage 40; on first zombie hit, rearward 90° cone splash
- * (radius 120px, splash damage 22 ≈ 55% of direct).
+ * Full-screen reference length (viewport width). The handgun bullet itself
+ * has no maxDistance — it flies until it hits or leaves the view.
+ * Shotgun pellets use a quarter of this (800 * 0.25 = 200px).
+ */
+export const HANDGUN_EFFECTIVE_RANGE = GAME_WIDTH;
+
+/**
+ * Shotgun: auto-fire every 2.0s. Each shot is a 70° fan of 16–20 pellets
+ * centered on straight left (180°), not a single slug and not a rearward splash.
+ * Per-pellet damage is lower than the old 40-point slug so hits stack at close
+ * range instead of each grain one-shotting a wave. Knockback is slightly under
+ * the handgun's 10 so a faceful shoves harder than one pistol round.
  */
 export const SHOTGUN_FIRE_MS = 2000;
-export const SHOTGUN_DAMAGE = 40;
-export const SHOTGUN_SPLASH_DAMAGE = 22;
-export const SHOTGUN_SPLASH_RADIUS = 120;
-export const SHOTGUN_SPLASH_HALF_ANGLE_RAD = Math.PI / 4; // 90° full cone
+export const SHOTGUN_PELLET_DAMAGE = 10;
+export const SHOTGUN_PELLET_KNOCKBACK = 8;
+export const SHOTGUN_PELLET_MIN = 16;
+export const SHOTGUN_PELLET_MAX = 20;
+export const SHOTGUN_PELLET_SIZE = 4;
+/** Half of the 70° fan, centered on 180° (straight left). */
+export const SHOTGUN_FAN_HALF_DEG = 35;
+export const SHOTGUN_FAN_HALF_RAD = (SHOTGUN_FAN_HALF_DEG * Math.PI) / 180;
+/** Straight left in screen space (0° is +X, +Y is down). */
+export const SHOTGUN_CENTER_ANGLE = Math.PI;
+/** ± this fraction of BULLET_SPEED, rolled per pellet. */
+export const SHOTGUN_SPEED_SPREAD = 0.08;
+export const SHOTGUN_MAX_DISTANCE = HANDGUN_EFFECTIVE_RANGE * 0.25;
 export const SHOTGUN_VFX_MS = 150;
+/** Short muzzle flash; pellets themselves show the travel. */
+export const SHOTGUN_MUZZLE_VFX_RADIUS = 48;
 
 /**
  * Pet: spawn PetBullet every 1.0s toward nearest zombie.
@@ -39,7 +67,7 @@ export const PET_AOE_VFX_MS = 150;
 export const PET_BULLET_DAMAGE = 0;
 
 /**
- * Owns weapon state, nearest-enemy targeting, fire cadence, and splash / AOE math.
+ * Owns weapon state, nearest-enemy targeting, fire cadence, and ballistics.
  * DefenderGroup pushes bullets / applies hits; StageScene only toggles SPACE + HUD.
  */
 export class WeaponSystem {
@@ -72,7 +100,7 @@ export class WeaponSystem {
   }
 
   /**
-   * Living zombie with smallest Phaser distance to (x, y), or null.
+   * Living zombie with a body and the smallest distance to (x, y), or null.
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {number} x
    * @param {number} y
@@ -80,9 +108,13 @@ export class WeaponSystem {
   findNearest(zombies, x, y) {
     let best = null;
     let bestDist = Infinity;
-    for (const z of zombies) {
-      if (!z.alive) continue;
-      const dist = Phaser.Math.Distance.Between(x, y, z.x, z.y);
+    const list = Array.isArray(zombies) ? zombies : [];
+    for (const z of list) {
+      if (!z?.alive || !z.body) continue;
+      const zx = z.x;
+      const zy = z.y;
+      if (!Number.isFinite(zx) || !Number.isFinite(zy)) continue;
+      const dist = Phaser.Math.Distance.Between(x, y, zx, zy);
       if (dist < bestDist) {
         bestDist = dist;
         best = z;
@@ -92,19 +124,21 @@ export class WeaponSystem {
   }
 
   /**
-   * Unit aim velocity toward target, or straight left if none.
+   * Unit aim velocity toward target, or straight left (180°, −X) if none.
    * @param {number} fromX
    * @param {number} fromY
    * @param {{ x: number, y: number }|null} target
    * @returns {{ vx: number, vy: number }}
    */
   aimVelocity(fromX, fromY, target) {
-    if (!target) {
-      return { vx: -BULLET_SPEED, vy: 0 };
+    const straightLeft = { vx: -BULLET_SPEED, vy: 0 };
+    if (!target || !Number.isFinite(target.x) || !Number.isFinite(target.y)) {
+      return straightLeft;
     }
     const dx = target.x - fromX;
     const dy = target.y - fromY;
-    const len = Math.hypot(dx, dy) || 1;
+    const len = Math.hypot(dx, dy);
+    if (!(len > 0) || !Number.isFinite(len)) return straightLeft;
     return {
       vx: (dx / len) * BULLET_SPEED,
       vy: (dy / len) * BULLET_SPEED,
@@ -112,7 +146,9 @@ export class WeaponSystem {
   }
 
   /**
-   * Tick player weapon cadence; may push a bullet into `bullets`.
+   * Tick player weapon cadence; may push bullets into `bullets`.
+   * Handgun: one straight shot at the nearest living zombie (or left).
+   * Shotgun: 16–20 pellets in a fixed 70° fan to the left.
    * @param {number} deltaMs
    * @param {number} playerX
    * @param {number} playerY
@@ -122,27 +158,30 @@ export class WeaponSystem {
   updatePlayerFire(deltaMs, playerX, playerY, zombies, bullets) {
     this._playerCooldown -= deltaMs;
     if (this._playerCooldown > 0) return;
+    if (!Array.isArray(bullets)) return;
 
-    const living = zombies.filter((z) => z.alive);
-    const target = this.findNearest(living, playerX, playerY);
-    // Fire even with no target (aim left); always spend the interval
     const fromX = playerX - 10;
     const fromY = playerY;
-    const { vx, vy } = this.aimVelocity(fromX, fromY, target);
 
     if (this.weapon === WEAPON_SHOTGUN) {
-      this._spawnBullet(bullets, fromX, fromY, vx, vy, {
-        damage: SHOTGUN_DAMAGE,
-        kind: 'shotgun',
-      });
       this._playerCooldown = SHOTGUN_FIRE_MS;
-    } else {
-      this._spawnBullet(bullets, fromX, fromY, vx, vy, {
-        damage: HANDGUN_DAMAGE,
-        kind: 'handgun',
-      });
-      this._playerCooldown = HANDGUN_FIRE_MS;
+      this._spawnShotgunFan(bullets, fromX, fromY);
+      return;
     }
+
+    this._playerCooldown = HANDGUN_FIRE_MS;
+    const living = (Array.isArray(zombies) ? zombies : []).filter(
+      (z) => z?.alive && z.body
+    );
+    const target = this.findNearest(living, playerX, playerY);
+    const { vx, vy } = this.aimVelocity(fromX, fromY, target);
+    this._spawnBullet(bullets, fromX, fromY, vx, vy, {
+      damage: HANDGUN_DAMAGE,
+      kind: 'handgun',
+      size: BULLET_SIZE,
+      maxDistance: null,
+      knockback: HANDGUN_KNOCKBACK,
+    });
   }
 
   /**
@@ -156,10 +195,13 @@ export class WeaponSystem {
   updatePetFire(deltaMs, petX, petY, zombies, bullets) {
     this._petCooldown -= deltaMs;
     if (this._petCooldown > 0) return;
+    if (!Array.isArray(bullets)) return;
 
     this._petCooldown = PET_AOE_INTERVAL_MS;
 
-    const living = zombies.filter((z) => z.alive);
+    const living = (Array.isArray(zombies) ? zombies : []).filter(
+      (z) => z?.alive && z.body
+    );
     const nearest = this.findNearest(living, petX, petY);
     if (!nearest) return;
 
@@ -169,79 +211,95 @@ export class WeaponSystem {
     this._spawnBullet(bullets, fromX, fromY, vx, vy, {
       damage: PET_BULLET_DAMAGE,
       kind: 'pet',
+      size: Math.max(6, BULLET_SIZE - 1),
+      maxDistance: null,
+      knockback: 0,
     });
   }
 
   /**
-   * After a shotgun bullet's first zombie hit: rearward 90° cone splash.
-   * Cone axis = opposite of bullet incoming velocity; apex = hit zombie.
-   * Filter eligible targets first, then apply damage (never mutate mid-scan).
-   * @param {import('../entities/Zombie.js').Zombie} hitZombie
-   * @param {number} bulletVx
-   * @param {number} bulletVy
-   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * Integrate bullet motion. Shotgun pellets accumulate travel for maxDistance.
+   * Handgun and PetBullet are uncapped (retired only when they leave the view).
+   * @param {object[]} bullets
+   * @param {number} deltaSec
+   */
+  stepBullets(bullets, deltaSec) {
+    if (!Array.isArray(bullets)) return;
+    const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
+    for (const b of bullets) {
+      if (!b?.gfx || b.gfx.active === false) continue;
+      const dx = (Number.isFinite(b.vx) ? b.vx : 0) * dt;
+      const dy = (Number.isFinite(b.vy) ? b.vy : 0) * dt;
+      b.gfx.x += dx;
+      b.gfx.y += dy;
+      if (b.maxDistance != null) {
+        b.traveled = (b.traveled || 0) + Math.hypot(dx, dy);
+      }
+      if (typeof b.gfx.setDepth === 'function') {
+        b.gfx.setDepth(depthFromY(b.gfx.y));
+      }
+    }
+  }
+
+  /**
+   * True when a bullet should be removed without a hit:
+   * shotgun pellets past maxDistance, anything that left the playable view,
+   * or a graphic that is already gone.
+   * @param {object} b
+   */
+  shouldRetireBullet(b) {
+    if (!b?.gfx || b.gfx.active === false) return true;
+    if (
+      b.maxDistance != null &&
+      Number.isFinite(b.maxDistance) &&
+      (b.traveled || 0) >= b.maxDistance
+    ) {
+      return true;
+    }
+    const x = b.gfx.x;
+    const y = b.gfx.y;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return true;
+    const leftCull = spawnWorldX() - 50;
+    if (x < leftCull || x > WORLD_WIDTH + 40) return true;
+    if (y < -30 || y > WORLD_HEIGHT + 30) return true;
+    return false;
+  }
+
+  /**
+   * Direct handgun or shotgun-pellet hit. Filter is the caller's job;
+   * this no-ops if the zombie is already dead or its body is gone.
+   * Knockback is applied only while the body still exists.
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {{ damage?: number, kind?: string, knockback?: number }} bullet
    * @returns {{ gold: number, kills: number }}
    */
-  applyShotgunSplash(hitZombie, bulletVx, bulletVy, zombies) {
-    if (!hitZombie || !hitZombie.alive) {
+  applyDirectHit(zombie, bullet) {
+    if (!zombie?.alive || !zombie.body || !bullet) {
+      return { gold: 0, kills: 0 };
+    }
+    const damage = Number(bullet.damage);
+    if (!Number.isFinite(damage) || damage < 0) {
       return { gold: 0, kills: 0 };
     }
 
-    const apexX = hitZombie.x;
-    const apexY = hitZombie.y;
-
-    const axisLen = Math.hypot(bulletVx, bulletVy);
-    if (!(axisLen > 0) || !Number.isFinite(axisLen)) {
-      // Still apply splash with default rearward axis (left) if velocity is unusable
-      return this._applyShotgunSplashAt(apexX, apexY, 1, 0, hitZombie, zombies);
+    const hx = zombie.x;
+    const hy = zombie.y - (zombie.displayHalf || 0);
+    const goldVal = zombie.goldValue || 0;
+    const knockback = Number(bullet.knockback);
+    if (knockback > 0 && typeof zombie.applyKnockback === 'function') {
+      zombie.applyKnockback(knockback);
+    }
+    // Knockback must not be followed by a touch of a destroyed body.
+    if (!zombie.alive || !zombie.body) {
+      return { gold: 0, kills: 0 };
     }
 
-    const invLen = 1 / axisLen;
-    const axisX = -bulletVx * invLen;
-    const axisY = -bulletVy * invLen;
-
-    return this._applyShotgunSplashAt(apexX, apexY, axisX, axisY, hitZombie, zombies);
-  }
-
-  /**
-   * @param {number} apexX
-   * @param {number} apexY
-   * @param {number} axisX
-   * @param {number} axisY
-   * @param {import('../entities/Zombie.js').Zombie} hitZombie
-   * @param {import('../entities/Zombie.js').Zombie[]} zombies
-   * @returns {{ gold: number, kills: number }}
-   */
-  _applyShotgunSplashAt(apexX, apexY, axisX, axisY, hitZombie, zombies) {
-    this._drawShotgunFan(apexX, apexY, axisX, axisY);
-
-    const cosHalf = Math.cos(SHOTGUN_SPLASH_HALF_ANGLE_RAD);
-
-    // Collect eligible first — never takeDamage while iterating the live list for eligibility
-    const eligible = zombies.filter((z) => {
-      if (!z.alive || z === hitZombie) return false;
-      const dx = z.x - apexX;
-      const dy = z.y - apexY;
-      const dist = Math.hypot(dx, dy);
-      if (dist > SHOTGUN_SPLASH_RADIUS || dist < 0.001) return false;
-      const dot = (dx / dist) * axisX + (dy / dist) * axisY;
-      return dot >= cosHalf;
-    });
-
-    let gold = 0;
-    let kills = 0;
-    for (const z of eligible) {
-      if (!z.alive) continue;
-      const hx = z.x;
-      const hy = z.y - z.displayHalf;
-      const killed = z.takeDamage(SHOTGUN_SPLASH_DAMAGE);
-      showDamageText(this.scene, hx, hy, SHOTGUN_SPLASH_DAMAGE, DAMAGE_COLORS.shotgun);
-      if (killed) {
-        gold += z.goldValue;
-        kills += 1;
-      }
-    }
-    return { gold, kills };
+    const killed = zombie.takeDamage(damage);
+    const color =
+      bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
+    showDamageText(this.scene, hx, hy, damage, color);
+    if (killed) return { gold: goldVal, kills: 1 };
+    return { gold: 0, kills: 0 };
   }
 
   /**
@@ -258,8 +316,9 @@ export class WeaponSystem {
 
     this._drawPetAoeRing(cx, cy);
 
-    const eligible = zombies.filter((z) => {
-      if (!z.alive) return false;
+    const list = Array.isArray(zombies) ? zombies : [];
+    const eligible = list.filter((z) => {
+      if (!z?.alive || !z.body) return false;
       const dist = Phaser.Math.Distance.Between(cx, cy, z.x, z.y);
       return dist <= PET_AOE_RADIUS;
     });
@@ -267,13 +326,14 @@ export class WeaponSystem {
     let gold = 0;
     let kills = 0;
     for (const z of eligible) {
-      if (!z.alive) continue;
+      if (!z.alive || !z.body) continue;
       const hx = z.x;
       const hy = z.y - z.displayHalf;
+      const goldVal = z.goldValue;
       const killed = z.takeDamage(PET_AOE_DAMAGE);
       showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet);
       if (killed) {
-        gold += z.goldValue;
+        gold += goldVal;
         kills += 1;
       }
     }
@@ -284,22 +344,55 @@ export class WeaponSystem {
    * @param {object[]} bullets
    * @param {number} x
    * @param {number} y
+   */
+  _spawnShotgunFan(bullets, x, y) {
+    const count = Phaser.Math.Between(SHOTGUN_PELLET_MIN, SHOTGUN_PELLET_MAX);
+    for (let i = 0; i < count; i++) {
+      const spread = Phaser.Math.FloatBetween(
+        -SHOTGUN_FAN_HALF_RAD,
+        SHOTGUN_FAN_HALF_RAD
+      );
+      const angle = SHOTGUN_CENTER_ANGLE + spread;
+      const speed =
+        BULLET_SPEED *
+        Phaser.Math.FloatBetween(1 - SHOTGUN_SPEED_SPREAD, 1 + SHOTGUN_SPEED_SPREAD);
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed;
+      this._spawnBullet(bullets, x, y, vx, vy, {
+        damage: SHOTGUN_PELLET_DAMAGE,
+        kind: 'shotgun',
+        size: SHOTGUN_PELLET_SIZE,
+        maxDistance: SHOTGUN_MAX_DISTANCE,
+        knockback: SHOTGUN_PELLET_KNOCKBACK,
+      });
+    }
+    this._drawShotgunFan(x, y);
+  }
+
+  /**
+   * @param {object[]} bullets
+   * @param {number} x
+   * @param {number} y
    * @param {number} vx
    * @param {number} vy
-   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet' }} meta
+   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet', size?: number, maxDistance?: number|null, knockback?: number }} meta
    */
   _spawnBullet(bullets, x, y, vx, vy, meta) {
     let color = 0x40c4ff;
+    let size = meta.size ?? BULLET_SIZE;
     if (meta.kind === 'shotgun') {
-      color = 0xffcc66;
+      color = 0xffaa00;
+      size = meta.size ?? SHOTGUN_PELLET_SIZE;
     } else if (meta.kind === 'pet') {
       // PIXELLAB_HOOK: replace with sprite PetBullet
       color = 0xb388ff; // purple/cyan pet projectile
+      size = meta.size ?? Math.max(6, BULLET_SIZE - 1);
     }
-    const size = meta.kind === 'pet' ? Math.max(6, BULLET_SIZE - 1) : BULLET_SIZE;
     const gfx = this.scene.add.rectangle(x, y, size, size, color);
     if (meta.kind === 'pet') {
       gfx.setStrokeStyle(1, 0x42a5f5);
+    } else if (meta.kind === 'shotgun') {
+      gfx.setStrokeStyle(1, 0xfff3e0);
     }
     gfx.setDepth(depthFromY(y));
     bullets.push({
@@ -308,6 +401,10 @@ export class WeaponSystem {
       vx,
       vy,
       kind: meta.kind,
+      size,
+      maxDistance: meta.maxDistance == null ? null : meta.maxDistance,
+      traveled: 0,
+      knockback: meta.knockback || 0,
     });
   }
 
@@ -325,30 +422,24 @@ export class WeaponSystem {
   }
 
   /**
-   * Temporary translucent yellow 90° sector (shotgun blast viz).
-   * Skips VFX if axis length is 0 / NaN. Always force-destroys after SHOTGUN_VFX_MS.
+   * Brief translucent orange 70° muzzle fan aimed straight left.
+   * Always force-destroys after SHOTGUN_VFX_MS.
    * @param {number} x
    * @param {number} y
-   * @param {number} axisX
-   * @param {number} axisY
    */
-  _drawShotgunFan(x, y, axisX, axisY) {
+  _drawShotgunFan(x, y) {
     // PIXELLAB_HOOK: replace with sprite shotgun fan VFX
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
-    if (!Number.isFinite(axisX) || !Number.isFinite(axisY)) return;
-    const axisLen = Math.hypot(axisX, axisY);
-    if (!(axisLen > 0)) return;
+    if (!this.scene?.add?.graphics) return;
 
-    const mid = Math.atan2(axisY, axisX);
-    if (!Number.isFinite(mid)) return;
-
-    const start = mid - SHOTGUN_SPLASH_HALF_ANGLE_RAD;
-    const end = mid + SHOTGUN_SPLASH_HALF_ANGLE_RAD;
+    const mid = SHOTGUN_CENTER_ANGLE;
+    const start = mid - SHOTGUN_FAN_HALF_RAD;
+    const end = mid + SHOTGUN_FAN_HALF_RAD;
     const g = this.scene.add.graphics();
-    g.fillStyle(0xffeb3b, 0.35);
+    g.fillStyle(0xffaa00, 0.35);
     g.beginPath();
     g.moveTo(x, y);
-    g.arc(x, y, SHOTGUN_SPLASH_RADIUS, start, end, false);
+    g.arc(x, y, SHOTGUN_MUZZLE_VFX_RADIUS, start, end, false);
     g.closePath();
     g.fillPath();
     g.setDepth(depthFromY(y, 5));

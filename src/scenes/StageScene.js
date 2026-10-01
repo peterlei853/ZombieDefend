@@ -235,7 +235,7 @@ export default class StageScene extends Phaser.Scene {
       return;
     }
 
-    // Defenders fire + hits (WeaponSystem cadence / splash / pet AOE)
+    // Defenders fire + hits (WeaponSystem cadence / ballistics / pet AOE)
     const petGain = this.defenders.update(deltaMs, this.zombies);
     const hitGain = this.defenders.resolveHits(this.zombies);
     const gold = (petGain?.gold || 0) + (hitGain?.gold || 0);

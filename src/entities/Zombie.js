@@ -32,6 +32,8 @@ export class Zombie {
     this.barricadeDmgAccum = 0;
     this.goldValue = getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
+    this._lastX = cfg.x;
+    this._lastY = cfg.y;
     this.scale = scaleFromY(cfg.y);
 
     // PIXELLAB_HOOK: replace with sprite zombie
@@ -60,11 +62,38 @@ export class Zombie {
   }
 
   get x() {
-    return this.body.x;
+    return this.body ? this.body.x : this._lastX;
   }
 
   get y() {
-    return this.body.y;
+    return this.body ? this.body.y : this._lastY;
+  }
+
+  /**
+   * Shove the zombie left along its lane. Y stays on laneY.
+   * Releases barricade lock and any bite tween so the shove is not snapped back.
+   * No-op if already dead or the body is gone.
+   * @param {number} pixels
+   */
+  applyKnockback(pixels) {
+    if (!this.alive || !this.body) return;
+    const amount = Number(pixels);
+    if (!(amount > 0) || !Number.isFinite(amount)) return;
+    if (this.scene?.tweens?.killTweensOf) {
+      this.scene.tweens.killTweensOf(this.body);
+    }
+    this.body.x -= amount;
+    if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
+    this._lastX = this.body.x;
+    this._lastY = this.body.y;
+    if (this.atBarricade) {
+      this.atBarricade = false;
+      this._haltX = null;
+      this._attackCooldown = 1;
+      this._attackBeat = false;
+    }
+    this._syncBars();
+    this._applyDepth();
   }
 
   _applyDepth() {
@@ -203,6 +232,7 @@ export class Zombie {
 
   /** Axis-aligned hitbox for bullet tests (matches scaled visual size). */
   getBounds() {
+    if (!this.body) return null;
     const h = this.displayHalf;
     return {
       left: this.body.x - h,
@@ -214,6 +244,8 @@ export class Zombie {
 
   destroyVisuals() {
     if (this.body) {
+      this._lastX = this.body.x;
+      this._lastY = this.body.y;
       this.scene.tweens.killTweensOf(this.body);
       this.body.destroy();
       this.body = null;
