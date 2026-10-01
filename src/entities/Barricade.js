@@ -140,7 +140,8 @@ export class Barricade {
 
   /**
    * Red flash on the posts around this Y for 0.1s.
-   * Rects use setTint; fill is restored with the tint so the hit reads bright red.
+   * Placeholder posts are Shapes (no tint component); fill is the red flash.
+   * Sprites that replace them still get setTint(0xff0000).
    * @param {number} y
    */
   flashAtY(y) {
@@ -165,13 +166,15 @@ export class Barricade {
   _flashPost(post) {
     const token = (post.getData('flashToken') || 0) + 1;
     post.setData('flashToken', token);
-    post.setFillStyle(0xff2a2a);
-    post.setTint(0xff0000);
+    if (typeof post.setFillStyle === 'function') post.setFillStyle(0xff0000);
+    if (typeof post.setTint === 'function') post.setTint(0xff0000);
     this.scene.time.delayedCall(100, () => {
       if (!post.active) return;
       if (post.getData('flashToken') !== token) return;
-      post.clearTint();
-      post.setFillStyle(post.getData('baseFill') ?? 0x6b4f35);
+      if (typeof post.clearTint === 'function') post.clearTint();
+      if (typeof post.setFillStyle === 'function') {
+        post.setFillStyle(post.getData('baseFill') ?? 0x6b4f35);
+      }
     });
   }
 
