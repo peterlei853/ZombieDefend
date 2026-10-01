@@ -13,7 +13,7 @@ export const PLAYER_FRAME_SIZE = 92;
  */
 export const PLAYER_SOLE_PAD_PX = 16;
 
-/** Bottom-center of the character, not the center of the 92px canvas. */
+/** Sole at (0.5, 76/92) — bottom-center of the character, not the 92px canvas center. */
 export const PLAYER_ORIGIN_X = 0.5;
 export const PLAYER_ORIGIN_Y =
   (PLAYER_FRAME_SIZE - PLAYER_SOLE_PAD_PX) / PLAYER_FRAME_SIZE;

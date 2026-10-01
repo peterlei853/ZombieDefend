@@ -8,26 +8,42 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../data/waves.js';
  * higher on screen, slightly smaller); larger Y is nearer the camera.
  *
  * World is wider than the viewport so the camera can sit on the base.
- * Logical combat X (spawn −10, BARRICADE_X 650) is shifted by WORLD_SHIFT_X
- * so travel distance — and therefore contact timing — stays the same.
+ * Logical combat X (spawn just off the left edge, barricade on the right)
+ * is shifted by WORLD_SHIFT_X so the camera frames the wall and the march
+ * stays the same fraction of the view.
+ *
+ * The stage was composed on an 800×450 field. LAYOUT_SCALE (exactly 1.6)
+ * maps those pixels onto the 1280×720 canvas. Wave speeds, damage, and
+ * knockback stay authored in field units; callers multiply px/s and px
+ * kicks by LAYOUT_SCALE so contact time does not change.
  */
 
-export const WORLD_WIDTH = 1320;
+/** Source playfield width this view was composed on. Height was 450 (same 16:9). */
+const FIELD_WIDTH = 800;
+/** 1280/800 = 720/450. */
+export const LAYOUT_SCALE = GAME_WIDTH / FIELD_WIDTH;
+
+/** Snap a field-pixel length onto the canvas (pixel-art grid). */
+export function layoutPx(px) {
+  return Math.round(px * LAYOUT_SCALE);
+}
+
+export const WORLD_WIDTH = layoutPx(1320);
 export const WORLD_HEIGHT = GAME_HEIGHT;
 export const WORLD_SHIFT_X = WORLD_WIDTH - GAME_WIDTH;
 
-/** Logical spawn X from the original 800-wide field (just off the left edge). */
-export const SPAWN_LOGICAL_X = -10;
+/** Logical spawn X, just off the left edge of the unshifted field. */
+export const SPAWN_LOGICAL_X = layoutPx(-10);
 
-export const HORIZON_Y = 92;
+export const HORIZON_Y = layoutPx(92);
 /** Dark walk lanes split evenly across the grass band (upper → lower). */
 export const LANE_COUNT = 9;
 /** Spawn jitter so a lane's zombies are not glued to one pixel row. */
-export const LANE_JITTER_PX = 8;
+export const LANE_JITTER_PX = layoutPx(8);
 
 /** Padding inset from horizon / bottom for playable grass band. */
-const GRASS_PAD_TOP = 8;
-const GRASS_PAD_BOTTOM = 10;
+const GRASS_PAD_TOP = layoutPx(8);
+const GRASS_PAD_BOTTOM = layoutPx(10);
 
 /** Z samples for the ground plane (larger Z = farther). */
 const GROUND_Z_FAR = 2.45;
@@ -172,7 +188,7 @@ export function depthFromY(y, bias = 0) {
   return 100 + Math.round(y * 10) + bias;
 }
 
-/** Far lanes slightly smaller, near lanes slightly larger. */
+/** Far lanes slightly smaller, near lanes slightly larger. Field-relative (not canvas px). */
 export function scaleFromY(y) {
   const lanes = laneCenters();
   const min = lanes[0];
@@ -181,6 +197,14 @@ export function scaleFromY(y) {
   const t = span <= 0 ? 1 : (y - min) / span;
   const clamped = Math.min(1, Math.max(0, t));
   return SCALE_FAR + (SCALE_NEAR - SCALE_FAR) * clamped;
+}
+
+/**
+ * Sprite / placeholder scale. Depth taper stays in scaleFromY; this also
+ * grows art with the canvas so a 92px frame keeps its size on the 720p field.
+ */
+export function displayScaleFromY(y) {
+  return scaleFromY(y) * LAYOUT_SCALE;
 }
 
 /**

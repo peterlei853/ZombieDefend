@@ -20,6 +20,10 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  render: {
+    pixelArt: true,
+    roundPixels: true,
+  },
 };
 
 const game = new Phaser.Game(config);

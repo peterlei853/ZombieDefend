@@ -1,4 +1,5 @@
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
+import { layoutPx } from '../systems/DepthView.js';
 
 /**
  * Minimal boot / title stub.
@@ -23,7 +24,7 @@ export default class BootScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.32, 'ZombieDefend', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '36px',
+        fontSize: `${layoutPx(36)}px`,
         color: '#e8eef5',
         fontStyle: 'bold',
       })
@@ -32,7 +33,7 @@ export default class BootScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.44, 'Combat vertical slice — Stage 1', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '16px',
+        fontSize: `${layoutPx(16)}px`,
         color: '#8fa3b8',
       })
       .setOrigin(0.5);
@@ -49,12 +50,12 @@ export default class BootScene extends Phaser.Scene {
     this.registry.set('stage', this.registry.get('stage') ?? 1);
 
     const btn = this.add
-      .rectangle(width / 2, height * 0.62, 200, 48, 0x2e7d32)
+      .rectangle(width / 2, height * 0.62, layoutPx(200), layoutPx(48), 0x2e7d32)
       .setInteractive({ useHandCursor: true });
     const btnLabel = this.add
       .text(width / 2, height * 0.62, 'Start Stage 1', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '18px',
+        fontSize: `${layoutPx(18)}px`,
         color: '#ffffff',
       })
       .setOrigin(0.5);

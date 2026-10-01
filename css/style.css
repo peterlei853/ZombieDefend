@@ -1,12 +1,17 @@
 html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
   height: 100%;
   background: #0b0f14;
   overflow: hidden;
   font-family: system-ui, sans-serif;
 }
 #game-host {
-  width: 800px;
-  height: 450px;
-  margin: 24px auto;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+#game-host canvas {
+  display: block;
 }

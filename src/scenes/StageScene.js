@@ -22,6 +22,7 @@ import {
   grassYMax,
   barricadeXAtY,
   groundEdgesAtY,
+  layoutPx,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
@@ -96,7 +97,7 @@ export default class StageScene extends Phaser.Scene {
     this.add.rectangle(WORLD_WIDTH / 2, HORIZON_Y / 2, WORLD_WIDTH, HORIZON_Y, 0x152238);
     // Soft horizon glow
     this.add
-      .rectangle(WORLD_WIDTH / 2, HORIZON_Y, WORLD_WIDTH, 6, 0x3a5a78, 0.55)
+      .rectangle(WORLD_WIDTH / 2, HORIZON_Y, WORLD_WIDTH, layoutPx(6), 0x3a5a78, 0.55)
       .setDepth(0);
 
     // Backdrop under the ground plane (fills side wedges outside trapezoids)
@@ -125,7 +126,7 @@ export default class StageScene extends Phaser.Scene {
 
     // Dark lane guides — one per lane center, clipped to the grass trapezoid.
     const guides = this.add.graphics().setDepth(2);
-    guides.lineStyle(2, 0x070d0a, 0.88);
+    guides.lineStyle(layoutPx(2), 0x070d0a, 0.88);
     for (const y of laneCenters()) {
       const edge = groundEdgesAtY(y);
       const xEnd = Math.min(edge.right, barricadeXAtY(y));
@@ -140,48 +141,52 @@ export default class StageScene extends Phaser.Scene {
   _buildHud() {
     const style = {
       fontFamily: 'system-ui, sans-serif',
-      fontSize: '14px',
+      fontSize: `${layoutPx(14)}px`,
       color: '#e8eef5',
     };
     const d = HUD_DEPTH;
+    const textY = layoutPx(8);
+    const hudH = layoutPx(32);
 
     this.hudBg = this.add
-      .rectangle(GAME_WIDTH / 2, 16, GAME_WIDTH, 32, 0x0a1018, 0.85)
+      .rectangle(GAME_WIDTH / 2, hudH / 2, GAME_WIDTH, hudH, 0x0a1018, 0.85)
       .setScrollFactor(0)
       .setDepth(d);
 
-    this.hudTime = this.add.text(12, 8, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
-    this.hudWave = this.add.text(120, 8, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
+    // Column starts for a 1280-wide bar. The old 800px columns collided once
+    // the font grew with the canvas (Weapon ran into Stage).
+    this.hudTime = this.add.text(20, textY, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
+    this.hudWave = this.add.text(170, textY, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
     this.hudEnemies = this.add
-      .text(210, 8, 'Enemies: 0', style)
+      .text(300, textY, 'Enemies: 0', style)
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudBarricade = this.add
-      .text(360, 8, `Barricade: ${BARRICADE_MAX_HP}`, style)
+      .text(500, textY, `Barricade: ${BARRICADE_MAX_HP}`, style)
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudGold = this.add
-      .text(520, 8, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
+      .text(720, textY, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudWeapon = this.add
-      .text(620, 8, this.defenders.weapons.getWeaponLabel(), {
+      .text(900, textY, this.defenders.weapons.getWeaponLabel(), {
         ...style,
         color: '#90caf9',
       })
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudStage = this.add
-      .text(GAME_WIDTH - 12, 8, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
+      .text(GAME_WIDTH - layoutPx(16), textY, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
       .setOrigin(1, 0)
       .setScrollFactor(0)
       .setDepth(d + 1);
 
     // Tiny move / weapon hint
     this.hudHint = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 10, 'W/S move · SPACE switch weapon', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S move · SPACE switch weapon', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '11px',
+        fontSize: `${layoutPx(11)}px`,
         color: '#6a7a8a',
       })
       .setOrigin(0.5, 1)
@@ -291,7 +296,7 @@ export default class StageScene extends Phaser.Scene {
     this.barricade.spawnImpact(x, y);
     const shown = z.popBarricadeDmgInt();
     if (shown >= 1) {
-      showDamageText(this, x - 10, y - 18, shown, DAMAGE_COLORS.barricade);
+      showDamageText(this, x - layoutPx(10), y - layoutPx(18), shown, DAMAGE_COLORS.barricade);
     }
   }
 
@@ -330,7 +335,7 @@ export default class StageScene extends Phaser.Scene {
       this.add
         .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.38, 'Stage Clear!', {
           fontFamily: 'system-ui, sans-serif',
-          fontSize: '36px',
+          fontSize: `${layoutPx(36)}px`,
           color: '#81c784',
           fontStyle: 'bold',
         })
@@ -342,7 +347,7 @@ export default class StageScene extends Phaser.Scene {
       this.add
         .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.5, `Gold: ${this.gold}`, {
           fontFamily: 'system-ui, sans-serif',
-          fontSize: '18px',
+          fontSize: `${layoutPx(18)}px`,
           color: '#ffd54f',
         })
         .setOrigin(0.5)
@@ -376,7 +381,7 @@ export default class StageScene extends Phaser.Scene {
       this.add
         .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.32, 'Game Over', {
           fontFamily: 'system-ui, sans-serif',
-          fontSize: '40px',
+          fontSize: `${layoutPx(40)}px`,
           color: '#ef5350',
           fontStyle: 'bold',
         })
@@ -392,7 +397,7 @@ export default class StageScene extends Phaser.Scene {
           `Survived ${Math.floor(this.waveManager.getElapsed())}s · Gold ${this.gold}`,
           {
             fontFamily: 'system-ui, sans-serif',
-            fontSize: '16px',
+            fontSize: `${layoutPx(16)}px`,
             color: '#cfd8dc',
           }
         )
@@ -402,7 +407,7 @@ export default class StageScene extends Phaser.Scene {
 
     const btn = this._pinOverlay(
       this.add
-        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 180, 44, 0x455a64)
+        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, layoutPx(180), layoutPx(44), 0x455a64)
         .setInteractive({ useHandCursor: true })
         .setDepth(d + 1)
     );
@@ -410,7 +415,7 @@ export default class StageScene extends Phaser.Scene {
       this.add
         .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 'Retry', {
           fontFamily: 'system-ui, sans-serif',
-          fontSize: '18px',
+          fontSize: `${layoutPx(18)}px`,
           color: '#ffffff',
         })
         .setOrigin(0.5)
