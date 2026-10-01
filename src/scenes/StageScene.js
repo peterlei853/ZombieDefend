@@ -24,6 +24,7 @@ import {
   groundEdgesAtY,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -55,7 +56,14 @@ export default class StageScene extends Phaser.Scene {
     this._laneCycle = { order: [] };
   }
 
+  preload() {
+    // BootScene loads these first; this covers a direct Stage start / retry
+    // after a cache miss without re-queueing keys that already exist.
+    preloadPlayerAssets(this);
+  }
+
   create() {
+    registerPlayerAnims(this);
     this._drawWorld();
 
     // Frame camera on slanted barricade at mid-grass Y (shared DepthView helpers)

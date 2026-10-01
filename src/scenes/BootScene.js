@@ -1,3 +1,5 @@
+import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
+
 /**
  * Minimal boot / title stub.
  * Skips full LocalStorage auth — jumps straight into Stage 1 for playtest.
@@ -8,7 +10,12 @@ export default class BootScene extends Phaser.Scene {
     super('BootScene');
   }
 
+  preload() {
+    preloadPlayerAssets(this);
+  }
+
   create() {
+    registerPlayerAnims(this);
     const { width, height } = this.scale;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x0b0f14);

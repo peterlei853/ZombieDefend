@@ -6,7 +6,15 @@ import {
   grassYMax,
   barricadeXAtY,
 } from '../systems/DepthView.js';
-import { WeaponSystem } from '../systems/WeaponSystem.js';
+import { WeaponSystem, WEAPON_SHOTGUN } from '../systems/WeaponSystem.js';
+import {
+  PLAYER_FRAME_SIZE,
+  PLAYER_ORIGIN_X,
+  PLAYER_ORIGIN_Y,
+  isPlayerActionAnim,
+  locomotionAnimKey,
+  registerPlayerAnims,
+} from '../assets/playerSprites.js';
 
 /** Player sits this many px right of the grass edge (safe zone). */
 const PLAYER_SAFE_OFFSET = 32;
@@ -25,6 +33,17 @@ const PLAYER_MOVE_SPEED = 180;
 const SHOTGUN_RECOIL_PX = 18;
 const SHOTGUN_RECOIL_MS = 100;
 const SHOTGUN_RECOIL_RETURN_MS = 140;
+/**
+ * Weapon icon scale relative to the defender's DepthView scale.
+ * Grip sits on the west-facing hand; the sheet already shows the gun
+ * during shoot / recoil, so the prop hides while those anims play.
+ */
+const WEAPON_PROP_SCALE = 0.4;
+/** Grip point inside handgun.png (48×32) and shotgun.png (64×32). */
+const WEAPON_GRIP = {
+  handgun: { x: 0.62, y: 0.72 },
+  shotgun: { x: 0.55, y: 0.55 },
+};
 
 /**
  * Player + pet behind the barricade.
@@ -56,11 +75,9 @@ export class DefenderGroup {
     const playerX = barricadeXAtY(playerY) + PLAYER_SAFE_OFFSET;
     const playerScale = scaleFromY(playerY);
 
-    // PIXELLAB_HOOK: replace with sprite player
-    this.player = scene.add.rectangle(playerX, playerY, 22, 28, 0x42a5f5);
-    this.player.setStrokeStyle(2, 0x1e88e5);
-    this.player.setScale(playerScale);
-    this.player.setDepth(depthFromY(playerY));
+    registerPlayerAnims(scene);
+    this.player = this._createPlayerBody(scene, playerX, playerY, playerScale);
+    this.weaponProp = this._createWeaponProp(scene, playerX, playerY);
 
     const petX = playerX + PET_OFFSET_X;
     const petY = playerY + PET_OFFSET_Y;
@@ -87,6 +104,40 @@ export class DefenderGroup {
     });
   }
 
+  /**
+   * Feet-anchored sprite when the PixelLab sheet is loaded.
+   * Frame size comes from the texture (92), not a hard-coded 64 box.
+   * Rectangle remains only if the sheet failed to load.
+   */
+  _createPlayerBody(scene, playerX, playerY, playerScale) {
+    if (scene.textures.exists('player-idle') && scene.anims.exists('player-idle')) {
+      const player = scene.add.sprite(playerX, playerY, 'player-idle', 0);
+      player.setOrigin(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+      player.setScale(playerScale);
+      player.setDepth(depthFromY(playerY));
+      player.play('player-idle');
+      return player;
+    }
+
+    const body = scene.add.rectangle(playerX, playerY, 22, 28, 0x42a5f5);
+    body.setStrokeStyle(2, 0x1e88e5);
+    body.setScale(playerScale);
+    body.setDepth(depthFromY(playerY));
+    return body;
+  }
+
+  _createWeaponProp(scene, playerX, playerY) {
+    const key = scene.textures.exists('handgun')
+      ? 'handgun'
+      : scene.textures.exists('shotgun')
+        ? 'shotgun'
+        : null;
+    if (!key) return null;
+    const prop = scene.add.image(playerX, playerY, key);
+    prop.setDepth(depthFromY(playerY, 1));
+    return prop;
+  }
+
   _clampGrassY(y) {
     return Math.min(grassYMax(), Math.max(grassYMin(), y));
   }
@@ -104,6 +155,7 @@ export class DefenderGroup {
     const s = scaleFromY(y);
     this.player.setScale(s);
     this.player.setDepth(depthFromY(y));
+    this._syncWeaponProp();
   }
 
   _syncPetTransform(deltaMs) {
@@ -133,10 +185,9 @@ export class DefenderGroup {
    */
   update(deltaMs, zombies) {
     // Player Y-only move (W/S or up/down). X always tracks barricade edge.
+    // A/D and arrows only pick a walk sheet — they do not leave the lane.
     const deltaSec = deltaMs / 1000;
-    let dy = 0;
-    if (this.cursors.up.isDown || this.keys.W.isDown) dy -= 1;
-    if (this.cursors.down.isDown || this.keys.S.isDown) dy += 1;
+    const { dx, dy } = this._inputAxes();
     if (dy !== 0) {
       this.player.y += dy * PLAYER_MOVE_SPEED * deltaSec;
     }
@@ -152,6 +203,8 @@ export class DefenderGroup {
       this.bullets
     );
     if (fired === 'shotgun') this._onShotgunVolley();
+    else if (fired === 'handgun') this._playHandgunShootAnim();
+    this._updateLocomotionAnim(dy, dx);
     this.weapons.updatePetFire(
       deltaMs,
       this.turret.x,
@@ -168,6 +221,67 @@ export class DefenderGroup {
   }
 
   /**
+   * Held keys. dy moves the defender; dx only selects a walk sheet.
+   * @returns {{ dx: number, dy: number }}
+   */
+  _inputAxes() {
+    let dy = 0;
+    let dx = 0;
+    if (this.cursors.up.isDown || this.keys.W.isDown) dy -= 1;
+    if (this.cursors.down.isDown || this.keys.S.isDown) dy += 1;
+    if (this.cursors.left.isDown || this.keys.A.isDown) dx -= 1;
+    if (this.cursors.right.isDown || this.keys.D.isDown) dx += 1;
+    return { dx, dy };
+  }
+
+  _currentAnimKey() {
+    return this.player?.anims?.currentAnim?.key ?? null;
+  }
+
+  _actionAnimPlaying() {
+    const anims = this.player?.anims;
+    if (!anims?.isPlaying) return false;
+    return isPlayerActionAnim(this._currentAnimKey());
+  }
+
+  /**
+   * @param {string} key
+   * @param {boolean} [ignoreIfPlaying]
+   */
+  _playAnim(key, ignoreIfPlaying = false) {
+    const player = this.player;
+    if (!player || typeof player.play !== 'function') return false;
+    const anims = this.scene?.anims;
+    if (!anims || typeof anims.exists !== 'function') return false;
+    if (!anims.exists(key)) return false;
+    try {
+      player.play(key, ignoreIfPlaying);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /**
+   * Idle / cardinal walk. Shoot and recoil finish before locomotion resumes.
+   * @param {number} dy
+   * @param {number} dx
+   */
+  _updateLocomotionAnim(dy, dx) {
+    if (this._actionAnimPlaying()) return;
+    const key = locomotionAnimKey(dy, dx);
+    if (this._currentAnimKey() === key && this.player.anims?.isPlaying) return;
+    this._playAnim(key);
+    this._syncWeaponProp();
+  }
+
+  /** One-shot west-facing handgun sheet, then locomotion takes over. */
+  _playHandgunShootAnim() {
+    this._playAnim('player-handgun-shoot');
+    this._syncWeaponProp();
+  }
+
+  /**
    * One shotgun volley (not each pellet): guarded recoil anim, +18px kick, camera shake.
    */
   _onShotgunVolley() {
@@ -179,21 +293,49 @@ export class DefenderGroup {
   }
 
   /**
-   * PixelLab recoil sheet is not shipped. Play only when the anim is registered
-   * and this body can play it (placeholder rectangle has no play).
+   * Play only when the anim is registered and this body can play it
+   * (placeholder rectangle has no play).
    */
   _playShotgunRecoilAnim() {
+    // PIXELLAB_HOOK: player-shotgun-recoil
+    this._playAnim('player-shotgun-recoil', true);
+    this._syncWeaponProp();
+  }
+
+  /**
+   * Equipped weapon icon on the west hand. Hidden while shoot / recoil
+   * frames already draw the gun. Position is a fraction of the frame
+   * (feet origin), scaled with DepthView — not a fixed 64px offset.
+   */
+  _syncWeaponProp() {
+    const prop = this.weaponProp;
     const player = this.player;
-    if (!player || typeof player.play !== 'function') return;
-    const anims = this.scene?.anims;
-    if (!anims || typeof anims.exists !== 'function') return;
-    if (!anims.exists('player-shotgun-recoil')) return;
-    try {
-      // PIXELLAB_HOOK: player-shotgun-recoil
-      player.play('player-shotgun-recoil', true);
-    } catch (_) {
-      /* missing anim must not throw */
+    if (!prop || !player?.active) return;
+
+    const shotgun = this.weapons.getWeapon() === WEAPON_SHOTGUN;
+    const key = shotgun ? 'shotgun' : 'handgun';
+    if (this.scene.textures.exists(key) && prop.texture?.key !== key) {
+      prop.setTexture(key);
     }
+    const grip = WEAPON_GRIP[key] ?? WEAPON_GRIP.handgun;
+    prop.setOrigin(grip.x, grip.y);
+
+    // Shoot / recoil sheets already include the gun. Other facings turn
+    // away from the west-aimed prop, so it only shows while facing left.
+    const facing = this._currentAnimKey();
+    const facingWest = !facing || facing === 'player-idle' || facing === 'player-walk-west';
+    prop.setVisible(!this._actionAnimPlaying() && facingWest);
+
+    const s = player.scaleX || 1;
+    const frameW = player.width || PLAYER_FRAME_SIZE;
+    const frameH = player.height || PLAYER_FRAME_SIZE;
+    // West-facing hand, as a fraction of the frame above the feet anchor.
+    // Grip overlaps the forward hand; the barrel sticks out to the left.
+    const handX = frameW * 0.02;
+    const handY = -frameH * 0.30;
+    prop.setScale(s * WEAPON_PROP_SCALE);
+    prop.setPosition(player.x + handX * s, player.y + handY * s);
+    prop.setDepth((player.depth ?? depthFromY(player.y)) + 1);
   }
 
   _stopRecoilTween() {
@@ -261,6 +403,7 @@ export class DefenderGroup {
     const y = this._clampGrassY(this.player.y);
     this.player.y = y;
     this.player.x = this._laneAnchorX(y) + this.recoilX;
+    this._syncWeaponProp();
   }
 
   /**
@@ -371,6 +514,8 @@ export class DefenderGroup {
       }
     }
     this.bullets = [];
+    this.weaponProp?.destroy();
+    this.weaponProp = null;
     this.player.destroy();
     this.turret.destroy();
     this.turretBarrel.destroy();
