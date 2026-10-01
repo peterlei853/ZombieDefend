@@ -50,9 +50,12 @@ export const WAVE_DEFS = [
 /** Barricade contact X — zombies stop here and deal DPS. */
 export const BARRICADE_X = 650;
 
-/** Game playfield. */
-export const GAME_WIDTH = 800;
-export const GAME_HEIGHT = 450;
+/**
+ * Internal canvas (16:9). Was 800×450; DepthView.LAYOUT_SCALE maps that
+ * composition onto this size. Combat tables below stay in field units.
+ */
+export const GAME_WIDTH = 1280;
+export const GAME_HEIGHT = 720;
 
 /** Starting barricade HP for Stage 1 (tuned for close win/lose on wave 4). */
 export const BARRICADE_MAX_HP = 720;

@@ -9,6 +9,7 @@ import {
   spawnWorldX,
   WORLD_WIDTH,
   WORLD_HEIGHT,
+  LAYOUT_SCALE,
 } from './DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
@@ -26,7 +27,8 @@ export const HANDGUN_KNOCKBACK = 10;
 /**
  * Full-screen reference length (viewport width). The handgun bullet itself
  * has no maxDistance — it flies until it hits or leaves the view.
- * Shotgun pellets use a quarter of this (800 * 0.25 = 200px).
+ * Shotgun pellets use a quarter of this. On the 800-wide field that was
+ * 200px; on 1280 it is 320px, the same fraction of the march.
  */
 export const HANDGUN_EFFECTIVE_RANGE = GAME_WIDTH;
 
@@ -132,7 +134,9 @@ export class WeaponSystem {
    * @returns {{ vx: number, vy: number }}
    */
   aimVelocity(fromX, fromY, target) {
-    const straightLeft = { vx: -BULLET_SPEED, vy: 0 };
+    // Field px/s, scaled so flight time matches the 800-wide field.
+    const speed = BULLET_SPEED * LAYOUT_SCALE;
+    const straightLeft = { vx: -speed, vy: 0 };
     if (!target || !Number.isFinite(target.x) || !Number.isFinite(target.y)) {
       return straightLeft;
     }
@@ -141,8 +145,8 @@ export class WeaponSystem {
     const len = Math.hypot(dx, dy);
     if (!(len > 0) || !Number.isFinite(len)) return straightLeft;
     return {
-      vx: (dx / len) * BULLET_SPEED,
-      vy: (dy / len) * BULLET_SPEED,
+      vx: (dx / len) * speed,
+      vy: (dy / len) * speed,
     };
   }
 
@@ -164,7 +168,7 @@ export class WeaponSystem {
     if (this._playerCooldown > 0) return null;
     if (!Array.isArray(bullets)) return null;
 
-    const fromX = playerX - 10;
+    const fromX = playerX - 10 * LAYOUT_SCALE;
     const fromY = playerY;
 
     if (this.weapon === WEAPON_SHOTGUN) {
@@ -183,7 +187,7 @@ export class WeaponSystem {
     this._spawnBullet(bullets, fromX, fromY, vx, vy, {
       damage: HANDGUN_DAMAGE,
       kind: 'handgun',
-      size: BULLET_SIZE,
+      size: BULLET_SIZE * LAYOUT_SCALE,
       maxDistance: null,
       knockback: HANDGUN_KNOCKBACK,
     });
@@ -211,13 +215,13 @@ export class WeaponSystem {
     const nearest = this.findNearest(living, petX, petY);
     if (!nearest) return;
 
-    const fromX = petX - 10;
+    const fromX = petX - 10 * LAYOUT_SCALE;
     const fromY = petY;
     const { vx, vy } = this.aimVelocity(fromX, fromY, nearest);
     this._spawnBullet(bullets, fromX, fromY, vx, vy, {
       damage: PET_BULLET_DAMAGE,
       kind: 'pet',
-      size: Math.max(6, BULLET_SIZE - 1),
+      size: Math.max(6, BULLET_SIZE - 1) * LAYOUT_SCALE,
       maxDistance: null,
       knockback: 0,
     });
@@ -265,9 +269,9 @@ export class WeaponSystem {
     const x = b.gfx.x;
     const y = b.gfx.y;
     if (!Number.isFinite(x) || !Number.isFinite(y)) return true;
-    const leftCull = spawnWorldX() - 50;
-    if (x < leftCull || x > WORLD_WIDTH + 40) return true;
-    if (y < -30 || y > WORLD_HEIGHT + 30) return true;
+    const leftCull = spawnWorldX() - 50 * LAYOUT_SCALE;
+    if (x < leftCull || x > WORLD_WIDTH + 40 * LAYOUT_SCALE) return true;
+    if (y < -30 * LAYOUT_SCALE || y > WORLD_HEIGHT + 30 * LAYOUT_SCALE) return true;
     return false;
   }
 
@@ -293,7 +297,7 @@ export class WeaponSystem {
     const goldVal = zombie.goldValue || 0;
     const knockback = Number(bullet.knockback);
     if (knockback > 0 && typeof zombie.applyKnockback === 'function') {
-      zombie.applyKnockback(knockback);
+      zombie.applyKnockback(knockback * LAYOUT_SCALE);
     }
     // Knockback must not be followed by a touch of a destroyed body.
     if (!zombie.alive || !zombie.body) {
@@ -326,7 +330,7 @@ export class WeaponSystem {
     const eligible = list.filter((z) => {
       if (!z?.alive || !z.body) return false;
       const dist = Phaser.Math.Distance.Between(cx, cy, z.x, z.y);
-      return dist <= PET_AOE_RADIUS;
+      return dist <= PET_AOE_RADIUS * LAYOUT_SCALE;
     });
 
     let gold = 0;
@@ -361,13 +365,14 @@ export class WeaponSystem {
       const angle = SHOTGUN_CENTER_ANGLE + spread;
       const speed =
         BULLET_SPEED *
+        LAYOUT_SCALE *
         Phaser.Math.FloatBetween(1 - SHOTGUN_SPEED_SPREAD, 1 + SHOTGUN_SPEED_SPREAD);
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
       this._spawnBullet(bullets, x, y, vx, vy, {
         damage: SHOTGUN_PELLET_DAMAGE,
         kind: 'shotgun',
-        size: SHOTGUN_PELLET_SIZE,
+        size: SHOTGUN_PELLET_SIZE * LAYOUT_SCALE,
         maxDistance: SHOTGUN_MAX_DISTANCE,
         knockback: SHOTGUN_PELLET_KNOCKBACK,
       });
@@ -392,7 +397,7 @@ export class WeaponSystem {
     } else if (meta.kind === 'pet') {
       // PIXELLAB_HOOK: replace with sprite PetBullet
       color = 0xb388ff; // purple/cyan pet projectile
-      size = meta.size ?? Math.max(6, BULLET_SIZE - 1);
+      size = meta.size ?? Math.max(6, BULLET_SIZE - 1) * LAYOUT_SCALE;
     }
     const gfx = this.scene.add.rectangle(x, y, size, size, color);
     if (meta.kind === 'pet') {
@@ -445,7 +450,7 @@ export class WeaponSystem {
     g.fillStyle(0xffaa00, 0.35);
     g.beginPath();
     g.moveTo(x, y);
-    g.arc(x, y, SHOTGUN_MUZZLE_VFX_RADIUS, start, end, false);
+    g.arc(x, y, SHOTGUN_MUZZLE_VFX_RADIUS * LAYOUT_SCALE, start, end, false);
     g.closePath();
     g.fillPath();
     g.setDepth(depthFromY(y, 5));
@@ -463,10 +468,11 @@ export class WeaponSystem {
     // PIXELLAB_HOOK: replace with sprite pet AOE ring VFX
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     const g = this.scene.add.graphics();
-    g.lineStyle(3, 0x7e57c2, 0.85);
-    g.strokeCircle(x, y, PET_AOE_RADIUS);
+    const radius = PET_AOE_RADIUS * LAYOUT_SCALE;
+    g.lineStyle(3 * LAYOUT_SCALE, 0x7e57c2, 0.85);
+    g.strokeCircle(x, y, radius);
     g.fillStyle(0x42a5f5, 0.22);
-    g.fillCircle(x, y, PET_AOE_RADIUS);
+    g.fillCircle(x, y, radius);
     g.setDepth(depthFromY(y, 5));
     this.scene.time.delayedCall(PET_AOE_VFX_MS, () => {
       this._safeDestroyGraphics(g);

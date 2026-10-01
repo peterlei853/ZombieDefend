@@ -1,5 +1,5 @@
 import { getGoldByHP } from '../data/economy.js';
-import { depthFromY, scaleFromY } from '../systems/DepthView.js';
+import { depthFromY, displayScaleFromY, LAYOUT_SCALE } from '../systems/DepthView.js';
 
 let _zombieId = 0;
 
@@ -34,7 +34,7 @@ export class Zombie {
     this.laneY = cfg.y;
     this._lastX = cfg.x;
     this._lastY = cfg.y;
-    this.scale = scaleFromY(cfg.y);
+    this.scale = displayScaleFromY(cfg.y);
 
     // PIXELLAB_HOOK: replace with sprite zombie
     this.body = scene.add.rectangle(cfg.x, cfg.y, this.baseSize, this.baseSize, 0xd32f2f);
@@ -112,7 +112,8 @@ export class Zombie {
     if (!this.alive) return;
 
     if (!this.atBarricade) {
-      const nextX = this.body.x + this.speed * deltaSec;
+      // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
+      const nextX = this.body.x + this.speed * LAYOUT_SCALE * deltaSec;
       const halt = contactX - this.displayHalf;
       if (nextX >= halt) {
         this.body.x = halt;
@@ -171,7 +172,7 @@ export class Zombie {
     this.body.x = homeX;
     this.scene.tweens.add({
       targets: this.body,
-      x: homeX + 6,
+      x: homeX + 6 * LAYOUT_SCALE,
       duration: 80,
       yoyo: true,
       ease: 'Quad.easeOut',

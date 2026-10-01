@@ -1,10 +1,12 @@
 import { BULLET_SIZE } from '../data/waves.js';
 import {
   depthFromY,
-  scaleFromY,
+  displayScaleFromY,
   grassYMin,
   grassYMax,
   barricadeXAtY,
+  LAYOUT_SCALE,
+  layoutPx,
 } from '../systems/DepthView.js';
 import { WeaponSystem, WEAPON_SHOTGUN } from '../systems/WeaponSystem.js';
 import {
@@ -16,21 +18,21 @@ import {
   registerPlayerAnims,
 } from '../assets/playerSprites.js';
 
-/** Player sits this many px right of the grass edge (safe zone). */
-const PLAYER_SAFE_OFFSET = 32;
+/** Player sits this many px right of the grass edge (safe zone), in field px. */
+const PLAYER_SAFE_OFFSET = layoutPx(32);
 /** Pet (turret) offset from player toward the safer side. */
-const PET_OFFSET_X = 25;
-const PET_OFFSET_Y = -15;
+const PET_OFFSET_X = layoutPx(25);
+const PET_OFFSET_Y = layoutPx(-15);
 /** Lerp factor per ~16.67ms frame (delta-aware). */
 const PET_LERP = 0.16;
-/** Player vertical move speed (px/s). */
-const PLAYER_MOVE_SPEED = 180;
+/** Player vertical move speed (field px/s), scaled so a lane sweep takes the same time. */
+const PLAYER_MOVE_SPEED = 180 * LAYOUT_SCALE;
 /**
  * Shotgun volley kicks the defender right (they face left to shoot).
- * Kick is +18px / ~100ms Quad.easeOut, then an ease back onto the lane
+ * Kick is +18 field px / ~100ms Quad.easeOut, then an ease back onto the lane
  * so the barricade safe-zone X is not left permanently offset.
  */
-const SHOTGUN_RECOIL_PX = 18;
+const SHOTGUN_RECOIL_PX = 18 * LAYOUT_SCALE;
 const SHOTGUN_RECOIL_MS = 100;
 const SHOTGUN_RECOIL_RETURN_MS = 140;
 /**
@@ -73,7 +75,7 @@ export class DefenderGroup {
     const yMax = grassYMax();
     const playerY = (yMin + yMax) / 2;
     const playerX = barricadeXAtY(playerY) + PLAYER_SAFE_OFFSET;
-    const playerScale = scaleFromY(playerY);
+    const playerScale = displayScaleFromY(playerY);
 
     registerPlayerAnims(scene);
     this.player = this._createPlayerBody(scene, playerX, playerY, playerScale);
@@ -81,7 +83,7 @@ export class DefenderGroup {
 
     const petX = playerX + PET_OFFSET_X;
     const petY = playerY + PET_OFFSET_Y;
-    const petScale = scaleFromY(petY);
+    const petScale = displayScaleFromY(petY);
 
     // PIXELLAB_HOOK: replace with sprite turret (Pet)
     this.turret = scene.add.rectangle(petX, petY, 24, 24, 0x78909c);
@@ -90,7 +92,7 @@ export class DefenderGroup {
     this.turret.setDepth(depthFromY(petY));
     // Small barrel marker
     this.turretBarrel = scene.add
-      .rectangle(petX - 16, petY, 14, 6, 0x90a4ae)
+      .rectangle(petX - layoutPx(16), petY, 14, 6, 0x90a4ae)
       .setScale(petScale)
       .setDepth(depthFromY(petY, 1));
 
@@ -152,7 +154,7 @@ export class DefenderGroup {
     this.player.y = y;
     // Lane clamp owns X. Shotgun recoil is a temporary +X on this same body.
     this.player.x = this._laneAnchorX(y) + this.recoilX;
-    const s = scaleFromY(y);
+    const s = displayScaleFromY(y);
     this.player.setScale(s);
     this.player.setDepth(depthFromY(y));
     this._syncWeaponProp();
@@ -168,11 +170,11 @@ export class DefenderGroup {
     this.turret.y += (targetY - this.turret.y) * t;
     this.turret.y = this._clampGrassY(this.turret.y);
 
-    const s = scaleFromY(this.turret.y);
+    const s = displayScaleFromY(this.turret.y);
     this.turret.setScale(s);
     this.turret.setDepth(depthFromY(this.turret.y));
 
-    this.turretBarrel.x = this.turret.x - 16;
+    this.turretBarrel.x = this.turret.x - layoutPx(16);
     this.turretBarrel.y = this.turret.y;
     this.turretBarrel.setScale(s);
     this.turretBarrel.setDepth(depthFromY(this.turret.y, 1));
@@ -430,7 +432,7 @@ export class DefenderGroup {
         remove.add(i);
         continue;
       }
-      const half = ((b.size ?? BULLET_SIZE) / 2) + 2;
+      const half = ((b.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
       const bx = b.gfx.x;
       const by = b.gfx.y;
       let hitZombie = null;

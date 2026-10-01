@@ -2,6 +2,8 @@
  * Minimal Shop stub — Architect will expand with real inventory / upgrades.
  * Receives { stage, gold, characterId } from StageScene on win.
  */
+import { layoutPx } from '../systems/DepthView.js';
+
 export default class ShopScene extends Phaser.Scene {
   constructor() {
     super('ShopScene');
@@ -24,7 +26,7 @@ export default class ShopScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.22, `Shop ${this.stage}`, {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '32px',
+        fontSize: `${layoutPx(32)}px`,
         color: '#ffd54f',
         fontStyle: 'bold',
       })
@@ -33,7 +35,7 @@ export default class ShopScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.36, `Gold: ${this.gold}`, {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '20px',
+        fontSize: `${layoutPx(20)}px`,
         color: '#e8eef5',
       })
       .setOrigin(0.5);
@@ -41,7 +43,7 @@ export default class ShopScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.46, `Character: ${this.characterId}`, {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '14px',
+        fontSize: `${layoutPx(14)}px`,
         color: '#8fa3b8',
       })
       .setOrigin(0.5);
@@ -49,18 +51,18 @@ export default class ShopScene extends Phaser.Scene {
     this.add
       .text(width / 2, height * 0.54, '(Shop items stub — Architect will wire SaveManager)', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '12px',
+        fontSize: `${layoutPx(12)}px`,
         color: '#607080',
       })
       .setOrigin(0.5);
 
     const btn = this.add
-      .rectangle(width / 2, height * 0.7, 220, 48, 0x1565c0)
+      .rectangle(width / 2, height * 0.7, layoutPx(220), layoutPx(48), 0x1565c0)
       .setInteractive({ useHandCursor: true });
     this.add
       .text(width / 2, height * 0.7, 'Next Stage', {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: '18px',
+        fontSize: `${layoutPx(18)}px`,
         color: '#ffffff',
       })
       .setOrigin(0.5);

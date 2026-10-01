@@ -1,4 +1,4 @@
-import { HUD_DEPTH } from '../systems/DepthView.js';
+import { HUD_DEPTH, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 
 /** Combat floating-number colors. */
 export const DAMAGE_COLORS = {
@@ -26,18 +26,18 @@ export function showDamageText(scene, x, y, damage, color) {
   const text = scene.add
     .text(x, y, `-${amount}`, {
       fontFamily: 'system-ui, sans-serif',
-      fontSize: '18px',
+      fontSize: `${layoutPx(18)}px`,
       fontStyle: 'bold',
       color: color || '#ffffff',
       stroke: '#14080a',
-      strokeThickness: 3,
+      strokeThickness: layoutPx(3),
     })
     .setOrigin(0.5, 0.5)
     .setDepth(HUD_DEPTH + 40);
 
   scene.tweens.add({
     targets: text,
-    y: y - 30,
+    y: y - 30 * LAYOUT_SCALE,
     alpha: 0,
     duration: 600,
     ease: 'Quad.easeOut',
