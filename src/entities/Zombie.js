@@ -96,23 +96,12 @@ export class Zombie {
    */
   _createSprite(scene, x, y, walkKey) {
     const sprite = scene.add.sprite(x, y, walkKey, 0);
-    // Lane Y is the sole. Sheets are west-facing 64×64; origin stays (0.5, 1.0).
+    // Lane Y is the sole. Sheets stay west-facing 64×64; origin stays (0.5, 1.0).
     sprite.setOrigin(ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y);
     sprite.setScale(this.scale);
-    // March is +X toward the right-side barricade, so mirror for the lifetime.
-    this._faceBarricade(sprite);
+    // West art, march is +X. Mirror once so walk, attack, and stumble face the barricade.
+    sprite.setFlipX(true);
     return sprite;
-  }
-
-  /**
-   * PixelLab strips look west. Walk, stumble, and attack all keep flipX
-   * so the zombie faces the barricade. Nothing in combat needs a left face.
-   * @param {Phaser.GameObjects.Sprite} [sprite]
-   */
-  _faceBarricade(sprite = this.body) {
-    if (!this._isSprite || !sprite) return;
-    if (typeof sprite.setFlipX === 'function') sprite.setFlipX(true);
-    else sprite.flipX = true;
   }
 
   /**
@@ -236,8 +225,6 @@ export class Zombie {
       this._syncLocomotion();
     }
 
-    // Attack and locomotion must not flip back to the sheet's west face.
-    this._faceBarricade();
     this._applyDepth();
     this._syncBars();
   }
@@ -286,12 +273,8 @@ export class Zombie {
     const key = this.isCritical() && hasZombieAnim(this.scene, this.variant, 'stumble') ? stumble : walk;
     if (!this.scene.anims.exists(key)) return;
     const current = this.body.anims.currentAnim?.key;
-    if (current === key && this.body.anims.isPlaying) {
-      this._faceBarricade();
-      return;
-    }
+    if (current === key && this.body.anims.isPlaying) return;
     this.body.play(key);
-    this._faceBarricade();
   }
 
   /**
@@ -308,7 +291,6 @@ export class Zombie {
     if (this._isSprite && this.scene.anims?.exists?.(attackKey)) {
       this.body.play(attackKey);
     }
-    this._faceBarricade();
     const juice = GAME_CONFIG.JUICE;
     const reach = homeX + juice.BARRICADE_LUNGE_PX * LAYOUT_SCALE;
     this.scene.tweens.add({
@@ -429,7 +411,6 @@ export class Zombie {
     if (this._isSprite && this.scene.anims?.exists?.(deathKey)) {
       body.play(deathKey);
     }
-    this._faceBarricade(body);
     this._arcCorpse(body);
   }
 
