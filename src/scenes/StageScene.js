@@ -153,29 +153,31 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d);
 
-    this.hudTime = this.add.text(layoutPx(12), textY, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
-    this.hudWave = this.add.text(layoutPx(120), textY, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
+    // Column starts for a 1280-wide bar. The old 800px columns collided once
+    // the font grew with the canvas (Weapon ran into Stage).
+    this.hudTime = this.add.text(20, textY, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
+    this.hudWave = this.add.text(170, textY, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
     this.hudEnemies = this.add
-      .text(layoutPx(210), textY, 'Enemies: 0', style)
+      .text(300, textY, 'Enemies: 0', style)
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudBarricade = this.add
-      .text(layoutPx(360), textY, `Barricade: ${BARRICADE_MAX_HP}`, style)
+      .text(500, textY, `Barricade: ${BARRICADE_MAX_HP}`, style)
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudGold = this.add
-      .text(layoutPx(520), textY, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
+      .text(720, textY, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudWeapon = this.add
-      .text(layoutPx(620), textY, this.defenders.weapons.getWeaponLabel(), {
+      .text(900, textY, this.defenders.weapons.getWeaponLabel(), {
         ...style,
         color: '#90caf9',
       })
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudStage = this.add
-      .text(GAME_WIDTH - layoutPx(12), textY, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
+      .text(GAME_WIDTH - layoutPx(16), textY, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
       .setOrigin(1, 0)
       .setScrollFactor(0)
       .setDepth(d + 1);
