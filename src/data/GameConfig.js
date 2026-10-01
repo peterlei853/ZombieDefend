@@ -23,6 +23,11 @@
  *
  * Hit shove, flash, hitlag, shake, and the critical-HP ratio live in JUICE.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
+ *
+ * Zombie sway, soft Y tracking, and soft separation live in SHAMBLE.
+ * Those are feel-only: wave HP, speed, DPS, gold, and barricade HP stay put.
+ * Lengths there are field px; Zombie multiplies them by LAYOUT_SCALE.
+ * Y motion clamps to the DepthView grass band and freezes while chewing.
  */
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
@@ -167,6 +172,37 @@ export const GAME_CONFIG = {
     /** Stronger than SCREEN_SHAKE_SHOTGUN. */
     SCREEN_SHAKE_OVERKILL: 0.03,
     SCREEN_SHAKE_OVERKILL_MS: 200,
+  },
+  /**
+   * March feel on top of the wave's X speed. Does not change HP, speed, or DPS.
+   * Distances and rates are field px / field px/s. Zombie scales those by
+   * LAYOUT_SCALE. SWAY_FREQUENCY is cycles per second (not scaled).
+   *
+   * While a zombie is chewing the barricade, Zombie freezes Y (no sway,
+   * track, or separation) so the bite does not bob on the slanted post.
+   * The shamble clock pauses with that freeze; knockback resumes the same
+   * wobble and keeps the tracked lane instead of the spawn row.
+   */
+  SHAMBLE: {
+    /** Peak bob above and below the tracked lane, field px. */
+    SWAY_AMPLITUDE: 7,
+    /** Bob cycles per second. Phase offset is per zombie id. */
+    SWAY_FREQUENCY: 0.85,
+    /**
+     * Field px/s cap on drift toward the defender's current Y.
+     * A step never exceeds the remaining gap, so this cannot snap.
+     */
+    Y_TRACK_RATE: 14,
+    /**
+     * Field px. Other zombies inside this 2D radius (X and lane Y)
+     * push this one on Y only. Rightward march is not altered.
+     */
+    SEPARATION_RADIUS: 34,
+    /**
+     * Field px/s Y push at zero distance, falling to 0 at SEPARATION_RADIUS.
+     * Each neighbor applies it, so a pair separates at twice this rate.
+     */
+    SEPARATION_STRENGTH: 22,
   },
 };
 

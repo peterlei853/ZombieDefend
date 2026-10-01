@@ -14,16 +14,33 @@ import {
   registerZombieAnims,
   zombieSheetKey,
 } from '../assets/zombieSprites.js';
-import { depthFromY, displayScaleFromY, LAYOUT_SCALE } from '../systems/DepthView.js';
+import {
+  depthFromY,
+  displayScaleFromY,
+  grassYMax,
+  grassYMin,
+  LAYOUT_SCALE,
+} from '../systems/DepthView.js';
 import { beginHitlag, shakeOverkill, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 
 let _zombieId = 0;
+
+/**
+ * Golden-ratio step so successive ids do not share a bob phase.
+ * Not a feel tunable — amplitude and frequency live in GAME_CONFIG.SHAMBLE.
+ */
+const SHAMBLE_PHASE_STEP = 0.6180339887;
 
 /**
  * Lane zombie. Walks right until barricade contact, then bites.
  * PixelLab strips (`zombie-walker|runner|tank` + walk/attack/stumble/death)
  * replace the rectangle when that texture is loaded; otherwise the colored
  * square stays. Scale and draw-order follow lane Y (2.5D DepthView).
+ *
+ * Y is free while marching: a sine sway, a slow drift toward the defender,
+ * and a soft push off nearby zombies (GAME_CONFIG.SHAMBLE). That motion
+ * pauses on the post so the bite does not jitter. X speed is still the
+ * wave speed (wounded when critical).
  */
 export class Zombie {
   /**
@@ -57,6 +74,11 @@ export class Zombie {
     this.barricadeDmgAccum = 0;
     this.goldValue = getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
+    /**
+     * Shamble clock (seconds). Pauses while chewing so knockback resumes
+     * the same sine sample. Phase is this.id * SHAMBLE_PHASE_STEP.
+     */
+    this._shambleTime = 0;
     this._lastX = cfg.x;
     this._lastY = cfg.y;
     this.scale = displayScaleFromY(cfg.y);
@@ -155,7 +177,9 @@ export class Zombie {
   }
 
   /**
-   * Shove the zombie left along its lane. Y stays on laneY.
+   * Shove the zombie left along its current lane. X only.
+   * Y stays on the tracked lane (plus whatever sway was already applied).
+   * It is not pulled back to the spawn row.
    * Releases barricade lock and any bite tween so the shove is not snapped back.
    * Tanks apply knockbackMult (still the handgun / pellet distances from GameConfig).
    * No-op if already dead or the body is gone.
@@ -169,7 +193,6 @@ export class Zombie {
       this.scene.tweens.killTweensOf(this.body);
     }
     this.body.x -= amount;
-    if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
     this._lastX = this.body.x;
     this._lastY = this.body.y;
     if (this.atBarricade) {
@@ -182,19 +205,98 @@ export class Zombie {
     this._applyDepth();
   }
 
+  /** Grass band from DepthView. Shambling Y never leaves the strip. */
+  _clampLaneY(y) {
+    return Math.min(grassYMax(), Math.max(grassYMin(), y));
+  }
+
   _applyDepth() {
     const y = this.body ? this.body.y : this.laneY;
+    // DepthView: scale and depth are both functions of Y. Spawn used to be
+    // the only Y write; marching now moves Y, so both refresh together.
+    this.scale = displayScaleFromY(y);
     const d = depthFromY(y);
-    if (this.body) this.body.setDepth(d);
+    if (this.body) {
+      if (this._isSprite) this.body.setScale(this.scale);
+      else this.body.setScale(this.scale * this.variantScale);
+      this.body.setDepth(d);
+    }
     if (this.hpBarBg) this.hpBarBg.setDepth(d + 1);
     if (this.hpBarFg) this.hpBarFg.setDepth(d + 2);
   }
 
   /**
+   * Sway, soft track toward the defender, and soft Y separation.
+   * Skipped while chewing — see update(). Feel numbers: GAME_CONFIG.SHAMBLE.
    * @param {number} deltaSec
-   * @param {number} contactX
+   * @param {{ playerY?: number, peers?: Zombie[] }} [feel]
    */
-  update(deltaSec, contactX) {
+  _applyShamble(deltaSec, feel) {
+    if (!this.body) return;
+    const cfg = GAME_CONFIG.SHAMBLE || {};
+    const dt = Number.isFinite(deltaSec) && deltaSec > 0 ? deltaSec : 0;
+
+    let lane = Number.isFinite(this.laneY) ? this.laneY : this.body.y;
+
+    const playerY = Number(feel?.playerY);
+    const trackRate = (Number(cfg.Y_TRACK_RATE) || 0) * LAYOUT_SCALE;
+    if (Number.isFinite(playerY) && trackRate > 0 && dt > 0) {
+      const dy = playerY - lane;
+      const maxStep = trackRate * dt;
+      if (Math.abs(dy) <= maxStep) lane = playerY;
+      else lane += Math.sign(dy) * maxStep;
+    }
+
+    const radius = (Number(cfg.SEPARATION_RADIUS) || 0) * LAYOUT_SCALE;
+    const strength = (Number(cfg.SEPARATION_STRENGTH) || 0) * LAYOUT_SCALE;
+    const peers = feel?.peers;
+    if (Array.isArray(peers) && radius > 0 && strength > 0 && dt > 0) {
+      let push = 0;
+      const selfX = this.body.x;
+      for (let i = 0; i < peers.length; i++) {
+        const peer = peers[i];
+        if (!peer || peer === this || peer.id === this.id || !peer.alive || !peer.body) continue;
+        const peerLane = Number.isFinite(peer.laneY) ? peer.laneY : peer.y;
+        if (!Number.isFinite(peerLane)) continue;
+        const dx = peer.x - selfX;
+        const dy = peerLane - lane;
+        const dist = Math.hypot(dx, dy);
+        let away = 0;
+        let weight = 0;
+        if (dist < 0.001) {
+          away = this.id < peer.id ? -1 : 1;
+          weight = strength;
+        } else if (dist < radius) {
+          away = dy > 0 ? -1 : dy < 0 ? 1 : this.id < peer.id ? -1 : 1;
+          weight = (1 - dist / radius) * strength;
+        }
+        if (weight > 0) push += away * weight;
+      }
+      lane += push * dt;
+    }
+
+    lane = this._clampLaneY(lane);
+    this.laneY = lane;
+
+    if (!Number.isFinite(this._shambleTime)) this._shambleTime = 0;
+    this._shambleTime += dt;
+    const amp = (Number(cfg.SWAY_AMPLITUDE) || 0) * LAYOUT_SCALE;
+    const freq = Number(cfg.SWAY_FREQUENCY) || 0;
+    const cycles = this._shambleTime * freq + this.id * SHAMBLE_PHASE_STEP;
+    const sway = Math.sin(cycles * Math.PI * 2) * amp;
+    this.body.y = this._clampLaneY(lane + sway);
+    this._lastY = this.body.y;
+  }
+
+  /**
+   * @param {number} deltaSec
+   * @param {number} contactX left face of the barricade at this zombie's current Y
+   * @param {{ playerY?: number, peers?: Zombie[] }} [feel]
+   *        Defender Y and the live list. Track and separation no-op when omitted.
+   *        Sway still runs. While atBarricade, Y is frozen (clock paused) so
+   *        the lunge stays on the post; knockback resumes from this lane Y.
+   */
+  update(deltaSec, contactX, feel) {
     if (!this.alive) return;
 
     if (!this.atBarricade) {
@@ -212,6 +314,10 @@ export class Zombie {
         this.body.x = nextX;
       }
     }
+
+    // Chewing freezes Y. Sway / track / separation would slide the body
+    // along the slanted post and fight the X-only lunge.
+    if (!this.atBarricade) this._applyShamble(deltaSec, feel);
 
     if (this.atBarricade) {
       this._attackCooldown -= deltaSec;
@@ -469,6 +575,12 @@ export class Zombie {
 
   _syncBars() {
     if (!this.hpBarBg || !this.hpBarFg || !this.body) return;
+    const barW = Math.max(20, (this._isSprite ? 28 : this.baseSize * this.variantScale) + 6) * this.scale;
+    const barH = 5 * this.scale;
+    this._barW = barW;
+    this.hpBarBg.width = barW;
+    this.hpBarBg.height = barH;
+    this.hpBarFg.height = barH;
     const barY = this.visualTop - 8 * this.scale;
     this.hpBarBg.x = this.body.x;
     this.hpBarBg.y = barY;
