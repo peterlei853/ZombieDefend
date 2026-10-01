@@ -363,7 +363,7 @@ export class WeaponSystem {
     }
 
     const hx = zombie.x;
-    const hy = zombie.y - (zombie.displayHalf || 0);
+    const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : zombie.y - (zombie.displayHalf || 0);
     const goldVal = zombie.goldValue || 0;
     const knockback = Number(bullet.knockback);
     if (knockback > 0 && typeof zombie.applyKnockback === 'function') {
@@ -374,7 +374,7 @@ export class WeaponSystem {
       return { gold: 0, kills: 0 };
     }
 
-    const killed = zombie.takeDamage(damage);
+    const killed = zombie.takeDamage(damage, { kind: bullet.kind });
     const color =
       bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, damage, color);
@@ -408,9 +408,9 @@ export class WeaponSystem {
     for (const z of eligible) {
       if (!z.alive || !z.body) continue;
       const hx = z.x;
-      const hy = z.y - z.displayHalf;
+      const hy = Number.isFinite(z.visualTop) ? z.visualTop : z.y - z.displayHalf;
       const goldVal = z.goldValue;
-      const killed = z.takeDamage(PET_AOE_DAMAGE);
+      const killed = z.takeDamage(PET_AOE_DAMAGE, { kind: 'pet' });
       showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet);
       if (killed) {
         gold += goldVal;

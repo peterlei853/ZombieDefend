@@ -1,4 +1,5 @@
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
+import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { layoutPx } from '../systems/DepthView.js';
 
 /**
@@ -13,10 +14,12 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     preloadPlayerAssets(this);
+    preloadZombieAssets(this);
   }
 
   create() {
     registerPlayerAnims(this);
+    registerZombieAnims(this);
     const { width, height } = this.scale;
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x0b0f14);

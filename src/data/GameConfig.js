@@ -105,5 +105,136 @@ export const GAME_CONFIG = {
     DAMAGE_TEXT_FLOAT_PX: 30,
     /** Fade duration for that float. */
     DAMAGE_TEXT_DURATION_MS: 600,
+
+    /**
+     * Pure-white hit flash on any bullet or pellet.
+     * Sprites use tint fill; rectangle placeholders swap fill.
+     * Bullet shove itself stays on WEAPONS.HANDGUN.KNOCKBACK (10) and
+     * WEAPONS.SHOTGUN.PELLET_KNOCKBACK (8) — both inside a 5–15 field-px shove.
+     * Tanks scale that shove by ZOMBIE_TYPES.tank.knockbackMult.
+     */
+    HIT_FLASH_MS: 50,
+    HIT_FLASH_COLOR: 0xffffff,
+
+    /** Field px lean into the barricade (+X) on each bite, then back. */
+    BARRICADE_LUNGE_PX: 10,
+    /** Outward half of the yoyo. Return takes the same time. */
+    BARRICADE_LUNGE_MS: 100,
+
+    /** Stumble / slow when remaining HP is at or below this fraction of max. */
+    CRIT_HP_RATIO: 0.3,
+    /**
+     * Move-speed multiplier while critical. Applied even when a stumble
+     * strip is playing, so a missing sheet still reads as wounded.
+     */
+    CRIT_SPEED_MULT: 0.5,
+
+    /** Normal death toss. −X is further left, away from the right-hand barricade. */
+    DEATH_ARC_X: 36,
+    /** Peak height of the arc (field px up). */
+    DEATH_ARC_Y: 22,
+    /** Extra drop by the end of the arc so the body settles, still left of the hit. */
+    DEATH_DROP_Y: 8,
+    DEATH_SPIN_DEG: 220,
+    DEATH_MS: 480,
+    BLOOD_COUNT: 10,
+    /** Field px upward travel for a blood speck. */
+    BLOOD_UP_PX: 28,
+    BLOOD_MS: 400,
+
+    /**
+     * Killing blow is overkill when it came from a shotgun pellet, or when
+     * the hit's damage is at least this (handgun is 30, so a pistol kill stays
+     * a normal death).
+     */
+    OVERKILL_DAMAGE: 40,
+    /** Real-time hitch. StageScene scales its delta; tweens and anims dip too. */
+    HITLAG_MS: 30,
+    HITLAG_SCALE: 0.05,
+    FRAGMENT_MIN: 4,
+    FRAGMENT_MAX: 6,
+    FRAGMENT_MS: 460,
+    /** Stronger than SCREEN_SHAKE_SHOTGUN. */
+    SCREEN_SHAKE_OVERKILL: 0.03,
+    SCREEN_SHAKE_OVERKILL_MS: 200,
   },
 };
+
+/**
+ * Zombie variant identity. HP, speed, and DPS stay on the wave archetype
+ * (waves.js) so gold-by-HP and the stage economy do not move.
+ * `knockbackMult` scales the existing handgun / pellet shove (1 = full).
+ * Placeholder scale and color are used only until that variant's walk sheet loads.
+ */
+export const ZOMBIE_TYPES = {
+  walker: {
+    knockbackMult: 1,
+    placeholderScale: 1,
+    placeholderColor: 0xd32f2f,
+    placeholderStroke: 0x7a1010,
+  },
+  runner: {
+    knockbackMult: 1,
+    placeholderScale: 0.82,
+    placeholderColor: 0xff7043,
+    placeholderStroke: 0xbf360c,
+  },
+  tank: {
+    knockbackMult: 0.6,
+    placeholderScale: 1.5,
+    placeholderColor: 0x4e1414,
+    placeholderStroke: 0x2a0a0a,
+  },
+};
+
+/** @param {string|null|undefined} id */
+export function zombieTypeDef(id) {
+  return ZOMBIE_TYPES[id] || ZOMBIE_TYPES.walker;
+}
+
+/**
+ * Walker / runner / tank from an explicit archetype label, otherwise from the
+ * stage-1 HP and speed bands already in waves.js (swarm is fast and light,
+ * the heavy slow row is the tank, everything else walks).
+ * @param {{ variant?: string, type?: string, hp?: number, speed?: number }|null|undefined} arch
+ * @returns {'walker'|'runner'|'tank'}
+ */
+export function resolveZombieVariant(arch) {
+  const named = arch?.variant || arch?.type;
+  if (named && ZOMBIE_TYPES[named]) return /** @type {'walker'|'runner'|'tank'} */ (named);
+  const hp = Number(arch?.hp) || 0;
+  const speed = Number(arch?.speed) || 0;
+  if (hp >= 150 || speed <= 34) return 'tank';
+  if (speed >= 48 && hp <= 70) return 'runner';
+  return 'walker';
+}
+
+/**
+ * @param {number} hp
+ * @param {number} maxHp
+ */
+export function isCriticalHp(hp, maxHp) {
+  return maxHp > 0 && hp > 0 && hp / maxHp <= GAME_CONFIG.JUICE.CRIT_HP_RATIO;
+}
+
+/**
+ * @param {number} speed
+ * @param {number} hp
+ * @param {number} maxHp
+ */
+export function woundedMoveSpeed(speed, hp, maxHp) {
+  if (!isCriticalHp(hp, maxHp)) return speed;
+  return speed * GAME_CONFIG.JUICE.CRIT_SPEED_MULT;
+}
+
+/**
+ * Shotgun pellets always gib. Any other killing blow gibs only at or above
+ * JUICE.OVERKILL_DAMAGE.
+ * @param {string|null|undefined} kind
+ * @param {number} damage
+ */
+export function isOverkillHit(kind, damage) {
+  if (kind === 'shotgun') return true;
+  const amount = Number(damage);
+  return Number.isFinite(amount) && amount >= GAME_CONFIG.JUICE.OVERKILL_DAMAGE;
+}
