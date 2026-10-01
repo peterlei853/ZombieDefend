@@ -96,9 +96,11 @@ export class Zombie {
    */
   _createSprite(scene, x, y, walkKey) {
     const sprite = scene.add.sprite(x, y, walkKey, 0);
-    // Lane Y is the sole. Sheets are west-facing 64×64.
+    // Lane Y is the sole. Sheets stay west-facing 64×64; origin stays (0.5, 1.0).
     sprite.setOrigin(ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y);
     sprite.setScale(this.scale);
+    // West art, march is +X. Mirror once so walk, attack, and stumble face the barricade.
+    sprite.setFlipX(true);
     return sprite;
   }
 
