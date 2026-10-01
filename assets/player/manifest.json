@@ -52,6 +52,20 @@
     },
     "shotgun": {
       "file": "shotgun.png"
+    },
+    "player-handgun-aim": {
+      "file": "player-handgun-aim.png",
+      "frames": 4,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
+    },
+    "player-shotgun-hold": {
+      "file": "player-shotgun-hold.png",
+      "frames": 4,
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "facing": "west"
     }
   }
 }
