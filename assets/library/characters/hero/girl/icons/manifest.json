@@ -1,0 +1,85 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "hero",
+  "group": "girl-icons",
+  "title": "Player Girl — weapon icons",
+  "titleZh": "武器圖示",
+  "description": "32x32 weapon icons for HUD / shop (single images, load with this.load.image).",
+  "source": {
+    "sourceFolder": "player-girl"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "frames": 1
+  },
+  "preview": {
+    "thumb": "assets/library/previews/hero/girl-icons/icons-sheet.png",
+    "sheets": [
+      "assets/library/previews/hero/girl-icons/icons-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "icon-water",
+      "path": "assets/library/characters/hero/girl/icons/icon-water.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    },
+    {
+      "key": "icon-sling",
+      "path": "assets/library/characters/hero/girl/icons/icon-sling.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    },
+    {
+      "key": "icon-bubble",
+      "path": "assets/library/characters/hero/girl/icons/icon-bubble.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    },
+    {
+      "key": "icon-lightning",
+      "path": "assets/library/characters/hero/girl/icons/icon-lightning.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    },
+    {
+      "key": "icon-frost",
+      "path": "assets/library/characters/hero/girl/icons/icon-frost.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    },
+    {
+      "key": "icon-flame",
+      "path": "assets/library/characters/hero/girl/icons/icon-flame.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "type": "icon",
+      "facing": null
+    }
+  ]
+}

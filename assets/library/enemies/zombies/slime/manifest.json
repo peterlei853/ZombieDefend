@@ -1,0 +1,172 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "slime",
+  "title": "Splitting Slime Zombie",
+  "titleZh": "分裂型史萊姆喪屍",
+  "description": "Splits on death: `zombie-slime-split` (96x64) ends as two mini slimes; spawn two slime-mini at spawnOffsetsX.",
+  "source": {
+    "pixellabCharacterId": "ad6d46ba-8b1f-40a1-88c0-a75cec86b2ac",
+    "sourceFolder": "zombie-batch2/slime"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-slime-walk",
+      "zombie-slime-attack",
+      "zombie-slime-hurt_jiggle",
+      "zombie-slime-split"
+    ],
+    "thumb": "assets/library/previews/zombies/slime/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/slime/all-actions-sheet.png",
+      "assets/library/previews/zombies/slime/special-sheet.png",
+      "assets/library/previews/zombies/slime/elemental-hits-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-slime-walk",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-run",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-die1",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-die2",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-attack",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-bite",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-hurt",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-idle_itch",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-hurt_freeze",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-hurt_burn",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-hurt_shock",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-hurt_jiggle",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-hurt_jiggle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-split",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-split.png",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "anchors": {
+        "spawnOffsetsX": [
+          -28,
+          28
+        ]
+      },
+      "note": "96x64 canvas (wider than the 64x64 base). Same origin semantics (0.5,1.0): canvas centre-bottom = slime position. Ends as two slime-mini stand poses; swap to zombie-slime-mini-* at x offsets spawnOffsetsX."
+    },
+    {
+      "key": "zombie-slime-splatter",
+      "path": "assets/library/enemies/zombies/slime/strips/zombie-slime-splatter.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    }
+  ]
+}

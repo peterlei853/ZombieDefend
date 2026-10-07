@@ -1,0 +1,101 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pickups",
+  "group": "clown-loot",
+  "title": "Clown Loot Pickups",
+  "titleZh": "小丑掉落物",
+  "description": "16x16 spinning coin and three gems (origin centre) plus a 64x32 loot pile (origin bottom-centre, = last frame of zombie-clown-loot_explode).",
+  "source": {
+    "sourceFolder": "zombie-batch3/clown"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "facing": null
+  },
+  "preview": {
+    "animate": [
+      "zombie-clown-coin",
+      "zombie-clown-gem-red",
+      "zombie-clown-gem-blue",
+      "zombie-clown-gem-green",
+      "zombie-clown-loot-pile"
+    ],
+    "thumb": "assets/library/previews/pickups/clown-loot/preview.gif",
+    "sheets": [
+      "assets/library/previews/pickups/clown-loot/pickups-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-clown-coin",
+      "path": "assets/library/pickups/zombie-clown-coin.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "16x16 spinning gold coin pickup, loop."
+    },
+    {
+      "key": "zombie-clown-gem-red",
+      "path": "assets/library/pickups/zombie-clown-gem-red.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "16x16 sparkling red gem pickup, loop."
+    },
+    {
+      "key": "zombie-clown-gem-blue",
+      "path": "assets/library/pickups/zombie-clown-gem-blue.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "16x16 sparkling blue gem pickup, loop."
+    },
+    {
+      "key": "zombie-clown-gem-green",
+      "path": "assets/library/pickups/zombie-clown-gem-green.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "16x16 sparkling green gem pickup, loop."
+    },
+    {
+      "key": "zombie-clown-loot-pile",
+      "path": "assets/library/pickups/zombie-clown-loot-pile.png",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "64x32 coin/gem pile (static = frame 0, or loop the 4-frame sparkle). Same art as the last frame of loot_explode."
+    }
+  ]
+}

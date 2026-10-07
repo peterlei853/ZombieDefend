@@ -1,0 +1,218 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "bosses",
+  "group": "lava-balon",
+  "title": "The Molten Giant, Balon",
+  "titleZh": "熔岩巨魔・巴倫",
+  "description": "Lava boss (128x128). Skills: lava_slam (fx-slam at impact), volcanic_breath (sustained start/loop/end + fx-breath attached at the mouth), meteor_storm (spawn fx-meteor + fx-meteor-impact during castFrames).",
+  "source": {
+    "pixellabCharacterId": "2f692cd5-2c6c-46d4-8a94-28199ddbb4f5",
+    "sourceFolder": "zombie-boss/lava"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 128,
+    "frameHeight": 128
+  },
+  "preview": {
+    "animate": [
+      "zombie-boss-lava-idle",
+      "zombie-boss-lava-walk",
+      "zombie-boss-lava-lava_slam",
+      "zombie-boss-lava-die1"
+    ],
+    "thumb": "assets/library/previews/bosses/lava-balon/preview.gif",
+    "sheets": [
+      "assets/library/previews/bosses/lava-balon/all-actions-sheet.png",
+      "assets/library/previews/bosses/lava-balon/skills-sheet.png",
+      "assets/library/previews/bosses/lava-balon/elemental-hits-sheet.png"
+    ],
+    "extras": [
+      "assets/library/previews/bosses/lava-balon/skill-lava_slam.gif",
+      "assets/library/previews/bosses/lava-balon/skill-volcanic_breath.gif",
+      "assets/library/previews/bosses/lava-balon/skill-meteor_storm.gif"
+    ]
+  },
+  "assets": [
+    {
+      "key": "zombie-boss-lava-spawn",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-spawn.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "note": "rises out of a lava pool (frames 0-5), then roars (6-11)"
+    },
+    {
+      "key": "zombie-boss-lava-idle",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-idle.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-walk",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-walk.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-run",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-run.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-attack",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-attack.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-hurt",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-hurt.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-lava-hurt_freeze",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-hurt_freeze.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "lava cools to a dark slate crust, ice crystals + ice mound; ends frozen (hold last frame)"
+    },
+    {
+      "key": "zombie-boss-lava-hurt_burn",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-hurt_burn.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "note": "overheat / flare variant: lava cracks blaze white-hot, flame mane flares"
+    },
+    {
+      "key": "zombie-boss-lava-hurt_shock",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-hurt_shock.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-enrage",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-enrage.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-lava-die1",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-die1.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-lava-die2",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-die2.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-lava-lava_slam",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-lava_slam.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "timing": {
+        "impactFrame": 7
+      },
+      "fx": [
+        "zombie-boss-lava-fx-slam"
+      ],
+      "note": "0-4 wind-up, 5-6 down-swing (smear), 7 impact (start fx-slam), 8-11 recovery"
+    },
+    {
+      "key": "zombie-boss-lava-volcanic_breath",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-volcanic_breath.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": 5,
+      "loopTo": 10,
+      "timing": {
+        "startRange": [
+          0,
+          4
+        ],
+        "loopRange": [
+          5,
+          10
+        ],
+        "endRange": [
+          11,
+          11
+        ]
+      },
+      "fx": [
+        "zombie-boss-lava-fx-breath"
+      ],
+      "note": "play startRange once, repeat loopRange while breathing, then endRange; fx-breath is attached from character frame 4"
+    },
+    {
+      "key": "zombie-boss-lava-meteor_storm",
+      "path": "assets/library/enemies/bosses/lava-balon/strips/zombie-boss-lava-meteor_storm.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "timing": {
+        "castFrames": [
+          2,
+          9
+        ]
+      },
+      "fx": [
+        "zombie-boss-lava-fx-meteor",
+        "zombie-boss-lava-fx-meteor-impact"
+      ]
+    }
+  ]
+}

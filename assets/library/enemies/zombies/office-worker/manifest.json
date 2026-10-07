@@ -1,0 +1,138 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "office-worker",
+  "title": "Office Worker Zombie",
+  "titleZh": "上班族丧尸",
+  "description": "Monster 01. Baseline shambling salaryman zombie: walk/run, attack/bite loops, two deaths, hurt and elemental hit reactions.",
+  "source": {
+    "pixellabCharacterId": "f8d7252e-2b88-4cad-bc27-5e8f9bc79a84",
+    "sourceFolder": "zombie-office-worker"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-office-walk",
+      "zombie-office-attack",
+      "zombie-office-hurt_burn",
+      "zombie-office-die1"
+    ],
+    "thumb": "assets/library/previews/zombies/office-worker/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/office-worker/all-actions-sheet.png",
+      "assets/library/previews/zombies/office-worker/attack-bite-sheet.png",
+      "assets/library/previews/zombies/office-worker/elemental-hits-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-office-walk",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-run",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-die1",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-office-die2",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-office-attack",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-bite",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-hurt",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-office-idle_itch",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-hurt_freeze",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-office-hurt_burn",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-office-hurt_shock",
+      "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "bosses",
+  "group": "lava-balon-fx",
+  "title": "The Molten Giant, Balon — skill FX",
+  "titleZh": "熔岩巨魔・巴倫 技能特效",
+  "description": "Skill FX strips for The Molten Giant, Balon. Origins and attach offsets are per key (see anchors/timing); offsets are in px relative to the boss origin (bottom-centre), east-facing; mirror x if the boss is flipped.",
+  "source": {
+    "sourceFolder": "zombie-boss/lava"
+  },
+  "defaults": {
+    "type": "fx",
+    "facing": "east"
+  },
+  "preview": {
+    "animate": [
+      "zombie-boss-lava-fx-slam",
+      "zombie-boss-lava-fx-breath",
+      "zombie-boss-lava-fx-meteor",
+      "zombie-boss-lava-fx-meteor-impact"
+    ],
+    "thumb": "assets/library/previews/bosses/lava-balon-fx/preview.gif",
+    "sheets": [
+      "assets/library/previews/bosses/lava-balon-fx/fx-slam-sheet.png",
+      "assets/library/previews/bosses/lava-balon-fx/fx-breath-sheet.png",
+      "assets/library/previews/bosses/lava-balon-fx/fx-meteor-sheet.png",
+      "assets/library/previews/bosses/lava-balon-fx/fx-meteor-impact-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-boss-lava-fx-slam",
+      "path": "assets/library/enemies/bosses/lava-balon/fx/zombie-boss-lava-fx-slam.png",
+      "frameWidth": 256,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "anchors": {
+        "attach": {
+          "animation": "zombie-boss-lava-lava_slam",
+          "startOnCharacterFrame": 7,
+          "offsetFromCharacterOrigin": [
+            44,
+            0
+          ]
+        },
+        "originNote": "bottom-centre = impact point on the ground"
+      },
+      "note": "ground crack + shockwave expand east, lava geysers erupt from the cracks, rock debris, dust; good moment for screen shake: fx frames 0-3",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-lava-fx-breath",
+      "path": "assets/library/enemies/bosses/lava-balon/fx/zombie-boss-lava-fx-breath.png",
+      "frameWidth": 256,
+      "frameHeight": 96,
+      "frames": 14,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "extra": {
+        "sourceLoopFlag": true
+      },
+      "origin": [
+        0.0,
+        0.5
+      ],
+      "anchors": {
+        "attach": {
+          "animation": "zombie-boss-lava-volcanic_breath",
+          "startOnCharacterFrame": 4,
+          "offsetFromCharacterOrigin": [
+            56,
+            -80
+          ],
+          "perCharacterFrameMouth": {
+            "4": [
+              56,
+              -80
+            ],
+            "5": [
+              55,
+              -80
+            ],
+            "6": [
+              57,
+              -79
+            ],
+            "7": [
+              55,
+              -80
+            ],
+            "8": [
+              56,
+              -79
+            ],
+            "9": [
+              55,
+              -80
+            ],
+            "10": [
+              56,
+              -79
+            ],
+            "11": [
+              50,
+              -70
+            ]
+          }
+        },
+        "originNote": "left-centre = mouth"
+      },
+      "timing": {
+        "startRange": [
+          0,
+          3
+        ],
+        "loopRange": [
+          4,
+          9
+        ],
+        "endRange": [
+          10,
+          13
+        ]
+      },
+      "note": "play 0-3 once, loop 4-9 while the character loops its frames 5-10, then 10-13 once (stream detaches and burns out)",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-lava-fx-meteor",
+      "path": "assets/library/enemies/bosses/lava-balon/fx/zombie-boss-lava-fx-meteor.png",
+      "frameWidth": 64,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.59375,
+        0.8125
+      ],
+      "anchors": {
+        "travelDirection": [
+          0.287,
+          0.958
+        ],
+        "suggestedSpeedPxPerFrame": 26,
+        "originNote": "centre of the falling rock"
+      },
+      "note": "single meteor; the game moves it along travelDirection (down, slightly east) and spawns fx-meteor-impact where the rock meets the ground. spawn many during meteor_storm castFrames",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-lava-fx-meteor-impact",
+      "path": "assets/library/enemies/bosses/lava-balon/fx/zombie-boss-lava-fx-meteor-impact.png",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "anchors": {
+        "originNote": "bottom-centre = crater centre on the ground"
+      },
+      "type": "fx"
+    }
+  ]
+}

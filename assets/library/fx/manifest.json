@@ -1,0 +1,45 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "exploder-blast",
+  "title": "Exploder Toxic Blast",
+  "titleZh": "劇毒爆炸",
+  "description": "Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-exploder dies / explodes; reusable for any chain-reaction or bomb.",
+  "source": {
+    "sourceFolder": "zombie-batch3/exploder"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null
+  },
+  "preview": {
+    "animate": [
+      "zombie-exploder-blast"
+    ],
+    "thumb": "assets/library/previews/fx/exploder-blast/preview.gif",
+    "sheets": [
+      "assets/library/previews/fx/exploder-blast/blast-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-exploder-blast",
+      "path": "assets/library/fx/zombie-exploder-blast.png",
+      "frameWidth": 160,
+      "frameHeight": 160,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    }
+  ]
+}

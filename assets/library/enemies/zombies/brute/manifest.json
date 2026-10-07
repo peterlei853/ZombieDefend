@@ -1,0 +1,177 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "brute",
+  "title": "Giant Mutant Brute",
+  "titleZh": "巨型突變暴君",
+  "description": "Large 96x96 mini-boss zombie with heavy hurt, part break, blast-back and defeat strips.",
+  "source": {
+    "pixellabCharacterId": "c13bb0f5-984d-4b35-9b37-742df531789a",
+    "sourceFolder": "zombie-batch2/brute"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 96,
+    "frameHeight": 96
+  },
+  "preview": {
+    "animate": [
+      "zombie-brute-walk",
+      "zombie-brute-attack",
+      "zombie-brute-part_break",
+      "zombie-brute-defeated"
+    ],
+    "thumb": "assets/library/previews/zombies/brute/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/brute/all-actions-sheet.png",
+      "assets/library/previews/zombies/brute/unique-actions-sheet.png",
+      "assets/library/previews/zombies/brute/special-sheet.png",
+      "assets/library/previews/zombies/brute/elemental-hits-sheet.png"
+    ],
+    "extras": [
+      "assets/library/previews/zombies/brute/special-sequence.gif"
+    ]
+  },
+  "assets": [
+    {
+      "key": "zombie-brute-walk",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-walk.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-run",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-run.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-die1",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-die1.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-die2",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-die2.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-attack",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-attack.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-bite",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-bite.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-hurt",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-hurt.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-idle_itch",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-idle_itch.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-hurt_freeze",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-hurt_freeze.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-hurt_burn",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-hurt_burn.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-hurt_shock",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-hurt_shock.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-brute-hurt_heavy",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-hurt_heavy.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-part_break",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-part_break.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-blasted_back",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-blasted_back.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-brute-defeated",
+      "path": "assets/library/enemies/zombies/brute/strips/zombie-brute-defeated.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    }
+  ]
+}

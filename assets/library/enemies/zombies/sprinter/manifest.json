@@ -1,0 +1,170 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "sprinter",
+  "title": "Fast Runner (high knockback)",
+  "titleZh": "瘋狂奔跑與擊飛喪屍",
+  "description": "Fast zombie that gets launched: blasted_back + tumble (96x64, translate x in code) then comedic_ko (loops frames 4-7).",
+  "source": {
+    "pixellabCharacterId": "d3b83548-43e5-4097-8096-167d92a1dc33",
+    "sourceFolder": "zombie-batch3/sprinter"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-sprinter-run",
+      "zombie-sprinter-attack",
+      "zombie-sprinter-blasted_back",
+      "zombie-sprinter-comedic_ko"
+    ],
+    "thumb": "assets/library/previews/zombies/sprinter/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/sprinter/all-actions-sheet.png",
+      "assets/library/previews/zombies/sprinter/special-sheet.png",
+      "assets/library/previews/zombies/sprinter/elemental-hits-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-sprinter-walk",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-run",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-die1",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-sprinter-die2",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-sprinter-attack",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-bite",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-hurt",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-sprinter-idle_itch",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-hurt_freeze",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-sprinter-hurt_burn",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-hurt_shock",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-sprinter-blasted_back",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-blasted_back.png",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "96x64 canvas, same origin semantics (0.5,1.0) = ground point under the zombie. Body stays in place horizontally: the game applies the westward knockback translation (e.g. tween x by -40..-80px over blasted_back+tumble). Vertical airborne arc, white shockwave burst, speed streaks and the hat + one shoe flying off are baked in. After this the zombie is hatless with one sock (tumble/comedic_ko)."
+    },
+    {
+      "key": "zombie-sprinter-tumble",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-tumble.png",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "frames": 10,
+      "frameRate": 10,
+      "loop": false,
+      "note": "96x64 canvas, same origin semantics; in place horizontally (keep applying knockback translation); bounce, backward roll and dust baked in."
+    },
+    {
+      "key": "zombie-sprinter-comedic_ko",
+      "path": "assets/library/enemies/zombies/sprinter/strips/zombie-sprinter-comedic_ko.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": 4,
+      "loopTo": 7,
+      "note": "Play once, then loop frames 4-7 (dizzy stars orbit + twitching foot). Ends lying on its back."
+    }
+  ]
+}
