@@ -1,0 +1,91 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "slime-mini",
+  "title": "Mini Slime (split child)",
+  "titleZh": "小史萊姆",
+  "description": "Child slime spawned by zombie-slime-split. 64x64 canvas, smaller body.",
+  "source": {
+    "pixellabCharacterId": "3b3a0436-6fbc-44df-92a8-526a6c4f8951",
+    "sourceFolder": "zombie-batch2/slime"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-slime-mini-walk",
+      "zombie-slime-mini-run",
+      "zombie-slime-mini-hurt",
+      "zombie-slime-mini-splatter"
+    ],
+    "thumb": "assets/library/previews/zombies/slime-mini/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/slime-mini/mini-actions-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-slime-mini-walk",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-mini-idle",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-idle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-mini-run",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-slime-mini-hurt",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-mini-die",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-die.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-slime-mini-splatter",
+      "path": "assets/library/enemies/zombies/slime-mini/strips/zombie-slime-mini-splatter.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    }
+  ]
+}

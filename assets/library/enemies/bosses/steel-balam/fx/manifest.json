@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "bosses",
+  "group": "steel-balam-fx",
+  "title": "The Cyber-Steel Behemoth, Balam — skill FX",
+  "titleZh": "鋼鐵巨獸・巴拉姆 技能特效",
+  "description": "Skill FX strips for The Cyber-Steel Behemoth, Balam. Origins and attach offsets are per key (see anchors/timing); offsets are in px relative to the boss origin (bottom-centre), east-facing; mirror x if the boss is flipped.",
+  "source": {
+    "sourceFolder": "zombie-boss/steel"
+  },
+  "defaults": {
+    "type": "fx",
+    "facing": "east"
+  },
+  "preview": {
+    "animate": [
+      "zombie-boss-steel-fx-smash",
+      "zombie-boss-steel-fx-acid",
+      "zombie-boss-steel-fx-acid-pool",
+      "zombie-boss-steel-fx-whirlwind"
+    ],
+    "thumb": "assets/library/previews/bosses/steel-balam-fx/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-boss-steel-fx-smash",
+      "path": "assets/library/enemies/bosses/steel-balam/fx/zombie-boss-steel-fx-smash.png",
+      "frameWidth": 256,
+      "frameHeight": 128,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "plays from ground_smash character frame 5; origin (bottom-center) goes on the fist impact point = character origin + (49,0) px",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-steel-fx-acid",
+      "path": "assets/library/enemies/bosses/steel-balam/fx/zombie-boss-steel-fx-acid.png",
+      "frameWidth": 256,
+      "frameHeight": 96,
+      "frames": 10,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": 2,
+      "loopTo": 5,
+      "origin": [
+        0.0,
+        0.5
+      ],
+      "note": "origin (left-middle) goes on the mouth anchor of the current bio_acid_spit frame (mouthAnchors). Start frames play with character frames 4-5, loop while the character loops 6-9, end frames play after (stream detaches).",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-steel-fx-acid-pool",
+      "path": "assets/library/enemies/bosses/steel-balam/fx/zombie-boss-steel-fx-acid-pool.png",
+      "frameWidth": 96,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "lingering damage puddle, origin bottom-center on the ground",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-steel-fx-whirlwind",
+      "path": "assets/library/enemies/bosses/steel-balam/fx/zombie-boss-steel-fx-whirlwind.png",
+      "frameWidth": 160,
+      "frameHeight": 160,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "front layer: draw OVER the boss; origin bottom-center = boss origin; play while steel_whirlwind loops (frames 2-7)",
+      "type": "fx"
+    },
+    {
+      "key": "zombie-boss-steel-fx-whirlwind-back",
+      "path": "assets/library/enemies/bosses/steel-balam/fx/zombie-boss-steel-fx-whirlwind-back.png",
+      "frameWidth": 160,
+      "frameHeight": 160,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "back layer: draw UNDER the boss, same origin/timing as fx-whirlwind",
+      "type": "fx"
+    }
+  ]
+}

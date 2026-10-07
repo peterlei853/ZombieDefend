@@ -1,0 +1,145 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "riot-bare",
+  "title": "Riot Zombie (bare, after armor break)",
+  "titleZh": "防爆喪屍（破甲後）",
+  "description": "Unarmored phase after `zombie-riot-armor_break`, incl. dismantled_defeat death.",
+  "source": {
+    "pixellabCharacterId": "7b95ee75-bee5-425e-b056-623b856085c1",
+    "sourceFolder": "zombie-batch3/riot"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-riot-bare-walk",
+      "zombie-riot-bare-attack",
+      "zombie-riot-bare-hurt_freeze",
+      "zombie-riot-bare-dismantled_defeat"
+    ],
+    "thumb": "assets/library/previews/zombies/riot-bare/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/riot-bare/bare-actions-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-riot-bare-walk",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-run",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-die1",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-riot-bare-die2",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-riot-bare-attack",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-bite",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-hurt",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-riot-bare-idle_itch",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-hurt_freeze",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-riot-bare-hurt_burn",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-hurt_shock",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-riot-bare-dismantled_defeat",
+      "path": "assets/library/enemies/zombies/riot-bare/strips/zombie-riot-bare-dismantled_defeat.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    }
+  ]
+}

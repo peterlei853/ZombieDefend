@@ -1,0 +1,159 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "clown",
+  "title": "Comedic Loot Dropper (Clown)",
+  "titleZh": "小丑/奇特搞怪喪屍",
+  "description": "Loot zombie: hurt_loot drops coins/gems, loot_explode bursts on death and ends on the loot-pile pickup (see pickups/clown-loot).",
+  "source": {
+    "pixellabCharacterId": "6ca89e10-2f4a-4082-9cb6-d30d6ff223aa",
+    "sourceFolder": "zombie-batch3/clown"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-clown-walk",
+      "zombie-clown-attack",
+      "zombie-clown-hurt_loot",
+      "zombie-clown-loot_explode"
+    ],
+    "thumb": "assets/library/previews/zombies/clown/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/clown/all-actions-sheet.png",
+      "assets/library/previews/zombies/clown/special-sheet.png",
+      "assets/library/previews/zombies/clown/elemental-hits-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-clown-walk",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-run",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-die1",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-clown-die2",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-clown-attack",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-bite",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-hurt",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "note": "Recoils west (snap back), then recovers."
+    },
+    {
+      "key": "zombie-clown-idle_itch",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-hurt_freeze",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-clown-hurt_burn",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-hurt_shock",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-clown-hurt_loot",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-hurt_loot.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "note": "Play once on a hit. Coins, gems and confetti popping out of the sack are baked in as visuals; spawn real pickups (zombie-clown-coin / zombie-clown-gem-*) in game at the sack around frame 1-2."
+    },
+    {
+      "key": "zombie-clown-loot_explode",
+      "path": "assets/library/enemies/zombies/clown/strips/zombie-clown-loot_explode.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "note": "Play once on death: inflates like a balloon with a trembling rim flash, sack bulging (0-3), burst (4), coins/gems/confetti/stars rain down while the pile grows (5-10), last frame (11) = zombie-clown-loot-pile frame 0 at the bottom of the 64x64 canvas, so you can swap to the pile pickup (origin bottom-centre) seamlessly. The party hat flies off on the burst."
+    }
+  ]
+}

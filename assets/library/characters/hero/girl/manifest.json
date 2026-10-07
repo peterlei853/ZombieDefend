@@ -1,0 +1,775 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "hero",
+  "group": "girl",
+  "title": "Player Girl (hero)",
+  "titleZh": "女主角",
+  "description": "Chibi girl hero with red cap and backpack; base moves plus six weapons (water, bubble, lightning crossbow, frost, flame, sling). Faces WEST unless the key ends in -walk-east/-north/-south.",
+  "source": {
+    "pixellabCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
+    "sourceFolder": "player-girl"
+  },
+  "conventions": {
+    "facing": "west (zombies come from the left) unless the key says otherwise",
+    "frameSize": "92x92 for player strips",
+    "origin": "(0.5, 76/92): feet at y=76",
+    "strips": "horizontal, frame i at x=i*frameWidth",
+    "sustainedFire": "water/bubble/frost/flame fire: play frames [0,loopFrom) once, loop [loopFrom..loopTo] while firing, then (loopTo..end] once",
+    "loopFields": "loop=true: whole strip loops; loopFrom/loopTo (inclusive, 0-based) mark the sustain section of a once-strip"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      0.8261
+    ],
+    "facing": "west",
+    "frameWidth": 92,
+    "frameHeight": 92
+  },
+  "preview": {
+    "animate": [
+      "player-girl-idle",
+      "player-girl-walk-west",
+      "player-girl-flame-fire",
+      "player-girl-sling-fire"
+    ],
+    "thumb": "assets/library/previews/hero/girl/preview.gif",
+    "sheets": [
+      "assets/library/previews/hero/girl/all-base-sheet.png"
+    ],
+    "extras": [
+      "assets/library/previews/hero/girl/weapon-water.gif",
+      "assets/library/previews/hero/girl/weapon-bubble.gif",
+      "assets/library/previews/hero/girl/weapon-lightning.gif",
+      "assets/library/previews/hero/girl/weapon-frost.gif",
+      "assets/library/previews/hero/girl/weapon-flame.gif",
+      "assets/library/previews/hero/girl/weapon-sling.gif"
+    ]
+  },
+  "assets": [
+    {
+      "key": "player-girl-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "head of frame 0 re-used on frames 3-5 (PixelLab turned the head)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-hurt",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-hurt.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-die",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-die.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "hit flash 0, recoil 1-2, fall 3-5, lying 6-7 (hold last frame)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-victory",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-victory.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-water-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-water-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the backpack 0-2, pull out 3, bring up to aim 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-water-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-water-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-bubble-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-bubble-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the backpack 0-2, pull out 3, bring up to aim 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-bubble-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-bubble-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-lightning-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-lightning-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the backpack 0-2, pull out 3, bring up to aim 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-lightning-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-lightning-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-frost-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-frost-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the backpack 0-2, pull out 3, bring up to aim 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-frost-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-frost-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-flame-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-flame-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the backpack 0-2, pull out 3, bring up to aim 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-flame-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-flame-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-water-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 9,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 3,
+      "loopTo": 6,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "play 0-2 once (start), loop 3-6 while firing, then 7-8 (end)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-sling-ready",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-ready.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "reach back to the hip 0-1, pull out 2-3, raise 4-5",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-sling-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "pull-back 0-5, release on frame 6 (spawn pellet), recover 7",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-sling-walk-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-walk-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south"
+    },
+    {
+      "key": "player-girl-sling-walk-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-walk-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north"
+    },
+    {
+      "key": "player-girl-bubble-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 9,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 3,
+      "loopTo": 6,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "play 0-2 once (start), loop 3-6 while firing, then 7-8 (end)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-frost-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 9,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 3,
+      "loopTo": 6,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "play 0-2 once (start), loop 3-6 while firing, then 7-8 (end)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-flame-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 9,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 3,
+      "loopTo": 6,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "play 0-2 once (start), loop 3-6 while firing, then 7-8 (end)",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-sling-idle",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-lightning-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-fire.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "raise/aim 0-3, shoot on frame 4 (spawn bolt, rim flash), recoil 4-6, settle 7",
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-water-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-water-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-water-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-bubble-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-bubble-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-bubble-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-lightning-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-lightning-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-lightning-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "note": "ponytail of frame 0 re-used (PixelLab made it fly)",
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-frost-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-frost-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-frost-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-flame-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-flame-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-flame-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    },
+    {
+      "key": "player-girl-sling-walk-west",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-walk-west.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "player-girl-sling-walk-east",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-sling-walk-east.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "east"
+    }
+  ]
+}

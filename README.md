@@ -23,3 +23,13 @@ Phaser 3 horizontal tower-defense demo.
 3. Drag the bottom-left stick up and down to change lanes. Tap **SWAP** to switch weapons. Keyboard on a desktop should still move and switch weapons.
 
 Auth (New/Old Game + CharSelect) is next; this deploy is the combat vertical slice.
+
+## Asset library
+
+Categorized art (hero girl, 12 zombie groups, 2 bosses, FX, pickups, campus backgrounds, and concepts) lives in `assets/library/`. The running game does not load it; `assets/zombies/` and `assets/player/` are unchanged.
+
+- Conventions and Phaser loading: [assets/library/README.md](assets/library/README.md)
+- Grouped list with thumbnails: [assets/library/CATALOG.md](assets/library/CATALOG.md)
+- Visual catalog: https://peterlei853.github.io/ZombieDefend/assets/library/catalog.html
+
+Every asset update must regenerate the catalog with `python3 tools/build-asset-catalog.py` in the same PR. `python3 tools/build-asset-catalog.py --check` fails if `asset-index.json`, `CATALOG.md`, or the inline data in `catalog.html` is stale.

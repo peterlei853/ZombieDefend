@@ -1,0 +1,416 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "hero",
+  "group": "girl-fx",
+  "title": "Player Girl — weapon FX",
+  "titleZh": "女主角武器特效",
+  "description": "Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (tileable), impacts and status overlays (wet, dizzy, paralyze, bubble trap, frost shatter). Directional FX point WEST (toward the zombies).",
+  "source": {
+    "sourceFolder": "player-girl"
+  },
+  "defaults": {
+    "type": "fx",
+    "facing": "west"
+  },
+  "preview": {
+    "animate": [
+      "fx-water-impact",
+      "fx-lightning-impact",
+      "fx-frost-shatter",
+      "fx-flame-cone"
+    ],
+    "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
+    "sheets": [
+      "assets/library/previews/hero/girl-fx/fx-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "fx-water-muzzle",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-muzzle.png",
+      "frameWidth": 28,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-water-stream",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-stream.png",
+      "frameWidth": 64,
+      "frameHeight": 16,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "seamless horizontal tile; repeat/stretch leftward from muzzle (TileSprite)",
+      "type": "fx"
+    },
+    {
+      "key": "fx-water-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-impact.png",
+      "frameWidth": 36,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.69
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-water-wet",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-wet.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "overlay on a wet zombie (feet at origin)",
+      "type": "fx"
+    },
+    {
+      "key": "fx-sling-pellet",
+      "path": "assets/library/characters/hero/girl/fx/fx-sling-pellet.png",
+      "frameWidth": 14,
+      "frameHeight": 10,
+      "frames": 4,
+      "frameRate": 16,
+      "loop": true,
+      "origin": [
+        0.29,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-sling-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-sling-impact.png",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-sling-dizzy",
+      "path": "assets/library/characters/hero/girl/fx/fx-sling-dizzy.png",
+      "frameWidth": 40,
+      "frameHeight": 18,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "overlay above stunned zombie head (origin bottom-center = head top)",
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-muzzle",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-muzzle.png",
+      "frameWidth": 32,
+      "frameHeight": 28,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-proj-s",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-s.png",
+      "frameWidth": 8,
+      "frameHeight": 8,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-proj-m",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-m.png",
+      "frameWidth": 12,
+      "frameHeight": 12,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-proj-l",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-l.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-pop",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-pop.png",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "frames": 5,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-trap-form",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-trap-form.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 5,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "play once, then trap-loop, then trap-pop",
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-trap-loop",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-trap-loop.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-bubble-trap-pop",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-trap-pop.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 5,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-lightning-bolt",
+      "path": "assets/library/characters/hero/girl/fx/fx-lightning-bolt.png",
+      "frameWidth": 32,
+      "frameHeight": 12,
+      "frames": 4,
+      "frameRate": 16,
+      "loop": true,
+      "origin": [
+        0.15,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-lightning-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-lightning-impact.png",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-lightning-chain",
+      "path": "assets/library/characters/hero/girl/fx/fx-lightning-chain.png",
+      "frameWidth": 64,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 16,
+      "loop": true,
+      "origin": [
+        0.0,
+        0.5
+      ],
+      "note": "tileable horizontal arc (ends at y=12); use TileSprite or scaleX to span targets",
+      "type": "fx"
+    },
+    {
+      "key": "fx-lightning-paralyze",
+      "path": "assets/library/characters/hero/girl/fx/fx-lightning-paralyze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "note": "overlay on paralysed zombie (origin feet)",
+      "type": "fx"
+    },
+    {
+      "key": "fx-frost-muzzle",
+      "path": "assets/library/characters/hero/girl/fx/fx-frost-muzzle.png",
+      "frameWidth": 24,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-frost-beam",
+      "path": "assets/library/characters/hero/girl/fx/fx-frost-beam.png",
+      "frameWidth": 64,
+      "frameHeight": 14,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "seamless horizontal tile; repeat leftward from muzzle",
+      "type": "fx"
+    },
+    {
+      "key": "fx-frost-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-frost-impact.png",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.83
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-frost-shatter",
+      "path": "assets/library/characters/hero/girl/fx/fx-frost-shatter.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 10,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.7
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-flame-muzzle",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-muzzle.png",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-flame-cone",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-cone.png",
+      "frameWidth": 96,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "note": "origin at nozzle (right-middle); cone extends 96px west",
+      "type": "fx"
+    },
+    {
+      "key": "fx-flame-ground",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-ground.png",
+      "frameWidth": 48,
+      "frameHeight": 24,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.92
+      ],
+      "type": "fx"
+    },
+    {
+      "key": "fx-flame-smoke",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-smoke.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "type": "fx"
+    }
+  ]
+}

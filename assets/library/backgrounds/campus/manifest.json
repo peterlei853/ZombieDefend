@@ -1,0 +1,419 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "backgrounds",
+  "group": "campus",
+  "title": "Campus Battle Background",
+  "titleZh": "校園戰場背景",
+  "description": "1280x720 campus background (authored 640x360, 2x nearest). Variants A (road, dusk, best), B (yard, dusk), C (night A). Layered far/ground/mid + animated fire and lamp glow. Top-left goes at world (832, 0) = the fixed camera scrollX.",
+  "source": {
+    "sourceFolder": "bg-campus"
+  },
+  "defaults": {
+    "type": "background",
+    "facing": null,
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "preview": {
+    "thumb": "assets/library/previews/backgrounds/campus/preview-A.gif",
+    "sheets": [
+      "assets/library/previews/backgrounds/campus/variants-sheet.png",
+      "assets/library/previews/backgrounds/campus/mock-A.png",
+      "assets/library/previews/backgrounds/campus/mock-B.png",
+      "assets/library/previews/backgrounds/campus/mock-C.png"
+    ],
+    "extras": [
+      "assets/library/previews/backgrounds/campus/preview-B.gif",
+      "assets/library/previews/backgrounds/campus/preview-C.gif"
+    ]
+  },
+  "assets": [
+    {
+      "key": "bg-campus-a",
+      "path": "assets/library/backgrounds/campus/variant-A.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Variant A (best): road in front of the school gate at dusk, flattened 1280x720 (fire frame 0 baked in).",
+      "tags": [
+        "dusk",
+        "flattened",
+        "variant-A"
+      ]
+    },
+    {
+      "key": "bg-campus-b",
+      "path": "assets/library/backgrounds/campus/variant-B.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Variant B: school yard at dusk (pitch, statue, hoop, pond), flattened 1280x720.",
+      "tags": [
+        "dusk",
+        "flattened",
+        "variant-B"
+      ]
+    },
+    {
+      "key": "bg-campus-c",
+      "path": "assets/library/backgrounds/campus/variant-C.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Variant C: night version of A, relit, flattened 1280x720.",
+      "tags": [
+        "night",
+        "flattened",
+        "variant-C"
+      ]
+    },
+    {
+      "key": "bg-campus-far",
+      "path": "assets/library/backgrounds/campus/layers/bg-far.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Layer: opaque sky, skyline, buildings, trees, smoke — variant A (dusk). Depth 3.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-ground",
+      "path": "assets/library/backgrounds/campus/layers/bg-ground.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 4
+      },
+      "description": "Layer: perspective ground, transparent above y=148 — variant A (dusk). Depth 4.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-mid",
+      "path": "assets/library/backgrounds/campus/layers/bg-mid.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 5
+      },
+      "description": "Layer: transparent fence, gate, hedges, flags, lamps, bus stop, car, bus — variant A (dusk). Depth 5.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-full",
+      "path": "assets/library/backgrounds/campus/layers/bg-full.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Layer stack flattened (identical to variant-A.png) — variant A (dusk).",
+      "tags": [
+        "layer",
+        "flattened"
+      ]
+    },
+    {
+      "key": "bg-campus-full-bleed",
+      "path": "assets/library/backgrounds/campus/layers/bg-full-bleed.png",
+      "type": "background",
+      "frameWidth": 1360,
+      "frameHeight": 768,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 792,
+        "worldY": -24,
+        "note": "place top-left at world (832-40, -24) so shake edges never show",
+        "depth": 3
+      },
+      "description": "1360x768 flattened with mirrored 40/24px margins for camera shake — variant A (dusk). Place at (832-40, -24).",
+      "tags": [
+        "layer",
+        "flattened",
+        "bleed"
+      ]
+    },
+    {
+      "key": "bg-campus-night-far",
+      "path": "assets/library/backgrounds/campus/layers-night/bg-far.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Layer: opaque sky, skyline, buildings, trees, smoke — variant C (night). Depth 3.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-night-ground",
+      "path": "assets/library/backgrounds/campus/layers-night/bg-ground.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 4
+      },
+      "description": "Layer: perspective ground, transparent above y=148 — variant C (night). Depth 4.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-night-mid",
+      "path": "assets/library/backgrounds/campus/layers-night/bg-mid.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 5
+      },
+      "description": "Layer: transparent fence, gate, hedges, flags, lamps, bus stop, car, bus — variant C (night). Depth 5.",
+      "tags": [
+        "layer"
+      ]
+    },
+    {
+      "key": "bg-campus-night-full",
+      "path": "assets/library/backgrounds/campus/layers-night/bg-full.png",
+      "type": "background",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 832,
+        "worldY": 0,
+        "note": "place top-left at world (WORLD_SHIFT_X=832, 0); camera scrollX is fixed at 832",
+        "depth": 3
+      },
+      "description": "Layer stack flattened (identical to variant-C.png) — variant C (night).",
+      "tags": [
+        "layer",
+        "flattened"
+      ]
+    },
+    {
+      "key": "bg-campus-night-full-bleed",
+      "path": "assets/library/backgrounds/campus/layers-night/bg-full-bleed.png",
+      "type": "background",
+      "frameWidth": 1360,
+      "frameHeight": 768,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "worldX": 792,
+        "worldY": -24,
+        "note": "place top-left at world (832-40, -24) so shake edges never show",
+        "depth": 3
+      },
+      "description": "1360x768 flattened with mirrored 40/24px margins for camera shake — variant C (night). Place at (832-40, -24).",
+      "tags": [
+        "layer",
+        "flattened",
+        "bleed"
+      ]
+    },
+    {
+      "key": "bg-campus-fire",
+      "path": "assets/library/backgrounds/campus/anim/fire-burning-block.png",
+      "type": "spritesheet",
+      "frameWidth": 170,
+      "frameHeight": 126,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0,
+        0
+      ],
+      "anchors": {
+        "x": 0,
+        "y": 16,
+        "worldX": 832,
+        "worldY": 16,
+        "depth": 3.5,
+        "variants": [
+          "A",
+          "B",
+          "C"
+        ],
+        "note": "positions are background px; add WORLD_SHIFT_X=832 for world x. above bg-far, below bg-ground/bg-mid (e.g. 3.5)"
+      },
+      "description": "Seamless 8-frame fire loop for the burning block (9 windows + roof). Layers contain no baked flames; flattened variants have frame 0 baked in.",
+      "tags": [
+        "anim",
+        "fire",
+        "loop"
+      ]
+    },
+    {
+      "key": "bg-campus-lamp",
+      "path": "assets/library/backgrounds/campus/anim/lamp-glow.png",
+      "type": "spritesheet",
+      "frameWidth": 112,
+      "frameHeight": 52,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "anchors": {
+        "positions": {
+          "A": [
+            [
+              1090,
+              92
+            ]
+          ],
+          "B": [
+            [
+              1090,
+              98
+            ]
+          ],
+          "C": [
+            [
+              294,
+              92
+            ],
+            [
+              834,
+              92
+            ],
+            [
+              1090,
+              92
+            ]
+          ]
+        },
+        "depth": 6,
+        "blendMode": "ADD",
+        "note": "positions are background px per variant; add 832 for world x. above bg-mid (e.g. 6); also usable as a ground pool scaled y 0.5"
+      },
+      "description": "Lamp flicker glow, 6 frames, additive blend (ADD).",
+      "tags": [
+        "anim",
+        "lamp",
+        "additive",
+        "loop"
+      ]
+    }
+  ]
+}

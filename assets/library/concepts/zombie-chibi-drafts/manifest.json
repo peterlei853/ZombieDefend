@@ -1,0 +1,400 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "concepts",
+  "group": "zombie-chibi-drafts",
+  "title": "Chibi Zombie Concept Drafts",
+  "titleZh": "Q版喪屍概念草圖",
+  "description": "20 front-view 256x256 concept images (PixelLab create_image_pixen). Concept art only — NOT game-ready sprites (no animation, wrong facing). Use as design reference.",
+  "source": {
+    "sourceFolder": "zombie-chibi-drafts"
+  },
+  "defaults": {
+    "type": "concept",
+    "facing": "south"
+  },
+  "preview": {
+    "thumb": "assets/library/previews/concepts/zombie-chibi-drafts/contact-sheet.png",
+    "sheets": [
+      "assets/library/previews/concepts/zombie-chibi-drafts/contact-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "concept-chibi-01-office-worker",
+      "path": "assets/library/concepts/zombie-chibi-drafts/01_office-worker.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Office Worker Zombie / 上班族丧尸: Pale-green salaryman in a torn white shirt, loose red tie and gray slacks, arms reaching forward.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "office-worker"
+      ]
+    },
+    {
+      "key": "concept-chibi-02-nurse",
+      "path": "assets/library/concepts/zombie-chibi-drafts/02_nurse.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Nurse Zombie / 护士丧尸: Ghoulish nurse in a blood-splattered white uniform and cap holding a giant syringe.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "nurse"
+      ]
+    },
+    {
+      "key": "concept-chibi-03-football-player",
+      "path": "assets/library/concepts/zombie-chibi-drafts/03_football-player.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Football Player Zombie / 橄榄球丧尸: Hulking linebacker in a cracked helmet and shoulder pads clutching a football.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "football-player"
+      ]
+    },
+    {
+      "key": "concept-chibi-04-chef",
+      "path": "assets/library/concepts/zombie-chibi-drafts/04_chef.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Chef Zombie / 厨师丧尸: Undead cook in a tall toque and stained apron brandishing a meat cleaver.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "chef"
+      ]
+    },
+    {
+      "key": "concept-chibi-05-construction-worker",
+      "path": "assets/library/concepts/zombie-chibi-drafts/05_construction-worker.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Construction Worker Zombie / 工地丧尸: Hard-hat laborer in a hi-vis orange vest dragging a wrench.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "construction-worker"
+      ]
+    },
+    {
+      "key": "concept-chibi-06-schoolgirl",
+      "path": "assets/library/concepts/zombie-chibi-drafts/06_schoolgirl.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Schoolgirl Zombie / 女学生丧尸: Sailor-uniform student with pigtails, torn skirt and a dangling school bag.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "schoolgirl"
+      ]
+    },
+    {
+      "key": "concept-chibi-07-bloated",
+      "path": "assets/library/concepts/zombie-chibi-drafts/07_bloated.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Bloated Zombie / 胖肿丧尸: Round, swollen blob of a zombie bursting out of a tiny tank top.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "bloated"
+      ]
+    },
+    {
+      "key": "concept-chibi-08-skinny-ghoul",
+      "path": "assets/library/concepts/zombie-chibi-drafts/08_skinny-ghoul.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Skinny Ghoul / 瘦骨丧尸: Bone-thin, hunched ghoul in rags with long claws and visible ribs.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "skinny-ghoul"
+      ]
+    },
+    {
+      "key": "concept-chibi-09-cheerleader",
+      "path": "assets/library/concepts/zombie-chibi-drafts/09_cheerleader.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Cheerleader Zombie / 啦啦队丧尸: Undead cheerleader with a high ponytail, pleated skirt and tattered pom-poms.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "cheerleader"
+      ]
+    },
+    {
+      "key": "concept-chibi-10-firefighter",
+      "path": "assets/library/concepts/zombie-chibi-drafts/10_firefighter.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Firefighter Zombie / 消防员丧尸: Soot-covered firefighter in tan bunker gear and red helmet carrying an axe.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "firefighter"
+      ]
+    },
+    {
+      "key": "concept-chibi-11-police-officer",
+      "path": "assets/library/concepts/zombie-chibi-drafts/11_police-officer.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Police Officer Zombie / 警察丧尸: Zombified cop in a navy uniform and peaked cap with a dangling baton.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "police-officer"
+      ]
+    },
+    {
+      "key": "concept-chibi-12-jiangshi",
+      "path": "assets/library/concepts/zombie-chibi-drafts/12_jiangshi.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Jiangshi Hopper / 清朝僵尸: Classic Chinese hopping vampire in Qing robes and hat with a yellow talisman on the forehead, arms stretched forward.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "jiangshi"
+      ]
+    },
+    {
+      "key": "concept-chibi-13-mummy",
+      "path": "assets/library/concepts/zombie-chibi-drafts/13_mummy.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Mummy Zombie / 木乃伊丧尸: Bandage-wrapped mummy with one glowing eye peeking out and loose trailing wraps.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "mummy"
+      ]
+    },
+    {
+      "key": "concept-chibi-14-punk",
+      "path": "assets/library/concepts/zombie-chibi-drafts/14_punk.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Punk Zombie / 朋克丧尸: Leather-jacket punk with a tall magenta mohawk, spikes and ripped jeans.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "punk"
+      ]
+    },
+    {
+      "key": "concept-chibi-15-grandma",
+      "path": "assets/library/concepts/zombie-chibi-drafts/15_grandma.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Grandma Zombie / 卷发奶奶丧尸: Hunched granny in pink hair curlers, floral nightgown and fuzzy slippers.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "grandma"
+      ]
+    },
+    {
+      "key": "concept-chibi-16-kid-teddy",
+      "path": "assets/library/concepts/zombie-chibi-drafts/16_kid-teddy.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Hoodie Kid Zombie / 小熊卫衣童尸: Small child in an oversized yellow hoodie dragging a torn teddy bear.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "kid-teddy"
+      ]
+    },
+    {
+      "key": "concept-chibi-17-toxic",
+      "path": "assets/library/concepts/zombie-chibi-drafts/17_toxic.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Toxic Zombie / 剧毒丧尸: Radioactive zombie glowing neon green, dripping ooze from a ruptured hazmat suit.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "toxic"
+      ]
+    },
+    {
+      "key": "concept-chibi-18-riot-armor",
+      "path": "assets/library/concepts/zombie-chibi-drafts/18_riot-armor.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Riot Armor Zombie / 防暴丧尸: Armored riot-police zombie with a cracked visor helmet and a large shield.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "riot-armor"
+      ]
+    },
+    {
+      "key": "concept-chibi-19-clown",
+      "path": "assets/library/concepts/zombie-chibi-drafts/19_clown.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Clown Zombie / 小丑丧尸: Creepy circus clown with rainbow afro, red nose and a polka-dot suit.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "clown"
+      ]
+    },
+    {
+      "key": "concept-chibi-20-brute-boss",
+      "path": "assets/library/concepts/zombie-chibi-drafts/20_brute-boss.png",
+      "type": "concept",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "facing": "south",
+      "origin": null,
+      "description": "Brute Boss Zombie / 巨兽丧尸王: Massive muscular boss zombie with a huge chest, broken shackles and stitched scars.",
+      "tags": [
+        "concept",
+        "chibi",
+        "front-view",
+        "not-game-ready",
+        "brute-boss"
+      ]
+    },
+    {
+      "key": "concept-chibi-contact-sheet",
+      "path": "assets/library/concepts/zombie-chibi-drafts/contact-sheet.png",
+      "type": "concept",
+      "frameWidth": 1280,
+      "frameHeight": 1136,
+      "frames": 1,
+      "facing": null,
+      "origin": null,
+      "description": "Contact sheet of all 20 chibi zombie concepts (5x4).",
+      "tags": [
+        "concept",
+        "contact-sheet",
+        "not-game-ready"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "trashcan-bare",
+  "title": "Trash Can Zombie (bare, after break)",
+  "titleZh": "垃圾桶喪屍（破甲後）",
+  "description": "Unarmored phase after `zombie-trashcan-break`: full move set plus a panic run.",
+  "source": {
+    "pixellabCharacterId": "12677659-15cf-4806-9018-43d737d708dd",
+    "sourceFolder": "zombie-batch2/trashcan"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "zombie-trashcan-bare-walk",
+      "zombie-trashcan-bare-panic",
+      "zombie-trashcan-bare-hurt_shock",
+      "zombie-trashcan-bare-die1"
+    ],
+    "thumb": "assets/library/previews/zombies/trashcan-bare/preview.gif",
+    "sheets": [
+      "assets/library/previews/zombies/trashcan-bare/bare-actions-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-trashcan-bare-walk",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-walk.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-run",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-run.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-die1",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-die1.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-trashcan-bare-die2",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-die2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-trashcan-bare-attack",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-bite",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-bite.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-hurt",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-trashcan-bare-idle_itch",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-idle_itch.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-hurt_freeze",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-hurt_freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-trashcan-bare-hurt_burn",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-hurt_burn.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-hurt_shock",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-hurt_shock.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-trashcan-bare-panic",
+      "path": "assets/library/enemies/zombies/trashcan-bare/strips/zombie-trashcan-bare-panic.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "bosses",
+  "group": "steel-balam",
+  "title": "The Cyber-Steel Behemoth, Balam",
+  "titleZh": "鋼鐵巨獸・巴拉姆",
+  "description": "Steel boss (128x128). Skills: ground_smash (fx-smash at impactPoint), bio_acid_spit (sustained loop 7-10 + fx-acid on mouthAnchors, fx-acid-pool on the ground), steel_whirlwind (loop 3-8 with fx-whirlwind front + back layers).",
+  "source": {
+    "pixellabCharacterId": "0ddbc644-751c-46f8-aa94-4af86003e833",
+    "sourceFolder": "zombie-boss/steel"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 128,
+    "frameHeight": 128
+  },
+  "preview": {
+    "animate": [
+      "zombie-boss-steel-idle",
+      "zombie-boss-steel-walk",
+      "zombie-boss-steel-ground_smash",
+      "zombie-boss-steel-die2"
+    ],
+    "thumb": "assets/library/previews/bosses/steel-balam/preview.gif",
+    "sheets": [
+      "assets/library/previews/bosses/steel-balam/all-actions-sheet.png",
+      "assets/library/previews/bosses/steel-balam/skills-sheet.png",
+      "assets/library/previews/bosses/steel-balam/elemental-hits-sheet.png"
+    ],
+    "extras": [
+      "assets/library/previews/bosses/steel-balam/skill-ground_smash.gif",
+      "assets/library/previews/bosses/steel-balam/skill-bio_acid_spit.gif",
+      "assets/library/previews/bosses/steel-balam/skill-steel_whirlwind.gif"
+    ]
+  },
+  "assets": [
+    {
+      "key": "zombie-boss-steel-spawn",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-spawn.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-steel-idle",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-idle.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-steel-walk",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-walk.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-steel-run",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-run.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-steel-attack",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-attack.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-steel-hurt",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-hurt.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-steel-hurt_freeze",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-hurt_freeze.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-steel-hurt_burn",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-hurt_burn.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-steel-hurt_shock",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-hurt_shock.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-boss-steel-enrage",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-enrage.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "note": "low-HP rage loop"
+    },
+    {
+      "key": "zombie-boss-steel-ground_smash",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-ground_smash.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "anchors": {
+        "impactPoint": [
+          49,
+          0
+        ]
+      },
+      "timing": {
+        "impactFrame": 5
+      },
+      "fx": [
+        "zombie-boss-steel-fx-smash"
+      ],
+      "skill": "毀滅轟地"
+    },
+    {
+      "key": "zombie-boss-steel-bio_acid_spit",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-bio_acid_spit.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": 7,
+      "loopTo": 10,
+      "anchors": {
+        "mouthAnchors": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ],
+          [
+            44,
+            -67
+          ]
+        ],
+        "anchorNote": "mouth position relative to the character origin (bottom-center), px, y up is negative"
+      },
+      "timing": {
+        "mouthOpenFrame": 5
+      },
+      "fx": [
+        "zombie-boss-steel-fx-acid",
+        "zombie-boss-steel-fx-acid-pool"
+      ],
+      "skill": "毒霧噴射"
+    },
+    {
+      "key": "zombie-boss-steel-steel_whirlwind",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-steel_whirlwind.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 3,
+      "loopTo": 8,
+      "fx": [
+        "zombie-boss-steel-fx-whirlwind",
+        "zombie-boss-steel-fx-whirlwind-back"
+      ],
+      "skill": "鋼刃旋風"
+    },
+    {
+      "key": "zombie-boss-steel-die1",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-die1.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-boss-steel-die2",
+      "path": "assets/library/enemies/bosses/steel-balam/strips/zombie-boss-steel-die2.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "note": "big defeat, clearly different from die1 (kneel then face-down collapse, plates pop off, toxic smoke)"
+    }
+  ]
+}
