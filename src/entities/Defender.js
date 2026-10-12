@@ -34,14 +34,11 @@ import {
   HERO_ORIGIN_Y,
   heroLocomotionKeys,
 } from '../assets/heroLoadout.js';
+import { libraryAsset } from '../assets/libraryAssets.js';
+import { petDepth, petDisplayScale, petLineupSlots } from '../assets/petLineup.js';
 
 /** Player sits this many px right of the grass edge (safe zone), in field px. */
 const PLAYER_SAFE_OFFSET = layoutPx(32);
-/** Pet (turret) offset from player toward the safer side. */
-const PET_OFFSET_X = layoutPx(25);
-const PET_OFFSET_Y = layoutPx(-15);
-/** Lerp factor per ~16.67ms frame (delta-aware). */
-const PET_LERP = 0.16;
 /**
  * Player vertical move speed (field px/s from GAME_CONFIG), scaled so a lane
  * sweep takes the same time on the 1280 canvas.
@@ -69,9 +66,10 @@ const WEAPON_GRIP = {
 };
 
 /**
- * Player + pet behind the barricade.
- * Movement / follow stay here; targeting, fire cadence, ballistics, pet AOE
- * live in WeaponSystem.
+ * Player on the barricade lane, plus the four baby pets standing on the
+ * safe side of the fence. Pets do not follow the hero.
+ * Targeting, fire cadence, ballistics, and the existing pet shot live in
+ * WeaponSystem — one shot on the old interval, not a new skill per pet.
  */
 export class DefenderGroup {
   /**
@@ -104,20 +102,13 @@ export class DefenderGroup {
     this.player = this._createPlayerBody(scene, playerX, playerY, playerScale);
     this.weaponProp = this._createWeaponProp(scene, playerX, playerY);
 
-    const petX = playerX + PET_OFFSET_X;
-    const petY = playerY + PET_OFFSET_Y;
-    const petScale = displayScaleFromY(petY);
-
-    // PIXELLAB_HOOK: pet sprite — phoenix/panda/lion/dragon are not in the library yet
-    this.turret = scene.add.rectangle(petX, petY, 24, 24, 0x78909c);
-    this.turret.setStrokeStyle(2, 0x546e7a);
-    this.turret.setScale(petScale);
-    this.turret.setDepth(depthFromY(petY));
-    // Small barrel marker
-    this.turretBarrel = scene.add
-      .rectangle(petX - layoutPx(16), petY, 14, 6, 0x90a4ae)
-      .setScale(petScale)
-      .setDepth(depthFromY(petY, 1));
+    this._petSlots = petLineupSlots();
+    /** @type {Phaser.GameObjects.Sprite[]} */
+    this.pets = [];
+    for (const slot of this._petSlots) {
+      const pet = this._createLineupPet(scene, slot);
+      if (pet) this.pets.push(pet);
+    }
 
     // W/S + arrow keys for Y-only move. Touch stick is optional (VirtualControls).
     const keyboard = scene.input.keyboard;
@@ -204,24 +195,59 @@ export class DefenderGroup {
     this._syncWeaponProp();
   }
 
-  _syncPetTransform(deltaMs) {
-    // Pet stays on the lane anchor — shotgun recoil does not shove the pet.
-    const targetX = this._laneAnchorX(this.player.y) + PET_OFFSET_X;
-    const targetY = this._clampGrassY(this.player.y + PET_OFFSET_Y);
-    // Delta-aware lerp (~PET_LERP per 60fps frame)
-    const t = 1 - Math.pow(1 - PET_LERP, deltaMs / (1000 / 60));
-    this.turret.x += (targetX - this.turret.x) * t;
-    this.turret.y += (targetY - this.turret.y) * t;
-    this.turret.y = this._clampGrassY(this.turret.y);
+  /**
+   * Baby idle on a fixed fence slot. No placeholder square if the strip
+   * is missing — the slot still exists for the existing pet shot.
+   * @param {Phaser.Scene} scene
+   * @param {{ key: string, x: number, y: number }} slot
+   */
+  _createLineupPet(scene, slot) {
+    if (!scene.textures?.exists?.(slot.key)) return null;
+    const asset = libraryAsset(scene, slot.key);
+    const origin = asset?.origin ?? [0.5, 1];
+    const pet = scene.add.sprite(slot.x, slot.y, slot.key, 0);
+    pet.setOrigin(origin[0], origin[1]);
+    pet.setScale(petDisplayScale(slot.y));
+    pet.setDepth(petDepth(slot.y));
+    // Library pets face west (toward the march). Do not flip.
+    if (scene.anims?.exists?.(slot.key)) pet.play(slot.key);
+    return pet;
+  }
 
-    const s = displayScaleFromY(this.turret.y);
-    this.turret.setScale(s);
-    this.turret.setDepth(depthFromY(this.turret.y));
-
-    this.turretBarrel.x = this.turret.x - layoutPx(16);
-    this.turretBarrel.y = this.turret.y;
-    this.turretBarrel.setScale(s);
-    this.turretBarrel.setDepth(depthFromY(this.turret.y, 1));
+  /**
+   * Origin for the existing single pet shot. The pet whose lane is closest
+   * to the nearest zombie fires; damage and interval stay in WeaponSystem.
+   * @param {import('./Zombie.js').Zombie[]} zombies
+   * @returns {{ x: number, y: number }|null}
+   */
+  _petFireOrigin(zombies) {
+    const points = this.pets.length
+      ? this.pets.map((pet) => ({ x: pet.x, y: pet.y }))
+      : this._petSlots;
+    if (!points.length) return null;
+    const list = Array.isArray(zombies) ? zombies : [];
+    let probe = null;
+    let probeDist = Infinity;
+    for (const point of points) {
+      const nearest = this.weapons.findNearest(list, point.x, point.y);
+      if (!nearest) continue;
+      const dist = Math.hypot(nearest.x - point.x, nearest.y - point.y);
+      if (dist < probeDist) {
+        probeDist = dist;
+        probe = nearest;
+      }
+    }
+    if (!probe) return points[Math.floor(points.length / 2)];
+    let best = points[0];
+    let bestDy = Infinity;
+    for (const point of points) {
+      const dy = Math.abs(point.y - probe.y);
+      if (dy < bestDy) {
+        bestDy = dy;
+        best = point;
+      }
+    }
+    return best;
   }
 
   /**
@@ -248,7 +274,6 @@ export class DefenderGroup {
       this.player.y += dy * PLAYER_MOVE_SPEED * deltaSec;
     }
     this._syncPlayerTransform();
-    this._syncPetTransform(deltaMs);
 
     // Handgun keeps firing while the lane is held. Shotgun waits until the
     // defender is fully stopped and the post-fire lock has expired.
@@ -269,13 +294,10 @@ export class DefenderGroup {
     if (fired === 'shotgun') this._onShotgunVolley();
     else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     this._updateStance(dy, shotgunLocked ? 0 : dx);
-    this.weapons.updatePetFire(
-      deltaMs,
-      this.turret.x,
-      this.turret.y,
-      zombies,
-      this.bullets
-    );
+    const petOrigin = this._petFireOrigin(zombies);
+    if (petOrigin) {
+      this.weapons.updatePetFire(deltaMs, petOrigin.x, petOrigin.y, zombies, this.bullets);
+    }
 
     // Move only. Range / off-view retirement happens after hit tests so a
     // pellet can still connect on the frame it reaches maxDistance.
@@ -446,16 +468,14 @@ export class DefenderGroup {
   }
 
   /**
-   * One shotgun volley (not each pellet): recoil anim, +12px kick, 300ms
-   * lane lock, camera shake. Shell casing and muzzle flash spawn with the fan.
+   * One shotgun volley (not each pellet): recoil anim, body kick, lane lock.
+   * Weapon fire does not shake the camera. Shell casing and muzzle flash
+   * still spawn with the fan.
    */
   _onShotgunVolley() {
     this._shotgunLockMs = GAME_CONFIG.PLAYER.SHOTGUN_MOVE_LOCK_MS;
     this._playShotgunRecoilAnim();
     this._kickShotgunRecoil();
-    if (typeof this.scene?.onShotgunFired === 'function') {
-      this.scene.onShotgunFired();
-    }
   }
 
   /**
@@ -692,7 +712,7 @@ export class DefenderGroup {
     this.weaponProp?.destroy();
     this.weaponProp = null;
     this.player.destroy();
-    this.turret.destroy();
-    this.turretBarrel.destroy();
+    for (const pet of this.pets) pet.destroy();
+    this.pets = [];
   }
 }

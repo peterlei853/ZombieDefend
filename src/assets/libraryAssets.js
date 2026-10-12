@@ -4,15 +4,28 @@
  * frame sizes here. `concepts` stays out of the game load.
  */
 
+import { stageLibraryFilter } from './petLineup.js';
+
 export const LIBRARY_INDEX_KEY = 'asset-library-index';
 const INDEX_URL = 'assets/library/asset-index.json';
 
-/** Categories the stage actually draws. Concepts are reference art only. */
-export const STAGE_LIBRARY_CATEGORIES = ['hero', 'zombies', 'fx', 'backgrounds'];
+/**
+ * Categories the stage actually draws. Concepts are reference art only.
+ * `pets` is narrowed by stageLibraryFilter to the four baby idle strips.
+ * `environment` is the barricade fence posts.
+ */
+export const STAGE_LIBRARY_CATEGORIES = [
+  'hero',
+  'zombies',
+  'fx',
+  'backgrounds',
+  'pets',
+  'environment',
+];
 
 /**
- * Boss sheets stay on disk until a wave row spawns them.
- * Pets (phoenix / panda / lion / dragon) are not in the library.
+ * Boss sheets, pickups, and concepts stay on disk until something spawns them.
+ * Other pet forms (young / ancient / FX) are filtered out of the stage load.
  * @type {string[]}
  */
 export const UNWIRED_LIBRARY_CATEGORIES = ['bosses', 'pickups', 'concepts'];
@@ -23,7 +36,7 @@ export const UNWIRED_LIBRARY_CATEGORIES = ['bosses', 'pickups', 'concepts'];
  * @param {Phaser.Scene} scene
  * @param {{ categories?: string[], filter?: ((asset: object) => boolean)|null }} [opts]
  */
-export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, filter = null } = {}) {
+export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, filter = stageLibraryFilter } = {}) {
   if (!scene?.load || !scene.textures) return;
   const cached = readCachedIndex(scene);
   if (cached) {
