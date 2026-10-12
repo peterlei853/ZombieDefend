@@ -452,9 +452,11 @@ export class Zombie {
       this.hp = 0;
       this.alive = false;
       this._beginDeath(amount, hit);
+      this.scene.audio?.playZombieDeath();
       return true;
     }
     this._playHitFlash();
+    if (amount > 0) this.scene.audio?.playZombieHurt();
     return false;
   }
 

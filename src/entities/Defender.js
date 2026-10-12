@@ -264,6 +264,8 @@ export class DefenderGroup {
         canFireShotgun: !laneHeld && !shotgunLocked,
       }
     );
+    // One fire SFX per volley. Shotgun returns once for the whole fan, not per pellet.
+    if (fired) this.scene.audio?.playWeaponShot(this.weapons.getSkin?.(), fired);
     if (fired === 'shotgun') this._onShotgunVolley();
     else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     this._updateStance(dy, shotgunLocked ? 0 : dx);

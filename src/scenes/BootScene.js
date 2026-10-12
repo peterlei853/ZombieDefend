@@ -2,6 +2,7 @@ import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprite
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { layoutPx } from '../systems/DepthView.js';
+import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 
 /**
  * Minimal boot / title stub.
@@ -17,6 +18,7 @@ export default class BootScene extends Phaser.Scene {
     preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
+    preloadGameAudio(this);
   }
 
   create() {
@@ -37,7 +39,7 @@ export default class BootScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height * 0.44, 'v0.16.2 — Stage 1', {
+      .text(width / 2, height * 0.44, 'v0.17.0 — Stage 1', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(16)}px`,
         color: '#8fa3b8',
@@ -66,9 +68,16 @@ export default class BootScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    this.audio = new SoundManager(this);
+    this.events.once('shutdown', () => {
+      this.audio?.dispose();
+      this.audio = null;
+    });
+
     btn.on('pointerover', () => btn.setFillStyle(0x388e3c));
     btn.on('pointerout', () => btn.setFillStyle(0x2e7d32));
     btn.on('pointerup', () => {
+      this.audio?.playUiClick();
       this.scene.start('StageScene', {
         stage: this.registry.get('stage') || 1,
         gold: this.registry.get('gold') || 0,
