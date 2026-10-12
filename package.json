@@ -1,11 +1,12 @@
 {
   "name": "zombie-defend",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "private": true,
   "description": "ZombieDefend — Phaser 3 tower-defense shell",
   "scripts": {
     "serve": "npx --yes serve . -p 5173",
-    "start": "npm run serve"
+    "start": "npm run serve",
+    "check:readout": "node tools/check-damage-readout.mjs"
   },
   "type": "module"
 }
