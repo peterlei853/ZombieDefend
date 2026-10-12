@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 84 |
+| [Hero](#hero) | 3 | 86 |
 | [Pets](#pets) | 16 | 68 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
@@ -13,7 +13,7 @@
 | [Pickups](#pickups) | 1 | 5 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **39** | **378** |
+| **Total** | **39** | **380** |
 
 <a id="hero"></a>
 ## Hero
@@ -84,41 +84,43 @@ Chibi girl hero with red cap and backpack; base moves plus six weapons (water, b
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (tileable), impacts and status overlays (wet, dizzy, paralyze, bubble trap, frost shatter). Directional FX point WEST (toward the zombies).
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake: cyan lightning orb, warm flame ember pellets, ice-crystal frost, soap bubble traps.
 
-- group `girl-fx` · 28 assets · frame 8x8, 12x12, 14x10, 16x16, 24x24, 24x32, 28x24, 32x12, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x14, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 30 assets · frame 8x8, 12x12, 14x10, 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
-| `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) | seamless horizontal tile; repeat/stretch leftward from muzzle (TileSprite) |
-| `fx-water-impact` | 6 | 36x32 | 12 | once | (0.5, 0.69) |  |
-| `fx-water-wet` | 6 | 64x64 | 8 | loop | (0.5, 1.0) | overlay on a wet zombie (feet at origin) |
-| `fx-sling-pellet` | 4 | 14x10 | 16 | loop | (0.29, 0.5) |  |
-| `fx-sling-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
-| `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) | overlay above stunned zombie head (origin bottom-center = head top) |
 | `fx-bubble-muzzle` | 4 | 32x28 | 12 | once | (1.0, 0.5) |  |
-| `fx-bubble-proj-s` | 4 | 8x8 | 8 | loop | (0.5, 0.5) |  |
-| `fx-bubble-proj-m` | 4 | 12x12 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-pop` | 6 | 24x24 | 16 | once | (0.5, 0.5) |  |
 | `fx-bubble-proj-l` | 4 | 16x16 | 8 | loop | (0.5, 0.5) |  |
-| `fx-bubble-pop` | 6 | 24x24 | 14 | once | (0.5, 0.5) |  |
-| `fx-bubble-trap-form` | 5 | 64x64 | 12 | once | (0.5, 1.0) | play once, then trap-loop, then trap-pop |
+| `fx-bubble-proj-m` | 4 | 12x12 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-proj-s` | 4 | 8x8 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-trap-form` | 6 | 64x64 | 12 | once | (0.5, 1.0) |  |
 | `fx-bubble-trap-loop` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
-| `fx-bubble-trap-pop` | 5 | 64x64 | 14 | once | (0.5, 1.0) |  |
-| `fx-lightning-bolt` | 4 | 32x12 | 16 | loop | (0.15, 0.5) |  |
-| `fx-lightning-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
-| `fx-lightning-chain` | 4 | 64x24 | 16 | loop | (0.0, 0.5) | tileable horizontal arc (ends at y=12); use TileSprite or scaleX to span targets |
-| `fx-lightning-paralyze` | 6 | 64x64 | 12 | loop | (0.5, 1.0) | overlay on paralysed zombie (origin feet) |
-| `fx-frost-muzzle` | 4 | 24x32 | 12 | once | (1.0, 0.5) |  |
-| `fx-frost-beam` | 4 | 64x14 | 12 | loop | (0.5, 0.5) | seamless horizontal tile; repeat leftward from muzzle |
-| `fx-frost-impact` | 8 | 40x40 | 12 | once | (0.5, 0.83) |  |
-| `fx-frost-shatter` | 10 | 64x64 | 14 | once | (0.5, 0.7) |  |
-| `fx-flame-muzzle` | 4 | 24x24 | 14 | once | (1.0, 0.5) |  |
-| `fx-flame-cone` | 6 | 96x40 | 12 | loop | (1.0, 0.5) | origin at nozzle (right-middle); cone extends 96px west |
+| `fx-bubble-trap-pop` | 6 | 64x64 | 16 | once | (0.5, 1.0) |  |
+| `fx-flame-cone` | 6 | 96x40 | 12 | loop | (1.0, 0.5) |  |
 | `fx-flame-ground` | 6 | 48x24 | 10 | loop | (0.5, 0.92) |  |
-| `fx-flame-smoke` | 8 | 32x32 | 10 | once | (0.5, 0.75) |  |
-| `fx-flame-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) | short hit burst on contact (added to complete projectile+hit pair for flame) |
+| `fx-flame-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
+| `fx-flame-muzzle` | 4 | 24x24 | 14 | once | (1.0, 0.5) |  |
+| `fx-flame-smoke` | 8 | 32x32 | 12 | loop | (0.5, 0.5) |  |
+| `fx-frost-beam` | 4 | 64x16 | 12 | loop | (0.15, 0.5) |  |
+| `fx-frost-impact` | 8 | 40x40 | 12 | once | (0.5, 0.83) |  |
+| `fx-frost-muzzle` | 4 | 24x32 | 12 | once | (1.0, 0.5) |  |
+| `fx-frost-pellet` | 4 | 16x16 | 12 | loop | (0.5, 0.5) |  |
+| `fx-frost-shatter` | 10 | 64x64 | 14 | once | (0.5, 0.7) |  |
+| `fx-lightning-bolt` | 4 | 48x24 | 16 | loop | (0.18, 0.5) |  |
+| `fx-lightning-chain` | 4 | 64x24 | 16 | loop | (0.0, 0.5) |  |
+| `fx-lightning-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
+| `fx-lightning-muzzle` | 4 | 28x24 | 14 | once | (1.0, 0.5) |  |
+| `fx-lightning-paralyze` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
+| `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) |  |
+| `fx-sling-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
+| `fx-sling-pellet` | 4 | 14x10 | 16 | loop | (0.29, 0.5) |  |
+| `fx-water-impact` | 6 | 36x32 | 12 | once | (0.5, 0.69) |  |
+| `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
+| `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) |  |
+| `fx-water-wet` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
 
 ### Player Girl — weapon icons (武器圖示)
 
