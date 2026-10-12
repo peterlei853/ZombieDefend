@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl \u2014 weapon FX",
   "titleZh": "\u5973\u4e3b\u89d2\u6b66\u5668\u7279\u6548",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake: cyan lightning orb, warm flame ember pellets, ice-crystal frost, soap bubble traps.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake + v0.16.2 sling stone pellet/impact.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -23,7 +23,9 @@
     "sheets": [
       "assets/library/previews/hero/girl-fx/fx-sheet.png"
     ],
-    "extras": []
+    "extras": [
+      "assets/library/characters/hero/girl/preview/sling-pellet-v0162.png"
+    ]
   },
   "assets": [
     {
@@ -421,21 +423,23 @@
         0.5,
         0.5
       ],
-      "type": "fx"
+      "type": "fx",
+      "note": "v0.16.2: brown/gray stone-chip splash (no fire)"
     },
     {
       "key": "fx-sling-pellet",
       "path": "assets/library/characters/hero/girl/fx/fx-sling-pellet.png",
-      "frameWidth": 14,
-      "frameHeight": 10,
+      "frameWidth": 16,
+      "frameHeight": 16,
       "frames": 4,
-      "frameRate": 16,
+      "frameRate": 14,
       "loop": true,
       "origin": [
-        0.29,
+        0.38,
         0.5
       ],
-      "type": "fx"
+      "type": "fx",
+      "note": "v0.16.2: brown stone/pebble (NOT blue cube); spins; short dust trail east; travel west"
     },
     {
       "key": "fx-water-impact",

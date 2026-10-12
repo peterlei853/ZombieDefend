@@ -84,10 +84,10 @@ Chibi girl hero with red cap and backpack; base moves plus six weapons (water, b
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake: cyan lightning orb, warm flame ember pellets, ice-crystal frost, soap bubble traps.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake + v0.16.2 sling stone pellet/impact.
 
-- group `girl-fx` · 30 assets · frame 8x8, 12x12, 14x10, 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
-- previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png)
+- group `girl-fx` · 30 assets · frame 8x8, 12x12, 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -115,8 +115,8 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity 
 | `fx-lightning-muzzle` | 4 | 28x24 | 14 | once | (1.0, 0.5) |  |
 | `fx-lightning-paralyze` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) |  |
-| `fx-sling-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
-| `fx-sling-pellet` | 4 | 14x10 | 16 | loop | (0.29, 0.5) |  |
+| `fx-sling-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) | v0.16.2: brown/gray stone-chip splash (no fire) |
+| `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.38, 0.5) | v0.16.2: brown stone/pebble (NOT blue cube); spins; short dust trail east; travel west |
 | `fx-water-impact` | 6 | 36x32 | 12 | once | (0.5, 0.69) |  |
 | `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
 | `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) |  |

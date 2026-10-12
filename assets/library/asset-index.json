@@ -158,21 +158,22 @@
       "group": "girl-fx",
       "title": "Player Girl — weapon FX",
       "titleZh": "女主角武器特效",
-      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake: cyan lightning orb, warm flame ember pellets, ice-crystal frost, soap bubble traps.",
+      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake + v0.16.2 sling stone pellet/impact.",
       "manifest": "assets/library/characters/hero/girl/fx/manifest.json",
       "dir": "assets/library/characters/hero/girl/fx",
       "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
       "sheets": [
         "assets/library/previews/hero/girl-fx/fx-sheet.png"
       ],
-      "extras": [],
+      "extras": [
+        "assets/library/characters/hero/girl/preview/sling-pellet-v0162.png"
+      ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
       "count": 30,
       "frameSizes": [
         "8x8",
         "12x12",
-        "14x10",
         "16x16",
         "24x24",
         "24x32",
@@ -4540,7 +4541,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
       "description": "Player Girl — weapon FX: sling-impact — 6 frames 40x40 @ 14 fps, once.",
-      "note": null,
+      "note": "v0.16.2: brown/gray stone-chip splash (no fire)",
       "tags": [
         "hero",
         "girl-fx",
@@ -4558,15 +4559,15 @@
       "group": "girl-fx",
       "path": "assets/library/characters/hero/girl/fx/fx-sling-pellet.png",
       "type": "fx",
-      "frameWidth": 14,
-      "frameHeight": 10,
+      "frameWidth": 16,
+      "frameHeight": 16,
       "frames": 4,
-      "frameRate": 16,
+      "frameRate": 14,
       "loop": true,
       "loopFrom": null,
       "loopTo": null,
       "origin": [
-        0.29,
+        0.38,
         0.5
       ],
       "facing": "west",
@@ -4575,8 +4576,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
-      "description": "Player Girl — weapon FX: sling-pellet — 4 frames 14x10 @ 16 fps, loop.",
-      "note": null,
+      "description": "Player Girl — weapon FX: sling-pellet — 4 frames 16x16 @ 14 fps, loop.",
+      "note": "v0.16.2: brown stone/pebble (NOT blue cube); spins; short dust trail east; travel west",
       "tags": [
         "hero",
         "girl-fx",
