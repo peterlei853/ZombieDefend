@@ -1,9 +1,10 @@
 /**
- * PixelLab zombie sheets — 64×64, west-facing, foot pivot (0.5, 1.0).
- * The nine strips live in assets/zombies/ (walker / runner / tank ×
- * walk 6×64, attack 4×64, stumble 4×64). Optional `{prefix}-death` is
- * not in that pack. If a death texture is already cached, it still registers.
- * A missing walk texture keeps the colored-square placeholder.
+ * Zombie sheets.
+ *
+ * Stage visuals prefer the asset library (12 groups, east-facing, feet at
+ * (0.5, 1)). The legacy walker/runner/tank strips in assets/zombies/ stay
+ * as a fallback and still face west — those keep setFlipX(true).
+ * Combat variant (knockback) is separate from the library skin.
  */
 
 /** Canvas size of every zombie sheet. */
@@ -109,4 +110,135 @@ export function registerZombieAnims(scene) {
 function textureFrameCount(tex) {
   const names = typeof tex?.getFrameNames === 'function' ? tex.getFrameNames() : [];
   return names.filter((name) => name !== '__BASE').length;
+}
+
+/**
+ * Library skins. `facing: 'east'` means the strip already walks toward the
+ * right-hand barricade — do not setFlipX. Armored trashcan / riot have no
+ * die strip; the break strip is the death. Slime-mini has no attack.
+ * Bosses are listed but not pooled: no wave row spawns them.
+ * @type {Record<string, { id: string, facing: 'east'|'west', actions: Record<string, string|null>, blastFx?: string }>}
+ */
+export const ZOMBIE_LIBRARY_SKINS = {
+  'office-worker': skin('office-worker', 'zombie-office', { death: 'zombie-office-die1' }),
+  clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
+  cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
+  slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
+  'slime-mini': skin('slime-mini', 'zombie-slime-mini', {
+    attack: null,
+    death: 'zombie-slime-mini-die',
+  }),
+  exploder: skin('exploder', 'zombie-exploder', {
+    death: 'zombie-exploder-die1',
+    blast: 'zombie-exploder-explode',
+    blastFx: 'zombie-exploder-blast',
+  }),
+  'riot-bare': skin('riot-bare', 'zombie-riot-bare', { death: 'zombie-riot-bare-die1' }),
+  'trashcan-bare': skin('trashcan-bare', 'zombie-trashcan-bare', {
+    death: 'zombie-trashcan-bare-die1',
+  }),
+  sprinter: skin('sprinter', 'zombie-sprinter', { death: 'zombie-sprinter-die1' }),
+  brute: skin('brute', 'zombie-brute', { death: 'zombie-brute-die1' }),
+  trashcan: skin('trashcan', 'zombie-trashcan', { death: 'zombie-trashcan-break' }),
+  riot: skin('riot', 'zombie-riot', { death: 'zombie-riot-armor_break' }),
+};
+
+/**
+ * Not spawned. Stage waves only emit walker / runner / tank.
+ * Keys are ready for a later boss row: walk + attack + die, facing east, 128px.
+ */
+export const ZOMBIE_BOSS_SKINS = {
+  'lava-balon': {
+    id: 'lava-balon',
+    facing: 'east',
+    actions: {
+      walk: 'zombie-boss-lava-walk',
+      run: 'zombie-boss-lava-run',
+      attack: 'zombie-boss-lava-attack',
+      death: 'zombie-boss-lava-die1',
+    },
+  },
+  'steel-balam': {
+    id: 'steel-balam',
+    facing: 'east',
+    actions: {
+      walk: 'zombie-boss-steel-walk',
+      run: 'zombie-boss-steel-run',
+      attack: 'zombie-boss-steel-attack',
+      death: 'zombie-boss-steel-die1',
+    },
+  },
+};
+
+/** Visual pools. HP / speed / DPS stay on the wave archetype. */
+const SKIN_POOLS = {
+  walker: [
+    'office-worker',
+    'clown',
+    'cyborg',
+    'slime',
+    'slime-mini',
+    'exploder',
+    'riot-bare',
+    'trashcan-bare',
+  ],
+  runner: ['sprinter', 'clown', 'office-worker', 'exploder', 'cyborg'],
+  tank: ['brute', 'trashcan', 'riot'],
+};
+
+/** @type {Record<string, number>} */
+const skinCursor = { walker: 0, runner: 0, tank: 0 };
+
+/**
+ * @param {string} id
+ * @param {string} prefix key prefix, e.g. `zombie-office`
+ * @param {{ attack?: string|null, death?: string, blast?: string, blastFx?: string }} [extra]
+ */
+function skin(id, prefix, extra = {}) {
+  return {
+    id,
+    facing: /** @type {'east'} */ ('east'),
+    blastFx: extra.blastFx || null,
+    actions: {
+      walk: `${prefix}-walk`,
+      run: `${prefix}-run`,
+      attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
+      death: extra.death || `${prefix}-die1`,
+      hurt: `${prefix}-hurt`,
+      blast: extra.blast || null,
+    },
+  };
+}
+
+/**
+ * Next library skin for a combat variant. Round-robin so a walker wave
+ * shows the whole walker pool before repeating.
+ * @param {string} variant
+ */
+export function takeZombieSkin(variant) {
+  const pool = SKIN_POOLS[variant] || SKIN_POOLS.walker;
+  const cursor = skinCursor[variant] || 0;
+  skinCursor[variant] = cursor + 1;
+  const id = pool[cursor % pool.length];
+  return ZOMBIE_LIBRARY_SKINS[id];
+}
+
+/**
+ * Library action key, or null when that strip does not exist for the skin.
+ * Runners play `run` for the walk slot. Legacy fallback is `zombie-${variant}-${action}`.
+ * @param {{ actions?: Record<string, string|null> }|null|undefined} skinDef
+ * @param {string} variant
+ * @param {'walk'|'attack'|'stumble'|'death'|'hurt'|'blast'} action
+ * @returns {string|null}
+ */
+export function zombieActionKey(skinDef, variant, action) {
+  if (skinDef?.actions) {
+    if (action === 'walk' && variant === 'runner' && skinDef.actions.run) {
+      return skinDef.actions.run;
+    }
+    if (action === 'stumble') return skinDef.actions.stumble || null;
+    return skinDef.actions[action] || null;
+  }
+  if (action === 'blast' || action === 'hurt') return null;
+  return zombieSheetKey(variant, action);
 }

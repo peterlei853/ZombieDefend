@@ -7,7 +7,7 @@ import { HUD_DEPTH } from '../systems/DepthView.js';
  * Joystick (bottom-left) reports the same axes as WASD / arrows:
  * vertical moves the defender, horizontal is only a facing/strafe axis
  * (DefenderGroup still clamps X to the barricade lane).
- * SWAP (bottom-right) toggles handgun/shotgun once per tap, like SPACE.
+ * SWAP (bottom-right) cycles weapons once per tap, like SPACE.
  *
  * Both sit above the HUD (`setScrollFactor(0)`) and ignore camera X scroll.
  * They are not full-screen hit targets, so the rest of the stage still receives clicks.

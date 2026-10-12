@@ -9,6 +9,8 @@ import {
   layoutPx,
 } from './DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { HERO_WEAPONS } from '../assets/heroLoadout.js';
+import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
@@ -82,6 +84,10 @@ export class WeaponSystem {
     this.scene = scene;
     /** @type {WeaponId} */
     this.weapon = WEAPON_HANDGUN;
+    /** Index into HERO_WEAPONS. Profile still drives this.weapon. */
+    this._skinIndex = 0;
+    /** Defender display scale captured at the last shot, for FX size. */
+    this._visScale = LAYOUT_SCALE;
     this._playerCooldown = 0;
     this._petCooldown = 0;
     /** @type {{ gfx: Phaser.GameObjects.Rectangle, vx: number, vy: number, life: number, max: number, spin: number }[]} */
@@ -93,15 +99,36 @@ export class WeaponSystem {
     return this.weapon;
   }
 
-  /** HUD label, e.g. `Weapon: Handgun`. */
-  getWeaponLabel() {
-    return `Weapon: ${this.weapon}`;
+  /**
+   * Equipped library skin, or null when those sheets are not loaded
+   * (legacy handgun / shotgun rectangles stay in that case).
+   */
+  getSkin() {
+    const skin = HERO_WEAPONS[this._skinIndex] || HERO_WEAPONS[0];
+    if (!this.scene?.textures?.exists?.(skin.idle)) return null;
+    return skin;
   }
 
-  /** Toggle Handgun ↔ Shotgun. @returns {WeaponId} */
+  /** HUD label. Library skins use their art name; otherwise Handgun / Shotgun. */
+  getWeaponLabel() {
+    const skin = this.getSkin();
+    return `Weapon: ${skin ? skin.label : this.weapon}`;
+  }
+
+  /**
+   * Cycle the six library weapons when their sheets are loaded.
+   * Profiles alternate, so the first press is still single-shot → spread.
+   * Without the library, this is the old Handgun ↔ Shotgun toggle.
+   * @returns {WeaponId}
+   */
   toggleWeapon() {
-    this.weapon =
-      this.weapon === WEAPON_HANDGUN ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
+    if (!this.getSkin() && !this.scene?.textures?.exists?.(HERO_WEAPONS[0].idle)) {
+      this.weapon = this.weapon === WEAPON_HANDGUN ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
+      return this.weapon;
+    }
+    this._skinIndex = (this._skinIndex + 1) % HERO_WEAPONS.length;
+    const skin = HERO_WEAPONS[this._skinIndex];
+    this.weapon = skin.profile === 'shotgun' ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
     return this.weapon;
   }
 
@@ -193,6 +220,8 @@ export class WeaponSystem {
     if (!Array.isArray(bullets)) return null;
 
     const muzzle = this.muzzlePoint(playerX, playerY, opts.scaleX, opts.scaleY);
+    const sx = Number.isFinite(opts.scaleX) ? Math.abs(opts.scaleX) : LAYOUT_SCALE;
+    this._visScale = sx > 0 ? sx : LAYOUT_SCALE;
 
     if (this.weapon === WEAPON_SHOTGUN) {
       if (opts.canFireShotgun === false) {
@@ -274,7 +303,9 @@ export class WeaponSystem {
       if (b.maxDistance != null) {
         b.traveled = (b.traveled || 0) + Math.hypot(dx, dy);
       }
-      if (b.kind === 'handgun') {
+      if (b.library && b.rotate && typeof b.gfx.setRotation === 'function') {
+        b.gfx.setRotation(aimRotation(b.vx, b.vy, b.facing || 'west'));
+      } else if (b.kind === 'handgun') {
         if (typeof b.gfx.setRotation === 'function') {
           b.gfx.setRotation(Math.atan2(b.vy, b.vx));
         }
@@ -374,6 +405,7 @@ export class WeaponSystem {
       return { gold: 0, kills: 0 };
     }
 
+    this._spawnImpactFx(hx, hy, zombie);
     const killed = zombie.takeDamage(damage, { kind: bullet.kind });
     const color =
       bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
@@ -427,6 +459,7 @@ export class WeaponSystem {
    */
   _spawnShotgunFan(bullets, x, y) {
     const count = Phaser.Math.Between(SHOTGUN_PELLET_MIN, SHOTGUN_PELLET_MAX);
+    const alts = this.getSkin()?.projectileAlts;
     for (let i = 0; i < count; i++) {
       const spread = Phaser.Math.FloatBetween(
         -SHOTGUN_FAN_HALF_RAD,
@@ -439,12 +472,14 @@ export class WeaponSystem {
         Phaser.Math.FloatBetween(1 - SHOTGUN_SPEED_SPREAD, 1 + SHOTGUN_SPEED_SPREAD);
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
+      const fxKey = Array.isArray(alts) && alts.length ? alts[i % alts.length] : null;
       this._spawnBullet(bullets, x, y, vx, vy, {
         damage: SHOTGUN_PELLET_DAMAGE,
         kind: 'shotgun',
         size: SHOTGUN_PELLET_SIZE * LAYOUT_SCALE,
         maxDistance: SHOTGUN_MAX_DISTANCE,
         knockback: SHOTGUN_PELLET_KNOCKBACK,
+        fxKey,
       });
     }
     this._drawShotgunFan(x, y);
@@ -456,9 +491,30 @@ export class WeaponSystem {
    * @param {number} y
    * @param {number} vx
    * @param {number} vy
-   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet', size?: number, maxDistance?: number|null, knockback?: number }} meta
+   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet', size?: number, maxDistance?: number|null, knockback?: number, fxKey?: string|null }} meta
    */
   _spawnBullet(bullets, x, y, vx, vy, meta) {
+    const libraryGfx = this._spawnLibraryProjectile(x, y, vx, vy, meta);
+    if (libraryGfx) {
+      bullets.push({
+        gfx: libraryGfx.sprite,
+        trail: null,
+        trailPts: [],
+        damage: meta.damage,
+        vx,
+        vy,
+        kind: meta.kind,
+        size: meta.size ?? BULLET_SIZE,
+        maxDistance: meta.maxDistance == null ? null : meta.maxDistance,
+        traveled: 0,
+        knockback: meta.knockback || 0,
+        library: true,
+        rotate: libraryGfx.rotate,
+        facing: libraryGfx.facing,
+      });
+      return;
+    }
+
     let color = 0x40c4ff;
     let size = meta.size ?? BULLET_SIZE;
     let gfx;
@@ -504,6 +560,53 @@ export class WeaponSystem {
   }
 
   /**
+   * Library projectile sprite. Collision `size` stays on the GameConfig slug
+   * or pellet — the graphic scale does not change the hit test.
+   * @param {number} x
+   * @param {number} y
+   * @param {number} vx
+   * @param {number} vy
+   * @param {{ kind?: string, fxKey?: string|null }} meta
+   * @returns {{ sprite: Phaser.GameObjects.Sprite, rotate: boolean, facing: string }|null}
+   */
+  _spawnLibraryProjectile(x, y, vx, vy, meta) {
+    if (meta.kind !== 'handgun' && meta.kind !== 'shotgun') return null;
+    const skin = this.getSkin();
+    if (!skin) return null;
+    const key = meta.fxKey || skin.projectile;
+    if (!key || !this.scene.textures?.exists?.(key)) return null;
+    // PIXELLAB_HOOK: projectile sheet — fx-<weapon>-* from the hero FX manifest
+    const sprite = this.scene.add.sprite(x, y, key);
+    const asset = libraryAsset(this.scene, key);
+    const origin = asset?.origin ?? [0.5, 0.5];
+    sprite.setOrigin(origin[0], origin[1]);
+    const scale = (this._visScale || 1) * (skin.projScale || 1);
+    sprite.setScale(scale);
+    const facing = asset?.facing || 'west';
+    const rotate = skin.rotate !== false;
+    if (rotate) sprite.setRotation(aimRotation(vx, vy, facing));
+    if (this.scene.anims?.exists?.(key)) sprite.play(key);
+    sprite.setDepth(depthFromY(y));
+    return { sprite, rotate, facing };
+  }
+
+  /**
+   * Impact puff at the hit. Skipped when the skin has no impact strip.
+   * @param {number} x
+   * @param {number} y
+   * @param {{ scale?: number, bodyCenterY?: number }} zombie
+   */
+  _spawnImpactFx(x, y, zombie) {
+    const key = this.getSkin()?.impact;
+    if (!key) return;
+    const hy = Number.isFinite(zombie?.bodyCenterY) ? zombie.bodyCenterY : y;
+    playLibraryFx(this.scene, x, hy, key, {
+      scale: Math.abs(zombie?.scale || this._visScale || 1),
+      depth: depthFromY(hy, 4),
+    });
+  }
+
+  /**
    * Short fading streak behind the handgun slug.
    * @param {object} b
    */
@@ -530,12 +633,24 @@ export class WeaponSystem {
   }
 
   /**
-   * Yellow-white flash at the muzzle. Fades in MUZZLE_FLASH_MS (~50ms).
+   * Library muzzle strip when the skin names one (nozzle origin on the barrel).
+   * Otherwise the yellow-white flash. Fades in MUZZLE_FLASH_MS (~50ms).
    * @param {number} x
    * @param {number} y
    */
   _spawnMuzzleFlash(x, y) {
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const skin = this.getSkin();
+    if (skin) {
+      // PIXELLAB_HOOK: muzzle FX — fx-<weapon>-muzzle, origin (1, 0.5) nozzle
+      if (skin.muzzle) {
+        playLibraryFx(this.scene, x, y, skin.muzzle, {
+          scale: this._visScale || 1,
+          depth: depthFromY(y, 6),
+        });
+      }
+      return;
+    }
     if (!this.scene?.add?.rectangle) return;
     const ms = GAME_CONFIG.VFX.MUZZLE_FLASH_MS;
     const flash = this.scene.add.rectangle(x, y, layoutPx(11), layoutPx(7), 0xfff6d0);
@@ -557,6 +672,7 @@ export class WeaponSystem {
    * @param {number} y
    */
   _spawnShellCasing(x, y) {
+    if (this.getSkin()) return;
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     if (!this.scene?.add?.rectangle) return;
     const cfg = SHOTGUN_CFG;
@@ -599,8 +715,21 @@ export class WeaponSystem {
    * @param {number} y
    */
   _drawShotgunFan(x, y) {
-    // PIXELLAB_HOOK: replace with sprite shotgun fan VFX
+    // PIXELLAB_HOOK: spread VFX — fx-flame-cone when the skin names a fan
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const skin = this.getSkin();
+    if (skin) {
+      if (skin.fan && this.scene.textures?.exists?.(skin.fan)) {
+        const fan = playLibraryFx(this.scene, x, y, skin.fan, {
+          scale: this._visScale || 1,
+          depth: depthFromY(y, 5),
+        });
+        this.scene.time?.delayedCall?.(SHOTGUN_VFX_MS, () => {
+          if (fan?.active) fan.destroy();
+        });
+      }
+      return;
+    }
     if (!this.scene?.add?.graphics) return;
 
     const mid = SHOTGUN_CENTER_ANGLE;
