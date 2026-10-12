@@ -112,6 +112,12 @@ export const GAME_CONFIG = {
     DAMAGE_TEXT_FLOAT_PX: 30,
     /** Fade duration for that float. */
     DAMAGE_TEXT_DURATION_MS: 600,
+    /**
+     * Largest integer a floating `-N` may print. Real single hits are
+     * handgun 30, a pellet 10, pet 28, or about one second of contact DPS.
+     * This does not change damage applied to HP.
+     */
+    DAMAGE_TEXT_MAX: 60,
 
     /**
      * Field-px shove on a bullet hit. Both sit in the 5–15 band.
