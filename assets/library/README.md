@@ -59,6 +59,15 @@ Each texture key equals its file name without `.png`. Phaser texture keys and an
 
 The office worker's key prefix is `zombie-office-`, kept from its source manifest; its folder is `office-worker/`. The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
 
+## Pets
+
+Category `pets/` holds four chibi companions (phoenix / panda / lion / dragon), each with baby / young / ancient forms:
+
+- `pets/<pet>/<form>/strips/pet-<pet>-<form>-{idle,move,skill,hurt}.png`
+- `pets/<pet>/fx/fx-pet-<pet>-*.png` (standalone skill FX + evolve)
+
+Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128). Origin `(0.5, 1)`. Facing west. Skill = cast strip + FX; see group manifest `castFrame` / `spawnOffset`.
+
 ## Canvas, origin and facing conventions
 
 All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Every PNG is exactly `frameWidth*frames × frameHeight`, and the build script checks this. The `origin` value is the Phaser `setOrigin(x, y)`.
@@ -151,7 +160,7 @@ Drop this in, for example as `src/assets/libraryAssets.js`. It reads `asset-inde
 ```js
 // src/assets/libraryAssets.js — data-driven loader for assets/library/asset-index.json
 export const LIBRARY_INDEX_KEY = 'asset-library-index';
-const GAME_CATEGORIES = ['hero', 'zombies', 'bosses', 'fx', 'pickups', 'backgrounds']; // 'concepts' is reference art only
+const GAME_CATEGORIES = ['hero', 'pets', 'zombies', 'bosses', 'fx', 'pickups', 'backgrounds']; // 'concepts' is reference art only
 
 /** Call in preload(). `filter(asset)` can restrict what is loaded (e.g. only the current wave's groups). */
 export function preloadLibrary(scene, { categories = GAME_CATEGORIES, filter = null } = {}) {

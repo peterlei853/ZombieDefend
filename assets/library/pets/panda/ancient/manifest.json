@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "panda-ancient",
+  "title": "Momo / 墨墨 — Ancient",
+  "titleZh": "墨墨·成年",
+  "description": "Black Panda 墨熊貓. Ancient form (96px). Skill: Chi Blast / 氣功波. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "07d5f02b-1b14-4395-bb94-14923c38b6e6",
+    "sourceFolder": "pets/panda/ancient"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "96x96",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 96,
+    "frameHeight": 96
+  },
+  "preview": {
+    "animate": [
+      "pet-panda-ancient-idle",
+      "pet-panda-ancient-move",
+      "pet-panda-ancient-skill"
+    ],
+    "thumb": "assets/library/previews/pets/panda-ancient.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-panda-ancient-idle",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-idle.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-ancient-move",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-move.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-ancient-skill",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-skill.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Chi Blast",
+      "skillZh": "氣功波",
+      "castFrame": 4,
+      "spawnOffset": [
+        0,
+        -40
+      ],
+      "fx": [
+        "fx-pet-panda-chi-blast"
+      ],
+      "role": "AoE shockwave ring around itself + knockback"
+    },
+    {
+      "key": "pet-panda-ancient-hurt",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-hurt.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

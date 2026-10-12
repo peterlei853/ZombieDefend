@@ -1,0 +1,108 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "phoenix-baby",
+  "title": "Azure / 藍羽 — Baby",
+  "titleZh": "藍羽·幼年",
+  "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
+    "sourceFolder": "pets/phoenix/baby"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "48x48",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 48,
+    "frameHeight": 48
+  },
+  "preview": {
+    "animate": [
+      "pet-phoenix-baby-idle",
+      "pet-phoenix-baby-move",
+      "pet-phoenix-baby-skill"
+    ],
+    "thumb": "assets/library/previews/pets/phoenix-baby.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-phoenix-baby-idle",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-idle.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 8
+    },
+    {
+      "key": "pet-phoenix-baby-move",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-move.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 8
+    },
+    {
+      "key": "pet-phoenix-baby-skill",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-skill.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Spark Feather",
+      "skillZh": "閃光羽落",
+      "castFrame": 3,
+      "spawnOffset": [
+        -18,
+        -22
+      ],
+      "fx": [
+        "fx-pet-phoenix-spark-feather",
+        "fx-pet-phoenix-spark-feather-hit"
+      ],
+      "role": "single-target projectile (fan of 3 feathers)"
+    },
+    {
+      "key": "pet-phoenix-baby-hurt",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-hurt.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

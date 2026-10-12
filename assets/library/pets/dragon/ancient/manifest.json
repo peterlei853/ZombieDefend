@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "dragon-ancient",
+  "title": "Jade / 翠火 — Ancient",
+  "titleZh": "翠火·成年",
+  "description": "Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "d79ea80c-1e36-40f3-86ca-c74921818812",
+    "sourceFolder": "pets/dragon/ancient"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "128x128",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 128,
+    "frameHeight": 128
+  },
+  "preview": {
+    "animate": [
+      "pet-dragon-ancient-idle",
+      "pet-dragon-ancient-move",
+      "pet-dragon-ancient-skill"
+    ],
+    "thumb": "assets/library/previews/pets/dragon-ancient.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-dragon-ancient-idle",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-idle.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-dragon-ancient-move",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-move.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-dragon-ancient-skill",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-skill.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Apocalyptic Flame",
+      "skillZh": "末日烈焰",
+      "castFrame": 4,
+      "spawnOffset": [
+        -48,
+        -40
+      ],
+      "fx": [
+        "fx-pet-dragon-apocalypse-flame"
+      ],
+      "role": "sustained breath beam (channel), line damage over time"
+    },
+    {
+      "key": "pet-dragon-ancient-hurt",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-hurt.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

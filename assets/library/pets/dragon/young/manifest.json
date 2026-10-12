@@ -1,0 +1,106 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "dragon-young",
+  "title": "Jade / 翠火 — Young",
+  "titleZh": "翠火·青年",
+  "description": "Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "f5893d43-5041-467a-91bd-97e7c5ff895c",
+    "sourceFolder": "pets/dragon/young"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "64x64",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "pet-dragon-young-idle",
+      "pet-dragon-young-move",
+      "pet-dragon-young-skill"
+    ],
+    "thumb": "assets/library/previews/pets/dragon-young.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-dragon-young-idle",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-idle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-dragon-young-move",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-move.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-dragon-young-skill",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-skill.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Scorching Fireball",
+      "skillZh": "灼熱火球",
+      "castFrame": 3,
+      "spawnOffset": [
+        -22,
+        -28
+      ],
+      "fx": [
+        "fx-pet-dragon-fireball",
+        "fx-pet-dragon-fireball-impact"
+      ],
+      "role": "single-target projectile with small splash"
+    },
+    {
+      "key": "pet-dragon-young-hurt",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "phoenix-ancient",
+  "title": "Azure / 藍羽 — Ancient",
+  "titleZh": "藍羽·成年",
+  "description": "Blue Phoenix 藍焰鳳凰. Ancient form (128px). Skill: Blazing Rebirth / 烈焰重生. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "7b57bd4e-4b32-4a38-8b57-74b537451c72",
+    "sourceFolder": "pets/phoenix/ancient"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "128x128",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 128,
+    "frameHeight": 128
+  },
+  "preview": {
+    "animate": [
+      "pet-phoenix-ancient-idle",
+      "pet-phoenix-ancient-move",
+      "pet-phoenix-ancient-skill"
+    ],
+    "thumb": "assets/library/previews/pets/phoenix-ancient.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-phoenix-ancient-idle",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-idle.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 14
+    },
+    {
+      "key": "pet-phoenix-ancient-move",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-move.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 14
+    },
+    {
+      "key": "pet-phoenix-ancient-skill",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-skill.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Blazing Rebirth",
+      "skillZh": "烈焰重生",
+      "castFrame": 4,
+      "spawnOffset": [
+        -40,
+        -50
+      ],
+      "fx": [
+        "fx-pet-phoenix-blazing-rebirth"
+      ],
+      "role": "AoE burst around itself + burn; can double as a self-revive"
+    },
+    {
+      "key": "pet-phoenix-ancient-hurt",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-hurt.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

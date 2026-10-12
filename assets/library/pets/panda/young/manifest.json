@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "panda-young",
+  "title": "Momo / 墨墨 — Young",
+  "titleZh": "墨墨·青年",
+  "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "55cdb271-abc0-4a66-882a-0e8cd317a102",
+    "sourceFolder": "pets/panda/young"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "64x64",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "pet-panda-young-idle",
+      "pet-panda-young-move",
+      "pet-panda-young-skill"
+    ],
+    "thumb": "assets/library/previews/pets/panda-young.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-panda-young-idle",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-idle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-young-move",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-move.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-young-skill",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Bamboo Sweep",
+      "skillZh": "竹林橫掃",
+      "castFrame": 3,
+      "spawnOffset": [
+        -20,
+        -20
+      ],
+      "fx": [
+        "fx-pet-panda-bamboo-sweep"
+      ],
+      "role": "melee arc AoE in front + knockback"
+    },
+    {
+      "key": "pet-panda-young-hurt",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

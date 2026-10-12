@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "lion-ancient",
+  "title": "Leo / 雷歐 — Ancient",
+  "titleZh": "雷歐·成年",
+  "description": "Golden Lion 金獅. Ancient form (96px). Skill: Sunder Strike / 裂地猛擊. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "50e45d46-c69c-4b0c-a998-69679c4f5c50",
+    "sourceFolder": "pets/lion/ancient"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "96x96",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 96,
+    "frameHeight": 96
+  },
+  "preview": {
+    "animate": [
+      "pet-lion-ancient-idle",
+      "pet-lion-ancient-move",
+      "pet-lion-ancient-skill"
+    ],
+    "thumb": "assets/library/previews/pets/lion-ancient.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-lion-ancient-idle",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-idle.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-ancient-move",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-move.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-ancient-skill",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-skill.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Sunder Strike",
+      "skillZh": "裂地猛擊",
+      "castFrame": 4,
+      "spawnOffset": [
+        0,
+        -20
+      ],
+      "fx": [
+        "fx-pet-lion-sunder-strike"
+      ],
+      "role": "leap-slam ground AoE + short stun"
+    },
+    {
+      "key": "pet-lion-ancient-hurt",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-hurt.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}
