@@ -18,6 +18,19 @@ import {
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { beginHitlag, shakeOverkill, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
+import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+
+/** Near-black track. The old 0x1a1a1a tick disappeared into green slime shading. */
+const HP_BAR_TRACK = 0x050308;
+/** High-luminance fill. 0xff5252 sat in the slime's green midtones at this size. */
+const HP_BAR_FILL = 0xfff3c4;
+/** Cream stroke so the tick reads on neon green and on dark bodies. */
+const HP_BAR_OUTLINE = 0xfff6e8;
+/**
+ * One floater is about one bite (1s). A little slack covers a late frame.
+ * Longer queues are a stalled readout, not a bigger hit.
+ */
+const BARRICADE_READOUT_SEC = 1.25;
 
 let _zombieId = 0;
 
@@ -56,7 +69,12 @@ export class Zombie {
     this._attackBeat = false;
     /** Halt X while chewing, so the lunge tween can return here. */
     this._haltX = null;
-    /** Fractional contact DPS waiting to be shown as an integer. */
+    /**
+     * Fractional contact DPS waiting for the next integer floater.
+     * Display only — barricade HP is applied every frame in StageScene.
+     * Knockback clears a completed integer so interrupted bites do not
+     * bank into one later popup.
+     */
     this.barricadeDmgAccum = 0;
     this.goldValue = getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
@@ -93,9 +111,11 @@ export class Zombie {
     const metrics = this._barMetrics();
     this._barW = metrics.barW;
     this._barH = metrics.barH;
-    this.hpBarBg = scene.add.rectangle(cfg.x, metrics.barY, metrics.barW, metrics.barH, 0x1a1a1a);
+    this._barPad = metrics.pad;
+    this.hpBarBg = scene.add.rectangle(cfg.x, metrics.barY, metrics.barW, metrics.barH, HP_BAR_TRACK);
+    this.hpBarBg.setStrokeStyle(metrics.pad, HP_BAR_OUTLINE);
     this.hpBarFg = scene.add
-      .rectangle(cfg.x - metrics.barW / 2, metrics.barY, metrics.barW, metrics.barH, 0xff5252)
+      .rectangle(cfg.x - metrics.barW / 2, metrics.barY, metrics.barW, metrics.barH, HP_BAR_FILL)
       .setOrigin(0, 0.5);
 
     this._applyDepth();
@@ -174,20 +194,22 @@ export class Zombie {
   }
 
   /**
-   * Short tick just above the feet. A head-relative bar floated into the
-   * lane above and stacked into stripes when several bodies overlapped.
-   * @returns {{ barW: number, barH: number, barY: number }}
+   * Short tick on the body, lifted a few field px off the lower highlight
+   * so a green slime belly does not swallow it. Still feet-relative:
+   * a head bar stacked into stripes when bodies overlapped.
+   * @returns {{ barW: number, barH: number, pad: number, barY: number }}
    */
   _barMetrics() {
     const bodyW = Math.max(layoutPx(12), this.displayHalf * 2);
     const barW = Math.round(Math.min(bodyW * 0.45, layoutPx(22)));
-    const barH = Math.max(2, layoutPx(2));
+    const barH = Math.max(3, layoutPx(3));
+    const pad = Math.max(1, layoutPx(1));
     const feet = this.y;
-    const minY = this.visualTop + barH;
-    const maxY = feet - barH;
-    const wanted = feet - layoutPx(16);
+    const minY = this.visualTop + barH + pad;
+    const maxY = feet - barH - pad;
+    const wanted = feet - layoutPx(22);
     const barY = maxY <= minY ? (minY + maxY) / 2 : Math.min(maxY, Math.max(minY, wanted));
-    return { barW, barH, barY };
+    return { barW, barH, pad, barY };
   }
 
   /**
@@ -220,6 +242,9 @@ export class Zombie {
     if (!this.alive || !this.body) return;
     const amount = Number(pixels) * (this.knockbackMult ?? 1);
     if (!(amount > 0) || !Number.isFinite(amount)) return;
+    const atWall = this.atBarricade;
+    const wallX = this.body.x;
+    const wallY = this.body.y;
     if (this.scene?.tweens?.killTweensOf) {
       this.scene.tweens.killTweensOf(this.body);
     }
@@ -227,11 +252,18 @@ export class Zombie {
     if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
     this._lastX = this.body.x;
     this._lastY = this.body.y;
-    if (this.atBarricade) {
+    if (atWall) {
+      // Bite timer restarts, so flush the integer already chewed. Leaving
+      // it queued summed every knockback (handgun is faster than the 1s
+      // bite) into one later `-N` that could reach the hundreds.
+      const shown = this.popBarricadeDmgInt();
       this.atBarricade = false;
       this._haltX = null;
       this._attackCooldown = 1;
       this._attackBeat = false;
+      if (shown >= 1) {
+        showDamageText(this.scene, wallX, wallY - layoutPx(18), shown, DAMAGE_COLORS.barricade);
+      }
     }
     this._syncBars();
     this._applyDepth();
@@ -294,19 +326,33 @@ export class Zombie {
     return beat;
   }
 
+  /** One floater's worth of contact DPS. Does not limit HP actually dealt. */
+  _barricadeReadoutCap() {
+    const dps = Number(this.dps);
+    const perSec = Number.isFinite(dps) && dps > 0 ? dps : 1;
+    return perSec * BARRICADE_READOUT_SEC;
+  }
+
   /** Queue fractional barricade DPS for the next integer floating number. */
   addBarricadeDmg(amount) {
-    if (amount > 0) this.barricadeDmgAccum += amount;
+    if (!(amount > 0) || !Number.isFinite(amount)) return;
+    const next = (Number.isFinite(this.barricadeDmgAccum) ? this.barricadeDmgAccum : 0) + amount;
+    this.barricadeDmgAccum = Math.min(this._barricadeReadoutCap(), next);
   }
 
   /**
-   * Whole HP lost since the last pop. Remainder stays queued so the readout
-   * tracks applyDamage without printing a fraction every frame.
+   * Whole HP lost since the last pop, capped to about one bite.
+   * Remainder under 1 stays queued so the readout tracks applyDamage
+   * without printing a fraction every frame. Anything above the cap is
+   * dropped from the floater only.
    */
   popBarricadeDmgInt() {
-    const shown = Math.floor(this.barricadeDmgAccum + 1e-6);
+    const cap = this._barricadeReadoutCap();
+    let queued = Number.isFinite(this.barricadeDmgAccum) ? this.barricadeDmgAccum : 0;
+    if (queued > cap) queued = cap;
+    const shown = Math.floor(queued + 1e-6);
     if (shown <= 0) return 0;
-    this.barricadeDmgAccum -= shown;
+    this.barricadeDmgAccum = queued - shown;
     return shown;
   }
 
@@ -623,12 +669,15 @@ export class Zombie {
 
   _syncBars() {
     if (!this.hpBarBg || !this.hpBarFg || !this.body) return;
-    const { barW, barH, barY } = this._barMetrics();
+    const { barW, barH, pad, barY } = this._barMetrics();
     this._barW = barW;
     this._barH = barH;
+    this._barPad = pad;
     this.hpBarBg.setSize(barW, barH);
+    this.hpBarBg.setStrokeStyle(pad, HP_BAR_OUTLINE);
     this.hpBarBg.x = this.body.x;
     this.hpBarBg.y = barY;
+    this.hpBarFg.setFillStyle(HP_BAR_FILL);
     this.hpBarFg.setSize(barW, barH);
     this.hpBarFg.x = this.body.x - barW / 2;
     this.hpBarFg.y = barY;
