@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "lion-young",
+  "title": "Leo / 雷歐 — Young",
+  "titleZh": "雷歐·青年",
+  "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "ad17c12f-62e5-46d4-b2de-685a2b1e0af0",
+    "sourceFolder": "pets/lion/young"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "64x64",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "pet-lion-young-idle",
+      "pet-lion-young-move",
+      "pet-lion-young-skill"
+    ],
+    "thumb": "assets/library/previews/pets/lion-young.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-lion-young-idle",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-idle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-young-move",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-move.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-young-skill",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-skill.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Lion Roar",
+      "skillZh": "雄獅咆哮",
+      "castFrame": 3,
+      "spawnOffset": [
+        -24,
+        -16
+      ],
+      "fx": [
+        "fx-pet-lion-roar-wave"
+      ],
+      "role": "stun cone in front"
+    },
+    {
+      "key": "pet-lion-young-hurt",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

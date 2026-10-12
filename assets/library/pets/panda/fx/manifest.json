@@ -1,0 +1,98 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "panda-fx",
+  "title": "Momo / 墨墨 — FX",
+  "titleZh": "墨墨·特效",
+  "description": "Standalone skill FX for Black Panda 墨熊貓. Travel west. Evolve FX included.",
+  "source": {
+    "sourceFolder": "pets/panda/fx"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "facing": "west"
+  },
+  "preview": {
+    "animate": [
+      "fx-pet-panda-roll-dust"
+    ],
+    "thumb": "assets/library/previews/pets/panda.gif"
+  },
+  "assets": [
+    {
+      "key": "fx-pet-panda-roll-dust",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-roll-dust.png",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "note": "Dust + bamboo-leaf puff left behind the rolling panda (spawn at the panda origin every 3–4 cast frames; does not move)."
+    },
+    {
+      "key": "fx-pet-panda-roll-impact",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-roll-impact.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 16,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Jade impact star when the rolling panda hits a zombie (knockback). Centre on contact point."
+    },
+    {
+      "key": "fx-pet-panda-bamboo-sweep",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-bamboo-sweep.png",
+      "frameWidth": 112,
+      "frameHeight": 72,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.7321,
+        0.5556
+      ],
+      "facing": "west",
+      "note": "Crescent sweep in front (west) of the panda, top → bottom, reach ≈ 50 px from the pivot (≈ 100 px wide arc). Melee AoE + knockback on frames 1–4. Origin = swing pivot (place at the panda chest). Bamboo leaves fly off the edge."
+    },
+    {
+      "key": "fx-pet-panda-chi-blast",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-chi-blast.png",
+      "frameWidth": 224,
+      "frameHeight": 112,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.8928571428571429
+      ],
+      "facing": "west",
+      "note": "AoE shockwave around the panda: radius ≈ 110 px (x) × 37 px (y ground ellipse). Origin = ground under the panda. Frames 0–3 charge; damage + knockback when the ring passes (frames 4–9); bamboo shards fly outward."
+    },
+    {
+      "key": "fx-pet-panda-evolve",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-evolve.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash)."
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "dragon-fx",
+  "title": "Jade / 翠火 — FX",
+  "titleZh": "翠火·特效",
+  "description": "Standalone skill FX for Green Dragon. Travel west. Evolve FX included.",
+  "source": {
+    "sourceFolder": "pets/dragon/fx"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "facing": "west"
+  },
+  "preview": {
+    "animate": [
+      "fx-pet-dragon-smoke-breath"
+    ],
+    "thumb": "assets/library/previews/pets/dragon.gif"
+  },
+  "assets": [
+    {
+      "key": "fx-pet-dragon-smoke-breath",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-smoke-breath.png",
+      "frameWidth": 80,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.975,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Small toxic smoke cloud puffed west from the mouth (cone ≈ 60 px). Origin = mouth. Gameplay: slow + light poison on zombies in the cloud."
+    },
+    {
+      "key": "fx-pet-dragon-fireball",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-fireball.png",
+      "frameWidth": 40,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.225,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Projectile: green fireball flying west (−x) ≈ 5 px/frame at 60 fps. Origin = ball centre. On hit spawn fx-pet-dragon-fireball-impact (splash ≈ 28 px)."
+    },
+    {
+      "key": "fx-pet-dragon-fireball-impact",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-fireball-impact.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Green fireball explosion, splash radius ≈ 28 px. Centre on the hit point."
+    },
+    {
+      "key": "fx-pet-dragon-apocalypse-flame",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-apocalypse-flame.png",
+      "frameWidth": 256,
+      "frameHeight": 96,
+      "frames": 14,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.9844,
+        0.5
+      ],
+      "facing": "west",
+      "loopFrom": 4,
+      "loopTo": 9,
+      "note": "Sustained jade-fire breath beam. Origin = mouth; reaches ≈ 240 px west, ≈ 80 px wide at the far end. Start 0–3 (beam grows), loop 4–9 while breathing (seamless), end 10–13 (beam detaches and burns out). Damage tick every ~0.2 s to zombies inside the beam."
+    },
+    {
+      "key": "fx-pet-dragon-evolve",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-evolve.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash)."
+    }
+  ]
+}

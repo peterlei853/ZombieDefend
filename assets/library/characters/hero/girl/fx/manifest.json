@@ -188,7 +188,7 @@
       "path": "assets/library/characters/hero/girl/fx/fx-bubble-pop.png",
       "frameWidth": 24,
       "frameHeight": 24,
-      "frames": 5,
+      "frames": 6,
       "frameRate": 14,
       "loop": false,
       "origin": [
@@ -411,6 +411,21 @@
         0.75
       ],
       "type": "fx"
+    },
+    {
+      "key": "fx-flame-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-impact.png",
+      "type": "spritesheet",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "note": "short hit burst on contact (added to complete projectile+hit pair for flame)"
     }
   ]
 }

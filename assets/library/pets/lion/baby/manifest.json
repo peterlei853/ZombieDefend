@@ -1,0 +1,105 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "lion-baby",
+  "title": "Leo / 雷歐 — Baby",
+  "titleZh": "雷歐·幼年",
+  "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
+    "sourceFolder": "pets/lion/baby"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "48x48",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 48,
+    "frameHeight": 48
+  },
+  "preview": {
+    "animate": [
+      "pet-lion-baby-idle",
+      "pet-lion-baby-move",
+      "pet-lion-baby-skill"
+    ],
+    "thumb": "assets/library/previews/pets/lion-baby.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-lion-baby-idle",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-idle.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-baby-move",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-move.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-lion-baby-skill",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-skill.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Cub Pounce",
+      "skillZh": "幼獅飛撲",
+      "castFrame": 3,
+      "spawnOffset": [
+        -16,
+        -12
+      ],
+      "fx": [
+        "fx-pet-lion-pounce-slash"
+      ],
+      "role": "leap + single-target melee strike"
+    },
+    {
+      "key": "pet-lion-baby-hurt",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-hurt.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

@@ -25,8 +25,8 @@ CATALOG_MD_REL = f'{LIB_REL}/CATALOG.md'
 CATALOG_HTML_REL = f'{LIB_REL}/catalog.html'
 PAGES_URL = 'https://peterlei853.github.io/ZombieDefend/assets/library/catalog.html'
 
-CATEGORY_ORDER = ['hero', 'zombies', 'bosses', 'fx', 'pickups', 'backgrounds', 'concepts']
-CATEGORY_TITLES = {'hero': 'Hero', 'zombies': 'Zombies', 'bosses': 'Bosses', 'fx': 'Shared FX',
+CATEGORY_ORDER = ['hero', 'pets', 'zombies', 'bosses', 'fx', 'pickups', 'backgrounds', 'concepts']
+CATEGORY_TITLES = {'hero': 'Hero', 'pets': 'Pets', 'zombies': 'Zombies', 'bosses': 'Bosses', 'fx': 'Shared FX',
                    'pickups': 'Pickups', 'backgrounds': 'Backgrounds', 'concepts': 'Concepts'}
 VALID_TYPES = {'spritesheet', 'image', 'fx', 'icon', 'background', 'concept'}
 MAX_PREVIEW_BYTES = 1_500_000
@@ -393,6 +393,7 @@ def build_index(groups, assets):
         ('origin', 'Phaser setOrigin(x, y) fractions of one frame'),
         ('zombies', '64x64 (brute 96x96, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east'),
         ('bosses', '128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative'),
+        ('pets', 'Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX'),
         ('hero', '92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south'),
         ('fx', 'origin per key; hero FX point west, boss FX east'),
         ('loop', 'loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once'),

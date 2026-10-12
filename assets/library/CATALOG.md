@@ -5,14 +5,15 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 83 |
+| [Hero](#hero) | 3 | 84 |
+| [Pets](#pets) | 16 | 68 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **23** | **309** |
+| **Total** | **39** | **378** |
 
 <a id="hero"></a>
 ## Hero
@@ -85,7 +86,7 @@ Chibi girl hero with red cap and backpack; base moves plus six weapons (water, b
 
 Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (tileable), impacts and status overlays (wet, dizzy, paralyze, bubble trap, frost shatter). Directional FX point WEST (toward the zombies).
 
-- group `girl-fx` · 27 assets · frame 8x8, 12x12, 14x10, 16x16, 24x24, 24x32, 28x24, 32x12, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x14, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 28 assets · frame 8x8, 12x12, 14x10, 16x16, 24x24, 24x32, 28x24, 32x12, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x14, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -101,7 +102,7 @@ Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (t
 | `fx-bubble-proj-s` | 4 | 8x8 | 8 | loop | (0.5, 0.5) |  |
 | `fx-bubble-proj-m` | 4 | 12x12 | 8 | loop | (0.5, 0.5) |  |
 | `fx-bubble-proj-l` | 4 | 16x16 | 8 | loop | (0.5, 0.5) |  |
-| `fx-bubble-pop` | 5 | 24x24 | 14 | once | (0.5, 0.5) |  |
+| `fx-bubble-pop` | 6 | 24x24 | 14 | once | (0.5, 0.5) |  |
 | `fx-bubble-trap-form` | 5 | 64x64 | 12 | once | (0.5, 1.0) | play once, then trap-loop, then trap-pop |
 | `fx-bubble-trap-loop` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
 | `fx-bubble-trap-pop` | 5 | 64x64 | 14 | once | (0.5, 1.0) |  |
@@ -117,6 +118,7 @@ Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (t
 | `fx-flame-cone` | 6 | 96x40 | 12 | loop | (1.0, 0.5) | origin at nozzle (right-middle); cone extends 96px west |
 | `fx-flame-ground` | 6 | 48x24 | 10 | loop | (0.5, 0.92) |  |
 | `fx-flame-smoke` | 8 | 32x32 | 10 | once | (0.5, 0.75) |  |
+| `fx-flame-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) | short hit burst on contact (added to complete projectile+hit pair for flame) |
 
 ### Player Girl — weapon icons (武器圖示)
 
@@ -135,6 +137,253 @@ Procedural pixel FX for the hero weapons: muzzles, projectiles, beams/streams (t
 | `icon-lightning` | [icon-lightning.png](characters/hero/girl/icons/icon-lightning.png) | 32x32 | icon | Player Girl — weapon icons: lightning (32x32 image). |
 | `icon-frost` | [icon-frost.png](characters/hero/girl/icons/icon-frost.png) | 32x32 | icon | Player Girl — weapon icons: frost (32x32 image). |
 | `icon-flame` | [icon-flame.png](characters/hero/girl/icons/icon-flame.png) | 32x32 | icon | Player Girl — weapon icons: flame (32x32 image). |
+
+<a id="pets"></a>
+## Pets
+
+### Jade / 翠火 — Ancient (翠火·成年)
+
+<img src="previews/pets/dragon-ancient.gif" alt="dragon-ancient preview" height="140">
+
+Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Faces WEST.
+
+- group `dragon-ancient` · 4 assets · frame 128x128 · key prefix `pet-dragon-ancient-` · manifest [pets/dragon/ancient/manifest.json](pets/dragon/ancient/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-dragon-ancient-idle` | 6 | 128x128 | 6 | loop | (0.5, 1.0) |  |
+| `pet-dragon-ancient-move` | 8 | 128x128 | 10 | loop | (0.5, 1.0) |  |
+| `pet-dragon-ancient-skill` | 12 | 128x128 | 10 | once | (0.5, 1.0) | fx: `fx-pet-dragon-apocalypse-flame` |
+| `pet-dragon-ancient-hurt` | 4 | 128x128 | 10 | once | (0.5, 1.0) |  |
+
+### Jade / 翠火 — Baby (翠火·幼年)
+
+<img src="previews/pets/dragon-baby.gif" alt="dragon-baby preview" height="140">
+
+Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST.
+
+- group `dragon-baby` · 4 assets · frame 48x48 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-dragon-baby-idle` | 6 | 48x48 | 6 | loop | (0.5, 1.0) |  |
+| `pet-dragon-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
+| `pet-dragon-baby-skill` | 8 | 48x48 | 10 | once | (0.5, 1.0) | fx: `fx-pet-dragon-smoke-breath` |
+| `pet-dragon-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+
+### Jade / 翠火 — FX (翠火·特效)
+
+<img src="previews/pets/dragon.gif" alt="dragon-fx preview" height="140">
+
+Standalone skill FX for Green Dragon. Travel west. Evolve FX included.
+
+- group `dragon-fx` · 5 assets · frame 40x24, 64x64, 80x48, 128x128, 256x96 · key prefix `fx-pet-dragon-` · manifest [pets/dragon/fx/manifest.json](pets/dragon/fx/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-pet-dragon-smoke-breath` | 10 | 80x48 | 12 | once | (0.975, 0.5) | Small toxic smoke cloud puffed west from the mouth (cone ≈ 60 px). Origin = mouth. Gameplay: slow + light poison on zombies in the cloud. |
+| `fx-pet-dragon-fireball` | 4 | 40x24 | 12 | loop | (0.225, 0.5) | Projectile: green fireball flying west (−x) ≈ 5 px/frame at 60 fps. Origin = ball centre. On hit spawn fx-pet-dragon-fireball-impact (splash ≈ 28 px). |
+| `fx-pet-dragon-fireball-impact` | 8 | 64x64 | 14 | once | (0.5, 0.5) | Green fireball explosion, splash radius ≈ 28 px. Centre on the hit point. |
+| `fx-pet-dragon-apocalypse-flame` | 14 | 256x96 | 12 | start 0-3 once, loop 4-9, end 10-13 once | (0.9844, 0.5) | Sustained jade-fire breath beam. Origin = mouth; reaches ≈ 240 px west, ≈ 80 px wide at the far end. Start 0–3 (beam grows), loop 4–9 while breathing (seamless), end 10–13 (beam detaches and burns out). Damage tick every ~0.2 s to zombies inside the beam. |
+| `fx-pet-dragon-evolve` | 12 | 128x128 | 12 | once | (0.5, 0.921875) | Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash). |
+
+### Jade / 翠火 — Young (翠火·青年)
+
+<img src="previews/pets/dragon-young.gif" alt="dragon-young preview" height="140">
+
+Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST.
+
+- group `dragon-young` · 4 assets · frame 64x64 · key prefix `pet-dragon-young-` · manifest [pets/dragon/young/manifest.json](pets/dragon/young/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-dragon-young-idle` | 6 | 64x64 | 6 | loop | (0.5, 1.0) |  |
+| `pet-dragon-young-move` | 8 | 64x64 | 10 | loop | (0.5, 1.0) |  |
+| `pet-dragon-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-dragon-fireball`, `fx-pet-dragon-fireball-impact` |
+| `pet-dragon-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+
+### Leo / 雷歐 — Ancient (雷歐·成年)
+
+<img src="previews/pets/lion-ancient.gif" alt="lion-ancient preview" height="140">
+
+Golden Lion 金獅. Ancient form (96px). Skill: Sunder Strike / 裂地猛擊. Faces WEST.
+
+- group `lion-ancient` · 4 assets · frame 96x96 · key prefix `pet-lion-ancient-` · manifest [pets/lion/ancient/manifest.json](pets/lion/ancient/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-lion-ancient-idle` | 8 | 96x96 | 8 | loop | (0.5, 1.0) |  |
+| `pet-lion-ancient-move` | 6 | 96x96 | 12 | loop | (0.5, 1.0) |  |
+| `pet-lion-ancient-skill` | 8 | 96x96 | 12 | once | (0.5, 1.0) | fx: `fx-pet-lion-sunder-strike` |
+| `pet-lion-ancient-hurt` | 4 | 96x96 | 10 | once | (0.5, 1.0) |  |
+
+### Leo / 雷歐 — Baby (雷歐·幼年)
+
+<img src="previews/pets/lion-baby.gif" alt="lion-baby preview" height="140">
+
+Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST.
+
+- group `lion-baby` · 4 assets · frame 48x48 · key prefix `pet-lion-baby-` · manifest [pets/lion/baby/manifest.json](pets/lion/baby/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-lion-baby-idle` | 8 | 48x48 | 8 | loop | (0.5, 1.0) |  |
+| `pet-lion-baby-move` | 6 | 48x48 | 12 | loop | (0.5, 1.0) |  |
+| `pet-lion-baby-skill` | 8 | 48x48 | 12 | once | (0.5, 1.0) | fx: `fx-pet-lion-pounce-slash` |
+| `pet-lion-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+
+### Leo / 雷歐 — FX (雷歐·特效)
+
+<img src="previews/pets/lion.gif" alt="lion-fx preview" height="140">
+
+Standalone skill FX for Golden Lion 金獅. Travel west. Evolve FX included.
+
+- group `lion-fx` · 4 assets · frame 48x48, 128x128, 160x80, 192x112 · key prefix `fx-pet-lion-` · manifest [pets/lion/fx/manifest.json](pets/lion/fx/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-pet-lion-pounce-slash` | 6 | 48x48 | 16 | once | (0.5, 0.5) | Claw slash on landing; centre on the target (≈ 20 px in front of the cub). Single-target melee. |
+| `fx-pet-lion-roar-wave` | 8 | 160x80 | 12 | once | (0.975, 0.5) | Stun cone: golden sonic rings travel west from the mouth, range ≈ 150 px, half-angle ≈ 28°. Origin = mouth. Stun zombies inside the cone on frames 2–6 (≈ 1.5 s). |
+| `fx-pet-lion-sunder-strike` | 10 | 192x112 | 12 | once | (0.5, 0.875) | Ground-slam AoE at the landing point: gold ground cracks with lightning rising out of them, radius ≈ 90 px along the ground. Origin = impact point on the ground. Damage + short stun on frame 1. |
+| `fx-pet-lion-evolve` | 12 | 128x128 | 12 | once | (0.5, 0.921875) | Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash). |
+
+### Leo / 雷歐 — Young (雷歐·青年)
+
+<img src="previews/pets/lion-young.gif" alt="lion-young preview" height="140">
+
+Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.
+
+- group `lion-young` · 4 assets · frame 64x64 · key prefix `pet-lion-young-` · manifest [pets/lion/young/manifest.json](pets/lion/young/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-lion-young-idle` | 8 | 64x64 | 8 | loop | (0.5, 1.0) |  |
+| `pet-lion-young-move` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
+| `pet-lion-young-skill` | 8 | 64x64 | 12 | once | (0.5, 1.0) | fx: `fx-pet-lion-roar-wave` |
+| `pet-lion-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+
+### Momo / 墨墨 — Ancient (墨墨·成年)
+
+<img src="previews/pets/panda-ancient.gif" alt="panda-ancient preview" height="140">
+
+Black Panda 墨熊貓. Ancient form (96px). Skill: Chi Blast / 氣功波. Faces WEST.
+
+- group `panda-ancient` · 4 assets · frame 96x96 · key prefix `pet-panda-ancient-` · manifest [pets/panda/ancient/manifest.json](pets/panda/ancient/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-panda-ancient-idle` | 6 | 96x96 | 6 | loop | (0.5, 1.0) |  |
+| `pet-panda-ancient-move` | 6 | 96x96 | 10 | loop | (0.5, 1.0) |  |
+| `pet-panda-ancient-skill` | 8 | 96x96 | 10 | once | (0.5, 1.0) | fx: `fx-pet-panda-chi-blast` |
+| `pet-panda-ancient-hurt` | 4 | 96x96 | 10 | once | (0.5, 1.0) |  |
+
+### Momo / 墨墨 — Baby (墨墨·幼年)
+
+<img src="previews/pets/panda-baby.gif" alt="panda-baby preview" height="140">
+
+Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST.
+
+- group `panda-baby` · 4 assets · frame 48x48 · key prefix `pet-panda-baby-` · manifest [pets/panda/baby/manifest.json](pets/panda/baby/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-panda-baby-idle` | 6 | 48x48 | 8 | loop | (0.5, 1.0) |  |
+| `pet-panda-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
+| `pet-panda-baby-skill` | 8 | 48x48 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-roll-dust`, `fx-pet-panda-roll-impact` |
+| `pet-panda-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+
+### Momo / 墨墨 — FX (墨墨·特效)
+
+<img src="previews/pets/panda.gif" alt="panda-fx preview" height="140">
+
+Standalone skill FX for Black Panda 墨熊貓. Travel west. Evolve FX included.
+
+- group `panda-fx` · 5 assets · frame 48x32, 48x48, 112x72, 128x128, 224x112 · key prefix `fx-pet-panda-` · manifest [pets/panda/fx/manifest.json](pets/panda/fx/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-pet-panda-roll-dust` | 6 | 48x32 | 12 | once | (0.5, 0.9375) | Dust + bamboo-leaf puff left behind the rolling panda (spawn at the panda origin every 3–4 cast frames; does not move). |
+| `fx-pet-panda-roll-impact` | 6 | 48x48 | 16 | once | (0.5, 0.5) | Jade impact star when the rolling panda hits a zombie (knockback). Centre on contact point. |
+| `fx-pet-panda-bamboo-sweep` | 8 | 112x72 | 14 | once | (0.7321, 0.5556) | Crescent sweep in front (west) of the panda, top → bottom, reach ≈ 50 px from the pivot (≈ 100 px wide arc). Melee AoE + knockback on frames 1–4. Origin = swing pivot (place at the panda chest). Bamboo leaves fly off the edge. |
+| `fx-pet-panda-chi-blast` | 12 | 224x112 | 12 | once | (0.5, 0.8928571428571429) | AoE shockwave around the panda: radius ≈ 110 px (x) × 37 px (y ground ellipse). Origin = ground under the panda. Frames 0–3 charge; damage + knockback when the ring passes (frames 4–9); bamboo shards fly outward. |
+| `fx-pet-panda-evolve` | 12 | 128x128 | 12 | once | (0.5, 0.921875) | Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash). |
+
+### Momo / 墨墨 — Young (墨墨·青年)
+
+<img src="previews/pets/panda-young.gif" alt="panda-young preview" height="140">
+
+Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.
+
+- group `panda-young` · 4 assets · frame 64x64 · key prefix `pet-panda-young-` · manifest [pets/panda/young/manifest.json](pets/panda/young/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-panda-young-idle` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
+| `pet-panda-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
+| `pet-panda-young-skill` | 8 | 64x64 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-bamboo-sweep` |
+| `pet-panda-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+
+### Azure / 藍羽 — Ancient (藍羽·成年)
+
+<img src="previews/pets/phoenix-ancient.gif" alt="phoenix-ancient preview" height="140">
+
+Blue Phoenix 藍焰鳳凰. Ancient form (128px). Skill: Blazing Rebirth / 烈焰重生. Faces WEST.
+
+- group `phoenix-ancient` · 4 assets · frame 128x128 · key prefix `pet-phoenix-ancient-` · manifest [pets/phoenix/ancient/manifest.json](pets/phoenix/ancient/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-phoenix-ancient-idle` | 6 | 128x128 | 6 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-ancient-move` | 6 | 128x128 | 10 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-ancient-skill` | 8 | 128x128 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-blazing-rebirth` |
+| `pet-phoenix-ancient-hurt` | 4 | 128x128 | 10 | once | (0.5, 1.0) |  |
+
+### Azure / 藍羽 — Baby (藍羽·幼年)
+
+<img src="previews/pets/phoenix-baby.gif" alt="phoenix-baby preview" height="140">
+
+Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST.
+
+- group `phoenix-baby` · 4 assets · frame 48x48 · key prefix `pet-phoenix-baby-` · manifest [pets/phoenix/baby/manifest.json](pets/phoenix/baby/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-phoenix-baby-idle` | 6 | 48x48 | 8 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-baby-skill` | 8 | 48x48 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-spark-feather`, `fx-pet-phoenix-spark-feather-hit` |
+| `pet-phoenix-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+
+### Azure / 藍羽 — FX (藍羽·特效)
+
+<img src="previews/pets/phoenix.gif" alt="phoenix-fx preview" height="140">
+
+Standalone skill FX for Blue Phoenix 藍焰鳳凰. Travel west. Evolve FX included.
+
+- group `phoenix-fx` · 6 assets · frame 24x48, 32x16, 32x32, 48x32, 128x128, 192x128 · key prefix `fx-pet-phoenix-` · manifest [pets/phoenix/fx/manifest.json](pets/phoenix/fx/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-pet-phoenix-spark-feather` | 4 | 32x16 | 12 | loop | (0.19, 0.5) | Projectile: flies west (−x) ~6 px/frame at 60 fps (≈360 px/s). Origin = feather tip. Fire 3 in a small fan (−8°, 0°, +8°). |
+| `fx-pet-phoenix-spark-feather-hit` | 6 | 32x32 | 16 | once | (0.5, 0.5) | Impact when a spark feather hits; centre on the zombie hit point. |
+| `fx-pet-phoenix-rain-bolt` | 4 | 24x48 | 12 | loop | (0.33, 0.79) | Falling blue fire-feather. Origin = head. Spawn 60–90 px above ground in an area 40–140 px west of the phoenix; move (−2, +6) px/frame at 60 fps; on reaching the ground spawn fx-pet-phoenix-rain-impact. |
+| `fx-pet-phoenix-rain-impact` | 6 | 48x32 | 14 | once | (0.5, 0.875) | Ground impact of a rain bolt (small AoE, ~20 px radius). Origin = ground contact point. |
+| `fx-pet-phoenix-blazing-rebirth` | 12 | 192x128 | 12 | once | (0.5, 0.9062) | AoE around the phoenix: radius ≈ 95 px (x) × 27 px (y ground ellipse); flame plume up to ≈ 90 px high. Origin = ground under the phoenix. Frames 0–2 gather (no damage), burst/damage on frame 3, burning ring 4–10. Can double as the revive/heal burst. |
+| `fx-pet-phoenix-evolve` | 12 | 128x128 | 12 | once | (0.5, 0.921875) | Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash). |
+
+### Azure / 藍羽 — Young (藍羽·青年)
+
+<img src="previews/pets/phoenix-young.gif" alt="phoenix-young preview" height="140">
+
+Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.
+
+- group `phoenix-young` · 4 assets · frame 64x64 · key prefix `pet-phoenix-young-` · manifest [pets/phoenix/young/manifest.json](pets/phoenix/young/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `pet-phoenix-young-idle` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
+| `pet-phoenix-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-rain-bolt`, `fx-pet-phoenix-rain-impact` |
+| `pet-phoenix-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
 
 <a id="zombies"></a>
 ## Zombies

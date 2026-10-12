@@ -1,0 +1,108 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "phoenix-young",
+  "title": "Azure / 藍羽 — Young",
+  "titleZh": "藍羽·青年",
+  "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "38781a23-dee8-45b8-93d5-ece6bbeebc84",
+    "sourceFolder": "pets/phoenix/young"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "64x64",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 64,
+    "frameHeight": 64
+  },
+  "preview": {
+    "animate": [
+      "pet-phoenix-young-idle",
+      "pet-phoenix-young-move",
+      "pet-phoenix-young-skill"
+    ],
+    "thumb": "assets/library/previews/pets/phoenix-young.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-phoenix-young-idle",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-idle.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 10
+    },
+    {
+      "key": "pet-phoenix-young-move",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-move.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "hoverOffset": 10
+    },
+    {
+      "key": "pet-phoenix-young-skill",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-skill.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Phoenix Rain",
+      "skillZh": "鳳凰火雨",
+      "castFrame": 3,
+      "spawnOffset": [
+        -22,
+        -28
+      ],
+      "fx": [
+        "fx-pet-phoenix-rain-bolt",
+        "fx-pet-phoenix-rain-impact"
+      ],
+      "role": "area barrage: 6-8 blue fire-feathers rain onto an area ahead"
+    },
+    {
+      "key": "pet-phoenix-young-hurt",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-hurt.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}

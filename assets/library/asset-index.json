@@ -9,6 +9,7 @@
     "origin": "Phaser setOrigin(x, y) fractions of one frame",
     "zombies": "64x64 (brute 96x96, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
     "bosses": "128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative",
+    "pets": "Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX",
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
     "fx": "origin per key; hero FX point west, boss FX east",
     "loop": "loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once",
@@ -16,11 +17,15 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 309,
+    "total": 378,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 83
+        "assets": 84
+      },
+      "pets": {
+        "groups": 16,
+        "assets": 68
       },
       "zombies": {
         "groups": 12,
@@ -52,7 +57,7 @@
       "concept": 21,
       "fx": 37,
       "icon": 6,
-      "spritesheet": 232
+      "spritesheet": 301
     }
   },
   "groups": [
@@ -163,7 +168,7 @@
       "extras": [],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 27,
+      "count": 28,
       "frameSizes": [
         "8x8",
         "12x12",
@@ -194,7 +199,8 @@
         16
       ],
       "types": [
-        "fx"
+        "fx",
+        "spritesheet"
       ],
       "keys": [
         "fx-water-muzzle",
@@ -223,7 +229,8 @@
         "fx-flame-muzzle",
         "fx-flame-cone",
         "fx-flame-ground",
-        "fx-flame-smoke"
+        "fx-flame-smoke",
+        "fx-flame-impact"
       ]
     },
     {
@@ -261,6 +268,602 @@
         "icon-lightning",
         "icon-frost",
         "icon-flame"
+      ]
+    },
+    {
+      "id": "pets/dragon-ancient",
+      "category": "pets",
+      "group": "dragon-ancient",
+      "title": "Jade / 翠火 — Ancient",
+      "titleZh": "翠火·成年",
+      "description": "Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Faces WEST.",
+      "manifest": "assets/library/pets/dragon/ancient/manifest.json",
+      "dir": "assets/library/pets/dragon/ancient",
+      "thumb": "assets/library/previews/pets/dragon-ancient.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-dragon-ancient-",
+      "mainKey": "pet-dragon-ancient-idle",
+      "count": 4,
+      "frameSizes": [
+        "128x128"
+      ],
+      "framesRange": [
+        4,
+        12
+      ],
+      "fpsRange": [
+        6,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-dragon-ancient-idle",
+        "pet-dragon-ancient-move",
+        "pet-dragon-ancient-skill",
+        "pet-dragon-ancient-hurt"
+      ]
+    },
+    {
+      "id": "pets/dragon-baby",
+      "category": "pets",
+      "group": "dragon-baby",
+      "title": "Jade / 翠火 — Baby",
+      "titleZh": "翠火·幼年",
+      "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST.",
+      "manifest": "assets/library/pets/dragon/baby/manifest.json",
+      "dir": "assets/library/pets/dragon/baby",
+      "thumb": "assets/library/previews/pets/dragon-baby.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-dragon-baby-",
+      "mainKey": "pet-dragon-baby-idle",
+      "count": 4,
+      "frameSizes": [
+        "48x48"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        6,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-dragon-baby-idle",
+        "pet-dragon-baby-move",
+        "pet-dragon-baby-skill",
+        "pet-dragon-baby-hurt"
+      ]
+    },
+    {
+      "id": "pets/dragon-fx",
+      "category": "pets",
+      "group": "dragon-fx",
+      "title": "Jade / 翠火 — FX",
+      "titleZh": "翠火·特效",
+      "description": "Standalone skill FX for Green Dragon. Travel west. Evolve FX included.",
+      "manifest": "assets/library/pets/dragon/fx/manifest.json",
+      "dir": "assets/library/pets/dragon/fx",
+      "thumb": "assets/library/previews/pets/dragon.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "fx-pet-dragon-",
+      "mainKey": "fx-pet-dragon-smoke-breath",
+      "count": 5,
+      "frameSizes": [
+        "40x24",
+        "64x64",
+        "80x48",
+        "128x128",
+        "256x96"
+      ],
+      "framesRange": [
+        4,
+        14
+      ],
+      "fpsRange": [
+        12,
+        14
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "fx-pet-dragon-smoke-breath",
+        "fx-pet-dragon-fireball",
+        "fx-pet-dragon-fireball-impact",
+        "fx-pet-dragon-apocalypse-flame",
+        "fx-pet-dragon-evolve"
+      ]
+    },
+    {
+      "id": "pets/dragon-young",
+      "category": "pets",
+      "group": "dragon-young",
+      "title": "Jade / 翠火 — Young",
+      "titleZh": "翠火·青年",
+      "description": "Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST.",
+      "manifest": "assets/library/pets/dragon/young/manifest.json",
+      "dir": "assets/library/pets/dragon/young",
+      "thumb": "assets/library/previews/pets/dragon-young.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-dragon-young-",
+      "mainKey": "pet-dragon-young-idle",
+      "count": 4,
+      "frameSizes": [
+        "64x64"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        6,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-dragon-young-idle",
+        "pet-dragon-young-move",
+        "pet-dragon-young-skill",
+        "pet-dragon-young-hurt"
+      ]
+    },
+    {
+      "id": "pets/lion-ancient",
+      "category": "pets",
+      "group": "lion-ancient",
+      "title": "Leo / 雷歐 — Ancient",
+      "titleZh": "雷歐·成年",
+      "description": "Golden Lion 金獅. Ancient form (96px). Skill: Sunder Strike / 裂地猛擊. Faces WEST.",
+      "manifest": "assets/library/pets/lion/ancient/manifest.json",
+      "dir": "assets/library/pets/lion/ancient",
+      "thumb": "assets/library/previews/pets/lion-ancient.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-lion-ancient-",
+      "mainKey": "pet-lion-ancient-idle",
+      "count": 4,
+      "frameSizes": [
+        "96x96"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        12
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-lion-ancient-idle",
+        "pet-lion-ancient-move",
+        "pet-lion-ancient-skill",
+        "pet-lion-ancient-hurt"
+      ]
+    },
+    {
+      "id": "pets/lion-baby",
+      "category": "pets",
+      "group": "lion-baby",
+      "title": "Leo / 雷歐 — Baby",
+      "titleZh": "雷歐·幼年",
+      "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST.",
+      "manifest": "assets/library/pets/lion/baby/manifest.json",
+      "dir": "assets/library/pets/lion/baby",
+      "thumb": "assets/library/previews/pets/lion-baby.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-lion-baby-",
+      "mainKey": "pet-lion-baby-idle",
+      "count": 4,
+      "frameSizes": [
+        "48x48"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        12
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-lion-baby-idle",
+        "pet-lion-baby-move",
+        "pet-lion-baby-skill",
+        "pet-lion-baby-hurt"
+      ]
+    },
+    {
+      "id": "pets/lion-fx",
+      "category": "pets",
+      "group": "lion-fx",
+      "title": "Leo / 雷歐 — FX",
+      "titleZh": "雷歐·特效",
+      "description": "Standalone skill FX for Golden Lion 金獅. Travel west. Evolve FX included.",
+      "manifest": "assets/library/pets/lion/fx/manifest.json",
+      "dir": "assets/library/pets/lion/fx",
+      "thumb": "assets/library/previews/pets/lion.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "fx-pet-lion-",
+      "mainKey": "fx-pet-lion-pounce-slash",
+      "count": 4,
+      "frameSizes": [
+        "48x48",
+        "128x128",
+        "160x80",
+        "192x112"
+      ],
+      "framesRange": [
+        6,
+        12
+      ],
+      "fpsRange": [
+        12,
+        16
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "fx-pet-lion-pounce-slash",
+        "fx-pet-lion-roar-wave",
+        "fx-pet-lion-sunder-strike",
+        "fx-pet-lion-evolve"
+      ]
+    },
+    {
+      "id": "pets/lion-young",
+      "category": "pets",
+      "group": "lion-young",
+      "title": "Leo / 雷歐 — Young",
+      "titleZh": "雷歐·青年",
+      "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.",
+      "manifest": "assets/library/pets/lion/young/manifest.json",
+      "dir": "assets/library/pets/lion/young",
+      "thumb": "assets/library/previews/pets/lion-young.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-lion-young-",
+      "mainKey": "pet-lion-young-idle",
+      "count": 4,
+      "frameSizes": [
+        "64x64"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        12
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-lion-young-idle",
+        "pet-lion-young-move",
+        "pet-lion-young-skill",
+        "pet-lion-young-hurt"
+      ]
+    },
+    {
+      "id": "pets/panda-ancient",
+      "category": "pets",
+      "group": "panda-ancient",
+      "title": "Momo / 墨墨 — Ancient",
+      "titleZh": "墨墨·成年",
+      "description": "Black Panda 墨熊貓. Ancient form (96px). Skill: Chi Blast / 氣功波. Faces WEST.",
+      "manifest": "assets/library/pets/panda/ancient/manifest.json",
+      "dir": "assets/library/pets/panda/ancient",
+      "thumb": "assets/library/previews/pets/panda-ancient.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-panda-ancient-",
+      "mainKey": "pet-panda-ancient-idle",
+      "count": 4,
+      "frameSizes": [
+        "96x96"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        6,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-panda-ancient-idle",
+        "pet-panda-ancient-move",
+        "pet-panda-ancient-skill",
+        "pet-panda-ancient-hurt"
+      ]
+    },
+    {
+      "id": "pets/panda-baby",
+      "category": "pets",
+      "group": "panda-baby",
+      "title": "Momo / 墨墨 — Baby",
+      "titleZh": "墨墨·幼年",
+      "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST.",
+      "manifest": "assets/library/pets/panda/baby/manifest.json",
+      "dir": "assets/library/pets/panda/baby",
+      "thumb": "assets/library/previews/pets/panda-baby.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-panda-baby-",
+      "mainKey": "pet-panda-baby-idle",
+      "count": 4,
+      "frameSizes": [
+        "48x48"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        12
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-panda-baby-idle",
+        "pet-panda-baby-move",
+        "pet-panda-baby-skill",
+        "pet-panda-baby-hurt"
+      ]
+    },
+    {
+      "id": "pets/panda-fx",
+      "category": "pets",
+      "group": "panda-fx",
+      "title": "Momo / 墨墨 — FX",
+      "titleZh": "墨墨·特效",
+      "description": "Standalone skill FX for Black Panda 墨熊貓. Travel west. Evolve FX included.",
+      "manifest": "assets/library/pets/panda/fx/manifest.json",
+      "dir": "assets/library/pets/panda/fx",
+      "thumb": "assets/library/previews/pets/panda.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "fx-pet-panda-",
+      "mainKey": "fx-pet-panda-roll-dust",
+      "count": 5,
+      "frameSizes": [
+        "48x32",
+        "48x48",
+        "112x72",
+        "128x128",
+        "224x112"
+      ],
+      "framesRange": [
+        6,
+        12
+      ],
+      "fpsRange": [
+        12,
+        16
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "fx-pet-panda-roll-dust",
+        "fx-pet-panda-roll-impact",
+        "fx-pet-panda-bamboo-sweep",
+        "fx-pet-panda-chi-blast",
+        "fx-pet-panda-evolve"
+      ]
+    },
+    {
+      "id": "pets/panda-young",
+      "category": "pets",
+      "group": "panda-young",
+      "title": "Momo / 墨墨 — Young",
+      "titleZh": "墨墨·青年",
+      "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.",
+      "manifest": "assets/library/pets/panda/young/manifest.json",
+      "dir": "assets/library/pets/panda/young",
+      "thumb": "assets/library/previews/pets/panda-young.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-panda-young-",
+      "mainKey": "pet-panda-young-idle",
+      "count": 4,
+      "frameSizes": [
+        "64x64"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        12
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-panda-young-idle",
+        "pet-panda-young-move",
+        "pet-panda-young-skill",
+        "pet-panda-young-hurt"
+      ]
+    },
+    {
+      "id": "pets/phoenix-ancient",
+      "category": "pets",
+      "group": "phoenix-ancient",
+      "title": "Azure / 藍羽 — Ancient",
+      "titleZh": "藍羽·成年",
+      "description": "Blue Phoenix 藍焰鳳凰. Ancient form (128px). Skill: Blazing Rebirth / 烈焰重生. Faces WEST.",
+      "manifest": "assets/library/pets/phoenix/ancient/manifest.json",
+      "dir": "assets/library/pets/phoenix/ancient",
+      "thumb": "assets/library/previews/pets/phoenix-ancient.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-phoenix-ancient-",
+      "mainKey": "pet-phoenix-ancient-idle",
+      "count": 4,
+      "frameSizes": [
+        "128x128"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        6,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-phoenix-ancient-idle",
+        "pet-phoenix-ancient-move",
+        "pet-phoenix-ancient-skill",
+        "pet-phoenix-ancient-hurt"
+      ]
+    },
+    {
+      "id": "pets/phoenix-baby",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "title": "Azure / 藍羽 — Baby",
+      "titleZh": "藍羽·幼年",
+      "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST.",
+      "manifest": "assets/library/pets/phoenix/baby/manifest.json",
+      "dir": "assets/library/pets/phoenix/baby",
+      "thumb": "assets/library/previews/pets/phoenix-baby.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-phoenix-baby-",
+      "mainKey": "pet-phoenix-baby-idle",
+      "count": 4,
+      "frameSizes": [
+        "48x48"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-phoenix-baby-idle",
+        "pet-phoenix-baby-move",
+        "pet-phoenix-baby-skill",
+        "pet-phoenix-baby-hurt"
+      ]
+    },
+    {
+      "id": "pets/phoenix-fx",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "title": "Azure / 藍羽 — FX",
+      "titleZh": "藍羽·特效",
+      "description": "Standalone skill FX for Blue Phoenix 藍焰鳳凰. Travel west. Evolve FX included.",
+      "manifest": "assets/library/pets/phoenix/fx/manifest.json",
+      "dir": "assets/library/pets/phoenix/fx",
+      "thumb": "assets/library/previews/pets/phoenix.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "fx-pet-phoenix-",
+      "mainKey": "fx-pet-phoenix-spark-feather",
+      "count": 6,
+      "frameSizes": [
+        "24x48",
+        "32x16",
+        "32x32",
+        "48x32",
+        "128x128",
+        "192x128"
+      ],
+      "framesRange": [
+        4,
+        12
+      ],
+      "fpsRange": [
+        12,
+        16
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "fx-pet-phoenix-spark-feather",
+        "fx-pet-phoenix-spark-feather-hit",
+        "fx-pet-phoenix-rain-bolt",
+        "fx-pet-phoenix-rain-impact",
+        "fx-pet-phoenix-blazing-rebirth",
+        "fx-pet-phoenix-evolve"
+      ]
+    },
+    {
+      "id": "pets/phoenix-young",
+      "category": "pets",
+      "group": "phoenix-young",
+      "title": "Azure / 藍羽 — Young",
+      "titleZh": "藍羽·青年",
+      "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.",
+      "manifest": "assets/library/pets/phoenix/young/manifest.json",
+      "dir": "assets/library/pets/phoenix/young",
+      "thumb": "assets/library/previews/pets/phoenix-young.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "pet-phoenix-young-",
+      "mainKey": "pet-phoenix-young-idle",
+      "count": 4,
+      "frameSizes": [
+        "64x64"
+      ],
+      "framesRange": [
+        4,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "pet-phoenix-young-idle",
+        "pet-phoenix-young-move",
+        "pet-phoenix-young-skill",
+        "pet-phoenix-young-hurt"
       ]
     },
     {
@@ -3427,7 +4030,7 @@
       "type": "fx",
       "frameWidth": 24,
       "frameHeight": 24,
-      "frames": 5,
+      "frames": 6,
       "frameRate": 14,
       "loop": false,
       "loopFrom": null,
@@ -3442,7 +4045,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
-      "description": "Player Girl — weapon FX: bubble-pop — 5 frames 24x24 @ 14 fps, once.",
+      "description": "Player Girl — weapon FX: bubble-pop — 6 frames 24x24 @ 14 fps, once.",
       "note": null,
       "tags": [
         "hero",
@@ -4000,6 +4603,43 @@
       "action": "flame-smoke"
     },
     {
+      "key": "fx-flame-impact",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-impact.png",
+      "type": "spritesheet",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: flame-impact — 6 frames 40x40 @ 14 fps, once.",
+      "note": "short hit burst on contact (added to complete projectile+hit pair for flame)",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "spritesheet",
+        "impact",
+        "flame",
+        "once",
+        "tileable"
+      ],
+      "extra": null,
+      "action": "flame-impact"
+    },
+    {
       "key": "icon-water",
       "category": "hero",
       "group": "girl-icons",
@@ -4202,6 +4842,2396 @@
       ],
       "extra": null,
       "action": "flame"
+    },
+    {
+      "key": "pet-dragon-ancient-idle",
+      "category": "pets",
+      "group": "dragon-ancient",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-ancient.gif",
+      "description": "Jade / 翠火 — Ancient: idle — 6 frames 128x128 @ 6 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-ancient",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-dragon-ancient-move",
+      "category": "pets",
+      "group": "dragon-ancient",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-move.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-ancient.gif",
+      "description": "Jade / 翠火 — Ancient: move — 8 frames 128x128 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-ancient",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-dragon-ancient-skill",
+      "category": "pets",
+      "group": "dragon-ancient",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-dragon-apocalypse-flame"
+      ],
+      "skill": "Apocalyptic Flame",
+      "preview": "assets/library/previews/pets/dragon-ancient.gif",
+      "description": "Jade / 翠火 — Ancient: skill — 12 frames 128x128 @ 10 fps, once. Skill: Apocalyptic Flame.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-ancient",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-dragon-ancient-hurt",
+      "category": "pets",
+      "group": "dragon-ancient",
+      "path": "assets/library/pets/dragon/ancient/strips/pet-dragon-ancient-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-ancient.gif",
+      "description": "Jade / 翠火 — Ancient: hurt — 4 frames 128x128 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-ancient",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-dragon-baby-idle",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: idle — 6 frames 48x48 @ 6 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-dragon-baby-move",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-move.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: move — 6 frames 48x48 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-dragon-baby-skill",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-dragon-smoke-breath"
+      ],
+      "skill": "Smoke Breath",
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: skill — 8 frames 48x48 @ 10 fps, once. Skill: Smoke Breath.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-dragon-baby-hurt",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "fx-pet-dragon-smoke-breath",
+      "category": "pets",
+      "group": "dragon-fx",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-smoke-breath.png",
+      "type": "spritesheet",
+      "frameWidth": 80,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.975,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon.gif",
+      "description": "Jade / 翠火 — FX: smoke-breath — 10 frames 80x48 @ 12 fps, once.",
+      "note": "Small toxic smoke cloud puffed west from the mouth (cone ≈ 60 px). Origin = mouth. Gameplay: slow + light poison on zombies in the cloud.",
+      "tags": [
+        "pets",
+        "dragon-fx",
+        "spritesheet",
+        "smoke",
+        "once"
+      ],
+      "extra": null,
+      "action": "smoke-breath"
+    },
+    {
+      "key": "fx-pet-dragon-fireball",
+      "category": "pets",
+      "group": "dragon-fx",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-fireball.png",
+      "type": "spritesheet",
+      "frameWidth": 40,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.225,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon.gif",
+      "description": "Jade / 翠火 — FX: fireball — 4 frames 40x24 @ 12 fps, loop.",
+      "note": "Projectile: green fireball flying west (−x) ≈ 5 px/frame at 60 fps. Origin = ball centre. On hit spawn fx-pet-dragon-fireball-impact (splash ≈ 28 px).",
+      "tags": [
+        "pets",
+        "dragon-fx",
+        "spritesheet",
+        "fire",
+        "loop",
+        "tileable"
+      ],
+      "extra": null,
+      "action": "fireball"
+    },
+    {
+      "key": "fx-pet-dragon-fireball-impact",
+      "category": "pets",
+      "group": "dragon-fx",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-fireball-impact.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon.gif",
+      "description": "Jade / 翠火 — FX: fireball-impact — 8 frames 64x64 @ 14 fps, once.",
+      "note": "Green fireball explosion, splash radius ≈ 28 px. Centre on the hit point.",
+      "tags": [
+        "pets",
+        "dragon-fx",
+        "spritesheet",
+        "fire",
+        "impact",
+        "once"
+      ],
+      "extra": null,
+      "action": "fireball-impact"
+    },
+    {
+      "key": "fx-pet-dragon-apocalypse-flame",
+      "category": "pets",
+      "group": "dragon-fx",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-apocalypse-flame.png",
+      "type": "spritesheet",
+      "frameWidth": 256,
+      "frameHeight": 96,
+      "frames": 14,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.9844,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon.gif",
+      "description": "Jade / 翠火 — FX: apocalypse-flame — 14 frames 256x96 @ 12 fps, start 0-3 once, loop 4-9, end 10-13 once.",
+      "note": "Sustained jade-fire breath beam. Origin = mouth; reaches ≈ 240 px west, ≈ 80 px wide at the far end. Start 0–3 (beam grows), loop 4–9 while breathing (seamless), end 10–13 (beam detaches and burns out). Damage tick every ~0.2 s to zombies inside the beam.",
+      "tags": [
+        "pets",
+        "dragon-fx",
+        "spritesheet",
+        "sustained",
+        "tileable"
+      ],
+      "extra": null,
+      "action": "apocalypse-flame"
+    },
+    {
+      "key": "fx-pet-dragon-evolve",
+      "category": "pets",
+      "group": "dragon-fx",
+      "path": "assets/library/pets/dragon/fx/fx-pet-dragon-evolve.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon.gif",
+      "description": "Jade / 翠火 — FX: evolve — 12 frames 128x128 @ 12 fps, once.",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash).",
+      "tags": [
+        "pets",
+        "dragon-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve"
+    },
+    {
+      "key": "pet-dragon-young-idle",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: idle — 6 frames 64x64 @ 6 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-dragon-young-move",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-move.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: move — 8 frames 64x64 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-dragon-young-skill",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-dragon-fireball",
+        "fx-pet-dragon-fireball-impact"
+      ],
+      "skill": "Scorching Fireball",
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: skill — 8 frames 64x64 @ 10 fps, once. Skill: Scorching Fireball.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-dragon-young-hurt",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: hurt — 4 frames 64x64 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-lion-ancient-idle",
+      "category": "pets",
+      "group": "lion-ancient",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-ancient.gif",
+      "description": "Leo / 雷歐 — Ancient: idle — 8 frames 96x96 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-ancient",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-lion-ancient-move",
+      "category": "pets",
+      "group": "lion-ancient",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-move.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-ancient.gif",
+      "description": "Leo / 雷歐 — Ancient: move — 6 frames 96x96 @ 12 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-ancient",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-lion-ancient-skill",
+      "category": "pets",
+      "group": "lion-ancient",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-lion-sunder-strike"
+      ],
+      "skill": "Sunder Strike",
+      "preview": "assets/library/previews/pets/lion-ancient.gif",
+      "description": "Leo / 雷歐 — Ancient: skill — 8 frames 96x96 @ 12 fps, once. Skill: Sunder Strike.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-ancient",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-lion-ancient-hurt",
+      "category": "pets",
+      "group": "lion-ancient",
+      "path": "assets/library/pets/lion/ancient/strips/pet-lion-ancient-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-ancient.gif",
+      "description": "Leo / 雷歐 — Ancient: hurt — 4 frames 96x96 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-ancient",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-lion-baby-idle",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: idle — 8 frames 48x48 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-lion-baby-move",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-move.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: move — 6 frames 48x48 @ 12 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-lion-baby-skill",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-lion-pounce-slash"
+      ],
+      "skill": "Cub Pounce",
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: skill — 8 frames 48x48 @ 12 fps, once. Skill: Cub Pounce.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-lion-baby-hurt",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "fx-pet-lion-pounce-slash",
+      "category": "pets",
+      "group": "lion-fx",
+      "path": "assets/library/pets/lion/fx/fx-pet-lion-pounce-slash.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 16,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion.gif",
+      "description": "Leo / 雷歐 — FX: pounce-slash — 6 frames 48x48 @ 16 fps, once.",
+      "note": "Claw slash on landing; centre on the target (≈ 20 px in front of the cub). Single-target melee.",
+      "tags": [
+        "pets",
+        "lion-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "pounce-slash"
+    },
+    {
+      "key": "fx-pet-lion-roar-wave",
+      "category": "pets",
+      "group": "lion-fx",
+      "path": "assets/library/pets/lion/fx/fx-pet-lion-roar-wave.png",
+      "type": "spritesheet",
+      "frameWidth": 160,
+      "frameHeight": 80,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.975,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion.gif",
+      "description": "Leo / 雷歐 — FX: roar-wave — 8 frames 160x80 @ 12 fps, once.",
+      "note": "Stun cone: golden sonic rings travel west from the mouth, range ≈ 150 px, half-angle ≈ 28°. Origin = mouth. Stun zombies inside the cone on frames 2–6 (≈ 1.5 s).",
+      "tags": [
+        "pets",
+        "lion-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "roar-wave"
+    },
+    {
+      "key": "fx-pet-lion-sunder-strike",
+      "category": "pets",
+      "group": "lion-fx",
+      "path": "assets/library/pets/lion/fx/fx-pet-lion-sunder-strike.png",
+      "type": "spritesheet",
+      "frameWidth": 192,
+      "frameHeight": 112,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion.gif",
+      "description": "Leo / 雷歐 — FX: sunder-strike — 10 frames 192x112 @ 12 fps, once.",
+      "note": "Ground-slam AoE at the landing point: gold ground cracks with lightning rising out of them, radius ≈ 90 px along the ground. Origin = impact point on the ground. Damage + short stun on frame 1.",
+      "tags": [
+        "pets",
+        "lion-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "sunder-strike"
+    },
+    {
+      "key": "fx-pet-lion-evolve",
+      "category": "pets",
+      "group": "lion-fx",
+      "path": "assets/library/pets/lion/fx/fx-pet-lion-evolve.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion.gif",
+      "description": "Leo / 雷歐 — FX: evolve — 12 frames 128x128 @ 12 fps, once.",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash).",
+      "tags": [
+        "pets",
+        "lion-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve"
+    },
+    {
+      "key": "pet-lion-young-idle",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: idle — 8 frames 64x64 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-lion-young-move",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-move.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: move — 6 frames 64x64 @ 12 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-lion-young-skill",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-lion-roar-wave"
+      ],
+      "skill": "Lion Roar",
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: skill — 8 frames 64x64 @ 12 fps, once. Skill: Lion Roar.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-lion-young-hurt",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: hurt — 4 frames 64x64 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-panda-ancient-idle",
+      "category": "pets",
+      "group": "panda-ancient",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-ancient.gif",
+      "description": "Momo / 墨墨 — Ancient: idle — 6 frames 96x96 @ 6 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-ancient",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-panda-ancient-move",
+      "category": "pets",
+      "group": "panda-ancient",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-move.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-ancient.gif",
+      "description": "Momo / 墨墨 — Ancient: move — 6 frames 96x96 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-ancient",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-panda-ancient-skill",
+      "category": "pets",
+      "group": "panda-ancient",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-panda-chi-blast"
+      ],
+      "skill": "Chi Blast",
+      "preview": "assets/library/previews/pets/panda-ancient.gif",
+      "description": "Momo / 墨墨 — Ancient: skill — 8 frames 96x96 @ 10 fps, once. Skill: Chi Blast.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-ancient",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-panda-ancient-hurt",
+      "category": "pets",
+      "group": "panda-ancient",
+      "path": "assets/library/pets/panda/ancient/strips/pet-panda-ancient-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-ancient.gif",
+      "description": "Momo / 墨墨 — Ancient: hurt — 4 frames 96x96 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-ancient",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-panda-baby-idle",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: idle — 6 frames 48x48 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-panda-baby-move",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-move.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: move — 6 frames 48x48 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-panda-baby-skill",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-panda-roll-dust",
+        "fx-pet-panda-roll-impact"
+      ],
+      "skill": "Roll Raid",
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: skill — 8 frames 48x48 @ 12 fps, once. Skill: Roll Raid.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-panda-baby-hurt",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "fx-pet-panda-roll-dust",
+      "category": "pets",
+      "group": "panda-fx",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-roll-dust.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda.gif",
+      "description": "Momo / 墨墨 — FX: roll-dust — 6 frames 48x32 @ 12 fps, once.",
+      "note": "Dust + bamboo-leaf puff left behind the rolling panda (spawn at the panda origin every 3–4 cast frames; does not move).",
+      "tags": [
+        "pets",
+        "panda-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "roll-dust"
+    },
+    {
+      "key": "fx-pet-panda-roll-impact",
+      "category": "pets",
+      "group": "panda-fx",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-roll-impact.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 16,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda.gif",
+      "description": "Momo / 墨墨 — FX: roll-impact — 6 frames 48x48 @ 16 fps, once.",
+      "note": "Jade impact star when the rolling panda hits a zombie (knockback). Centre on contact point.",
+      "tags": [
+        "pets",
+        "panda-fx",
+        "spritesheet",
+        "impact",
+        "once"
+      ],
+      "extra": null,
+      "action": "roll-impact"
+    },
+    {
+      "key": "fx-pet-panda-bamboo-sweep",
+      "category": "pets",
+      "group": "panda-fx",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-bamboo-sweep.png",
+      "type": "spritesheet",
+      "frameWidth": 112,
+      "frameHeight": 72,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.7321,
+        0.5556
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda.gif",
+      "description": "Momo / 墨墨 — FX: bamboo-sweep — 8 frames 112x72 @ 14 fps, once.",
+      "note": "Crescent sweep in front (west) of the panda, top → bottom, reach ≈ 50 px from the pivot (≈ 100 px wide arc). Melee AoE + knockback on frames 1–4. Origin = swing pivot (place at the panda chest). Bamboo leaves fly off the edge.",
+      "tags": [
+        "pets",
+        "panda-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "bamboo-sweep"
+    },
+    {
+      "key": "fx-pet-panda-chi-blast",
+      "category": "pets",
+      "group": "panda-fx",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-chi-blast.png",
+      "type": "spritesheet",
+      "frameWidth": 224,
+      "frameHeight": 112,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8928571428571429
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda.gif",
+      "description": "Momo / 墨墨 — FX: chi-blast — 12 frames 224x112 @ 12 fps, once.",
+      "note": "AoE shockwave around the panda: radius ≈ 110 px (x) × 37 px (y ground ellipse). Origin = ground under the panda. Frames 0–3 charge; damage + knockback when the ring passes (frames 4–9); bamboo shards fly outward.",
+      "tags": [
+        "pets",
+        "panda-fx",
+        "spritesheet",
+        "blast",
+        "once"
+      ],
+      "extra": null,
+      "action": "chi-blast"
+    },
+    {
+      "key": "fx-pet-panda-evolve",
+      "category": "pets",
+      "group": "panda-fx",
+      "path": "assets/library/pets/panda/fx/fx-pet-panda-evolve.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda.gif",
+      "description": "Momo / 墨墨 — FX: evolve — 12 frames 128x128 @ 12 fps, once.",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash).",
+      "tags": [
+        "pets",
+        "panda-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve"
+    },
+    {
+      "key": "pet-panda-young-idle",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: idle — 6 frames 64x64 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-panda-young-move",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-move.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: move — 6 frames 64x64 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-panda-young-skill",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-panda-bamboo-sweep"
+      ],
+      "skill": "Bamboo Sweep",
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: skill — 8 frames 64x64 @ 12 fps, once. Skill: Bamboo Sweep.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-panda-young-hurt",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: hurt — 4 frames 64x64 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-phoenix-ancient-idle",
+      "category": "pets",
+      "group": "phoenix-ancient",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-ancient.gif",
+      "description": "Azure / 藍羽 — Ancient: idle — 6 frames 128x128 @ 6 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-ancient",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-phoenix-ancient-move",
+      "category": "pets",
+      "group": "phoenix-ancient",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-move.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-ancient.gif",
+      "description": "Azure / 藍羽 — Ancient: move — 6 frames 128x128 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-ancient",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-phoenix-ancient-skill",
+      "category": "pets",
+      "group": "phoenix-ancient",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-phoenix-blazing-rebirth"
+      ],
+      "skill": "Blazing Rebirth",
+      "preview": "assets/library/previews/pets/phoenix-ancient.gif",
+      "description": "Azure / 藍羽 — Ancient: skill — 8 frames 128x128 @ 10 fps, once. Skill: Blazing Rebirth.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-ancient",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-phoenix-ancient-hurt",
+      "category": "pets",
+      "group": "phoenix-ancient",
+      "path": "assets/library/pets/phoenix/ancient/strips/pet-phoenix-ancient-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-ancient.gif",
+      "description": "Azure / 藍羽 — Ancient: hurt — 4 frames 128x128 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-ancient",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "pet-phoenix-baby-idle",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: idle — 6 frames 48x48 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-phoenix-baby-move",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-move.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: move — 6 frames 48x48 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-phoenix-baby-skill",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-phoenix-spark-feather",
+        "fx-pet-phoenix-spark-feather-hit"
+      ],
+      "skill": "Spark Feather",
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: skill — 8 frames 48x48 @ 10 fps, once. Skill: Spark Feather.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-phoenix-baby-hurt",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
+    },
+    {
+      "key": "fx-pet-phoenix-spark-feather",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-spark-feather.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.19,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: spark-feather — 4 frames 32x16 @ 12 fps, loop.",
+      "note": "Projectile: flies west (−x) ~6 px/frame at 60 fps (≈360 px/s). Origin = feather tip. Fire 3 in a small fan (−8°, 0°, +8°).",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "status",
+        "shock",
+        "loop",
+        "tileable"
+      ],
+      "extra": null,
+      "action": "spark-feather"
+    },
+    {
+      "key": "fx-pet-phoenix-spark-feather-hit",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-spark-feather-hit.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 16,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: spark-feather-hit — 6 frames 32x32 @ 16 fps, once.",
+      "note": "Impact when a spark feather hits; centre on the zombie hit point.",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "status",
+        "shock",
+        "once"
+      ],
+      "extra": null,
+      "action": "spark-feather-hit"
+    },
+    {
+      "key": "fx-pet-phoenix-rain-bolt",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-rain-bolt.png",
+      "type": "spritesheet",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.33,
+        0.79
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: rain-bolt — 4 frames 24x48 @ 12 fps, loop.",
+      "note": "Falling blue fire-feather. Origin = head. Spawn 60–90 px above ground in an area 40–140 px west of the phoenix; move (−2, +6) px/frame at 60 fps; on reaching the ground spawn fx-pet-phoenix-rain-impact.",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "rain-bolt"
+    },
+    {
+      "key": "fx-pet-phoenix-rain-impact",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-rain-impact.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: rain-impact — 6 frames 48x32 @ 14 fps, once.",
+      "note": "Ground impact of a rain bolt (small AoE, ~20 px radius). Origin = ground contact point.",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "impact",
+        "once"
+      ],
+      "extra": null,
+      "action": "rain-impact"
+    },
+    {
+      "key": "fx-pet-phoenix-blazing-rebirth",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-blazing-rebirth.png",
+      "type": "spritesheet",
+      "frameWidth": 192,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9062
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: blazing-rebirth — 12 frames 192x128 @ 12 fps, once.",
+      "note": "AoE around the phoenix: radius ≈ 95 px (x) × 27 px (y ground ellipse); flame plume up to ≈ 90 px high. Origin = ground under the phoenix. Frames 0–2 gather (no damage), burst/damage on frame 3, burning ring 4–10. Can double as the revive/heal burst.",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "blazing-rebirth"
+    },
+    {
+      "key": "fx-pet-phoenix-evolve",
+      "category": "pets",
+      "group": "phoenix-fx",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-evolve.png",
+      "type": "spritesheet",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix.gif",
+      "description": "Azure / 藍羽 — FX: evolve — 12 frames 128x128 @ 12 fps, once.",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash).",
+      "tags": [
+        "pets",
+        "phoenix-fx",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve"
+    },
+    {
+      "key": "pet-phoenix-young-idle",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-idle.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: idle — 6 frames 64x64 @ 8 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "idle",
+        "loop"
+      ],
+      "extra": null,
+      "action": "idle"
+    },
+    {
+      "key": "pet-phoenix-young-move",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-move.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: move — 6 frames 64x64 @ 10 fps, loop.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "loop"
+      ],
+      "extra": null,
+      "action": "move"
+    },
+    {
+      "key": "pet-phoenix-young-skill",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-skill.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": [
+        "fx-pet-phoenix-rain-bolt",
+        "fx-pet-phoenix-rain-impact"
+      ],
+      "skill": "Phoenix Rain",
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: skill — 8 frames 64x64 @ 10 fps, once. Skill: Phoenix Rain.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "once",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill"
+    },
+    {
+      "key": "pet-phoenix-young-hurt",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: hurt — 4 frames 64x64 @ 10 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": null,
+      "action": "hurt"
     },
     {
       "key": "zombie-brute-walk",

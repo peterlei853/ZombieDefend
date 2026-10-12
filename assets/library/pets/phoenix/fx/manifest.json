@@ -1,0 +1,113 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "phoenix-fx",
+  "title": "Azure / 藍羽 — FX",
+  "titleZh": "藍羽·特效",
+  "description": "Standalone skill FX for Blue Phoenix 藍焰鳳凰. Travel west. Evolve FX included.",
+  "source": {
+    "sourceFolder": "pets/phoenix/fx"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "facing": "west"
+  },
+  "preview": {
+    "animate": [
+      "fx-pet-phoenix-spark-feather"
+    ],
+    "thumb": "assets/library/previews/pets/phoenix.gif"
+  },
+  "assets": [
+    {
+      "key": "fx-pet-phoenix-spark-feather",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-spark-feather.png",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.19,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Projectile: flies west (−x) ~6 px/frame at 60 fps (≈360 px/s). Origin = feather tip. Fire 3 in a small fan (−8°, 0°, +8°)."
+    },
+    {
+      "key": "fx-pet-phoenix-spark-feather-hit",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-spark-feather-hit.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 16,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Impact when a spark feather hits; centre on the zombie hit point."
+    },
+    {
+      "key": "fx-pet-phoenix-rain-bolt",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-rain-bolt.png",
+      "frameWidth": 24,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.33,
+        0.79
+      ],
+      "facing": "west",
+      "note": "Falling blue fire-feather. Origin = head. Spawn 60–90 px above ground in an area 40–140 px west of the phoenix; move (−2, +6) px/frame at 60 fps; on reaching the ground spawn fx-pet-phoenix-rain-impact."
+    },
+    {
+      "key": "fx-pet-phoenix-rain-impact",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-rain-impact.png",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.875
+      ],
+      "facing": "west",
+      "note": "Ground impact of a rain bolt (small AoE, ~20 px radius). Origin = ground contact point."
+    },
+    {
+      "key": "fx-pet-phoenix-blazing-rebirth",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-blazing-rebirth.png",
+      "frameWidth": 192,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.9062
+      ],
+      "facing": "west",
+      "note": "AoE around the phoenix: radius ≈ 95 px (x) × 27 px (y ground ellipse); flame plume up to ≈ 90 px high. Origin = ground under the phoenix. Frames 0–2 gather (no damage), burst/damage on frame 3, burning ring 4–10. Can double as the revive/heal burst."
+    },
+    {
+      "key": "fx-pet-phoenix-evolve",
+      "path": "assets/library/pets/phoenix/fx/fx-pet-phoenix-evolve.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 12,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.921875
+      ],
+      "facing": "west",
+      "note": "Form-change burst. Origin = pet feet (y=118). Play over the pet; swap the pet texture on frame 6 (the flash)."
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "panda-baby",
+  "title": "Momo / 墨墨 — Baby",
+  "titleZh": "墨墨·幼年",
+  "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST.",
+  "source": {
+    "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
+    "sourceFolder": "pets/panda/baby"
+  },
+  "conventions": {
+    "facing": "west",
+    "frameSize": "48x48",
+    "origin": "(0.5, 1) feet",
+    "strips": "horizontal"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "west",
+    "frameWidth": 48,
+    "frameHeight": 48
+  },
+  "preview": {
+    "animate": [
+      "pet-panda-baby-idle",
+      "pet-panda-baby-move",
+      "pet-panda-baby-skill"
+    ],
+    "thumb": "assets/library/previews/pets/panda-baby.gif"
+  },
+  "assets": [
+    {
+      "key": "pet-panda-baby-idle",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-idle.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-baby-move",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-move.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    },
+    {
+      "key": "pet-panda-baby-skill",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-skill.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Roll Raid",
+      "skillZh": "滾動突襲",
+      "castFrame": 2,
+      "spawnOffset": [
+        -8,
+        -8
+      ],
+      "fx": [
+        "fx-pet-panda-roll-dust",
+        "fx-pet-panda-roll-impact"
+      ],
+      "role": "dash: rolls forward in a line, knockback on contact"
+    },
+    {
+      "key": "pet-panda-baby-hurt",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-hurt.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west"
+    }
+  ]
+}
