@@ -1,0 +1,53 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "barricade",
+  "title": "Barricade Fence Posts",
+  "titleZh": "圍欄木樁",
+  "description": "Tileable wooden picket barricade posts with clear gaps between stakes (bullets read as pass-through; monsters blocked by collision code). Brown weathered wood ~#6b4f35. Origin feet (0.5, 1.0). Visual only — Barricade.js contact face stays code-driven.",
+  "source": {
+    "tool": "pixellab create_image_pro_flash",
+    "note": "v0.18.0 fence visual for PIXELLAB_HOOK in Barricade.js"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [0.5, 1.0],
+    "facing": "west",
+    "frameWidth": 32,
+    "frameHeight": 64,
+    "frames": 1
+  },
+  "preview": {
+    "thumb": "assets/library/previews/environment/barricade/preview.png",
+    "sheets": [
+      "assets/library/previews/environment/barricade/barricade-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "barricade-post",
+      "path": "assets/library/environment/barricade/barricade-post.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 1.0],
+      "facing": "west",
+      "description": "Intact wooden stake barricade post, 32x64, gappy pickets so projectiles can pass; scale to postW/postH in Barricade.js.",
+      "note": "Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face)."
+    },
+    {
+      "key": "barricade-post-damaged",
+      "path": "assets/library/environment/barricade/barricade-post-damaged.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 1.0],
+      "facing": "west",
+      "description": "Cracked/splintered variant of barricade-post, same 32x64 canvas and gaps.",
+      "note": "Optional HP-threshold swap; same origin and scale as barricade-post."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 12 zombie groups, 2 bosses with skill FX, shared FX, pickups, the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 12 zombie groups, 2 bosses with skill FX, shared FX, pickups, environment props (barricade), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -33,6 +33,7 @@ assets/library/
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       manifest.json + shared FX (zombie-exploder-blast)
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
+├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
@@ -54,6 +55,7 @@ Each texture key equals its file name without `.png`. Phaser texture keys and an
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
+| Environment | `barricade-post`, `barricade-post-damaged` | 32×64 wooden picket posts, origin (0.5, 1.0) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 
