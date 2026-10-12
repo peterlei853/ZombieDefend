@@ -115,9 +115,17 @@ export const GAME_CONFIG = {
     /**
      * Largest integer a floating `-N` may print. Real single hits are
      * handgun 30, a pellet 10, pet 28, or about one second of contact DPS.
-     * This does not change damage applied to HP.
+     * A merged shotgun volley stops here too. This does not change damage
+     * applied to HP.
      */
     DAMAGE_TEXT_MAX: 60,
+    /**
+     * Same target and color inside this window updates one `-N` instead of
+     * a new label per pellet. One Flame fan lands inside it. Handgun cadence
+     * is 500ms and barricade bites are 1s, so those stay their own popups.
+     * 0 turns merging off. Display only.
+     */
+    DAMAGE_TEXT_MERGE_MS: 400,
 
     /**
      * Field-px shove on a bullet hit. Both sit in the 5–15 band.

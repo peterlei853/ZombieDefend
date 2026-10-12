@@ -410,7 +410,9 @@ export class WeaponSystem {
     if (damage > 0) this.scene.audio?.playHitImpact();
     const color =
       bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
-    showDamageText(this.scene, hx, hy, damage, color);
+    // Per-pellet labels stepped left by knockback (~one digit) and read as
+    // -100 / -1000 / -10000. Fold them into one capped floater. HP is per pellet.
+    showDamageText(this.scene, hx, hy, damage, color, zombie.id);
     if (killed) return { gold: goldVal, kills: 1 };
     return { gold: 0, kills: 0 };
   }
@@ -444,7 +446,7 @@ export class WeaponSystem {
       const hy = Number.isFinite(z.visualTop) ? z.visualTop : z.y - z.displayHalf;
       const goldVal = z.goldValue;
       const killed = z.takeDamage(PET_AOE_DAMAGE, { kind: 'pet' });
-      showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet);
+      showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet, z.id);
       if (killed) {
         gold += goldVal;
         kills += 1;
