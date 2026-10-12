@@ -37,7 +37,7 @@ export default class BootScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height * 0.44, 'v0.16.0 — Stage 1', {
+      .text(width / 2, height * 0.44, 'v0.16.1 — Stage 1', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(16)}px`,
         color: '#8fa3b8',
