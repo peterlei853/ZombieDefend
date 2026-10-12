@@ -13,7 +13,7 @@ Phaser 3 horizontal tower-defense demo.
 - Survive 90s waves; barricade HP → 0 is Game Over
 - Clear the field after 90s → Shop → Next Stage
 - **Move:** W / S or up / down arrows. A / D and left / right only change walk facing; the defender stays on the barricade lane.
-- **Weapon:** SPACE toggles handgun / shotgun.
+- **Weapon:** SPACE cycles sling → bubble → lightning → flame → water → frost. Sling, lightning, and water use the handgun profile (one shot). Bubble, flame, and frost use the shotgun profile (pellet fan). Damage and fire rate stay on those two profiles.
 - **Phone:** joystick bottom-left (same axes), **SWAP** bottom-right (same as SPACE). Desktop keyboard still works.
 
 ### Try it on a phone
@@ -26,7 +26,7 @@ Auth (New/Old Game + CharSelect) is next; this deploy is the combat vertical sli
 
 ## Asset library
 
-Categorized art (hero girl, 12 zombie groups, 2 bosses, FX, pickups, campus backgrounds, and concepts) lives in `assets/library/`. The running game does not load it; `assets/zombies/` and `assets/player/` are unchanged.
+Categorized art (hero girl, 12 zombie groups, 2 bosses, FX, pickups, campus backgrounds, and concepts) lives in `assets/library/`. **v0.16.0** loads the hero, the 12 zombie groups, shared FX, and the campus background into Stage 1. Bosses have no wave spawn yet. Pets are not in the library. Legacy `assets/zombies/` and `assets/player/` remain as fallbacks.
 
 - Conventions and Phaser loading: [assets/library/README.md](assets/library/README.md)
 - Grouped list with thumbnails: [assets/library/CATALOG.md](assets/library/CATALOG.md)

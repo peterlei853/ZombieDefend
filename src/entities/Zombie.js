@@ -12,6 +12,8 @@ import {
   ZOMBIE_ORIGIN_Y,
   hasZombieAnim,
   registerZombieAnims,
+  takeZombieSkin,
+  zombieActionKey,
   zombieSheetKey,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, LAYOUT_SCALE } from '../systems/DepthView.js';
@@ -21,9 +23,10 @@ let _zombieId = 0;
 
 /**
  * Lane zombie. Walks right until barricade contact, then bites.
- * PixelLab strips (`zombie-walker|runner|tank` + walk/attack/stumble/death)
- * replace the rectangle when that texture is loaded; otherwise the colored
- * square stays. Scale and draw-order follow lane Y (2.5D DepthView).
+ * Library skins (`zombie-<group>-walk|run|attack|die`) replace the rectangle
+ * when that texture is loaded; otherwise the legacy west strip, then the
+ * colored square. Feet stay on the lane (origin 0.5, 1). East library art
+ * is not flipped; west legacy art uses setFlipX(true).
  */
 export class Zombie {
   /**
@@ -65,13 +68,24 @@ export class Zombie {
     this._flashToken = 0;
 
     registerZombieAnims(scene);
-    const walkKey = zombieSheetKey(this.variant, 'walk');
+    this.skin = takeZombieSkin(this.variant);
+    const libraryWalk = zombieActionKey(this.skin, this.variant, 'walk');
+    const legacyWalk = zombieSheetKey(this.variant, 'walk');
+    const libraryReady = !!(
+      libraryWalk &&
+      scene.textures?.exists?.(libraryWalk) &&
+      scene.anims?.exists?.(libraryWalk)
+    );
+    if (!libraryReady) this.skin = null;
+    const walkKey = libraryReady ? libraryWalk : legacyWalk;
     this._isSprite = !!(scene.textures?.exists?.(walkKey) && scene.anims?.exists?.(walkKey));
+    /** Library sheets face east. Legacy strips face west and must be mirrored. */
+    this._faceWest = (this.skin?.facing || 'west') === 'west';
     this.variantScale = this._isSprite ? 1 : this.typeDef.placeholderScale || 1;
     this._baseFill = this.typeDef.placeholderColor;
     this._baseStroke = this.typeDef.placeholderStroke;
 
-    // PIXELLAB_HOOK: rectangle stands in until `{prefix}-walk` is in the cache
+    // PIXELLAB_HOOK: rectangle stands in until the library `{group}-walk` strip is cached
     this.body = this._isSprite
       ? this._createSprite(scene, cfg.x, cfg.y, walkKey)
       : this._createPlaceholder(scene, cfg.x, cfg.y);
@@ -96,11 +110,11 @@ export class Zombie {
    */
   _createSprite(scene, x, y, walkKey) {
     const sprite = scene.add.sprite(x, y, walkKey, 0);
-    // Lane Y is the sole. Sheets stay west-facing 64×64; origin stays (0.5, 1.0).
+    // Lane Y is the sole. Origin stays (0.5, 1) for 64px and brute 96px frames.
     sprite.setOrigin(ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y);
     sprite.setScale(this.scale);
-    // West art, march is +X. Mirror once so walk, attack, and stumble face the barricade.
-    sprite.setFlipX(true);
+    // East library art already faces the barricade. West legacy art is mirrored.
+    sprite.setFlipX(this._faceWest);
     return sprite;
   }
 
@@ -255,11 +269,26 @@ export class Zombie {
     return shown;
   }
 
-  /** Stop the walk or stumble while the body leans into the barricade. */
+  /** Stop the walk or run while the body leans into the barricade. */
   _stopWalkAnim() {
     if (!this._isSprite || !this.body?.anims) return;
     const key = this.body.anims.currentAnim?.key || '';
-    if (key.endsWith('-walk') || key.endsWith('-stumble')) this.body.anims.stop();
+    if (key.endsWith('-walk') || key.endsWith('-run') || key.endsWith('-stumble')) {
+      this.body.anims.stop();
+    }
+  }
+
+  /**
+   * @param {'walk'|'attack'|'stumble'|'death'|'hurt'|'blast'} action
+   * @returns {string|null}
+   */
+  _animKey(action) {
+    return zombieActionKey(this.skin, this.variant, action);
+  }
+
+  /** @param {string|null|undefined} key */
+  _animReady(key) {
+    return !!(key && this.scene?.anims?.exists?.(key));
   }
 
   /**
@@ -268,9 +297,12 @@ export class Zombie {
    */
   _syncLocomotion() {
     if (!this._isSprite || !this.body?.anims || !this.alive || this.atBarricade) return;
-    const stumble = zombieSheetKey(this.variant, 'stumble');
-    const walk = zombieSheetKey(this.variant, 'walk');
-    const key = this.isCritical() && hasZombieAnim(this.scene, this.variant, 'stumble') ? stumble : walk;
+    const stumble = this._animKey('stumble');
+    const walk = this._animKey('walk');
+    const stumbleReady =
+      !!stumble &&
+      (this.skin ? this._animReady(stumble) : hasZombieAnim(this.scene, this.variant, 'stumble'));
+    const key = this.isCritical() && stumbleReady ? stumble : walk;
     if (!this.scene.anims.exists(key)) return;
     const current = this.body.anims.currentAnim?.key;
     if (current === key && this.body.anims.isPlaying) return;
@@ -287,8 +319,8 @@ export class Zombie {
     this.scene.tweens.killTweensOf(this.body);
     this.body.x = homeX;
     this._stopWalkAnim();
-    const attackKey = zombieSheetKey(this.variant, 'attack');
-    if (this._isSprite && this.scene.anims?.exists?.(attackKey)) {
+    const attackKey = this._animKey('attack');
+    if (this._isSprite && this._animReady(attackKey)) {
       this.body.play(attackKey);
     }
     const juice = GAME_CONFIG.JUICE;
@@ -391,6 +423,18 @@ export class Zombie {
     this._deathMode = overkill ? 'overkill' : 'normal';
     this._playHitFlash();
 
+    const deathKey = this._libraryDeathKey(overkill);
+    if (deathKey) {
+      if (overkill) {
+        beginHitlag(this.scene);
+        shakeOverkill(this.scene);
+      } else {
+        spawnBlood(this.scene, body.x, body.y);
+      }
+      this._playLibraryDeath(body, deathKey, overkill);
+      return;
+    }
+
     if (overkill) {
       beginHitlag(this.scene);
       shakeOverkill(this.scene);
@@ -407,11 +451,80 @@ export class Zombie {
 
     this._recenterCorpse(body);
     spawnBlood(this.scene, body.x, body.y);
-    const deathKey = zombieSheetKey(this.variant, 'death');
-    if (this._isSprite && this.scene.anims?.exists?.(deathKey)) {
-      body.play(deathKey);
+    const legacyDeath = zombieSheetKey(this.variant, 'death');
+    if (this._isSprite && this.scene.anims?.exists?.(legacyDeath)) {
+      body.play(legacyDeath);
     }
     this._arcCorpse(body);
+  }
+
+  /**
+   * Authored death strip when the library skin is on this body.
+   * Exploders use the explode strip on an overkill so the blast FX can attach.
+   * @param {boolean} overkill
+   * @returns {string|null}
+   */
+  _libraryDeathKey(overkill) {
+    if (!this._isSprite || !this.skin) return null;
+    if (overkill) {
+      const blast = this._animKey('blast');
+      if (this._animReady(blast)) return blast;
+    }
+    const death = this._animKey('death');
+    return this._animReady(death) ? death : null;
+  }
+
+  /**
+   * Play the death strip in place (feet origin, no spin). The arc toss is the
+   * placeholder / legacy path — it fights a feet-planted death sheet.
+   * @param {Phaser.GameObjects.Sprite} body
+   * @param {string} deathKey
+   * @param {boolean} overkill
+   */
+  _playLibraryDeath(body, deathKey, overkill) {
+    if (overkill && deathKey === this._animKey('blast')) this._spawnBlastFx(body);
+    body.play(deathKey);
+    // Overkill flash otherwise holds a white tint for the whole death strip.
+    this.scene.time?.delayedCall?.(GAME_CONFIG.JUICE.HIT_FLASH_MS, () => {
+      if (body.active && typeof body.clearTint === 'function') body.clearTint();
+    });
+    const finish = () => {
+      if (!body.active) return;
+      if (!this.scene?.tweens?.add) {
+        body.destroy();
+        if (this.body === body) this.body = null;
+        return;
+      }
+      this.scene.tweens.add({
+        targets: body,
+        alpha: 0,
+        duration: 220,
+        onComplete: () => {
+          if (body.active) body.destroy();
+          if (this.body === body) this.body = null;
+        },
+      });
+    };
+    body.once(`animationcomplete-${deathKey}`, finish);
+  }
+
+  /**
+   * Shared exploder blast at the body. PIXELLAB_HOOK: zombie-exploder-blast.
+   * @param {Phaser.GameObjects.Sprite} body
+   */
+  _spawnBlastFx(body) {
+    const fxKey = this.skin?.blastFx;
+    if (!fxKey || !this.scene.textures?.exists?.(fxKey)) return;
+    const sprite = this.scene.add.sprite(body.x, this.bodyCenterY, fxKey);
+    sprite.setOrigin(0.5, 0.5);
+    sprite.setScale(Math.abs(body.scaleX || 1));
+    sprite.setDepth((body.depth || 0) + 2);
+    if (this.scene.anims?.exists?.(fxKey)) {
+      sprite.play(fxKey);
+      sprite.once(`animationcomplete-${fxKey}`, () => {
+        if (sprite.active) sprite.destroy();
+      });
+    }
   }
 
   /**

@@ -29,6 +29,11 @@ import {
   preferredShotgunRecoilKey,
   registerPlayerAnims,
 } from '../assets/playerSprites.js';
+import {
+  HERO_ORIGIN_X,
+  HERO_ORIGIN_Y,
+  heroLocomotionKeys,
+} from '../assets/heroLoadout.js';
 
 /** Player sits this many px right of the grass edge (safe zone), in field px. */
 const PLAYER_SAFE_OFFSET = layoutPx(32);
@@ -103,7 +108,7 @@ export class DefenderGroup {
     const petY = playerY + PET_OFFSET_Y;
     const petScale = displayScaleFromY(petY);
 
-    // PIXELLAB_HOOK: replace with sprite turret (Pet)
+    // PIXELLAB_HOOK: pet sprite — phoenix/panda/lion/dragon are not in the library yet
     this.turret = scene.add.rectangle(petX, petY, 24, 24, 0x78909c);
     this.turret.setStrokeStyle(2, 0x546e7a);
     this.turret.setScale(petScale);
@@ -138,6 +143,17 @@ export class DefenderGroup {
    * Rectangle remains only if the sheet failed to load.
    */
   _createPlayerBody(scene, playerX, playerY, playerScale) {
+    const skin = this.weapons.getSkin?.();
+    const heroKey = skin?.idle;
+    if (heroKey && scene.textures.exists(heroKey) && scene.anims.exists(heroKey)) {
+      // PIXELLAB_HOOK: player-girl-<weapon>-idle — 92px, feet at y=76, faces west
+      const player = scene.add.sprite(playerX, playerY, heroKey, 0);
+      player.setOrigin(HERO_ORIGIN_X, HERO_ORIGIN_Y);
+      player.setScale(playerScale);
+      player.setDepth(depthFromY(playerY));
+      player.play(heroKey);
+      return player;
+    }
     if (scene.textures.exists('player-idle') && scene.anims.exists('player-idle')) {
       const player = scene.add.sprite(playerX, playerY, 'player-idle', 0);
       player.setOrigin(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
@@ -155,6 +171,8 @@ export class DefenderGroup {
   }
 
   _createWeaponProp(scene, playerX, playerY) {
+    // Library sheets already draw the weapon. The loose gun icon is legacy-only.
+    if (this.weapons.getSkin?.()) return null;
     const key = scene.textures.exists('handgun')
       ? 'handgun'
       : scene.textures.exists('shotgun')
@@ -247,6 +265,7 @@ export class DefenderGroup {
       }
     );
     if (fired === 'shotgun') this._onShotgunVolley();
+    else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     this._updateStance(dy, shotgunLocked ? 0 : dx);
     this.weapons.updatePetFire(
       deltaMs,
@@ -336,6 +355,16 @@ export class DefenderGroup {
 
     const shotgun = this.weapons.getWeapon() === WEAPON_SHOTGUN;
     const stance = shotgun ? 'shotgun' : 'handgun';
+    const skin = this.weapons.getSkin?.();
+    if (skin) {
+      if (this._fireAnimPlaying()) {
+        this._syncWeaponProp();
+        return;
+      }
+      this._playFirstExisting(heroLocomotionKeys(skin, dy, dx));
+      this._syncWeaponProp();
+      return;
+    }
     applyWeaponWalkAliases(this.scene, stance);
     if (shotgun && this._recoilAnimPlaying()) {
       this._syncWeaponProp();
@@ -354,6 +383,20 @@ export class DefenderGroup {
       this._holdFrame(HANDGUN_AIM_TEXTURE, HANDGUN_AIM_FRAME) ||
         this._playFirstExisting(['player-idle']);
     }
+    this._syncWeaponProp();
+  }
+
+  _fireAnimPlaying() {
+    const fire = this.weapons.getSkin?.()?.fire;
+    if (!fire) return false;
+    const anims = this.player?.anims;
+    if (!anims?.isPlaying) return false;
+    return this._currentAnimKey() === fire;
+  }
+
+  _playWeaponFire() {
+    const key = this.weapons.getSkin?.()?.fire;
+    if (key) this._playAnim(key, false);
     this._syncWeaponProp();
   }
 
@@ -418,6 +461,10 @@ export class DefenderGroup {
    * (placeholder rectangle has no play).
    */
   _playShotgunRecoilAnim() {
+    if (this.weapons.getSkin?.()) {
+      this._playWeaponFire();
+      return;
+    }
     const preferred = preferredShotgunRecoilKey(this.scene);
     if (!this._playAnim(preferred, false) && preferred !== SHOTGUN_RECOIL_KEY) {
       this._playAnim(SHOTGUN_RECOIL_KEY, false);

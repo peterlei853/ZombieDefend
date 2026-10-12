@@ -1,5 +1,6 @@
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
+import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { layoutPx } from '../systems/DepthView.js';
 
 /**
@@ -13,11 +14,13 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
   }
 
   create() {
+    createLibraryAnims(this);
     registerPlayerAnims(this);
     registerZombieAnims(this);
     const { width, height } = this.scale;
@@ -34,7 +37,7 @@ export default class BootScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height * 0.44, 'Combat vertical slice — Stage 1', {
+      .text(width / 2, height * 0.44, 'v0.16.0 — Stage 1', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(16)}px`,
         color: '#8fa3b8',

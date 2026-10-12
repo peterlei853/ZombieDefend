@@ -29,6 +29,8 @@ import { GAME_CONFIG } from '../data/GameConfig.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
+import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
+import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 
 /**
@@ -64,11 +66,13 @@ export default class StageScene extends Phaser.Scene {
   preload() {
     // BootScene loads these first; this covers a direct Stage start / retry
     // after a cache miss without re-queueing keys that already exist.
+    preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
   }
 
   create() {
+    createLibraryAnims(this);
     registerPlayerAnims(this);
     registerZombieAnims(this);
     this._drawWorld();
@@ -157,6 +161,8 @@ export default class StageScene extends Phaser.Scene {
       guides.lineTo(xEnd, y);
       guides.strokePath();
     }
+
+    drawCampusBackdrop(this);
   }
 
   _buildHud() {
@@ -190,8 +196,18 @@ export default class StageScene extends Phaser.Scene {
       .text(720, textY, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
       .setScrollFactor(0)
       .setDepth(d + 1);
+    const weaponLabel = this.defenders.weapons.getWeaponLabel();
+    const weaponIconKey = this.defenders.weapons.getSkin?.()?.icon;
+    if (weaponIconKey && this.textures.exists(weaponIconKey)) {
+      this.hudWeaponIcon = this.add
+        .image(868, textY + layoutPx(8), weaponIconKey)
+        .setOrigin(0, 0.5)
+        .setScale(0.7)
+        .setScrollFactor(0)
+        .setDepth(d + 1);
+    }
     this.hudWeapon = this.add
-      .text(900, textY, this.defenders.weapons.getWeaponLabel(), {
+      .text(900, textY, weaponLabel, {
         ...style,
         color: '#90caf9',
       })
@@ -205,7 +221,7 @@ export default class StageScene extends Phaser.Scene {
 
     // Tiny move / weapon hint. VirtualControls lifts this above the touch row.
     this.hudHint = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S or joystick · SPACE or SWAP', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S or joystick · SPACE cycles weapons', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(11)}px`,
         color: '#6a7a8a',
@@ -226,6 +242,10 @@ export default class StageScene extends Phaser.Scene {
     this.hudBarricade.setText(`Barricade: ${Math.ceil(this.barricade.hp)}`);
     this.hudGold.setText(`Gold: ${this.gold}`);
     this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    const iconKey = this.defenders.weapons.getSkin?.()?.icon;
+    if (this.hudWeaponIcon && iconKey && this.textures.exists(iconKey)) {
+      this.hudWeaponIcon.setTexture(iconKey);
+    }
   }
 
   /**
