@@ -32,8 +32,18 @@ export const WORLD_WIDTH = layoutPx(1320);
 export const WORLD_HEIGHT = GAME_HEIGHT;
 export const WORLD_SHIFT_X = WORLD_WIDTH - GAME_WIDTH;
 
-/** Logical spawn X, just off the left edge of the unshifted field. */
+/**
+ * Logical X of the old off-screen march line (field −10).
+ * Bullet cull still uses this. Visible zombies use `zombieSpawnWorldX`
+ * so the body is not sliced by the camera's left edge.
+ */
 export const SPAWN_LOGICAL_X = layoutPx(-10);
+
+/**
+ * Canvas px of air between the view's left edge and the sprite's left edge
+ * when the camera is parked at max scroll (the stage framing).
+ */
+export const SPAWN_EDGE_PAD = layoutPx(6);
 
 export const HORIZON_Y = layoutPx(92);
 /** Dark walk lanes split evenly across the grass band (upper → lower). */
@@ -64,6 +74,19 @@ export function worldX(logicalX) {
 
 export function spawnWorldX() {
   return worldX(SPAWN_LOGICAL_X);
+}
+
+/**
+ * World X for a zombie that should appear fully inside the left edge.
+ * `halfWidth` is the on-screen half body (sprite display width / 2).
+ * The center sits `halfWidth + SPAWN_EDGE_PAD` in from the camera's left
+ * edge at max scroll — the point where the old off-screen spawn finished
+ * being cropped — so the on-screen march to the barricade barely changes.
+ * @param {number} [halfWidth]
+ */
+export function zombieSpawnWorldX(halfWidth = 0) {
+  const half = Number.isFinite(halfWidth) && halfWidth > 0 ? halfWidth : layoutPx(28);
+  return worldX(half + SPAWN_EDGE_PAD);
 }
 
 /**
@@ -208,8 +231,8 @@ export function displayScaleFromY(y) {
 }
 
 /**
- * Opening scroll: barricade sits on the right of the viewport,
- * spawn (logical −10) falls just left of the camera.
+ * Opening scroll: barricade sits on the right of the viewport.
+ * Visible spawns are inset by zombieSpawnWorldX; SPAWN_LOGICAL_X is the cull line.
  */
 export function cameraScrollX(barricadeWorldX, viewWidth = GAME_WIDTH) {
   const max = Math.max(0, WORLD_WIDTH - viewWidth);

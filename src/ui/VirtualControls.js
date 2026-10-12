@@ -11,6 +11,8 @@ import { HUD_DEPTH } from '../systems/DepthView.js';
  *
  * Both sit above the HUD (`setScrollFactor(0)`) and ignore camera X scroll.
  * They are not full-screen hit targets, so the rest of the stage still receives clicks.
+ * While a zombie overlaps a control and the player is not holding it, the
+ * control fades so the bottom lane is not covered.
  */
 
 /** Thumb target diameter (canvas px). Kept inside the 64–96px band. */
@@ -23,6 +25,8 @@ const BTN_RADIUS = CONTROL_DIAMETER / 2;
 /** Stick travel inside this fraction of the radius does not move. */
 const DEADZONE = 0.18;
 const IDLE_ALPHA = 0.45;
+/** While a zombie body covers a control, drop it so the lane stays readable. */
+const COMBAT_ALPHA = 0.08;
 const ACTIVE_ALPHA = 0.92;
 /** Above HUD / barricade bar, below the win/lose overlay (HUD_DEPTH + 100). */
 const CONTROL_DEPTH = HUD_DEPTH + 20;
@@ -121,7 +125,10 @@ export class VirtualControls {
     this.onLayout = typeof opts.onLayout === 'function' ? opts.onLayout : null;
     this.dx = 0;
     this.dy = 0;
-    /** Top of the control row in screen px (for the HUD hint). */
+    /** True while a zombie body overlaps that control. Idle alpha drops. */
+    this._joyFade = false;
+    this._swapFade = false;
+    /** Top of the control row in screen px. */
     this.layoutTop = GAME_HEIGHT - CONTROL_EDGE_PAD - CONTROL_DIAMETER;
 
     this._joyPointerId = null;
@@ -144,6 +151,65 @@ export class VirtualControls {
   /** Analog axes in [-1, 1]. Zero when the stick is idle or inside the deadzone. */
   getAxes() {
     return { dx: this.dx, dy: this.dy };
+  }
+
+  /**
+   * Fade whichever idle control a bottom-lane body covers.
+   * A finger that is already down keeps the active alpha.
+   * @param {boolean} joyOccluded
+   * @param {boolean} swapOccluded
+   */
+  setCombatFade(joyOccluded, swapOccluded) {
+    const joy = !!joyOccluded;
+    const swap = !!swapOccluded;
+    if (joy === this._joyFade && swap === this._swapFade) return;
+    this._joyFade = joy;
+    this._swapFade = swap;
+    if (this._joyPointerId == null) this._setJoyActive(false);
+    if (this._weaponPointerId == null) this._setButtonPressed(false);
+  }
+
+  /**
+   * True when an upright body (feet at `feetY`, top at `topY`) overlaps
+   * the named control. `which` is `joy` or `swap`.
+   * @param {'joy'|'swap'} which
+   * @param {number} x screen x
+   * @param {number} feetY
+   * @param {number} halfW
+   * @param {number} topY
+   */
+  bodyCoversControl(which, x, feetY, halfW, topY) {
+    if (this._destroyed) return false;
+    if (which === 'joy') {
+      return this._rectHitsCircle(x, topY, feetY, halfW, this.joyCX, this.joyCY, JOY_RADIUS);
+    }
+    return this._rectHitsCircle(x, topY, feetY, halfW, this.btnCX, this.btnCY, BTN_RADIUS);
+  }
+
+  /**
+   * @param {number} x
+   * @param {number} top
+   * @param {number} bottom
+   * @param {number} halfW
+   * @param {number} cx
+   * @param {number} cy
+   * @param {number} r
+   */
+  _rectHitsCircle(x, top, bottom, halfW, cx, cy, r) {
+    if (![x, top, bottom, halfW, cx, cy, r].every(Number.isFinite)) return false;
+    const nx = Math.max(x - halfW, Math.min(cx, x + halfW));
+    const ny = Math.max(Math.min(top, bottom), Math.min(Math.max(top, bottom), cy));
+    const dx = cx - nx;
+    const dy = cy - ny;
+    return dx * dx + dy * dy <= r * r;
+  }
+
+  _joyRestAlpha() {
+    return this._joyFade ? COMBAT_ALPHA : IDLE_ALPHA;
+  }
+
+  _swapRestAlpha() {
+    return this._swapFade ? COMBAT_ALPHA : IDLE_ALPHA;
   }
 
   _createObjects() {
@@ -309,25 +375,22 @@ export class VirtualControls {
   }
 
   _setIdleAlpha() {
-    this.base.setAlpha(IDLE_ALPHA);
-    this.ticks.setAlpha(IDLE_ALPHA);
-    this.thumb.setAlpha(IDLE_ALPHA + 0.15);
-    this.button.setAlpha(IDLE_ALPHA);
-    this.buttonLabel.setAlpha(IDLE_ALPHA + 0.25);
+    this._setJoyActive(false);
+    this._setButtonPressed(false);
   }
 
   _setJoyActive(active) {
-    const a = active ? ACTIVE_ALPHA : IDLE_ALPHA;
+    const a = active ? ACTIVE_ALPHA : this._joyRestAlpha();
     this.base.setAlpha(a);
     this.ticks.setAlpha(a);
-    this.thumb.setAlpha(active ? 1 : IDLE_ALPHA + 0.15);
+    this.thumb.setAlpha(active ? 1 : a);
   }
 
   _setButtonPressed(pressed) {
     this.button.setFillStyle(pressed ? 0x1565c0 : 0x1b2836, pressed ? 0.95 : 0.82);
-    const a = pressed ? 1 : IDLE_ALPHA;
+    const a = pressed ? 1 : this._swapRestAlpha();
     this.button.setAlpha(a);
-    this.buttonLabel.setAlpha(pressed ? 1 : IDLE_ALPHA + 0.25);
+    this.buttonLabel.setAlpha(a);
   }
 
   destroy() {

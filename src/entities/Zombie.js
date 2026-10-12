@@ -16,7 +16,7 @@ import {
   zombieActionKey,
   zombieSheetKey,
 } from '../assets/zombieSprites.js';
-import { depthFromY, displayScaleFromY, LAYOUT_SCALE } from '../systems/DepthView.js';
+import { depthFromY, displayScaleFromY, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { beginHitlag, shakeOverkill, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 
 let _zombieId = 0;
@@ -90,13 +90,13 @@ export class Zombie {
       ? this._createSprite(scene, cfg.x, cfg.y, walkKey)
       : this._createPlaceholder(scene, cfg.x, cfg.y);
 
-    const barW = Math.max(20, (this._isSprite ? 28 : this.baseSize * this.variantScale) + 6) * this.scale;
-    const barY = this.visualTop - 8 * this.scale;
-    this.hpBarBg = scene.add.rectangle(cfg.x, barY, barW, 5 * this.scale, 0x1a1a1a);
+    const metrics = this._barMetrics();
+    this._barW = metrics.barW;
+    this._barH = metrics.barH;
+    this.hpBarBg = scene.add.rectangle(cfg.x, metrics.barY, metrics.barW, metrics.barH, 0x1a1a1a);
     this.hpBarFg = scene.add
-      .rectangle(cfg.x - barW / 2, barY, barW, 5 * this.scale, 0xff5252)
+      .rectangle(cfg.x - metrics.barW / 2, metrics.barY, metrics.barW, metrics.barH, 0xff5252)
       .setOrigin(0, 0.5);
-    this._barW = barW;
 
     this._applyDepth();
     this._syncLocomotion();
@@ -166,6 +166,47 @@ export class Zombie {
 
   get y() {
     return this.body ? this.body.y : this._lastY;
+  }
+
+  /** Screen Y of the HP tick (feet-relative, on the body). */
+  get hpBarAnchorY() {
+    return this.hpBarBg ? this.hpBarBg.y : this.y - layoutPx(16);
+  }
+
+  /**
+   * Short tick just above the feet. A head-relative bar floated into the
+   * lane above and stacked into stripes when several bodies overlapped.
+   * @returns {{ barW: number, barH: number, barY: number }}
+   */
+  _barMetrics() {
+    const bodyW = Math.max(layoutPx(12), this.displayHalf * 2);
+    const barW = Math.round(Math.min(bodyW * 0.45, layoutPx(22)));
+    const barH = Math.max(2, layoutPx(2));
+    const feet = this.y;
+    const minY = this.visualTop + barH;
+    const maxY = feet - barH;
+    const wanted = feet - layoutPx(16);
+    const barY = maxY <= minY ? (minY + maxY) / 2 : Math.min(maxY, Math.max(minY, wanted));
+    return { barW, barH, barY };
+  }
+
+  /**
+   * Move the body onto the visible march line. Spawn X depends on the
+   * measured half-width, which exists only after the sprite is scaled.
+   * @param {number} x
+   */
+  placeAt(x) {
+    if (!this.body || !Number.isFinite(x)) return;
+    this.body.x = x;
+    this._lastX = x;
+    this._syncBars();
+  }
+
+  /** @param {boolean} shown */
+  setHpBarShown(shown) {
+    const visible = !!shown;
+    if (this.hpBarBg) this.hpBarBg.setVisible(visible);
+    if (this.hpBarFg) this.hpBarFg.setVisible(visible);
   }
 
   /**
@@ -582,13 +623,17 @@ export class Zombie {
 
   _syncBars() {
     if (!this.hpBarBg || !this.hpBarFg || !this.body) return;
-    const barY = this.visualTop - 8 * this.scale;
+    const { barW, barH, barY } = this._barMetrics();
+    this._barW = barW;
+    this._barH = barH;
+    this.hpBarBg.setSize(barW, barH);
     this.hpBarBg.x = this.body.x;
     this.hpBarBg.y = barY;
-    this.hpBarFg.x = this.body.x - this._barW / 2;
+    this.hpBarFg.setSize(barW, barH);
+    this.hpBarFg.x = this.body.x - barW / 2;
     this.hpBarFg.y = barY;
     const ratio = this.maxHp > 0 ? Math.max(0, this.hp / this.maxHp) : 0;
-    this.hpBarFg.width = this._barW * ratio;
+    this.hpBarFg.width = barW * ratio;
   }
 
   _releaseBars() {
@@ -631,5 +676,44 @@ export class Zombie {
       this.body = null;
     }
     this._releaseBars();
+  }
+}
+
+/** Vertical gap under which two ticks read as one stripe. */
+const HP_BAR_STACK_Y = layoutPx(10);
+/** Horizontal gap under which two ticks on the same row collide. */
+const HP_BAR_STACK_X = layoutPx(26);
+
+/**
+ * Hide HP ticks that would paint on top of a nearer (or wounded) body.
+ * Nearer and already-damaged zombies keep their bar so the mark stays
+ * on a body the player is looking at.
+ * @param {Zombie[]} zombies
+ */
+export function applyHpBarDensity(zombies) {
+  const list = [];
+  for (const z of zombies) {
+    if (!z?.alive || !z.hpBarBg) {
+      z?.setHpBarShown?.(false);
+      continue;
+    }
+    list.push(z);
+  }
+  list.sort((a, b) => {
+    const aw = a.hp < a.maxHp ? 1 : 0;
+    const bw = b.hp < b.maxHp ? 1 : 0;
+    if (aw !== bw) return bw - aw;
+    return b.y - a.y;
+  });
+  /** @type {{ x: number, y: number }[]} */
+  const shown = [];
+  for (const z of list) {
+    const y = z.hpBarAnchorY;
+    const x = z.x;
+    const crowded = shown.some(
+      (o) => Math.abs(o.y - y) < HP_BAR_STACK_Y && Math.abs(o.x - x) < HP_BAR_STACK_X
+    );
+    z.setHpBarShown(!crowded);
+    if (!crowded) shown.push({ x, y });
   }
 }

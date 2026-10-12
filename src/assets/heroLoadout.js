@@ -66,14 +66,14 @@ export const HERO_WEAPONS = [
   weapon('lightning', 'Lightning', 'handgun', {
     projectile: 'fx-lightning-bolt',
     impact: 'fx-lightning-impact',
-    muzzle: null,
+    muzzle: 'fx-lightning-muzzle',
     fan: null,
     projScale: 1,
     rotate: true,
   }),
   weapon('flame', 'Flame', 'shotgun', {
     projectile: 'fx-flame-smoke',
-    impact: null,
+    impact: 'fx-flame-impact',
     muzzle: 'fx-flame-muzzle',
     fan: 'fx-flame-cone',
     projScale: 0.5,
@@ -88,11 +88,12 @@ export const HERO_WEAPONS = [
     rotate: true,
   }),
   weapon('frost', 'Frost', 'shotgun', {
-    projectile: 'fx-frost-beam',
+    // 16px crystal. projScale 0.5 was only to shrink the 64px beam.
+    projectile: 'fx-frost-pellet',
     impact: 'fx-frost-impact',
     muzzle: 'fx-frost-muzzle',
     fan: null,
-    projScale: 0.5,
+    projScale: 1,
     rotate: true,
   }),
 ];

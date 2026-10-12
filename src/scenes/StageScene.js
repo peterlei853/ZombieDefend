@@ -1,6 +1,6 @@
 import { WaveManager } from '../systems/WaveManager.js';
 import { Barricade } from '../entities/Barricade.js';
-import { Zombie } from '../entities/Zombie.js';
+import { applyHpBarDensity, Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
   BARRICADE_MAX_HP,
@@ -14,8 +14,8 @@ import {
   HORIZON_Y,
   HUD_DEPTH,
   depthBands,
-  spawnWorldX,
   cameraScrollX,
+  zombieSpawnWorldX,
   laneCenters,
   takeEvenLaneY,
   grassYMin,
@@ -49,7 +49,12 @@ export default class StageScene extends Phaser.Scene {
 
   init(data) {
     this.stage = data?.stage ?? this.registry.get('stage') ?? 1;
-    this.gold = data?.gold ?? this.registry.get('gold') ?? 0;
+    // Purse for this attempt. Boot and Shop pass the gold the run starts
+    // with. Kills add on top. Retry restores this value so a failed attempt
+    // cannot farm gold. There is no separate SaveManager write during Stage;
+    // MockDB account gold is not touched here.
+    this.runStartGold = data?.gold ?? this.registry.get('gold') ?? 0;
+    this.gold = this.runStartGold;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
 
     this.registry.set('stage', this.stage);
@@ -104,9 +109,6 @@ export default class StageScene extends Phaser.Scene {
 
     this.touchControls = new VirtualControls(this, {
       onWeapon: () => this._toggleWeapon(),
-      onLayout: (top) => {
-        this.hudHint?.setY(top - layoutPx(6));
-      },
     });
     this.defenders.touchControls = this.touchControls;
   }
@@ -219,16 +221,45 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d + 1);
 
-    // Tiny move / weapon hint. VirtualControls lifts this above the touch row.
+    // Onboarding line under the HUD, in the sky band, so it never sits on
+    // the bottom lane. Fire is automatic; the mouse does not aim.
+    const hintEn = 'Auto-fire · W/S lane · SPACE weapon swap · mouse does not aim';
+    const hintZh = '自動射擊 · W/S 換道 · SPACE 換武器 · 滑鼠不瞄準';
+    const hintSize = layoutPx(13);
+    const hintY = hudH + layoutPx(6);
     this.hudHint = this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - layoutPx(10), 'W/S or joystick · SPACE cycles weapons', {
+      .text(GAME_WIDTH / 2, hintY, hintEn, {
         fontFamily: 'system-ui, sans-serif',
-        fontSize: `${layoutPx(11)}px`,
-        color: '#6a7a8a',
+        fontSize: `${hintSize}px`,
+        color: '#fff4c2',
+        fontStyle: 'bold',
       })
-      .setOrigin(0.5, 1)
+      .setOrigin(0.5, 0)
       .setScrollFactor(0)
       .setDepth(d + 1);
+    this.hudHintZh = this.add
+      .text(GAME_WIDTH / 2, hintY + this.hudHint.height + layoutPx(2), hintZh, {
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: `${layoutPx(12)}px`,
+        color: '#ffe082',
+      })
+      .setOrigin(0.5, 0)
+      .setScrollFactor(0)
+      .setDepth(d + 1);
+    const hintW = Math.max(this.hudHint.width, this.hudHintZh.width) + layoutPx(28);
+    const hintTop = hintY - layoutPx(4);
+    const hintBottom = this.hudHintZh.y + this.hudHintZh.height + layoutPx(4);
+    this.hudHintBg = this.add
+      .rectangle(
+        GAME_WIDTH / 2,
+        (hintTop + hintBottom) / 2,
+        hintW,
+        hintBottom - hintTop,
+        0x0a1018,
+        0.88
+      )
+      .setScrollFactor(0)
+      .setDepth(d);
   }
 
   _refreshHud() {
@@ -316,6 +347,8 @@ export default class StageScene extends Phaser.Scene {
     }
 
     this._refreshHud();
+    applyHpBarDensity(this.zombies);
+    this._syncControlFade();
 
     // Win check
     if (this.waveManager.isTimeUp()) {
@@ -349,7 +382,7 @@ export default class StageScene extends Phaser.Scene {
     const arch = intent.archetype;
     // Variant is a spawn hook. HP / speed / DPS stay on the wave row.
     const z = new Zombie(this, {
-      x: spawnWorldX(),
+      x: 0,
       y,
       hp: arch.hp,
       speed: arch.speed,
@@ -357,7 +390,34 @@ export default class StageScene extends Phaser.Scene {
       wave: intent.wave,
       variant: arch.variant,
     });
+    // Inset by the measured half-body so the left edge does not crop it.
+    z.placeAt(zombieSpawnWorldX(z.displayHalf));
     this.zombies.push(z);
+  }
+
+  /**
+   * Drop joystick / SWAP opacity while a body covers them. The onboarding
+   * hint lives under the top HUD, not on the bottom lane.
+   */
+  _syncControlFade() {
+    const controls = this.touchControls;
+    if (!controls?.bodyCoversControl) return;
+    const cam = this.cameras.main;
+    let joy = false;
+    let swap = false;
+    for (const z of this.zombies) {
+      if (!z.alive || !z.body) continue;
+      // Controls are screen-space. Zombie x is world x (camera scrolls).
+      const screenX = z.x - cam.scrollX;
+      if (!joy && controls.bodyCoversControl('joy', screenX, z.y, z.displayHalf, z.visualTop)) {
+        joy = true;
+      }
+      if (!swap && controls.bodyCoversControl('swap', screenX, z.y, z.displayHalf, z.visualTop)) {
+        swap = true;
+      }
+      if (joy && swap) break;
+    }
+    controls.setCombatFade(joy, swap);
   }
 
   _pinOverlay(go) {
@@ -413,7 +473,9 @@ export default class StageScene extends Phaser.Scene {
   _onLose() {
     if (this.ended) return;
     this.ended = true;
-    this.registry.set('gold', this.gold);
+    // Failed attempt does not keep kill gold. The next run starts at the
+    // purse this attempt was given (0 from Boot, or Shop gold after a win).
+    this.registry.set('gold', this.runStartGold);
 
     const d = HUD_DEPTH + 100;
 
@@ -468,13 +530,24 @@ export default class StageScene extends Phaser.Scene {
         .setDepth(d + 2)
     );
 
+    this._pinOverlay(
+      this.add
+        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.54, `Retry starts at ${this.runStartGold} gold`, {
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: `${layoutPx(14)}px`,
+          color: '#ffd54f',
+        })
+        .setOrigin(0.5)
+        .setDepth(d + 1)
+    );
+
     btn.on('pointerover', () => btn.setFillStyle(0x546e7a));
     btn.on('pointerout', () => btn.setFillStyle(0x455a64));
     btn.on('pointerup', () => {
-      // Retry same stage; keep earned gold this run (Architect may change)
+      // Retry resets run gold to the purse this attempt started with.
       this.scene.start('StageScene', {
         stage: this.stage,
-        gold: this.gold,
+        gold: this.runStartGold,
         characterId: this.characterId,
       });
     });
