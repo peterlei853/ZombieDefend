@@ -117,6 +117,8 @@ export class Zombie {
     this.hpBarFg = scene.add
       .rectangle(cfg.x - metrics.barW / 2, metrics.barY, metrics.barW, metrics.barH, HP_BAR_FILL)
       .setOrigin(0, 0.5);
+    // Full HP stays hidden. applyHpBarDensity shows the tick once damaged.
+    this.setHpBarShown(false);
 
     this._applyDepth();
     this._syncLocomotion();
@@ -188,15 +190,13 @@ export class Zombie {
     return this.body ? this.body.y : this._lastY;
   }
 
-  /** Screen Y of the HP tick (feet-relative, on the body). */
+  /** Screen Y of the HP tick (on the crown). */
   get hpBarAnchorY() {
-    return this.hpBarBg ? this.hpBarBg.y : this.y - layoutPx(16);
+    return this.hpBarBg ? this.hpBarBg.y : this._crownY() - layoutPx(4);
   }
 
   /**
-   * Short tick on the body, lifted a few field px off the lower highlight
-   * so a green slime belly does not swallow it. Still feet-relative:
-   * a head bar stacked into stripes when bodies overlapped.
+   * Short tick sitting on the crown. Hidden at full HP (see applyHpBarDensity).
    * @returns {{ barW: number, barH: number, pad: number, barY: number }}
    */
   _barMetrics() {
@@ -204,12 +204,20 @@ export class Zombie {
     const barW = Math.round(Math.min(bodyW * 0.45, layoutPx(22)));
     const barH = Math.max(3, layoutPx(3));
     const pad = Math.max(1, layoutPx(1));
-    const feet = this.y;
-    const minY = this.visualTop + barH + pad;
-    const maxY = feet - barH - pad;
-    const wanted = feet - layoutPx(22);
-    const barY = maxY <= minY ? (minY + maxY) / 2 : Math.min(maxY, Math.max(minY, wanted));
+    const barY = this._crownY() - pad - barH / 2;
     return { barW, barH, pad, barY };
+  }
+
+  /**
+   * World Y of the first opaque row (the head). Placeholder squares use
+   * the top of the box. Sprite sheets skip transparent padding above the hair.
+   */
+  _crownY() {
+    const top = this.visualTop;
+    if (!this._isSprite || !this.body) return top;
+    const h = Math.abs(this.body.displayHeight) || 0;
+    const key = this.body.texture?.key;
+    return top + h * crownFraction(this.scene, key);
   }
 
   /**
@@ -736,15 +744,14 @@ const HP_BAR_STACK_Y = layoutPx(10);
 const HP_BAR_STACK_X = layoutPx(26);
 
 /**
- * Hide HP ticks that would paint on top of a nearer (or wounded) body.
- * Nearer and already-damaged zombies keep their bar so the mark stays
- * on a body the player is looking at.
+ * Full-HP zombies stay unmarked. Damaged ticks sit on the crown; hide one
+ * when it would paint on top of a nearer (or more wounded) bar.
  * @param {Zombie[]} zombies
  */
 export function applyHpBarDensity(zombies) {
   const list = [];
   for (const z of zombies) {
-    if (!z?.alive || !z.hpBarBg) {
+    if (!z?.alive || !z.hpBarBg || !(z.hp < z.maxHp)) {
       z?.setHpBarShown?.(false);
       continue;
     }
@@ -767,4 +774,57 @@ export function applyHpBarDensity(zombies) {
     z.setHpBarShown(!crowded);
     if (!crowded) shown.push({ x, y });
   }
+}
+
+/** Fraction of frame height from the top to the first opaque pixel. */
+const CROWN_FRACTION = new Map();
+
+/**
+ * @param {Phaser.Scene} scene
+ * @param {string|undefined} textureKey
+ */
+function crownFraction(scene, textureKey) {
+  if (!textureKey) return 0.08;
+  if (CROWN_FRACTION.has(textureKey)) return CROWN_FRACTION.get(textureKey);
+  const fraction = measureCrownFraction(scene, textureKey);
+  CROWN_FRACTION.set(textureKey, fraction);
+  return fraction;
+}
+
+/**
+ * Scan frame 0 so a slime's empty canvas top does not float the bar,
+ * and a humanoid's hair gets the tick instead of the belly.
+ * @param {Phaser.Scene} scene
+ * @param {string} textureKey
+ */
+function measureCrownFraction(scene, textureKey) {
+  const fallback = 0.08;
+  try {
+    const tex = scene?.textures?.get?.(textureKey);
+    if (!tex || tex.key === '__MISSING') return fallback;
+    const src = tex.getSourceImage?.();
+    if (!src || typeof document === 'undefined') return fallback;
+    const frame = tex.get?.(0);
+    const fw = frame?.width || frame?.cutWidth;
+    const fh = frame?.height || frame?.cutHeight;
+    if (!fw || !fh) return fallback;
+    const canvas = document.createElement('canvas');
+    canvas.width = fw;
+    canvas.height = fh;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return fallback;
+    const sx = frame.cutX ?? frame.x ?? 0;
+    const sy = frame.cutY ?? frame.y ?? 0;
+    ctx.drawImage(src, sx, sy, fw, fh, 0, 0, fw, fh);
+    const data = ctx.getImageData(0, 0, fw, fh).data;
+    for (let y = 0; y < fh; y++) {
+      const row = y * fw * 4;
+      for (let x = 0; x < fw; x++) {
+        if (data[row + x * 4 + 3] > 24) return y / fh;
+      }
+    }
+  } catch (_) {
+    return fallback;
+  }
+  return fallback;
 }

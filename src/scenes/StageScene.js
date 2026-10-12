@@ -25,7 +25,6 @@ import {
   layoutPx,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
-import { GAME_CONFIG } from '../data/GameConfig.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
@@ -287,16 +286,6 @@ export default class StageScene extends Phaser.Scene {
     if (this.hudWeaponIcon && iconKey && this.textures.exists(iconKey)) {
       this.hudWeaponIcon.setTexture(iconKey);
     }
-  }
-
-  /**
-   * One shake per shotgun volley. DefenderGroup calls this after WeaponSystem
-   * fires; pellet fan does not call it.
-   */
-  onShotgunFired() {
-    if (this.ended) return;
-    const juice = GAME_CONFIG.JUICE;
-    this.cameras.main.shake(juice.SCREEN_SHAKE_SHOTGUN_MS, juice.SCREEN_SHAKE_SHOTGUN);
   }
 
   update(_time, delta) {

@@ -29,6 +29,11 @@ export class Barricade {
 
     this.posts = [];
     this.contactMarkers = [];
+    /** Intact fence sheet. Damaged swap is visual only. */
+    this._fenceKey = scene.textures?.exists?.('barricade-post') ? 'barricade-post' : null;
+    this._fenceDamagedKey = scene.textures?.exists?.('barricade-post-damaged')
+      ? 'barricade-post-damaged'
+      : null;
 
     const yMin = grassYMin();
     const yMax = grassYMax();
@@ -43,34 +48,29 @@ export class Barricade {
       const postW = this._postWidthAt(y);
       const cx = barricadeXAtY(y, postW / 2);
       const d = depthFromY(y, -2);
-      const drawY = y - postH * 0.15;
+      const groundY = y;
 
-      // PIXELLAB_HOOK: replace with sprite barricade
-      const post = scene.add.rectangle(cx, drawY, postW, postH, 0x6b4f35);
-      post.setStrokeStyle(layoutPx(2), 0x9a9a9a);
+      const post = this._fenceKey
+        ? this._createFencePost(scene, cx, groundY, postW, postH)
+        : this._createPlaceholderPost(scene, cx, groundY, postW, postH, d);
       post.setDepth(d);
       post.setData('logicalY', y);
       post.setData('baseFill', 0x6b4f35);
       this.posts.push(post);
 
-      const marker = scene.add.rectangle(
-        cx - postW / 2 - layoutPx(1),
-        drawY,
-        layoutPx(3),
-        postH * 0.9,
-        0xc4c4c4,
-        0.85
-      );
-      marker.setDepth(d + 1);
-      this.contactMarkers.push(marker);
-
-      // Slight overlap so no visible gaps between posts
+      // Slight overlap so the slant reads as one fence. Spacing is visual;
+      // contactXAt still uses _postWidthAt and does not depend on the sprite.
       y += postH * 0.52;
     }
 
-    // Slanted silhouette / contact strip following the polyline (not a vertical rect).
-    this.gfx = scene.add.graphics().setDepth(depthFromY(yMin, -4));
-    this._drawSilhouette(yMin, yMax);
+    // Placeholder silhouette only. Fence art is gappy on purpose — a fill
+    // behind the stakes would close the holes bullets are meant to read through.
+    if (this._fenceKey) {
+      this.gfx = null;
+    } else {
+      this.gfx = scene.add.graphics().setDepth(depthFromY(yMin, -4));
+      this._drawSilhouette(yMin, yMax);
+    }
 
     // HP bar: camera-fixed near top of wall (scrollFactor 0)
     const cam = scene.cameras.main;
@@ -89,6 +89,48 @@ export class Barricade {
       .setOrigin(0, 0.5)
       .setScrollFactor(0)
       .setDepth(HUD_DEPTH + 11);
+  }
+
+  /**
+   * Feet-anchored fence post. Collision stays on contactXAt (left face).
+   * PIXELLAB_HOOK: barricade-post / barricade-post-damaged (32×64, origin 0.5, 1).
+   * @param {Phaser.Scene} scene
+   * @param {number} cx
+   * @param {number} groundY
+   * @param {number} postW
+   * @param {number} postH
+   */
+  _createFencePost(scene, cx, groundY, postW, postH) {
+    const post = scene.add.image(cx, groundY, this._fenceKey);
+    post.setOrigin(0.5, 1);
+    post.setDisplaySize(postW, postH);
+    return post;
+  }
+
+  /**
+   * Brown rectangle if the fence sheet failed to load.
+   * @param {Phaser.Scene} scene
+   * @param {number} cx
+   * @param {number} groundY
+   * @param {number} postW
+   * @param {number} postH
+   * @param {number} depth
+   */
+  _createPlaceholderPost(scene, cx, groundY, postW, postH, depth) {
+    const drawY = groundY - postH * 0.15;
+    const post = scene.add.rectangle(cx, drawY, postW, postH, 0x6b4f35);
+    post.setStrokeStyle(layoutPx(2), 0x9a9a9a);
+    const marker = scene.add.rectangle(
+      cx - postW / 2 - layoutPx(1),
+      drawY,
+      layoutPx(3),
+      postH * 0.9,
+      0xc4c4c4,
+      0.85
+    );
+    marker.setDepth(depth + 1);
+    this.contactMarkers.push(marker);
+    return post;
   }
 
   /** Post width at Y (same formula for draw + collision). */
@@ -161,7 +203,7 @@ export class Barricade {
       }
     }
     if (!nearest) return;
-    const band = Math.max(layoutPx(24), nearest.height * 0.55);
+    const band = Math.max(layoutPx(24), (nearest.displayHeight || nearest.height) * 0.55);
     for (const post of this.posts) {
       const py = post.getData('logicalY');
       if (Math.abs(py - y) <= band) this._flashPost(post);
@@ -219,6 +261,23 @@ export class Barricade {
     if (ratio > 0.5) this.hpBarFg.setFillStyle(0x3ecf5a);
     else if (ratio > 0.25) this.hpBarFg.setFillStyle(0xe0b040);
     else this.hpBarFg.setFillStyle(0xe04848);
+    this._syncFenceDamage(ratio);
+  }
+
+  /**
+   * Swap to the cracked sheet once the wall is at half HP or below.
+   * Does not move posts or change contactXAt.
+   * @param {number} ratio
+   */
+  _syncFenceDamage(ratio) {
+    if (!this._fenceKey || !this._fenceDamagedKey) return;
+    const key = ratio <= 0.5 ? this._fenceDamagedKey : this._fenceKey;
+    for (const post of this.posts) {
+      if (typeof post.setTexture !== 'function') continue;
+      if (post.texture?.key === key) continue;
+      post.setTexture(key);
+      post.setOrigin(0.5, 1);
+    }
   }
 
   isDestroyed() {

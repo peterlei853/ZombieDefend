@@ -21,7 +21,8 @@
  * waves.js and economy.js. Zombie variant labels do not scale those HP
  * or speed numbers. Walker rows keep the default feel.
  *
- * Hit shove, flash, hitlag, shake, and the critical-HP ratio live in JUICE.
+ * Hit shove, flash, hitlag, overkill shake, and the critical-HP ratio live in JUICE.
+ * Weapon volleys do not shake the camera.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
  */
 const KNOCKBACK_HANDGUN_PX = 10;
@@ -104,9 +105,12 @@ export const GAME_CONFIG = {
     },
   },
   JUICE: {
-    /** camera.shake intensity, once per shotgun volley. */
+    /**
+     * Retired for weapon fire in v0.18.0. Shotgun / Flame volleys must not
+     * call camera.shake. Overkill kills still use SCREEN_SHAKE_OVERKILL.
+     */
     SCREEN_SHAKE_SHOTGUN: 0.015,
-    /** camera.shake duration. */
+    /** Retired with SCREEN_SHAKE_SHOTGUN. */
     SCREEN_SHAKE_SHOTGUN_MS: 150,
     /** Field px the floating `-N` rises. damageText multiplies by LAYOUT_SCALE. */
     DAMAGE_TEXT_FLOAT_PX: 30,
@@ -178,7 +182,7 @@ export const GAME_CONFIG = {
     FRAGMENT_MIN: 4,
     FRAGMENT_MAX: 6,
     FRAGMENT_MS: 460,
-    /** Stronger than SCREEN_SHAKE_SHOTGUN. */
+    /** Overkill kill only. Weapon volleys do not shake. */
     SCREEN_SHAKE_OVERKILL: 0.03,
     SCREEN_SHAKE_OVERKILL_MS: 200,
   },

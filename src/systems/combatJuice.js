@@ -47,7 +47,7 @@ export function tickHitlag(scene) {
   return GAME_CONFIG.JUICE.HITLAG_SCALE;
 }
 
-/** Stronger than the per-volley shotgun shake. @param {Phaser.Scene} scene */
+/** Overkill kills still shake. Weapon volleys do not. @param {Phaser.Scene} scene */
 export function shakeOverkill(scene) {
   const cam = scene?.cameras?.main;
   if (!cam?.shake || scene.ended) return;
