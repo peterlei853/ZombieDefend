@@ -32,6 +32,7 @@ import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprite
 import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
+import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -74,9 +75,16 @@ export default class StageScene extends Phaser.Scene {
     preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
+    preloadGameAudio(this);
   }
 
   create() {
+    this.audio = new SoundManager(this);
+    this.events.once('shutdown', () => {
+      this.audio?.dispose();
+      this.audio = null;
+    });
+
     createLibraryAnims(this);
     registerPlayerAnims(this);
     registerZombieAnims(this);
@@ -111,12 +119,14 @@ export default class StageScene extends Phaser.Scene {
       onWeapon: () => this._toggleWeapon(),
     });
     this.defenders.touchControls = this.touchControls;
+    this.audio.startStageBgm();
   }
 
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
   _toggleWeapon() {
     this.defenders.weapons.toggleWeapon();
     this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    this.audio?.playWeaponSwap();
   }
 
   _drawWorld() {
@@ -339,6 +349,7 @@ export default class StageScene extends Phaser.Scene {
     if (gold > 0) {
       this.gold += gold;
       this.registry.set('gold', this.gold);
+      this.audio?.playCoin();
     }
 
     // Prune dead refs occasionally
@@ -367,6 +378,7 @@ export default class StageScene extends Phaser.Scene {
    */
   _onBarricadeAttack(z) {
     if (!z) return;
+    this.audio?.playBarricadeHit();
     const y = z.y;
     const x = this.barricade.contactXAt(y);
     this.barricade.flashAtY(y);
@@ -428,6 +440,7 @@ export default class StageScene extends Phaser.Scene {
   _onWin() {
     if (this.ended) return;
     this.ended = true;
+    this.audio?.fadeBgm();
     this.registry.set('gold', this.gold);
 
     const d = HUD_DEPTH + 100;
@@ -473,6 +486,7 @@ export default class StageScene extends Phaser.Scene {
   _onLose() {
     if (this.ended) return;
     this.ended = true;
+    this.audio?.playGameOver();
     // Failed attempt does not keep kill gold. The next run starts at the
     // purse this attempt was given (0 from Boot, or Shop gold after a win).
     this.registry.set('gold', this.runStartGold);

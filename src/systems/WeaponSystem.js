@@ -407,6 +407,7 @@ export class WeaponSystem {
 
     this._spawnImpactFx(hx, hy, zombie);
     const killed = zombie.takeDamage(damage, { kind: bullet.kind });
+    if (damage > 0) this.scene.audio?.playHitImpact();
     const color =
       bullet.kind === 'shotgun' ? DAMAGE_COLORS.shotgun : DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, damage, color);
