@@ -13,11 +13,12 @@
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
     "fx": "origin per key; hero FX point west, boss FX east",
     "loop": "loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once",
+    "environment": "barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven",
     "backgrounds": "1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6",
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 380,
+    "total": 382,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -43,6 +44,10 @@
         "groups": 1,
         "assets": 5
       },
+      "environment": {
+        "groups": 1,
+        "assets": 2
+      },
       "backgrounds": {
         "groups": 1,
         "assets": 15
@@ -56,7 +61,7 @@
       "background": 13,
       "concept": 21,
       "fx": 40,
-      "icon": 6,
+      "icon": 8,
       "spritesheet": 300
     }
   },
@@ -1714,6 +1719,39 @@
         "zombie-clown-gem-blue",
         "zombie-clown-gem-green",
         "zombie-clown-loot-pile"
+      ]
+    },
+    {
+      "id": "environment/barricade",
+      "category": "environment",
+      "group": "barricade",
+      "title": "Barricade Fence Posts",
+      "titleZh": "圍欄木樁",
+      "description": "Tileable wooden picket barricade posts with clear gaps between stakes (bullets read as pass-through; monsters blocked by collision code). Brown weathered wood ~#6b4f35. Origin feet (0.5, 1.0). Visual only — Barricade.js contact face stays code-driven.",
+      "manifest": "assets/library/environment/barricade/manifest.json",
+      "dir": "assets/library/environment/barricade",
+      "thumb": "assets/library/previews/environment/barricade/preview.png",
+      "sheets": [
+        "assets/library/previews/environment/barricade/barricade-sheet.png"
+      ],
+      "extras": [],
+      "keyPrefix": "barricade-",
+      "mainKey": "barricade-post",
+      "count": 2,
+      "frameSizes": [
+        "32x64"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "icon"
+      ],
+      "keys": [
+        "barricade-post",
+        "barricade-post-damaged"
       ]
     },
     {
@@ -14218,6 +14256,72 @@
       ],
       "extra": null,
       "action": "loot-pile"
+    },
+    {
+      "key": "barricade-post",
+      "category": "environment",
+      "group": "barricade",
+      "path": "assets/library/environment/barricade/barricade-post.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/barricade/preview.png",
+      "description": "Intact wooden stake barricade post, 32x64, gappy pickets so projectiles can pass; scale to postW/postH in Barricade.js.",
+      "note": "Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face).",
+      "tags": [
+        "environment",
+        "barricade",
+        "icon"
+      ],
+      "extra": null,
+      "action": "post"
+    },
+    {
+      "key": "barricade-post-damaged",
+      "category": "environment",
+      "group": "barricade",
+      "path": "assets/library/environment/barricade/barricade-post-damaged.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/barricade/preview.png",
+      "description": "Cracked/splintered variant of barricade-post, same 32x64 canvas and gaps.",
+      "note": "Optional HP-threshold swap; same origin and scale as barricade-post.",
+      "tags": [
+        "environment",
+        "barricade",
+        "icon"
+      ],
+      "extra": null,
+      "action": "post-damaged"
     },
     {
       "key": "bg-campus-a",

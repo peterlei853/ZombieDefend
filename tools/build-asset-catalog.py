@@ -25,9 +25,9 @@ CATALOG_MD_REL = f'{LIB_REL}/CATALOG.md'
 CATALOG_HTML_REL = f'{LIB_REL}/catalog.html'
 PAGES_URL = 'https://peterlei853.github.io/ZombieDefend/assets/library/catalog.html'
 
-CATEGORY_ORDER = ['hero', 'pets', 'zombies', 'bosses', 'fx', 'pickups', 'backgrounds', 'concepts']
+CATEGORY_ORDER = ['hero', 'pets', 'zombies', 'bosses', 'fx', 'pickups', 'environment', 'backgrounds', 'concepts']
 CATEGORY_TITLES = {'hero': 'Hero', 'pets': 'Pets', 'zombies': 'Zombies', 'bosses': 'Bosses', 'fx': 'Shared FX',
-                   'pickups': 'Pickups', 'backgrounds': 'Backgrounds', 'concepts': 'Concepts'}
+                   'pickups': 'Pickups', 'environment': 'Environment', 'backgrounds': 'Backgrounds', 'concepts': 'Concepts'}
 VALID_TYPES = {'spritesheet', 'image', 'fx', 'icon', 'background', 'concept'}
 MAX_PREVIEW_BYTES = 1_500_000
 MAX_PREVIEW_SIDE = 1600
@@ -397,6 +397,7 @@ def build_index(groups, assets):
         ('hero', '92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south'),
         ('fx', 'origin per key; hero FX point west, boss FX east'),
         ('loop', 'loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once'),
+        ('environment', 'barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven'),
         ('backgrounds', '1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6'),
         ('concepts', 'concept art only; not game-ready'),
     ])

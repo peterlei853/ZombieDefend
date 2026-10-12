@@ -11,9 +11,10 @@
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
 | [Pickups](#pickups) | 1 | 5 |
+| [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **39** | **380** |
+| **Total** | **40** | **382** |
 
 <a id="hero"></a>
 ## Hero
@@ -803,6 +804,23 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 | `zombie-clown-gem-blue` | 6 | 16x16 | 8 | loop | (0.5, 0.5) | 16x16 sparkling blue gem pickup, loop. |
 | `zombie-clown-gem-green` | 6 | 16x16 | 8 | loop | (0.5, 0.5) | 16x16 sparkling green gem pickup, loop. |
 | `zombie-clown-loot-pile` | 4 | 64x32 | 6 | loop | (0.5, 1.0) | 64x32 coin/gem pile (static = frame 0, or loop the 4-frame sparkle). Same art as the last frame of loot_explode. |
+
+<a id="environment"></a>
+## Environment
+
+### Barricade Fence Posts (圍欄木樁)
+
+<img src="previews/environment/barricade/preview.png" alt="barricade preview" height="140">
+
+Tileable wooden picket barricade posts with clear gaps between stakes (bullets read as pass-through; monsters blocked by collision code). Brown weathered wood ~#6b4f35. Origin feet (0.5, 1.0). Visual only — Barricade.js contact face stays code-driven.
+
+- group `barricade` · 2 assets · frame 32x64 · key prefix `barricade-` · manifest [environment/barricade/manifest.json](environment/barricade/manifest.json)
+- previews: [barricade-sheet.png](previews/environment/barricade/barricade-sheet.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `barricade-post` | [barricade-post.png](environment/barricade/barricade-post.png) | 32x64 | icon | Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face). |
+| `barricade-post-damaged` | [barricade-post-damaged.png](environment/barricade/barricade-post-damaged.png) | 32x64 | icon | Optional HP-threshold swap; same origin and scale as barricade-post. |
 
 <a id="backgrounds"></a>
 ## Backgrounds
