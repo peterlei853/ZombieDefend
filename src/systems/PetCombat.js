@@ -50,6 +50,7 @@ const PLACEHOLDER_TINT = {
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
  * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
  * Forms 2 and 3 use placeholder circles and stay locked until evolution.
+ * A bite flashes the body, plays the hurt strip once, and pops both HP bars.
  * The camera does not shake.
  */
 export class PetCombat {
@@ -154,6 +155,7 @@ export class PetCombat {
       tappable: actor.phase !== 'revive',
       grey: actor.phase === 'revive',
       hp: actor.maxHp > 0 ? clamp01(actor.hp / actor.maxHp) : 0,
+      hitSeq: actor.hitSeq || 0,
       barKey: actor.role.hudBar,
       headKey: actor.role.hudHead,
       orbs: actor.orbs.map((orb) => this._orbView(orb, unlockedCount)),
@@ -280,6 +282,11 @@ export class PetCombat {
       attackElapsed: 0,
       released: false,
       hurtLeft: 0,
+      hurtReactLeft: 0,
+      flashLeft: 0,
+      tintLeft: 0,
+      barFlashLeft: 0,
+      hitSeq: 0,
       popLeft: 0,
       rest: null,
       sleepSlot: null,
@@ -337,7 +344,7 @@ export class PetCombat {
     actor.tucked = false;
     actor.attackElapsed = 0;
     actor.released = false;
-    actor.hurtLeft = 0;
+    this._clearHitLook(actor);
     actor.latched = false;
     actor.latchId = null;
     actor.castQueue = [];
@@ -367,7 +374,7 @@ export class PetCombat {
     actor.leaving = true;
     actor.attackElapsed = 0;
     actor.released = false;
-    actor.hurtLeft = 0;
+    this._clearHitLook(actor);
     actor.latched = false;
     actor.latchId = null;
     actor.castQueue = [];
@@ -396,7 +403,7 @@ export class PetCombat {
     actor.castQueue = [];
     actor.latched = false;
     actor.latchId = null;
-    actor.hurtLeft = 0;
+    this._clearHitLook(actor);
     actor.attackElapsed = 0;
     actor.released = false;
     actor.wakeLeft = 0;
@@ -600,8 +607,8 @@ export class PetCombat {
     const node = actor.float;
     const sprite = actor.sprite;
     if (!node || !sprite) return;
-    node.x = sprite.x + layoutPx(30);
-    node.y = sprite.y - layoutPx(40);
+    node.x = sprite.x + layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_X);
+    node.y = sprite.y - layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_Y);
     node.setDepth?.(depthFromY(sprite.y, 8));
   }
 
@@ -711,12 +718,8 @@ export class PetCombat {
     if (sprite) {
       const hy = sprite.y - layoutPx(28);
       showDamageText(this.scene, sprite.x, hy, dmg, '#ffffff', `pet-${actor.role.id}`);
-      this._flash(sprite);
-      if (actor.state !== 'attack') {
-        actor.hurtLeft = GAME_CONFIG.PETS.HURT_MS;
-        playOnce(sprite, actor.role.hurt);
-      }
     }
+    if (!(actor.hurtReactLeft > 0)) this._beginHitReact(actor);
     if (actor.hp <= 0) {
       actor.hp = 0;
       this._dismiss(actor);
@@ -726,13 +729,83 @@ export class PetCombat {
     return false;
   }
 
-  /** @param {Phaser.GameObjects.Sprite} sprite */
-  _flash(sprite) {
-    if (!sprite || typeof sprite.setTintFill !== 'function') return;
-    sprite.setTintFill(0xffffff);
-    this.scene?.time?.delayedCall?.(40, () => {
-      if (sprite.active && typeof sprite.clearTint === 'function') sprite.clearTint();
-    });
+  /**
+   * One flinch per HURT_MS. Bite DPS arrives every frame; restarting the
+   * strip each frame held the pet on frame 0. A cast already in progress
+   * keeps playing — the flash and bars still react.
+   * @param {PetActor} actor
+   */
+  _beginHitReact(actor) {
+    const pets = GAME_CONFIG.PETS;
+    actor.hurtReactLeft = pets.HURT_MS;
+    actor.flashLeft = pets.HURT_FLASH_MS;
+    actor.tintLeft = pets.HURT_FLASH_MS + pets.HURT_TINT_MS;
+    actor.barFlashLeft = pets.HURT_BAR_MS;
+    actor.hitSeq = (actor.hitSeq || 0) + 1;
+    this._paintHit(actor, 'flash');
+    if (actor.state === 'attack') return;
+    actor.hurtLeft = pets.HURT_MS;
+    playOnce(actor.sprite, actor.role.hurt);
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {'flash'|'hurt'|'clear'} mode
+   */
+  _paintHit(actor, mode) {
+    const sprite = actor.sprite;
+    if (!sprite?.active) return;
+    const element = PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff;
+    if (mode === 'flash') {
+      if (typeof sprite.setTintFill === 'function') {
+        sprite.setTintFill(GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
+        return;
+      }
+      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
+      return;
+    }
+    if (mode === 'hurt') {
+      if (typeof sprite.clearTint === 'function') sprite.clearTint();
+      if (typeof sprite.setTint === 'function') {
+        sprite.setTint(0xff5252);
+        return;
+      }
+      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(0xff5252);
+      return;
+    }
+    if (typeof sprite.clearTint === 'function') sprite.clearTint();
+    if (typeof sprite.setFillStyle === 'function' && typeof sprite.setTintFill !== 'function') {
+      sprite.setFillStyle(element);
+    }
+  }
+
+  /** Drop a flinch so recall, wake, and a fresh deploy are not stuck tinted. @param {PetActor} actor */
+  _clearHitLook(actor) {
+    actor.hurtLeft = 0;
+    actor.hurtReactLeft = 0;
+    actor.flashLeft = 0;
+    actor.tintLeft = 0;
+    actor.barFlashLeft = 0;
+    this._paintHit(actor, 'clear');
+  }
+
+  /**
+   * White fill, then the red tint, then clear. Bar heat ticks here too.
+   * @param {PetActor} actor
+   * @param {number} dt
+   */
+  _tickHitLook(actor, dt) {
+    if (actor.hurtReactLeft > 0) actor.hurtReactLeft = Math.max(0, actor.hurtReactLeft - dt);
+    if (actor.barFlashLeft > 0) actor.barFlashLeft = Math.max(0, actor.barFlashLeft - dt);
+    if (!(actor.flashLeft > 0) && !(actor.tintLeft > 0)) return;
+    const flashing = actor.flashLeft > 0;
+    if (actor.flashLeft > 0) actor.flashLeft = Math.max(0, actor.flashLeft - dt);
+    if (actor.tintLeft > 0) actor.tintLeft = Math.max(0, actor.tintLeft - dt);
+    if (flashing && !(actor.flashLeft > 0)) {
+      this._paintHit(actor, actor.tintLeft > 0 ? 'hurt' : 'clear');
+    } else if (!(actor.tintLeft > 0)) {
+      this._paintHit(actor, 'clear');
+    }
   }
 
   /** @param {PetActor} actor */
@@ -752,6 +825,10 @@ export class PetCombat {
     actor.wakeLeft = 0;
     actor.leaving = false;
     actor.tucked = false;
+    actor.hurtReactLeft = 0;
+    actor.flashLeft = 0;
+    actor.tintLeft = 0;
+    actor.barFlashLeft = 0;
     actor.phase = 'revive';
     actor.reviveLeft = GAME_CONFIG.PETS.REVIVE_CD_MS;
     for (const orb of actor.orbs) {
@@ -866,6 +943,7 @@ export class PetCombat {
     const sprite = actor.sprite;
     if (!sprite?.active) return EMPTY;
     let dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    this._tickHitLook(actor, dt);
     if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
     this._place(actor);
 
@@ -887,8 +965,9 @@ export class PetCombat {
     if (actor.hurtLeft > 0) {
       actor.hurtLeft -= dt;
       const hurt = actor.role.hurt;
-      const playing = sprite.anims?.currentAnim?.key === hurt && sprite.anims?.isPlaying;
-      if (!playing && !playOnce(sprite, hurt)) playLoop(sprite, actor.role.key);
+      const onHurt = sprite.anims?.currentAnim?.key === hurt;
+      const playing = onHurt && sprite.anims?.isPlaying;
+      if (!playing && !onHurt && !playOnce(sprite, hurt)) playLoop(sprite, actor.role.key);
       faceLeft(sprite);
       return EMPTY;
     }
@@ -1036,11 +1115,14 @@ export class PetCombat {
     const w = layoutPx(26);
     const y = sprite.y - layoutPx(36);
     const ratio = actor.maxHp > 0 ? Math.max(0, actor.hp / actor.maxHp) : 0;
+    const hot = actor.barFlashLeft > 0;
+    const element = PET_ELEMENT_TINT[actor.role.element] ?? 0xfff3c4;
     bg.x = sprite.x;
     bg.y = y;
     fg.x = sprite.x - w / 2;
     fg.y = y;
-    if (typeof fg.setScale === 'function') fg.setScale(Math.max(0.02, ratio), 1);
+    if (typeof fg.setFillStyle === 'function') fg.setFillStyle(hot ? 0xfff6e8 : element);
+    if (typeof fg.setScale === 'function') fg.setScale(Math.max(0.02, ratio), hot ? 1.7 : 1);
     const depth = depthFromY(y, 2);
     bg.setDepth?.(depth);
     fg.setDepth?.(depth + 1);

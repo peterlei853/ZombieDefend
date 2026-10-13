@@ -27,11 +27,14 @@
  * PETS is the summon loop: tap to summon or recall, regen while recalled,
  * revive after death, and orb cooldowns that auto-cast. Form 1 is unlocked.
  * Forms 2 and 3 have cast logic and placeholder FX only. v0.22.1 adds the
- * GO! / Back! floats and the recall sleep bed. The camera does not shake.
+ * GO! / Back! floats and the recall sleep bed. v0.22.1b doubles the shared
+ * pet HP pool and thins Stage 1 waves 1–3. A pet hit is a white flash, a
+ * short red tint, the baby hurt strip, and an HP-bar pop. The camera does
+ * not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.22.1';
+export const APP_VERSION = '0.22.1b';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -126,9 +129,14 @@ export const GAME_CONFIG = {
    * UNLOCKED_ORBS is 1 (form 1 only). Orbs 2–3 stay visible and locked.
    *
    * FLOAT_HOLD_MS is 700 (inside 0.6–0.8s). The GO! / Back! sprite holds,
-   * then fades for FLOAT_FADE_MS. Recall walks to an empty bed behind the
-   * fence, plays sleep-start once, then the sleep loop. Resummon wakes
-   * that body and walks it out. HP, regen, and revive are unchanged.
+   * then fades for FLOAT_FADE_MS. The label sits up and to the right of the
+   * pet (FLOAT_OFFSET_X 64, FLOAT_OFFSET_Y 56, field px) so it clears the
+   * hero when the pet is beside the player. Recall walks to an empty bed
+   * behind the fence, plays sleep-start once, then the sleep loop. Resummon wakes
+   * that body and walks it out. HP, regen, and revive stay on this table.
+   * v0.22.1b raises the shared max from 96 to 192. Recall still restores
+   * OFF_FIELD_REGEN_RATIO of that max per second, so a full heal is still
+   * 4s. Forms 2 and 3 do not have their own max.
    *
    * ORB_CD_MS is [form1, form2, form3]:
    *   phoenix  9000 / 16000 / 24000
@@ -137,20 +145,37 @@ export const GAME_CONFIG = {
    *   dragon  12000 / 20000 / 28000
    */
   PETS: {
-    /** Shared max HP. Zombies that reach a pet chew this instead of the barricade. */
-    HP: 96,
+    /** Shared max HP for every pet and form. Zombies that reach a pet chew this instead of the barricade. */
+    HP: 192,
     /** Field px/s while walking from behind the player toward the threat. */
     MOVE_SPEED: 170,
     /** Field px added to the zombie's body radius when it bites a pet. */
     BITE_RADIUS: 18,
-    /** Flinch on the hurt strip. Does not cancel a cast already in progress. */
-    HURT_MS: 280,
+    /**
+     * Flinch on the baby hurt strip (4 frames at 10 fps). A new pose waits
+     * out this window so per-frame bite DPS cannot restart it. Does not
+     * cancel a cast already in progress.
+     */
+    HURT_MS: 400,
+    /** Pure-white body fill at the start of a flinch. */
+    HURT_FLASH_MS: 90,
+    /** Red multiply tint after the white fill. The camera does not shake. */
+    HURT_TINT_MS: 160,
+    /** World bar and portrait fill stay hot for this long after a flinch. */
+    HURT_BAR_MS: 180,
     /** Scale-pop after the sprite appears behind the player. */
     POP_MS: 160,
     /** GO! / Back! stay opaque this long, then fade. 0.6–0.8s. */
     FLOAT_HOLD_MS: 700,
     /** Fade after FLOAT_HOLD_MS. */
     FLOAT_FADE_MS: 200,
+    /**
+     * Field px from the pet's feet to the bottom-center of GO! / Back!.
+     * +X is toward the barricade. 64 clears the hero's right edge when the
+     * pet pops just behind the player; 56 lifts the 32px label off the shoulder.
+     */
+    FLOAT_OFFSET_X: 64,
+    FLOAT_OFFSET_Y: 56,
     /** Death lockout before the bar can summon again. 18s. */
     REVIVE_CD_MS: 18000,
     /** Fraction of max HP restored per second while recalled (alive, off field). */
