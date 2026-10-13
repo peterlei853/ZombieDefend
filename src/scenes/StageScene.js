@@ -50,6 +50,7 @@ import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
+import { debugBgmEnabled } from '../debugBgm.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -59,7 +60,10 @@ import { PetPortraitHud } from '../ui/PetPortraitHud.js';
  *
  * Win:  timer ≥ 90s AND no zombies remain → ShopScene
  * Lose: barricade HP ≤ 0 → Game Over overlay (retry)
+ *
+ * `?debugBgm=1` (or `?debug=1`): V or the DEBUG CLEAR chip calls the same win path.
  */
+
 export default class StageScene extends Phaser.Scene {
   constructor() {
     super('StageScene');
@@ -141,6 +145,9 @@ export default class StageScene extends Phaser.Scene {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       this._spaceKey.on('down', () => this._toggleWeapon());
     }
+    if (debugBgmEnabled()) {
+      this._installDebugClear();
+    }
 
     this.touchControls = new VirtualControls(this, {
       onWeapon: () => this._toggleWeapon(),
@@ -157,6 +164,39 @@ export default class StageScene extends Phaser.Scene {
       this.petEvolve?.resetStage();
     });
     this.audio.startStageBgm();
+  }
+
+  /**
+   * Same clear as a real win: stop `bgm-stage`, play `bgm-victory`, hold ~1.5s,
+   * then ShopScene starts `bgm-shop`. Gold, saves, and the 90s timer stay put.
+   */
+  _installDebugClear() {
+    const fire = () => this._onWin();
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const onDown = () => fire();
+      this._debugClearKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+      this._debugClearKey.on('down', onDown);
+      this.events.once('shutdown', () => {
+        this._debugClearKey?.off('down', onDown);
+      });
+    }
+
+    const x = GAME_WIDTH / 2;
+    const y = GAME_HEIGHT - 150;
+    const depth = HUD_DEPTH + 50;
+    const hit = this.add
+      .rectangle(x, y, 168, 28, 0x1a1208, 0.82)
+      .setScrollFactor(0)
+      .setDepth(depth)
+      .setInteractive({ useHandCursor: true });
+    hit.on('pointerup', fire);
+    addKitText(this, x, y, 'V  DEBUG CLEAR', {
+      system: true,
+      size: 13,
+      color: '#ffd27a',
+      depth: depth + 1,
+    });
   }
 
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
