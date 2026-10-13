@@ -18,17 +18,33 @@ function between(min, max) {
  * @param {Phaser.Scene} scene
  */
 export function beginHitlag(scene) {
+  beginHitstop(scene, GAME_CONFIG.JUICE.HITLAG_MS, GAME_CONFIG.JUICE.HITLAG_SCALE);
+}
+
+/**
+ * Short global hitch. Does not shake the camera.
+ * A longer window already running is left in place.
+ * @param {Phaser.Scene} scene
+ * @param {number} ms
+ * @param {number} [scale]
+ */
+export function beginHitstop(scene, ms, scale = GAME_CONFIG.JUICE.HITLAG_SCALE) {
   if (!scene) return;
-  const juice = GAME_CONFIG.JUICE;
+  const dur = Number(ms);
+  if (!(dur > 0)) return;
   const now = nowMs();
   if (!scene._hitlagUntil || now >= scene._hitlagUntil) {
     scene._hitlagPrevTweens = scene.tweens?.timeScale ?? 1;
     scene._hitlagPrevAnims = scene.anims?.globalTimeScale ?? 1;
   }
-  const until = now + juice.HITLAG_MS;
-  scene._hitlagUntil = Math.max(scene._hitlagUntil || 0, until);
-  if (scene.tweens) scene.tweens.timeScale = juice.HITLAG_SCALE;
-  if (scene.anims) scene.anims.globalTimeScale = juice.HITLAG_SCALE;
+  const until = now + dur;
+  if (until >= (scene._hitlagUntil || 0)) {
+    scene._hitlagUntil = until;
+    scene._hitlagScale = scale;
+  }
+  const applied = scene._hitlagScale ?? scale;
+  if (scene.tweens) scene.tweens.timeScale = applied;
+  if (scene.anims) scene.anims.globalTimeScale = applied;
 }
 
 /**
@@ -40,11 +56,12 @@ export function tickHitlag(scene) {
   if (!scene?._hitlagUntil) return 1;
   if (nowMs() >= scene._hitlagUntil) {
     scene._hitlagUntil = 0;
+    scene._hitlagScale = null;
     if (scene.tweens) scene.tweens.timeScale = scene._hitlagPrevTweens ?? 1;
     if (scene.anims) scene.anims.globalTimeScale = scene._hitlagPrevAnims ?? 1;
     return 1;
   }
-  return GAME_CONFIG.JUICE.HITLAG_SCALE;
+  return scene._hitlagScale ?? GAME_CONFIG.JUICE.HITLAG_SCALE;
 }
 
 const BLOOD_COLORS = [0xc62828, 0x43a047, 0x7cb342, 0x8e1b1b];

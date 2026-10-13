@@ -1,5 +1,7 @@
 import { GAME_CONFIG } from '../data/GameConfig.js';
-import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { DAMAGE_COLORS, showCritText, showDamageText } from '../ui/damageText.js';
+import { beginHitstop } from './combatJuice.js';
+import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 import {
@@ -40,6 +42,14 @@ const PLACEHOLDER_TINT = {
   dragon: 0x76ff03,
 };
 
+/** PIXELLAB_HOOK: assets/library/fx/v026/aoe/vfx-aoe-*.png */
+const RESIDUE_KEY = {
+  phoenix: 'vfx-aoe-fire',
+  panda: 'vfx-aoe-ice',
+  lion: 'vfx-aoe-lightning',
+  dragon: 'vfx-aoe-poison',
+};
+
 /**
  * Summoned baby pets. Off the field until the bar is tapped.
  * Tap again to recall: Back! floats beside the pet, then it walks to an
@@ -77,6 +87,109 @@ export class PetCombat {
     this.cueLog = [];
     /** @type {number|null} overrides GAME_CONFIG.PETS.UNLOCKED_ORBS when set */
     this._unlockedOrbs = null;
+    /** @type {import('./PetEvolve.js').PetEvolve|null} */
+    this.evolve = null;
+    this.ult = new UltCutscene(scene);
+    this._loot = { gold: 0, kills: 0 };
+    /** @type {import('../entities/Zombie.js').Zombie[]} */
+    this._liveZombies = [];
+  }
+
+  /** @param {import('./PetEvolve.js').PetEvolve|null} evolve */
+  setEvolve(evolve) {
+    this.evolve = evolve || null;
+  }
+
+  /** True while the tier-3 letterbox is holding this scene. */
+  get ultPlaying() {
+    return !!this.ult?.playing;
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   * @param {{ x?: number, y?: number }|null} player
+   */
+  tickAi(actor, dt, zombies, threat, player) {
+    return this._tickField(actor, dt, zombies, threat, player);
+  }
+
+  /**
+   * Melee box in front of the pet. Wind-up, impact, recovery.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
+   */
+  tryBasic(actor, zombies) {
+    if (!actor || actor.state === 'attack' || actor.meleePhase || actor.hurtLeft > 0) return false;
+    if (actor.meleeGap > 0) return false;
+    const sprite = actor.sprite;
+    if (!sprite?.active) return false;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    const range = layoutPx(pets.RANGE);
+    const yHalf = layoutPx(pets.Y_HALF);
+    const list = Array.isArray(zombies) ? zombies : this._liveZombies;
+    const hit = list.some((z) => z?.alive && z.body && inForwardBox(sprite.x, sprite.y, z.x, z.y, range, yHalf));
+    if (!hit) return false;
+    actor.meleePhase = 'windup';
+    actor.meleeLeft = pets.WINDUP_MS;
+    actor.state = 'melee';
+    return true;
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {1|2|3} slot
+   */
+  trySkill(actor, slot) {
+    const index = Math.floor(Number(slot)) - 1;
+    if (!actor || index < 0 || index > 2) return false;
+    if (index >= this._unlockedCount(actor)) return false;
+    if (index === 2 && !this._allowUlt(actor)) return false;
+    this._commitOrb(actor, index);
+    return true;
+  }
+
+  /**
+   * Leftward shove. dirX <= 0 pushes back down the march.
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {number} [dirX]
+   * @param {number} [px] field px
+   * @param {number} [ms]
+   */
+  applyKnockback(zombie, dirX = -1, px = GAME_CONFIG.PETS.KNOCKBACK_PX, ms = GAME_CONFIG.PETS.KNOCKBACK_MS) {
+    if (!zombie || typeof zombie.beginPetSlide !== 'function') return;
+    const mag = layoutPx(Math.abs(px));
+    if (!(mag > 0)) return;
+    void dirX;
+    zombie.beginPetSlide(mag, ms);
+    this.scene?.audio?.playPetKnockback?.();
+  }
+
+  /** @param {number} ms */
+  hitstop(ms) {
+    beginHitstop(this.scene, ms);
+  }
+
+  _takeLoot() {
+    const loot = this._loot || EMPTY;
+    this._loot = { gold: 0, kills: 0 };
+    return { gold: loot.gold || 0, kills: loot.kills || 0 };
+  }
+
+  /**
+   * @param {number} chance
+   * @param {() => { gold: number, kills: number }} fn
+   */
+  _withCrit(chance, fn) {
+    const prev = this.scene?._zdCrit;
+    if (this.scene) this.scene._zdCrit = chance;
+    try {
+      return fn();
+    } finally {
+      if (this.scene) this.scene._zdCrit = prev;
+    }
   }
 
   /**
@@ -88,9 +201,26 @@ export class PetCombat {
     this._unlockedOrbs = Number.isFinite(n) ? Math.max(0, Math.min(3, Math.floor(n))) : null;
   }
 
-  _unlockedCount() {
-    if (this._unlockedOrbs == null) return GAME_CONFIG.PETS.UNLOCKED_ORBS;
-    return this._unlockedOrbs;
+  /**
+   * @param {PetActor} [actor]
+   */
+  _unlockedCount(actor) {
+    if (this._unlockedOrbs != null) return this._unlockedOrbs;
+    if (actor && this.evolve?.getTier) {
+      return Math.max(1, Math.min(3, this.evolve.getTier(actor.role.id) || 1));
+    }
+    return GAME_CONFIG.PETS.UNLOCKED_ORBS;
+  }
+
+  /** @param {PetActor} actor */
+  _tierOf(actor) {
+    return this.evolve?.getTier?.(actor.role.id) ?? 1;
+  }
+
+  /** S3 plays only at tier 3, or when a test override unlocks every orb. */
+  _allowUlt(actor) {
+    if ((this._unlockedOrbs ?? 0) >= 3) return true;
+    return this.evolve?.canUseUlt?.(actor.role.id) === true;
   }
 
   /**
@@ -137,6 +267,7 @@ export class PetCombat {
         get alive() {
           return actor.phase === 'field' && actor.hp > 0;
         },
+        onField: true,
         takeDamage: (amount) => this._damage(actor, amount),
       });
     }
@@ -145,21 +276,25 @@ export class PetCombat {
 
   /** One view per party slot, top → bottom. */
   portraitViews() {
-    const unlockedCount = this._unlockedCount();
-    return this._actors.map((actor) => ({
-      id: actor.role.id,
-      element: actor.role.element,
-      elementZh: actor.role.elementZh,
-      color: PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff,
-      phase: actor.phase,
-      tappable: actor.phase !== 'revive',
-      grey: actor.phase === 'revive',
-      hp: actor.maxHp > 0 ? clamp01(actor.hp / actor.maxHp) : 0,
-      hitSeq: actor.hitSeq || 0,
-      barKey: actor.role.hudBar,
-      headKey: actor.role.hudHead,
-      orbs: actor.orbs.map((orb) => this._orbView(orb, unlockedCount)),
-    }));
+    return this._actors.map((actor) => {
+      const unlockedCount = this._unlockedCount(actor);
+      return {
+        id: actor.role.id,
+        element: actor.role.element,
+        elementZh: actor.role.elementZh,
+        color: PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff,
+        phase: actor.phase,
+        tappable: actor.phase !== 'revive',
+        grey: actor.phase === 'revive',
+        hp: actor.maxHp > 0 ? clamp01(actor.hp / actor.maxHp) : 0,
+        hitSeq: actor.hitSeq || 0,
+        tier: this._tierOf(actor),
+        expRatio: this.evolve?.expRatio?.(actor.role.id) ?? 0,
+        barKey: actor.role.hudBar,
+        headKey: actor.role.hudHead,
+        orbs: actor.orbs.map((orb) => this._orbView(orb, unlockedCount)),
+      };
+    });
   }
 
   /**
@@ -201,6 +336,12 @@ export class PetCombat {
     this._anchor = player;
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     const list = Array.isArray(zombies) ? zombies : [];
+    this._liveZombies = list;
+    if (this.ult?.playing) {
+      this._loot = { gold: 0, kills: 0 };
+      this.ult.update(dt);
+      return this._takeLoot();
+    }
     const threat = nearestBarricadeThreat(list);
     let gold = 0;
     let kills = 0;
@@ -213,6 +354,7 @@ export class PetCombat {
       if (actor.phase === 'ready') {
         this._tickRegen(actor, dt);
         this._tickRest(actor, dt);
+        this._tickSleepCd(actor, dt);
         this._tickFloat(actor, dt);
         continue;
       }
@@ -220,7 +362,7 @@ export class PetCombat {
         this._tickFloat(actor, dt);
         continue;
       }
-      const gain = this._tickField(actor, dt, list, threat, player);
+      const gain = this.tickAi(actor, dt, list, threat, player);
       gold += gain.gold;
       kills += gain.kills;
       if (actor.phase !== 'field') {
@@ -254,9 +396,13 @@ export class PetCombat {
     this._zones = [];
     for (const blob of this._blobs) destroySprite(blob?.node);
     this._blobs = [];
+    this.ult?._clear?.();
+    this.ult && (this.ult.playing = false);
     for (const actor of this._actors) {
       this._clearFloat(actor);
       this._destroyBars(actor);
+      destroySprite(actor.stars);
+      actor.stars = null;
       destroySprite(actor.sprite);
       actor.sprite = null;
       actor.phase = 'ready';
@@ -306,6 +452,14 @@ export class PetCombat {
       drawDepth: 0,
       latched: false,
       latchId: null,
+      meleePhase: null,
+      meleeLeft: 0,
+      meleeGap: 0,
+      shownTier: 1,
+      stars: null,
+      starsKey: '',
+      expBg: null,
+      expFg: null,
       destX: 0,
       destY: 0,
       x: 0,
@@ -375,7 +529,9 @@ export class PetCombat {
     actor.sleepSlot = null;
     actor.settleLeft = 0;
     actor.state = 'idle';
+    actor.meleePhase = null;
     actor.wakeLeft = lying ? WAKE_MS : 0;
+    if (lying) this.scene?.events?.emit?.('pet:wake', { petId: actor.role.id });
     actor.leaving = true;
     actor.attackElapsed = 0;
     actor.released = false;
@@ -544,6 +700,7 @@ export class PetCombat {
     actor.rest = 'sleep';
     actor.settleLeft = 0;
     actor.tucked = true;
+    this.scene?.events?.emit?.('pet:sleep', { petId: actor.role.id });
     const sprite = actor.sprite;
     const loopKey = `${actor.role.sleep}:loop`;
     if (sprite?.scene?.anims?.exists?.(loopKey)) playLoop(sprite, loopKey);
@@ -716,6 +873,11 @@ export class PetCombat {
     actor.hpBg = scene.add.rectangle(sprite.x, y, w, h, 0x14080a);
     actor.hpFg = scene.add.rectangle(sprite.x - w / 2, y, w, h, tint).setOrigin?.(0, 0.5);
     if (actor.hpFg) actor.hpFg.setOrigin?.(0, 0.5);
+    const ey = y - layoutPx(6);
+    const eh = Math.max(2, layoutPx(2));
+    actor.expBg = scene.add.rectangle(sprite.x, ey, w, eh, 0x1a1208);
+    actor.expFg = scene.add.rectangle(sprite.x - w / 2, ey, w, eh, 0xffd54f);
+    actor.expFg?.setOrigin?.(0, 0.5);
   }
 
   /**
@@ -728,6 +890,7 @@ export class PetCombat {
     const dmg = Number(amount);
     if (!(dmg > 0) || !Number.isFinite(dmg)) return false;
     actor.hp -= dmg;
+    this.scene?.events?.emit?.('pet:hit', { petId: actor.role.id, amount: dmg });
     const sprite = actor.sprite;
     if (sprite) {
       const hy = sprite.y - layoutPx(28);
@@ -886,6 +1049,9 @@ export class PetCombat {
       orb.left = orb.cdMs;
     }
     this._destroyBars(actor);
+    destroySprite(actor.stars);
+    actor.stars = null;
+    actor.starsKey = '';
     this._clearFloat(actor);
     this.scene?.audio?.playPetDeath?.();
     this._fadeOut(sprite);
@@ -930,7 +1096,7 @@ export class PetCombat {
    */
   _tickOrbs(actor, dt) {
     if (actor.phase !== 'field' || actor.wakeLeft > 0) return;
-    const unlocked = this._unlockedCount();
+    const unlocked = this._unlockedCount(actor);
     for (const orb of actor.orbs) {
       if (orb.index >= unlocked) continue;
       this._tickOrb(actor, orb, dt);
@@ -977,8 +1143,26 @@ export class PetCombat {
    */
   _commitOrb(actor, orbIndex) {
     actor.castQueue.push(orbIndex);
+    if (actor.meleePhase) {
+      actor.meleePhase = null;
+      if (actor.state === 'melee') actor.state = 'idle';
+    }
     if (actor.state === 'attack' || actor.hurtLeft > 0) return;
     this._beginAttack(actor);
+  }
+
+  /**
+   * Recalled pets keep charging skill CDs at 1.0× and do not cast from the bed.
+   * @param {PetActor} actor
+   * @param {number} dt
+   */
+  _tickSleepCd(actor, dt) {
+    const unlocked = this._unlockedCount(actor);
+    const step = Math.max(0, dt);
+    for (const orb of actor.orbs) {
+      if (orb.index >= unlocked || orb.pending) continue;
+      if (orb.left > 0) orb.left = Math.max(0, orb.left - step);
+    }
   }
 
   /**
@@ -1029,8 +1213,21 @@ export class PetCombat {
         return gain;
       }
 
+      if (actor.meleeGap > 0) actor.meleeGap = Math.max(0, actor.meleeGap - dt);
+      if (actor.meleePhase) {
+        gain = this._advanceMelee(actor, dt, zombies);
+        return gain;
+      }
+
+      if (!threat && !actor.leaving) {
+        this._tickCombatNap(actor, dt);
+        return EMPTY;
+      }
+      if (threat && actor.rest) this._combatWake(actor);
+
       this._stepMove(actor, threat, player, dt);
-      return EMPTY;
+      if (actor.meleePhase) gain = this._advanceMelee(actor, dt, zombies);
+      return gain;
     } finally {
       this._applyHitLook(actor);
     }
@@ -1077,6 +1274,7 @@ export class PetCombat {
       playLoop(sprite, actor.role.key);
       faceLeft(sprite);
       this._place(actor);
+      this.tryBasic(actor, this._liveZombies);
       return;
     }
     const step = GAME_CONFIG.PETS.MOVE_SPEED * LAYOUT_SCALE * (deltaMs / 1000);
@@ -1164,6 +1362,110 @@ export class PetCombat {
     actor.drawDepth = depth;
     sprite.setDepth?.(depth);
     this._syncBars(actor);
+    this._syncStars(actor);
+  }
+
+  /**
+   * No target in aggro: walk to the recall bed and sleep. Phase stays field
+   * so GO! / Back! still recalls, and skill CDs keep charging.
+   * @param {PetActor} actor
+   * @param {number} dt
+   */
+  _tickCombatNap(actor, dt) {
+    if (!actor.rest) {
+      this._claimBed(actor);
+      actor.rest = 'seek';
+      actor.latched = false;
+      actor.latchId = null;
+      actor.state = 'move';
+      actor.meleePhase = null;
+    }
+    if (actor.rest === 'seek') this._stepSeek(actor, dt);
+    else if (actor.rest === 'settle') this._stepSettle(actor, dt);
+    else this._stepSleep(actor);
+    this._syncStars(actor);
+  }
+
+  /** Threat walked into range. Stand up without a second GO! float. @param {PetActor} actor */
+  _combatWake(actor) {
+    const was = actor.rest;
+    actor.rest = null;
+    actor.settleLeft = 0;
+    actor.tucked = false;
+    actor.sleepSlot = null;
+    actor.state = 'idle';
+    actor.meleePhase = null;
+    if (was === 'sleep' || was === 'settle' || was === 'seek') {
+      this.scene?.events?.emit?.('pet:wake', { petId: actor.role.id });
+    }
+    faceLeft(actor.sprite);
+    playLoop(actor.sprite, actor.role.key);
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _advanceMelee(actor, dt, zombies) {
+    let left = Math.max(0, dt);
+    let gold = 0;
+    let kills = 0;
+    let guard = 0;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    while (left > 0 && actor.meleePhase && guard < 6) {
+      guard += 1;
+      const use = Math.min(left, Math.max(0, actor.meleeLeft));
+      if (actor.meleePhase === 'windup') this._stepIn(actor, use, pets.WINDUP_MS);
+      actor.meleeLeft -= use;
+      left -= use;
+      if (actor.meleeLeft > 0) break;
+      if (actor.meleePhase === 'windup') {
+        const gain = this._meleeImpact(actor, zombies);
+        gold += gain.gold;
+        kills += gain.kills;
+        actor.meleePhase = 'recover';
+        actor.meleeLeft = pets.RECOVER_MS;
+        continue;
+      }
+      actor.meleePhase = null;
+      actor.state = 'idle';
+      actor.meleeGap = pets.GAP_MS;
+      playLoop(actor.sprite, actor.role.key);
+      break;
+    }
+    this._place(actor);
+    return { gold, kills };
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} use
+   * @param {number} windup
+   */
+  _stepIn(actor, use, windup) {
+    const sprite = actor.sprite;
+    if (!sprite || !(windup > 0)) return;
+    const step = layoutPx(GAME_CONFIG.PETS.MELEE.STEP_PX) * (use / windup);
+    sprite.x -= step;
+    faceLeft(sprite);
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _meleeImpact(actor, zombies) {
+    const sprite = actor.sprite;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    const range = layoutPx(pets.RANGE);
+    const yHalf = layoutPx(pets.Y_HALF);
+    const hits = threatsInShape(zombies, (z) =>
+      inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
+    );
+    this.scene?.audio?.playPetMeleeHit?.();
+    const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
+    return strikeAll(this.scene, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
   }
 
   /** @param {PetActor} actor */
@@ -1186,14 +1488,200 @@ export class PetCombat {
     const depth = depthFromY(y, 2);
     bg.setDepth?.(depth);
     fg.setDepth?.(depth + 1);
+    const expRatio = this.evolve?.expRatio?.(actor.role.id) ?? 0;
+    const expY = y - layoutPx(6);
+    if (actor.expBg) {
+      actor.expBg.x = sprite.x;
+      actor.expBg.y = expY;
+      actor.expBg.setDepth?.(depth);
+    }
+    if (actor.expFg) {
+      actor.expFg.x = sprite.x - w / 2;
+      actor.expFg.y = expY;
+      if (typeof actor.expFg.setScale === 'function') actor.expFg.setScale(Math.max(0.02, expRatio), 1);
+      actor.expFg.setDepth?.(depth + 1);
+    }
+  }
+
+  /**
+   * Tier marker above the pet. Origin (0.5, 1). Burst only when the tier rises.
+   * PIXELLAB_HOOK: assets/library/fx/v026/evolve-stars/vfx-evolve-stars-{1,2,3}.png
+   * @param {PetActor} actor
+   */
+  _syncStars(actor) {
+    const sprite = actor.sprite;
+    if (!sprite?.active) {
+      destroySprite(actor.stars);
+      actor.stars = null;
+      actor.starsKey = '';
+      return;
+    }
+    const tier = Math.max(1, Math.min(3, this._tierOf(actor) || 1));
+    if (tier > (actor.shownTier || 1)) this._burstEvolve(actor, tier);
+    actor.shownTier = tier;
+    const key = `vfx-evolve-stars-${tier}`;
+    const scene = this.scene;
+    if (actor.starsKey !== key || !actor.stars?.active) {
+      destroySprite(actor.stars);
+      actor.stars = null;
+      actor.starsKey = '';
+      if (scene?.textures?.exists?.(key)) {
+        const make = scene.add?.image || scene.add?.sprite;
+        const node = make?.call(scene.add, sprite.x, sprite.y - layoutPx(42), key);
+        if (node) {
+          node.setOrigin?.(0.5, 1);
+          node.setDepth?.(depthFromY(sprite.y, 4));
+          actor.stars = node;
+          actor.starsKey = key;
+        }
+      }
+    }
+    if (actor.stars) {
+      actor.stars.x = sprite.x;
+      actor.stars.y = sprite.y - layoutPx(42);
+      actor.stars.setDepth?.(depthFromY(sprite.y, 4));
+    }
+  }
+
+  /**
+   * Visual only. PetEvolve.addExp already emits pet:evolved and plays the sting.
+   * @param {PetActor} actor
+   * @param {number} tier
+   */
+  _burstEvolve(actor, tier) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    const key = `vfx-evolve-stars-${tier}`;
+    const y = sprite.y - layoutPx(48);
+    const node = playLibraryFx(this.scene, sprite.x, y, key, {
+      scale: 1.35,
+      depth: depthFromY(sprite.y, 8),
+    });
+    if (!node) return;
+    this.scene?.tweens?.add?.({
+      targets: node,
+      y: y - layoutPx(22),
+      alpha: 0,
+      duration: 700,
+      onComplete: () => destroySprite(node),
+    });
+  }
+
+  /**
+   * Semi-transparent tell. S1 ring, S2 larger ring, S3 half-screen wash.
+   * PIXELLAB_HOOK: assets/library/fx/v026/telegraph/
+   * @param {PetActor} actor
+   * @param {number} orbIndex
+   */
+  _showTelegraph(actor, orbIndex) {
+    const scene = this.scene;
+    const sprite = actor.sprite;
+    if (!scene || !sprite) return;
+    scene.audio?.playSkillTelegraph?.();
+    const pets = GAME_CONFIG.PETS;
+    const x = sprite.x;
+    const y = sprite.y;
+    const depth = depthFromY(y, 4);
+    let key = 'vfx-telegraph-ring';
+    let scale = layoutPx(pets.SKILL_R.s1 * 2) / 64;
+    let flipX = false;
+    if (orbIndex >= 2) {
+      key = 'vfx-telegraph-half-left';
+      const camW = scene.cameras?.main?.width || 1280;
+      scale = camW / 2 / 192;
+      flipX = true;
+    } else if (orbIndex === 1) {
+      key = 'vfx-telegraph-ring-128';
+      scale = layoutPx(pets.SKILL_R.s2 * 2) / 128;
+    }
+    const node = playLibraryFx(scene, x, y, key, { scale, depth, flipX });
+    if (!node) return;
+    scene.tweens?.add?.({
+      targets: node,
+      alpha: 0.2,
+      duration: pets.TELEGRAPH_MS,
+      onComplete: () => destroySprite(node),
+    });
+  }
+
+  /**
+   * Lingering element patch. PIXELLAB_HOOK: assets/library/fx/v026/aoe/
+   * @param {PetActor} actor
+   * @param {number} x
+   * @param {number} y
+   */
+  _showResidue(actor, x, y) {
+    const key = RESIDUE_KEY[actor.role.id];
+    if (!key || !Number.isFinite(x) || !Number.isFinite(y)) return;
+    const node = playLibraryFx(this.scene, x, y, key, { depth: depthFromY(y, 5) });
+    if (!node) return;
+    this.scene?.tweens?.add?.({
+      targets: node,
+      alpha: 0,
+      duration: 700,
+      onComplete: () => destroySprite(node),
+    });
+  }
+
+  /**
+   * Letterbox, then themed form-3 plus a forward half-screen hit.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _startUlt(actor, zombies, threat) {
+    const list = Array.isArray(zombies) ? zombies.slice() : [];
+    this.ult?.play?.(actor.role.id, () => {
+      this._applyUltHit(actor, list, threat);
+    });
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _applyUltHit(actor, zombies, threat) {
+    const focus = focusPoint(actor, threat);
+    this._showResidue(actor, focus.x, focus.y);
+    this.hitstop(GAME_CONFIG.PETS.HITSTOP_S3_MS);
+    const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
+    const gain = this._withCrit(0.55, () => {
+      const themed = this._castForm3(actor, zombies, threat);
+      const hits = this._halfScreenHits(actor, zombies);
+      const aoe = strikeAll(this.scene, hits, 10, color, { knockback: true, critChance: 0.55 });
+      return { gold: (themed?.gold || 0) + aoe.gold, kills: (themed?.kills || 0) + aoe.kills };
+    });
+    this._loot.gold = (this._loot.gold || 0) + gain.gold;
+    this._loot.kills = (this._loot.kills || 0) + gain.kills;
+  }
+
+  /**
+   * Zombies in the forward half of the camera, roughly on the pet's side of the screen.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _halfScreenHits(actor, zombies) {
+    const x = actor.sprite?.x ?? actor.x;
+    const y = actor.sprite?.y ?? actor.y;
+    const camW = this.scene?.cameras?.main?.width || 1280;
+    const reach = camW / 2;
+    return threatsInShape(
+      zombies,
+      (z) => z.x <= x + layoutPx(8) && z.x >= x - reach && Math.abs((z.y ?? y) - y) <= reach
+    );
   }
 
   /** @param {PetActor} actor */
   _destroyBars(actor) {
     destroySprite(actor.hpBg);
     destroySprite(actor.hpFg);
+    destroySprite(actor.expBg);
+    destroySprite(actor.expFg);
     actor.hpBg = null;
     actor.hpFg = null;
+    actor.expBg = null;
+    actor.expFg = null;
   }
 
   /**
@@ -1209,6 +1697,7 @@ export class PetCombat {
     actor.hurtStrip = false;
     faceLeft(actor.sprite);
     const orb = actor.castQueue[0] ?? 0;
+    this._showTelegraph(actor, orb);
     if (orb <= 0) playOnce(actor.sprite, actor.role.skill);
   }
 
@@ -1231,7 +1720,7 @@ export class PetCombat {
         (playingSkill && progress >= 0.34) ||
         !playingSkill ||
         actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-      : actor.attackElapsed >= 90;
+      : actor.attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS;
     let gold = 0;
     let kills = 0;
     if (!actor.released && due) {
@@ -1278,9 +1767,21 @@ export class PetCombat {
       orb.left = orb.cdMs;
     }
     this.castLog.push({ id: actor.role.id, orb: orbIndex });
+    if (orbIndex >= 2 && this._allowUlt(actor)) {
+      this._startUlt(actor, zombies, threat);
+      return EMPTY;
+    }
+    if (orbIndex >= 1) {
+      const focus = focusPoint(actor, threat);
+      this._showResidue(actor, focus.x, focus.y);
+    }
     if (orbIndex <= 0) return this._cast(actor, zombies, threat);
-    if (orbIndex === 1) return this._castForm2(actor, zombies, threat);
-    return this._castForm3(actor, zombies, threat);
+    if (orbIndex === 1) {
+      this.hitstop(GAME_CONFIG.PETS.HITSTOP_S2_MS);
+      return this._withCrit(0.45, () => this._castForm2(actor, zombies, threat));
+    }
+    this.hitstop(GAME_CONFIG.PETS.HITSTOP_S3_MS);
+    return this._withCrit(0.55, () => this._castForm3(actor, zombies, threat));
   }
 
   /**
@@ -1601,6 +2102,7 @@ export class PetCombat {
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
     const node = this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.dragon, cfg.durationMs, 'dragon-cloud');
+    if (threat) this.applyKnockback(threat);
     this._zones.push({
       node,
       x: focus.x,
@@ -1739,7 +2241,7 @@ export class PetCombat {
         zone.acc -= zone.interval;
         const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - zone.x, z.y - zone.y) <= zone.radius);
         for (const z of hits) {
-          const gain = strike(this.scene, z, zone.damage, zone.hitColor);
+          const gain = strike(this.scene, z, zone.damage, zone.hitColor, { knockback: false });
           gold += gain.gold;
           kills += gain.kills;
         }
@@ -1807,12 +2309,8 @@ export class PetCombat {
 }
 
 /** @param {string} id */
-function engageStand(id) {
-  const pets = GAME_CONFIG.PETS;
-  if (id === 'panda') return pets.PANDA.RANGE * LAYOUT_SCALE * 0.5;
-  if (id === 'lion') return pets.LION.RANGE * LAYOUT_SCALE * 0.5;
-  if (id === 'dragon') return pets.DRAGON.RANGE * LAYOUT_SCALE * 0.45;
-  return layoutPx(100);
+function engageStand(_id) {
+  return layoutPx(GAME_CONFIG.PETS.MELEE.RANGE * 0.7);
 }
 
 /**
@@ -2119,11 +2617,11 @@ function threatsInShape(zombies, pred) {
  * @param {number} damage
  * @param {string} color
  */
-function strikeAll(scene, zombies, damage, color) {
+function strikeAll(scene, zombies, damage, color, opts) {
   let gold = 0;
   let kills = 0;
   for (const z of zombies) {
-    const gain = strike(scene, z, damage, color);
+    const gain = strike(scene, z, damage, color, opts);
     gold += gain.gold;
     kills += gain.kills;
   }
@@ -2137,14 +2635,21 @@ function strikeAll(scene, zombies, damage, color) {
  * @param {string} color
  * @returns {{ gold: number, kills: number, killed: boolean }}
  */
-function strike(scene, zombie, damage, color) {
+function strike(scene, zombie, damage, color, opts = {}) {
   if (!zombie?.alive || !zombie.body) return { gold: 0, kills: 0, killed: false };
+  if (opts.knockback !== false && typeof zombie.beginPetSlide === 'function') {
+    const px = layoutPx(GAME_CONFIG.PETS.KNOCKBACK_PX);
+    zombie.beginPetSlide(px, GAME_CONFIG.PETS.KNOCKBACK_MS);
+    scene?.audio?.playPetKnockback?.();
+  }
   const hx = zombie.x;
   const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : chestY(zombie);
   const goldVal = zombie.goldValue || 0;
   const killed = zombie.takeDamage(damage, { kind: 'pet' });
   if (damage > 0) scene?.audio?.playHitImpact?.();
   showDamageText(scene, hx, hy, damage, color, zombie.id);
+  const chance = Number.isFinite(opts.critChance) ? opts.critChance : (scene?._zdCrit ?? 0.15);
+  if (chance > 0 && Math.random() < chance) showCritText(scene, hx, hy - layoutPx(12));
   if (killed) return { gold: goldVal, kills: 1, killed: true };
   return { gold: 0, kills: 0, killed: false };
 }

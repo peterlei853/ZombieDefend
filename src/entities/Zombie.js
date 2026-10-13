@@ -312,8 +312,54 @@ export class Zombie {
    * @param {number} contactX barricade face. The halt math is unchanged.
    * @param {{ x: number, y: number, hp?: number, alive?: boolean, radius?: number }|null} [pet]
    */
+  /**
+   * Pet hit shove, left along the lane over `ms`. Separate from the short
+   * weapon applyKnockback. Halt math is unchanged; a zombie on the posts
+   * is released so the shove is not snapped back.
+   * @param {number} pixels canvas px
+   * @param {number} ms
+   */
+  beginPetSlide(pixels, ms) {
+    if (!this.alive || !this.body) return;
+    const amount = Number(pixels);
+    const dur = Number(ms);
+    if (!(amount > 0) || !(dur > 0) || !Number.isFinite(amount)) return;
+    if (this.atBarricade) {
+      const shown = this.popBarricadeDmgInt();
+      const wallX = this.body.x;
+      const wallY = this.body.y;
+      this.atBarricade = false;
+      this._haltX = null;
+      this._attackCooldown = 1;
+      this._attackBeat = false;
+      if (shown >= 1) {
+        showDamageText(this.scene, wallX, wallY - layoutPx(18), shown, DAMAGE_COLORS.barricade);
+      }
+    }
+    this.petBiteTarget = null;
+    this.scene?.tweens?.killTweensOf?.(this.body);
+    this._petSlidePx = amount;
+    this._petSlideMs = dur;
+  }
+
   update(deltaSec, contactX, pet = null) {
     if (!this.alive) return;
+
+    if (this._petSlideMs > 0 && this.body) {
+      const ms = Math.max(0, deltaSec * 1000);
+      const use = Math.min(ms, this._petSlideMs);
+      const dist = this._petSlidePx * (use / Math.max(this._petSlideMs, 0.001));
+      this.body.x -= dist;
+      this._petSlidePx -= dist;
+      this._petSlideMs -= use;
+      if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
+      this._lastX = this.body.x;
+      this._lastY = this.body.y;
+      this._syncLocomotion();
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
 
     const chase = this._petToChase(pet, contactX);
     if (chase) {
@@ -663,6 +709,7 @@ export class Zombie {
       this.alive = false;
       this._beginDeath(amount, hit);
       this.scene.audio?.playZombieDeath();
+      this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
     }
     this._playHitFlash();

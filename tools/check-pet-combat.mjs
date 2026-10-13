@@ -36,8 +36,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.22.2', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.22.2', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.26.0', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.26.0', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -51,11 +51,11 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.22.2'), 'document title is v0.22.2');
+assert(html.includes('v0.26.0'), 'document title is v0.26.0');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
-assert(stage.includes('nearestFieldPet'), 'stage routes aggro to field pets');
+assert(stage.includes('pickPetTarget'), 'stage routes aggro through the near-pet filter');
 assert(stage.includes('petContactDamage'), 'pet bites are separate from barricade DPS');
 assert(hud.includes('setOrigin(0, 0.5)'), 'bar origin is left-middle');
 assert(hud.includes('.arc('), 'cooldown ring is a code arc');
@@ -115,12 +115,13 @@ assert(petsCfg.REVIVE_CD_MS === 18000, 'revive cooldown is 18s');
 assert(petsCfg.OFF_FIELD_REGEN_RATIO === 0.25, 'recall regen is 25% max HP per second');
 assert(petsCfg.ORB_FLASH_MS === 1000, 'orb flash is 1s');
 assert(petsCfg.UNLOCKED_ORBS === 1, 'only form 1 is unlocked');
-assert(petsCfg.ORB_CD_MS.phoenix.join() === '9000,16000,24000', 'phoenix orbs 9/16/24');
-assert(petsCfg.ORB_CD_MS.panda.join() === '10000,18000,26000', 'panda orbs 10/18/26');
-assert(petsCfg.ORB_CD_MS.lion.join() === '8000,14000,22000', 'lion orbs 8/14/22');
-assert(petsCfg.ORB_CD_MS.dragon.join() === '12000,20000,28000', 'dragon orbs 12/20/28');
-assert(petsCfg.ORB_CD_MS.phoenix[0] < petsCfg.ORB_CD_MS.phoenix[1], 'phoenix orb 2 is longer than orb 1');
-assert(petsCfg.ORB_CD_MS.phoenix[1] < petsCfg.ORB_CD_MS.phoenix[2], 'phoenix orb 3 is the longest');
+assert(petsCfg.ORB_CD_MS.phoenix.join() === '12000,8000,4000', 'phoenix orbs 12/8/4');
+assert(petsCfg.ORB_CD_MS.panda.join() === '12000,8000,4000', 'panda orbs 12/8/4');
+assert(petsCfg.ORB_CD_MS.lion.join() === '12000,8000,4000', 'lion orbs 12/8/4');
+assert(petsCfg.ORB_CD_MS.dragon.join() === '12000,8000,4000', 'dragon orbs 12/8/4');
+assert(petsCfg.ORB_CD_MS.phoenix[0] > petsCfg.ORB_CD_MS.phoenix[1], 'S1 is longer than S2');
+assert(petsCfg.ORB_CD_MS.phoenix[1] > petsCfg.ORB_CD_MS.phoenix[2], 'S2 is longer than S3');
+assert(petsCfg.ORB_CD_MS.phoenix[0] * 1 === petsCfg.ORB_CD_MS.phoenix[2] * 3, 'S1:S3 cooldown ratio is 3:1');
 assert(GAME_CONFIG.PETS.HP === 192, 'shared pet HP is 192');
 assert(petsCfg.HURT_MS >= 400, 'hurt gate lasts at least the 4-frame strip');
 assert(petsCfg.HURT_FLASH_MS >= 150 && petsCfg.HURT_FLASH_MS <= 200, `white flash is 150–200ms (${petsCfg.HURT_FLASH_MS})`);

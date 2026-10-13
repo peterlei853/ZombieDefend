@@ -46,7 +46,9 @@ import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
-import { nearestFieldPet } from '../systems/petAggro.js';
+import { pickPetTarget } from '../systems/ZombieAggro.js';
+import { ExpOrbManager } from '../systems/ExpOrbManager.js';
+import { PetEvolve } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 
 /**
@@ -73,9 +75,16 @@ export default class StageScene extends Phaser.Scene {
     this.gold = this.runStartGold;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
 
+    this.ownedWeapons = Array.isArray(data?.ownedWeapons)
+      ? data.ownedWeapons.slice()
+      : this.registry.get('ownedWeapons') || [];
+    this.weaponUpgrades = { ...(data?.upgrades || this.registry.get('weaponUpgrades') || {}) };
+
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
+    this.registry.set('ownedWeapons', this.ownedWeapons);
+    this.registry.set('weaponUpgrades', this.weaponUpgrades);
 
     this.ended = false;
     /** @type {Zombie[]} */
@@ -117,6 +126,9 @@ export default class StageScene extends Phaser.Scene {
     });
 
     this.defenders = new DefenderGroup(this, {});
+    this.petEvolve = new PetEvolve(this);
+    this.expOrbs = new ExpOrbManager(this, this.petEvolve);
+    this.defenders.petCombat?.setEvolve?.(this.petEvolve);
 
     this.waveManager = new WaveManager();
 
@@ -141,6 +153,8 @@ export default class StageScene extends Phaser.Scene {
     this.events.once('shutdown', () => {
       this.petHud?.destroy();
       this.petHud = null;
+      this.expOrbs?.clearAll();
+      this.petEvolve?.resetStage();
     });
     this.audio.startStageBgm();
   }
@@ -356,7 +370,21 @@ export default class StageScene extends Phaser.Scene {
     const cam = this.cameras.main;
     if (cam.scrollY !== 0) cam.setScroll(cam.scrollX, 0);
 
-    const deltaMs = Math.min(delta, 50) * hitlag;
+    const rawMs = Math.min(delta, 50);
+    this.petEvolve?.notifyStageProgress(this.waveManager.getElapsed() / STAGE_DURATION);
+    if (this.defenders.combatFrozen?.()) {
+      const petGain = this.defenders.tickCombatFreeze(rawMs);
+      if (petGain?.gold > 0) {
+        this.gold += petGain.gold;
+        this.registry.set('gold', this.gold);
+        this.audio?.playCoin();
+      }
+      this._refreshHud();
+      this.petHud?.update(rawMs);
+      return;
+    }
+
+    const deltaMs = rawMs * hitlag;
     const deltaSec = deltaMs / 1000;
 
     // Spawns
@@ -375,7 +403,7 @@ export default class StageScene extends Phaser.Scene {
     const fieldPets = this.defenders.fieldPets();
     for (const z of this.zombies) {
       if (!z.alive) continue;
-      const pet = nearestFieldPet(z, fieldPets);
+      const pet = pickPetTarget(z, fieldPets);
       z.update(deltaSec, this.barricade.contactXAt(z.y), pet);
       const status = z.tickStatus(deltaMs);
       statusGold += status?.gold || 0;
@@ -410,6 +438,7 @@ export default class StageScene extends Phaser.Scene {
       this.registry.set('gold', this.gold);
       this.audio?.playCoin();
     }
+    this.expOrbs?.update(deltaMs, this.defenders.fieldPets());
 
     // Prune dead refs occasionally
     if (this.zombies.length > 40) {
@@ -539,6 +568,8 @@ export default class StageScene extends Phaser.Scene {
         stage: this.stage,
         gold: this.gold,
         characterId: this.characterId,
+        ownedWeapons: this.ownedWeapons,
+        upgrades: this.weaponUpgrades,
       });
     });
   }
