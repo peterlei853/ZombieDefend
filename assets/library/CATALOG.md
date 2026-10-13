@@ -6,7 +6,7 @@
 | Category | Groups | Assets |
 |---|---:|---:|
 | [Hero](#hero) | 3 | 86 |
-| [Pets](#pets) | 16 | 68 |
+| [Pets](#pets) | 17 | 72 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
@@ -14,7 +14,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **40** | **382** |
+| **Total** | **41** | **386** |
 
 <a id="hero"></a>
 ## Hero
@@ -387,6 +387,22 @@ Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨
 | `pet-phoenix-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `pet-phoenix-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-rain-bolt`, `fx-pet-phoenix-rain-impact` |
 | `pet-phoenix-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+
+### Pet UI Heads — baby portraits (寵物大頭 UI)
+
+<img src="previews/pets/pet-heads/heads-sheet.png" alt="pet-heads preview" height="140">
+
+48x48 chibi head icons for Stage big-head recall HUD (v0.20.x). Transparent PNG, origin center. Grey-dead state is code desaturate — no separate grey assets.
+
+- group `pet-heads` · 4 assets · frame 48x48 · key prefix `ui-pet-` · manifest [pets/ui/manifest.json](pets/ui/manifest.json)
+- previews: [heads-sheet.png](previews/pets/pet-heads/heads-sheet.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `ui-pet-phoenix-head` | [ui-pet-phoenix-head.png](pets/ui/ui-pet-phoenix-head.png) | 48x48 | icon | Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. Big-head HUD. |
+| `ui-pet-panda-head` | [ui-pet-panda-head.png](pets/ui/ui-pet-panda-head.png) | 48x48 | icon | Ink / 墨墨 baby head — black-white panda with green sprout. Big-head HUD. |
+| `ui-pet-lion-head` | [ui-pet-lion-head.png](pets/ui/ui-pet-lion-head.png) | 48x48 | icon | Leo / 雷歐 baby head — golden lion with orange mane tuft. Big-head HUD. |
+| `ui-pet-dragon-head` | [ui-pet-dragon-head.png](pets/ui/ui-pet-dragon-head.png) | 48x48 | icon | Jadefire / 翠火 baby head — green dragon with cream horn. Big-head HUD. |
 
 <a id="zombies"></a>
 ## Zombies

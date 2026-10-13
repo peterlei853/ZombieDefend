@@ -18,15 +18,15 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 382,
+    "total": 386,
     "byCategory": {
       "hero": {
         "groups": 3,
         "assets": 86
       },
       "pets": {
-        "groups": 16,
-        "assets": 68
+        "groups": 17,
+        "assets": 72
       },
       "zombies": {
         "groups": 12,
@@ -61,7 +61,7 @@
       "background": 13,
       "concept": 21,
       "fx": 40,
-      "icon": 8,
+      "icon": 12,
       "spritesheet": 300
     }
   },
@@ -869,6 +869,41 @@
         "pet-phoenix-young-move",
         "pet-phoenix-young-skill",
         "pet-phoenix-young-hurt"
+      ]
+    },
+    {
+      "id": "pets/pet-heads",
+      "category": "pets",
+      "group": "pet-heads",
+      "title": "Pet UI Heads — baby portraits",
+      "titleZh": "寵物大頭 UI",
+      "description": "48x48 chibi head icons for Stage big-head recall HUD (v0.20.x). Transparent PNG, origin center. Grey-dead state is code desaturate — no separate grey assets.",
+      "manifest": "assets/library/pets/ui/manifest.json",
+      "dir": "assets/library/pets/ui",
+      "thumb": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "sheets": [
+        "assets/library/previews/pets/pet-heads/heads-sheet.png"
+      ],
+      "extras": [],
+      "keyPrefix": "ui-pet-",
+      "mainKey": "ui-pet-phoenix-head",
+      "count": 4,
+      "frameSizes": [
+        "48x48"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "icon"
+      ],
+      "keys": [
+        "ui-pet-phoenix-head",
+        "ui-pet-panda-head",
+        "ui-pet-lion-head",
+        "ui-pet-dragon-head"
       ]
     },
     {
@@ -7368,6 +7403,154 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "ui-pet-phoenix-head",
+      "category": "pets",
+      "group": "pet-heads",
+      "path": "assets/library/pets/ui/ui-pet-phoenix-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "description": "Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. Big-head HUD.",
+      "note": null,
+      "tags": [
+        "pets",
+        "pet-heads",
+        "icon",
+        "ui",
+        "pet",
+        "phoenix",
+        "head"
+      ],
+      "extra": null,
+      "action": "phoenix-head"
+    },
+    {
+      "key": "ui-pet-panda-head",
+      "category": "pets",
+      "group": "pet-heads",
+      "path": "assets/library/pets/ui/ui-pet-panda-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "description": "Ink / 墨墨 baby head — black-white panda with green sprout. Big-head HUD.",
+      "note": null,
+      "tags": [
+        "pets",
+        "pet-heads",
+        "icon",
+        "ui",
+        "pet",
+        "panda",
+        "head"
+      ],
+      "extra": null,
+      "action": "panda-head"
+    },
+    {
+      "key": "ui-pet-lion-head",
+      "category": "pets",
+      "group": "pet-heads",
+      "path": "assets/library/pets/ui/ui-pet-lion-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "description": "Leo / 雷歐 baby head — golden lion with orange mane tuft. Big-head HUD.",
+      "note": null,
+      "tags": [
+        "pets",
+        "pet-heads",
+        "icon",
+        "ui",
+        "pet",
+        "lion",
+        "head"
+      ],
+      "extra": null,
+      "action": "lion-head"
+    },
+    {
+      "key": "ui-pet-dragon-head",
+      "category": "pets",
+      "group": "pet-heads",
+      "path": "assets/library/pets/ui/ui-pet-dragon-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "description": "Jadefire / 翠火 baby head — green dragon with cream horn. Big-head HUD.",
+      "note": null,
+      "tags": [
+        "pets",
+        "pet-heads",
+        "icon",
+        "ui",
+        "pet",
+        "dragon",
+        "head"
+      ],
+      "extra": null,
+      "action": "dragon-head"
     },
     {
       "key": "zombie-brute-walk",
