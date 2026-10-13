@@ -3,10 +3,10 @@ import { libraryAsset } from '../assets/libraryAssets.js';
 
 /**
  * Field px. Home to the nearest on-field pet inside this radius.
- * v0.26.1 widens it so orbs from the approach, not only body-contact
- * kills, reach a pet standing at the fence.
+ * v0.26.2 covers the whole march, so a gun kill on the left still
+ * reaches a pet standing at the fence.
  */
-export const MAGNET_R = 300;
+export const MAGNET_R = 2400;
 /** Field px. Pickup hands the orb's EXP to that pet. */
 export const PICKUP_R = 28;
 /** PIXELLAB_HOOK: assets/library/fx/v026/exp-orb/exp-orb.png */
@@ -14,14 +14,15 @@ export const ORB_KEY = 'exp-orb';
 
 /**
  * EXP from a zombie's initial max HP. Separate from getGoldByHP.
- * v0.26.1: floor(maxHp / 8), minimum 5, so the early fight can fill
- * tier 2 (40) before the wall breaks. Gold still uses getGoldByHP.
+ * v0.26.2: floor(maxHp / 4), minimum 10. Five wave-1 kills are 50 EXP,
+ * so one summoned pet can reach tier 2 (40) from the opening wave.
+ * Gold still uses getGoldByHP.
  * @param {number} maxHp
  */
 export function expFromZombieHp(maxHp) {
   const hp = Number(maxHp);
-  if (!Number.isFinite(hp) || hp <= 0) return 5;
-  return Math.max(5, Math.floor(hp / 8));
+  if (!Number.isFinite(hp) || hp <= 0) return 10;
+  return Math.max(10, Math.floor(hp / 4));
 }
 
 /**
@@ -86,7 +87,7 @@ export class ExpOrbManager {
     this._bob += step;
     const magnetR = layoutPx(MAGNET_R);
     const pickupR = layoutPx(PICKUP_R);
-    const speed = layoutPx(280) * (step / 1000);
+    const speed = layoutPx(720) * (step / 1000);
     const pets = (Array.isArray(fieldPets) ? fieldPets : []).filter(isFieldPet);
     /** @type {ExpOrb[]} */
     const keep = [];

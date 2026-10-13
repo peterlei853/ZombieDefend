@@ -6,13 +6,13 @@ import { GAME_CONFIG } from './GameConfig.js';
  * Spawn totals are spread evenly across each window (not all at once).
  *
  * v0.22.1b thins the early windows so Stage 1 can be taught.
- * v0.26.1 eases the early curve and the wave-4 swarm so a summoned pet
- * can collect tier 2 before the wall breaks. HP on each row is unchanged,
- * so gold-by-HP does not move. Halt math is unchanged.
- *   Wave 1: 10 → 4, DPS 11 → 8
- *   Wave 2: 15 → 8 → 6, DPS 13 → 10
- *   Wave 3: 20 → 16 → 12, DPS 15 → 13
- *   Wave 4: 90 → 68 (swarm lightened; HP mix unchanged)
+ * v0.26.2 slows the opening bites and adds one more soft walker so a
+ * summoned pet can bank tier 2 before the wall breaks. HP on each row is
+ * unchanged, so gold-by-HP does not move. Halt math is unchanged.
+ *   Wave 1: count 5, DPS 4, speed 32
+ *   Wave 2: count 6, DPS 6
+ *   Wave 3: count 10, DPS 10
+ *   Wave 4: count 48 (HP mix unchanged)
  *
  * Stage 1 HP table (initial max HP → gold via getGoldByHP):
  *   Wave 1: HP 40  (gold 10) — soft intro
@@ -31,28 +31,28 @@ export const WAVE_DEFS = [
     wave: 1,
     startSec: 0,
     endSec: 20,
-    total: 4,
-    archetypes: [{ hp: 40, speed: 38, dps: 8, weight: 1, variant: 'walker' }],
+    total: 5,
+    archetypes: [{ hp: 40, speed: 32, dps: 4, weight: 1, variant: 'walker' }],
   },
   {
     wave: 2,
     startSec: 21,
     endSec: 40,
     total: 6,
-    archetypes: [{ hp: 70, speed: 42, dps: 10, weight: 1, variant: 'walker' }],
+    archetypes: [{ hp: 70, speed: 36, dps: 6, weight: 1, variant: 'walker' }],
   },
   {
     wave: 3,
     startSec: 41,
     endSec: 60,
-    total: 12,
-    archetypes: [{ hp: 105, speed: 45, dps: 13, weight: 1, variant: 'walker' }],
+    total: 10,
+    archetypes: [{ hp: 105, speed: 42, dps: 10, weight: 1, variant: 'walker' }],
   },
   {
     wave: 4,
     startSec: 61,
     endSec: 90,
-    total: 68,
+    total: 48,
     archetypes: [
       { hp: 50, speed: 50, dps: 11, weight: 7, variant: 'runner' }, // swarm
       { hp: 115, speed: 40, dps: 16, weight: 2, variant: 'walker' }, // mid

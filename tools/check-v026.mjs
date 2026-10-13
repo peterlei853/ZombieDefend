@@ -23,18 +23,19 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.26.1', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.26.2', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 
-assert(expFromZombieHp(40) === 5, 'wave 1 exp is floor(40/8)');
-assert(expFromZombieHp(19) === 5, 'exp minimum is 5');
-assert(expFromZombieHp(70) === 8, 'wave 2 exp');
-assert(expFromZombieHp(100) === 12, 'exp for 100 HP');
-assert(expFromZombieHp(105) === 13, 'wave 3 exp');
-assert(MAGNET_R >= 240, 'orbs magnet from the approach, not only melee');
-const earlyExp = 4 * expFromZombieHp(40) + 6 * expFromZombieHp(70);
-assert(earlyExp >= 40, `wave 1–2 yield can fill tier 2 (${earlyExp})`);
+assert(expFromZombieHp(40) === 10, 'wave 1 exp is floor(40/4)');
+assert(expFromZombieHp(19) === 10, 'exp minimum is 10');
+assert(expFromZombieHp(70) === 17, 'wave 2 exp');
+assert(expFromZombieHp(100) === 25, 'exp for 100 HP');
+assert(expFromZombieHp(105) === 26, 'wave 3 exp');
+assert(expFromZombieHp(0) === 10 && expFromZombieHp(-4) === 10, 'invalid hp still drops the floor');
+assert(MAGNET_R >= 1200, 'orbs magnet across the march, not only melee');
+const earlyExp = 5 * expFromZombieHp(40);
+assert(earlyExp >= 40, `wave 1 yield can fill tier 2 (${earlyExp})`);
 assert(T2_COST === 40 && T3_COST === 80 && STAGE_EXP_CAP === 120, 'tier costs 40 then 80');
 
 const evolveSrc = readFileSync(new URL('../src/systems/PetEvolve.js', import.meta.url), 'utf8');
@@ -73,7 +74,7 @@ for (const id of ['phoenix', 'panda', 'lion', 'dragon']) {
 }
 assert(GAME_CONFIG.PETS.MELEE.DAMAGE === 8, 'melee damage');
 assert(GAME_CONFIG.PETS.KNOCKBACK_PX === 100 && GAME_CONFIG.PETS.KNOCKBACK_MS === 150, 'knockback 100px / 150ms');
-assert(GAME_CONFIG.PETS.TELEGRAPH_MS >= 150 && GAME_CONFIG.PETS.TELEGRAPH_MS <= 250, 'telegraph is 0.15–0.25s');
+assert(GAME_CONFIG.PETS.TELEGRAPH_MS >= 300, 'telegraph stays opaque for at least 300ms');
 assert(GAME_CONFIG.PETS.HITSTOP_S2_MS === 50 && GAME_CONFIG.PETS.HITSTOP_S3_MS === 80, 'skill hitstop');
 assert(ULT_MS >= 800 && ULT_MS <= 1200, 'ult freeze is 0.8–1.2s');
 assert(ULT_KEYS.phoenix === 'vfx-ult-phoenix' && ULT_KEYS.dragon === 'vfx-ult-dragon', 'ult texture keys');
@@ -92,8 +93,10 @@ assert(
   combatSrc.includes('attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS'),
   'skill damage waits until the ground telegraph has played'
 );
-assert(combatSrc.includes('delay: pets.TELEGRAPH_MS'), 'telegraph stays opaque for the tell, then fades');
+assert(combatSrc.includes('mark.age'), 'telegraph opacity follows mark.age, not a short tween');
+assert(combatSrc.includes('skills advance during a bite'), 'a bite does not freeze the tell');
 assert(combatSrc.includes('TELEGRAPH_GROUND_Y'), 'ring is squashed onto the lane');
+assert(combatSrc.includes('forceUlt'), 'debug ult can start the letterbox immediately');
 assert(debugExpEnabled('?debugExp=1') === true, 'debugExp flag');
 assert(debugExpEnabled('?debugBgm=1') === false, 'debug BGM does not grant EXP');
 assert(debugExpEnabled('?petHurt=1') === false, 'pet hurt does not grant EXP');
@@ -109,6 +112,7 @@ assert(grantDebugExp(debugEv, ['phoenix']) === true, 'second press applies');
 assert(debugEv.getTier('phoenix') === 3 && debugEv.canUseUlt('phoenix'), 'two presses reach the ult');
 assert(grantDebugExp(debugEv, ['phoenix']) === false, 'third press is a no-op');
 assert(stageSrc.includes('KeyCodes.E') && stageSrc.includes('debugExpEnabled'), 'E is wired behind the flag');
+assert(stageSrc.includes('KeyCodes.U') && stageSrc.includes('forceUlt'), 'U plays the ult behind the same flag');
 assert(stageSrc.includes('KeyCodes.H') && stageSrc.includes('petHurt'), 'H / petHurt still wired');
 assert(stageSrc.includes('KeyCodes.V') && stageSrc.includes('debugBgmEnabled'), 'V / debugBgm still wired');
 assert(combatSrc.includes('vfx-aoe-fire') && combatSrc.includes('vfx-aoe-poison'), 'residue keys');

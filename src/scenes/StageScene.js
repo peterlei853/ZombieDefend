@@ -48,7 +48,7 @@ import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
-import { PetEvolve } from '../systems/PetEvolve.js';
+import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 import { debugBgmEnabled } from '../debugBgm.js';
 import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
@@ -63,7 +63,9 @@ import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
  * Lose: barricade HP ≤ 0 → Game Over overlay (retry)
  *
  * `?debugBgm=1` (or `?debug=1`): V or the DEBUG CLEAR chip calls the same win path.
- * `?debugExp=1`: E or the DEBUG EXP chip grants tier 2, then tier 3. Off, E does nothing.
+ * `?debugExp=1`: E or the DEBUG EXP chip grants tier 2, then tier 3. U or the
+ * DEBUG ULT chip tops a field pet up to tier 3 and plays the letterbox now.
+ * Off, E and U do nothing.
  * `?petHurt=1` or H still plays one hurt sequence. The three flags are independent.
  */
 
@@ -159,6 +161,7 @@ export default class StageScene extends Phaser.Scene {
     }
     if (debugExpEnabled()) {
       this._installDebugExp();
+      this._installDebugUlt();
     }
 
     this.touchControls = new VirtualControls(this, {
@@ -247,6 +250,58 @@ export default class StageScene extends Phaser.Scene {
       color: '#9aecff',
       depth: depth + 1,
     });
+  }
+
+  /**
+   * ?debugExp=1 only. U summons a pet if the lane is empty, grants the
+   * rest of the 120 EXP the ult needs, and plays the letterbox immediately.
+   * E still only grants the next tier. The ult also auto-casts once S3 is
+   * ready; U skips that wait.
+   */
+  _installDebugUlt() {
+    const fire = () => this._debugUlt();
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const onDown = () => fire();
+      this._debugUltKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
+      this._debugUltKey.on('down', onDown);
+      this.events.once('shutdown', () => {
+        this._debugUltKey?.off('down', onDown);
+      });
+    }
+
+    const x = GAME_WIDTH / 2;
+    const y = GAME_HEIGHT - (debugBgmEnabled() ? 222 : 186);
+    const depth = HUD_DEPTH + 50;
+    const hit = this.add
+      .rectangle(x, y, 168, 28, 0x1a1208, 0.82)
+      .setScrollFactor(0)
+      .setDepth(depth)
+      .setInteractive({ useHandCursor: true });
+    hit.on('pointerup', fire);
+    addKitText(this, x, y, 'U  DEBUG ULT', {
+      system: true,
+      size: 13,
+      color: '#ffd2a8',
+      depth: depth + 1,
+    });
+  }
+
+  _debugUlt() {
+    if (this.ended || !debugExpEnabled()) return;
+    const combat = this.defenders?.petCombat;
+    if (!combat) return;
+    let field = combat.fieldPets?.() || [];
+    if (!field.length) {
+      this.defenders?.summonPet?.(0, this.zombies);
+      field = combat.fieldPets?.() || [];
+    }
+    const pet = field[0];
+    if (!pet?.id) return;
+    const need = T2_COST + T3_COST;
+    const have = this.petEvolve?.getExp?.(pet.id) ?? 0;
+    if (have < need) this.petEvolve?.addExp?.(pet.id, need - have);
+    combat.forceUlt(pet.id);
   }
 
   /**
