@@ -7,7 +7,8 @@
     "serve": "npx --yes serve . -p 5173",
     "start": "npm run serve",
     "check:readout": "node tools/check-damage-readout.mjs",
-    "check:pets": "node tools/check-pet-combat.mjs"
+    "check:pets": "node tools/check-pet-combat.mjs",
+    "check:bgm": "node tools/check-bgm.mjs"
   },
   "type": "module"
 }

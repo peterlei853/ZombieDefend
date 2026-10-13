@@ -1,7 +1,8 @@
 /**
- * First-pass BGM + SFX for Stage 1.
+ * BGM + SFX for ZombieDefend.
  * Phaser 3 `scene.sound` only — no second audio engine.
  *
+ * Beds (`bgm-title`, `bgm-stage`, `bgm-shop`, `bgm-victory`) loop at 0.28.
  * Volumes match the v0.17.0 pack. Cooldowns keep auto-fire, multi-pellet
  * hits, and barricade bites from stacking into noise. Shotgun callers must
  * invoke `playWeaponShot` once per volley (WeaponSystem already returns one
@@ -46,11 +47,17 @@ export const AUDIO_COOLDOWN_MS = {
 };
 
 export const BGM_KEY = 'bgm-stage';
+export const BGM_TITLE_KEY = 'bgm-title';
+export const BGM_SHOP_KEY = 'bgm-shop';
+export const BGM_VICTORY_KEY = 'bgm-victory';
 export const BGM_FADE_MS = 700;
 
 /** Keys match `assets/audio/<key>.mp3`. */
 export const GAME_AUDIO = [
+  { key: 'bgm-title', url: 'assets/audio/bgm-title.mp3' },
   { key: 'bgm-stage', url: 'assets/audio/bgm-stage.mp3' },
+  { key: 'bgm-shop', url: 'assets/audio/bgm-shop.mp3' },
+  { key: 'bgm-victory', url: 'assets/audio/bgm-victory.mp3' },
   { key: 'shoot-sling', url: 'assets/audio/shoot-sling.mp3' },
   { key: 'shoot-bubble', url: 'assets/audio/shoot-bubble.mp3' },
   { key: 'shoot-lightning', url: 'assets/audio/shoot-lightning.mp3' },
@@ -120,6 +127,8 @@ export class SoundManager {
     this._pending = new Map();
     /** @type {Phaser.Sound.BaseSound|null} */
     this._bgm = null;
+    /** @type {string|null} */
+    this._bgmKey = null;
     this._bgmAllowed = false;
     /** @type {Function|null} */
     this._bgmUnlock = null;
@@ -131,20 +140,29 @@ export class SoundManager {
     this._disposed = false;
   }
 
-  /** Looping stage bed. No-op until the cache has the clip. Waits out a locked context. */
-  startStageBgm() {
+  /**
+   * Looping bed. Replaces whatever bed is playing. No-op until the cache
+   * has the clip. Waits out a locked context.
+   * Title uses `bgm-title`. Shop uses `bgm-shop`. Stage uses `bgm-stage`.
+   * Victory uses `bgm-victory`.
+   * @param {string} [key]
+   */
+  startBgm(key = BGM_KEY) {
     if (this._disposed) return;
+    if (this._bgmAllowed && this._bgmKey === key && this._bgm && !this._fading) return;
     this._bgmAllowed = true;
+    this._bgmKey = key;
     const sound = this._sound();
-    if (!sound || !this._cached(BGM_KEY)) return;
+    if (!sound || !this._cached(key)) return;
     const begin = () => {
       this._bgmUnlock = null;
-      if (this._disposed || !this._bgmAllowed) return;
+      if (this._disposed || !this._bgmAllowed || this._bgmKey !== key) return;
       this._stopBgmNow();
       try {
-        const bgm = sound.add(BGM_KEY, { loop: true, volume: AUDIO_VOLUME.bgm });
+        const bgm = sound.add(key, { loop: true, volume: AUDIO_VOLUME.bgm });
         bgm?.play?.();
         this._bgm = bgm || null;
+        this._bgmKey = key;
       } catch (_) {
         this._bgm = null;
       }
@@ -158,6 +176,21 @@ export class SoundManager {
     begin();
   }
 
+  /** Looping stage bed. */
+  startStageBgm() {
+    this.startBgm(BGM_KEY);
+  }
+
+  /** Title / splash menu bed. */
+  startTitleBgm() {
+    this.startBgm(BGM_TITLE_KEY);
+  }
+
+  /** Shop bed. Char-select should call this too when that scene exists. */
+  startShopBgm() {
+    this.startBgm(BGM_SHOP_KEY);
+  }
+
   /**
    * Duck the bed to silence. Cancels a pending unlock start so Game Over
    * cannot be followed by the loop fading in late.
@@ -165,6 +198,7 @@ export class SoundManager {
    */
   fadeBgm(durationMs = BGM_FADE_MS) {
     this._bgmAllowed = false;
+    this._bgmKey = null;
     this._clearBgmUnlock();
     const bgm = this._bgm;
     if (!bgm) return;
@@ -194,6 +228,7 @@ export class SoundManager {
   /** Hard stop. Used on scene shutdown so Shop / retry do not keep the loop. */
   stopBgm() {
     this._bgmAllowed = false;
+    this._bgmKey = null;
     this._clearBgmUnlock();
     this._stopBgmNow();
   }
@@ -317,6 +352,16 @@ export class SoundManager {
     this._stopFireVoice();
     this.fadeBgm();
     this._cue('game-over', AUDIO_VOLUME.gameOver);
+  }
+
+  /**
+   * Stage clear. Stops the stage bed, then loops `bgm-victory` until the
+   * scene shuts down (Shop starts its own bed after the clear hold).
+   */
+  playVictory() {
+    this._stopFireVoice();
+    this.stopBgm();
+    this.startBgm(BGM_VICTORY_KEY);
   }
 
   /** Stop the bed and drop unlock hooks. One-shots already queued still flush. */

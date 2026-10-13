@@ -500,7 +500,7 @@ export default class StageScene extends Phaser.Scene {
   _onWin() {
     if (this.ended) return;
     this.ended = true;
-    this.audio?.fadeBgm();
+    this.audio?.playVictory();
     this.registry.set('gold', this.gold);
     this._clearBanner();
 
@@ -532,7 +532,8 @@ export default class StageScene extends Phaser.Scene {
       depth: d + 3,
     });
 
-    this.time.delayedCall(900, () => {
+    // Victory bed plays through this hold, then Shop starts bgm-shop.
+    this.time.delayedCall(1500, () => {
       overlay.destroy();
       this.scene.start('ShopScene', {
         stage: this.stage,
