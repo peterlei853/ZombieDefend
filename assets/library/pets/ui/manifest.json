@@ -1,26 +1,26 @@
 {
   "schema": "zombiedefend-asset-group/1",
   "category": "pets",
-  "group": "pet-heads",
-  "title": "Pet UI Heads — baby portraits",
-  "titleZh": "寵物大頭 UI",
-  "description": "48x48 chibi head icons for Stage big-head recall HUD (v0.20.x). Transparent PNG, origin center. Grey-dead state is code desaturate — no separate grey assets.",
+  "group": "pet-ui-hud",
+  "title": "Pet UI HUD — heads, bars, skill orbs",
+  "titleZh": "寵物 HUD（大頭／長條／寶珠）",
+  "description": "Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left (v0.21.0). Skill orbs 16x16 dark/lit/flash per pet (v0.21.0). Grey-dead bar/head is code desaturate. CD ring drawn in code over orb. Origin: heads center; bars left-middle [0, 0.5]; orbs center.",
   "source": {
-    "tool": "pixellab create_image_pro_flash",
-    "note": "Styled from pet-*-baby-idle frame 0; parallel fill for v0.20.0/v0.20.1 big-head UI swap-in"
+    "tool": "hybrid — pixellab create_image_pro_flash (heads) + PIL composite (bars from heads) + PIL pixel gems (orbs)",
+    "note": "v0.21.0 bars/orbs for summon/recall long-bar HUD + auto pearl skills. Form2/3 skill VFX deferred."
   },
   "defaults": {
     "type": "icon",
     "origin": [0.5, 0.5],
     "facing": null,
-    "frameWidth": 48,
-    "frameHeight": 48,
     "frames": 1
   },
   "preview": {
-    "thumb": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+    "thumb": "assets/library/previews/pets/pet-hud/hud-sheet.png",
     "sheets": [
-      "assets/library/previews/pets/pet-heads/heads-sheet.png"
+      "assets/library/previews/pets/pet-heads/heads-sheet.png",
+      "assets/library/previews/pets/pet-hud/hud-sheet.png",
+      "assets/library/previews/pets/pet-hud/hud-sheet-x4.png"
     ],
     "extras": []
   },
@@ -34,7 +34,7 @@
       "frames": 1,
       "origin": [0.5, 0.5],
       "facing": null,
-      "description": "Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. Big-head HUD.",
+      "description": "Azure / 藍羽 baby head — cyan phoenix crest, yellow beak.",
       "tags": ["ui", "pet", "phoenix", "head", "icon"]
     },
     {
@@ -46,7 +46,7 @@
       "frames": 1,
       "origin": [0.5, 0.5],
       "facing": null,
-      "description": "Ink / 墨墨 baby head — black-white panda with green sprout. Big-head HUD.",
+      "description": "Ink / 墨墨 baby head — black-white panda with green sprout.",
       "tags": ["ui", "pet", "panda", "head", "icon"]
     },
     {
@@ -58,7 +58,7 @@
       "frames": 1,
       "origin": [0.5, 0.5],
       "facing": null,
-      "description": "Leo / 雷歐 baby head — golden lion with orange mane tuft. Big-head HUD.",
+      "description": "Leo / 雷歐 baby head — golden lion with orange mane tuft.",
       "tags": ["ui", "pet", "lion", "head", "icon"]
     },
     {
@@ -70,8 +70,204 @@
       "frames": 1,
       "origin": [0.5, 0.5],
       "facing": null,
-      "description": "Jadefire / 翠火 baby head — green dragon with cream horn. Big-head HUD.",
+      "description": "Jadefire / 翠火 baby head — green dragon with cream horn.",
       "tags": ["ui", "pet", "dragon", "head", "icon"]
+    },
+    {
+      "key": "ui-pet-phoenix-bar",
+      "path": "assets/library/pets/ui/ui-pet-phoenix-bar.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [0, 0.5],
+      "facing": null,
+      "description": "64x32 cyan-border HUD bar; phoenix head left, free right for HP/name. Origin left-middle.",
+      "note": "origin [0, 0.5] — place by left edge so orbs sit to the right of the bar",
+      "tags": ["ui", "pet", "phoenix", "bar", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-panda-bar",
+      "path": "assets/library/pets/ui/ui-pet-panda-bar.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [0, 0.5],
+      "facing": null,
+      "description": "64x32 jade-border HUD bar; panda head left. Origin left-middle.",
+      "note": "origin [0, 0.5]",
+      "tags": ["ui", "pet", "panda", "bar", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-lion-bar",
+      "path": "assets/library/pets/ui/ui-pet-lion-bar.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [0, 0.5],
+      "facing": null,
+      "description": "64x32 gold-border HUD bar; lion head left. Origin left-middle.",
+      "note": "origin [0, 0.5]",
+      "tags": ["ui", "pet", "lion", "bar", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-dragon-bar",
+      "path": "assets/library/pets/ui/ui-pet-dragon-bar.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [0, 0.5],
+      "facing": null,
+      "description": "64x32 green-border HUD bar; dragon head left. Origin left-middle.",
+      "note": "origin [0, 0.5]",
+      "tags": ["ui", "pet", "dragon", "bar", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-phoenix-dark",
+      "path": "assets/library/pets/ui/ui-pet-orb-phoenix-dark.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Phoenix skill orb — dark/empty (cyan-fire family).",
+      "tags": ["ui", "pet", "phoenix", "orb", "dark", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-phoenix-lit",
+      "path": "assets/library/pets/ui/ui-pet-orb-phoenix-lit.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Phoenix skill orb — lit/ready. Overlay CD ring in code.",
+      "tags": ["ui", "pet", "phoenix", "orb", "lit", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-phoenix-flash",
+      "path": "assets/library/pets/ui/ui-pet-orb-phoenix-flash.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Phoenix skill orb — flash/ready blink frame (Gameplay: 1s then auto-cast).",
+      "tags": ["ui", "pet", "phoenix", "orb", "flash", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-panda-dark",
+      "path": "assets/library/pets/ui/ui-pet-orb-panda-dark.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Panda skill orb — dark/empty (jade family).",
+      "tags": ["ui", "pet", "panda", "orb", "dark", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-panda-lit",
+      "path": "assets/library/pets/ui/ui-pet-orb-panda-lit.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Panda skill orb — lit/ready.",
+      "tags": ["ui", "pet", "panda", "orb", "lit", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-panda-flash",
+      "path": "assets/library/pets/ui/ui-pet-orb-panda-flash.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Panda skill orb — flash blink frame.",
+      "tags": ["ui", "pet", "panda", "orb", "flash", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-lion-dark",
+      "path": "assets/library/pets/ui/ui-pet-orb-lion-dark.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Lion skill orb — dark/empty (gold-electric family).",
+      "tags": ["ui", "pet", "lion", "orb", "dark", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-lion-lit",
+      "path": "assets/library/pets/ui/ui-pet-orb-lion-lit.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Lion skill orb — lit/ready.",
+      "tags": ["ui", "pet", "lion", "orb", "lit", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-lion-flash",
+      "path": "assets/library/pets/ui/ui-pet-orb-lion-flash.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Lion skill orb — flash blink frame.",
+      "tags": ["ui", "pet", "lion", "orb", "flash", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-dragon-dark",
+      "path": "assets/library/pets/ui/ui-pet-orb-dragon-dark.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Dragon skill orb — dark/empty (green-poison family).",
+      "tags": ["ui", "pet", "dragon", "orb", "dark", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-dragon-lit",
+      "path": "assets/library/pets/ui/ui-pet-orb-dragon-lit.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Dragon skill orb — lit/ready.",
+      "tags": ["ui", "pet", "dragon", "orb", "lit", "hud", "icon"]
+    },
+    {
+      "key": "ui-pet-orb-dragon-flash",
+      "path": "assets/library/pets/ui/ui-pet-orb-dragon-flash.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Dragon skill orb — flash blink frame.",
+      "tags": ["ui", "pet", "dragon", "orb", "flash", "hud", "icon"]
     }
   ]
 }

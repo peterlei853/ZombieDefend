@@ -6,7 +6,7 @@
 | Category | Groups | Assets |
 |---|---:|---:|
 | [Hero](#hero) | 3 | 86 |
-| [Pets](#pets) | 17 | 72 |
+| [Pets](#pets) | 17 | 88 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
@@ -14,7 +14,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **41** | **386** |
+| **Total** | **41** | **402** |
 
 <a id="hero"></a>
 ## Hero
@@ -388,21 +388,37 @@ Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨
 | `pet-phoenix-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-rain-bolt`, `fx-pet-phoenix-rain-impact` |
 | `pet-phoenix-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
 
-### Pet UI Heads — baby portraits (寵物大頭 UI)
+### Pet UI HUD — heads, bars, skill orbs (寵物 HUD（大頭／長條／寶珠）)
 
-<img src="previews/pets/pet-heads/heads-sheet.png" alt="pet-heads preview" height="140">
+<img src="previews/pets/pet-hud/hud-sheet.png" alt="pet-ui-hud preview" height="140">
 
-48x48 chibi head icons for Stage big-head recall HUD (v0.20.x). Transparent PNG, origin center. Grey-dead state is code desaturate — no separate grey assets.
+Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left (v0.21.0). Skill orbs 16x16 dark/lit/flash per pet (v0.21.0). Grey-dead bar/head is code desaturate. CD ring drawn in code over orb. Origin: heads center; bars left-middle [0, 0.5]; orbs center.
 
-- group `pet-heads` · 4 assets · frame 48x48 · key prefix `ui-pet-` · manifest [pets/ui/manifest.json](pets/ui/manifest.json)
-- previews: [heads-sheet.png](previews/pets/pet-heads/heads-sheet.png)
+- group `pet-ui-hud` · 20 assets · frame 16x16, 48x48, 64x32 · key prefix `ui-pet-` · manifest [pets/ui/manifest.json](pets/ui/manifest.json)
+- previews: [heads-sheet.png](previews/pets/pet-heads/heads-sheet.png), [hud-sheet.png](previews/pets/pet-hud/hud-sheet.png), [hud-sheet-x4.png](previews/pets/pet-hud/hud-sheet-x4.png)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
-| `ui-pet-phoenix-head` | [ui-pet-phoenix-head.png](pets/ui/ui-pet-phoenix-head.png) | 48x48 | icon | Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. Big-head HUD. |
-| `ui-pet-panda-head` | [ui-pet-panda-head.png](pets/ui/ui-pet-panda-head.png) | 48x48 | icon | Ink / 墨墨 baby head — black-white panda with green sprout. Big-head HUD. |
-| `ui-pet-lion-head` | [ui-pet-lion-head.png](pets/ui/ui-pet-lion-head.png) | 48x48 | icon | Leo / 雷歐 baby head — golden lion with orange mane tuft. Big-head HUD. |
-| `ui-pet-dragon-head` | [ui-pet-dragon-head.png](pets/ui/ui-pet-dragon-head.png) | 48x48 | icon | Jadefire / 翠火 baby head — green dragon with cream horn. Big-head HUD. |
+| `ui-pet-phoenix-head` | [ui-pet-phoenix-head.png](pets/ui/ui-pet-phoenix-head.png) | 48x48 | icon | Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. |
+| `ui-pet-panda-head` | [ui-pet-panda-head.png](pets/ui/ui-pet-panda-head.png) | 48x48 | icon | Ink / 墨墨 baby head — black-white panda with green sprout. |
+| `ui-pet-lion-head` | [ui-pet-lion-head.png](pets/ui/ui-pet-lion-head.png) | 48x48 | icon | Leo / 雷歐 baby head — golden lion with orange mane tuft. |
+| `ui-pet-dragon-head` | [ui-pet-dragon-head.png](pets/ui/ui-pet-dragon-head.png) | 48x48 | icon | Jadefire / 翠火 baby head — green dragon with cream horn. |
+| `ui-pet-phoenix-bar` | [ui-pet-phoenix-bar.png](pets/ui/ui-pet-phoenix-bar.png) | 64x32 | icon | origin [0, 0.5] — place by left edge so orbs sit to the right of the bar |
+| `ui-pet-panda-bar` | [ui-pet-panda-bar.png](pets/ui/ui-pet-panda-bar.png) | 64x32 | icon | origin [0, 0.5] |
+| `ui-pet-lion-bar` | [ui-pet-lion-bar.png](pets/ui/ui-pet-lion-bar.png) | 64x32 | icon | origin [0, 0.5] |
+| `ui-pet-dragon-bar` | [ui-pet-dragon-bar.png](pets/ui/ui-pet-dragon-bar.png) | 64x32 | icon | origin [0, 0.5] |
+| `ui-pet-orb-phoenix-dark` | [ui-pet-orb-phoenix-dark.png](pets/ui/ui-pet-orb-phoenix-dark.png) | 16x16 | icon | Phoenix skill orb — dark/empty (cyan-fire family). |
+| `ui-pet-orb-phoenix-lit` | [ui-pet-orb-phoenix-lit.png](pets/ui/ui-pet-orb-phoenix-lit.png) | 16x16 | icon | Phoenix skill orb — lit/ready. Overlay CD ring in code. |
+| `ui-pet-orb-phoenix-flash` | [ui-pet-orb-phoenix-flash.png](pets/ui/ui-pet-orb-phoenix-flash.png) | 16x16 | icon | Phoenix skill orb — flash/ready blink frame (Gameplay: 1s then auto-cast). |
+| `ui-pet-orb-panda-dark` | [ui-pet-orb-panda-dark.png](pets/ui/ui-pet-orb-panda-dark.png) | 16x16 | icon | Panda skill orb — dark/empty (jade family). |
+| `ui-pet-orb-panda-lit` | [ui-pet-orb-panda-lit.png](pets/ui/ui-pet-orb-panda-lit.png) | 16x16 | icon | Panda skill orb — lit/ready. |
+| `ui-pet-orb-panda-flash` | [ui-pet-orb-panda-flash.png](pets/ui/ui-pet-orb-panda-flash.png) | 16x16 | icon | Panda skill orb — flash blink frame. |
+| `ui-pet-orb-lion-dark` | [ui-pet-orb-lion-dark.png](pets/ui/ui-pet-orb-lion-dark.png) | 16x16 | icon | Lion skill orb — dark/empty (gold-electric family). |
+| `ui-pet-orb-lion-lit` | [ui-pet-orb-lion-lit.png](pets/ui/ui-pet-orb-lion-lit.png) | 16x16 | icon | Lion skill orb — lit/ready. |
+| `ui-pet-orb-lion-flash` | [ui-pet-orb-lion-flash.png](pets/ui/ui-pet-orb-lion-flash.png) | 16x16 | icon | Lion skill orb — flash blink frame. |
+| `ui-pet-orb-dragon-dark` | [ui-pet-orb-dragon-dark.png](pets/ui/ui-pet-orb-dragon-dark.png) | 16x16 | icon | Dragon skill orb — dark/empty (green-poison family). |
+| `ui-pet-orb-dragon-lit` | [ui-pet-orb-dragon-lit.png](pets/ui/ui-pet-orb-dragon-lit.png) | 16x16 | icon | Dragon skill orb — lit/ready. |
+| `ui-pet-orb-dragon-flash` | [ui-pet-orb-dragon-flash.png](pets/ui/ui-pet-orb-dragon-flash.png) | 16x16 | icon | Dragon skill orb — flash blink frame. |
 
 <a id="zombies"></a>
 ## Zombies
