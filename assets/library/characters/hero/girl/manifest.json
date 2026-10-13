@@ -4,7 +4,7 @@
   "group": "girl",
   "title": "Player Girl (hero)",
   "titleZh": "女主角",
-  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south.",
+  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
   "source": {
     "pixellabCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
     "sourceFolder": "player-girl"
@@ -33,11 +33,14 @@
       "player-girl-walk-west",
       "player-girl-flame-fire",
       "player-girl-sling-fire",
-      "player-girl-deploy"
+      "player-girl-deploy",
+      "player-girl-run-north",
+      "player-girl-run-south"
     ],
     "thumb": "assets/library/previews/hero/girl/preview.gif",
     "sheets": [
-      "assets/library/previews/hero/girl/all-base-sheet.png"
+      "assets/library/previews/hero/girl/all-base-sheet.png",
+      "assets/library/previews/hero/girl/hero-run-ns-sheet.png"
     ],
     "extras": [
       "assets/library/previews/hero/girl/weapon-water.gif",
@@ -120,6 +123,36 @@
         0.8261
       ],
       "facing": "north"
+    },
+    {
+      "key": "player-girl-run-north",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-run-north.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north",
+      "note": "Unarmed run away (rear/3/4); longer stride than walk-north."
+    },
+    {
+      "key": "player-girl-run-south",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-run-south.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south",
+      "note": "Unarmed run toward camera (front/3/4); longer stride than walk-south."
     },
     {
       "key": "player-girl-hurt",
@@ -801,7 +834,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-water-still.",
+      "extra": {
+        "stillKey": "player-girl-front-water-still"
+      }
+    },
+    {
+      "key": "player-girl-front-water-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-water-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-water. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-water"
+      }
     },
     {
       "key": "player-girl-front-sling",
@@ -816,7 +869,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-sling-still.",
+      "extra": {
+        "stillKey": "player-girl-front-sling-still"
+      }
+    },
+    {
+      "key": "player-girl-front-sling-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-sling-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-sling. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-sling"
+      }
     },
     {
       "key": "player-girl-front-bubble",
@@ -831,7 +904,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-bubble-still.",
+      "extra": {
+        "stillKey": "player-girl-front-bubble-still"
+      }
+    },
+    {
+      "key": "player-girl-front-bubble-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-bubble-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-bubble. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-bubble"
+      }
     },
     {
       "key": "player-girl-front-lightning",
@@ -846,7 +939,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-lightning-still.",
+      "extra": {
+        "stillKey": "player-girl-front-lightning-still"
+      }
+    },
+    {
+      "key": "player-girl-front-lightning-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-lightning-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-lightning. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-lightning"
+      }
     },
     {
       "key": "player-girl-front-frost",
@@ -861,7 +974,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-frost-still.",
+      "extra": {
+        "stillKey": "player-girl-front-frost-still"
+      }
+    },
+    {
+      "key": "player-girl-front-frost-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-frost-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-frost. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-frost"
+      }
     },
     {
       "key": "player-girl-front-flame",
@@ -876,7 +1009,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-flame-still.",
+      "extra": {
+        "stillKey": "player-girl-front-flame-still"
+      }
+    },
+    {
+      "key": "player-girl-front-flame-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-flame-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-flame. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-flame"
+      }
     },
     {
       "key": "player-girl-back-sling",
@@ -968,5 +1121,8 @@
       "facing": "west",
       "note": "Back-float flame bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons."
     }
-  ]
+  ],
+  "extra": {
+    "movement": "Prefer player-girl-run-north/south for up/down dash; walk-* remains for slower move."
+  }
 }

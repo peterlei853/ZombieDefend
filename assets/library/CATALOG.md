@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 104 |
+| [Hero](#hero) | 3 | 112 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 16 | 190 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **540** |
+| **Total** | **51** | **548** |
 
 <a id="hero"></a>
 ## Hero
@@ -24,10 +24,10 @@
 
 <img src="previews/hero/girl/preview.gif" alt="girl preview" height="140">
 
-Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south.
+Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.
 
-- group `girl` · 63 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
-- previews: [all-base-sheet.png](previews/hero/girl/all-base-sheet.png), [weapon-water.gif](previews/hero/girl/weapon-water.gif), [weapon-bubble.gif](previews/hero/girl/weapon-bubble.gif), [weapon-lightning.gif](previews/hero/girl/weapon-lightning.gif), [weapon-frost.gif](previews/hero/girl/weapon-frost.gif), [weapon-flame.gif](previews/hero/girl/weapon-flame.gif), [weapon-sling.gif](previews/hero/girl/weapon-sling.gif), [front-float-deploy-sheet.png](previews/hero/girl/front-float-deploy-sheet.png)
+- group `girl` · 71 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
+- previews: [all-base-sheet.png](previews/hero/girl/all-base-sheet.png), [hero-run-ns-sheet.png](previews/hero/girl/hero-run-ns-sheet.png), [weapon-water.gif](previews/hero/girl/weapon-water.gif), [weapon-bubble.gif](previews/hero/girl/weapon-bubble.gif), [weapon-lightning.gif](previews/hero/girl/weapon-lightning.gif), [weapon-frost.gif](previews/hero/girl/weapon-frost.gif), [weapon-flame.gif](previews/hero/girl/weapon-flame.gif), [weapon-sling.gif](previews/hero/girl/weapon-sling.gif), [front-float-deploy-sheet.png](previews/hero/girl/front-float-deploy-sheet.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -36,6 +36,8 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 | `player-girl-walk-east` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces east |
 | `player-girl-walk-south` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces south |
 | `player-girl-walk-north` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces north |
+| `player-girl-run-north` | 8 | 92x92 | 12 | loop | (0.5, 0.8261) | faces north · Unarmed run away (rear/3/4); longer stride than walk-north. |
+| `player-girl-run-south` | 8 | 92x92 | 12 | loop | (0.5, 0.8261) | faces south · Unarmed run toward camera (front/3/4); longer stride than walk-south. |
 | `player-girl-hurt` | 4 | 92x92 | 12 | once | (0.5, 0.8261) |  |
 | `player-girl-die` | 8 | 92x92 | 10 | once | (0.5, 0.8261) | hit flash 0, recoil 1-2, fall 3-5, lying 6-7 (hold last frame) |
 | `player-girl-victory` | 8 | 92x92 | 10 | loop | (0.5, 0.8261) |  |
@@ -82,12 +84,18 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 | `player-girl-sling-walk-west` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) |  |
 | `player-girl-sling-walk-east` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces east |
 | `player-girl-deploy` | 8 | 92x92 | 12 | once | (0.5, 0.8261) | One-shot hand-sweep on STOP (west). Play once at 12 fps, then player-girl-idle. Lerp weapons from hidden to the front arc across these 8 frames; enable fire after frame 7. |
-| `player-girl-front-water` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
-| `player-girl-front-sling` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
-| `player-girl-front-bubble` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
-| `player-girl-front-lightning` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
-| `player-girl-front-frost` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
-| `player-girl-front-flame` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip. |
+| `player-girl-front-water` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-water-still. |
+| `player-girl-front-water-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-water. 56×56 front-float, no bob. |
+| `player-girl-front-sling` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-sling-still. |
+| `player-girl-front-sling-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-sling. 56×56 front-float, no bob. |
+| `player-girl-front-bubble` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-bubble-still. |
+| `player-girl-front-bubble-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-bubble. 56×56 front-float, no bob. |
+| `player-girl-front-lightning` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-lightning-still. |
+| `player-girl-front-lightning-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-lightning. 56×56 front-float, no bob. |
+| `player-girl-front-frost` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-frost-still. |
+| `player-girl-front-frost-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-frost. 56×56 front-float, no bob. |
+| `player-girl-front-flame` | 8 | 56x56 | 8 | loop | (0.5, 0.5) | Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-flame-still. |
+| `player-girl-front-flame-still` | 1 | 56x56 | – | static | (0.5, 0.5) | Static sibling of player-girl-front-flame. 56×56 front-float, no bob. |
 | `player-girl-back-sling` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float sling bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-bubble` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float bubble bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-frost` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float frost bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |

@@ -92,7 +92,7 @@ Shared FX under `fx/v026/` (category `fx`, five groups). Notes live in [`fx/v026
 
 ## Front-float combat (v0.27)
 
-Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Run sheets `player-girl-run-*` are not in the library; walk is the fallback. Front stills (`player-girl-front-*-still`) were not shipped.
+Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.
 
 ## UI kit
 
@@ -113,7 +113,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 | Zombies | **64×64**. Exceptions: brute **96×96**, profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
 | Bosses | **128×128** | **(0.5, 1.0)** | **east** |
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
-| Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north` or `-walk-south` |
+| Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
 | Shared FX | 160×160 blast | (0.5, 0.5) | – |
 | v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |
