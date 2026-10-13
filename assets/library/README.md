@@ -74,7 +74,7 @@ Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young
 
 ## UI kit
 
-`ui/` is the title and stage chrome (v0.22.0): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, and Latin bitmap font atlases. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
+`ui/` is the title and stage chrome (v0.22.0): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, and Latin bitmap font atlases. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. TitleScene draws `bg-title-zombie-vs-buddy`, an alias of the native `ui-title-bg` (688×384); `ui-title-bg-hd` is the 1280×720 fallback. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
 
 ## Canvas, origin and facing conventions
 

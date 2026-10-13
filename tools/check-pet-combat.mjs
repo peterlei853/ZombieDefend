@@ -36,13 +36,15 @@ assert(APP_VERSION === '0.22.0', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
+const title = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
 const stage = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const defender = readFileSync(new URL('../src/entities/Defender.js', import.meta.url), 'utf8');
 const hud = readFileSync(new URL('../src/ui/PetPortraitHud.js', import.meta.url), 'utf8');
 const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.meta.url), 'utf8');
-assert(boot.includes('APP_VERSION'), 'title uses APP_VERSION');
-assert(!boot.includes('v0.19'), 'boot title is not 0.19');
+assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
+assert(!title.includes('v0.19'), 'title is not 0.19');
+assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
 assert(html.includes('v0.22.0'), 'document title is v0.22.0');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
