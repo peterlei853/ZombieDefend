@@ -30,7 +30,10 @@
  * GO! / Back! floats and the recall sleep bed. v0.22.1b doubles the shared
  * pet HP pool and thins Stage 1 waves 1–3. v0.22.1c holds the pet hit
  * white fill for 180ms and a solid red fill for 200ms, lets the hurt
- * strip finish, and clamps GO! / Back! into the camera. v0.22.2 wires
+ * strip finish, and clamps GO! / Back! into the camera. v0.22.1d runs
+ * that hit as three beats in order — solid white, solid red, then the
+ * hurt strip — so the strip is not hidden under the fills and a bite
+ * every frame cannot restart it. v0.22.2 wires
  * the catalog enemy HP bar, parchment joystick, and clean title splash.
  * v0.26 adds EXP orbs, evolution tiers, melee, skill telegraphs, nearby
  * aggro, a tier-3 ult, and a shop stub. Pet hurt stays a solid red fill.
@@ -39,6 +42,15 @@
 
 /** Title, stage HUD, and package.json stay on this string together. */
 export const APP_VERSION = '0.26.0';
+
+/** `?petHurt=1` plays the pet hurt sequence once after the stage boots. */
+export function petHurtDebugRequested() {
+  try {
+    return new URLSearchParams(globalThis.location?.search || '').get('petHurt') === '1';
+  } catch (_) {
+    return false;
+  }
+}
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -154,20 +166,25 @@ export const GAME_CONFIG = {
     /** Field px added to the zombie's body radius when it bites a pet. */
     BITE_RADIUS: 18,
     /**
-     * Flinch lockout. The baby hurt strip is 4 frames at 10 fps (400ms).
-     * This is longer than that strip so one play finishes and the last
-     * frame holds before per-frame bite DPS may start another. Does not
-     * cancel a cast already in progress. The camera does not shake.
+     * Flinch lockout: white fill, then red fill, then the hurt strip.
+     * 180 + 200 + 500. A bite during this window cannot restart it.
+     * The camera does not shake.
      */
-    HURT_MS: 560,
-    /** Pure-white body fill at the start of a flinch. 150–200ms. */
+    HURT_MS: 880,
+    /** Pure-white body fill. 150–200ms. The hurt strip has not started. */
     HURT_FLASH_MS: 180,
     /**
-     * Solid red fill after the white flash. 150–200ms.
-     * A multiply tint (the old 0xff5252) left cool-colored pets nearly black.
+     * Solid red fill after the white flash. At least 200ms.
+     * Fill, never a multiply tint — 0xff5252 left a blue phoenix nearly black.
      */
     HURT_TINT_MS: 200,
     HURT_TINT_COLOR: 0xff2a2a,
+    /**
+     * Baby hurt strip after both fills. 4 frames at 10 fps is 400ms;
+     * the extra 100ms holds the last frame so idle does not cut it off.
+     * play() runs once at the start of this beat, not on later bites.
+     */
+    HURT_STRIP_MS: 500,
     /** World bar and portrait fill stay hot through the white and red phases. */
     HURT_BAR_MS: 380,
     /** Scale-pop after the sprite appears behind the player. */

@@ -12,6 +12,7 @@ import {
   grassYMin,
   LAYOUT_SCALE,
   layoutPx,
+  scaleFromY,
   spawnWorldX,
   WORLD_HEIGHT,
   WORLD_WIDTH,
@@ -60,8 +61,9 @@ const RESIDUE_KEY = {
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
  * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
  * Forms 2 and 3 use placeholder circles and stay locked until evolution.
- * A bite holds a white fill, then a solid red fill, plays the hurt strip
- * through once, and pops both HP bars. The camera does not shake.
+ * A bite is three beats in order: solid white fill, solid red fill, then
+ * the hurt strip played once. Bite DPS cannot restart a beat already
+ * running. The camera does not shake.
  */
 export class PetCombat {
   /** @param {Phaser.Scene} scene */
@@ -430,6 +432,9 @@ export class PetCombat {
       released: false,
       hurtLeft: 0,
       hurtStrip: false,
+      /** @type {''|'white'|'red'|'strip'} */
+      hitPhase: '',
+      stripLeft: 0,
       hurtReactLeft: 0,
       flashLeft: 0,
       tintLeft: 0,
@@ -488,7 +493,7 @@ export class PetCombat {
       this._wake(actor, player);
       return;
     }
-    const point = deployPoint(player);
+    const point = deployPoint(player, cameraRight(this.scene));
     const x = point.x;
     const y = point.y;
     actor.phase = 'field';
@@ -903,7 +908,7 @@ export class PetCombat {
         showDamageText(this.scene, sprite.x, hy, whole, '#ff4040', `pet-${actor.role.id}`);
       }
     }
-    if (!(actor.hurtReactLeft > 0)) this._beginHitReact(actor);
+    if (!actor.hitPhase) this._beginHitReact(actor);
     if (actor.hp <= 0) {
       actor.hp = 0;
       this._dismiss(actor);
@@ -914,24 +919,45 @@ export class PetCombat {
   }
 
   /**
-   * One flinch per HURT_MS. Bite DPS arrives every frame; sprite.play()
-   * restarts at frame 0, so a second call before the strip ends hides the
-   * recoil. A cast already in progress keeps its strip — the fill and bars
-   * still react. The camera does not shake.
+   * Start white → red → hurt strip. A second call is ignored while
+   * `hitPhase` is set, so per-frame bite DPS cannot restart the strip
+   * with play() or swap the fill back to white. The camera does not shake.
    * @param {PetActor} actor
    */
   _beginHitReact(actor) {
+    if (actor.hitPhase) return;
     const pets = GAME_CONFIG.PETS;
-    actor.hurtReactLeft = pets.HURT_MS;
+    actor.hitPhase = 'white';
     actor.flashLeft = pets.HURT_FLASH_MS;
-    actor.tintLeft = pets.HURT_FLASH_MS + pets.HURT_TINT_MS;
+    actor.tintLeft = pets.HURT_TINT_MS;
+    actor.stripLeft = pets.HURT_STRIP_MS;
+    actor.hurtLeft = pets.HURT_MS;
+    actor.hurtReactLeft = pets.HURT_MS;
+    actor.hurtStrip = false;
     actor.barFlashLeft = pets.HURT_BAR_MS;
     actor.hitSeq = (actor.hitSeq || 0) + 1;
-    if (actor.state !== 'attack') {
-      actor.hurtLeft = pets.HURT_MS;
-      actor.hurtStrip = playOnce(actor.sprite, actor.role.hurt, { restart: false });
-    }
     this._applyHitLook(actor);
+  }
+
+  /**
+   * White fill, then solid red, then the hurt strip, without spending HP.
+   * No-op while a flinch is already on screen. Summons the phoenix when
+   * the field is empty so a debug key still has a body to flash.
+   * @param {{ x?: number, y?: number }|null} [player]
+   * @returns {boolean}
+   */
+  debugHurtOnce(player = null) {
+    if (this._actors.some((actor) => actor.hitPhase)) return false;
+    let actor = this._actors.find((entry) => entry.phase === 'field' && entry.hp > 0 && entry.sprite?.active);
+    if (!actor) {
+      const anchor = player || this._anchor;
+      const summoned = this.summon(0, anchor, []);
+      if (!summoned.ok) return false;
+      actor = this._actors.find((entry) => entry.phase === 'field' && entry.hp > 0 && entry.sprite?.active);
+    }
+    if (!actor) return false;
+    this._beginHitReact(actor);
+    return true;
   }
 
   /**
@@ -944,21 +970,13 @@ export class PetCombat {
     const element = PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff;
     const pets = GAME_CONFIG.PETS;
     if (mode === 'flash') {
-      if (typeof sprite.setTintFill === 'function') {
-        sprite.setTintFill(GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
-        return;
-      }
-      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
+      paintSolid(sprite, GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
       return;
     }
     if (mode === 'hurt') {
       // Fill, not multiply. 0xff5252 left a blue phoenix almost black.
       const red = pets.HURT_TINT_COLOR;
-      if (typeof sprite.setTintFill === 'function') {
-        sprite.setTintFill(red);
-        return;
-      }
-      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(red);
+      paintSolid(sprite, red);
       return;
     }
     if (typeof sprite.clearTint === 'function') sprite.clearTint();
@@ -971,6 +989,8 @@ export class PetCombat {
   _clearHitLook(actor) {
     actor.hurtLeft = 0;
     actor.hurtStrip = false;
+    actor.hitPhase = '';
+    actor.stripLeft = 0;
     actor.hurtReactLeft = 0;
     actor.flashLeft = 0;
     actor.tintLeft = 0;
@@ -981,33 +1001,77 @@ export class PetCombat {
   }
 
   /**
-   * Count down the white fill, the red fill, and the bar pop.
-   * Painting happens after the animation step so a strip swap cannot
-   * leave the body untinted for the rest of the frame.
+   * Step the active beat only. Leftover time spills into the next beat so
+   * one long frame cannot skip the red fill. The strip beat does not
+   * start counting on the frame it begins — that frame is the single play().
    * @param {PetActor} actor
    * @param {number} dt
    */
   _tickHitLook(actor, dt) {
-    const step = Number.isFinite(dt) ? dt : 0;
-    if (actor.hurtReactLeft > 0) actor.hurtReactLeft = Math.max(0, actor.hurtReactLeft - step);
+    const step = Number.isFinite(dt) ? Math.max(0, dt) : 0;
     if (actor.barFlashLeft > 0) actor.barFlashLeft = Math.max(0, actor.barFlashLeft - step);
-    if (actor.flashLeft > 0) actor.flashLeft = Math.max(0, actor.flashLeft - step);
-    if (actor.tintLeft > 0) actor.tintLeft = Math.max(0, actor.tintLeft - step);
+    if (!actor.hitPhase) {
+      actor.hurtReactLeft = 0;
+      return;
+    }
+    let remain = step;
+    const pets = GAME_CONFIG.PETS;
+    if (actor.hitPhase === 'white') {
+      if (actor.flashLeft > remain) {
+        actor.flashLeft -= remain;
+        remain = 0;
+      } else {
+        remain -= Math.max(0, actor.flashLeft);
+        actor.flashLeft = 0;
+        actor.hitPhase = 'red';
+        actor.tintLeft = pets.HURT_TINT_MS;
+      }
+    }
+    if (actor.hitPhase === 'red' && remain > 0) {
+      if (actor.tintLeft > remain) {
+        actor.tintLeft -= remain;
+        remain = 0;
+      } else {
+        remain -= Math.max(0, actor.tintLeft);
+        actor.tintLeft = 0;
+        actor.hitPhase = 'strip';
+        actor.hurtStrip = false;
+        actor.stripLeft = pets.HURT_STRIP_MS;
+        remain = 0;
+      }
+    }
+    if (actor.hitPhase === 'strip' && remain > 0) {
+      actor.stripLeft = Math.max(0, actor.stripLeft - remain);
+      if (!(actor.stripLeft > 0)) this._finishHit(actor);
+    }
+    actor.hurtLeft = actor.hitPhase ? pets.HURT_MS : 0;
+    actor.hurtReactLeft = actor.hitPhase ? pets.HURT_MS : 0;
+  }
+
+  /** @param {PetActor} actor */
+  _finishHit(actor) {
+    actor.hitPhase = '';
+    actor.hurtStrip = false;
+    actor.stripLeft = 0;
+    actor.flashLeft = 0;
+    actor.tintLeft = 0;
+    actor.hurtLeft = 0;
+    actor.hurtReactLeft = 0;
   }
 
   /**
-   * White fill, then solid red, then the pet's own colors.
-   * Reapplied every field tick so it survives the animation update.
+   * White fill, then solid red, then the pet's own colors for the strip.
+   * Reapplied every field tick so a frame change cannot drop the fill.
    * @param {PetActor} actor
    */
   _applyHitLook(actor) {
     if (!actor.sprite?.active) return;
-    if (actor.flashLeft > 0) {
+    if (actor.hitPhase === 'white') {
       actor.hitLook = 'flash';
       this._paintHit(actor, 'flash');
       return;
     }
-    if (actor.tintLeft > 0) {
+    if (actor.hitPhase === 'red') {
       actor.hitLook = 'hurt';
       this._paintHit(actor, 'hurt');
       return;
@@ -1016,6 +1080,21 @@ export class PetCombat {
       actor.hitLook = '';
       this._paintHit(actor, 'clear');
     }
+  }
+
+  /**
+   * Hold still for the fills. Start the hurt strip exactly once when the
+   * red beat ends, and do not call play() again until it has finished.
+   * @param {PetActor} actor
+   */
+  _presentHurt(actor) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    if (actor.hitPhase === 'strip' && !actor.hurtStrip) {
+      actor.hurtStrip = playOnce(sprite, actor.role.hurt, { restart: false });
+      if (!actor.hurtStrip) this._finishHit(actor);
+    }
+    faceLeft(sprite);
   }
 
   /** @param {PetActor} actor */
@@ -1029,6 +1108,8 @@ export class PetCombat {
     actor.state = 'idle';
     actor.hurtLeft = 0;
     actor.hurtStrip = false;
+    actor.hitPhase = '';
+    actor.stripLeft = 0;
     actor.hitLook = '';
     actor.castQueue = [];
     actor.rest = null;
@@ -1182,6 +1263,11 @@ export class PetCombat {
       if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
       this._place(actor);
 
+      if (actor.hitPhase) {
+        this._presentHurt(actor);
+        return EMPTY;
+      }
+
       if (actor.wakeLeft > 0) {
         const use = Math.min(actor.wakeLeft, dt);
         actor.wakeLeft -= use;
@@ -1192,19 +1278,8 @@ export class PetCombat {
         if (actor.wakeLeft > 0 || dt <= 0) return EMPTY;
       }
 
-      if (actor.hurtLeft > 0) {
-        actor.hurtLeft -= dt;
-        if (!actor.hurtStrip) {
-          actor.hurtStrip = playOnce(sprite, actor.role.hurt, { restart: false });
-        }
-        faceLeft(sprite);
-        if (actor.hurtLeft > 0) return EMPTY;
-        actor.hurtStrip = false;
-        if (actor.castQueue.length > 0 && actor.state !== 'attack') {
-          this._beginAttack(actor);
-          gain = this._advanceAttack(actor, zombies, threat);
-          return gain;
-        }
+      if (actor.castQueue.length > 0 && actor.state !== 'attack') {
+        this._beginAttack(actor);
       }
 
       if (actor.state === 'attack') {
@@ -1319,7 +1394,7 @@ export class PetCombat {
   _stepOutbound(actor, player, deltaMs) {
     const sprite = actor.sprite;
     if (!sprite) return;
-    const dest = deployPoint(player);
+    const dest = deployPoint(player, cameraRight(this.scene));
     const dx = dest.x - sprite.x;
     const dy = dest.y - sprite.y;
     const dist = Math.hypot(dx, dy);
@@ -2478,11 +2553,38 @@ export function placeFloatLabel(x, y, box, view, hero) {
  * First-summon point, just behind the player. Resummon walks here when
  * nothing is on the field.
  * @param {{ x?: number, y?: number }|null|undefined} player
+ * @param {number|null} [viewRight] camera right edge in world px
  */
-function deployPoint(player) {
+function deployPoint(player, viewRight = null) {
   const px = Number.isFinite(player?.x) ? player.x : 0;
   const py = Number.isFinite(player?.y) ? player.y : 0;
-  return { x: px + layoutPx(18), y: clampGrass(py) };
+  const y = clampGrass(py);
+  // Hero frame is 92px, origin x 0.5 (46px half). Baby pet frame is 48px
+  // (24px half). The gun points left, so the pet stands behind (+X).
+  // 0.72 of the combined halves clears most of the arm where the lane has
+  // room. The slanted barricade puts a bottom-lane hero on the camera's
+  // right edge, so the offset never pushes the pet further off screen
+  // than the previous 18 field px tuck. GO! / Back! keep their clamp.
+  const display = scaleFromY(y) * LAYOUT_SCALE;
+  const petHalf = 24 * display;
+  const desired = Math.round((46 + 24) * display * 0.72);
+  const floor = layoutPx(18);
+  let behind = desired;
+  if (Number.isFinite(viewRight)) {
+    const maxFit = viewRight - layoutPx(6) - petHalf - px;
+    // No room behind the hero: keep the old tuck instead of stepping
+    // left onto the gun or further off the right edge.
+    behind = maxFit < floor ? floor : Math.min(desired, maxFit);
+  }
+  return { x: px + Math.round(behind), y };
+}
+
+/** @param {Phaser.Scene|null|undefined} scene */
+function cameraRight(scene) {
+  const cam = scene?.cameras?.main;
+  if (!cam || !(cam.width > 0)) return null;
+  const scrollX = Number.isFinite(cam.scrollX) ? cam.scrollX : 0;
+  return scrollX + cam.width;
 }
 
 /** @param {number} y */
@@ -2704,14 +2806,31 @@ function playLoop(sprite, key) {
 function playOnce(sprite, key, opts = {}) {
   if (!sprite || !key || typeof sprite.play !== 'function') return false;
   if (!sprite.scene?.anims?.exists?.(key)) return false;
+  // Already on this strip: play() would snap back to frame 0.
   if (opts.restart === false && sprite.anims?.currentAnim?.key === key) return true;
   try {
-    sprite.play(opts.restart === false ? { key, ignoreIfPlaying: true } : key);
+    sprite.play(key);
   } catch (_) {
     return false;
   }
   faceLeft(sprite);
   return true;
+}
+
+/**
+ * Solid fill. setTint() (multiply) is never used here — it darkens a
+ * blue phoenix instead of painting red. tintFill is set again because
+ * setTint inside setTintFill clears it first.
+ * @param {Phaser.GameObjects.GameObject} sprite
+ * @param {number} color
+ */
+function paintSolid(sprite, color) {
+  if (typeof sprite.setTintFill === 'function') {
+    sprite.setTintFill(color);
+    sprite.tintFill = true;
+    return;
+  }
+  if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(color);
 }
 
 /**

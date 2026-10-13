@@ -1,4 +1,4 @@
-import { APP_VERSION } from '../data/GameConfig.js';
+import { APP_VERSION, petHurtDebugRequested } from '../data/GameConfig.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
 import {
@@ -86,6 +86,7 @@ export default class TitleScene extends Phaser.Scene {
 
     this.input.keyboard?.once('keydown-ENTER', startStage);
     this.input.keyboard?.once('keydown-SPACE', startStage);
+    if (petHurtDebugRequested()) this.time.delayedCall(0, startStage);
 
     void btn;
   }

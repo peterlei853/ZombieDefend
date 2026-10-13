@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
 import { WAVE_DEFS, BARRICADE_MAX_HP, GAME_WIDTH, GAME_HEIGHT } from '../src/data/waves.js';
 import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
-import { barricadeXAtY, cameraScrollX, depthFromY, grassYMax, grassYMin, layoutPx } from '../src/systems/DepthView.js';
+import { barricadeXAtY, cameraScrollX, depthFromY, displayScaleFromY, grassYMax, grassYMin, layoutPx } from '../src/systems/DepthView.js';
 import { nearestFieldPet, petReachableBeforeFence } from '../src/systems/petAggro.js';
 import {
   PET_AUDIO_KEYS,
@@ -123,10 +123,17 @@ assert(petsCfg.ORB_CD_MS.phoenix[0] > petsCfg.ORB_CD_MS.phoenix[1], 'S1 is longe
 assert(petsCfg.ORB_CD_MS.phoenix[1] > petsCfg.ORB_CD_MS.phoenix[2], 'S2 is longer than S3');
 assert(petsCfg.ORB_CD_MS.phoenix[0] * 1 === petsCfg.ORB_CD_MS.phoenix[2] * 3, 'S1:S3 cooldown ratio is 3:1');
 assert(GAME_CONFIG.PETS.HP === 192, 'shared pet HP is 192');
-assert(petsCfg.HURT_MS >= 400, 'hurt gate lasts at least the 4-frame strip');
+assert(petsCfg.HURT_STRIP_MS >= 400, 'hurt strip lasts at least the 4-frame beat');
+assert(
+  petsCfg.HURT_MS === petsCfg.HURT_FLASH_MS + petsCfg.HURT_TINT_MS + petsCfg.HURT_STRIP_MS,
+  'hurt lockout is white + red + strip'
+);
 assert(petsCfg.HURT_FLASH_MS >= 150 && petsCfg.HURT_FLASH_MS <= 200, `white flash is 150–200ms (${petsCfg.HURT_FLASH_MS})`);
-assert(petsCfg.HURT_TINT_MS >= 150 && petsCfg.HURT_TINT_MS <= 200, `red fill is 150–200ms (${petsCfg.HURT_TINT_MS})`);
+assert(petsCfg.HURT_TINT_MS >= 200, `red fill is at least 200ms (${petsCfg.HURT_TINT_MS})`);
 assert(petsCfg.HURT_TINT_COLOR === 0xff2a2a, 'red phase is a solid fill, not a light multiply');
+assert(combatSrc.includes('setTintFill') && !combatSrc.includes('setTint(0xff5252)'), 'pet hurt fill is not a multiply tint');
+assert(combatSrc.includes('debugHurtOnce'), 'debug one-shot can force the hurt sequence');
+assert(stage.includes("_hurtKey") && stage.includes('petHurt'), 'H key and ?petHurt=1 are wired');
 assert(petsCfg.HURT_BAR_MS >= petsCfg.HURT_FLASH_MS, 'bar pop lasts through the white flash');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '4,8,16,90', 'stage 1 early waves are thinned; wave 4 stays');
 assert(WAVE_DEFS[0].archetypes[0].hp === 40 && WAVE_DEFS[1].archetypes[0].hp === 70, 'wave 1–2 HP rows are unchanged');
@@ -255,7 +262,7 @@ const petBody = scene._sprites.find((sprite) => sprite.textureKey === 'pet-phoen
 const hurtPlays = () => petBody._played.filter((key) => key === 'pet-phoenix-baby-hurt').length;
 hurt.takeDamage(48);
 assert(Math.abs(hurt.hp - (petsCfg.HP - 48)) < 0.01, 'damage sticks');
-assert(hurtPlays() === 1, 'first hit plays the hurt strip once');
+assert(hurtPlays() === 0, 'the hurt strip waits until white and red have finished');
 assert(combat.portraitViews()[0].hitSeq === 1, 'portrait hit pulse increments once');
 assert(petBody._tintFill === 0xffffff, 'hit flash is white');
 const recalled = combat.summon(0, player, [zombie]);
@@ -298,28 +305,83 @@ const gateBody = gateScene._sprites.find((sprite) => sprite.textureKey === 'pet-
 const gateHurts = () => gateBody._played.filter((key) => key === 'pet-phoenix-baby-hurt').length;
 gatePet.takeDamage(10);
 gatePet.takeDamage(10);
-assert(gateHurts() === 1, 'a second hit inside the flinch does not restart the hurt strip');
+assert(gateHurts() === 0, 'hits do not start the hurt strip during the white fill');
 assert(gate.portraitViews()[0].hitSeq === 1, 'portrait hit pulse stays gated for the flinch');
 assert(Math.abs(gatePet.hp - (petsCfg.HP - 20)) < 0.01, 'gated feedback still applies HP');
 assert(gateBody._tintFill === 0xffffff, 'the flinch opens on a white fill');
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 6; i++) {
   gatePet.takeDamage(0.35);
   gate.update(16, [], player);
 }
-assert(gateHurts() === 1, 'per-frame bite DPS does not restart the hurt strip');
+assert(gateHurts() === 0, 'per-frame bite DPS does not start the hurt strip');
 assert(gateBody._tintFill === 0xffffff, 'white fill is still up inside 150–200ms');
 assert(gateScene._labels.some((label) => label.active && String(label.label).startsWith('-')), 'fractional bites stack into a visible -N');
 gate.update(petsCfg.HURT_FLASH_MS, [], player);
 assert(gateBody._tintFill === petsCfg.HURT_TINT_COLOR, 'white flash gives way to a solid red fill');
-gate.update(petsCfg.HURT_TINT_MS + 40, [], player);
-assert(gateBody._tintFill == null && gateBody._tint == null, 'red fill clears after its window');
-gate.update(petsCfg.HURT_MS, [], player);
+assert(gateHurts() === 0, 'the strip still waits through the red fill');
+for (let i = 0; i < 4; i++) {
+  gatePet.takeDamage(0.4);
+  gate.update(16, [], player);
+}
+assert(gateBody._tintFill === petsCfg.HURT_TINT_COLOR, 'bite DPS does not wash out the red fill');
+assert(gateHurts() === 0, 'bite DPS does not play() the strip during red');
+gate.update(petsCfg.HURT_TINT_MS, [], player);
+assert(gateHurts() === 1, 'the hurt strip starts once when the red fill ends');
+assert(gateBody._tintFill == null && gateBody._tint == null, 'red fill clears so the strip can be seen');
+assert(gateBody.anims.currentAnim.key === 'pet-phoenix-baby-hurt', 'the body is on the hurt strip');
+const midStrip = gateHurts();
+gatePet.takeDamage(4);
+gate.update(petsCfg.HURT_STRIP_MS / 2, [], player);
+assert(gateHurts() === midStrip, 'a bite mid-strip does not call play() again');
+gate.update(petsCfg.HURT_STRIP_MS, [], player);
 gatePet.takeDamage(5);
-assert(gateHurts() === 2, 'a hit after the flinch plays the hurt strip again');
+assert(gateHurts() === midStrip, 'the next flinch does not replay the strip during white');
 assert(gate.portraitViews()[0].hitSeq === 2, 'portrait hit pulse increments after the flinch');
-gate.update(petsCfg.HURT_FLASH_MS, [], player);
-assert(gateBody._tintFill === petsCfg.HURT_TINT_COLOR, 'the next flinch also reaches the red fill');
+assert(gateBody._tintFill === 0xffffff, 'the next flinch opens on white');
+gate.update(petsCfg.HURT_FLASH_MS + petsCfg.HURT_TINT_MS, [], player);
+assert(gateBody._tintFill == null, 'the next flinch also clears into the strip');
+assert(gateHurts() === midStrip + 1, 'the next flinch plays the hurt strip once');
 gate.destroy();
+
+const dbgScene = mockScene(audio);
+const dbg = new PetCombat(dbgScene);
+assert(dbg.debugHurtOnce(player) === true, 'debug one-shot summons and starts the flinch');
+const dbgBody = dbgScene._sprites.find((sprite) => sprite.textureKey === 'pet-phoenix-baby-idle');
+assert(dbgBody._tintFill === 0xffffff, 'debug flinch opens on white');
+assert(dbg.debugHurtOnce(player) === false, 'debug one-shot does not restart a flinch in progress');
+assert(dbg.fieldPets()[0].hp === petsCfg.HP, 'debug flinch does not spend HP');
+dbg.update(petsCfg.HURT_FLASH_MS, [], player);
+assert(dbgBody._tintFill === petsCfg.HURT_TINT_COLOR, 'debug flinch reaches the solid red fill');
+dbg.update(petsCfg.HURT_TINT_MS, [], player);
+assert(dbgBody._played.filter((key) => key === 'pet-phoenix-baby-hurt').length === 1, 'debug flinch plays the strip once');
+dbg.destroy();
+
+{
+  const yFar = grassYMin() + 2;
+  const yMid = (grassYMin() + grassYMax()) / 2;
+  const yBottom = grassYMax() - 2;
+  const scroll = cameraScrollX(barricadeXAtY(yMid));
+  const viewRight = scroll + GAME_WIDTH;
+  const gapAt = (y) => {
+    const scene = mockScene(audio);
+    scene.cameras.main.scrollX = scroll;
+    const combat = new PetCombat(scene);
+    const anchorX = barricadeXAtY(y) + layoutPx(32);
+    combat.summon(0, { x: anchorX, y }, []);
+    const pet = combat.fieldPets()[0];
+    const gap = pet.x - anchorX;
+    const right = pet.x + 24 * displayScaleFromY(y);
+    combat.destroy();
+    return { gap, right };
+  };
+  const far = gapAt(yFar);
+  const mid = gapAt(yMid);
+  const bottom = gapAt(yBottom);
+  assert(mid.gap > far.gap, 'a closer lane stands further behind the hero');
+  assert(mid.gap > layoutPx(18), 'mid summon is not tucked into the hero at the old 18px offset');
+  assert(mid.right < viewRight - 4, 'mid summon stays inside the camera');
+  assert(Math.abs(bottom.gap - layoutPx(18)) < 1.5, 'bottom summon keeps the old tuck when the camera has no room behind the hero');
+}
 
 const castScene = mockScene(audio);
 const casts = new PetCombat(castScene);
