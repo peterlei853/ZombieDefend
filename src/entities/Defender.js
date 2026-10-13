@@ -36,6 +36,7 @@ import {
 } from '../assets/heroLoadout.js';
 import { libraryAsset } from '../assets/libraryAssets.js';
 import { petDepth, petDisplayScale, petLineupSlots } from '../assets/petLineup.js';
+import { PetCombat } from '../systems/PetCombat.js';
 
 /** Player sits this many px right of the grass edge (safe zone), in field px. */
 const PLAYER_SAFE_OFFSET = layoutPx(32);
@@ -67,9 +68,8 @@ const WEAPON_GRIP = {
 
 /**
  * Player on the barricade lane, plus the four baby pets standing on the
- * safe side of the fence. Pets do not follow the hero.
- * Targeting, fire cadence, ballistics, and the existing pet shot live in
- * WeaponSystem — one shot on the old interval, not a new skill per pet.
+ * safe side of the fence. Pets do not follow the hero and do not leave
+ * their lineup slots. PetCombat runs idle → attack → idle on those sprites.
  */
 export class DefenderGroup {
   /**
@@ -109,6 +109,7 @@ export class DefenderGroup {
       const pet = this._createLineupPet(scene, slot);
       if (pet) this.pets.push(pet);
     }
+    this.petCombat = new PetCombat(scene, this.pets);
 
     // W/S + arrow keys for Y-only move. Touch stick is optional (VirtualControls).
     const keyboard = scene.input.keyboard;
@@ -197,9 +198,11 @@ export class DefenderGroup {
 
   /**
    * Baby idle on a fixed fence slot. No placeholder square if the strip
-   * is missing — the slot still exists for the existing pet shot.
+   * is missing. PetCombat plays the skill strip in place — this sprite
+   * is not parented to the hero.
+   * PIXELLAB_HOOK: pet-<id>-baby-idle, feet origin, faces west.
    * @param {Phaser.Scene} scene
-   * @param {{ key: string, x: number, y: number }} slot
+   * @param {{ id?: string, key: string, x: number, y: number }} slot
    */
   _createLineupPet(scene, slot) {
     if (!scene.textures?.exists?.(slot.key)) return null;
@@ -209,51 +212,17 @@ export class DefenderGroup {
     pet.setOrigin(origin[0], origin[1]);
     pet.setScale(petDisplayScale(slot.y));
     pet.setDepth(petDepth(slot.y));
+    pet.setData('petId', slot.id);
     // Library pets face west (toward the march). Do not flip.
+    if (typeof pet.setFlipX === 'function') pet.setFlipX(false);
     if (scene.anims?.exists?.(slot.key)) pet.play(slot.key);
     return pet;
   }
 
   /**
-   * Origin for the existing single pet shot. The pet whose lane is closest
-   * to the nearest zombie fires; damage and interval stay in WeaponSystem.
-   * @param {import('./Zombie.js').Zombie[]} zombies
-   * @returns {{ x: number, y: number }|null}
-   */
-  _petFireOrigin(zombies) {
-    const points = this.pets.length
-      ? this.pets.map((pet) => ({ x: pet.x, y: pet.y }))
-      : this._petSlots;
-    if (!points.length) return null;
-    const list = Array.isArray(zombies) ? zombies : [];
-    let probe = null;
-    let probeDist = Infinity;
-    for (const point of points) {
-      const nearest = this.weapons.findNearest(list, point.x, point.y);
-      if (!nearest) continue;
-      const dist = Math.hypot(nearest.x - point.x, nearest.y - point.y);
-      if (dist < probeDist) {
-        probeDist = dist;
-        probe = nearest;
-      }
-    }
-    if (!probe) return points[Math.floor(points.length / 2)];
-    let best = points[0];
-    let bestDy = Infinity;
-    for (const point of points) {
-      const dy = Math.abs(point.y - probe.y);
-      if (dy < bestDy) {
-        bestDy = dy;
-        best = point;
-      }
-    }
-    return best;
-  }
-
-  /**
    * @param {number} deltaMs
    * @param {import('./Zombie.js').Zombie[]} zombies
-   * @returns {{ gold: number, kills: number }} always zero here; pet AOE gold comes from resolveHits
+   * @returns {{ gold: number, kills: number }} pet kills only; bullet gold comes from resolveHits
    */
   update(deltaMs, zombies) {
     // Player Y-only move (W/S, arrows, or the touch stick). X always tracks
@@ -294,17 +263,14 @@ export class DefenderGroup {
     if (fired === 'shotgun') this._onShotgunVolley();
     else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     this._updateStance(dy, shotgunLocked ? 0 : dx);
-    const petOrigin = this._petFireOrigin(zombies);
-    if (petOrigin) {
-      this.weapons.updatePetFire(deltaMs, petOrigin.x, petOrigin.y, zombies, this.bullets);
-    }
+    const petGain = this.petCombat?.update(deltaMs, zombies) || { gold: 0, kills: 0 };
 
     // Move only. Range / off-view retirement happens after hit tests so a
     // pellet can still connect on the frame it reaches maxDistance.
     this.weapons.stepBullets(this.bullets, deltaSec);
     this.weapons.stepCasings(deltaMs);
 
-    return { gold: 0, kills: 0 };
+    return petGain;
   }
 
   /**
@@ -601,7 +567,7 @@ export class DefenderGroup {
   }
 
   /**
-   * Resolve bullet ↔ zombie hits (per-pellet shotgun + pet on-hit AOE).
+   * Resolve bullet ↔ zombie hits (per-pellet shotgun). Pet strikes are not bullets.
    * Pair living bodies first, then damage — never splice or takeDamage mid-scan.
    * A zombie killed by an earlier pellet is skipped by later pellets.
    * @param {import('./Zombie.js').Zombie[]} zombies
@@ -648,23 +614,13 @@ export class DefenderGroup {
       hits.push({ index: i, bullet: b, zombie: hitZombie, bx, by });
     }
 
-    // Pass 2 — damage / knockback / pet AOE. Later pellets no-op if an earlier
+    // Pass 2 — damage / knockback. Later pellets no-op if an earlier
     // one already destroyed that zombie.
     for (const hit of hits) {
       remove.add(hit.index);
-      const b = hit.bullet;
-      if (b.kind === 'pet') {
-        const z = hit.zombie;
-        const ix = Number.isFinite(hit.bx) ? hit.bx : z?.x;
-        const iy = Number.isFinite(hit.by) ? hit.by : z?.y;
-        const aoe = this.weapons.applyPetAoe(ix, iy, list);
-        gold += aoe.gold;
-        kills += aoe.kills;
-      } else {
-        const gain = this.weapons.applyDirectHit(hit.zombie, b);
-        gold += gain.gold;
-        kills += gain.kills;
-      }
+      const gain = this.weapons.applyDirectHit(hit.zombie, hit.bullet);
+      gold += gain.gold;
+      kills += gain.kills;
     }
 
     for (let i = 0; i < this.bullets.length; i++) {
@@ -706,6 +662,8 @@ export class DefenderGroup {
     this._stopRecoilTween();
     this.recoilX = 0;
     this._shotgunLockMs = 0;
+    this.petCombat?.destroy();
+    this.petCombat = null;
     this.weapons.destroyEffects();
     for (const b of this.bullets) this._destroyBulletParts(b);
     this.bullets = [];

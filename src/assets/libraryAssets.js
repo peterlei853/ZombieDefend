@@ -11,7 +11,7 @@ const INDEX_URL = 'assets/library/asset-index.json';
 
 /**
  * Categories the stage actually draws. Concepts are reference art only.
- * `pets` is narrowed by stageLibraryFilter to the four baby idle strips.
+ * `pets` is narrowed by stageLibraryFilter to the four baby combat strips.
  * `environment` is the barricade fence posts.
  */
 export const STAGE_LIBRARY_CATEGORIES = [
@@ -25,7 +25,7 @@ export const STAGE_LIBRARY_CATEGORIES = [
 
 /**
  * Boss sheets, pickups, and concepts stay on disk until something spawns them.
- * Other pet forms (young / ancient / FX) are filtered out of the stage load.
+ * Other pet forms (young / ancient, and FX this phase does not cast) stay unloaded.
  * @type {string[]}
  */
 export const UNWIRED_LIBRARY_CATEGORIES = ['bosses', 'pickups', 'concepts'];

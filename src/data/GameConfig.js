@@ -22,9 +22,13 @@
  * or speed numbers. Walker rows keep the default feel.
  *
  * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
- * Nothing calls camera.shake: weapon fire, hits, and overkill included.
+ * Nothing calls camera.shake: weapon fire, hits, overkill, and pet attacks.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
+ * PETS is baby-form support only (no ultimates, cooldown HUD, or evolution).
  */
+
+/** Title, stage HUD, and package.json stay on this string together. */
+export const APP_VERSION = '0.19.0';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -104,6 +108,70 @@ export const GAME_CONFIG = {
       CASING_OFFSET_Y: -4,
     },
   },
+  /**
+   * Baby pets behind the fence. Lengths are field px (callers × LAYOUT_SCALE).
+   * Cadence is the gap between attack starts. Damage stays under a handgun
+   * shot (30) so the four of them support the player instead of replacing them.
+   * The camera does not shake.
+   */
+  PETS: {
+    COOLDOWN_MIN_MS: 1000,
+    COOLDOWN_MAX_MS: 1500,
+    /**
+     * Countdown from stage start, lineup order (far → near).
+     * A timer that hits 0 with no zombies holds there, so the first cast
+     * still lands inside a few seconds of the first spawn.
+     */
+    FIRST_DELAY_MS: [480, 820, 1160, 1480],
+    /** 0-based skill frame that releases the hit. */
+    RELEASE_FRAME: 3,
+    /** Safety cap if a skill strip never finishes. */
+    ATTACK_MAX_MS: 1200,
+    PHOENIX: {
+      DAMAGE: 12,
+      /** Second body, if the bolt still has pierce. */
+      PIERCE_DAMAGE: 8,
+      PIERCE: 1,
+      /** Field px/s. PetCombat multiplies by LAYOUT_SCALE. */
+      SPEED: 340,
+      /** Max aim off straight left. The bolt still travels left. */
+      AIM_LIMIT_DEG: 42,
+      /** Frame px from the feet origin to the beak. */
+      MOUTH_X: -12,
+      MOUTH_Y: -26,
+    },
+    PANDA: {
+      DAMAGE: 14,
+      /** Field px to the left of the panda. Reaches a zombie at the posts. */
+      RANGE: 100,
+      /** Field px of lane tolerance. One lane, not a vertical cleave. */
+      Y_HALF: 36,
+      SLOW_MULT: 0.5,
+      SLOW_MS: 1100,
+    },
+    LION: {
+      DAMAGE: 13,
+      RANGE: 108,
+      HALF_ANGLE_DEG: 28,
+      MAX_TARGETS: 3,
+      /** Frame px from the feet to the slash center (in front of the cub). */
+      FORWARD_X: -18,
+      FORWARD_Y: -18,
+    },
+    DRAGON: {
+      /** Contact tick when the puff connects. Burn is the rest. */
+      CHIP: 5,
+      RANGE: 86,
+      HALF_ANGLE_DEG: 30,
+      MAX_TARGETS: 4,
+      BURN: 4,
+      BURN_INTERVAL_MS: 450,
+      /** Three ticks at the interval above. */
+      BURN_MS: 1350,
+      MOUTH_X: -14,
+      MOUTH_Y: -22,
+    },
+  },
   JUICE: {
     /** Field px the floating `-N` rises. damageText multiplies by LAYOUT_SCALE. */
     DAMAGE_TEXT_FLOAT_PX: 30,
@@ -111,7 +179,7 @@ export const GAME_CONFIG = {
     DAMAGE_TEXT_DURATION_MS: 600,
     /**
      * Largest integer a floating `-N` may print. Real single hits are
-     * handgun 30, a pellet 10, pet 28, or about one second of contact DPS.
+     * handgun 30, a pellet 10, a baby-pet hit (about 4–14), or one second of contact DPS.
      * A merged shotgun volley stops here too. This does not change damage
      * applied to HP.
      */

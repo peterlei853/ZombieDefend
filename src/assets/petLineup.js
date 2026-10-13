@@ -8,18 +8,46 @@ import {
 } from '../systems/DepthView.js';
 
 /**
- * First form only: baby idle strips (48×48, feet origin, face west).
- * Young / ancient forms and pet FX stay on disk.
- * Order is far → near along the fence.
+ * First form only. Baby idle + skill strips (48×48, feet origin, face west)
+ * and the baby skill FX. Young / ancient forms stay on disk.
+ * Order is far → near along the fence. Combat reads `id`; placement uses
+ * `key` plus the slot math below — pets are not moved behind the hero.
  */
 export const PET_LINEUP = [
-  { id: 'phoenix', key: 'pet-phoenix-baby-idle' },
-  { id: 'panda', key: 'pet-panda-baby-idle' },
-  { id: 'lion', key: 'pet-lion-baby-idle' },
-  { id: 'dragon', key: 'pet-dragon-baby-idle' },
+  {
+    id: 'phoenix',
+    key: 'pet-phoenix-baby-idle',
+    skill: 'pet-phoenix-baby-skill',
+    projectile: 'fx-pet-phoenix-spark-feather',
+    impact: 'fx-pet-phoenix-spark-feather-hit',
+  },
+  {
+    id: 'panda',
+    key: 'pet-panda-baby-idle',
+    skill: 'pet-panda-baby-skill',
+    windup: 'fx-pet-panda-roll-dust',
+    impact: 'fx-pet-panda-roll-impact',
+  },
+  {
+    id: 'lion',
+    key: 'pet-lion-baby-idle',
+    skill: 'pet-lion-baby-skill',
+    impact: 'fx-pet-lion-pounce-slash',
+  },
+  {
+    id: 'dragon',
+    key: 'pet-dragon-baby-idle',
+    skill: 'pet-dragon-baby-skill',
+    breath: 'fx-pet-dragon-smoke-breath',
+  },
 ];
 
-export const PET_LINEUP_KEYS = new Set(PET_LINEUP.map((pet) => pet.key));
+/** Idle, skill, and the baby FX each role actually casts. */
+export const PET_STAGE_KEYS = new Set(
+  PET_LINEUP.flatMap((pet) =>
+    [pet.key, pet.skill, pet.projectile, pet.windup, pet.impact, pet.breath].filter(Boolean)
+  )
+);
 
 /**
  * Canvas px to the right of the grass edge (the fence's safe-side face).
@@ -31,14 +59,19 @@ export const PET_LINEUP_KEYS = new Set(PET_LINEUP.map((pet) => pet.key));
 export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
- * Stage load filter. Non-pet categories pass through. Only the four
- * baby idle keys are queued from `pets`.
+ * Stage load filter. Non-pet categories pass through. From `pets`, only
+ * the four baby idle/skill strips and their phase-1 FX are queued.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {
   if (!asset) return false;
   if (asset.category !== 'pets') return true;
-  return PET_LINEUP_KEYS.has(asset.key);
+  return PET_STAGE_KEYS.has(asset.key);
+}
+
+/** @param {string} id */
+export function petRole(id) {
+  return PET_LINEUP.find((pet) => pet.id === id) ?? null;
 }
 
 /**
