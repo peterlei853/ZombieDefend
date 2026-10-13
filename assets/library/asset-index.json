@@ -945,7 +945,7 @@
       "group": "hud-kit",
       "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
       "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons.",
+      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated.",
       "manifest": "assets/library/ui/manifest.json",
       "dir": "assets/library/ui",
       "thumb": "assets/library/previews/ui/hud-kit/preview.png",
@@ -10077,7 +10077,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/ui/hud-kit/preview.png",
-      "description": "HUD bold font atlas black silhouettes (tint in engine). Glyph 16px, 10x8.",
+      "description": "HUD bold font atlas black silhouettes (tint in engine). Glyph 16px, 10x8. v0.26.1 redraws digits 0–9 so 0, 1, and 6 stay distinct.",
       "note": null,
       "tags": [
         "ui",
@@ -10112,7 +10112,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/ui/hud-kit/preview.png",
-      "description": "HUD bold atlas cream-gold fill.",
+      "description": "HUD bold atlas cream-gold fill. v0.26.1 redraws digits 0–9 so 0, 1, and 6 stay distinct.",
       "note": null,
       "tags": [
         "ui",
@@ -10147,7 +10147,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/ui/hud-kit/preview.png",
-      "description": "Prefer for HUD — gold fill + navy outline.",
+      "description": "Prefer for HUD — gold fill + navy exterior outline. v0.26.1 redraws digits 0–9 so counters on 0 and 6 stay open.",
       "note": null,
       "tags": [
         "ui",
@@ -10182,7 +10182,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/ui/hud-kit/preview.png",
-      "description": "HUD tiny font atlas black silhouettes. Glyph 8px.",
+      "description": "HUD tiny font atlas black silhouettes. Glyph 8px. v0.26.1 redraws digits 0–9 so 0, 1, and 6 stay distinct.",
       "note": null,
       "tags": [
         "ui",
@@ -10217,7 +10217,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/ui/hud-kit/preview.png",
-      "description": "HUD tiny atlas cream tint for small labels.",
+      "description": "HUD tiny atlas cream tint for small labels (version line). v0.26.1 redraws digits 0–9 so 0, 1, and 6 stay distinct.",
       "note": null,
       "tags": [
         "ui",
