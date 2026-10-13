@@ -23,7 +23,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.27.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.27.1', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 

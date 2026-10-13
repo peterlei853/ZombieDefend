@@ -1,4 +1,5 @@
 import { depthFromY } from './DepthView.js';
+import { playLibraryAnim } from '../assets/libraryAssets.js';
 import {
   WEAPON_TRAITS,
   deployOffset,
@@ -141,7 +142,9 @@ export class HeroFloats {
     const anims = this.scene?.anims;
     if (phase === 'fire' && anims?.exists?.(gun.key)) {
       const current = sprite.anims?.currentAnim?.key;
-      if (current !== gun.key || !sprite.anims?.isPlaying) sprite.play(gun.key);
+      if (current !== gun.key || !sprite.anims?.isPlaying) {
+        playLibraryAnim(sprite, gun.key, this.scene);
+      }
       return;
     }
     try {

@@ -61,6 +61,8 @@ export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, f
 /**
  * Call in create(). Creates `<key>` plus `<key>:start|:loop|:end` for sustained strips.
  * Idempotent. Returns the index, or null if preload did not cache it.
+ * Anims with no real texture frames are removed so `play()` cannot throw on
+ * `currentFrame.duration`.
  * @param {Phaser.Scene} scene
  */
 export function createLibraryAnims(scene) {
@@ -76,13 +78,7 @@ export function createLibraryAnims(scene) {
     }
     if (!(asset.frames > 1)) continue;
     const make = (key, start, end, repeat) => {
-      if (end < start || scene.anims.exists(key)) return;
-      scene.anims.create({
-        key,
-        repeat,
-        frameRate: asset.frameRate || 10,
-        frames: scene.anims.generateFrameNumbers(asset.key, { start, end }),
-      });
+      registerLibraryAnim(scene, asset.key, key, start, end, repeat, asset.frameRate);
     };
     make(asset.key, 0, asset.frames - 1, asset.loop ? -1 : 0);
     if (asset.loopFrom != null) {
@@ -92,6 +88,79 @@ export function createLibraryAnims(scene) {
     }
   }
   return index;
+}
+
+/** One-shot length when a strip has no playable duration. */
+export const LIBRARY_FX_FALLBACK_MS = 400;
+
+/**
+ * True when Phaser can start this anim. `anims.exists` is not enough:
+ * an empty frame list still registers, and `getFirstTick` then reads
+ * `currentFrame.duration` on undefined.
+ * @param {{ frames?: { duration?: number }[] }|null|undefined} anim
+ */
+export function libraryAnimReady(anim) {
+  const frames = anim?.frames;
+  if (!Array.isArray(frames) || frames.length === 0) return false;
+  const first = frames[0];
+  if (!first) return false;
+  if (first.duration != null && !Number.isFinite(first.duration)) return false;
+  return true;
+}
+
+/**
+ * Milliseconds to hold a still when playback cannot start.
+ * Prefers a finite positive anim duration, then frame count / frame rate.
+ * @param {{ duration?: number, frameRate?: number, frames?: unknown[] }|null|undefined} anim
+ * @param {{ frameRate?: number, frames?: number }|null|undefined} [asset]
+ */
+export function libraryFxDuration(anim, asset) {
+  const fromAnim = anim?.duration;
+  if (Number.isFinite(fromAnim) && fromAnim > 0) return fromAnim;
+  const frameCount = Array.isArray(anim?.frames) && anim.frames.length
+    ? anim.frames.length
+    : (Number.isFinite(asset?.frames) && asset.frames > 0 ? asset.frames : 4);
+  const rate = Number.isFinite(anim?.frameRate) && anim.frameRate > 0
+    ? anim.frameRate
+    : (Number.isFinite(asset?.frameRate) && asset.frameRate > 0 ? asset.frameRate : 10);
+  const ms = (frameCount / rate) * 1000;
+  return Number.isFinite(ms) && ms > 0 ? ms : LIBRARY_FX_FALLBACK_MS;
+}
+
+/**
+ * Play a library strip. Missing, empty, or throwing anims hold frame 0.
+ * Never throws.
+ * @param {Phaser.GameObjects.Sprite} sprite
+ * @param {string} key
+ * @param {Phaser.Scene} scene
+ * @returns {boolean} true when `sprite.play` started
+ */
+export function playLibraryAnim(sprite, key, scene) {
+  if (!sprite || typeof sprite.play !== 'function' || !key) return false;
+  const anims = scene?.anims;
+  const known = typeof anims?.exists === 'function' && anims.exists(key);
+  if (!known) {
+    holdLibraryFrame(sprite);
+    return false;
+  }
+  // Managers without `get` (older tests) cannot be inspected. Play inside
+  // try/catch. A real empty Phaser anim has `get` and is refused first.
+  if (typeof anims.get === 'function' && !libraryAnimReady(lookupLibraryAnim(scene, key))) {
+    holdLibraryFrame(sprite);
+    return false;
+  }
+  try {
+    sprite.play(key);
+    return true;
+  } catch (_) {
+    try {
+      sprite.anims?.stop?.();
+    } catch (_) {
+      /* already stopped */
+    }
+    holdLibraryFrame(sprite);
+    return false;
+  }
 }
 
 /** @param {Phaser.Scene} scene @param {string} key */
@@ -114,25 +183,38 @@ export function libraryAsset(scene, key) {
  */
 export function playLibraryFx(scene, x, y, key, opts = {}) {
   if (!scene?.add?.sprite || !key || !scene.textures?.exists?.(key)) return null;
-  const asset = libraryAsset(scene, key);
-  const sprite = scene.add.sprite(x, y, key);
-  const origin = asset?.origin ?? [0.5, 0.5];
-  const ox = opts.flipX ? 1 - origin[0] : origin[0];
-  sprite.setOrigin(ox, origin[1]);
-  if (opts.flipX) sprite.setFlipX(true);
-  if (opts.scale) sprite.setScale(opts.scale);
-  if (opts.rotation) sprite.setRotation(opts.rotation);
-  if (opts.depth != null) sprite.setDepth(opts.depth);
-  if (scene.anims?.exists?.(key)) {
-    sprite.play(key);
-    const looping = asset?.loop && asset.loopFrom == null;
-    if (!looping) {
+  let sprite = null;
+  try {
+    const asset = libraryAsset(scene, key);
+    sprite = scene.add.sprite(x, y, key);
+    const origin = asset?.origin ?? [0.5, 0.5];
+    const ox = opts.flipX ? 1 - origin[0] : origin[0];
+    sprite.setOrigin(ox, origin[1]);
+    if (opts.flipX) sprite.setFlipX(true);
+    if (opts.scale) sprite.setScale(opts.scale);
+    if (opts.rotation) sprite.setRotation(opts.rotation);
+    if (opts.depth != null) sprite.setDepth(opts.depth);
+    const played = playLibraryAnim(sprite, key, scene);
+    const looping = !!(asset?.loop && asset.loopFrom == null);
+    if (played && !looping) {
       sprite.once(`animationcomplete-${key}`, () => {
         if (sprite.active) sprite.destroy();
       });
+    } else if (!played && !looping) {
+      const ms = libraryFxDuration(lookupLibraryAnim(scene, key), asset);
+      scene.time?.delayedCall?.(ms, () => {
+        if (sprite?.active) sprite.destroy();
+      });
     }
+    return sprite;
+  } catch (_) {
+    try {
+      sprite?.destroy?.();
+    } catch (_) {
+      /* sprite never attached */
+    }
+    return null;
   }
-  return sprite;
 }
 
 /**
@@ -184,6 +266,96 @@ function rememberIndex(scene, index) {
   const cache = scene?.cache?.json;
   if (!cache || cache.exists?.(LIBRARY_INDEX_KEY)) return;
   cache.add(LIBRARY_INDEX_KEY, index);
+}
+
+/**
+ * Register only frames the texture actually has. Drops an existing empty anim
+ * so a later ready sheet can recreate it.
+ * @param {Phaser.Scene} scene
+ * @param {string} textureKey
+ * @param {string} key
+ * @param {number} start
+ * @param {number} end
+ * @param {number} repeat
+ * @param {number|null|undefined} frameRate
+ */
+function registerLibraryAnim(scene, textureKey, key, start, end, repeat, frameRate) {
+  if (!scene?.anims || end < start) return;
+  const frames = libraryFrameList(scene, textureKey, start, end);
+  const existing = lookupLibraryAnim(scene, key);
+  if (frames.length === 0) {
+    removeLibraryAnim(scene, key);
+    return;
+  }
+  if (libraryAnimReady(existing) && existing.frames.length === frames.length) return;
+  removeLibraryAnim(scene, key);
+  if (scene.anims.exists?.(key)) return;
+  const rate = Number.isFinite(frameRate) && frameRate > 0 ? frameRate : 10;
+  try {
+    scene.anims.create({ key, repeat, frameRate: rate, frames });
+  } catch (_) {
+    removeLibraryAnim(scene, key);
+  }
+}
+
+/**
+ * @param {Phaser.Scene} scene
+ * @param {string} textureKey
+ * @param {number} start
+ * @param {number} end
+ */
+function libraryFrameList(scene, textureKey, start, end) {
+  const tex = scene.textures?.exists?.(textureKey) ? scene.textures.get(textureKey) : null;
+  const frames = [];
+  for (let i = start; i <= end; i++) {
+    if (textureHasFrame(tex, i)) frames.push({ key: textureKey, frame: i });
+  }
+  return frames;
+}
+
+/** @param {Phaser.Textures.Texture|null|undefined} tex @param {number} frame */
+function textureHasFrame(tex, frame) {
+  if (!tex) return false;
+  if (typeof tex.has === 'function' && (tex.has(frame) || tex.has(String(frame)))) return true;
+  const names = typeof tex.getFrameNames === 'function' ? tex.getFrameNames() : [];
+  return names.includes(frame) || names.includes(String(frame));
+}
+
+/** @param {Phaser.Scene} scene @param {string} key */
+function lookupLibraryAnim(scene, key) {
+  const anims = scene?.anims;
+  if (!anims || typeof anims.exists !== 'function' || !anims.exists(key)) return null;
+  try {
+    return typeof anims.get === 'function' ? anims.get(key) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/** @param {Phaser.Scene} scene @param {string} key */
+function removeLibraryAnim(scene, key) {
+  const anims = scene?.anims;
+  if (!anims || typeof anims.exists !== 'function' || !anims.exists(key)) return;
+  if (typeof anims.remove !== 'function') return;
+  try {
+    anims.remove(key);
+  } catch (_) {
+    /* leave the key; play paths still refuse it */
+  }
+}
+
+/** @param {Phaser.GameObjects.Sprite} sprite */
+function holdLibraryFrame(sprite) {
+  if (typeof sprite.setFrame !== 'function') return;
+  try {
+    sprite.setFrame(0);
+  } catch (_) {
+    try {
+      sprite.setFrame('__BASE');
+    } catch (_) {
+      /* texture has no still; the sprite stays as created */
+    }
+  }
 }
 
 function readLibraryIndexSync() {
