@@ -4,7 +4,7 @@
  * Lengths and speeds are field pixels from the 800-wide composition.
  * Callers multiply px and px/s by DepthView.LAYOUT_SCALE so the 1280 canvas
  * keeps the same timing. Fire rates and tween durations are milliseconds.
- * Shake intensity is Phaser's camera.shake magnitude.
+ * The camera does not shake.
  *
  * PLAYER.MOVE_SPEED stays 180 (a sketch of this object used 200).
  * SHOTGUN.PELLETS (18) is the midpoint of the live 16–20 roll, not a fixed count.
@@ -21,8 +21,8 @@
  * waves.js and economy.js. Zombie variant labels do not scale those HP
  * or speed numbers. Walker rows keep the default feel.
  *
- * Hit shove, flash, hitlag, overkill shake, and the critical-HP ratio live in JUICE.
- * Weapon volleys do not shake the camera.
+ * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
+ * Nothing calls camera.shake: weapon fire, hits, and overkill included.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
  */
 const KNOCKBACK_HANDGUN_PX = 10;
@@ -105,13 +105,6 @@ export const GAME_CONFIG = {
     },
   },
   JUICE: {
-    /**
-     * Retired for weapon fire in v0.18.0. Shotgun / Flame volleys must not
-     * call camera.shake. Overkill kills still use SCREEN_SHAKE_OVERKILL.
-     */
-    SCREEN_SHAKE_SHOTGUN: 0.015,
-    /** Retired with SCREEN_SHAKE_SHOTGUN. */
-    SCREEN_SHAKE_SHOTGUN_MS: 150,
     /** Field px the floating `-N` rises. damageText multiplies by LAYOUT_SCALE. */
     DAMAGE_TEXT_FLOAT_PX: 30,
     /** Fade duration for that float. */
@@ -182,9 +175,6 @@ export const GAME_CONFIG = {
     FRAGMENT_MIN: 4,
     FRAGMENT_MAX: 6,
     FRAGMENT_MS: 460,
-    /** Overkill kill only. Weapon volleys do not shake. */
-    SCREEN_SHAKE_OVERKILL: 0.03,
-    SCREEN_SHAKE_OVERKILL_MS: 200,
   },
 };
 

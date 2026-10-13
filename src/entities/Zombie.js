@@ -17,7 +17,7 @@ import {
   zombieSheetKey,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
-import { beginHitlag, shakeOverkill, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
+import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
 /** Near-black track. The old 0x1a1a1a tick disappeared into green slime shading. */
@@ -524,7 +524,6 @@ export class Zombie {
     if (deathKey) {
       if (overkill) {
         beginHitlag(this.scene);
-        shakeOverkill(this.scene);
       } else {
         spawnBlood(this.scene, body.x, body.y);
       }
@@ -534,7 +533,6 @@ export class Zombie {
 
     if (overkill) {
       beginHitlag(this.scene);
-      shakeOverkill(this.scene);
       spawnFragments(this.scene, body.x, this.bodyCenterY);
       const ms = GAME_CONFIG.JUICE.HIT_FLASH_MS;
       this.scene.time?.delayedCall?.(ms, () => {

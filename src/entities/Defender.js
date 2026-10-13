@@ -469,8 +469,8 @@ export class DefenderGroup {
 
   /**
    * One shotgun volley (not each pellet): recoil anim, body kick, lane lock.
-   * Weapon fire does not shake the camera. Shell casing and muzzle flash
-   * still spawn with the fan.
+   * The camera does not shake. Shell casing and muzzle flash still spawn
+   * with the fan.
    */
   _onShotgunVolley() {
     this._shotgunLockMs = GAME_CONFIG.PLAYER.SHOTGUN_MOVE_LOCK_MS;
