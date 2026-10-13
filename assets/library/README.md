@@ -70,6 +70,8 @@ Category `pets/` holds four chibi companions (phoenix / panda / lion / dragon), 
 
 Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128). Origin `(0.5, 1)`. Facing west. Skill = cast strip + FX; see group manifest `castFrame` / `spawnOffset`.
 
+HUD portraits are the 48×48 icons in `pets/ui/` (`ui-pet-phoenix-head`, `ui-pet-panda-head`, `ui-pet-lion-head`, `ui-pet-dragon-head`). Origin `(0.5, 0.5)`. Bright, dim, and grey states are applied in code.
+
 ## Canvas, origin and facing conventions
 
 All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Every PNG is exactly `frameWidth*frames × frameHeight`, and the build script checks this. The `origin` value is the Phaser `setOrigin(x, y)`.

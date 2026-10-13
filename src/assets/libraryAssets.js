@@ -11,7 +11,9 @@ const INDEX_URL = 'assets/library/asset-index.json';
 
 /**
  * Categories the stage actually draws. Concepts are reference art only.
- * `pets` is narrowed by stageLibraryFilter to the four baby summon strips.
+ * `pets` is narrowed by stageLibraryFilter to the four baby summon strips
+ * and the four `ui-pet-*-head` icons. Icons (frames === 1) load with
+ * `load.image`, the same path as hero weapon icons.
  * `environment` is the barricade fence posts.
  */
 export const STAGE_LIBRARY_CATEGORIES = [

@@ -2,10 +2,10 @@ import { GAME_WIDTH } from '../data/waves.js';
 import { HUD_DEPTH, layoutPx } from '../systems/DepthView.js';
 
 /**
- * Top-right party column. The library has no portrait icons, so each slot
- * shows frame 0 of `pet-*-baby-idle`, cropped to the head.
- * Ready slots are bright and tappable. Skill cooldown dims the head.
- * Death / revive cooldown greys it and draws an X plus a bandage.
+ * Top-right party column. Each slot shows the library `ui-pet-*-head` icon
+ * (48×48, full texture, no idle-frame crop).
+ * Ready slots are bright and tappable. Skill cooldown dims the head (alpha).
+ * Death / revive cooldown greys it (tint) and draws an X plus a bandage.
  * A pet on the field shows 「出戰中」 and ignores taps.
  * Tap punch is visual. Summon / death / revive-ready audio is played by PetCombat.
  */
@@ -159,14 +159,12 @@ export class PetPortraitHud {
   _portrait(view) {
     const scene = this.scene;
     const key = view.portraitKey;
-    const crop = view.crop || { x: 8, y: 4, width: 32, height: 24 };
     if (key && scene.textures?.exists?.(key) && scene.add?.image) {
-      // Frame 0 of the baby idle strip. No separate portrait sheet.
-      const img = scene.add.image(0, -layoutPx(4), key, 0);
-      img.setFrame?.(0);
-      img.setCrop(crop.x, crop.y, crop.width, crop.height);
-      const fit = this.slot - layoutPx(18);
-      img.setScale(fit / Math.max(1, crop.width));
+      const img = scene.add.image(0, -layoutPx(4), key);
+      img.setOrigin?.(0.5, 0.5);
+      const src = img.frame?.realWidth || img.width || 48;
+      const fit = this.slot - layoutPx(14);
+      img.setScale(fit / Math.max(1, src));
       return img;
     }
     const g = scene.add.graphics();
@@ -242,7 +240,6 @@ export class PetPortraitHud {
     const enabled = !!slot.hit.input?.enabled;
     if (tappable && !enabled) slot.hit.setInteractive({ useHandCursor: true });
     else if (!tappable && enabled) slot.hit.disableInteractive();
-    if (typeof slot.portrait.setFrame === 'function') slot.portrait.setFrame(0);
     if (view.grey) slot.portrait.setTint?.(0x8d8d8d);
     else slot.portrait.clearTint?.();
     // Skill CD dims. Revive stays readable under the grey tint, X, and bandage.
@@ -284,7 +281,6 @@ function cssColor(color) {
  * @property {string} badge
  * @property {number} bar
  * @property {string} portraitKey
- * @property {{ x: number, y: number, width: number, height: number }} [crop]
  */
 
 /**
