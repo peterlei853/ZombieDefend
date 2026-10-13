@@ -4,7 +4,7 @@
   "group": "hud-kit",
   "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
   "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/.",
+  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons.",
   "source": {
     "tool": "2-PixelLab Bot ui-kit",
     "note": "Cataloged by PixelLab Asset Pipeline from /workspace/ui-kit"
@@ -72,6 +72,26 @@
       "key": "ui-hp-bar-enemy",
       "path": "assets/library/ui/bars/ui-hp-bar-enemy.png",
       "type": "icon",
+      "frameWidth": 118,
+      "frameHeight": 24,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 enemy HP stone frame, parchment rim, cyan end glow, orange gems. Origin (0.5, 0.5). Native 118×24. Legacy slot is ui-hp-bar-enemy-96.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud",
+        "enemy"
+      ]
+    },
+    {
+      "key": "ui-hp-bar-enemy-96",
+      "path": "assets/library/ui/bars/ui-hp-bar-enemy-96.png",
+      "type": "icon",
       "frameWidth": 96,
       "frameHeight": 32,
       "frames": 1,
@@ -80,11 +100,72 @@
         0.5
       ],
       "facing": null,
-      "description": "Compact enemy / world HP frame.",
+      "description": "v0.22 enemy HP frame nearest drop-in for the legacy 96×32 slot. Origin (0.5, 0.5).",
       "tags": [
         "ui",
         "bar",
-        "hud"
+        "hud",
+        "enemy"
+      ]
+    },
+    {
+      "key": "ui-hp-enemy-fill-ok",
+      "path": "assets/library/ui/bars/ui-hp-enemy-fill-ok.png",
+      "type": "icon",
+      "frameWidth": 72,
+      "frameHeight": 8,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Compact green enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud",
+        "enemy"
+      ]
+    },
+    {
+      "key": "ui-hp-enemy-fill-mid",
+      "path": "assets/library/ui/bars/ui-hp-enemy-fill-mid.png",
+      "type": "icon",
+      "frameWidth": 72,
+      "frameHeight": 8,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Compact yellow enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud",
+        "enemy"
+      ]
+    },
+    {
+      "key": "ui-hp-enemy-fill-low",
+      "path": "assets/library/ui/bars/ui-hp-enemy-fill-low.png",
+      "type": "icon",
+      "frameWidth": 72,
+      "frameHeight": 8,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Compact red enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud",
+        "enemy"
       ]
     },
     {
@@ -331,6 +412,86 @@
       "tags": [
         "ui",
         "button",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-joystick-base",
+      "path": "assets/library/ui/controls/ui-joystick-base.png",
+      "type": "icon",
+      "frameWidth": 80,
+      "frameHeight": 80,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 virtual joystick base. Stone ring, parchment pad, orange cardinal gems, cyan runes. Origin (0.5, 0.5). Not a flat circle.",
+      "tags": [
+        "ui",
+        "control",
+        "joystick",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-joystick-base-96",
+      "path": "assets/library/ui/controls/ui-joystick-base-96.png",
+      "type": "icon",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 joystick base nearest 96×96 upscale. Origin (0.5, 0.5).",
+      "tags": [
+        "ui",
+        "control",
+        "joystick",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-joystick-knob",
+      "path": "assets/library/ui/controls/ui-joystick-knob.png",
+      "type": "icon",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 joystick knob. Stone rim, parchment, orange gem, cyan cardinal dots. Origin (0.5, 0.5).",
+      "tags": [
+        "ui",
+        "control",
+        "joystick",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-joystick-knob-pressed",
+      "path": "assets/library/ui/controls/ui-joystick-knob-pressed.png",
+      "type": "icon",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 joystick knob pressed state. Brighter cyan ring. Origin (0.5, 0.5). Swap in while the stick is active.",
+      "tags": [
+        "ui",
+        "control",
+        "joystick",
         "hud"
       ]
     },
@@ -614,6 +775,46 @@
       ],
       "facing": null,
       "description": "Title splash upscale 1280×720 (optional HD). Prefer ui-title-bg for pixel-perfect.",
+      "tags": [
+        "ui",
+        "title",
+        "background",
+        "splash"
+      ]
+    },
+    {
+      "key": "ui-title-bg-clean",
+      "path": "assets/library/ui/title/ui-title-bg-clean.png",
+      "type": "image",
+      "frameWidth": 688,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 clean title splash. Hero, four baby pets, night campus, ZOMBIE VS MY BUDDY logo. Origin (0.5, 0.5). No baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons.",
+      "tags": [
+        "ui",
+        "title",
+        "background",
+        "splash"
+      ]
+    },
+    {
+      "key": "ui-title-bg-clean-hd",
+      "path": "assets/library/ui/title/ui-title-bg-clean-hd.png",
+      "type": "image",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "v0.22 clean title splash upscale 1280×720. Origin (0.5, 0.5). No baked menu buttons or version footer. Prefer ui-title-bg-clean for pixel-perfect.",
       "tags": [
         "ui",
         "title",

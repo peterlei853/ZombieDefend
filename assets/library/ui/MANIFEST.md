@@ -28,7 +28,11 @@ Glyph order (atlas row-major, 10×8, **no space glyph**):
 |-----|------|------|--------|-------|
 | `ui-hp-bar-player` | `ui-hp-bar-player.png` | 248×36 | (0.5, 0.5) | Stone frame, parchment inner rim, cyan accents, orange end gems, empty navy trough. Overlay fill in code. |
 | `ui-hp-bar-barricade` | `ui-hp-bar-barricade.png` | 251×45 | (0.5, 0.5) | Wood-brown + stone, cyan micro-glow, orange gems. |
-| `ui-hp-bar-enemy` | `ui-hp-bar-enemy.png` | 96×32 | (0.5, 0.5) | Compact enemy / world HP frame. |
+| `ui-hp-bar-enemy` | `ui-hp-bar-enemy.png` | **118×24** (native) | (0.5, 0.5) | **v0.22 Accept fix** — stone + parchment rim + cyan end glow + orange gems; empty navy trough. Replaces the old 96×32 frame on this key. |
+| `ui-hp-bar-enemy-96` | `ui-hp-bar-enemy-96.png` | 96×32 | (0.5, 0.5) | Nearest drop-in for the legacy 96×32 slot. |
+| `ui-hp-enemy-fill-ok` | `ui-hp-enemy-fill-ok.png` | 72×8 | (0, 0.5) | Compact green fill (matches player fill palette). Left-grow, same as `ui-hp-fill-*`. |
+| `ui-hp-enemy-fill-mid` | `ui-hp-enemy-fill-mid.png` | 72×8 | (0, 0.5) | Compact yellow fill. |
+| `ui-hp-enemy-fill-low` | `ui-hp-enemy-fill-low.png` | 72×8 | (0, 0.5) | Compact red fill. |
 | `ui-hp-trough` | `ui-hp-trough.png` | 128×16 | (0, 0.5) | Procedural empty trough (stretch). |
 | `ui-hp-fill-full` | `ui-hp-fill-full.png` | 120×10 | (0, 0.5) | Red fill strip (procedural). |
 | `ui-hp-fill-mid` | `ui-hp-fill-mid.png` | 120×10 | (0, 0.5) | Yellow fill. |
@@ -47,6 +51,28 @@ Glyph order (atlas row-major, 10×8, **no space glyph**):
 | `ui-btn-parchment` | `buttons/ui-btn-parchment.png` | 73×33 | (0.5, 0.5) | Single empty parchment button (label via font). |
 | `ui-btn-piece-1` | `buttons/ui-btn-piece-1.png` | 116×56 | (0.5, 0.5) | Smaller frame piece from strip gen. |
 | `ui-btn-piece-2` | `buttons/ui-btn-piece-2.png` | 234×148 | (0.5, 0.5) | Larger panel piece (9-slice candidate). |
+
+### Controls — virtual joystick (`controls/`)
+**v0.22 Accept fix** — parchment/stone kit style (not flat circles). Origin **(0.5, 0.5)**. Transparent background.
+
+| Key | File | Size | Origin | Notes |
+|-----|------|------|--------|-------|
+| `ui-joystick-base` | `controls/ui-joystick-base.png` | 80×80 | (0.5, 0.5) | Stone ring + parchment pad + cardinal orange gems + cyan runes. |
+| `ui-joystick-base-96` | `controls/ui-joystick-base-96.png` | 96×96 | (0.5, 0.5) | 96px nearest upscale of the base. |
+| `ui-joystick-knob` | `controls/ui-joystick-knob.png` | 40×40 | (0.5, 0.5) | Stone rim + parchment + orange gem + cyan cardinal dots. |
+| `ui-joystick-knob-pressed` | `controls/ui-joystick-knob-pressed.png` | 40×40 | (0.5, 0.5) | Pressed: brighter cyan ring. Swap in while the stick is active. |
+
+**Wire:** place the knob at the stick delta inside the base; swap to `ui-joystick-knob-pressed` while active.
+
+### Title splash — clean (`title/`)
+**v0.22 Accept fix** — removes the baked **v0.21** footer and the **NEW GAME / OLD GAME / SCOREBOARD** parchment buttons. The game draws menu buttons separately. Sits alongside `ui-title-bg` / `ui-title-bg-hd`.
+
+| Key | File | Size | Origin | Notes |
+|-----|------|------|--------|-------|
+| `ui-title-bg-clean` | `title/ui-title-bg-clean.png` | 688×384 | (0.5, 0.5) | Hero + 4 baby pets + campus night + ornate **ZOMBIE VS MY BUDDY** logo. **No** menu buttons, **no** version footer. |
+| `ui-title-bg-clean-hd` | `title/ui-title-bg-clean-hd.png` | 1280×720 | (0.5, 0.5) | Nearest upscale of the clean splash. |
+
+**Wire:** replace the title background with `ui-title-bg-clean` (or `-hd`). Overlay `ui-btn-parchment` + font labels for NEW / LOAD / SCOREBOARD.
 
 ### Icons (`icons/`)
 | Key | File | Size | Origin |
@@ -125,3 +151,18 @@ Runtime (code, not assets): `StageScene` flat HUD bar + Phaser `Text`; `Barricad
 - [ ] Menu buttons: parchment + font labels (NEW GAME / OLD GAME / SCOREBOARD)  
 - [ ] Pet summon/recall: `ui-float-go` / `ui-float-back` (0.6–0.8s, origin 0.5,1)
 - [ ] Leave `// PIXELLAB_HOOK` if any; catalog PR via PixelLab Asset Pipeline when shipping to `assets/library/ui/`
+- [ ] **v0.22 Accept:** wire `ui-hp-bar-enemy` (118×24, origin 0.5,0.5) or legacy `ui-hp-bar-enemy-96` (96×32) plus `ui-hp-enemy-fill-{ok,mid,low}` (origin 0,0.5)
+- [ ] **v0.22 Accept:** swap the flat joystick for `ui-joystick-base` / `ui-joystick-knob` / `ui-joystick-knob-pressed` (origin 0.5,0.5)
+- [ ] **v0.22 Accept:** replace the title background with `ui-title-bg-clean` (no baked footer or menu buttons)
+
+---
+
+## v0.22 Accept style fixes (2026-10-13)
+
+Player Tester Accept flagged a flat enemy HP bar, a flat joystick, and a dirty title splash. Cataloged from the 2-PixelLab ui-kit into `assets/library/ui/`:
+
+1. **Enemy HP** — `bars/ui-hp-bar-enemy.png` is now the native 118×24 stone frame. `ui-hp-bar-enemy-96` keeps a 96×32 slot. Compact fills are `ui-hp-enemy-fill-{ok,mid,low}`.
+2. **Joystick** — `controls/ui-joystick-{base,base-96,knob,knob-pressed}`.
+3. **Title** — `title/ui-title-bg-clean.png` and `ui-title-bg-clean-hd.png` have no baked menu labels and no v0.21 footer.
+
+Bar frames, joystick parts, and both clean title splashes use origin **(0.5, 0.5)**. Enemy fill strips use **(0, 0.5)** so they grow from the left like `ui-hp-fill-*`. Assets only — no game code in this change.
