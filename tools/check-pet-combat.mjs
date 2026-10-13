@@ -1,9 +1,11 @@
 /**
- * Baby-pet summon checks (no Phaser, no browser).
+ * Pet bar summon checks (no Phaser, no browser).
  * Run: node tools/check-pet-combat.mjs
  *
- * Portraits own summon. Pets start off the field. Timeout starts skill CD
- * only. Death starts revive CD only. A tap with no enemies does not spend CD.
+ * Bars summon and recall. No deploy cooldown, no on-field limit.
+ * Recalled pets regen. Death greys the bar for REVIVE_CD_MS.
+ * Unlocked orbs fill, flash, then auto-cast. Form 1 uses baby FX.
+ * Forms 2 and 3 are locked in play and covered with placeholder circles.
  */
 import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
@@ -29,8 +31,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.20.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.20.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.21.0', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.21.0', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -42,17 +44,23 @@ const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.met
 assert(boot.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!boot.includes('v0.19'), 'boot title is not 0.19');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.20.0'), 'document title is v0.20.0');
+assert(html.includes('v0.21.0'), 'document title is v0.21.0');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
-assert(defender.includes('summonPet'), 'defender summons from portraits');
+assert(defender.includes('summonPet'), 'defender summons from the bar');
 assert(stage.includes('nearestFieldPet'), 'stage routes aggro to field pets');
 assert(stage.includes('petContactDamage'), 'pet bites are separate from barricade DPS');
-assert(hud.includes('出戰中'), 'field badge is 出戰中');
-assert(hud.includes('沒有目標'), 'empty tap toasts 沒有目標');
+assert(hud.includes('setOrigin(0, 0.5)'), 'bar origin is left-middle');
+assert(hud.includes('.arc('), 'cooldown ring is a code arc');
+assert(hud.includes('64') && hud.includes('32') && hud.includes('16'), 'bar is 64×32 and orbs are 16');
+assert(!hud.includes('出戰中'), 'field badge is not the old 出戰中 label');
+assert(!hud.includes('沒有目標'), 'summon does not toast 沒有目標');
+assert(!combatSrc.includes('fieldLeft'), 'no on-field time limit');
+assert(!combatSrc.includes("phase = 'skill'"), 'skill cooldown is not a summon gate');
 assert(combatSrc.includes('playPetSummon'), 'summon SFX hook');
 assert(combatSrc.includes('playPetDeath'), 'death SFX hook');
 assert(combatSrc.includes('playPetReviveReady'), 'revive-ready SFX hook');
+assert(combatSrc.includes('OFF_FIELD_REGEN_RATIO'), 'recall regen uses the config ratio');
 
 for (const file of [
   '../src/systems/PetCombat.js',
@@ -78,18 +86,29 @@ assert(!PET_STAGE_KEYS.has('fx-pet-lion-roar-wave'), 'baby lion does not load ro
 assert(PET_STAGE_KEYS.has('fx-pet-dragon-smoke-breath'), 'dragon breath loads');
 assert(!PET_STAGE_KEYS.has('fx-pet-dragon-fireball'), 'baby dragon does not load fireball');
 assert(!PET_STAGE_KEYS.has('pet-phoenix-young-skill'), 'young form stays unloaded');
+assert(PET_STAGE_KEYS.has('ui-pet-phoenix-bar'), 'phoenix bar loads');
+assert(PET_STAGE_KEYS.has('ui-pet-dragon-bar'), 'dragon bar loads');
+assert(PET_STAGE_KEYS.has('ui-pet-phoenix-head'), 'phoenix head loads');
+assert(PET_STAGE_KEYS.has('ui-pet-orb-phoenix-dark'), 'phoenix dark orb loads');
+assert(PET_STAGE_KEYS.has('ui-pet-orb-phoenix-lit'), 'phoenix lit orb loads');
+assert(PET_STAGE_KEYS.has('ui-pet-orb-phoenix-flash'), 'phoenix flash orb loads');
+assert(PET_STAGE_KEYS.has('ui-pet-orb-lion-flash'), 'lion flash orb loads');
+assert(PET_STAGE_KEYS.has('ui-pet-orb-dragon-dark'), 'dragon dark orb loads');
 assert(stageLibraryFilter({ category: 'hero', key: 'player-girl' }), 'hero still loads');
 assert(!stageLibraryFilter({ category: 'pets', key: 'pet-lion-ancient-idle' }), 'ancient filtered');
 
-const summon = GAME_CONFIG.PETS.SUMMON;
-assert(summon.phoenix.skillCdMs === 8000 && summon.phoenix.fieldMs === 12000 && summon.phoenix.reviveCdMs === 20000, 'phoenix 8/12/20');
-assert(summon.panda.skillCdMs === 10000 && summon.panda.fieldMs === 14000 && summon.panda.reviveCdMs === 22000, 'panda 10/14/22');
-assert(summon.lion.skillCdMs === 7000 && summon.lion.fieldMs === 10000 && summon.lion.reviveCdMs === 18000, 'lion 7/10/18');
-assert(summon.dragon.skillCdMs === 12000 && summon.dragon.fieldMs === 16000 && summon.dragon.reviveCdMs === 25000, 'dragon 12/16/25');
-assert(GAME_CONFIG.PETS.HP > 0, 'pets have HP');
-
 const petsCfg = GAME_CONFIG.PETS;
-assert(petsCfg.COOLDOWN_MIN_MS >= 1000 && petsCfg.COOLDOWN_MAX_MS <= 1500, 'in-field cadence is 1.0–1.5s');
+assert(petsCfg.REVIVE_CD_MS === 18000, 'revive cooldown is 18s');
+assert(petsCfg.OFF_FIELD_REGEN_RATIO === 0.25, 'recall regen is 25% max HP per second');
+assert(petsCfg.ORB_FLASH_MS === 1000, 'orb flash is 1s');
+assert(petsCfg.UNLOCKED_ORBS === 1, 'only form 1 is unlocked');
+assert(petsCfg.ORB_CD_MS.phoenix.join() === '9000,16000,24000', 'phoenix orbs 9/16/24');
+assert(petsCfg.ORB_CD_MS.panda.join() === '10000,18000,26000', 'panda orbs 10/18/26');
+assert(petsCfg.ORB_CD_MS.lion.join() === '8000,14000,22000', 'lion orbs 8/14/22');
+assert(petsCfg.ORB_CD_MS.dragon.join() === '12000,20000,28000', 'dragon orbs 12/20/28');
+assert(petsCfg.ORB_CD_MS.phoenix[0] < petsCfg.ORB_CD_MS.phoenix[1], 'phoenix orb 2 is longer than orb 1');
+assert(petsCfg.ORB_CD_MS.phoenix[1] < petsCfg.ORB_CD_MS.phoenix[2], 'phoenix orb 3 is the longest');
+assert(GAME_CONFIG.PETS.HP > 0, 'pets have HP');
 assert(petsCfg.PHOENIX.DAMAGE < 30 && petsCfg.PANDA.DAMAGE < 30, 'pet hits stay under a handgun shot');
 assert(petsCfg.PANDA.RANGE >= 80, 'panda reach covers a zombie at the posts');
 assert(petsCfg.DRAGON.BURN > 0 && petsCfg.DRAGON.BURN_MS > 0, 'dragon burn is configured');
@@ -140,11 +159,15 @@ const audio = { summon: 0, death: 0, revive: 0, playPetSummon() { this.summon +=
 const scene = mockScene(audio);
 const combat = new PetCombat(scene);
 const views0 = combat.portraitViews();
-assert(views0.length === 4, 'four portrait slots');
-assert(views0.every((view) => view.portraitKey.endsWith('-baby-idle')), 'portraits are baby idle strips');
-assert(hud.includes('key, 0'), 'portrait image is idle frame 0');
-assert(!hud.includes('pet-portrait-icon'), 'no dedicated portrait icons');
-assert(views0.every((view) => view.phase === 'ready' && view.tappable && view.bar === 1), 'starts ready, off the field');
+assert(views0.length === 4, 'four bars');
+assert(views0.map((view) => view.barKey).join() === 'ui-pet-phoenix-bar,ui-pet-panda-bar,ui-pet-lion-bar,ui-pet-dragon-bar', 'bar keys');
+assert(views0[0].headKey === 'ui-pet-phoenix-head', 'phoenix head key is on the view');
+assert(views0[0].orbs.map((orb) => orb.dark).join() === 'ui-pet-orb-phoenix-dark,ui-pet-orb-phoenix-dark,ui-pet-orb-phoenix-dark', 'three phoenix orbs');
+assert(views0[0].orbs[0].lit === 'ui-pet-orb-phoenix-lit' && views0[0].orbs[0].flash === 'ui-pet-orb-phoenix-flash', 'phoenix lit and flash keys');
+assert(views0.every((view) => view.orbs.length === 3), 'three orbs on every bar');
+assert(views0.every((view) => view.orbs[0].unlocked && !view.orbs[1].unlocked && !view.orbs[2].unlocked), 'only orb 1 starts unlocked');
+assert(views0.every((view) => view.orbs[1].state === 'locked' && view.orbs[2].state === 'locked'), 'orbs 2 and 3 are locked');
+assert(views0.every((view) => view.phase === 'ready' && view.tappable && view.hp === 1), 'starts ready, full HP, off the field');
 assert(combat.fieldPets().length === 0, 'nothing is summoned at stage start');
 
 const laneY = 432;
@@ -152,94 +175,133 @@ const fenceX = barricadeXAtY(laneY);
 const player = { x: fenceX + layoutPx(28), y: laneY };
 const foeX = fenceX - layoutPx(110);
 const empty = combat.summon(0, player, []);
-assert(empty.ok === false && empty.reason === 'no-target', 'no enemies does not summon');
-assert(combat.portraitViews()[0].tappable, 'no-target tap stays ready');
-assert(combat.portraitViews()[0].phase === 'ready', 'no-target does not start skill CD');
-assert(audio.summon === 0, 'rejected tap plays no summon hook');
+assert(empty.ok && empty.id === 'phoenix', 'summon does not require a target');
+assert(combat.portraitViews()[0].phase === 'field', 'empty field still deploys');
+assert(audio.summon === 1, 'deploy plays the summon hook');
+const recalledEmpty = combat.summon(0, player, []);
+assert(recalledEmpty.reason === 'recall', 'second tap recalls');
+assert(combat.fieldPets().length === 0, 'recall leaves the field');
+assert(combat.portraitViews()[0].phase === 'ready' && combat.portraitViews()[0].tappable, 'recalled bar can summon again');
+assert(audio.summon === 1, 'recall is not another summon');
 
 const zombie = mockZombie(foeX, laneY);
 const first = combat.summon(0, player, [zombie]);
 assert(first.ok && first.id === 'phoenix', 'phoenix summons');
-assert(audio.summon === 1, 'summon hook');
+assert(audio.summon === 2, 'summon hook on the real deploy');
 assert(combat.fieldPets().length === 1, 'one pet on the field');
-assert(combat.portraitViews()[0].badge === '出戰中', 'field portrait says 出戰中');
-assert(combat.portraitViews()[0].tappable === false, 'field portrait is not tappable');
-const again = combat.summon(0, player, [zombie]);
-assert(again.ok === false && again.reason === 'field', 'no double summon');
-assert(combat.fieldPets().length === 1, 'still one phoenix');
+assert(combat.portraitViews()[0].tappable === true, 'field bar stays tappable for recall');
+assert(combat.portraitViews()[0].grey === false, 'a living pet is not grey');
 
 const spawned = combat.fieldPets()[0];
 const behind = spawned.x > player.x;
 assert(behind, `pet pops behind the player (${spawned.x} > ${player.x})`);
 
-for (let t = 0; t < 2500; t += 50) {
-  combat.update(50, [zombie], player);
-  for (const sprite of scene._sprites) {
-    if (sprite._anim.key.endsWith('-skill') && sprite._anim.playing) {
-      sprite._anim.acc += 50;
-      if (sprite._anim.acc >= 80) {
-        sprite._anim.acc = 0;
-        sprite._anim.frame += 1;
-        if (sprite._anim.frame >= 8) sprite._anim.playing = false;
-      }
-    }
-  }
-}
-assert(zombie.hp < zombie.maxHp, `phoenix cast landed (hp ${zombie.hp})`);
-assert(scene._sprites.some((sprite) => sprite._played.some((key) => key === 'pet-phoenix-baby-skill')), 'phoenix skill strip played');
-assert(combat.portraitViews()[0].phase === 'field', 'still out before the field limit');
+const cd = petsCfg.ORB_CD_MS.phoenix[0];
+const flash = petsCfg.ORB_FLASH_MS;
+combat.update(cd / 2, [zombie], player);
+const halfOrb = combat.portraitViews()[0].orbs[0];
+assert(halfOrb.state === 'cd' && Math.abs(halfOrb.ratio - 0.5) < 0.02, `orb 1 ring is halfway (${halfOrb.ratio})`);
+assert(combat.castLog.length === 0, 'halfway orb has not cast');
+assert(combat.portraitViews()[0].phase === 'field', 'still out with no field limit');
+combat.update(cd / 2, [zombie], player);
+assert(combat.portraitViews()[0].orbs[0].state === 'flash', 'filled orb flashes');
+assert(combat.castLog.length === 0, 'flash has not cast yet');
+combat.update(flash, [zombie], player);
+assert(scene._sprites.some((sprite) => sprite._played.includes('pet-phoenix-baby-skill')), 'phoenix skill strip played');
+pump(combat, scene, 1600, zombie, player);
+assert(combat.castLog.some((entry) => entry.id === 'phoenix' && entry.orb === 0), 'orb 1 auto-cast');
+assert(zombie.hp < zombie.maxHp, `phoenix bolt landed (hp ${zombie.hp})`);
+assert(scene._sprites.some((sprite) => sprite._played.includes('fx-pet-phoenix-spark-feather')), 'spark feather FX played');
+assert(!combat.castLog.some((entry) => entry.orb > 0), 'locked orbs did not cast');
+assert(combat.portraitViews()[0].phase === 'field', 'pet stays out after the cast');
 
-combat.update(summon.phoenix.fieldMs, [zombie], player);
-const afterTimeout = combat.portraitViews()[0];
-assert(afterTimeout.phase === 'skill', 'timeout recalls into skill CD');
-assert(afterTimeout.tappable === false && afterTimeout.dim, 'skill CD is dim and not tappable');
-assert(afterTimeout.grey === false, 'timeout is not a death portrait');
-assert(combat.fieldPets().length === 0, 'timeout leaves the field');
-const skillLeftRatio = afterTimeout.bar;
-assert(skillLeftRatio === 0, `skill bar starts empty after recall (${skillLeftRatio})`);
-assert(audio.death === 0, 'timeout does not play the death hook');
+const hurt = combat.fieldPets()[0];
+hurt.takeDamage(48);
+assert(Math.abs(hurt.hp - (petsCfg.HP - 48)) < 0.01, 'damage sticks');
+const recalled = combat.summon(0, player, [zombie]);
+assert(recalled.reason === 'recall', 'tap while out recalls');
+assert(combat.fieldPets().length === 0, 'recalled pet is off the field');
+const recalledView = combat.portraitViews()[0];
+assert(recalledView.phase === 'ready' && Math.abs(recalledView.hp - (petsCfg.HP - 48) / petsCfg.HP) < 0.02, 'recall keeps the current HP');
+combat.update(1000, [], player);
+const healed = combat.portraitViews()[0];
+const expected = (petsCfg.HP - 48 + petsCfg.HP * petsCfg.OFF_FIELD_REGEN_RATIO) / petsCfg.HP;
+assert(healed.phase === 'ready' && Math.abs(healed.hp - expected) < 0.02, `one second of regen (${healed.hp} vs ${expected})`);
+const resummon = combat.summon(0, player, [zombie]);
+assert(resummon.ok && resummon.reason === 'ok', 'resummon has no deploy cooldown');
+assert(Math.abs(combat.fieldPets()[0].hp - expected * petsCfg.HP) < 1, 'resummon does not refill HP');
+combat.update(1000, [zombie], player);
+assert(Math.abs(combat.fieldPets()[0].hp - expected * petsCfg.HP) < 1, 'on-field pets do not regen');
 
-combat.update(4000, [], player);
-const midCd = combat.portraitViews()[0];
-assert(midCd.phase === 'skill', 'still cooling at 4s');
-assert(Math.abs(midCd.bar - 0.5) < 0.02, `skill bar fills (${midCd.bar})`);
-combat.update(4000, [], player);
-assert(combat.portraitViews()[0].phase === 'ready' && combat.portraitViews()[0].tappable, 'skill CD ends on ready');
-
-const revived = combat.summon(0, player, [zombie.alive ? zombie : mockZombie(foeX, laneY)]);
-assert(revived.ok, 'can summon again after skill CD');
 const target = combat.fieldPets()[0];
 const killed = target.takeDamage(10000);
 assert(killed, 'lethal damage downs the pet');
 assert(audio.death === 1, 'death hook');
 const down = combat.portraitViews()[0];
-assert(down.phase === 'revive' && down.grey && down.dim, 'death greys the portrait');
+assert(down.phase === 'revive' && down.grey, 'death greys the bar');
 assert(down.tappable === false, 'revive is not tappable');
-assert(down.bar === 0, 'revive bar starts empty');
+assert(down.hp === 0, 'dead bar is empty');
 assert(combat.fieldPets().length === 0, 'death leaves the field');
 const blocked = combat.summon(0, player, [mockZombie(foeX, laneY)]);
 assert(blocked.reason === 'revive', 'cannot summon during revive');
-combat.update(summon.phoenix.reviveCdMs, [], player);
-assert(combat.portraitViews()[0].phase === 'ready', 'revive CD ends on ready');
+combat.update(1000, [], player);
+assert(combat.portraitViews()[0].phase === 'revive' && combat.portraitViews()[0].hp === 0, 'dead pets do not regen');
+combat.update(petsCfg.REVIVE_CD_MS - 1000, [], player);
+assert(combat.portraitViews()[0].phase === 'ready' && combat.portraitViews()[0].hp === 1, 'revive restores a full bar');
 assert(audio.revive === 1, 'revive-ready hook');
-assert(audio.summon === 2, 'revive does not count as another summon');
 
 const castScene = mockScene(audio);
 const casts = new PetCombat(castScene);
 const styles = ['pet-phoenix-baby-skill', 'pet-panda-baby-skill', 'pet-lion-baby-skill', 'pet-dragon-baby-skill'];
+const fxKeys = [
+  'fx-pet-phoenix-spark-feather',
+  'fx-pet-panda-roll-impact',
+  'fx-pet-lion-pounce-slash',
+  'fx-pet-dragon-smoke-breath',
+];
 for (let i = 0; i < 4; i++) {
   const foe = mockZombie(foeX, laneY);
   assert(casts.summon(i, player, [foe]).ok, `summon ${PET_LINEUP[i].id}`);
-  for (let t = 0; t < 2200; t += 50) {
-    casts.update(50, [foe], player);
-    advanceSkills(castScene);
-  }
+  const orbCd = petsCfg.ORB_CD_MS[PET_LINEUP[i].id][0];
+  pump(casts, castScene, orbCd + flash + 1600, foe, player);
   const played = castScene._sprites.some((sprite) => sprite._played.includes(styles[i]));
   assert(played, `${PET_LINEUP[i].id} cast ${styles[i]}`);
+  assert(castScene._sprites.some((sprite) => sprite._played.includes(fxKeys[i])), `${PET_LINEUP[i].id} used its baby FX`);
   assert(foe.hp < foe.maxHp || foe.burn || foe.slow, `${PET_LINEUP[i].id} applied its attack`);
-  casts.update(GAME_CONFIG.PETS.SUMMON[PET_LINEUP[i].id].fieldMs, [], player);
+  assert(casts.portraitViews()[i].phase === 'field', `${PET_LINEUP[i].id} does not time out`);
+  casts.summon(i, player, [foe]);
 }
 casts.destroy();
+
+const formTags = {
+  phoenix: ['phoenix-nova', 'phoenix-dive'],
+  panda: ['panda-freeze', 'panda-blizzard'],
+  lion: ['lion-chain', 'lion-stomp'],
+  dragon: ['dragon-cloud', 'dragon-rain'],
+};
+for (let i = 0; i < 4; i++) {
+  const id = PET_LINEUP[i].id;
+  const foe = mockZombie(foeX, laneY + i * 2);
+  foe.maxHp = 400;
+  foe.hp = 400;
+  const formScene = mockScene(audio);
+  const one = new PetCombat(formScene);
+  one.setUnlockedOrbs(3);
+  assert(one.summon(i, player, [foe]).ok, `form test summon ${id}`);
+  assert(one.portraitViews()[i].orbs.every((orb) => orb.unlocked), `${id} orbs unlock together`);
+  const longest = Math.max(...petsCfg.ORB_CD_MS[id]);
+  pump(one, formScene, longest + flash + 2200, foe, player);
+  const seen = new Set(one.castLog.filter((entry) => entry.id === id).map((entry) => entry.orb));
+  assert(seen.has(0) && seen.has(1) && seen.has(2), `${id} cast orbs 1–3 (${[...seen].join(',')})`);
+  for (const tag of formTags[id]) {
+    assert(one.fxLog.includes(tag), `${id} spawned ${tag}`);
+  }
+  assert(formScene._circles.length > 0, `${id} placeholder circles`);
+  if (id === 'phoenix' || id === 'dragon') assert(foe.burn, `${id} form applied burn`);
+  if (id === 'panda') assert(foe.slow && foe.rootMs > 0, 'panda freeze roots and blizzard slows');
+  if (id === 'lion') assert(foe.rootMs > 0, 'lion stomp roots');
+  one.destroy();
+}
 combat.destroy();
 
 const wallScene = mockZombieScene();
@@ -280,11 +342,30 @@ assert(!chaser.atBarricade, 'chaser does not lock onto the barricade');
 assert(bait.hurt > 0, `pet HP was bitten (${bait.hurt})`);
 assert(chaser.contactDamage(0.05) === 0, 'a pet bite does not also damage the barricade');
 
+const rootScene = mockZombieScene();
+const rooted = new Zombie(rootScene, { x: 200, y: 400, hp: 40, speed: 80, dps: 12, variant: 'walker' });
+const rootX = rooted.body.x;
+rooted.applyRoot(5000);
+for (let i = 0; i < 30; i++) rooted.update(0.05, 1100, null);
+assert(Math.abs(rooted.body.x - rootX) < 0.5, 'root stops the march');
+assert(rooted.contactDamage(0.05) === 0, 'a rooted marcher is not at the barricade');
+rooted.tickStatus(5000);
+rooted.update(0.05, 1100, null);
+assert(rooted.body.x > rootX, 'march resumes when the root ends');
+
 if (failed) {
   console.error(`${failed} pet combat check(s) failed`);
   process.exit(1);
 }
 console.log('pet combat checks passed');
+
+function pump(combat, scene, ms, foe, player) {
+  const step = 50;
+  for (let t = 0; t < ms; t += step) {
+    combat.update(step, foe ? [foe] : [], player);
+    advanceSkills(scene);
+  }
+}
 
 function advanceSkills(scene) {
   for (const sprite of scene._sprites) {
@@ -302,6 +383,7 @@ function advanceSkills(scene) {
 function mockScene(audio) {
   const state = { now: 0 };
   const sprites = [];
+  const circles = [];
   const text = () => {
     const node = {
       active: true,
@@ -316,6 +398,7 @@ function mockScene(audio) {
   };
   const scene = {
     _sprites: sprites,
+    _circles: circles,
     audio,
     time: {
       get now() {
@@ -338,6 +421,14 @@ function mockScene(audio) {
       },
       rectangle(x, y, w, h) {
         return mockRect(x, y, w, h);
+      },
+      circle(x, y, r, color) {
+        const node = mockRect(x, y, r * 2, r * 2);
+        node.radius = r;
+        node.color = color;
+        node.setData = () => node;
+        circles.push(node);
+        return node;
       },
     },
   };
@@ -438,6 +529,9 @@ function mockZombie(x, y) {
     },
     applyBurn(damage, intervalMs, durationMs) {
       this.burn = { damage, intervalMs, durationMs };
+    },
+    applyRoot(durationMs) {
+      this.rootMs = durationMs;
     },
   };
 }

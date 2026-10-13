@@ -17,11 +17,22 @@ import {
 
 const EMPTY = { gold: 0, kills: 0 };
 
+/** Tinted circles stand in for form-2 / form-3 FX until themed art exists. */
+const PLACEHOLDER_TINT = {
+  phoenix: 0xff6d00,
+  panda: 0xb3e5fc,
+  lion: 0xffee58,
+  dragon: 0x76ff03,
+};
+
 /**
- * Summoned baby pets. They are off the field until a portrait tap.
- * A summon pops the sprite out from behind the player, walks it toward
- * the nearest fence threat, and casts the v0.19 baby skill. Timeout
- * starts the skill cooldown. Death starts the revive cooldown.
+ * Summoned baby pets. Off the field until the bar is tapped.
+ * Tap again to recall: the pet leaves, sits behind the barricade, and
+ * regens. There is no deploy cooldown and no on-field time limit.
+ * Death (HP ≤ 0) greys the bar for REVIVE_CD_MS.
+ * While out, the pet walks to the nearest fence threat. Each unlocked orb
+ * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
+ * Forms 2 and 3 use placeholder circles and stay locked until evolution.
  * The camera does not shake.
  */
 export class PetCombat {
@@ -32,9 +43,37 @@ export class PetCombat {
     this._actors = PET_LINEUP.map((role) => this._makeActor(role));
     /** @type {PhoenixBolt[]} */
     this._bolts = [];
+    /** @type {DiveCharge[]} */
+    this._charges = [];
+    /** @type {GroundZone[]} */
+    this._zones = [];
+    /** @type {FxBlob[]} */
+    this._blobs = [];
+    /** @type {{ id: string, orb: number }[]} */
+    this.castLog = [];
+    /** @type {string[]} */
+    this.fxLog = [];
+    /** @type {number|null} overrides GAME_CONFIG.PETS.UNLOCKED_ORBS when set */
+    this._unlockedOrbs = null;
   }
 
   /**
+   * Evolution hook. 1 is form 1 only. 3 unlocks the placeholder forms.
+   * @param {number} count
+   */
+  setUnlockedOrbs(count) {
+    const n = Number(count);
+    this._unlockedOrbs = Number.isFinite(n) ? Math.max(0, Math.min(3, Math.floor(n))) : null;
+  }
+
+  _unlockedCount() {
+    if (this._unlockedOrbs == null) return GAME_CONFIG.PETS.UNLOCKED_ORBS;
+    return this._unlockedOrbs;
+  }
+
+  /**
+   * Tap the bar. Ready → summon. Field → recall. Revive → blocked.
+   * Enemies are not required, and there is no deploy cooldown.
    * @param {number} index party order
    * @param {{ x?: number, y?: number }|null} player
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
@@ -43,13 +82,14 @@ export class PetCombat {
   summon(index, player, zombies) {
     const actor = this._actors[index];
     if (!actor) return { ok: false, reason: 'missing' };
-    if (actor.phase === 'field') return { ok: false, reason: 'field' };
     if (actor.phase === 'revive') return { ok: false, reason: 'revive' };
-    if (actor.phase === 'skill') return { ok: false, reason: 'cooling' };
-    const threat = nearestBarricadeThreat(zombies);
-    if (!threat) return { ok: false, reason: 'no-target' };
+    if (actor.phase === 'field') {
+      this._recall(actor);
+      return { ok: true, reason: 'recall', id: actor.role.id };
+    }
     this._deploy(actor, player);
     this.scene?.audio?.playPetSummon?.();
+    void zombies;
     return { ok: true, reason: 'ok', id: actor.role.id };
   }
 
@@ -83,30 +123,49 @@ export class PetCombat {
 
   /** One view per party slot, top → bottom. */
   portraitViews() {
-    return this._actors.map((actor) => {
-      let bar = 1;
-      if (actor.phase === 'skill' && actor.skillMax > 0) {
-        bar = 1 - actor.skillLeft / actor.skillMax;
-      } else if (actor.phase === 'revive' && actor.reviveMax > 0) {
-        bar = 1 - actor.reviveLeft / actor.reviveMax;
-      } else if (actor.phase === 'field' && actor.fieldMax > 0) {
-        bar = actor.fieldLeft / actor.fieldMax;
+    const unlockedCount = this._unlockedCount();
+    return this._actors.map((actor) => ({
+      id: actor.role.id,
+      element: actor.role.element,
+      elementZh: actor.role.elementZh,
+      color: PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff,
+      phase: actor.phase,
+      tappable: actor.phase !== 'revive',
+      grey: actor.phase === 'revive',
+      hp: actor.maxHp > 0 ? clamp01(actor.hp / actor.maxHp) : 0,
+      barKey: actor.role.hudBar,
+      headKey: actor.role.hudHead,
+      orbs: actor.orbs.map((orb) => this._orbView(orb, unlockedCount)),
+    }));
+  }
+
+  /**
+   * @param {OrbState} orb
+   * @param {number} unlockedCount
+   */
+  _orbView(orb, unlockedCount) {
+    const unlocked = orb.index < unlockedCount;
+    /** @type {'locked'|'cd'|'flash'} */
+    let state = 'locked';
+    let ratio = 0;
+    if (unlocked) {
+      if (orb.flashLeft > 0 || orb.pending) {
+        state = 'flash';
+        ratio = 1;
+      } else {
+        state = 'cd';
+        ratio = orb.cdMs > 0 ? clamp01(1 - orb.left / orb.cdMs) : 1;
       }
-      return {
-        id: actor.role.id,
-        element: actor.role.element,
-        elementZh: actor.role.elementZh,
-        color: PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff,
-        phase: actor.phase,
-        tappable: actor.phase === 'ready',
-        dim: actor.phase === 'skill' || actor.phase === 'revive',
-        grey: actor.phase === 'revive',
-        badge: actor.phase === 'field' ? '出戰中' : '',
-        bar: clamp01(bar),
-        portraitKey: actor.role.key,
-        crop: actor.role.portrait,
-      };
-    });
+    }
+    return {
+      index: orb.index,
+      unlocked,
+      state,
+      ratio,
+      dark: orb.dark,
+      lit: orb.lit,
+      flash: orb.flash,
+    };
   }
 
   /**
@@ -122,12 +181,12 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const actor of this._actors) {
-      if (actor.phase === 'skill') {
-        this._tickSkill(actor, dt);
-        continue;
-      }
       if (actor.phase === 'revive') {
         this._tickRevive(actor, dt);
+        continue;
+      }
+      if (actor.phase === 'ready') {
+        this._tickRegen(actor, dt);
         continue;
       }
       if (actor.phase !== 'field') continue;
@@ -135,50 +194,56 @@ export class PetCombat {
       gold += gain.gold;
       kills += gain.kills;
       if (actor.phase !== 'field') continue;
-      actor.fieldLeft -= dt;
-      if (!(actor.hp > 0)) this._dismiss(actor, 'death');
-      else if (actor.fieldLeft <= 0) this._dismiss(actor, 'timeout');
+      this._tickOrbs(actor, dt);
+      if (!(actor.hp > 0)) this._dismiss(actor);
     }
     this._stepBolts(dt / 1000);
     const bolts = this._resolveBolts(list);
     gold += bolts.gold;
     kills += bolts.kills;
+    const charges = this._stepCharges(dt, list);
+    gold += charges.gold;
+    kills += charges.kills;
+    const zones = this._stepZones(dt, list);
+    gold += zones.gold;
+    kills += zones.kills;
+    this._stepBlobs(dt);
     return { gold, kills };
   }
 
   destroy() {
     for (const bolt of this._bolts) destroySprite(bolt?.sprite);
     this._bolts = [];
+    for (const charge of this._charges) destroySprite(charge?.node);
+    this._charges = [];
+    for (const zone of this._zones) destroySprite(zone?.node);
+    this._zones = [];
+    for (const blob of this._blobs) destroySprite(blob?.node);
+    this._blobs = [];
     for (const actor of this._actors) {
       this._destroyBars(actor);
       destroySprite(actor.sprite);
       actor.sprite = null;
       actor.phase = 'ready';
-      actor.hp = 0;
+      actor.hp = actor.maxHp;
     }
   }
 
   /** @param {import('../assets/petLineup.js').PET_LINEUP[number]} role */
   _makeActor(role) {
-    const timing = GAME_CONFIG.PETS.SUMMON[role.id];
+    const cds = GAME_CONFIG.PETS.ORB_CD_MS[role.id] || [8000, 16000, 24000];
     return {
       role,
       phase: 'ready',
-      skillLeft: 0,
-      skillMax: timing.skillCdMs,
-      reviveLeft: 0,
-      reviveMax: timing.reviveCdMs,
-      fieldLeft: 0,
-      fieldMax: timing.fieldMs,
-      hp: 0,
+      hp: GAME_CONFIG.PETS.HP,
       maxHp: GAME_CONFIG.PETS.HP,
+      reviveLeft: 0,
       sprite: null,
       hpBg: null,
       hpFg: null,
       state: 'idle',
-      attackCd: 0,
-      released: false,
       attackElapsed: 0,
+      released: false,
       hurtLeft: 0,
       popLeft: 0,
       latched: false,
@@ -187,6 +252,18 @@ export class PetCombat {
       destY: 0,
       x: 0,
       y: 0,
+      /** @type {number[]} orb indexes waiting on the skill swing */
+      castQueue: [],
+      orbs: cds.map((cdMs, index) => ({
+        index,
+        cdMs,
+        left: cdMs,
+        flashLeft: 0,
+        pending: false,
+        dark: role.orbDark,
+        lit: role.orbLit,
+        flash: role.orbFlash,
+      })),
     };
   }
 
@@ -199,26 +276,47 @@ export class PetCombat {
     const py = Number.isFinite(player?.y) ? player.y : 0;
     const x = px + layoutPx(18);
     const y = clampGrass(py);
-    const pets = GAME_CONFIG.PETS;
     actor.phase = 'field';
-    actor.hp = actor.maxHp;
-    actor.fieldLeft = actor.fieldMax;
-    actor.skillLeft = 0;
-    actor.reviveLeft = 0;
+    if (!(actor.hp > 0)) actor.hp = actor.maxHp;
     actor.state = 'idle';
-    actor.attackCd = pets.SUMMON_WINDUP_MS;
     actor.attackElapsed = 0;
     actor.released = false;
     actor.hurtLeft = 0;
     actor.latched = false;
     actor.latchId = null;
+    actor.castQueue = [];
     actor.destX = x;
     actor.destY = y;
     actor.x = x;
     actor.y = y;
-    actor.popLeft = pets.POP_MS;
+    actor.popLeft = GAME_CONFIG.PETS.POP_MS;
     actor.sprite = this._spawnSprite(actor, x, y);
     this._attachBars(actor);
+  }
+
+  /**
+   * Leave the field at the current HP and regen behind the barricade.
+   * A flash that had not released yet resumes the next time the pet is out.
+   * @param {PetActor} actor
+   */
+  _recall(actor) {
+    if (actor.phase !== 'field') return;
+    const sprite = actor.sprite;
+    actor.sprite = null;
+    actor.phase = 'ready';
+    actor.state = 'idle';
+    actor.castQueue = [];
+    actor.latched = false;
+    actor.latchId = null;
+    actor.hurtLeft = 0;
+    for (const orb of actor.orbs) {
+      if (!orb.pending) continue;
+      orb.pending = false;
+      orb.left = 0;
+      orb.flashLeft = GAME_CONFIG.PETS.ORB_FLASH_MS;
+    }
+    this._destroyBars(actor);
+    this._fadeOut(sprite);
   }
 
   /**
@@ -293,7 +391,7 @@ export class PetCombat {
     }
     if (actor.hp <= 0) {
       actor.hp = 0;
-      this._dismiss(actor, 'death');
+      this._dismiss(actor);
       return true;
     }
     this._syncBars(actor);
@@ -309,11 +407,8 @@ export class PetCombat {
     });
   }
 
-  /**
-   * @param {PetActor} actor
-   * @param {'death'|'timeout'} mode
-   */
-  _dismiss(actor, mode) {
+  /** @param {PetActor} actor */
+  _dismiss(actor) {
     if (actor.phase !== 'field') return;
     const sprite = actor.sprite;
     actor.sprite = null;
@@ -322,19 +417,16 @@ export class PetCombat {
     actor.latchId = null;
     actor.state = 'idle';
     actor.hurtLeft = 0;
-    this._destroyBars(actor);
-    if (mode === 'death') {
-      actor.phase = 'revive';
-      actor.reviveLeft = actor.reviveMax;
-      actor.skillLeft = 0;
-      actor.fieldLeft = 0;
-      this.scene?.audio?.playPetDeath?.();
-    } else {
-      actor.phase = 'skill';
-      actor.skillLeft = actor.skillMax;
-      actor.reviveLeft = 0;
-      actor.fieldLeft = 0;
+    actor.castQueue = [];
+    actor.phase = 'revive';
+    actor.reviveLeft = GAME_CONFIG.PETS.REVIVE_CD_MS;
+    for (const orb of actor.orbs) {
+      orb.pending = false;
+      orb.flashLeft = 0;
+      orb.left = orb.cdMs;
     }
+    this._destroyBars(actor);
+    this.scene?.audio?.playPetDeath?.();
     this._fadeOut(sprite);
   }
 
@@ -354,22 +446,78 @@ export class PetCombat {
   }
 
   /** @param {PetActor} actor @param {number} dt */
-  _tickSkill(actor, dt) {
-    actor.skillLeft = Math.max(0, actor.skillLeft - dt);
-    if (actor.skillLeft <= 0) {
-      actor.skillLeft = 0;
-      actor.phase = 'ready';
-    }
+  _tickRegen(actor, dt) {
+    if (!(actor.hp > 0) || actor.hp >= actor.maxHp) return;
+    const ratio = GAME_CONFIG.PETS.OFF_FIELD_REGEN_RATIO;
+    const gain = actor.maxHp * ratio * (dt / 1000);
+    actor.hp = Math.min(actor.maxHp, actor.hp + gain);
   }
 
   /** @param {PetActor} actor @param {number} dt */
   _tickRevive(actor, dt) {
     actor.reviveLeft = Math.max(0, actor.reviveLeft - dt);
-    if (actor.reviveLeft <= 0) {
-      actor.reviveLeft = 0;
-      actor.phase = 'ready';
-      this.scene?.audio?.playPetReviveReady?.();
+    if (actor.reviveLeft > 0) return;
+    actor.reviveLeft = 0;
+    actor.phase = 'ready';
+    actor.hp = actor.maxHp;
+    this.scene?.audio?.playPetReviveReady?.();
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} dt
+   */
+  _tickOrbs(actor, dt) {
+    if (actor.phase !== 'field') return;
+    const unlocked = this._unlockedCount();
+    for (const orb of actor.orbs) {
+      if (orb.index >= unlocked) continue;
+      this._tickOrb(actor, orb, dt);
     }
+  }
+
+  /**
+   * CD fills, then the orb flashes, then the cast is committed.
+   * The cooldown restarts when the skill actually releases.
+   * @param {PetActor} actor
+   * @param {OrbState} orb
+   * @param {number} dt
+   */
+  _tickOrb(actor, orb, dt) {
+    if (orb.pending || actor.phase !== 'field') return;
+    let remain = Math.max(0, dt);
+    let guard = 0;
+    while (remain > 0 && guard < 12 && !orb.pending) {
+      guard += 1;
+      if (orb.flashLeft > 0) {
+        const use = Math.min(remain, orb.flashLeft);
+        orb.flashLeft -= use;
+        remain -= use;
+        if (orb.flashLeft <= 0) {
+          orb.flashLeft = 0;
+          orb.pending = true;
+          this._commitOrb(actor, orb.index);
+        }
+        continue;
+      }
+      if (orb.left > remain) {
+        orb.left -= remain;
+        return;
+      }
+      remain -= orb.left;
+      orb.left = 0;
+      orb.flashLeft = GAME_CONFIG.PETS.ORB_FLASH_MS;
+    }
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} orbIndex
+   */
+  _commitOrb(actor, orbIndex) {
+    actor.castQueue.push(orbIndex);
+    if (actor.state === 'attack') return;
+    this._beginAttack(actor);
   }
 
   /**
@@ -400,10 +548,6 @@ export class PetCombat {
     }
 
     this._stepMove(actor, threat, player, deltaMs);
-    if (actor.attackCd > 0) actor.attackCd -= deltaMs;
-    if (actor.attackCd > 0 || !threat) return EMPTY;
-    if (!this._inCastRange(actor, threat)) return EMPTY;
-    this._beginAttack(actor);
     return EMPTY;
   }
 
@@ -478,52 +622,6 @@ export class PetCombat {
     return { x, y };
   }
 
-  /**
-   * @param {PetActor} actor
-   * @param {import('../entities/Zombie.js').Zombie} threat
-   */
-  _inCastRange(actor, threat) {
-    const sprite = actor.sprite;
-    if (!sprite || !threat) return false;
-    const id = actor.role.id;
-    const pets = GAME_CONFIG.PETS;
-    if (id === 'panda') {
-      return inForwardBox(
-        sprite.x,
-        sprite.y,
-        threat.x,
-        threat.y,
-        pets.PANDA.RANGE * LAYOUT_SCALE,
-        pets.PANDA.Y_HALF * LAYOUT_SCALE
-      );
-    }
-    if (id === 'lion') {
-      const from = framePoint(sprite, pets.LION.FORWARD_X, pets.LION.FORWARD_Y);
-      const half = (pets.LION.HALF_ANGLE_DEG * Math.PI) / 180;
-      return inLeftCone(
-        from.x,
-        from.y,
-        threat.x,
-        chestY(threat),
-        pets.LION.RANGE * LAYOUT_SCALE,
-        half
-      );
-    }
-    if (id === 'dragon') {
-      const mouth = framePoint(sprite, pets.DRAGON.MOUTH_X, pets.DRAGON.MOUTH_Y);
-      const half = (pets.DRAGON.HALF_ANGLE_DEG * Math.PI) / 180;
-      return inLeftCone(
-        mouth.x,
-        mouth.y,
-        threat.x,
-        chestY(threat),
-        pets.DRAGON.RANGE * LAYOUT_SCALE,
-        half
-      );
-    }
-    return inForwardBox(sprite.x, sprite.y, threat.x, threat.y, layoutPx(260), layoutPx(52));
-  }
-
   /** @param {PetActor} actor */
   _place(actor) {
     const sprite = actor.sprite;
@@ -568,8 +666,8 @@ export class PetCombat {
   }
 
   /**
-   * Skill strip starts this frame. The hit waits for RELEASE_FRAME
-   * (or the next tick, if that strip is not loaded).
+   * Form 1 plays the baby skill strip and releases on its hit frame.
+   * Forms 2 and 3 release on a short telegraph; their FX are placeholders.
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
@@ -578,7 +676,8 @@ export class PetCombat {
     actor.attackElapsed = 0;
     actor.hurtLeft = 0;
     faceLeft(actor.sprite);
-    playOnce(actor.sprite, actor.role.skill);
+    const orb = actor.castQueue[0] ?? 0;
+    if (orb <= 0) playOnce(actor.sprite, actor.role.skill);
   }
 
   /**
@@ -589,25 +688,35 @@ export class PetCombat {
   _advanceAttack(actor, zombies, threat) {
     const sprite = actor.sprite;
     const skill = actor.role.skill;
-    const anims = sprite.anims;
+    const anims = sprite?.anims;
     const frame = anims?.currentFrame?.index ?? 0;
     const progress = typeof anims?.getProgress === 'function' ? anims.getProgress() : 0;
-    const playing = !!(anims?.isPlaying && anims.currentAnim?.key === skill);
-    const due =
-      frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
-      (playing && progress >= 0.34) ||
-      !playing ||
-      actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS;
+    const playingSkill = !!(anims?.isPlaying && anims.currentAnim?.key === skill);
+    const orb = actor.castQueue[0] ?? 0;
+    const form1 = !(orb > 0);
+    const due = form1
+      ? frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
+        (playingSkill && progress >= 0.34) ||
+        !playingSkill ||
+        actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
+      : actor.attackElapsed >= 90;
     let gold = 0;
     let kills = 0;
     if (!actor.released && due) {
       actor.released = true;
-      const gain = this._cast(actor, zombies, threat);
-      gold += gain.gold;
-      kills += gain.kills;
+      const index = actor.castQueue.shift();
+      if (index != null) {
+        const gain = this._castOrb(actor, index, zombies, threat);
+        gold += gain.gold;
+        kills += gain.kills;
+      }
     }
-    if (!playing || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS) {
-      this._enterIdle(actor);
+    const swingDone = form1
+      ? !playingSkill || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
+      : actor.released;
+    if (actor.released && swingDone) {
+      if (actor.castQueue.length > 0) this._beginAttack(actor);
+      else this._enterIdle(actor);
     }
     faceLeft(sprite);
     this._place(actor);
@@ -616,15 +725,30 @@ export class PetCombat {
 
   /** @param {PetActor} actor */
   _enterIdle(actor) {
-    const pets = GAME_CONFIG.PETS;
-    const period = rollInt(pets.COOLDOWN_MIN_MS, pets.COOLDOWN_MAX_MS);
-    const leftover = period - actor.attackElapsed;
     actor.state = 'idle';
     actor.released = false;
     actor.attackElapsed = 0;
-    actor.attackCd = Math.max(0, leftover);
     faceLeft(actor.sprite);
     playLoop(actor.sprite, actor.role.key);
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} orbIndex
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _castOrb(actor, orbIndex, zombies, threat) {
+    const orb = actor.orbs[orbIndex];
+    if (orb) {
+      orb.pending = false;
+      orb.flashLeft = 0;
+      orb.left = orb.cdMs;
+    }
+    this.castLog.push({ id: actor.role.id, orb: orbIndex });
+    if (orbIndex <= 0) return this._cast(actor, zombies, threat);
+    if (orbIndex === 1) return this._castForm2(actor, zombies, threat);
+    return this._castForm3(actor, zombies, threat);
   }
 
   /**
@@ -750,6 +874,351 @@ export class PetCombat {
     return { gold, kills };
   }
 
+  /**
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _castForm2(actor, zombies, threat) {
+    const id = actor.role.id;
+    if (id === 'phoenix') return this._phoenixNova(actor, zombies, threat);
+    if (id === 'panda') return this._pandaFreeze(actor, zombies);
+    if (id === 'lion') return this._lionChain(actor, zombies);
+    if (id === 'dragon') return this._dragonCloud(actor, threat);
+    return EMPTY;
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _castForm3(actor, zombies, threat) {
+    const id = actor.role.id;
+    if (id === 'phoenix') return this._phoenixDive(actor);
+    if (id === 'panda') return this._pandaBlizzard(actor, zombies, threat);
+    if (id === 'lion') return this._lionStomp(actor, zombies);
+    if (id === 'dragon') return this._dragonRain(actor, zombies);
+    return EMPTY;
+  }
+
+  /**
+   * Fire nova on the fence threat. Chip plus a short burn.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _phoenixNova(actor, zombies, threat) {
+    const cfg = GAME_CONFIG.PETS.FORM2.phoenix;
+    const focus = focusPoint(actor, threat);
+    const radius = cfg.radius * LAYOUT_SCALE;
+    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.phoenix, 420, 'phoenix-nova');
+    const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
+    let gold = 0;
+    let kills = 0;
+    for (const z of hits) {
+      const gain = strike(this.scene, z, cfg.damage, DAMAGE_COLORS.phoenix);
+      gold += gain.gold;
+      kills += gain.kills;
+      if (!gain.killed && typeof z.applyBurn === 'function') {
+        z.applyBurn(cfg.burn, cfg.burnIntervalMs, cfg.burnMs);
+      }
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * A line charge traveling left from the pet. Wide enough to cross one lane.
+   * @param {PetActor} actor
+   */
+  _phoenixDive(actor) {
+    const cfg = GAME_CONFIG.PETS.FORM3.phoenix;
+    const sprite = actor.sprite;
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    const length = cfg.length * LAYOUT_SCALE;
+    const halfW = cfg.halfWidth * LAYOUT_SCALE;
+    const speed = 480 * LAYOUT_SCALE;
+    for (let i = 1; i <= 4; i++) {
+      this._spawnBlob(x - (length * i) / 5, y, layoutPx(8), PLACEHOLDER_TINT.phoenix, 320, 'phoenix-dive');
+    }
+    const node = this.scene?.add?.rectangle?.(x, y, layoutPx(18), Math.max(layoutPx(8), halfW * 2), PLACEHOLDER_TINT.phoenix, 0.4) ?? null;
+    node?.setDepth?.(depthFromY(y, 5));
+    this._charges.push({
+      node,
+      x,
+      y,
+      vx: -speed,
+      halfL: layoutPx(16),
+      halfW,
+      damage: cfg.damage,
+      hitIds: new Set(),
+      life: (length / speed) * 1000,
+      color: DAMAGE_COLORS.phoenix,
+    });
+    return EMPTY;
+  }
+
+  /**
+   * One target, the nearest fence threat in range, locked in place.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _pandaFreeze(actor, zombies) {
+    const cfg = GAME_CONFIG.PETS.FORM2.panda;
+    const sprite = actor.sprite;
+    const range = cfg.range * LAYOUT_SCALE;
+    const target = closestThreatWhere(
+      zombies,
+      (z) => Math.hypot((sprite?.x ?? actor.x) - z.x, (sprite?.y ?? actor.y) - z.y) <= range
+    );
+    if (!target) return EMPTY;
+    this._spawnBlob(target.x, chestY(target), layoutPx(16), PLACEHOLDER_TINT.panda, 520, 'panda-freeze');
+    const gain = strike(this.scene, target, cfg.damage, DAMAGE_COLORS.panda);
+    if (!gain.killed && typeof target.applyRoot === 'function') target.applyRoot(cfg.rootMs);
+    return gain;
+  }
+
+  /**
+   * Slow and a light burn on every zombie in a circle on the threat.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _pandaBlizzard(actor, zombies, threat) {
+    const cfg = GAME_CONFIG.PETS.FORM3.panda;
+    const focus = focusPoint(actor, threat);
+    const radius = cfg.radius * LAYOUT_SCALE;
+    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.panda, 640, 'panda-blizzard');
+    const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
+    let gold = 0;
+    let kills = 0;
+    for (const z of hits) {
+      if (typeof z.applySlow === 'function') z.applySlow(cfg.slowMult, cfg.slowMs);
+      if (typeof z.applyBurn === 'function') z.applyBurn(cfg.dot, cfg.dotIntervalMs, cfg.dotMs);
+      const gain = strike(this.scene, z, cfg.dot, DAMAGE_COLORS.panda);
+      gold += gain.gold;
+      kills += gain.kills;
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * Primary target plus jumps to nearby bodies. Damage steps down the chain.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _lionChain(actor, zombies) {
+    const cfg = GAME_CONFIG.PETS.FORM2.lion;
+    const sprite = actor.sprite;
+    const from = framePoint(sprite, GAME_CONFIG.PETS.LION.FORWARD_X, GAME_CONFIG.PETS.LION.FORWARD_Y);
+    const hits = chainTargets(
+      zombies,
+      from.x,
+      from.y,
+      cfg.range * LAYOUT_SCALE,
+      cfg.jump * LAYOUT_SCALE,
+      Math.max(0, cfg.damages.length - 1)
+    );
+    let gold = 0;
+    let kills = 0;
+    hits.forEach((z, i) => {
+      this._spawnBlob(z.x, chestY(z), layoutPx(10), PLACEHOLDER_TINT.lion, 280, 'lion-chain');
+      const dmg = cfg.damages[Math.min(i, cfg.damages.length - 1)];
+      const gain = strike(this.scene, z, dmg, DAMAGE_COLORS.lion);
+      gold += gain.gold;
+      kills += gain.kills;
+    });
+    if (!hits.length) {
+      this._spawnBlob(from.x - layoutPx(24), from.y, layoutPx(8), PLACEHOLDER_TINT.lion, 220, 'lion-chain');
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * Circle around the cub. Damage plus a short root.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _lionStomp(actor, zombies) {
+    const cfg = GAME_CONFIG.PETS.FORM3.lion;
+    const sprite = actor.sprite;
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    const radius = cfg.radius * LAYOUT_SCALE;
+    this._spawnBlob(x, y, radius, PLACEHOLDER_TINT.lion, 420, 'lion-stomp');
+    const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= radius);
+    let gold = 0;
+    let kills = 0;
+    for (const z of hits) {
+      const gain = strike(this.scene, z, cfg.damage, DAMAGE_COLORS.lion);
+      gold += gain.gold;
+      kills += gain.kills;
+      if (!gain.killed && typeof z.applyRoot === 'function') z.applyRoot(cfg.rootMs);
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * A poison puddle on the threat that ticks while it lasts.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _dragonCloud(actor, threat) {
+    const cfg = GAME_CONFIG.PETS.FORM2.dragon;
+    const focus = focusPoint(actor, threat);
+    const radius = cfg.radius * LAYOUT_SCALE;
+    const node = this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.dragon, cfg.durationMs, 'dragon-cloud');
+    this._zones.push({
+      node,
+      x: focus.x,
+      y: focus.y,
+      radius,
+      damage: cfg.damage,
+      interval: cfg.intervalMs,
+      acc: cfg.intervalMs,
+      left: cfg.durationMs,
+      hitColor: DAMAGE_COLORS.dragon,
+    });
+    return EMPTY;
+  }
+
+  /**
+   * A drop on each nearby fence threat. Chip plus burn.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _dragonRain(actor, zombies) {
+    const cfg = GAME_CONFIG.PETS.FORM3.dragon;
+    const sprite = actor.sprite;
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    const range = cfg.range * LAYOUT_SCALE;
+    const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= range).slice(0, cfg.targets);
+    if (!hits.length) {
+      this._spawnBlob(x - layoutPx(40), y, layoutPx(8), PLACEHOLDER_TINT.dragon, 300, 'dragon-rain');
+      return EMPTY;
+    }
+    let gold = 0;
+    let kills = 0;
+    for (const z of hits) {
+      this._spawnBlob(z.x, chestY(z) - layoutPx(18), layoutPx(8), PLACEHOLDER_TINT.dragon, 360, 'dragon-rain');
+      const gain = strike(this.scene, z, cfg.chip, DAMAGE_COLORS.dragon);
+      gold += gain.gold;
+      kills += gain.kills;
+      if (!gain.killed && typeof z.applyBurn === 'function') {
+        z.applyBurn(cfg.burn, cfg.burnIntervalMs, cfg.burnMs);
+      }
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} radius
+   * @param {number} color
+   * @param {number} lifeMs
+   * @param {string} tag
+   */
+  _spawnBlob(x, y, radius, color, lifeMs, tag) {
+    const scene = this.scene;
+    const r = Math.max(layoutPx(4), radius);
+    /** @type {Phaser.GameObjects.Arc|Phaser.GameObjects.Rectangle|null} */
+    let node = null;
+    if (scene?.add?.circle) node = scene.add.circle(x, y, r, color, 0.45);
+    else if (scene?.add?.rectangle) node = scene.add.rectangle(x, y, r * 2, r * 2, color, 0.45);
+    if (node) {
+      node.setDepth?.(depthFromY(y, 6));
+      node.setData?.('petFx', tag);
+    }
+    this.fxLog.push(tag);
+    this._blobs.push({ node, life: lifeMs });
+    return node;
+  }
+
+  /** @param {number} dt */
+  _stepBlobs(dt) {
+    const keep = [];
+    for (const blob of this._blobs) {
+      blob.life -= dt;
+      if (blob.life <= 0 || (blob.node && blob.node.active === false)) {
+        destroySprite(blob.node);
+        continue;
+      }
+      keep.push(blob);
+    }
+    this._blobs = keep;
+  }
+
+  /**
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _stepCharges(dt, zombies) {
+    const keep = [];
+    let gold = 0;
+    let kills = 0;
+    for (const charge of this._charges) {
+      const use = Math.max(0, Math.min(dt, charge.life));
+      const x0 = charge.x;
+      charge.x += charge.vx * (use / 1000);
+      charge.life -= use;
+      if (charge.node) {
+        charge.node.x = charge.x;
+        charge.node.y = charge.y;
+      }
+      const minX = Math.min(x0, charge.x) - charge.halfL;
+      const maxX = Math.max(x0, charge.x) + charge.halfL;
+      for (const z of zombies) {
+        if (!z?.alive || !z.body) continue;
+        if (charge.hitIds.has(z.id)) continue;
+        if (Math.abs(z.y - charge.y) > charge.halfW) continue;
+        if (z.x < minX || z.x > maxX) continue;
+        charge.hitIds.add(z.id);
+        const gain = strike(this.scene, z, charge.damage, charge.color);
+        gold += gain.gold;
+        kills += gain.kills;
+      }
+      if (charge.life <= 0) {
+        destroySprite(charge.node);
+        continue;
+      }
+      keep.push(charge);
+    }
+    this._charges = keep;
+    return { gold, kills };
+  }
+
+  /**
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _stepZones(dt, zombies) {
+    const keep = [];
+    let gold = 0;
+    let kills = 0;
+    for (const zone of this._zones) {
+      zone.left -= dt;
+      zone.acc += dt;
+      let guard = 0;
+      while (zone.acc >= zone.interval && guard < 6) {
+        guard += 1;
+        zone.acc -= zone.interval;
+        const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - zone.x, z.y - zone.y) <= zone.radius);
+        for (const z of hits) {
+          const gain = strike(this.scene, z, zone.damage, zone.hitColor);
+          gold += gain.gold;
+          kills += gain.kills;
+        }
+      }
+      if (zone.left <= 0) continue;
+      keep.push(zone);
+    }
+    this._zones = keep;
+    return { gold, kills };
+  }
+
   /** @param {number} deltaSec */
   _stepBolts(deltaSec) {
     const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
@@ -812,6 +1281,56 @@ function engageStand(id) {
   if (id === 'lion') return pets.LION.RANGE * LAYOUT_SCALE * 0.5;
   if (id === 'dragon') return pets.DRAGON.RANGE * LAYOUT_SCALE * 0.45;
   return layoutPx(100);
+}
+
+/**
+ * @param {PetActor} actor
+ * @param {import('../entities/Zombie.js').Zombie|null} threat
+ */
+function focusPoint(actor, threat) {
+  if (threat && Number.isFinite(threat.x) && Number.isFinite(threat.y)) {
+    return { x: threat.x, y: threat.y };
+  }
+  return { x: actor.sprite?.x ?? actor.x, y: actor.sprite?.y ?? actor.y };
+}
+
+/**
+ * @param {import('../entities/Zombie.js').Zombie[]} zombies
+ * @param {number} originX
+ * @param {number} originY
+ * @param {number} range
+ * @param {number} jump
+ * @param {number} jumps
+ */
+function chainTargets(zombies, originX, originY, range, jump, jumps) {
+  /** @type {import('../entities/Zombie.js').Zombie[]} */
+  const hits = [];
+  const used = new Set();
+  let fromX = originX;
+  let fromY = originY;
+  let reach = range;
+  const list = Array.isArray(zombies) ? zombies : [];
+  for (let n = 0; n <= jumps; n++) {
+    /** @type {import('../entities/Zombie.js').Zombie|null} */
+    let best = null;
+    let bestD = Infinity;
+    for (const z of list) {
+      if (!z?.alive || !z.body) continue;
+      if (used.has(z.id)) continue;
+      if (!Number.isFinite(z.x) || !Number.isFinite(z.y)) continue;
+      const d = Math.hypot(z.x - fromX, chestY(z) - fromY);
+      if (d > reach || d >= bestD) continue;
+      best = z;
+      bestD = d;
+    }
+    if (!best) break;
+    used.add(best.id);
+    hits.push(best);
+    fromX = best.x;
+    fromY = chestY(best);
+    reach = jump;
+  }
+  return hits;
 }
 
 /** @param {number} y */
@@ -984,8 +1503,8 @@ function strike(scene, zombie, damage, color) {
  * @param {number} frameY
  */
 function framePoint(sprite, frameX, frameY) {
-  const s = Math.abs(sprite.scaleY || sprite.scaleX || 1);
-  return { x: sprite.x + frameX * s, y: sprite.y + frameY * s };
+  const s = Math.abs(sprite?.scaleY || sprite?.scaleX || 1);
+  return { x: (sprite?.x ?? 0) + frameX * s, y: (sprite?.y ?? 0) + frameY * s };
 }
 
 /** @param {{ bodyCenterY?: number, y: number }} zombie */
@@ -1108,35 +1627,35 @@ function destroySprite(sprite) {
   }
 }
 
-function rollInt(min, max) {
-  const lo = Math.ceil(Math.min(min, max));
-  const hi = Math.floor(Math.max(min, max));
-  const math = globalThis.Phaser?.Math;
-  if (math?.Between) return math.Between(lo, hi);
-  return lo + Math.floor(Math.random() * (hi - lo + 1));
-}
-
 function wrapPi(rad) {
   return Math.atan2(Math.sin(rad), Math.cos(rad));
 }
 
 /**
+ * @typedef {object} OrbState
+ * @property {number} index
+ * @property {number} cdMs
+ * @property {number} left
+ * @property {number} flashLeft
+ * @property {boolean} pending
+ * @property {string} dark
+ * @property {string} lit
+ * @property {string} flash
+ */
+
+/**
  * @typedef {object} PetActor
  * @property {Phaser.GameObjects.Sprite|null} sprite
  * @property {import('../assets/petLineup.js').PET_LINEUP[number]} role
- * @property {'ready'|'field'|'skill'|'revive'} phase
- * @property {number} skillLeft
- * @property {number} skillMax
- * @property {number} reviveLeft
- * @property {number} reviveMax
- * @property {number} fieldLeft
- * @property {number} fieldMax
+ * @property {'ready'|'field'|'revive'} phase
  * @property {number} hp
  * @property {number} maxHp
+ * @property {number} reviveLeft
  * @property {'idle'|'move'|'attack'|'hurt'} state
- * @property {number} attackCd
  * @property {boolean} released
  * @property {number} attackElapsed
+ * @property {number[]} castQueue
+ * @property {OrbState[]} orbs
  * @property {number} x
  * @property {number} y
  */
@@ -1162,4 +1681,37 @@ function wrapPi(rad) {
  * @property {Set<number>} hitIds
  * @property {string|undefined} impact
  * @property {number} scale
+ */
+
+/**
+ * @typedef {object} DiveCharge
+ * @property {Phaser.GameObjects.Rectangle|null} node
+ * @property {number} x
+ * @property {number} y
+ * @property {number} vx
+ * @property {number} halfL
+ * @property {number} halfW
+ * @property {number} damage
+ * @property {Set<number>} hitIds
+ * @property {number} life
+ * @property {string} color
+ */
+
+/**
+ * @typedef {object} GroundZone
+ * @property {Phaser.GameObjects.GameObject|null} node
+ * @property {number} x
+ * @property {number} y
+ * @property {number} radius
+ * @property {number} damage
+ * @property {number} interval
+ * @property {number} acc
+ * @property {number} left
+ * @property {string} hitColor
+ */
+
+/**
+ * @typedef {object} FxBlob
+ * @property {Phaser.GameObjects.GameObject|null} node
+ * @property {number} life
  */

@@ -24,12 +24,13 @@
  * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
  * Nothing calls camera.shake: weapon fire, hits, overkill, and pet attacks.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
- * PETS is baby-form support only (no ultimates or evolution). Summon, field,
- * and revive timers drive the portrait HUD. In-field casts keep the short cadence.
+ * PETS is the v0.21.0 summon loop: tap to summon or recall, regen while
+ * recalled, revive after death, and orb cooldowns that auto-cast. Form 1
+ * is unlocked. Forms 2 and 3 have cast logic and placeholder FX only.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.20.0';
+export const APP_VERSION = '0.21.0';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -110,16 +111,26 @@ export const GAME_CONFIG = {
     },
   },
   /**
-   * Baby pets are summoned from the portrait HUD. They are not on the field
-   * until a ready portrait is tapped. Lengths are field px (callers × LAYOUT_SCALE).
-   * COOLDOWN_* is the gap between casts while a pet is out. SUMMON is the
-   * portrait skill CD, the on-field limit, and the death revive CD.
+   * Baby pets stay off the field until their bar is tapped. Tap again to
+   * recall. There is no deploy cooldown and no on-field time limit.
+   * Lengths are field px (callers × LAYOUT_SCALE). Durations are ms.
    * Party order is phoenix → panda → lion → dragon (far → near).
    * Damage stays under a handgun shot (30). The camera does not shake.
+   *
+   * OFF_FIELD_REGEN_RATIO is 0.25 — 25% of max HP per second while recalled
+   * and alive, until full. REVIVE_CD_MS is 18000 (18s) after HP hits 0;
+   * the bar stays grey and summon is blocked until it ends, then HP is full.
+   * ORB_FLASH_MS is 1000. An unlocked orb fills across its cooldown, flashes
+   * for that second, then auto-casts and the cooldown restarts.
+   * UNLOCKED_ORBS is 1 (form 1 only). Orbs 2–3 stay visible and locked.
+   *
+   * ORB_CD_MS is [form1, form2, form3]:
+   *   phoenix  9000 / 16000 / 24000
+   *   panda   10000 / 18000 / 26000
+   *   lion     8000 / 14000 / 22000
+   *   dragon  12000 / 20000 / 28000
    */
   PETS: {
-    COOLDOWN_MIN_MS: 1000,
-    COOLDOWN_MAX_MS: 1500,
     /** Shared max HP. Zombies that reach a pet chew this instead of the barricade. */
     HP: 96,
     /** Field px/s while walking from behind the player toward the threat. */
@@ -130,18 +141,23 @@ export const GAME_CONFIG = {
     HURT_MS: 280,
     /** Scale-pop after the sprite appears behind the player. */
     POP_MS: 160,
-    /** Brief windup so the summon pop reads before the first cast. */
-    SUMMON_WINDUP_MS: 220,
+    /** Death lockout before the bar can summon again. 18s. */
+    REVIVE_CD_MS: 18000,
+    /** Fraction of max HP restored per second while recalled (alive, off field). */
+    OFF_FIELD_REGEN_RATIO: 0.25,
+    /** Filled orb blinks this long, then auto-casts. */
+    ORB_FLASH_MS: 1000,
+    /** Form 1. Evolution can raise this; orbs above it stay locked. */
+    UNLOCKED_ORBS: 1,
     /**
-     * Skill CD / on-field limit / revive CD, in ms.
-     * Timeout recall starts skill CD only. Death starts revive CD only.
-     * Phoenix fire, panda ice, lion electric, dragon poison.
+     * Per-pet orb cooldowns in ms: [spark/roll/slash/breath, form 2, form 3].
+     * Orb 1 is the v0.19 baby skill. Orbs 2–3 are longer and longest.
      */
-    SUMMON: {
-      phoenix: { skillCdMs: 8000, fieldMs: 12000, reviveCdMs: 20000 },
-      panda: { skillCdMs: 10000, fieldMs: 14000, reviveCdMs: 22000 },
-      lion: { skillCdMs: 7000, fieldMs: 10000, reviveCdMs: 18000 },
-      dragon: { skillCdMs: 12000, fieldMs: 16000, reviveCdMs: 25000 },
+    ORB_CD_MS: {
+      phoenix: [9000, 16000, 24000],
+      panda: [10000, 18000, 26000],
+      lion: [8000, 14000, 22000],
+      dragon: [12000, 20000, 28000],
     },
     /** 0-based skill frame that releases the hit. */
     RELEASE_FRAME: 3,
@@ -190,6 +206,23 @@ export const GAME_CONFIG = {
       BURN_MS: 1350,
       MOUTH_X: -14,
       MOUTH_Y: -22,
+    },
+    /**
+     * Form 2 / form 3. Cast logic is live; visuals are tinted circles until
+     * themed FX exist. Lengths are field px. Orbs 2–3 stay locked while
+     * UNLOCKED_ORBS is 1, so these do not fire in the current stage.
+     */
+    FORM2: {
+      phoenix: { damage: 8, radius: 72, burn: 4, burnIntervalMs: 450, burnMs: 1350 },
+      panda: { damage: 6, range: 120, rootMs: 1600 },
+      lion: { damages: [11, 8, 6], range: 150, jump: 90 },
+      dragon: { damage: 4, radius: 52, durationMs: 2800, intervalMs: 400 },
+    },
+    FORM3: {
+      phoenix: { damage: 16, length: 200, halfWidth: 22 },
+      panda: { radius: 96, slowMult: 0.45, slowMs: 2200, dot: 3, dotIntervalMs: 500, dotMs: 1500 },
+      lion: { damage: 10, radius: 120, rootMs: 1000 },
+      dragon: { chip: 4, targets: 4, range: 220, burn: 5, burnIntervalMs: 400, burnMs: 1200 },
     },
   },
   JUICE: {

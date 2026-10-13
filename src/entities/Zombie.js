@@ -70,6 +70,8 @@ export class Zombie {
     /** Panda slow. March speed only — barricade bite DPS is untouched. */
     this._slowMs = 0;
     this._slowMult = 1;
+    /** Freeze / stun. March and chase only — barricade bite DPS is untouched. */
+    this._rootMs = 0;
     /** Dragon smoke burn. Ticked by tickStatus; does not change contact DPS. */
     this._burnLeft = 0;
     this._burnAcc = 0;
@@ -442,6 +444,17 @@ export class Zombie {
   }
 
   /**
+   * Freeze or stun. Stops the march and a pet chase. A zombie already
+   * biting the barricade keeps contact DPS — that halt math is unchanged.
+   * @param {number} durationMs
+   */
+  applyRoot(durationMs) {
+    if (!this.alive) return;
+    const dur = Math.max(0, Number(durationMs) || 0);
+    this._rootMs = Math.max(this._rootMs || 0, dur);
+  }
+
+  /**
    * Brief burn. Damage ticks from tickStatus, not from the bite.
    * @param {number} damage
    * @param {number} intervalMs
@@ -459,8 +472,9 @@ export class Zombie {
     this._burnLeft = Math.max(this._burnLeft || 0, dur);
   }
 
-  /** 1 while unslowed. */
+  /** 0 while rooted, otherwise the panda slow multiplier, else 1. */
   _slowFactor() {
+    if (this._rootMs > 0) return 0;
     if (!(this._slowMs > 0)) return 1;
     return this._slowMult > 0 ? this._slowMult : 1;
   }
@@ -476,6 +490,7 @@ export class Zombie {
       this._slowMs = Math.max(0, this._slowMs - dt);
       if (this._slowMs <= 0) this._slowMult = 1;
     }
+    if (this._rootMs > 0) this._rootMs = Math.max(0, this._rootMs - dt);
     if (!(this._burnLeft > 0) || !this.alive) return { gold: 0, kills: 0 };
     this._burnLeft -= dt;
     this._burnAcc += dt;
