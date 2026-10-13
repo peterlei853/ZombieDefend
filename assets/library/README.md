@@ -148,7 +148,7 @@ n=6: [ {x:-44, y:-42}, {x:-38, y:-26}, {x:-36, y:-10}, {x:-36, y:6}, {x:-38, y:2
 
 Shop order: `water, sling, bubble, lightning, frost, flame`.
 
-`weapon.y` adds `bobY` from the strip (already baked: ±3px front, ±2px back). This library drop adds `player-girl-deploy`, all six `player-girl-front-*` strips, and the missing backs `player-girl-back-sling`, `player-girl-back-bubble`, `player-girl-back-frost`. Existing `player-girl-back-water`, `player-girl-back-lightning`, and `player-girl-back-flame` are left untouched when present.
+`weapon.y` adds `bobY` from the strip (already baked: ±3px front, ±2px back). This library drop adds `player-girl-deploy`, all six `player-girl-front-*` strips, and all six `player-girl-back-*` bobs (sling, bubble, and frost under `back/`; water, lightning, and flame under `strips/`).
 
 ## Playback: loop, once, and sustained (start/loop/end)
 

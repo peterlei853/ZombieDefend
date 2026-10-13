@@ -64,7 +64,7 @@ Keys: `player-girl-back-<weapon>` (32×32, 8f bob).
 
 **Confirmed design preference:** on MOVE, weapons are **hidden** (not back-stack). Back strips are provided for optional fallback / inventory preview.
 
-This change adds only the missing backs: `player-girl-back-sling`, `player-girl-back-bubble`, `player-girl-back-frost`. If `player-girl-back-water`, `player-girl-back-lightning`, or `player-girl-back-flame` are already in the library, leave those files as they are.
+All six back bobs are in this library: sling, bubble, and frost under `back/`, and water, lightning, and flame under `strips/`.
 
 ## Deploy lerp timeline
 
@@ -102,15 +102,16 @@ alpha = t
 | player-girl-front-frost | `front/player-girl-front-frost.png` | 56×56 | 8 | 8 | yes |
 | player-girl-front-flame | `front/player-girl-front-flame.png` | 56×56 | 8 | 8 | yes |
 
-### Back float (3 added here)
+### Back float
 
 | key | file | size | frames | fps | loop |
 |-----|------|------|--------|-----|------|
 | player-girl-back-sling | `back/player-girl-back-sling.png` | 32×32 | 8 | 8 | yes |
 | player-girl-back-bubble | `back/player-girl-back-bubble.png` | 32×32 | 8 | 8 | yes |
 | player-girl-back-frost | `back/player-girl-back-frost.png` | 32×32 | 8 | 8 | yes |
-
-`player-girl-back-water`, `player-girl-back-lightning`, and `player-girl-back-flame` are not part of this drop.
+| player-girl-back-water | `strips/player-girl-back-water.png` | 32×32 | 8 | 8 | yes |
+| player-girl-back-lightning | `strips/player-girl-back-lightning.png` | 32×32 | 8 | 8 | yes |
+| player-girl-back-flame | `strips/player-girl-back-flame.png` | 32×32 | 8 | 8 | yes |
 
 ### Deploy
 
