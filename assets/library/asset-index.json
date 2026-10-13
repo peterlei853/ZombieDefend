@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 540,
+    "total": 542,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 104
+        "assets": 106
       },
       "pets": {
         "groups": 17,
@@ -67,7 +67,7 @@
       "fx": 61,
       "icon": 75,
       "image": 4,
-      "spritesheet": 366
+      "spritesheet": 368
     }
   },
   "groups": [
@@ -77,12 +77,13 @@
       "group": "girl",
       "title": "Player Girl (hero)",
       "titleZh": "女主角",
-      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south.",
+      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
       "manifest": "assets/library/characters/hero/girl/manifest.json",
       "dir": "assets/library/characters/hero/girl",
       "thumb": "assets/library/previews/hero/girl/preview.gif",
       "sheets": [
-        "assets/library/previews/hero/girl/all-base-sheet.png"
+        "assets/library/previews/hero/girl/all-base-sheet.png",
+        "assets/library/previews/hero/girl/hero-run-ns-sheet.png"
       ],
       "extras": [
         "assets/library/previews/hero/girl/weapon-water.gif",
@@ -95,7 +96,7 @@
       ],
       "keyPrefix": "player-girl-",
       "mainKey": "player-girl-idle",
-      "count": 63,
+      "count": 65,
       "frameSizes": [
         "32x32",
         "56x56",
@@ -118,6 +119,8 @@
         "player-girl-walk-east",
         "player-girl-walk-south",
         "player-girl-walk-north",
+        "player-girl-run-north",
+        "player-girl-run-south",
         "player-girl-hurt",
         "player-girl-die",
         "player-girl-victory",
@@ -2586,6 +2589,76 @@
       ],
       "extra": null,
       "action": "walk-north"
+    },
+    {
+      "key": "player-girl-run-north",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-run-north.png",
+      "type": "spritesheet",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "north",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): run-north — 8 frames 92x92 @ 12 fps, loop.",
+      "note": "Unarmed run away (rear/3/4); longer stride than walk-north.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "run",
+        "loop"
+      ],
+      "extra": null,
+      "action": "run-north"
+    },
+    {
+      "key": "player-girl-run-south",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-run-south.png",
+      "type": "spritesheet",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): run-south — 8 frames 92x92 @ 12 fps, loop.",
+      "note": "Unarmed run toward camera (front/3/4); longer stride than walk-south.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "run",
+        "loop"
+      ],
+      "extra": null,
+      "action": "run-south"
     },
     {
       "key": "player-girl-hurt",
