@@ -4,7 +4,7 @@
   "group": "dragon-baby",
   "title": "Jade / 翠火 — Baby",
   "titleZh": "翠火·幼年",
-  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST.",
+  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
   "source": {
     "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
     "sourceFolder": "pets/dragon/baby"
@@ -29,7 +29,8 @@
     "animate": [
       "pet-dragon-baby-idle",
       "pet-dragon-baby-move",
-      "pet-dragon-baby-skill"
+      "pet-dragon-baby-skill",
+      "pet-dragon-baby-sleep"
     ],
     "thumb": "assets/library/previews/pets/dragon-baby.gif"
   },
@@ -100,6 +101,39 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-dragon-baby-sleep-start",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-sleep-start.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "one-shot lie-down / curl into sleep (play after seek/move behind barricade)"
+    },
+    {
+      "key": "pet-dragon-baby-sleep",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-sleep.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "settle (0-3) then sleep breathe loop (4-9); Gameplay: play once then loopFrom, or play sleep-start then this with startAt=loopFrom",
+      "wake": "on resummon: leave sleep → idle/move (no teleport)"
     }
   ]
 }

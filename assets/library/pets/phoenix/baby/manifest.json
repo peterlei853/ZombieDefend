@@ -4,7 +4,7 @@
   "group": "phoenix-baby",
   "title": "Azure / 藍羽 — Baby",
   "titleZh": "藍羽·幼年",
-  "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST.",
+  "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
   "source": {
     "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
     "sourceFolder": "pets/phoenix/baby"
@@ -29,7 +29,8 @@
     "animate": [
       "pet-phoenix-baby-idle",
       "pet-phoenix-baby-move",
-      "pet-phoenix-baby-skill"
+      "pet-phoenix-baby-skill",
+      "pet-phoenix-baby-sleep"
     ],
     "thumb": "assets/library/previews/pets/phoenix-baby.gif"
   },
@@ -103,6 +104,39 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-phoenix-baby-sleep-start",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-sleep-start.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "one-shot lie-down / curl into sleep (play after seek/move behind barricade)"
+    },
+    {
+      "key": "pet-phoenix-baby-sleep",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-sleep.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "settle (0-3) then sleep breathe loop (4-9); Gameplay: play once then loopFrom, or play sleep-start then this with startAt=loopFrom",
+      "wake": "on resummon: leave sleep → idle/move (no teleport)"
     }
   ]
 }

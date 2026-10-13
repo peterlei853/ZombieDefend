@@ -4,7 +4,7 @@
   "group": "lion-baby",
   "title": "Leo / 雷歐 — Baby",
   "titleZh": "雷歐·幼年",
-  "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST.",
+  "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
   "source": {
     "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
     "sourceFolder": "pets/lion/baby"
@@ -29,7 +29,8 @@
     "animate": [
       "pet-lion-baby-idle",
       "pet-lion-baby-move",
-      "pet-lion-baby-skill"
+      "pet-lion-baby-skill",
+      "pet-lion-baby-sleep"
     ],
     "thumb": "assets/library/previews/pets/lion-baby.gif"
   },
@@ -100,6 +101,39 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-lion-baby-sleep-start",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-sleep-start.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "one-shot lie-down / curl into sleep (play after seek/move behind barricade)"
+    },
+    {
+      "key": "pet-lion-baby-sleep",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-sleep.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "role": "settle (0-3) then sleep breathe loop (4-9); Gameplay: play once then loopFrom, or play sleep-start then this with startAt=loopFrom",
+      "wake": "on resummon: leave sleep → idle/move (no teleport)"
     }
   ]
 }

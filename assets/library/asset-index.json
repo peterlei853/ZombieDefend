@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 443,
+    "total": 451,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -26,7 +26,7 @@
       },
       "pets": {
         "groups": 17,
-        "assets": 88
+        "assets": 96
       },
       "ui": {
         "groups": 1,
@@ -67,7 +67,7 @@
       "fx": 40,
       "icon": 67,
       "image": 2,
-      "spritesheet": 300
+      "spritesheet": 308
     }
   },
   "groups": [
@@ -322,7 +322,7 @@
       "group": "dragon-baby",
       "title": "Jade / 翠火 — Baby",
       "titleZh": "翠火·幼年",
-      "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST.",
+      "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
       "manifest": "assets/library/pets/dragon/baby/manifest.json",
       "dir": "assets/library/pets/dragon/baby",
       "thumb": "assets/library/previews/pets/dragon-baby.gif",
@@ -330,13 +330,13 @@
       "extras": [],
       "keyPrefix": "pet-dragon-baby-",
       "mainKey": "pet-dragon-baby-idle",
-      "count": 4,
+      "count": 6,
       "frameSizes": [
         "48x48"
       ],
       "framesRange": [
         4,
-        8
+        10
       ],
       "fpsRange": [
         6,
@@ -349,7 +349,9 @@
         "pet-dragon-baby-idle",
         "pet-dragon-baby-move",
         "pet-dragon-baby-skill",
-        "pet-dragon-baby-hurt"
+        "pet-dragon-baby-hurt",
+        "pet-dragon-baby-sleep-start",
+        "pet-dragon-baby-sleep"
       ]
     },
     {
@@ -471,7 +473,7 @@
       "group": "lion-baby",
       "title": "Leo / 雷歐 — Baby",
       "titleZh": "雷歐·幼年",
-      "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST.",
+      "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
       "manifest": "assets/library/pets/lion/baby/manifest.json",
       "dir": "assets/library/pets/lion/baby",
       "thumb": "assets/library/previews/pets/lion-baby.gif",
@@ -479,16 +481,16 @@
       "extras": [],
       "keyPrefix": "pet-lion-baby-",
       "mainKey": "pet-lion-baby-idle",
-      "count": 4,
+      "count": 6,
       "frameSizes": [
         "48x48"
       ],
       "framesRange": [
         4,
-        8
+        10
       ],
       "fpsRange": [
-        8,
+        6,
         12
       ],
       "types": [
@@ -498,7 +500,9 @@
         "pet-lion-baby-idle",
         "pet-lion-baby-move",
         "pet-lion-baby-skill",
-        "pet-lion-baby-hurt"
+        "pet-lion-baby-hurt",
+        "pet-lion-baby-sleep-start",
+        "pet-lion-baby-sleep"
       ]
     },
     {
@@ -618,7 +622,7 @@
       "group": "panda-baby",
       "title": "Momo / 墨墨 — Baby",
       "titleZh": "墨墨·幼年",
-      "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST.",
+      "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
       "manifest": "assets/library/pets/panda/baby/manifest.json",
       "dir": "assets/library/pets/panda/baby",
       "thumb": "assets/library/previews/pets/panda-baby.gif",
@@ -626,16 +630,16 @@
       "extras": [],
       "keyPrefix": "pet-panda-baby-",
       "mainKey": "pet-panda-baby-idle",
-      "count": 4,
+      "count": 6,
       "frameSizes": [
         "48x48"
       ],
       "framesRange": [
         4,
-        8
+        10
       ],
       "fpsRange": [
-        8,
+        6,
         12
       ],
       "types": [
@@ -645,7 +649,9 @@
         "pet-panda-baby-idle",
         "pet-panda-baby-move",
         "pet-panda-baby-skill",
-        "pet-panda-baby-hurt"
+        "pet-panda-baby-hurt",
+        "pet-panda-baby-sleep-start",
+        "pet-panda-baby-sleep"
       ]
     },
     {
@@ -767,7 +773,7 @@
       "group": "phoenix-baby",
       "title": "Azure / 藍羽 — Baby",
       "titleZh": "藍羽·幼年",
-      "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST.",
+      "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
       "manifest": "assets/library/pets/phoenix/baby/manifest.json",
       "dir": "assets/library/pets/phoenix/baby",
       "thumb": "assets/library/previews/pets/phoenix-baby.gif",
@@ -775,16 +781,16 @@
       "extras": [],
       "keyPrefix": "pet-phoenix-baby-",
       "mainKey": "pet-phoenix-baby-idle",
-      "count": 4,
+      "count": 6,
       "frameSizes": [
         "48x48"
       ],
       "framesRange": [
         4,
-        8
+        10
       ],
       "fpsRange": [
-        8,
+        6,
         10
       ],
       "types": [
@@ -794,7 +800,9 @@
         "pet-phoenix-baby-idle",
         "pet-phoenix-baby-move",
         "pet-phoenix-baby-skill",
-        "pet-phoenix-baby-hurt"
+        "pet-phoenix-baby-hurt",
+        "pet-phoenix-baby-sleep-start",
+        "pet-phoenix-baby-sleep"
       ]
     },
     {
@@ -5423,6 +5431,74 @@
       "action": "hurt"
     },
     {
+      "key": "pet-dragon-baby-sleep-start",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-sleep-start.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: sleep-start — 4 frames 48x48 @ 8 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "sleep-start"
+    },
+    {
+      "key": "pet-dragon-baby-sleep",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-sleep.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: sleep — 10 frames 48x48 @ 6 fps, start 0-3 once, loop 4-9.",
+      "note": null,
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "sustained"
+      ],
+      "extra": null,
+      "action": "sleep"
+    },
+    {
       "key": "fx-pet-dragon-smoke-breath",
       "category": "pets",
       "group": "dragon-fx",
@@ -6023,6 +6099,74 @@
       "action": "hurt"
     },
     {
+      "key": "pet-lion-baby-sleep-start",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-sleep-start.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: sleep-start — 4 frames 48x48 @ 8 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "sleep-start"
+    },
+    {
+      "key": "pet-lion-baby-sleep",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-sleep.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: sleep — 10 frames 48x48 @ 6 fps, start 0-3 once, loop 4-9.",
+      "note": null,
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "sustained"
+      ],
+      "extra": null,
+      "action": "sleep"
+    },
+    {
       "key": "fx-pet-lion-pounce-slash",
       "category": "pets",
       "group": "lion-fx",
@@ -6581,6 +6725,74 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "pet-panda-baby-sleep-start",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-sleep-start.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: sleep-start — 4 frames 48x48 @ 8 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "sleep-start"
+    },
+    {
+      "key": "pet-panda-baby-sleep",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-sleep.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: sleep — 10 frames 48x48 @ 6 fps, start 0-3 once, loop 4-9.",
+      "note": null,
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "sustained"
+      ],
+      "extra": null,
+      "action": "sleep"
     },
     {
       "key": "fx-pet-panda-roll-dust",
@@ -7177,6 +7389,74 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "pet-phoenix-baby-sleep-start",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-sleep-start.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: sleep-start — 4 frames 48x48 @ 8 fps, once.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "sleep-start"
+    },
+    {
+      "key": "pet-phoenix-baby-sleep",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-sleep.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": 4,
+      "loopTo": 9,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: sleep — 10 frames 48x48 @ 6 fps, start 0-3 once, loop 4-9.",
+      "note": null,
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "sustained"
+      ],
+      "extra": null,
+      "action": "sleep"
     },
     {
       "key": "fx-pet-phoenix-spark-feather",
