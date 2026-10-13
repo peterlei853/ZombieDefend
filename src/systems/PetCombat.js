@@ -1,6 +1,6 @@
 import { GAME_CONFIG } from '../data/GameConfig.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
-import { PET_ELEMENT_TINT, PET_LINEUP } from '../assets/petLineup.js';
+import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 import {
   barricadeXAtY,
@@ -17,6 +17,21 @@ import {
 
 const EMPTY = { gold: 0, kills: 0 };
 
+/** 4 frames at 8 fps. Sleep-start, then the loop. */
+const SLEEP_START_MS = 500;
+/** Idle beat when a sleeping pet is called back out. */
+const WAKE_MS = 280;
+
+/**
+ * Named for a later SFX pass. Recorded on cueLog and not sent to SoundManager.
+ * go-shout, back-shout, pet-sleep
+ */
+export const PET_AUDIO_KEYS = Object.freeze({
+  go: 'go-shout',
+  back: 'back-shout',
+  sleep: 'pet-sleep',
+});
+
 /** Tinted circles stand in for form-2 / form-3 FX until themed art exists. */
 const PLACEHOLDER_TINT = {
   phoenix: 0xff6d00,
@@ -27,8 +42,10 @@ const PLACEHOLDER_TINT = {
 
 /**
  * Summoned baby pets. Off the field until the bar is tapped.
- * Tap again to recall: the pet leaves, sits behind the barricade, and
- * regens. There is no deploy cooldown and no on-field time limit.
+ * Tap again to recall: Back! floats beside the pet, then it walks to an
+ * empty bed behind the barricade, plays sleep-start once, and loops sleep.
+ * Resummon wakes that body and walks it out. Regen still runs off the field.
+ * There is no deploy cooldown and no on-field time limit.
  * Death (HP ≤ 0) greys the bar for REVIVE_CD_MS.
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
  * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
@@ -53,6 +70,10 @@ export class PetCombat {
     this.castLog = [];
     /** @type {string[]} */
     this.fxLog = [];
+    /** @type {{ id: string, key: string, which: string }[]} */
+    this.floatLog = [];
+    /** @type {string[]} Cue names only. SoundManager is not called. */
+    this.cueLog = [];
     /** @type {number|null} overrides GAME_CONFIG.PETS.UNLOCKED_ORBS when set */
     this._unlockedOrbs = null;
   }
@@ -183,19 +204,29 @@ export class PetCombat {
     for (const actor of this._actors) {
       if (actor.phase === 'revive') {
         this._tickRevive(actor, dt);
+        this._tickFloat(actor, dt);
         continue;
       }
       if (actor.phase === 'ready') {
         this._tickRegen(actor, dt);
+        this._tickRest(actor, dt);
+        this._tickFloat(actor, dt);
         continue;
       }
-      if (actor.phase !== 'field') continue;
+      if (actor.phase !== 'field') {
+        this._tickFloat(actor, dt);
+        continue;
+      }
       const gain = this._tickField(actor, dt, list, threat, player);
       gold += gain.gold;
       kills += gain.kills;
-      if (actor.phase !== 'field') continue;
+      if (actor.phase !== 'field') {
+        this._tickFloat(actor, dt);
+        continue;
+      }
       this._tickOrbs(actor, dt);
       if (!(actor.hp > 0)) this._dismiss(actor);
+      this._tickFloat(actor, dt);
     }
     this._stepBolts(dt / 1000);
     const bolts = this._resolveBolts(list);
@@ -221,10 +252,14 @@ export class PetCombat {
     for (const blob of this._blobs) destroySprite(blob?.node);
     this._blobs = [];
     for (const actor of this._actors) {
+      this._clearFloat(actor);
       this._destroyBars(actor);
       destroySprite(actor.sprite);
       actor.sprite = null;
       actor.phase = 'ready';
+      actor.rest = null;
+      actor.sleepSlot = null;
+      actor.tucked = false;
       actor.hp = actor.maxHp;
     }
   }
@@ -246,6 +281,18 @@ export class PetCombat {
       released: false,
       hurtLeft: 0,
       popLeft: 0,
+      rest: null,
+      sleepSlot: null,
+      sleepX: 0,
+      sleepY: 0,
+      settleLeft: 0,
+      wakeLeft: 0,
+      leaving: false,
+      tucked: false,
+      float: null,
+      floatLeft: 0,
+      floatFade: 0,
+      drawDepth: 0,
       latched: false,
       latchId: null,
       destX: 0,
@@ -272,13 +319,22 @@ export class PetCombat {
    * @param {{ x?: number, y?: number }|null} player
    */
   _deploy(actor, player) {
-    const px = Number.isFinite(player?.x) ? player.x : 0;
-    const py = Number.isFinite(player?.y) ? player.y : 0;
-    const x = px + layoutPx(18);
-    const y = clampGrass(py);
+    if (actor.sprite?.active) {
+      this._wake(actor);
+      return;
+    }
+    const point = deployPoint(player);
+    const x = point.x;
+    const y = point.y;
     actor.phase = 'field';
     if (!(actor.hp > 0)) actor.hp = actor.maxHp;
     actor.state = 'idle';
+    actor.rest = null;
+    actor.sleepSlot = null;
+    actor.settleLeft = 0;
+    actor.wakeLeft = 0;
+    actor.leaving = false;
+    actor.tucked = false;
     actor.attackElapsed = 0;
     actor.released = false;
     actor.hurtLeft = 0;
@@ -292,23 +348,60 @@ export class PetCombat {
     actor.popLeft = GAME_CONFIG.PETS.POP_MS;
     actor.sprite = this._spawnSprite(actor, x, y);
     this._attachBars(actor);
+    this._showFloat(actor, 'go');
+    this._noteCue(PET_AUDIO_KEYS.go);
   }
 
   /**
-   * Leave the field at the current HP and regen behind the barricade.
-   * A flash that had not released yet resumes the next time the pet is out.
+   * Stand up where they are and walk out. The sprite is not respawned.
+   * @param {PetActor} actor
+   */
+  _wake(actor) {
+    const lying = actor.rest === 'sleep' || actor.rest === 'settle';
+    actor.phase = 'field';
+    actor.rest = null;
+    actor.sleepSlot = null;
+    actor.settleLeft = 0;
+    actor.state = 'idle';
+    actor.wakeLeft = lying ? WAKE_MS : 0;
+    actor.leaving = true;
+    actor.attackElapsed = 0;
+    actor.released = false;
+    actor.hurtLeft = 0;
+    actor.latched = false;
+    actor.latchId = null;
+    actor.castQueue = [];
+    actor.popLeft = 0;
+    if (actor.sprite && typeof actor.sprite.setAlpha === 'function') actor.sprite.setAlpha(1);
+    faceLeft(actor.sprite);
+    playLoop(actor.sprite, actor.role.key);
+    this._destroyBars(actor);
+    this._attachBars(actor);
+    this._place(actor);
+    this._showFloat(actor, 'go');
+    this._noteCue(PET_AUDIO_KEYS.go);
+  }
+
+  /**
+   * Leave the field at the current HP and walk to an empty bed.
+   * The sprite stays. A flash that had not released yet resumes next time out.
    * @param {PetActor} actor
    */
   _recall(actor) {
     if (actor.phase !== 'field') return;
     const sprite = actor.sprite;
-    actor.sprite = null;
     actor.phase = 'ready';
     actor.state = 'idle';
+    actor.rest = sprite?.active ? 'seek' : null;
     actor.castQueue = [];
     actor.latched = false;
     actor.latchId = null;
     actor.hurtLeft = 0;
+    actor.attackElapsed = 0;
+    actor.released = false;
+    actor.wakeLeft = 0;
+    actor.leaving = false;
+    actor.popLeft = 0;
     for (const orb of actor.orbs) {
       if (!orb.pending) continue;
       orb.pending = false;
@@ -316,7 +409,242 @@ export class PetCombat {
       orb.flashLeft = GAME_CONFIG.PETS.ORB_FLASH_MS;
     }
     this._destroyBars(actor);
-    this._fadeOut(sprite);
+    if (!sprite?.active) return;
+    this.scene?.tweens?.killTweensOf?.(sprite);
+    if (typeof sprite.setScale === 'function') sprite.setScale(displayScaleFromY(sprite.y));
+    if (typeof sprite.setAlpha === 'function') sprite.setAlpha(1);
+    this._claimBed(actor);
+    this._showFloat(actor, 'back');
+    this._noteCue(PET_AUDIO_KEYS.back);
+  }
+
+  /**
+   * Party index when that bed is free, otherwise the first open rank.
+   * @param {PetActor} actor
+   */
+  _claimBed(actor) {
+    const slots = petLineupSlots();
+    const taken = new Set();
+    for (const other of this._actors) {
+      if (other === actor) continue;
+      if (other.sleepSlot == null) continue;
+      if (!other.sprite?.active && other.rest == null) continue;
+      taken.add(other.sleepSlot);
+    }
+    let index = this._actors.indexOf(actor);
+    if (index < 0) index = 0;
+    if (taken.has(index)) {
+      const free = slots.findIndex((_, i) => !taken.has(i));
+      if (free >= 0) index = free;
+    }
+    const slot = slots[index] || slots[0];
+    actor.sleepSlot = slot ? index : null;
+    actor.sleepX = slot?.x ?? actor.x;
+    actor.sleepY = slot?.y ?? actor.y;
+  }
+
+  /**
+   * @param {number} index
+   * @returns {{ id: string, x: number, y: number, rest: string|null, depth: number, slot: number|null }|null}
+   */
+  restSpot(index) {
+    const actor = this._actors[index];
+    if (!actor?.sprite?.active || actor.phase === 'field' || actor.phase === 'revive') return null;
+    return {
+      id: actor.role.id,
+      x: actor.sprite.x,
+      y: actor.sprite.y,
+      rest: actor.rest,
+      depth: actor.drawDepth,
+      slot: actor.sleepSlot,
+    };
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _tickRest(actor, dt) {
+    if (!actor.sprite?.active || !actor.rest) return;
+    if (actor.rest === 'seek') this._stepSeek(actor, dt);
+    else if (actor.rest === 'settle') this._stepSettle(actor, dt);
+    else if (actor.rest === 'sleep') this._stepSleep(actor);
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _stepSeek(actor, dt) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    const dx = actor.sleepX - sprite.x;
+    const dy = actor.sleepY - sprite.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= layoutPx(5)) {
+      sprite.x = actor.sleepX;
+      sprite.y = actor.sleepY;
+      actor.x = sprite.x;
+      actor.y = sprite.y;
+      this._beginSettle(actor);
+      return;
+    }
+    const step = GAME_CONFIG.PETS.MOVE_SPEED * LAYOUT_SCALE * (dt / 1000);
+    const span = Math.max(dist, 0.001);
+    sprite.x += dx * Math.min(1, step / span);
+    sprite.y += dy * Math.min(1, step / span);
+    actor.x = sprite.x;
+    actor.y = sprite.y;
+    actor.state = 'move';
+    const moveKey = actor.role.move;
+    if (moveKey && sprite.scene?.anims?.exists?.(moveKey)) playLoop(sprite, moveKey);
+    else playLoop(sprite, actor.role.key);
+    if (typeof sprite.setFlipX === 'function') sprite.setFlipX(dx > layoutPx(2));
+    this._placeRest(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _beginSettle(actor) {
+    actor.rest = 'settle';
+    actor.tucked = true;
+    faceLeft(actor.sprite);
+    this._noteCue(PET_AUDIO_KEYS.sleep);
+    const key = actor.role.sleepStart;
+    const played = playOnce(actor.sprite, key);
+    actor.settleLeft = played ? SLEEP_START_MS : 0;
+    const sprite = actor.sprite;
+    if (played && sprite && typeof sprite.once === 'function') {
+      sprite.once('animationcomplete', (anim) => {
+        const doneKey = typeof anim === 'string' ? anim : anim?.key;
+        if (actor.rest === 'settle' && doneKey === key) actor.settleLeft = 0;
+      });
+    }
+    this._placeRest(actor);
+    if (actor.settleLeft <= 0) this._beginSleepLoop(actor);
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _stepSettle(actor, dt) {
+    actor.settleLeft -= dt;
+    this._placeRest(actor);
+    if (actor.settleLeft > 0) return;
+    this._beginSleepLoop(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _beginSleepLoop(actor) {
+    if (actor.rest === 'sleep') return;
+    actor.rest = 'sleep';
+    actor.settleLeft = 0;
+    actor.tucked = true;
+    const sprite = actor.sprite;
+    const loopKey = `${actor.role.sleep}:loop`;
+    if (sprite?.scene?.anims?.exists?.(loopKey)) playLoop(sprite, loopKey);
+    else playLoop(sprite, actor.role.sleep);
+    faceLeft(sprite);
+    this._placeRest(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _stepSleep(actor) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    sprite.x = actor.sleepX;
+    sprite.y = actor.sleepY;
+    const loopKey = `${actor.role.sleep}:loop`;
+    const current = sprite.anims?.currentAnim?.key;
+    if (current !== loopKey && current !== actor.role.sleep) {
+      if (sprite.scene?.anims?.exists?.(loopKey)) playLoop(sprite, loopKey);
+      else playLoop(sprite, actor.role.sleep);
+    }
+    this._placeRest(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _placeRest(actor) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    const y = clampGrass(sprite.y);
+    sprite.y = y;
+    actor.x = sprite.x;
+    actor.y = y;
+    if (typeof sprite.setScale === 'function') sprite.setScale(displayScaleFromY(y));
+    const depth = restingBehindFence(actor) ? petSleepDepth(y) : depthFromY(y, -1);
+    actor.drawDepth = depth;
+    sprite.setDepth?.(depth);
+    if (actor.rest === 'settle' || actor.rest === 'sleep') faceLeft(sprite);
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {'go'|'back'} which
+   */
+  _showFloat(actor, which) {
+    this._clearFloat(actor);
+    const primary = which === 'go' ? 'ui-float-go' : 'ui-float-back';
+    const burst = which === 'go' ? 'ui-float-go-burst' : 'ui-float-back-burst';
+    const scene = this.scene;
+    let key = null;
+    if (scene?.textures?.exists?.(primary)) key = primary;
+    else if (scene?.textures?.exists?.(burst)) key = burst;
+    this.floatLog.push({ id: actor.role.id, key: key || primary, which });
+    if (!key || !scene?.add?.sprite || !actor.sprite) return;
+    const node = scene.add.sprite(actor.sprite.x, actor.sprite.y, key);
+    const asset = libraryAsset(scene, key);
+    const origin = asset?.origin ?? [0.5, 1];
+    node.setOrigin?.(origin[0], origin[1]);
+    if (typeof node.setScale === 'function') node.setScale(1);
+    node.setData?.('float', which);
+    actor.float = node;
+    actor.floatLeft = GAME_CONFIG.PETS.FLOAT_HOLD_MS;
+    actor.floatFade = GAME_CONFIG.PETS.FLOAT_FADE_MS;
+    this._placeFloat(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _placeFloat(actor) {
+    const node = actor.float;
+    const sprite = actor.sprite;
+    if (!node || !sprite) return;
+    node.x = sprite.x + layoutPx(30);
+    node.y = sprite.y - layoutPx(40);
+    node.setDepth?.(depthFromY(sprite.y, 8));
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _tickFloat(actor, dt) {
+    const node = actor.float;
+    if (!node) return;
+    if (node.active === false) {
+      actor.float = null;
+      return;
+    }
+    this._placeFloat(actor);
+    let remain = Number.isFinite(dt) ? dt : 0;
+    if (actor.floatLeft > 0) {
+      const use = Math.min(remain, actor.floatLeft);
+      actor.floatLeft -= use;
+      remain -= use;
+      if (typeof node.setAlpha === 'function') node.setAlpha(1);
+    }
+    if (remain > 0 && actor.floatLeft <= 0) {
+      actor.floatFade -= remain;
+      const fade = GAME_CONFIG.PETS.FLOAT_FADE_MS;
+      const alpha = fade > 0 ? Math.max(0, actor.floatFade / fade) : 0;
+      if (typeof node.setAlpha === 'function') node.setAlpha(alpha);
+      if (actor.floatFade <= 0) this._clearFloat(actor);
+    }
+  }
+
+  /** @param {PetActor} actor */
+  _clearFloat(actor) {
+    destroySprite(actor.float);
+    actor.float = null;
+    actor.floatLeft = 0;
+    actor.floatFade = 0;
+  }
+
+  /**
+   * Key name only. The audio pass cues this later.
+   * @param {string} name
+   */
+  _noteCue(name) {
+    if (!name) return;
+    this.cueLog.push(name);
   }
 
   /**
@@ -418,6 +746,12 @@ export class PetCombat {
     actor.state = 'idle';
     actor.hurtLeft = 0;
     actor.castQueue = [];
+    actor.rest = null;
+    actor.sleepSlot = null;
+    actor.settleLeft = 0;
+    actor.wakeLeft = 0;
+    actor.leaving = false;
+    actor.tucked = false;
     actor.phase = 'revive';
     actor.reviveLeft = GAME_CONFIG.PETS.REVIVE_CD_MS;
     for (const orb of actor.orbs) {
@@ -426,6 +760,7 @@ export class PetCombat {
       orb.left = orb.cdMs;
     }
     this._destroyBars(actor);
+    this._clearFloat(actor);
     this.scene?.audio?.playPetDeath?.();
     this._fadeOut(sprite);
   }
@@ -468,7 +803,7 @@ export class PetCombat {
    * @param {number} dt
    */
   _tickOrbs(actor, dt) {
-    if (actor.phase !== 'field') return;
+    if (actor.phase !== 'field' || actor.wakeLeft > 0) return;
     const unlocked = this._unlockedCount();
     for (const orb of actor.orbs) {
       if (orb.index >= unlocked) continue;
@@ -530,16 +865,27 @@ export class PetCombat {
   _tickField(actor, deltaMs, zombies, threat, player) {
     const sprite = actor.sprite;
     if (!sprite?.active) return EMPTY;
-    if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - deltaMs);
+    let dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
     this._place(actor);
 
+    if (actor.wakeLeft > 0) {
+      const use = Math.min(actor.wakeLeft, dt);
+      actor.wakeLeft -= use;
+      dt -= use;
+      playLoop(sprite, actor.role.key);
+      faceLeft(sprite);
+      this._place(actor);
+      if (actor.wakeLeft > 0 || dt <= 0) return EMPTY;
+    }
+
     if (actor.state === 'attack') {
-      actor.attackElapsed += deltaMs;
+      actor.attackElapsed += dt;
       return this._advanceAttack(actor, zombies, threat);
     }
 
     if (actor.hurtLeft > 0) {
-      actor.hurtLeft -= deltaMs;
+      actor.hurtLeft -= dt;
       const hurt = actor.role.hurt;
       const playing = sprite.anims?.currentAnim?.key === hurt && sprite.anims?.isPlaying;
       if (!playing && !playOnce(sprite, hurt)) playLoop(sprite, actor.role.key);
@@ -547,7 +893,7 @@ export class PetCombat {
       return EMPTY;
     }
 
-    this._stepMove(actor, threat, player, deltaMs);
+    this._stepMove(actor, threat, player, dt);
     return EMPTY;
   }
 
@@ -561,11 +907,16 @@ export class PetCombat {
     const sprite = actor.sprite;
     if (!sprite) return;
     if (!threat) {
+      if (actor.leaving) {
+        this._stepOutbound(actor, player, deltaMs);
+        return;
+      }
       actor.state = 'idle';
       playLoop(sprite, actor.role.key);
       faceLeft(sprite);
       return;
     }
+    actor.leaving = false;
     if (actor.latchId !== threat.id) {
       actor.latched = false;
       actor.latchId = threat.id;
@@ -622,6 +973,41 @@ export class PetCombat {
     return { x, y };
   }
 
+  /**
+   * No threat: walk from the bed to the summon point beside the player.
+   * @param {PetActor} actor
+   * @param {{ x?: number, y?: number }|null} player
+   * @param {number} deltaMs
+   */
+  _stepOutbound(actor, player, deltaMs) {
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    const dest = deployPoint(player);
+    const dx = dest.x - sprite.x;
+    const dy = dest.y - sprite.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= layoutPx(5)) {
+      sprite.x = dest.x;
+      sprite.y = dest.y;
+      actor.leaving = false;
+      actor.state = 'idle';
+      playLoop(sprite, actor.role.key);
+      faceLeft(sprite);
+      this._place(actor);
+      return;
+    }
+    const step = GAME_CONFIG.PETS.MOVE_SPEED * LAYOUT_SCALE * (deltaMs / 1000);
+    const span = Math.max(dist, 0.001);
+    sprite.x += dx * Math.min(1, step / span);
+    sprite.y += dy * Math.min(1, step / span);
+    actor.state = 'move';
+    const moveKey = actor.role.move;
+    if (moveKey && sprite.scene?.anims?.exists?.(moveKey)) playLoop(sprite, moveKey);
+    else playLoop(sprite, actor.role.key);
+    if (typeof sprite.setFlipX === 'function') sprite.setFlipX(dx > layoutPx(2));
+    this._place(actor);
+  }
+
   /** @param {PetActor} actor */
   _place(actor) {
     const sprite = actor.sprite;
@@ -633,8 +1019,11 @@ export class PetCombat {
     if (!(actor.popLeft > 0) && typeof sprite.setScale === 'function') {
       sprite.setScale(displayScaleFromY(y));
     }
-    sprite.setDepth?.(depthFromY(y, -1));
-    faceLeft(sprite);
+    const behind = restingBehindFence(actor);
+    if (actor.tucked && !behind) actor.tucked = false;
+    const depth = behind ? petSleepDepth(y) : depthFromY(y, -1);
+    actor.drawDepth = depth;
+    sprite.setDepth?.(depth);
     this._syncBars(actor);
   }
 
@@ -1333,6 +1722,32 @@ function chainTargets(zombies, originX, originY, range, jump, jumps) {
   return hits;
 }
 
+/**
+ * True while the body should draw under the fence posts.
+ * Fresh summons stay in front. A woken pet stays tucked until it crosses out.
+ * @param {PetActor} actor
+ */
+function restingBehindFence(actor) {
+  const y = actor.sprite?.y ?? actor.y;
+  const x = actor.sprite?.x ?? actor.x;
+  if (actor.rest === 'settle' || actor.rest === 'sleep') return true;
+  const safe = x >= barricadeXAtY(y) - layoutPx(4);
+  if (actor.rest === 'seek' && safe) return true;
+  if (actor.tucked && safe) return true;
+  return false;
+}
+
+/**
+ * First-summon point, just behind the player. Resummon walks here when
+ * nothing is on the field.
+ * @param {{ x?: number, y?: number }|null|undefined} player
+ */
+function deployPoint(player) {
+  const px = Number.isFinite(player?.x) ? player.x : 0;
+  const py = Number.isFinite(player?.y) ? player.y : 0;
+  return { x: px + layoutPx(18), y: clampGrass(py) };
+}
+
 /** @param {number} y */
 function clampGrass(y) {
   return Math.min(grassYMax(), Math.max(grassYMin(), Number.isFinite(y) ? y : grassYMin()));
@@ -1651,7 +2066,12 @@ function wrapPi(rad) {
  * @property {number} hp
  * @property {number} maxHp
  * @property {number} reviveLeft
- * @property {'idle'|'move'|'attack'|'hurt'} state
+ * @property {'idle'|'move'|'attack'|'hurt'|'wake'} state
+ * @property {null|'seek'|'settle'|'sleep'} rest
+ * @property {number|null} sleepSlot
+ * @property {boolean} tucked
+ * @property {boolean} leaving
+ * @property {number} wakeLeft
  * @property {boolean} released
  * @property {number} attackElapsed
  * @property {number[]} castQueue

@@ -8,8 +8,9 @@ import {
 } from '../systems/DepthView.js';
 
 /**
- * First form only. Baby idle / move / skill / hurt strips (48×48, feet origin,
- * face west) and the baby skill FX. Young / ancient forms stay on disk.
+ * First form only. Baby idle / move / skill / hurt / sleep strips (48×48,
+ * feet origin, face west) and the baby skill FX. Young / ancient forms stay
+ * on disk. Sleep is the recall bed: sleep-start once, then the sleep loop.
  * Order is party order: far → near, and the HUD column top → bottom.
  * Pets are not spawned with the stage. The bar summons and recalls them.
  * `hudBar` is the 64×32 bar (head already composited on the left).
@@ -25,6 +26,8 @@ export const PET_LINEUP = [
     move: 'pet-phoenix-baby-move',
     skill: 'pet-phoenix-baby-skill',
     hurt: 'pet-phoenix-baby-hurt',
+    sleepStart: 'pet-phoenix-baby-sleep-start',
+    sleep: 'pet-phoenix-baby-sleep',
     projectile: 'fx-pet-phoenix-spark-feather',
     impact: 'fx-pet-phoenix-spark-feather-hit',
     hudBar: 'ui-pet-phoenix-bar',
@@ -41,6 +44,8 @@ export const PET_LINEUP = [
     move: 'pet-panda-baby-move',
     skill: 'pet-panda-baby-skill',
     hurt: 'pet-panda-baby-hurt',
+    sleepStart: 'pet-panda-baby-sleep-start',
+    sleep: 'pet-panda-baby-sleep',
     windup: 'fx-pet-panda-roll-dust',
     impact: 'fx-pet-panda-roll-impact',
     hudBar: 'ui-pet-panda-bar',
@@ -57,6 +62,8 @@ export const PET_LINEUP = [
     move: 'pet-lion-baby-move',
     skill: 'pet-lion-baby-skill',
     hurt: 'pet-lion-baby-hurt',
+    sleepStart: 'pet-lion-baby-sleep-start',
+    sleep: 'pet-lion-baby-sleep',
     impact: 'fx-pet-lion-pounce-slash',
     hudBar: 'ui-pet-lion-bar',
     hudHead: 'ui-pet-lion-head',
@@ -72,6 +79,8 @@ export const PET_LINEUP = [
     move: 'pet-dragon-baby-move',
     skill: 'pet-dragon-baby-skill',
     hurt: 'pet-dragon-baby-hurt',
+    sleepStart: 'pet-dragon-baby-sleep-start',
+    sleep: 'pet-dragon-baby-sleep',
     breath: 'fx-pet-dragon-smoke-breath',
     hudBar: 'ui-pet-dragon-bar',
     hudHead: 'ui-pet-dragon-head',
@@ -97,6 +106,8 @@ export const PET_STAGE_KEYS = new Set(
       pet.move,
       pet.skill,
       pet.hurt,
+      pet.sleepStart,
+      pet.sleep,
       pet.projectile,
       pet.windup,
       pet.impact,
@@ -121,7 +132,7 @@ export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
  * Stage load filter. Non-pet categories pass through. From `pets`, only
- * the four baby idle/move/skill/hurt strips, their form-1 FX, and the HUD
+ * the four baby idle/move/skill/hurt/sleep strips, their form-1 FX, and the HUD
  * bar / head / orb icons are queued.
  * @param {{ category?: string, key?: string }} asset
  */
@@ -137,9 +148,9 @@ export function petRole(id) {
 }
 
 /**
- * Legacy fence ranks (safe side of the posts). v0.21 does not spawn these.
- * Summon placement starts behind the player and walks toward the threat.
- * Kept so slot math stays available for tooling.
+ * Safe-side ranks behind the posts, one per pet, spread down the grass.
+ * Stage start does not spawn them. Recall claims a free rank and walks
+ * there; the spots do not share a point.
  */
 export function petLineupSlots() {
   const y0 = grassYMin();
@@ -165,4 +176,12 @@ export function petDisplayScale(y) {
 /** Just behind a body on the same lane so the hero draws in front. */
 export function petDepth(y) {
   return depthFromY(y, -1);
+}
+
+/**
+ * Asleep behind the fence. Posts use bias −2, so −4 draws the pet under them.
+ * @param {number} y
+ */
+export function petSleepDepth(y) {
+  return depthFromY(y, -4);
 }

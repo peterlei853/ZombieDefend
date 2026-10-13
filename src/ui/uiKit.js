@@ -1,7 +1,7 @@
 import { HUD_DEPTH } from '../systems/DepthView.js';
 
 /**
- * ZombieDefend UI kit (v0.22.0).
+ * ZombieDefend UI kit (v0.22.1).
  *
  * Textures load from assets/library/ui/ through the asset index.
  * HP frames are empty; the fill strip is cropped to the HP ratio and
