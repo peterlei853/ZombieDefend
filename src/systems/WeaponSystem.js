@@ -10,6 +10,15 @@ import {
 } from './DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { HERO_WEAPONS } from '../assets/heroLoadout.js';
+import {
+  FLAME_GROW_MS,
+  FLAME_RANGE_MAX,
+  FLAME_RANGE_START,
+  WEAPON_TRAITS,
+  forwardVelocity,
+  orderWeapons,
+  splitVelocities,
+} from '../assets/heroDeploy.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
@@ -81,6 +90,43 @@ export class WeaponSystem {
     this._playerCooldown = 0;
     /** @type {{ gfx: Phaser.GameObjects.Rectangle, vx: number, vy: number, life: number, max: number, spin: number }[]} */
     this._casings = [];
+    /** Shop-order ids that deploy and fire together. */
+    this._ownedIds = [];
+    /** @type {Record<string, number>} */
+    this._cooldowns = {};
+    this._visualScale = 1;
+    this._wasFrontFire = false;
+    this._flameMs = 0;
+    this._flameTick = 0;
+    this._flameRange = 0;
+    /** @type {Phaser.GameObjects.Sprite|null} */
+    this._flame = null;
+    /** @type {{ zombie: import('../entities/Zombie.js').Zombie, sprite: Phaser.GameObjects.Sprite, key: string, life: number }[]} */
+    this._follows = [];
+    this._pending = { gold: 0, kills: 0 };
+    /** @type {import('../entities/Zombie.js').Zombie[]} */
+    this._liveZombies = [];
+    /** @type {object[]|null} */
+    this._liveBullets = null;
+  }
+
+  /**
+   * Guns that sit in the front arc and fire once deploy finishes.
+   * @param {string[]|null|undefined} ids
+   */
+  setOwnedWeapons(ids) {
+    this._ownedIds = orderWeapons(ids);
+    this._cooldowns = {};
+    const first = this._ownedIds[0];
+    if (first) {
+      const idx = HERO_WEAPONS.findIndex((w) => w.id === first);
+      if (idx >= 0) this._skinIndex = idx;
+    }
+  }
+
+  /** @returns {string[]} */
+  ownedIds() {
+    return this._ownedIds.slice();
   }
 
   /** @returns {WeaponId} */
@@ -94,7 +140,8 @@ export class WeaponSystem {
    */
   getSkin() {
     const skin = HERO_WEAPONS[this._skinIndex] || HERO_WEAPONS[0];
-    if (!this.scene?.textures?.exists?.(skin.idle)) return null;
+    const tex = this.scene?.textures;
+    if (!tex?.exists?.(skin.idle) && !tex?.exists?.('player-girl-idle')) return null;
     return skin;
   }
 
@@ -111,11 +158,18 @@ export class WeaponSystem {
    * @returns {WeaponId}
    */
   toggleWeapon() {
-    if (!this.getSkin() && !this.scene?.textures?.exists?.(HERO_WEAPONS[0].idle)) {
+    const tex = this.scene?.textures;
+    const library = tex?.exists?.('player-girl-idle') || tex?.exists?.(HERO_WEAPONS[0].idle);
+    if (!library) {
       this.weapon = this.weapon === WEAPON_HANDGUN ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
       return this.weapon;
     }
-    this._skinIndex = (this._skinIndex + 1) % HERO_WEAPONS.length;
+    const cycle = this._ownedIds.length ? this._ownedIds : HERO_WEAPONS.map((w) => w.id);
+    const current = HERO_WEAPONS[this._skinIndex]?.id;
+    const at = Math.max(0, cycle.indexOf(current));
+    const nextId = cycle[(at + 1) % cycle.length];
+    const idx = HERO_WEAPONS.findIndex((w) => w.id === nextId);
+    this._skinIndex = idx >= 0 ? idx : 0;
     const skin = HERO_WEAPONS[this._skinIndex];
     this.weapon = skin.profile === 'shotgun' ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
     return this.weapon;
@@ -204,6 +258,9 @@ export class WeaponSystem {
    * @returns {'shotgun'|'handgun'|null}
    */
   updatePlayerFire(deltaMs, playerX, playerY, zombies, bullets, opts = {}) {
+    if (opts.frontFloat) {
+      return this._updateFrontFire(deltaMs, zombies, bullets, opts);
+    }
     this._playerCooldown -= deltaMs;
     if (this._playerCooldown > 0) return null;
     if (!Array.isArray(bullets)) return null;
@@ -256,9 +313,7 @@ export class WeaponSystem {
       const dy = (Number.isFinite(b.vy) ? b.vy : 0) * dt;
       b.gfx.x += dx;
       b.gfx.y += dy;
-      if (b.maxDistance != null) {
-        b.traveled = (b.traveled || 0) + Math.hypot(dx, dy);
-      }
+      b.traveled = (b.traveled || 0) + Math.hypot(dx, dy);
       if (b.library && b.rotate && typeof b.gfx.setRotation === 'function') {
         b.gfx.setRotation(aimRotation(b.vx, b.vy, b.facing || 'west'));
       } else if (b.kind === 'handgun') {
@@ -306,6 +361,9 @@ export class WeaponSystem {
   destroyEffects() {
     for (const c of this._casings || []) this._safeDestroyGraphics(c?.gfx);
     this._casings = [];
+    for (const f of this._follows || []) this._safeDestroyGraphics(f?.sprite);
+    this._follows = [];
+    this._destroyFlame();
   }
 
   /**
@@ -340,9 +398,51 @@ export class WeaponSystem {
    * @param {{ damage?: number, kind?: string, knockback?: number }} bullet
    * @returns {{ gold: number, kills: number }}
    */
+  /**
+   * Living zombies and the bullet list for splash, split, and chain.
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {object[]} bullets
+   */
+  armHits(zombies, bullets) {
+    this._liveZombies = Array.isArray(zombies) ? zombies : [];
+    this._liveBullets = Array.isArray(bullets) ? bullets : null;
+  }
+
+  /** Gold from the flame cone, which is not a bullet hit. */
+  consumePending() {
+    const pending = this._pending || { gold: 0, kills: 0 };
+    this._pending = { gold: 0, kills: 0 };
+    return pending;
+  }
+
+  /**
+   * Freeze coats and burn overlays follow their zombie.
+   * @param {number} deltaMs
+   */
+  stepOverlays(deltaMs) {
+    const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    const alive = [];
+    for (const f of this._follows || []) {
+      f.life -= dt;
+      if (f.life <= 0 || !f.zombie?.alive || !f.sprite?.active) {
+        this._safeDestroyGraphics(f.sprite);
+        continue;
+      }
+      f.sprite.setPosition(f.zombie.x, f.zombie.y);
+      if (typeof f.sprite.setDepth === 'function') {
+        f.sprite.setDepth(depthFromY(f.zombie.y, 4));
+      }
+      alive.push(f);
+    }
+    this._follows = alive;
+  }
+
   applyDirectHit(zombie, bullet) {
     if (!zombie?.alive || !zombie.body || !bullet) {
       return { gold: 0, kills: 0 };
+    }
+    if (bullet.weaponId && WEAPON_TRAITS[bullet.weaponId]) {
+      return this._applyFrontHit(zombie, bullet);
     }
     const damage = Number(bullet.damage);
     if (!Number.isFinite(damage) || damage < 0) {
@@ -371,6 +471,445 @@ export class WeaponSystem {
     showDamageText(this.scene, hx, hy, damage, color, zombie.id);
     if (killed) return { gold: goldVal, kills: 1 };
     return { gold: 0, kills: 0 };
+  }
+
+  /**
+   * Every owned gun, west only, and only while `opts.canFire` (stopped + deployed).
+   * @param {number} deltaMs
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {object[]} bullets
+   * @param {{ canFire?: boolean, muzzles?: { id: string, x: number, y: number }[], visualScale?: number }} opts
+   * @returns {string|null} first weapon id that spawned a slug this call
+   */
+  _updateFrontFire(deltaMs, zombies, bullets, opts) {
+    this.armHits(zombies, bullets);
+    const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    this._visualScale =
+      Number.isFinite(opts.visualScale) && opts.visualScale > 0 ? opts.visualScale : 1;
+    const canFire = opts.canFire === true;
+    const muzzles = new Map((opts.muzzles || []).map((m) => [m.id, m]));
+    if (!canFire || !Array.isArray(bullets)) {
+      this._wasFrontFire = false;
+      this._syncFlame(false, null, dt, zombies);
+      return null;
+    }
+    if (!this._wasFrontFire) {
+      this._ownedIds.forEach((id, i) => {
+        this._cooldowns[id] = i * 70;
+      });
+      this._flameMs = 0;
+      this._flameTick = 0;
+    }
+    this._wasFrontFire = true;
+    let fired = null;
+    let flame = false;
+    for (const id of this._ownedIds) {
+      const trait = WEAPON_TRAITS[id];
+      const muzzle = muzzles.get(id);
+      if (!trait || !muzzle) continue;
+      if (trait.continuous) {
+        flame = true;
+        this._syncFlame(true, muzzle, dt, zombies);
+        continue;
+      }
+      this._cooldowns[id] = (this._cooldowns[id] || 0) - dt;
+      if (this._cooldowns[id] > 0) continue;
+      this._cooldowns[id] = trait.fireMs;
+      const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
+      const { vx, vy } = forwardVelocity(speed);
+      this._spawnFrontBullet(bullets, muzzle.x, muzzle.y, vx, vy, trait, {
+        split: trait.id === 'bubble',
+        tier: trait.tier || null,
+      });
+      fired = fired || id;
+    }
+    if (!flame) this._syncFlame(false, null, dt, zombies);
+    return fired;
+  }
+
+  /**
+   * @param {object[]} bullets
+   * @param {number} x
+   * @param {number} y
+   * @param {number} vx
+   * @param {number} vy
+   * @param {object} trait
+   * @param {object} [extra]
+   */
+  _spawnFrontBullet(bullets, x, y, vx, vy, trait, extra = {}) {
+    const fxKey = extra.fxKey || trait.projectile;
+    const damage = extra.damage ?? trait.damage;
+    const meta = {
+      kind: trait.id,
+      weaponId: trait.id,
+      fxKey,
+      damage,
+      visualScale: this._visualScale || 1,
+      rotate: trait.rotate === true,
+      size: layoutPx(extra.hitSize || trait.hitSize || 10),
+      maxDistance: null,
+      knockbackBodies: extra.knockbackBodies ?? trait.knockbackBodies ?? 0,
+      impact: trait.impact || null,
+      tier: extra.tier ?? null,
+      split: extra.split === true,
+      ignoreId: extra.ignoreId ?? null,
+      armTravel: extra.armTravel ?? 0,
+    };
+    const libraryGfx = this._spawnLibraryProjectile(x, y, vx, vy, meta);
+    let gfx = libraryGfx?.sprite;
+    if (!gfx && this.scene?.add?.rectangle) {
+      const size = meta.size;
+      gfx = this.scene.add.rectangle(x, y, size, size, trait.tint || 0xffffff);
+      gfx.setDepth(depthFromY(y));
+    }
+    if (!gfx) return;
+    bullets.push({
+      gfx,
+      trail: null,
+      trailPts: [],
+      damage,
+      vx,
+      vy,
+      kind: trait.id,
+      weaponId: trait.id,
+      size: meta.size,
+      maxDistance: null,
+      traveled: 0,
+      knockback: 0,
+      knockbackBodies: meta.knockbackBodies,
+      library: !!libraryGfx,
+      rotate: libraryGfx ? libraryGfx.rotate : false,
+      facing: libraryGfx?.facing || 'west',
+      impact: meta.impact,
+      tier: meta.tier,
+      split: meta.split,
+      ignoreId: meta.ignoreId,
+      armTravel: meta.armTravel,
+    });
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {object} bullet
+   */
+  _applyFrontHit(zombie, bullet) {
+    const trait = WEAPON_TRAITS[bullet.weaponId];
+    const water = trait?.id === 'water';
+    const gain = this._hurtZombie(zombie, bullet.damage, bullet, {
+      impact: !water,
+      knock: true,
+    });
+    if (water) {
+      const splash = this._waterSplash(zombie);
+      gain.gold += splash.gold;
+      gain.kills += splash.kills;
+    }
+    if (trait?.id === 'bubble' && bullet.split) this._splitBubble(zombie, bullet);
+    if (trait?.id === 'lightning') {
+      const chain = this._chainLightning(zombie);
+      gain.gold += chain.gold;
+      gain.kills += chain.kills;
+    }
+    if (trait?.id === 'frost') this._freezeZombie(zombie, trait);
+    if (trait?.streak) this._playStreak(zombie, trait.streak);
+    return gain;
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {number} damage
+   * @param {object} bullet
+   * @param {{ impact?: boolean, knock?: boolean }} [opts]
+   */
+  _hurtZombie(zombie, damage, bullet, opts = {}) {
+    if (!zombie?.alive || !zombie.body) return { gold: 0, kills: 0 };
+    const dmg = Number(damage);
+    if (!Number.isFinite(dmg) || dmg <= 0) return { gold: 0, kills: 0 };
+    const hx = zombie.x;
+    const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : zombie.y;
+    const goldVal = zombie.goldValue || 0;
+    if (opts.knock && bullet?.knockbackBodies > 0) {
+      const body = (zombie.displayHalf || 0) * 2;
+      if (body > 0 && typeof zombie.applyKnockback === 'function') {
+        zombie.applyKnockback(body * bullet.knockbackBodies);
+      }
+    }
+    if (!zombie.alive || !zombie.body) return { gold: 0, kills: 0 };
+    if (opts.impact && bullet?.impact) {
+      this._spawnImpactKey(bullet.impact, hx, Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : hy, zombie);
+    }
+    const killed = zombie.takeDamage(dmg, { kind: bullet?.weaponId || bullet?.kind });
+    if (dmg > 0) this.scene.audio?.playHitImpact();
+    const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
+    showDamageText(this.scene, hx, hy, dmg, color, zombie.id);
+    if (killed) return { gold: goldVal, kills: 1 };
+    return { gold: 0, kills: 0 };
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} primary
+   */
+  _waterSplash(primary) {
+    const trait = WEAPON_TRAITS.water;
+    const radius = layoutPx(trait.splashRadius || 56);
+    const px = primary.x;
+    const py = primary.y;
+    let gold = 0;
+    let kills = 0;
+    const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : py;
+    this._spawnImpactKey(trait.impact, px, hy, primary);
+    this._spawnGround(trait.ground, px, py);
+    for (const z of this._liveZombies || []) {
+      if (!z?.alive || !z.body || z === primary) continue;
+      const reach = radius + (z.displayHalf || 0);
+      if (Math.hypot(z.x - px, z.y - py) > reach) continue;
+      const gain = this._hurtZombie(z, trait.splash, { weaponId: 'water' }, { impact: false, knock: false });
+      gold += gain.gold;
+      kills += gain.kills;
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {object} bullet
+   */
+  _splitBubble(zombie, bullet) {
+    const trait = WEAPON_TRAITS.bubble;
+    const tier = bullet.tier || 'l';
+    const next = trait.childTier?.[tier];
+    const fx = trait.childProjectile?.[tier];
+    if (!next || !fx || !this._liveBullets) return;
+    const kids = splitVelocities(bullet.vx, bullet.vy);
+    const nudge = layoutPx(28);
+    for (const vel of kids) {
+      const len = Math.hypot(vel.vx, vel.vy) || 1;
+      this._spawnFrontBullet(
+        this._liveBullets,
+        zombie.x + (vel.vx / len) * nudge,
+        zombie.y + (vel.vy / len) * nudge,
+        vel.vx,
+        vel.vy,
+        trait,
+        {
+          fxKey: fx,
+          damage: trait.childDamage?.[next] ?? trait.damage,
+          hitSize: trait.childHitSize?.[next] ?? trait.hitSize,
+          tier: next,
+          split: !!trait.childTier?.[next],
+          knockbackBodies: 0,
+          ignoreId: zombie.id,
+          armTravel: layoutPx(36),
+        }
+      );
+    }
+  }
+
+  /**
+   * Primary hit plus two jumps (chain count 3).
+   * @param {import('../entities/Zombie.js').Zombie} primary
+   */
+  _chainLightning(primary) {
+    const trait = WEAPON_TRAITS.lightning;
+    const range = layoutPx(trait.chainRange || 150);
+    let from = primary;
+    let gold = 0;
+    let kills = 0;
+    const used = new Set([primary.id]);
+    const jumps = trait.chainJumps || 0;
+    for (let i = 0; i < jumps; i++) {
+      let best = null;
+      let bestD = range;
+      for (const z of this._liveZombies || []) {
+        if (!z?.alive || !z.body || used.has(z.id)) continue;
+        const d = Math.hypot(z.x - from.x, (z.bodyCenterY || z.y) - (from.bodyCenterY || from.y));
+        if (d < bestD) {
+          best = z;
+          bestD = d;
+        }
+      }
+      if (!best) break;
+      used.add(best.id);
+      this._spawnChain(
+        from.x,
+        from.bodyCenterY || from.y,
+        best.x,
+        best.bodyCenterY || best.y
+      );
+      const dmg = trait.chainDamage?.[i] ?? trait.damage;
+      const gain = this._hurtZombie(
+        best,
+        dmg,
+        { weaponId: 'lightning', impact: trait.impact },
+        { impact: true, knock: false }
+      );
+      gold += gain.gold;
+      kills += gain.kills;
+      from = best;
+    }
+    return { gold, kills };
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {object} trait
+   */
+  _freezeZombie(zombie, trait) {
+    if (typeof zombie.applyRoot === 'function') zombie.applyRoot(trait.freezeMs || 0);
+    this._attachFollow(zombie, trait.status, trait.freezeMs || 900);
+  }
+
+  /**
+   * @param {boolean} active
+   * @param {{ x: number, y: number }|null} muzzle
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _syncFlame(active, muzzle, dt, zombies) {
+    if (!active || !muzzle || !Number.isFinite(muzzle.x)) {
+      this._destroyFlame();
+      this._flameMs = 0;
+      this._flameTick = 0;
+      return;
+    }
+    const trait = WEAPON_TRAITS.flame;
+    this._flameMs = Math.min(FLAME_GROW_MS, (this._flameMs || 0) + Math.max(0, dt));
+    const u = FLAME_GROW_MS > 0 ? this._flameMs / FLAME_GROW_MS : 1;
+    const frac = FLAME_RANGE_START + (FLAME_RANGE_MAX - FLAME_RANGE_START) * u;
+    const range = GAME_WIDTH * frac;
+    const useShort = frac < 0.3 && this.scene.textures?.exists?.(trait.coneShort);
+    const key = useShort ? trait.coneShort : trait.cone;
+    if (!key || !this.scene.textures?.exists?.(key)) {
+      this._destroyFlame();
+      return;
+    }
+    const asset = libraryAsset(this.scene, key);
+    const fw = asset?.frameWidth || (useShort ? 48 : 128);
+    const fh = asset?.frameHeight || (useShort ? 32 : 48);
+    if (!this._flame?.active || this._flame.texture?.key !== key) {
+      this._destroyFlame();
+      this._flame = this.scene.add.sprite(muzzle.x, muzzle.y, key);
+      const origin = asset?.origin || [1, 0.5];
+      this._flame.setOrigin(origin[0], origin[1]);
+      if (this.scene.anims?.exists?.(key)) this._flame.play(key);
+    }
+    const sy = this._visualScale || 1;
+    this._flame.setPosition(muzzle.x, muzzle.y);
+    this._flame.setScale(range / Math.max(1, fw), sy);
+    this._flame.setDepth(depthFromY(muzzle.y, 5));
+    this._flameRange = range;
+    const halfY = (fh * sy) / 2;
+    this._flameTick += Math.max(0, dt);
+    const tick = trait.tickMs || 200;
+    if (this._flameTick < tick) return;
+    this._flameTick = 0;
+    for (const z of zombies || []) {
+      if (!z?.alive || !z.body) continue;
+      const dx = muzzle.x - z.x;
+      if (dx < 0 || dx > range) continue;
+      const reach = halfY + (z.displayHalf || 0);
+      if (Math.abs(z.y - muzzle.y) > reach) continue;
+      if (typeof z.applyBurn === 'function') {
+        z.applyBurn(trait.burn, trait.burnIntervalMs, trait.burnMs);
+      }
+      this._attachFollow(z, trait.burnFx, trait.burnMs);
+      const gain = this._hurtZombie(z, trait.chip, { weaponId: 'flame' }, { impact: false, knock: false });
+      this._pending.gold += gain.gold;
+      this._pending.kills += gain.kills;
+    }
+  }
+
+  _destroyFlame() {
+    this._safeDestroyGraphics(this._flame);
+    this._flame = null;
+    this._flameRange = 0;
+  }
+
+  /**
+   * @param {string|null|undefined} key
+   * @param {number} x
+   * @param {number} y
+   * @param {{ scale?: number, bodyCenterY?: number }} [zombie]
+   */
+  _spawnImpactKey(key, x, y, zombie) {
+    if (!key) return;
+    const hy = Number.isFinite(zombie?.bodyCenterY) ? zombie.bodyCenterY : y;
+    playLibraryFx(this.scene, x, hy, key, {
+      scale: this._visualScale || Math.abs(zombie?.scale || 1) || 1,
+      depth: depthFromY(hy, 4),
+    });
+  }
+
+  /**
+   * @param {string|null|undefined} key
+   * @param {number} x
+   * @param {number} y feet
+   */
+  _spawnGround(key, x, y) {
+    if (!key) return;
+    const sprite = playLibraryFx(this.scene, x, y, key, {
+      scale: this._visualScale || 1,
+      depth: depthFromY(y, 1),
+    });
+    if (!sprite) return;
+    this.scene.time?.delayedCall?.(1400, () => this._safeDestroyGraphics(sprite));
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {string} key
+   */
+  _playStreak(zombie, key) {
+    const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+    playLibraryFx(this.scene, zombie.x, y, key, {
+      scale: this._visualScale || 1,
+      depth: depthFromY(y, 5),
+      flipX: true,
+    });
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {string} key
+   * @param {number} life
+   */
+  _attachFollow(zombie, key, life) {
+    if (!zombie || !key || !this.scene.textures?.exists?.(key)) return;
+    const existing = (this._follows || []).find((f) => f.zombie === zombie && f.key === key);
+    if (existing) {
+      existing.life = Math.max(existing.life, life || 0);
+      return;
+    }
+    const sprite = playLibraryFx(this.scene, zombie.x, zombie.y, key, {
+      scale: this._visualScale || 1,
+      depth: depthFromY(zombie.y, 4),
+    });
+    if (!sprite) return;
+    this._follows.push({ zombie, sprite, key, life: life || 0 });
+  }
+
+  /**
+   * @param {number} x1
+   * @param {number} y1
+   * @param {number} x2
+   * @param {number} y2
+   */
+  _spawnChain(x1, y1, x2, y2) {
+    const key = WEAPON_TRAITS.lightning.chainFx;
+    if (!key || !this.scene.textures?.exists?.(key)) return;
+    const asset = libraryAsset(this.scene, key);
+    const sprite = this.scene.add.sprite(x1, y1, key);
+    const origin = asset?.origin || [0, 0.5];
+    sprite.setOrigin(origin[0], origin[1]);
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.hypot(dx, dy);
+    const fw = asset?.frameWidth || 64;
+    sprite.setScale(Math.max(0.2, dist / Math.max(1, fw)), this._visualScale || 1);
+    sprite.setRotation(aimRotation(dx, dy, asset?.facing || 'west'));
+    sprite.setDepth(depthFromY((y1 + y2) / 2, 6));
+    if (this.scene.anims?.exists?.(key)) sprite.play(key);
+    this.scene.time?.delayedCall?.(180, () => this._safeDestroyGraphics(sprite));
   }
 
   /**
@@ -485,20 +1024,23 @@ export class WeaponSystem {
    * @returns {{ sprite: Phaser.GameObjects.Sprite, rotate: boolean, facing: string }|null}
    */
   _spawnLibraryProjectile(x, y, vx, vy, meta) {
-    if (meta.kind !== 'handgun' && meta.kind !== 'shotgun') return null;
     const skin = this.getSkin();
-    if (!skin) return null;
-    const key = meta.fxKey || skin.projectile;
+    const keyed = !!meta.fxKey;
+    if (!keyed && meta.kind !== 'handgun' && meta.kind !== 'shotgun') return null;
+    if (!keyed && !skin) return null;
+    const key = meta.fxKey || skin?.projectile;
     if (!key || !this.scene.textures?.exists?.(key)) return null;
     // PIXELLAB_HOOK: projectile sheet — fx-<weapon>-* from the hero FX manifest
     const sprite = this.scene.add.sprite(x, y, key);
     const asset = libraryAsset(this.scene, key);
     const origin = asset?.origin ?? [0.5, 0.5];
     sprite.setOrigin(origin[0], origin[1]);
-    const scale = (this._visScale || 1) * (skin.projScale || 1);
+    const scale = Number.isFinite(meta.visualScale)
+      ? meta.visualScale
+      : (this._visScale || 1) * (skin?.projScale || 1);
     sprite.setScale(scale);
     const facing = asset?.facing || 'west';
-    const rotate = skin.rotate !== false;
+    const rotate = meta.rotate != null ? meta.rotate : skin?.rotate !== false;
     if (rotate) sprite.setRotation(aimRotation(vx, vy, facing));
     if (this.scene.anims?.exists?.(key)) sprite.play(key);
     sprite.setDepth(depthFromY(y));

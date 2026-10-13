@@ -1,13 +1,21 @@
 /**
  * Female hero loadout from assets/library/characters/hero/girl/.
  *
- * SPACE cycles these six skins. `profile` picks the existing GameConfig
- * weapon (handgun = one slug, shotgun = the pellet fan). Damage, fire rate,
- * knockback, and range stay on those two profiles.
+ * v0.27 keeps the girl on the unarmed sheets (`player-girl-idle` / walk).
+ * Owned guns are front-float sprites, not held poses. SPACE still cycles the
+ * highlighted gun. Every owned gun fires once the deploy one-shot finishes,
+ * along the west forward ray.
  *
- * Sheets face west (toward the left-hand march) except walk-east/north/south,
- * which stay as authored. Feet origin matches the 92px library frame.
+ * `profile` only picks the legacy shot cue (handgun vs shotgun). Damage and
+ * cadence live on WEAPON_TRAITS.
  */
+
+import {
+  OWNED_WEAPON_ORDER,
+  WEAPON_TRAITS,
+  backKey,
+  frontKey,
+} from './heroDeploy.js';
 
 export const HERO_FRAME = 92;
 /** Feet at y = 76. Same sole as the legacy player sheets. */
@@ -18,11 +26,9 @@ const CARDINALS = ['west', 'east', 'north', 'south'];
 
 /**
  * @param {string} id
- * @param {string} label
- * @param {'handgun'|'shotgun'} profile
- * @param {object} fx
  */
-function weapon(id, label, profile, fx) {
+function weapon(id) {
+  const trait = WEAPON_TRAITS[id];
   /** @type {Record<string, string>} */
   const walks = {};
   for (const dir of CARDINALS) {
@@ -30,77 +36,29 @@ function weapon(id, label, profile, fx) {
   }
   return {
     id,
-    label,
-    profile,
+    label: trait.label,
+    profile: trait.profile,
     idle: `player-girl-${id}-idle`,
     fire: `player-girl-${id}-fire`,
     icon: `icon-${id}`,
+    front: frontKey(id),
+    back: backKey(id),
     walks,
-    ...fx,
+    projectile: trait.projectile || null,
+    impact: trait.impact || null,
+    muzzle: null,
+    fan: trait.cone || null,
+    projScale: 1,
+    rotate: trait.rotate !== false,
   };
 }
 
-/**
- * Order alternates profiles so the first SPACE press is still
- * single-shot → spread, matching the old handgun / shotgun swap.
- * @type {ReturnType<typeof weapon>[]}
- */
-export const HERO_WEAPONS = [
-  weapon('sling', 'Sling', 'handgun', {
-    projectile: 'fx-sling-pellet',
-    impact: 'fx-sling-impact',
-    muzzle: null,
-    fan: null,
-    projScale: 1.35,
-    rotate: true,
-  }),
-  weapon('bubble', 'Bubble', 'shotgun', {
-    projectile: 'fx-bubble-proj-s',
-    projectileAlts: ['fx-bubble-proj-s', 'fx-bubble-proj-m', 'fx-bubble-proj-l'],
-    impact: 'fx-bubble-pop',
-    muzzle: 'fx-bubble-muzzle',
-    fan: null,
-    projScale: 1.15,
-    rotate: false,
-  }),
-  weapon('lightning', 'Lightning', 'handgun', {
-    projectile: 'fx-lightning-bolt',
-    impact: 'fx-lightning-impact',
-    muzzle: 'fx-lightning-muzzle',
-    fan: null,
-    projScale: 1,
-    rotate: true,
-  }),
-  weapon('flame', 'Flame', 'shotgun', {
-    projectile: 'fx-flame-smoke',
-    impact: 'fx-flame-impact',
-    muzzle: 'fx-flame-muzzle',
-    fan: 'fx-flame-cone',
-    projScale: 0.5,
-    rotate: false,
-  }),
-  weapon('water', 'Water', 'handgun', {
-    projectile: 'fx-water-stream',
-    impact: 'fx-water-impact',
-    muzzle: 'fx-water-muzzle',
-    fan: null,
-    projScale: 0.75,
-    rotate: true,
-  }),
-  weapon('frost', 'Frost', 'shotgun', {
-    // 16px crystal. projScale 0.5 was only to shrink the 64px beam.
-    projectile: 'fx-frost-pellet',
-    impact: 'fx-frost-impact',
-    muzzle: 'fx-frost-muzzle',
-    fan: null,
-    projScale: 1,
-    rotate: true,
-  }),
-];
+/** Shop order: water, sling, bubble, lightning, frost, flame. */
+export const HERO_WEAPONS = OWNED_WEAPON_ORDER.map((id) => weapon(id));
 
 /**
- * Armed walk, or the weapon idle when the lane axis is quiet.
- * North / south sheets are never mirrored.
+ * Armed walk keys kept for callers that still ask. Combat pose uses
+ * unarmedAnimKeys in heroDeploy.js.
  * @param {{ idle: string, walks: Record<string, string> }|null|undefined} skin
  * @param {number} dy
  * @param {number} dx
@@ -117,5 +75,5 @@ export function heroLocomotionKeys(skin, dy, dx) {
 
 /** @param {Phaser.Scene} scene */
 export function heroLibraryReady(scene) {
-  return !!scene?.textures?.exists?.(HERO_WEAPONS[0].idle);
+  return !!scene?.textures?.exists?.('player-girl-idle');
 }
