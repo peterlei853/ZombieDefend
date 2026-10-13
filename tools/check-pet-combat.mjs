@@ -9,6 +9,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
+import { WAVE_DEFS, BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
 import { barricadeXAtY, depthFromY, layoutPx } from '../src/systems/DepthView.js';
 import { nearestFieldPet, petReachableBeforeFence } from '../src/systems/petAggro.js';
@@ -32,8 +33,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.22.1', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.22.1', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.22.1b', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.22.1b', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -47,7 +48,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.22.1'), 'document title is v0.22.1');
+assert(html.includes('v0.22.1b'), 'document title is v0.22.1b');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -117,7 +118,14 @@ assert(petsCfg.ORB_CD_MS.lion.join() === '8000,14000,22000', 'lion orbs 8/14/22'
 assert(petsCfg.ORB_CD_MS.dragon.join() === '12000,20000,28000', 'dragon orbs 12/20/28');
 assert(petsCfg.ORB_CD_MS.phoenix[0] < petsCfg.ORB_CD_MS.phoenix[1], 'phoenix orb 2 is longer than orb 1');
 assert(petsCfg.ORB_CD_MS.phoenix[1] < petsCfg.ORB_CD_MS.phoenix[2], 'phoenix orb 3 is the longest');
-assert(GAME_CONFIG.PETS.HP > 0, 'pets have HP');
+assert(GAME_CONFIG.PETS.HP === 192, 'shared pet HP is 192');
+assert(petsCfg.HURT_MS === 400, 'hurt pose matches the 4-frame strip');
+assert(petsCfg.HURT_FLASH_MS > 0 && petsCfg.HURT_TINT_MS > 0 && petsCfg.HURT_BAR_MS > 0, 'hit flash, tint, and bar pop are configured');
+assert(WAVE_DEFS.map((wave) => wave.total).join() === '4,8,16,90', 'stage 1 early waves are thinned; wave 4 stays');
+assert(WAVE_DEFS[0].archetypes[0].hp === 40 && WAVE_DEFS[1].archetypes[0].hp === 70, 'wave 1–2 HP rows are unchanged');
+assert(WAVE_DEFS[2].archetypes[0].hp === 105, 'wave 3 HP is unchanged');
+assert(WAVE_DEFS[3].archetypes.map((row) => row.hp).join() === '50,115,165', 'wave 4 HP mix is unchanged');
+assert(BARRICADE_MAX_HP === 720, 'barricade HP is unchanged');
 assert(petsCfg.PHOENIX.DAMAGE < 30 && petsCfg.PANDA.DAMAGE < 30, 'pet hits stay under a handgun shot');
 assert(petsCfg.PANDA.RANGE >= 80, 'panda reach covers a zombie at the posts');
 assert(petsCfg.DRAGON.BURN > 0 && petsCfg.DRAGON.BURN_MS > 0, 'dragon burn is configured');
@@ -233,8 +241,13 @@ assert(!combat.castLog.some((entry) => entry.orb > 0), 'locked orbs did not cast
 assert(combat.portraitViews()[0].phase === 'field', 'pet stays out after the cast');
 
 const hurt = combat.fieldPets()[0];
+const petBody = scene._sprites.find((sprite) => sprite.textureKey === 'pet-phoenix-baby-idle');
+const hurtPlays = () => petBody._played.filter((key) => key === 'pet-phoenix-baby-hurt').length;
 hurt.takeDamage(48);
 assert(Math.abs(hurt.hp - (petsCfg.HP - 48)) < 0.01, 'damage sticks');
+assert(hurtPlays() === 1, 'first hit plays the hurt strip once');
+assert(combat.portraitViews()[0].hitSeq === 1, 'portrait hit pulse increments once');
+assert(petBody._tintFill === 0xffffff, 'hit flash is white');
 const recalled = combat.summon(0, player, [zombie]);
 assert(recalled.reason === 'recall', 'tap while out recalls');
 assert(combat.fieldPets().length === 0, 'recalled pet is off the field');
@@ -266,6 +279,25 @@ assert(combat.portraitViews()[0].phase === 'revive' && combat.portraitViews()[0]
 combat.update(petsCfg.REVIVE_CD_MS - 1000, [], player);
 assert(combat.portraitViews()[0].phase === 'ready' && combat.portraitViews()[0].hp === 1, 'revive restores a full bar');
 assert(audio.revive === 1, 'revive-ready hook');
+
+const gateScene = mockScene(audio);
+const gate = new PetCombat(gateScene);
+assert(gate.summon(0, player, []).ok, 'flinch test summons');
+const gatePet = gate.fieldPets()[0];
+const gateBody = gateScene._sprites.find((sprite) => sprite.textureKey === 'pet-phoenix-baby-idle');
+const gateHurts = () => gateBody._played.filter((key) => key === 'pet-phoenix-baby-hurt').length;
+gatePet.takeDamage(10);
+gatePet.takeDamage(10);
+assert(gateHurts() === 1, 'a second hit inside the flinch does not restart the hurt strip');
+assert(gate.portraitViews()[0].hitSeq === 1, 'portrait hit pulse stays gated for the flinch');
+assert(Math.abs(gatePet.hp - (petsCfg.HP - 20)) < 0.01, 'gated feedback still applies HP');
+gate.update(petsCfg.HURT_MS, [], player);
+gatePet.takeDamage(5);
+assert(gateHurts() === 2, 'a hit after the flinch plays the hurt strip again');
+assert(gate.portraitViews()[0].hitSeq === 2, 'portrait hit pulse increments after the flinch');
+gate.update(petsCfg.HURT_FLASH_MS, [], player);
+assert(gateBody._tint === 0xff5252, 'white flash gives way to a red tint');
+gate.destroy();
 
 const castScene = mockScene(audio);
 const casts = new PetCombat(castScene);
@@ -544,8 +576,21 @@ function mockPetSprite(scene, x, y, sprites) {
     setAlpha(value) { sprite.alpha = value; return sprite; },
     setRotation() { return sprite; },
     setData() { return sprite; },
-    setTintFill() { return sprite; },
-    clearTint() { return sprite; },
+    setTintFill(color) {
+      sprite._tintFill = color;
+      sprite._tint = null;
+      return sprite;
+    },
+    setTint(color) {
+      sprite._tint = color;
+      sprite._tintFill = null;
+      return sprite;
+    },
+    clearTint() {
+      sprite._tintFill = null;
+      sprite._tint = null;
+      return sprite;
+    },
     once() { return sprite; },
     play(key) {
       const name = typeof key === 'string' ? key : key?.key;

@@ -1,3 +1,4 @@
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import { GAME_WIDTH } from '../data/waves.js';
 import { HUD_DEPTH, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 
@@ -33,10 +34,13 @@ export class PetPortraitHud {
    * @param {number} deltaMs
    */
   update(deltaMs) {
-    this._pulse += Number.isFinite(deltaMs) ? deltaMs : 0;
+    const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    this._pulse += dt;
     const views = this._views?.() || [];
     for (let i = 0; i < this._slots.length; i++) {
-      this._sync(this._slots[i], views[i]);
+      const slot = this._slots[i];
+      if (slot.hitLeft > 0) slot.hitLeft = Math.max(0, slot.hitLeft - dt);
+      this._sync(slot, views[i]);
     }
   }
 
@@ -95,6 +99,8 @@ export class PetPortraitHud {
         orbs,
         ring,
         color: view.color,
+        hitSeq: 0,
+        hitLeft: 0,
       });
     }
   }
@@ -191,12 +197,19 @@ export class PetPortraitHud {
     const enabled = !!slot.hit.input?.enabled;
     if (tappable && !enabled) slot.hit.setInteractive({ useHandCursor: true });
     else if (!tappable && enabled) slot.hit.disableInteractive();
-    if (view.grey) slot.bar.setTint?.(0x8d8d8d);
-    else slot.bar.clearTint?.();
     const ratio = Number.isFinite(view.hp) ? Math.max(0, Math.min(1, view.hp)) : 0;
-    slot.hp.fg.setScale(Math.max(ratio, 0.001), 1);
+    const seq = view.hitSeq || 0;
+    if (seq !== slot.hitSeq) {
+      slot.hitSeq = seq;
+      if (seq > 0) slot.hitLeft = GAME_CONFIG.PETS.HURT_BAR_MS;
+    }
+    const flashing = slot.hitLeft > 0 && !view.grey;
+    slot.hp.fg.setScale(Math.max(ratio, 0.001), flashing ? 1.45 : 1);
     slot.hp.fg.setVisible?.(ratio > 0.01);
-    const fill = view.grey ? 0x9e9e9e : view.color;
+    if (view.grey) slot.bar.setTint?.(0x8d8d8d);
+    else if (flashing) slot.bar.setTint?.(0xff8a80);
+    else slot.bar.clearTint?.();
+    const fill = view.grey ? 0x9e9e9e : flashing ? 0xfff6e8 : view.color;
     slot.hp.fg.setFillStyle?.(fill);
     const blinkOn = Math.floor(this._pulse / 120) % 2 === 0;
     slot.ring.clear();
@@ -274,6 +287,7 @@ export class PetPortraitHud {
  * @property {boolean} tappable
  * @property {boolean} grey
  * @property {number} hp
+ * @property {number} [hitSeq]
  * @property {string} barKey
  * @property {string} headKey
  * @property {OrbView[]} orbs
@@ -294,4 +308,6 @@ export class PetPortraitHud {
  * @property {{ image: Phaser.GameObjects.GameObject, x: number }[]} orbs
  * @property {Phaser.GameObjects.Graphics} ring
  * @property {number} color
+ * @property {number} hitSeq
+ * @property {number} hitLeft
  */

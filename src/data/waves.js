@@ -5,6 +5,14 @@ import { GAME_CONFIG } from './GameConfig.js';
  *
  * Spawn totals are spread evenly across each window (not all at once).
  *
+ * v0.22.1b thins the early windows so Stage 1 can be taught.
+ * Later in the same stage stays on the old curve. HP on each row is
+ * unchanged, so gold-by-HP does not move.
+ *   Wave 1: 10 → 4   (20s window, about one walker every 5s)
+ *   Wave 2: 15 → 8   (19s window)
+ *   Wave 3: 20 → 16  (19s window)
+ *   Wave 4: 90 → 90  (swarm unchanged)
+ *
  * Stage 1 HP table (initial max HP → gold via getGoldByHP):
  *   Wave 1: HP 40  (gold 10) — soft intro
  *   Wave 2: HP 70  (gold 10)
@@ -22,21 +30,21 @@ export const WAVE_DEFS = [
     wave: 1,
     startSec: 0,
     endSec: 20,
-    total: 10,
+    total: 4,
     archetypes: [{ hp: 40, speed: 38, dps: 11, weight: 1, variant: 'walker' }],
   },
   {
     wave: 2,
     startSec: 21,
     endSec: 40,
-    total: 15,
+    total: 8,
     archetypes: [{ hp: 70, speed: 42, dps: 13, weight: 1, variant: 'walker' }],
   },
   {
     wave: 3,
     startSec: 41,
     endSec: 60,
-    total: 20,
+    total: 16,
     archetypes: [{ hp: 105, speed: 45, dps: 15, weight: 1, variant: 'walker' }],
   },
   {
