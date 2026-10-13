@@ -74,7 +74,7 @@ export const PET_BULLET_DAMAGE = 0;
 /**
  * Owns weapon state, nearest-enemy targeting, fire cadence, and ballistics.
  * DefenderGroup pushes bullets / applies hits and plays shotgun recoil.
- * StageScene toggles SPACE and the HUD. Weapon volleys do not shake the camera.
+ * StageScene toggles SPACE and the HUD. The camera does not shake.
  */
 export class WeaponSystem {
   /**

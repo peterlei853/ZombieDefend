@@ -47,14 +47,6 @@ export function tickHitlag(scene) {
   return GAME_CONFIG.JUICE.HITLAG_SCALE;
 }
 
-/** Overkill kills still shake. Weapon volleys do not. @param {Phaser.Scene} scene */
-export function shakeOverkill(scene) {
-  const cam = scene?.cameras?.main;
-  if (!cam?.shake || scene.ended) return;
-  const juice = GAME_CONFIG.JUICE;
-  cam.shake(juice.SCREEN_SHAKE_OVERKILL_MS, juice.SCREEN_SHAKE_OVERKILL);
-}
-
 const BLOOD_COLORS = [0xc62828, 0x43a047, 0x7cb342, 0x8e1b1b];
 const FRAGMENT_COLORS = [0xe53935, 0x2e7d32, 0x8bc34a, 0xb71c1c, 0xff7043];
 

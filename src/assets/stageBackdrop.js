@@ -3,7 +3,7 @@ import { WORLD_SHIFT_X } from '../systems/DepthView.js';
 /**
  * Campus plate for the fixed camera (scrollX = WORLD_SHIFT_X).
  * Layers sit above the procedural bands (depth 0–2) and below every actor.
- * Full-bleed is the shake margin (camera kick up to ~38px).
+ * Full-bleed keeps a 40×24 px margin so the plate covers the fixed view.
  * Returns false when the library textures are not in the cache.
  * @param {Phaser.Scene} scene
  * @returns {boolean}
