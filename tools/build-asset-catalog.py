@@ -208,6 +208,11 @@ def load_library(problems):
                          dir=os.path.dirname(mrel), thumb=thumb, sheets=prev.get('sheets', []),
                          extras=prev.get('extras', []), animate=prev.get('animate', []),
                          conventions=m.get('conventions'), source=m.get('source'))
+        raw_aliases = (m.get('extra') or {}).get('aliases') or {}
+        if raw_aliases and not isinstance(raw_aliases, dict):
+            problems.err(f'{mrel}: extra.aliases must be an object')
+            raw_aliases = {}
+        gm['aliases'] = OrderedDict(raw_aliases)
         keys = [x['key'] for x in m.get('assets', [])]
         prefix = common_prefix(keys)
         gm['keyPrefix'] = prefix
@@ -308,6 +313,19 @@ def load_library(problems):
         for k in g['animate']:
             if k not in all_keys:
                 problems.err(f"{g['manifest']}: preview.animate key {k!r} not found")
+    seen_alias = {}
+    for g in groups:
+        for alias, target in (g.get('aliases') or {}).items():
+            if not isinstance(alias, str) or not isinstance(target, str) or not alias or not target:
+                problems.err(f"{g['manifest']}: bad alias {alias!r} -> {target!r}")
+                continue
+            if alias in all_keys:
+                problems.err(f"{g['manifest']}: alias {alias!r} collides with a texture key")
+            if target not in all_keys:
+                problems.err(f"{g['manifest']}: alias {alias!r} targets missing key {target!r}")
+            if alias in seen_alias:
+                problems.err(f"duplicate alias {alias!r} in {g['manifest']} and {seen_alias[alias]}")
+            seen_alias[alias] = g['manifest']
     order = {c: i for i, c in enumerate(CATEGORY_ORDER)}
     groups.sort(key=lambda g: (order.get(g['category'], 99), g['dir']))
     gorder = {g['id']: i for i, g in enumerate(groups)}
@@ -406,6 +424,13 @@ def build_index(groups, assets):
                                                      'dir', 'thumb', 'sheets', 'extras', 'keyPrefix', 'mainKey', 'count',
                                                      'frameSizes', 'framesRange', 'fpsRange', 'types', 'keys')) for g in groups]
     idx['assets'] = assets
+    aliases = OrderedDict()
+    for g in groups:
+        for alias, target in (g.get('aliases') or {}).items():
+            if isinstance(alias, str) and isinstance(target, str):
+                aliases[alias] = target
+    if aliases:
+        idx['aliases'] = aliases
     return idx
 
 

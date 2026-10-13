@@ -18351,5 +18351,8 @@
       "extra": null,
       "action": "contact-sheet"
     }
-  ]
+  ],
+  "aliases": {
+    "bg-title-zombie-vs-buddy": "ui-title-bg"
+  }
 }
