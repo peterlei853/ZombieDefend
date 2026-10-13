@@ -4,11 +4,11 @@
   "group": "office-worker-v2",
   "title": "Office Worker Zombie v2",
   "titleZh": "上班族丧尸",
-  "description": "84×84 sheet refresh of the salaryman zombie (east, origin 0.5, 1.0). Same eleven actions as the 64×64 office-worker group, which stays in the catalog until a later deprecate. hurt_shock is 8 frames in this drop (the 64×64 strip is 6).",
+  "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Eleven actions; hurt_shock is 8 frames. The 64×64 zombie-office-* group was deprecated after v0.28 Accept and removed from the catalog.",
   "source": {
     "pixellabCharacterId": "f8f0ce35-4b64-4807-a4ec-e7177aac1284",
     "sourceFolder": "new-zombies/office-worker",
-    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas grew to 84×84. Keys renamed from zombie-office-* so they do not replace the 64×64 office-worker group."
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas is 84×84. Keys are zombie-office-worker-v2-*. The earlier 64×64 zombie-office-* group was deprecated after v0.28 Accept."
   },
   "defaults": {
     "type": "spritesheet",
@@ -130,7 +130,7 @@
       "frames": 8,
       "frameRate": 12,
       "loop": true,
-      "note": "8 frames (64×64 office-worker hurt_shock is 6)."
+      "note": "8 frames."
     }
   ]
 }

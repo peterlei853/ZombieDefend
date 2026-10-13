@@ -4,7 +4,7 @@
   "group": "delivery",
   "title": "Delivery Rider Zombie",
   "titleZh": "外送員丧尸",
-  "description": "Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.",
+  "description": "Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.",
   "source": {
     "pixellabCharacterId": "0c01feac-1eda-40aa-8564-e726593ea602",
     "sourceFolder": "new-zombies/delivery",

@@ -4,7 +4,7 @@
   "group": "chef",
   "title": "Chef Zombie",
   "titleZh": "大廚丧尸",
-  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.",
+  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.",
   "source": {
     "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
     "sourceFolder": "new-zombies/chef",
