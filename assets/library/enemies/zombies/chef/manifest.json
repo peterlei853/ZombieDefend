@@ -1,0 +1,135 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "chef",
+  "title": "Chef Zombie",
+  "titleZh": "大廚丧尸",
+  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.",
+  "source": {
+    "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
+    "sourceFolder": "new-zombies/chef",
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas 84×84."
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 84,
+    "frameHeight": 84
+  },
+  "preview": {
+    "animate": [
+      "zombie-chef-walk",
+      "zombie-chef-attack",
+      "zombie-chef-hurt_burn",
+      "zombie-chef-die1"
+    ],
+    "thumb": "assets/library/previews/zombies/chef/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-chef-walk",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-walk.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-run",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-run.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-die1",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die1.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-chef-die2",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die2.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-chef-attack",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-attack.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-bite",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-bite.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-hurt",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-chef-idle_itch",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-idle_itch.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-hurt_freeze",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt_freeze.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-chef-hurt_burn",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt_burn.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-chef-hurt_shock",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt_shock.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    }
+  ]
+}

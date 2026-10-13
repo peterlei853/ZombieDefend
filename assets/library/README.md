@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 12 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 16 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -26,7 +26,8 @@ assets/library/
 │   └── icons/                manifest.json + icon-*.png
 ├── enemies/
 │   ├── zombies/<slug>/       manifest.json + strips/   (zombie-<slug>-*)
-│   │     office-worker, trashcan, trashcan-bare, brute, cyborg, slime, slime-mini,
+│   │     office-worker, office-worker-v2, delivery, chef, nurse,
+│   │     trashcan, trashcan-bare, brute, cyborg, slime, slime-mini,
 │   │     riot, riot-bare, exploder, sprinter, clown
 │   └── bosses/<slug>/        manifest.json + strips/   (zombie-boss-<lava|steel>-*)
 │       └── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
@@ -68,7 +69,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
 
-The office worker's key prefix is `zombie-office-`, kept from its source manifest; its folder is `office-worker/`. The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
+The office worker's key prefix is `zombie-office-`, kept from its source manifest; its folder is `office-worker/`. The 84×84 refresh is a separate group, `office-worker-v2/` with keys `zombie-office-worker-v2-*`, and does not replace the 64×64 `zombie-office-*` strips. Delivery, chef, and nurse use `zombie-delivery-*`, `zombie-chef-*`, and `zombie-nurse-*` (nurse also has `zombie-nurse-attach`). The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
 
 ## Pets
 
@@ -105,7 +106,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 
 | Category | Frame | Origin | Facing |
 |---|---|---|---|
-| Zombies | **64×64**. Exceptions: brute **96×96**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
+| Zombies | **64×64**. Exceptions: brute **96×96**, profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
 | Bosses | **128×128** | **(0.5, 1.0)** | **east** |
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
 | Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north` or `-walk-south` |
@@ -115,7 +116,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 | Pickups | coin/gems 16×16, pile 64×32 | coin/gems (0.5, 0.5); pile (0.5, 1.0) | – |
 | Backgrounds | 1280×720 (bleed 1360×768) | (0, 0) | – |
 
-- Wider 96×64 canvases keep the same ground-point semantics: the canvas bottom-centre is the zombie's position.
+- Wider 96×64 canvases, and the 84×84 profession strips, keep the same ground-point semantics: the canvas bottom-centre is the zombie's position.
 - To mirror a sprite, use `setFlipX(true)` **and** mirror the origin's x (`1 - ox`) for asymmetric origins (FX). Also negate the x of any attach offset.
 - Note on the legacy sheets: `assets/zombies/manifest.json` labels the walker/runner/tank strips "west". The library zombies are authored facing **east** (they move from the left spawn toward the barricade on the right). Check this in game and flip the legacy sheets if they disagree.
 - Render with `pixelArt: true` (already set in `main.js`), or set the NEAREST filter per texture as in the loader below.

@@ -1,0 +1,147 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "nurse",
+  "title": "Nurse Zombie",
+  "titleZh": "護士丧尸",
+  "description": "Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.",
+  "source": {
+    "pixellabCharacterId": "2ddf1ba9-8a95-4821-971b-97c2ceb05284",
+    "sourceFolder": "new-zombies/nurse",
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas 84×84. Extra attach (8 frames, once)."
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 84,
+    "frameHeight": 84
+  },
+  "preview": {
+    "animate": [
+      "zombie-nurse-walk",
+      "zombie-nurse-attack",
+      "zombie-nurse-hurt_burn",
+      "zombie-nurse-die1",
+      "zombie-nurse-attach"
+    ],
+    "thumb": "assets/library/previews/zombies/nurse/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-nurse-walk",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-walk.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-run",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-run.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-die1",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die1.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-nurse-die2",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die2.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-nurse-attack",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-attack.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-bite",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-bite.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-hurt",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hurt.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-nurse-idle_itch",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-idle_itch.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-hurt_freeze",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hurt_freeze.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-nurse-hurt_burn",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hurt_burn.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-nurse-hurt_shock",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hurt_shock.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "note": "4 frames."
+    },
+    {
+      "key": "zombie-nurse-attach",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-attach.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "Latch onto a barricade: lunge, plant syringe and IV, cling. Plays once."
+    }
+  ]
+}
