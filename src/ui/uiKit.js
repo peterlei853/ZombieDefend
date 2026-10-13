@@ -541,11 +541,13 @@ export class KitHpBar {
 export function showKitBanner(scene, opts) {
   const depth = opts.depth ?? HUD_DEPTH + 40;
   const panelKey = opts.panel || UI.toast;
-  // Toast center and the dialog body are parchment. Pass onParchment: false
-  // only when the line sits on the navy dialog header or the night sky.
-  const onParchment = opts.onParchment ?? true;
-  const titleFont = opts.titleFont || (onParchment ? FONT_INK : FONT_HUD);
-  const titleTint = onParchment ? INK_TINT : null;
+  const toast = panelKey === UI.toast;
+  // The toast's top cap is navy and its inset is a narrow parchment.
+  // Outlined Latin sits in the cap. Ink Latin and Chinese sit in the inset.
+  const titleOnDark = opts.titleOnDark ?? toast;
+  const bodyInk = opts.onParchment ?? true;
+  const titleFont = opts.titleFont || (titleOnDark ? FONT_HUD : bodyInk ? FONT_INK : FONT_HUD);
+  const titleTint = titleOnDark ? null : bodyInk ? INK_TINT : null;
   /** @type {Phaser.GameObjects.GameObject[]} */
   const objects = [];
   const pin = (go) => {
@@ -555,52 +557,63 @@ export function showKitBanner(scene, opts) {
     objects.push(go);
     return go;
   };
+  const pair = (icon, label, x, y) => {
+    if (!icon || !label) return;
+    const gap = 6;
+    const tw = label.width || 0;
+    const iw = icon.displayWidth || 32;
+    const total = iw + gap + tw;
+    icon.setPosition(x - total / 2 + iw / 2, y);
+    label.setPosition(x - total / 2 + iw + gap + tw / 2, y);
+  };
 
   pin(addKitImage(scene, opts.x, opts.y, panelKey, { depth, scrollFactor: 0 }));
+  const titleY = opts.y + (toast ? -42 : opts.sub || opts.zh ? -18 : 0);
   const title = pin(
-    addKitText(scene, opts.x, opts.y - (opts.sub || opts.zh ? 18 : 0), opts.title || '', {
+    addKitText(scene, opts.x, titleY, opts.title || '', {
       font: titleFont,
       size: opts.titleSize ?? 16,
       tint: titleTint,
-      color: onParchment ? '#2a2118' : '#f6e7c2',
+      color: titleOnDark ? '#f6e7c2' : '#2a2118',
       depth,
     })
   );
-  if (opts.icon && title) {
-    const icon = pin(addKitImage(scene, opts.x, title.y, opts.icon, { depth, scrollFactor: 0 }));
-    if (icon) {
-      const gap = 8;
-      const tw = title.width || 0;
-      const iw = icon.displayWidth || 32;
-      const total = iw + gap + tw;
-      icon.setPosition(opts.x - total / 2 + iw / 2, title.y);
-      title.setPosition(opts.x - total / 2 + iw + gap + tw / 2, title.y);
-    }
-  }
-  let nextY = (title?.y || opts.y) + ((title?.height || opts.titleSize || 16) / 2) + 8;
+  const icon = opts.icon
+    ? pin(addKitImage(scene, opts.x, titleY, opts.icon, { depth, scrollFactor: 0 }))
+    : null;
+  if (!toast) pair(icon, title, opts.x, titleY);
+
+  const subY = toast ? opts.y - 4 : (title?.y || opts.y) + ((title?.height || 16) / 2) + 8;
+  let zhY = subY;
   if (opts.sub) {
     const sub = pin(
-      addKitText(scene, opts.x, nextY, opts.sub, {
-        font: onParchment ? FONT_INK : FONT_HUD,
+      addKitText(scene, opts.x, subY, opts.sub, {
+        font: bodyInk ? FONT_INK : FONT_HUD,
         size: 16,
-        tint: onParchment ? INK_TINT : null,
-        color: onParchment ? '#2a2118' : '#f6e7c2',
-        originY: 0,
+        tint: bodyInk ? INK_TINT : null,
+        color: bodyInk ? '#2a2118' : '#f6e7c2',
+        originY: toast ? 0.5 : 0,
         depth,
       })
     );
-    nextY = (sub?.y || nextY) + (sub?.height || 16) + 6;
+    if (toast) pair(icon, sub, opts.x, subY);
+    zhY = toast ? opts.y + 18 : (sub?.y || subY) + (sub?.height || 16) + 6;
+  } else if (!toast) {
+    zhY = (title?.y || opts.y) + ((title?.height || 16) / 2) + 8;
+  } else {
+    zhY = opts.y + 6;
   }
   if (opts.zh) {
-    pin(
-      addKitText(scene, opts.x, nextY, opts.zh, {
+    const zh = pin(
+      addKitText(scene, opts.x, zhY, opts.zh, {
         system: true,
         size: 16,
-        color: onParchment ? '#3a2c1c' : '#ffe7b0',
-        originY: 0,
+        color: bodyInk ? '#3a2c1c' : '#ffe7b0',
+        originY: toast ? 0.5 : 0,
         depth,
       })
     );
+    if (toast && !opts.sub) pair(icon, zh, opts.x, zhY);
   }
   return {
     objects,

@@ -257,8 +257,8 @@ export default class StageScene extends Phaser.Scene {
     this._showBanner({
       icon: UI.ready,
       title: 'AUTO-FIRE',
-      sub: 'W/S LANE  SPACE SWAP',
-      zh: '自動射擊 · W/S 換道 · SPACE 換武器',
+      sub: 'W/S LANE SWAP',
+      zh: '自動射擊 · 換道 · 換武器',
       hold: 6500,
       y: 230,
     });
