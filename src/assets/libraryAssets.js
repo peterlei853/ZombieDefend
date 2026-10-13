@@ -11,7 +11,7 @@ const INDEX_URL = 'assets/library/asset-index.json';
 
 /**
  * Categories the stage actually draws. Concepts are reference art only.
- * `pets` is narrowed by stageLibraryFilter to the baby summon strips and HUD icons.
+ * `pets` is narrowed by stageLibraryFilter to baby body strips, orb cast strips, their FX, and HUD icons.
  * `environment` is the barricade fence posts.
  */
 export const STAGE_LIBRARY_CATEGORIES = [
@@ -25,7 +25,7 @@ export const STAGE_LIBRARY_CATEGORIES = [
 
 /**
  * Boss sheets, pickups, and concepts stay on disk until something spawns them.
- * Other pet forms (young / ancient, and FX this phase does not cast) stay unloaded.
+ * Young / ancient idle, move, hurt, and evolve FX stay unloaded. Their skill strips and orb FX load with the baby body.
  * @type {string[]}
  */
 export const UNWIRED_LIBRARY_CATEGORIES = ['bosses', 'pickups', 'concepts'];

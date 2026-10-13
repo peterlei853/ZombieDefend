@@ -5,7 +5,8 @@
  * Bars summon and recall. No deploy cooldown, no on-field limit.
  * Recalled pets regen. Death greys the bar for REVIVE_CD_MS.
  * Unlocked orbs fill, flash, then auto-cast. Form 1 uses baby FX.
- * Forms 2 and 3 are locked in play and covered with placeholder circles.
+ * Forms 2 and 3 stay locked in play. Their cast handlers play young / ancient
+ * library strips and FX (no tinted circles). The field body stays baby.
  */
 import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
@@ -31,8 +32,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.21.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.21.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.21.1', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.21.1', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -44,7 +45,7 @@ const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.met
 assert(boot.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!boot.includes('v0.19'), 'boot title is not 0.19');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.21.0'), 'document title is v0.21.0');
+assert(html.includes('v0.21.1'), 'document title is v0.21.1');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -82,10 +83,8 @@ assert(PET_STAGE_KEYS.has('pet-panda-baby-move'), 'panda move loads');
 assert(PET_STAGE_KEYS.has('fx-pet-phoenix-spark-feather'), 'phoenix bolt loads');
 assert(PET_STAGE_KEYS.has('fx-pet-panda-roll-impact'), 'panda impact loads');
 assert(PET_STAGE_KEYS.has('fx-pet-lion-pounce-slash'), 'lion slash loads');
-assert(!PET_STAGE_KEYS.has('fx-pet-lion-roar-wave'), 'baby lion does not load roar');
 assert(PET_STAGE_KEYS.has('fx-pet-dragon-smoke-breath'), 'dragon breath loads');
-assert(!PET_STAGE_KEYS.has('fx-pet-dragon-fireball'), 'baby dragon does not load fireball');
-assert(!PET_STAGE_KEYS.has('pet-phoenix-young-skill'), 'young form stays unloaded');
+assert(PET_LINEUP.every((pet) => pet.key.endsWith('-baby-idle') && pet.move.endsWith('-baby-move') && pet.hurt.endsWith('-baby-hurt')), 'field body stays baby');
 assert(PET_STAGE_KEYS.has('ui-pet-phoenix-bar'), 'phoenix bar loads');
 assert(PET_STAGE_KEYS.has('ui-pet-dragon-bar'), 'dragon bar loads');
 assert(PET_STAGE_KEYS.has('ui-pet-phoenix-head'), 'phoenix head loads');
@@ -95,7 +94,56 @@ assert(PET_STAGE_KEYS.has('ui-pet-orb-phoenix-flash'), 'phoenix flash orb loads'
 assert(PET_STAGE_KEYS.has('ui-pet-orb-lion-flash'), 'lion flash orb loads');
 assert(PET_STAGE_KEYS.has('ui-pet-orb-dragon-dark'), 'dragon dark orb loads');
 assert(stageLibraryFilter({ category: 'hero', key: 'player-girl' }), 'hero still loads');
-assert(!stageLibraryFilter({ category: 'pets', key: 'pet-lion-ancient-idle' }), 'ancient filtered');
+assert(!stageLibraryFilter({ category: 'pets', key: 'pet-lion-ancient-idle' }), 'ancient idle stays unloaded');
+assert(!stageLibraryFilter({ category: 'pets', key: 'pet-phoenix-young-idle' }), 'young idle stays unloaded');
+assert(!stageLibraryFilter({ category: 'pets', key: 'pet-dragon-young-move' }), 'young move stays unloaded');
+assert(!PET_STAGE_KEYS.has('fx-pet-phoenix-evolve'), 'evolve FX stays unloaded');
+
+/** Young / ancient cast strips and the FX each orb-2 / orb-3 handler plays. */
+const FORM_FX = {
+  phoenix: {
+    youngSkill: 'pet-phoenix-young-skill',
+    ancientSkill: 'pet-phoenix-ancient-skill',
+    young: ['fx-pet-phoenix-rain-bolt', 'fx-pet-phoenix-rain-impact'],
+    ancient: ['fx-pet-phoenix-blazing-rebirth'],
+  },
+  panda: {
+    youngSkill: 'pet-panda-young-skill',
+    ancientSkill: 'pet-panda-ancient-skill',
+    young: ['fx-pet-panda-bamboo-sweep'],
+    ancient: ['fx-pet-panda-chi-blast'],
+  },
+  lion: {
+    youngSkill: 'pet-lion-young-skill',
+    ancientSkill: 'pet-lion-ancient-skill',
+    young: ['fx-pet-lion-roar-wave'],
+    ancient: ['fx-pet-lion-sunder-strike'],
+  },
+  dragon: {
+    youngSkill: 'pet-dragon-young-skill',
+    ancientSkill: 'pet-dragon-ancient-skill',
+    young: ['fx-pet-dragon-fireball', 'fx-pet-dragon-fireball-impact'],
+    ancient: ['fx-pet-dragon-apocalypse-flame'],
+  },
+};
+const library = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+const libraryKeys = new Set((library.assets || []).map((asset) => asset.key));
+for (const pet of PET_LINEUP) {
+  const spec = FORM_FX[pet.id];
+  assert(pet.skillYoung === spec.youngSkill, `${pet.id} young cast key`);
+  assert(pet.skillAncient === spec.ancientSkill, `${pet.id} ancient cast key`);
+  for (const key of [spec.youngSkill, spec.ancientSkill, ...spec.young, ...spec.ancient]) {
+    assert(libraryKeys.has(key), `asset index has ${key}`);
+    assert(PET_STAGE_KEYS.has(key), `${key} loads for orb casts`);
+    assert(stageLibraryFilter({ category: 'pets', key }), `${key} passes the stage filter`);
+  }
+}
+assert(combatSrc.includes('skillYoung') && combatSrc.includes('skillAncient'), 'cast strips follow the orb');
+assert(combatSrc.includes('rainBolt') && combatSrc.includes('rainImpact') && combatSrc.includes('rebirth'), 'phoenix orb 2/3 FX keys');
+assert(combatSrc.includes('sweep') && combatSrc.includes('chi'), 'panda orb 2/3 FX keys');
+assert(combatSrc.includes('roar') && combatSrc.includes('sunder'), 'lion orb 2/3 FX keys');
+assert(combatSrc.includes('fireball') && combatSrc.includes('fireballImpact') && combatSrc.includes('apocalypse'), 'dragon orb 2/3 FX keys');
+assert(!combatSrc.includes('PLACEHOLDER_TINT') && !combatSrc.includes('_spawnBlob') && !combatSrc.includes('add.circle'), 'no placeholder circle FX');
 
 const petsCfg = GAME_CONFIG.PETS;
 assert(petsCfg.REVIVE_CD_MS === 18000, 'revive cooldown is 18s');
@@ -273,14 +321,9 @@ for (let i = 0; i < 4; i++) {
 }
 casts.destroy();
 
-const formTags = {
-  phoenix: ['phoenix-nova', 'phoenix-dive'],
-  panda: ['panda-freeze', 'panda-blizzard'],
-  lion: ['lion-chain', 'lion-stomp'],
-  dragon: ['dragon-cloud', 'dragon-rain'],
-};
 for (let i = 0; i < 4; i++) {
   const id = PET_LINEUP[i].id;
+  const spec = FORM_FX[id];
   const foe = mockZombie(foeX, laneY + i * 2);
   foe.maxHp = 400;
   foe.hp = 400;
@@ -293,10 +336,17 @@ for (let i = 0; i < 4; i++) {
   pump(one, formScene, longest + flash + 2200, foe, player);
   const seen = new Set(one.castLog.filter((entry) => entry.id === id).map((entry) => entry.orb));
   assert(seen.has(0) && seen.has(1) && seen.has(2), `${id} cast orbs 1–3 (${[...seen].join(',')})`);
-  for (const tag of formTags[id]) {
-    assert(one.fxLog.includes(tag), `${id} spawned ${tag}`);
+  const played = formScene._sprites.flatMap((sprite) => sprite._played);
+  assert(played.includes(spec.youngSkill), `${id} played ${spec.youngSkill}`);
+  assert(played.includes(spec.ancientSkill), `${id} played ${spec.ancientSkill}`);
+  assert(played.includes(PET_LINEUP[i].skill), `${id} still plays its baby cast`);
+  for (const key of [...spec.young, ...spec.ancient]) {
+    assert(one.fxLog.includes(key), `${id} orb handler used ${key}`);
+    assert(played.includes(key), `${id} spawned ${key}`);
   }
-  assert(formScene._circles.length > 0, `${id} placeholder circles`);
+  assert(formScene._circles.length === 0, `${id} drew no placeholder circles`);
+  const bodyKeys = played.filter((key) => key.startsWith(`pet-${id}-`) && !key.endsWith('-skill'));
+  assert(bodyKeys.every((key) => key.includes('-baby-')), `${id} field body stayed baby (${bodyKeys.join(',')})`);
   if (id === 'phoenix' || id === 'dragon') assert(foe.burn, `${id} form applied burn`);
   if (id === 'panda') assert(foe.slow && foe.rootMs > 0, 'panda freeze roots and blizzard slows');
   if (id === 'lion') assert(foe.rootMs > 0, 'lion stomp roots');
