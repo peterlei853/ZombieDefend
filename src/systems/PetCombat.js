@@ -19,6 +19,8 @@ import {
 } from './DepthView.js';
 
 const EMPTY = { gold: 0, kills: 0 };
+/** Above lane actors (~8k) and below the HUD (20000), so the tell stays readable. */
+const TELL_DEPTH = 15000;
 
 /** 4 frames at 8 fps. Sleep-start, then the loop. */
 const SLEEP_START_MS = 500;
@@ -401,6 +403,7 @@ export class PetCombat {
     this.ult?._clear?.();
     this.ult && (this.ult.playing = false);
     for (const actor of this._actors) {
+      this._clearTelegraph(actor);
       this._clearFloat(actor);
       this._destroyBars(actor);
       destroySprite(actor.stars);
@@ -477,10 +480,12 @@ export class PetCombat {
         left: cdMs,
         flashLeft: 0,
         pending: false,
+        opened: false,
         dark: role.orbDark,
         lit: role.orbLit,
         flash: role.orbFlash,
       })),
+      telegraph: null,
     };
   }
 
@@ -1099,6 +1104,7 @@ export class PetCombat {
 
   /** @param {PetActor} actor */
   _dismiss(actor) {
+    this._clearTelegraph(actor);
     if (actor.phase !== 'field') return;
     const sprite = actor.sprite;
     actor.sprite = null;
@@ -1179,7 +1185,16 @@ export class PetCombat {
     if (actor.phase !== 'field' || actor.wakeLeft > 0) return;
     const unlocked = this._unlockedCount(actor);
     for (const orb of actor.orbs) {
-      if (orb.index >= unlocked) continue;
+      const open = orb.index < unlocked;
+      if (open && !orb.opened) {
+        orb.opened = true;
+        // S2/S3 sit on a full CD while locked, so the first tick after
+        // tier-up would hide the ult for another 5s. Bring them up.
+        if (orb.index > 0 && orb.left >= orb.cdMs && !orb.pending && !(orb.flashLeft > 0)) {
+          orb.left = 300;
+        }
+      }
+      if (!open) continue;
       this._tickOrb(actor, orb, dt);
     }
   }
@@ -1228,7 +1243,7 @@ export class PetCombat {
       actor.meleePhase = null;
       if (actor.state === 'melee') actor.state = 'idle';
     }
-    if (actor.state === 'attack' || actor.hurtLeft > 0) return;
+    if (actor.state === 'attack') return;
     this._beginAttack(actor);
   }
 
@@ -1263,9 +1278,22 @@ export class PetCombat {
       if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
       this._place(actor);
 
+      // Skills keep moving during a bite so the ground tell and the ult
+      // are not frozen for the whole flinch. skills advance during a bite.
+      if (actor.wakeLeft <= 0) {
+        if (actor.castQueue.length > 0 && actor.state !== 'attack') {
+          this._beginAttack(actor);
+        }
+        if (actor.state === 'attack') {
+          actor.attackElapsed += dt;
+          gain = this._advanceAttack(actor, zombies, threat);
+        }
+      }
+      if (actor.telegraph) this._ageTelegraph(actor, dt);
+
       if (actor.hitPhase) {
         this._presentHurt(actor);
-        return EMPTY;
+        return gain;
       }
 
       if (actor.wakeLeft > 0) {
@@ -1275,18 +1303,10 @@ export class PetCombat {
         playLoop(sprite, actor.role.key);
         faceLeft(sprite);
         this._place(actor);
-        if (actor.wakeLeft > 0 || dt <= 0) return EMPTY;
+        if (actor.wakeLeft > 0 || dt <= 0) return gain;
       }
 
-      if (actor.castQueue.length > 0 && actor.state !== 'attack') {
-        this._beginAttack(actor);
-      }
-
-      if (actor.state === 'attack') {
-        actor.attackElapsed += dt;
-        gain = this._advanceAttack(actor, zombies, threat);
-        return gain;
-      }
+      if (actor.state === 'attack') return gain;
 
       if (actor.meleeGap > 0) actor.meleeGap = Math.max(0, actor.meleeGap - dt);
       if (actor.meleePhase) {
@@ -1643,56 +1663,90 @@ export class PetCombat {
   }
 
   /**
-   * Ground tell before the skill hits. S1 and S2 use the catalog rings,
-   * squashed onto the lane at the aim point. S3 uses the half-screen wash.
-   * The ring stays fully opaque for TELEGRAPH_MS, then fades. It used to
-   * lerp alpha toward 0.2 for the whole 200ms while centered on the pet,
-   * so the only circle a tester could catch was the HUD cooldown arc.
+   * Ground tell before the skill hits. S1 and S2 draw a filled lane ellipse
+   * plus the catalog ring, held fully opaque until mark.age reaches
+   * TELEGRAPH_MS, then faded. Depth sits above the march and below the HUD
+   * so a closer zombie cannot cover the aim point. S3 keeps the half-screen
+   * wash. A bite does not pause mark.age.
    * PIXELLAB_HOOK: assets/library/fx/v026/telegraph/
    * @param {PetActor} actor
    * @param {number} orbIndex
    */
   _showTelegraph(actor, orbIndex) {
+    this._clearTelegraph(actor);
     const scene = this.scene;
     const sprite = actor.sprite;
-    if (!scene || !sprite) return;
+    if (!scene?.add || !sprite) return;
     scene.audio?.playSkillTelegraph?.();
     const pets = GAME_CONFIG.PETS;
     const threat = nearestBarricadeThreat(this._liveZombies);
-    const spot = telegraphPoint(actor, orbIndex, threat);
-    const depth = depthFromY(spot.y, 24);
-    let key = 'vfx-telegraph-ring';
-    let scale = (layoutPx(pets.SKILL_R.s1 * 2) / 64) * 1.35;
-    let flipX = false;
-    let ground = true;
+    const aim = telegraphPoint(actor, orbIndex, threat);
     if (orbIndex >= 2) {
-      key = 'vfx-telegraph-half-left';
-      const camW = scene.cameras?.main?.width || 1280;
-      scale = camW / 2 / 192;
-      flipX = true;
-      ground = false;
-    } else if (orbIndex === 1) {
-      key = 'vfx-telegraph-ring-128';
-      scale = (layoutPx(pets.SKILL_R.s2 * 2) / 128) * 1.15;
+      this._showHalfTell(actor, scene, aim);
+      return;
     }
-    const node = playLibraryFx(scene, spot.x, spot.y, key, { scale, depth, flipX });
-    if (!node) return;
-    if (ground && typeof node.setScale === 'function') {
-      const sx = Math.abs(node.scaleX || scale);
-      node.setScale(sx, sx * pets.TELEGRAPH_GROUND_Y);
+    const radius = orbIndex >= 1 ? pets.SKILL_R.s2 : pets.SKILL_R.s1;
+    const width = Math.max(layoutPx(280), layoutPx(radius * 2));
+    const height = Math.max(layoutPx(120), Math.round(width * pets.TELEGRAPH_GROUND_Y));
+    const spot = clampTellPoint(scene, aim.x, aim.y, width / 2, height / 2);
+    const disc = makeTellDisc(scene, spot.x, spot.y, width, height);
+    const key = orbIndex >= 1 ? 'vfx-telegraph-ring-128' : 'vfx-telegraph-ring';
+    const frame = orbIndex >= 1 ? 128 : 64;
+    const node = makeTellRing(scene, spot.x, spot.y, key, width, height, frame);
+    disc?.setDepth?.(TELL_DEPTH);
+    node?.setDepth?.(TELL_DEPTH + 1);
+    actor.telegraph = { node, disc, age: 0, discFill: 0.92 };
+    this._paintTelegraph(actor.telegraph, 1);
+  }
+
+  /**
+   * S3 half-left wash. No ground squash. Catalog key vfx-telegraph-half-left.
+   * @param {PetActor} actor
+   * @param {Phaser.Scene} scene
+   * @param {{ x: number, y: number }} aim
+   */
+  _showHalfTell(actor, scene, aim) {
+    const key = 'vfx-telegraph-half-left';
+    const camW = scene.cameras?.main?.width || 1280;
+    const scale = camW / 2 / 192;
+    const node = makeTellRing(scene, aim.x, aim.y, key, 192 * scale, 192 * scale, 192);
+    node?.setFlipX?.(true);
+    node?.setDepth?.(TELL_DEPTH);
+    actor.telegraph = { node, disc: null, age: 0, discFill: 1 };
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {number} dt
+   */
+  _ageTelegraph(actor, dt) {
+    const mark = actor.telegraph;
+    if (!mark) return;
+    const step = Number.isFinite(dt) ? Math.max(0, dt) : 0;
+    mark.age += step;
+    const hold = GAME_CONFIG.PETS.TELEGRAPH_MS;
+    const fade = GAME_CONFIG.PETS.TELEGRAPH_FADE_MS;
+    if (mark.age >= hold + fade) {
+      this._clearTelegraph(actor);
+      return;
     }
-    const addBlend = globalThis.Phaser?.BlendModes?.ADD;
-    if (ground && addBlend != null && typeof node.setBlendMode === 'function') {
-      node.setBlendMode(addBlend);
-    }
-    if (typeof node.setAlpha === 'function') node.setAlpha(1);
-    scene.tweens?.add?.({
-      targets: node,
-      alpha: 0.15,
-      delay: pets.TELEGRAPH_MS,
-      duration: pets.TELEGRAPH_FADE_MS,
-      onComplete: () => destroySprite(node),
-    });
+    const alpha = mark.age < hold ? 1 : Math.max(0, 1 - (mark.age - hold) / Math.max(1, fade));
+    this._paintTelegraph(mark, alpha);
+  }
+
+  /** @param {{ node?: object|null, disc?: object|null, discFill?: number }} mark @param {number} alpha */
+  _paintTelegraph(mark, alpha) {
+    const shown = Math.max(0, Math.min(1, alpha));
+    mark.node?.setAlpha?.(shown);
+    mark.disc?.setAlpha?.(shown * (mark.discFill ?? 1));
+  }
+
+  /** @param {PetActor} actor */
+  _clearTelegraph(actor) {
+    if (!actor?.telegraph) return;
+    destroySprite(actor.telegraph.node);
+    destroySprite(actor.telegraph.disc);
+    actor.telegraph = null;
   }
 
   /**
@@ -1725,6 +1779,23 @@ export class PetCombat {
     this.ult?.play?.(actor.role.id, () => {
       this._applyUltHit(actor, list, threat);
     });
+  }
+
+  /**
+   * Start the letterbox now. Used by the `?debugExp=1` U key so a tier-3
+   * pet does not have to wait out the skill queue.
+   * @param {string|{ id?: string }|null} [petId]
+   * @returns {boolean}
+   */
+  forceUlt(petId) {
+    const id = typeof petId === 'string' ? petId : petId?.id;
+    const actor = this._actors.find((entry) => {
+      if (entry.phase !== 'field' || !(entry.hp > 0) || !entry.sprite?.active) return false;
+      return id ? entry.role.id === id : true;
+    });
+    if (!actor) return false;
+    this._startUlt(actor, this._liveZombies, nearestBarricadeThreat(this._liveZombies));
+    return this.ultPlaying;
   }
 
   /**
@@ -1782,7 +1853,6 @@ export class PetCombat {
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
-    if (actor.hurtLeft > 0) return;
     actor.state = 'attack';
     actor.released = false;
     actor.attackElapsed = 0;
@@ -2434,6 +2504,78 @@ function telegraphPoint(actor, orbIndex, threat) {
   if (orbIndex >= 1) return { x: focus.x, y: focus.y };
   const ahead = Number.isFinite(focus.x) ? (px + focus.x) / 2 : px - layoutPx(36);
   return { x: ahead, y: py };
+}
+
+/**
+ * Keep the ellipse center inside the camera so an off-screen threat
+ * cannot hide the tell past the left edge.
+ * @param {Phaser.Scene} scene
+ * @param {number} x
+ * @param {number} y
+ * @param {number} halfW
+ * @param {number} halfH
+ */
+function clampTellPoint(scene, x, y, halfW, halfH) {
+  const cam = scene?.cameras?.main;
+  if (!cam || !(cam.width > 0)) return { x, y };
+  const scrollX = Number.isFinite(cam.scrollX) ? cam.scrollX : 0;
+  const scrollY = Number.isFinite(cam.scrollY) ? cam.scrollY : 0;
+  const width = cam.width;
+  const height = cam.height || 720;
+  const padX = Math.min(Math.max(8, halfW), width * 0.35);
+  const padY = Math.min(Math.max(8, halfH), height * 0.35);
+  return {
+    x: Math.min(scrollX + width - padX, Math.max(scrollX + padX, x)),
+    y: Math.min(scrollY + height - padY, Math.max(scrollY + padY, y)),
+  };
+}
+
+/**
+ * Filled ground ellipse. A missing catalog ring still leaves a readable disc.
+ * @param {Phaser.Scene} scene
+ * @param {number} x
+ * @param {number} y
+ * @param {number} width
+ * @param {number} height
+ */
+function makeTellDisc(scene, x, y, width, height) {
+  const color = 0x39f3ff;
+  const fill = 0.92;
+  let disc = null;
+  if (typeof scene.add.ellipse === 'function') {
+    disc = scene.add.ellipse(x, y, width, height, color, fill);
+  } else if (typeof scene.add.circle === 'function') {
+    disc = scene.add.circle(x, y, width / 2, color, fill);
+    disc?.setScale?.(1, height / Math.max(1, width));
+  }
+  if (!disc) return null;
+  disc.setStrokeStyle?.(Math.max(4, Math.round(width * 0.035)), 0x5cf6ff, 1);
+  return disc;
+}
+
+/**
+ * Catalog ring in NORMAL blend, scaled to the disc. Not playLibraryFx:
+ * a one-frame strip must not destroy itself on animationcomplete.
+ * @param {Phaser.Scene} scene
+ * @param {number} x
+ * @param {number} y
+ * @param {string} key
+ * @param {number} width
+ * @param {number} height
+ * @param {number} frame
+ */
+function makeTellRing(scene, x, y, key, width, height, frame) {
+  if (!key || !scene.textures?.exists?.(key) || typeof scene.add.sprite !== 'function') return null;
+  const node = scene.add.sprite(x, y, key);
+  const source = scene.textures.get?.(key)?.get?.();
+  const fw = source?.width || frame || 64;
+  const fh = source?.height || frame || 64;
+  node.setOrigin?.(0.5, 0.5);
+  node.setScale?.(width / Math.max(1, fw), height / Math.max(1, fh));
+  node.setAlpha?.(1);
+  const normal = globalThis.Phaser?.BlendModes?.NORMAL;
+  if (normal != null) node.setBlendMode?.(normal);
+  return node;
 }
 
 /**

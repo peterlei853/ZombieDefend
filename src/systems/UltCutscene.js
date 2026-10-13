@@ -97,8 +97,8 @@ export class UltCutscene {
     // scrollFactor 0 keeps the letterbox in screen space.
     const cx = width / 2;
     const cy = height / 2;
-    const band = Math.round(height * 0.12);
-    const dim = addRect(scene, cx, cy, width, height, 0x07060c, 0.55);
+    const band = Math.round(height * 0.16);
+    const dim = addRect(scene, cx, cy, width, height, 0x07060c, 0.72);
     const top = addRect(scene, cx, band / 2, width, band, 0x05060a, 1);
     const bot = addRect(scene, cx, height - band / 2, width, band, 0x05060a, 1);
     for (const node of [dim, top, bot]) {
