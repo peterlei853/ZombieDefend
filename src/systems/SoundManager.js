@@ -6,6 +6,10 @@
  * hits, and barricade bites from stacking into noise. Shotgun callers must
  * invoke `playWeaponShot` once per volley (WeaponSystem already returns one
  * fire per fan, not per pellet).
+ *
+ * Overnight ult / exp / melee clips are preloaded and exposed as play
+ * helpers. Combat call sites stay with the gameplay pass; nothing here
+ * starts an ultimate, drops an orb, or changes pet logic.
  */
 
 /** @typedef {'handgun'|'shotgun'} WeaponProfile */
@@ -20,6 +24,15 @@ export const AUDIO_VOLUME = {
   coin: 0.3,
   ui: 0.4,
   gameOver: 0.45,
+  /** Ultimate cutscene sting. */
+  ult: 0.4,
+  /** Pet melee, knockback, exp orbs, and evolution. */
+  melee: 0.35,
+  knockback: 0.35,
+  expOrb: 0.35,
+  evolve: 0.35,
+  /** Range tell. Quieter than the hit it leads. */
+  telegraph: 0.25,
 };
 
 /** Minimum gap between repeats of the same cue. Hit/hurt cap at ~8/sec. */
@@ -54,6 +67,16 @@ export const GAME_AUDIO = [
   { key: 'weapon-swap', url: 'assets/audio/weapon-swap.mp3' },
   { key: 'ui-click', url: 'assets/audio/ui-click.mp3' },
   { key: 'game-over', url: 'assets/audio/game-over.mp3' },
+  { key: 'ult-phoenix', url: 'assets/audio/ult-phoenix.mp3' },
+  { key: 'ult-panda', url: 'assets/audio/ult-panda.mp3' },
+  { key: 'ult-lion', url: 'assets/audio/ult-lion.mp3' },
+  { key: 'ult-dragon', url: 'assets/audio/ult-dragon.mp3' },
+  { key: 'pet-melee-hit', url: 'assets/audio/pet-melee-hit.mp3' },
+  { key: 'pet-knockback', url: 'assets/audio/pet-knockback.mp3' },
+  { key: 'exp-orb-drop', url: 'assets/audio/exp-orb-drop.mp3' },
+  { key: 'exp-orb-pickup', url: 'assets/audio/exp-orb-pickup.mp3' },
+  { key: 'pet-evolve', url: 'assets/audio/pet-evolve.mp3' },
+  { key: 'skill-telegraph', url: 'assets/audio/skill-telegraph.mp3' },
 ];
 
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
@@ -233,6 +256,60 @@ export class SoundManager {
   /** Revive cooldown finished; the portrait is summonable again. */
   playPetReviveReady() {
     this._cueOptional('pet-revive', AUDIO_VOLUME.ui);
+  }
+
+  /**
+   * Ultimate cutscene sting. `role` is phoenix, panda, lion, or dragon.
+   * A full `ult-*` key is accepted. Unknown roles stay silent.
+   * @param {string|{ id?: string }|null|undefined} role
+   */
+  playUlt(role) {
+    const raw = typeof role === 'string' ? role : role?.id;
+    if (!raw) return;
+    const id = raw.startsWith('ult-') ? raw.slice(4) : raw;
+    const key = `ult-${id}`;
+    if (!AUDIO_KEYS.has(key)) return;
+    this._cue(key, AUDIO_VOLUME.ult);
+  }
+
+  playUltPhoenix() {
+    this.playUlt('phoenix');
+  }
+
+  playUltPanda() {
+    this.playUlt('panda');
+  }
+
+  playUltLion() {
+    this.playUlt('lion');
+  }
+
+  playUltDragon() {
+    this.playUlt('dragon');
+  }
+
+  playPetMeleeHit() {
+    this._cue('pet-melee-hit', AUDIO_VOLUME.melee, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  playPetKnockback() {
+    this._cue('pet-knockback', AUDIO_VOLUME.knockback, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  playExpOrbDrop() {
+    this._cue('exp-orb-drop', AUDIO_VOLUME.expOrb, AUDIO_COOLDOWN_MS.coin);
+  }
+
+  playExpOrbPickup() {
+    this._cue('exp-orb-pickup', AUDIO_VOLUME.expOrb, AUDIO_COOLDOWN_MS.coin);
+  }
+
+  playPetEvolve() {
+    this._cue('pet-evolve', AUDIO_VOLUME.evolve);
+  }
+
+  playSkillTelegraph() {
+    this._cue('skill-telegraph', AUDIO_VOLUME.telegraph);
   }
 
   /** Fail sting plus BGM fade. Combat tails are cut so they do not sit on the sting. */
