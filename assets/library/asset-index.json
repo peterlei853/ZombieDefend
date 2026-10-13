@@ -168,7 +168,7 @@
       "group": "girl-back",
       "title": "Player Girl — back-mounted weapons (float)",
       "titleZh": "背掛飄浮武器",
-      "description": "Owned weapons floating behind the hero girl's red backpack (west-facing). Sized to match held-weapon visual scale (~50–55px content on 72×72). Subtle up-down bob idle loop. First batch: water, lightning, flame. Keys player-girl-back-<weapon>. Still variants *-still. Draw weapons first, then girl, so backpack occludes. Stack when multiple owned.",
+      "description": "Owned weapons floating behind the hero girl's red backpack (west-facing). Sized ~1/3 of held visual (~18×13–18×14 content on 32×32). Stack VERTICALLY behind pack with no overlap (see extra.yOffsetsByCount). Keys player-girl-back-<weapon>; *-still for static. Bob ±2px 8f.",
       "manifest": "assets/library/characters/hero/girl/back/manifest.json",
       "dir": "assets/library/characters/hero/girl/back",
       "thumb": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
@@ -183,7 +183,7 @@
       "mainKey": "player-girl-back-water",
       "count": 6,
       "frameSizes": [
-        "72x72"
+        "32x32"
       ],
       "framesRange": [
         1,
@@ -3850,8 +3850,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-water.png",
       "type": "spritesheet",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 8,
       "frameRate": 8,
       "loop": true,
@@ -3867,7 +3867,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): water — 8 frames 72x72 @ 8 fps, loop.",
+      "description": "Player Girl — back-mounted weapons (float): water — 8 frames 32x32 @ 8 fps, loop.",
       "note": null,
       "tags": [
         "hero",
@@ -3877,11 +3877,38 @@
         "loop"
       ],
       "extra": {
-        "bobAmpPx": 3,
-        "note": "Water gun / 水槍 — blue tank blaster, muzzle up-left",
+        "bobAmpPx": 2,
+        "note": "Water gun / 水槍 — blue tank, muzzle up-left; ~18×13",
         "stillKey": "player-girl-back-water-still",
-        "contentPxApprox": 54,
-        "layerNote": "Draw behind girl sprite so backpack occludes; muzzle up-left."
+        "contentPx": [
+          18,
+          13
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "water"
     },
@@ -3891,8 +3918,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-water-still.png",
       "type": "image",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 1,
       "frameRate": 8,
       "loop": true,
@@ -3908,7 +3935,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): water-still (72x72 image).",
+      "description": "Player Girl — back-mounted weapons (float): water-still (32x32 image).",
       "note": null,
       "tags": [
         "hero",
@@ -3917,7 +3944,36 @@
         "water"
       ],
       "extra": {
-        "note": "Static frame of water back weapon; use animated key for float."
+        "note": "Static frame of water back weapon; use animated key for float.",
+        "contentPx": [
+          18,
+          13
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "water-still"
     },
@@ -3927,8 +3983,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-lightning.png",
       "type": "spritesheet",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 8,
       "frameRate": 8,
       "loop": true,
@@ -3944,7 +4000,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): lightning — 8 frames 72x72 @ 8 fps, loop.",
+      "description": "Player Girl — back-mounted weapons (float): lightning — 8 frames 32x32 @ 8 fps, loop.",
       "note": null,
       "tags": [
         "hero",
@@ -3954,11 +4010,38 @@
         "loop"
       ],
       "extra": {
-        "bobAmpPx": 3,
-        "note": "Lightning crossbow / 電磁弩 — cyan glow limbs, muzzle up-left",
+        "bobAmpPx": 2,
+        "note": "Lightning crossbow / 電磁弩 — cyan limbs; ~18×13",
         "stillKey": "player-girl-back-lightning-still",
-        "contentPxApprox": 54,
-        "layerNote": "Draw behind girl sprite so backpack occludes; muzzle up-left."
+        "contentPx": [
+          18,
+          13
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "lightning"
     },
@@ -3968,8 +4051,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-lightning-still.png",
       "type": "image",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 1,
       "frameRate": 8,
       "loop": true,
@@ -3985,7 +4068,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): lightning-still (72x72 image).",
+      "description": "Player Girl — back-mounted weapons (float): lightning-still (32x32 image).",
       "note": null,
       "tags": [
         "hero",
@@ -3994,7 +4077,36 @@
         "lightning"
       ],
       "extra": {
-        "note": "Static frame of lightning back weapon; use animated key for float."
+        "note": "Static frame of lightning back weapon; use animated key for float.",
+        "contentPx": [
+          18,
+          13
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "lightning-still"
     },
@@ -4004,8 +4116,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-flame.png",
       "type": "spritesheet",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 8,
       "frameRate": 8,
       "loop": true,
@@ -4021,7 +4133,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): flame — 8 frames 72x72 @ 8 fps, loop.",
+      "description": "Player Girl — back-mounted weapons (float): flame — 8 frames 32x32 @ 8 fps, loop.",
       "note": null,
       "tags": [
         "hero",
@@ -4031,11 +4143,38 @@
         "loop"
       ],
       "extra": {
-        "bobAmpPx": 3,
-        "note": "Flamethrower / 火焰噴射 — red/orange core, muzzle up-left",
+        "bobAmpPx": 2,
+        "note": "Flamethrower / 火焰噴射 — orange tank; ~18×14",
         "stillKey": "player-girl-back-flame-still",
-        "contentPxApprox": 54,
-        "layerNote": "Draw behind girl sprite so backpack occludes; muzzle up-left."
+        "contentPx": [
+          18,
+          14
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "flame"
     },
@@ -4045,8 +4184,8 @@
       "group": "girl-back",
       "path": "assets/library/characters/hero/girl/back/player-girl-back-flame-still.png",
       "type": "image",
-      "frameWidth": 72,
-      "frameHeight": 72,
+      "frameWidth": 32,
+      "frameHeight": 32,
       "frames": 1,
       "frameRate": 8,
       "loop": true,
@@ -4062,7 +4201,7 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
-      "description": "Player Girl — back-mounted weapons (float): flame-still (72x72 image).",
+      "description": "Player Girl — back-mounted weapons (float): flame-still (32x32 image).",
       "note": null,
       "tags": [
         "hero",
@@ -4071,7 +4210,36 @@
         "flame"
       ],
       "extra": {
-        "note": "Static frame of flame back weapon; use animated key for float."
+        "note": "Static frame of flame back weapon; use animated key for float.",
+        "contentPx": [
+          18,
+          14
+        ],
+        "baseOffsetPx": {
+          "x": 10,
+          "y": -6
+        },
+        "verticalStepPx": 20,
+        "yOffsetsByCount": {
+          "1": [
+            0
+          ],
+          "2": [
+            -10,
+            10
+          ],
+          "3": [
+            -20,
+            0,
+            20
+          ]
+        },
+        "stackOrder": [
+          "water",
+          "lightning",
+          "flame"
+        ],
+        "layerNote": "Draw weapons BEFORE girl so backpack occludes. Vertical stack only — do not overlap."
       },
       "action": "flame-still"
     },
