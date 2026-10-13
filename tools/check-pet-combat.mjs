@@ -9,13 +9,16 @@
  */
 import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
-import { WAVE_DEFS, BARRICADE_MAX_HP } from '../src/data/waves.js';
+import { WAVE_DEFS, BARRICADE_MAX_HP, GAME_WIDTH, GAME_HEIGHT } from '../src/data/waves.js';
 import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
-import { barricadeXAtY, depthFromY, displayScaleFromY, grassYMax, layoutPx } from '../src/systems/DepthView.js';
+import { barricadeXAtY, cameraScrollX, depthFromY, grassYMax, grassYMin, layoutPx } from '../src/systems/DepthView.js';
 import { nearestFieldPet, petReachableBeforeFence } from '../src/systems/petAggro.js';
 import {
   PET_AUDIO_KEYS,
   PetCombat,
+  floatHeroRect,
+  floatLabelBox,
+  placeFloatLabel,
   closestThreatWhere,
   inForwardBox,
   inLeftCone,
@@ -33,8 +36,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.22.1b', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.22.1b', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.22.1c', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.22.1c', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -48,7 +51,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.22.1b'), 'document title is v0.22.1b');
+assert(html.includes('v0.22.1c'), 'document title is v0.22.1c');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -119,8 +122,11 @@ assert(petsCfg.ORB_CD_MS.dragon.join() === '12000,20000,28000', 'dragon orbs 12/
 assert(petsCfg.ORB_CD_MS.phoenix[0] < petsCfg.ORB_CD_MS.phoenix[1], 'phoenix orb 2 is longer than orb 1');
 assert(petsCfg.ORB_CD_MS.phoenix[1] < petsCfg.ORB_CD_MS.phoenix[2], 'phoenix orb 3 is the longest');
 assert(GAME_CONFIG.PETS.HP === 192, 'shared pet HP is 192');
-assert(petsCfg.HURT_MS === 400, 'hurt pose matches the 4-frame strip');
-assert(petsCfg.HURT_FLASH_MS > 0 && petsCfg.HURT_TINT_MS > 0 && petsCfg.HURT_BAR_MS > 0, 'hit flash, tint, and bar pop are configured');
+assert(petsCfg.HURT_MS >= 400, 'hurt gate lasts at least the 4-frame strip');
+assert(petsCfg.HURT_FLASH_MS >= 150 && petsCfg.HURT_FLASH_MS <= 200, `white flash is 150–200ms (${petsCfg.HURT_FLASH_MS})`);
+assert(petsCfg.HURT_TINT_MS >= 150 && petsCfg.HURT_TINT_MS <= 200, `red fill is 150–200ms (${petsCfg.HURT_TINT_MS})`);
+assert(petsCfg.HURT_TINT_COLOR === 0xff2a2a, 'red phase is a solid fill, not a light multiply');
+assert(petsCfg.HURT_BAR_MS >= petsCfg.HURT_FLASH_MS, 'bar pop lasts through the white flash');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '4,8,16,90', 'stage 1 early waves are thinned; wave 4 stays');
 assert(WAVE_DEFS[0].archetypes[0].hp === 40 && WAVE_DEFS[1].archetypes[0].hp === 70, 'wave 1–2 HP rows are unchanged');
 assert(WAVE_DEFS[2].archetypes[0].hp === 105, 'wave 3 HP is unchanged');
@@ -131,7 +137,9 @@ assert(petsCfg.PANDA.RANGE >= 80, 'panda reach covers a zombie at the posts');
 assert(petsCfg.DRAGON.BURN > 0 && petsCfg.DRAGON.BURN_MS > 0, 'dragon burn is configured');
 assert(petsCfg.FLOAT_HOLD_MS >= 600 && petsCfg.FLOAT_HOLD_MS <= 800, 'GO!/Back! hold is 0.6–0.8s');
 assert(petsCfg.FLOAT_FADE_MS > 0, 'float fades after the hold');
-assert(petsCfg.FLOAT_OFFSET_X === 64 && petsCfg.FLOAT_OFFSET_Y === 56, 'GO!/Back! sits up-right of the pet');
+assert(petsCfg.FLOAT_OFFSET_X === 80 && petsCfg.FLOAT_OFFSET_Y === 68, 'GO!/Back! sits up-right of the pet');
+assert(stage.includes('ENEMIES ${alive}'), 'HUD enemies is the on-field count');
+assert(!stage.includes('ENEMIES ${remaining}'), 'HUD enemies does not print the stage budget');
 assert(PET_AUDIO_KEYS.go === 'go-shout' && PET_AUDIO_KEYS.back === 'back-shout' && PET_AUDIO_KEYS.sleep === 'pet-sleep', 'cue names are reserved');
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 assert(!soundSrc.includes('go-shout') && !soundSrc.includes('back-shout') && !soundSrc.includes('pet-sleep'), 'SFX is not wired');
@@ -292,12 +300,24 @@ gatePet.takeDamage(10);
 assert(gateHurts() === 1, 'a second hit inside the flinch does not restart the hurt strip');
 assert(gate.portraitViews()[0].hitSeq === 1, 'portrait hit pulse stays gated for the flinch');
 assert(Math.abs(gatePet.hp - (petsCfg.HP - 20)) < 0.01, 'gated feedback still applies HP');
+assert(gateBody._tintFill === 0xffffff, 'the flinch opens on a white fill');
+for (let i = 0; i < 8; i++) {
+  gatePet.takeDamage(0.35);
+  gate.update(16, [], player);
+}
+assert(gateHurts() === 1, 'per-frame bite DPS does not restart the hurt strip');
+assert(gateBody._tintFill === 0xffffff, 'white fill is still up inside 150–200ms');
+assert(gateScene._labels.some((label) => label.active && String(label.label).startsWith('-')), 'fractional bites stack into a visible -N');
+gate.update(petsCfg.HURT_FLASH_MS, [], player);
+assert(gateBody._tintFill === petsCfg.HURT_TINT_COLOR, 'white flash gives way to a solid red fill');
+gate.update(petsCfg.HURT_TINT_MS + 40, [], player);
+assert(gateBody._tintFill == null && gateBody._tint == null, 'red fill clears after its window');
 gate.update(petsCfg.HURT_MS, [], player);
 gatePet.takeDamage(5);
 assert(gateHurts() === 2, 'a hit after the flinch plays the hurt strip again');
 assert(gate.portraitViews()[0].hitSeq === 2, 'portrait hit pulse increments after the flinch');
 gate.update(petsCfg.HURT_FLASH_MS, [], player);
-assert(gateBody._tint === 0xff5252, 'white flash gives way to a red tint');
+assert(gateBody._tintFill === petsCfg.HURT_TINT_COLOR, 'the next flinch also reaches the red fill');
 gate.destroy();
 
 const castScene = mockScene(audio);
@@ -459,13 +479,36 @@ const go = fadeScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-g
 assert(go && go.active, 'GO! sprite is beside the pet');
 assert(go.originX === 0.5 && go.originY === 1, 'GO! origin is bottom center');
 assert(floatClearsHero(go, player), 'GO! does not cover the hero beside the pet');
+assert(floatInsideView(go, fadeScene), 'GO! stays inside the camera');
+const shoved = placeFloatLabel(
+  3000,
+  700,
+  { left: 40, right: 40, up: 32, down: 0 },
+  { left: 840, right: 2100, top: 8, bottom: 710 },
+  null
+);
+assert(shoved.x + 40 <= 2100 && shoved.x - 40 >= 840, 'clamp pulls a past-the-edge label back inside');
 const nearPlayer = { x: player.x, y: grassYMax() };
 const nearScene = mockScene(audio);
 const near = new PetCombat(nearScene);
 assert(near.summon(0, nearPlayer, []).ok, 'near-lane float summon');
 const nearGo = nearScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-go');
 assert(floatClearsHero(nearGo, nearPlayer), 'GO! clears the hero on the near lane');
+assert(floatInsideView(nearGo, nearScene), 'near-lane GO! stays inside the camera');
 near.destroy();
+const edgeY = grassYMax();
+const edgePlayer = { x: barricadeXAtY(edgeY) + layoutPx(32), y: edgeY };
+const edgeScene = mockScene(audio);
+const edge = new PetCombat(edgeScene);
+assert(edge.summon(0, edgePlayer, []).ok, 'bottom-right summon');
+const edgeGo = edgeScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-go');
+assert(floatInsideView(edgeGo, edgeScene), 'bottom-right GO! is clamped on screen');
+assert(floatClearsHero(edgeGo, edgePlayer), 'bottom-right GO! does not sit on the hero back');
+edge.summon(0, edgePlayer, []);
+const edgeBack = edgeScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-back');
+assert(floatInsideView(edgeBack, edgeScene), 'bottom-right Back! is clamped on screen');
+assert(floatClearsHero(edgeBack, edgePlayer), 'bottom-right Back! does not sit on the hero back');
+edge.destroy();
 fades.update(petsCfg.FLOAT_HOLD_MS - 40, [], player);
 assert(go.active && go.alpha === 1, 'float holds through 0.6–0.8s');
 fades.update(40 + petsCfg.FLOAT_FADE_MS + 30, [], player);
@@ -478,18 +521,29 @@ if (failed) {
 }
 console.log('pet combat checks passed');
 
-/** 80×32 label, origin bottom-center, must miss the 92px hero at the player's feet. */
+/** Label must miss the hero and stay inside the stage camera. */
 function floatClearsHero(node, player) {
-  if (!node || !player) return false;
-  const scale = displayScaleFromY(player.y);
-  const hero = {
-    l: player.x - 46 * scale,
-    r: player.x + 46 * scale,
-    t: player.y - 76 * scale,
-    b: player.y + 16 * scale,
-  };
-  const label = { l: node.x - 40, r: node.x + 40, t: node.y - 32, b: node.y };
+  const hero = floatHeroRect(player);
+  const box = floatLabelBox(node);
+  if (!node || !hero) return false;
+  const label = { l: node.x - box.left, r: node.x + box.right, t: node.y - box.up, b: node.y + box.down };
   return label.r <= hero.l || label.l >= hero.r || label.b <= hero.t || label.t >= hero.b;
+}
+
+function floatInsideView(node, scene) {
+  const box = floatLabelBox(node);
+  const cam = scene.cameras.main;
+  const margin = layoutPx(4);
+  const left = cam.scrollX + margin;
+  const right = cam.scrollX + cam.width - margin;
+  const top = (cam.scrollY || 0) + margin;
+  const bottom = (cam.scrollY || 0) + cam.height - margin;
+  return (
+    node.x - box.left >= left - 0.51 &&
+    node.x + box.right <= right + 0.51 &&
+    node.y - box.up >= top - 0.51 &&
+    node.y + box.down <= bottom + 0.51
+  );
 }
 
 function pump(combat, scene, ms, foe, player) {
@@ -517,21 +571,34 @@ function mockScene(audio) {
   const state = { now: 0 };
   const sprites = [];
   const circles = [];
-  const text = () => {
+  const labels = [];
+  const text = (_x, _y, value) => {
     const node = {
       active: true,
-      setText() { return node; },
+      label: value,
+      setText(next) { node.label = next; return node; },
       setAlpha() { return node; },
       setOrigin() { return node; },
       setDepth() { return node; },
       once() { return node; },
       destroy() { node.active = false; },
     };
+    labels.push(node);
     return node;
   };
+  const midY = (grassYMin() + grassYMax()) / 2;
   const scene = {
     _sprites: sprites,
     _circles: circles,
+    _labels: labels,
+    cameras: {
+      main: {
+        scrollX: cameraScrollX(barricadeXAtY(midY)),
+        scrollY: 0,
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+      },
+    },
     audio,
     time: {
       get now() {

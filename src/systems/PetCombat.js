@@ -50,8 +50,8 @@ const PLACEHOLDER_TINT = {
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
  * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
  * Forms 2 and 3 use placeholder circles and stay locked until evolution.
- * A bite flashes the body, plays the hurt strip once, and pops both HP bars.
- * The camera does not shake.
+ * A bite holds a white fill, then a solid red fill, plays the hurt strip
+ * through once, and pops both HP bars. The camera does not shake.
  */
 export class PetCombat {
   /** @param {Phaser.Scene} scene */
@@ -106,7 +106,7 @@ export class PetCombat {
     if (!actor) return { ok: false, reason: 'missing' };
     if (actor.phase === 'revive') return { ok: false, reason: 'revive' };
     if (actor.phase === 'field') {
-      this._recall(actor);
+      this._recall(actor, player);
       return { ok: true, reason: 'recall', id: actor.role.id };
     }
     this._deploy(actor, player);
@@ -198,6 +198,7 @@ export class PetCombat {
    * @returns {{ gold: number, kills: number }}
    */
   update(deltaMs, zombies, player = null) {
+    this._anchor = player;
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     const list = Array.isArray(zombies) ? zombies : [];
     const threat = nearestBarricadeThreat(list);
@@ -282,11 +283,14 @@ export class PetCombat {
       attackElapsed: 0,
       released: false,
       hurtLeft: 0,
+      hurtStrip: false,
       hurtReactLeft: 0,
       flashLeft: 0,
       tintLeft: 0,
       barFlashLeft: 0,
+      hitLook: '',
       hitSeq: 0,
+      biteReadout: 0,
       popLeft: 0,
       rest: null,
       sleepSlot: null,
@@ -327,7 +331,7 @@ export class PetCombat {
    */
   _deploy(actor, player) {
     if (actor.sprite?.active) {
-      this._wake(actor);
+      this._wake(actor, player);
       return;
     }
     const point = deployPoint(player);
@@ -355,15 +359,16 @@ export class PetCombat {
     actor.popLeft = GAME_CONFIG.PETS.POP_MS;
     actor.sprite = this._spawnSprite(actor, x, y);
     this._attachBars(actor);
-    this._showFloat(actor, 'go');
+    this._showFloat(actor, 'go', player);
     this._noteCue(PET_AUDIO_KEYS.go);
   }
 
   /**
    * Stand up where they are and walk out. The sprite is not respawned.
    * @param {PetActor} actor
+   * @param {{ x?: number, y?: number }|null} [anchor]
    */
-  _wake(actor) {
+  _wake(actor, anchor = null) {
     const lying = actor.rest === 'sleep' || actor.rest === 'settle';
     actor.phase = 'field';
     actor.rest = null;
@@ -385,7 +390,7 @@ export class PetCombat {
     this._destroyBars(actor);
     this._attachBars(actor);
     this._place(actor);
-    this._showFloat(actor, 'go');
+    this._showFloat(actor, 'go', anchor);
     this._noteCue(PET_AUDIO_KEYS.go);
   }
 
@@ -393,8 +398,9 @@ export class PetCombat {
    * Leave the field at the current HP and walk to an empty bed.
    * The sprite stays. A flash that had not released yet resumes next time out.
    * @param {PetActor} actor
+   * @param {{ x?: number, y?: number }|null} [anchor]
    */
-  _recall(actor) {
+  _recall(actor, anchor = null) {
     if (actor.phase !== 'field') return;
     const sprite = actor.sprite;
     actor.phase = 'ready';
@@ -421,7 +427,7 @@ export class PetCombat {
     if (typeof sprite.setScale === 'function') sprite.setScale(displayScaleFromY(sprite.y));
     if (typeof sprite.setAlpha === 'function') sprite.setAlpha(1);
     this._claimBed(actor);
-    this._showFloat(actor, 'back');
+    this._showFloat(actor, 'back', anchor);
     this._noteCue(PET_AUDIO_KEYS.back);
   }
 
@@ -579,8 +585,9 @@ export class PetCombat {
   /**
    * @param {PetActor} actor
    * @param {'go'|'back'} which
+   * @param {{ x?: number, y?: number }|null} [anchor]
    */
-  _showFloat(actor, which) {
+  _showFloat(actor, which, anchor = null) {
     this._clearFloat(actor);
     const primary = which === 'go' ? 'ui-float-go' : 'ui-float-back';
     const burst = which === 'go' ? 'ui-float-go-burst' : 'ui-float-back-burst';
@@ -599,16 +606,23 @@ export class PetCombat {
     actor.float = node;
     actor.floatLeft = GAME_CONFIG.PETS.FLOAT_HOLD_MS;
     actor.floatFade = GAME_CONFIG.PETS.FLOAT_FADE_MS;
-    this._placeFloat(actor);
+    this._placeFloat(actor, anchor);
   }
 
-  /** @param {PetActor} actor */
-  _placeFloat(actor) {
+  /**
+   * @param {PetActor} actor
+   * @param {{ x?: number, y?: number }|null} [anchor]
+   */
+  _placeFloat(actor, anchor = null) {
     const node = actor.float;
     const sprite = actor.sprite;
     if (!node || !sprite) return;
-    node.x = sprite.x + layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_X);
-    node.y = sprite.y - layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_Y);
+    const desiredX = sprite.x + layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_X);
+    const desiredY = sprite.y - layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_Y);
+    const hero = floatHeroRect(anchor || this._anchor);
+    const placed = placeFloatLabel(desiredX, desiredY, floatLabelBox(node), floatView(this.scene), hero);
+    node.x = placed.x;
+    node.y = placed.y;
     node.setDepth?.(depthFromY(sprite.y, 8));
   }
 
@@ -620,7 +634,7 @@ export class PetCombat {
       actor.float = null;
       return;
     }
-    this._placeFloat(actor);
+    this._placeFloat(actor, this._anchor);
     let remain = Number.isFinite(dt) ? dt : 0;
     if (actor.floatLeft > 0) {
       const use = Math.min(remain, actor.floatLeft);
@@ -717,7 +731,14 @@ export class PetCombat {
     const sprite = actor.sprite;
     if (sprite) {
       const hy = sprite.y - layoutPx(28);
-      showDamageText(this.scene, sprite.x, hy, dmg, '#ffffff', `pet-${actor.role.id}`);
+      // Bite DPS is a fraction per frame. Math.round drops those, so the
+      // pet never printed a −N while a zombie shot still showed −30.
+      actor.biteReadout = (actor.biteReadout || 0) + dmg;
+      const whole = Math.floor(actor.biteReadout);
+      if (whole >= 1) {
+        actor.biteReadout -= whole;
+        showDamageText(this.scene, sprite.x, hy, whole, '#ff4040', `pet-${actor.role.id}`);
+      }
     }
     if (!(actor.hurtReactLeft > 0)) this._beginHitReact(actor);
     if (actor.hp <= 0) {
@@ -730,9 +751,10 @@ export class PetCombat {
   }
 
   /**
-   * One flinch per HURT_MS. Bite DPS arrives every frame; restarting the
-   * strip each frame held the pet on frame 0. A cast already in progress
-   * keeps playing — the flash and bars still react.
+   * One flinch per HURT_MS. Bite DPS arrives every frame; sprite.play()
+   * restarts at frame 0, so a second call before the strip ends hides the
+   * recoil. A cast already in progress keeps its strip — the fill and bars
+   * still react. The camera does not shake.
    * @param {PetActor} actor
    */
   _beginHitReact(actor) {
@@ -742,10 +764,11 @@ export class PetCombat {
     actor.tintLeft = pets.HURT_FLASH_MS + pets.HURT_TINT_MS;
     actor.barFlashLeft = pets.HURT_BAR_MS;
     actor.hitSeq = (actor.hitSeq || 0) + 1;
-    this._paintHit(actor, 'flash');
-    if (actor.state === 'attack') return;
-    actor.hurtLeft = pets.HURT_MS;
-    playOnce(actor.sprite, actor.role.hurt);
+    if (actor.state !== 'attack') {
+      actor.hurtLeft = pets.HURT_MS;
+      actor.hurtStrip = playOnce(actor.sprite, actor.role.hurt, { restart: false });
+    }
+    this._applyHitLook(actor);
   }
 
   /**
@@ -756,6 +779,7 @@ export class PetCombat {
     const sprite = actor.sprite;
     if (!sprite?.active) return;
     const element = PET_ELEMENT_TINT[actor.role.element] ?? 0xffffff;
+    const pets = GAME_CONFIG.PETS;
     if (mode === 'flash') {
       if (typeof sprite.setTintFill === 'function') {
         sprite.setTintFill(GAME_CONFIG.JUICE.HIT_FLASH_COLOR);
@@ -765,12 +789,13 @@ export class PetCombat {
       return;
     }
     if (mode === 'hurt') {
-      if (typeof sprite.clearTint === 'function') sprite.clearTint();
-      if (typeof sprite.setTint === 'function') {
-        sprite.setTint(0xff5252);
+      // Fill, not multiply. 0xff5252 left a blue phoenix almost black.
+      const red = pets.HURT_TINT_COLOR;
+      if (typeof sprite.setTintFill === 'function') {
+        sprite.setTintFill(red);
         return;
       }
-      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(0xff5252);
+      if (typeof sprite.setFillStyle === 'function') sprite.setFillStyle(red);
       return;
     }
     if (typeof sprite.clearTint === 'function') sprite.clearTint();
@@ -782,28 +807,50 @@ export class PetCombat {
   /** Drop a flinch so recall, wake, and a fresh deploy are not stuck tinted. @param {PetActor} actor */
   _clearHitLook(actor) {
     actor.hurtLeft = 0;
+    actor.hurtStrip = false;
     actor.hurtReactLeft = 0;
     actor.flashLeft = 0;
     actor.tintLeft = 0;
     actor.barFlashLeft = 0;
+    actor.hitLook = '';
+    actor.biteReadout = 0;
     this._paintHit(actor, 'clear');
   }
 
   /**
-   * White fill, then the red tint, then clear. Bar heat ticks here too.
+   * Count down the white fill, the red fill, and the bar pop.
+   * Painting happens after the animation step so a strip swap cannot
+   * leave the body untinted for the rest of the frame.
    * @param {PetActor} actor
    * @param {number} dt
    */
   _tickHitLook(actor, dt) {
-    if (actor.hurtReactLeft > 0) actor.hurtReactLeft = Math.max(0, actor.hurtReactLeft - dt);
-    if (actor.barFlashLeft > 0) actor.barFlashLeft = Math.max(0, actor.barFlashLeft - dt);
-    if (!(actor.flashLeft > 0) && !(actor.tintLeft > 0)) return;
-    const flashing = actor.flashLeft > 0;
-    if (actor.flashLeft > 0) actor.flashLeft = Math.max(0, actor.flashLeft - dt);
-    if (actor.tintLeft > 0) actor.tintLeft = Math.max(0, actor.tintLeft - dt);
-    if (flashing && !(actor.flashLeft > 0)) {
-      this._paintHit(actor, actor.tintLeft > 0 ? 'hurt' : 'clear');
-    } else if (!(actor.tintLeft > 0)) {
+    const step = Number.isFinite(dt) ? dt : 0;
+    if (actor.hurtReactLeft > 0) actor.hurtReactLeft = Math.max(0, actor.hurtReactLeft - step);
+    if (actor.barFlashLeft > 0) actor.barFlashLeft = Math.max(0, actor.barFlashLeft - step);
+    if (actor.flashLeft > 0) actor.flashLeft = Math.max(0, actor.flashLeft - step);
+    if (actor.tintLeft > 0) actor.tintLeft = Math.max(0, actor.tintLeft - step);
+  }
+
+  /**
+   * White fill, then solid red, then the pet's own colors.
+   * Reapplied every field tick so it survives the animation update.
+   * @param {PetActor} actor
+   */
+  _applyHitLook(actor) {
+    if (!actor.sprite?.active) return;
+    if (actor.flashLeft > 0) {
+      actor.hitLook = 'flash';
+      this._paintHit(actor, 'flash');
+      return;
+    }
+    if (actor.tintLeft > 0) {
+      actor.hitLook = 'hurt';
+      this._paintHit(actor, 'hurt');
+      return;
+    }
+    if (actor.hitLook) {
+      actor.hitLook = '';
       this._paintHit(actor, 'clear');
     }
   }
@@ -818,6 +865,8 @@ export class PetCombat {
     actor.latchId = null;
     actor.state = 'idle';
     actor.hurtLeft = 0;
+    actor.hurtStrip = false;
+    actor.hitLook = '';
     actor.castQueue = [];
     actor.rest = null;
     actor.sleepSlot = null;
@@ -928,7 +977,7 @@ export class PetCombat {
    */
   _commitOrb(actor, orbIndex) {
     actor.castQueue.push(orbIndex);
-    if (actor.state === 'attack') return;
+    if (actor.state === 'attack' || actor.hurtLeft > 0) return;
     this._beginAttack(actor);
   }
 
@@ -944,36 +993,47 @@ export class PetCombat {
     if (!sprite?.active) return EMPTY;
     let dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     this._tickHitLook(actor, dt);
-    if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
-    this._place(actor);
-
-    if (actor.wakeLeft > 0) {
-      const use = Math.min(actor.wakeLeft, dt);
-      actor.wakeLeft -= use;
-      dt -= use;
-      playLoop(sprite, actor.role.key);
-      faceLeft(sprite);
+    let gain = EMPTY;
+    try {
+      if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
       this._place(actor);
-      if (actor.wakeLeft > 0 || dt <= 0) return EMPTY;
-    }
 
-    if (actor.state === 'attack') {
-      actor.attackElapsed += dt;
-      return this._advanceAttack(actor, zombies, threat);
-    }
+      if (actor.wakeLeft > 0) {
+        const use = Math.min(actor.wakeLeft, dt);
+        actor.wakeLeft -= use;
+        dt -= use;
+        playLoop(sprite, actor.role.key);
+        faceLeft(sprite);
+        this._place(actor);
+        if (actor.wakeLeft > 0 || dt <= 0) return EMPTY;
+      }
 
-    if (actor.hurtLeft > 0) {
-      actor.hurtLeft -= dt;
-      const hurt = actor.role.hurt;
-      const onHurt = sprite.anims?.currentAnim?.key === hurt;
-      const playing = onHurt && sprite.anims?.isPlaying;
-      if (!playing && !onHurt && !playOnce(sprite, hurt)) playLoop(sprite, actor.role.key);
-      faceLeft(sprite);
+      if (actor.hurtLeft > 0) {
+        actor.hurtLeft -= dt;
+        if (!actor.hurtStrip) {
+          actor.hurtStrip = playOnce(sprite, actor.role.hurt, { restart: false });
+        }
+        faceLeft(sprite);
+        if (actor.hurtLeft > 0) return EMPTY;
+        actor.hurtStrip = false;
+        if (actor.castQueue.length > 0 && actor.state !== 'attack') {
+          this._beginAttack(actor);
+          gain = this._advanceAttack(actor, zombies, threat);
+          return gain;
+        }
+      }
+
+      if (actor.state === 'attack') {
+        actor.attackElapsed += dt;
+        gain = this._advanceAttack(actor, zombies, threat);
+        return gain;
+      }
+
+      this._stepMove(actor, threat, player, dt);
       return EMPTY;
+    } finally {
+      this._applyHitLook(actor);
     }
-
-    this._stepMove(actor, threat, player, dt);
-    return EMPTY;
   }
 
   /**
@@ -1142,10 +1202,11 @@ export class PetCombat {
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
+    if (actor.hurtLeft > 0) return;
     actor.state = 'attack';
     actor.released = false;
     actor.attackElapsed = 0;
-    actor.hurtLeft = 0;
+    actor.hurtStrip = false;
     faceLeft(actor.sprite);
     const orb = actor.castQueue[0] ?? 0;
     if (orb <= 0) playOnce(actor.sprite, actor.role.skill);
@@ -1820,6 +1881,102 @@ function restingBehindFence(actor) {
 }
 
 /**
+ * Hero body used to keep GO! / Back! off the back. Matches the 92px frame
+ * with feet at y=76 and a 16px pad below the sole.
+ * @param {{ x?: number, y?: number }|null|undefined} anchor
+ * @returns {{ l: number, r: number, t: number, b: number }|null}
+ */
+export function floatHeroRect(anchor) {
+  if (!Number.isFinite(anchor?.x) || !Number.isFinite(anchor?.y)) return null;
+  const scale = displayScaleFromY(anchor.y);
+  return {
+    l: anchor.x - 46 * scale,
+    r: anchor.x + 46 * scale,
+    t: anchor.y - 76 * scale,
+    b: anchor.y + 16 * scale,
+  };
+}
+
+/**
+ * Extents from the label anchor. GO! is 80×32, Back! is 128×32, origin bottom-center.
+ * @param {{ texture?: { key?: string }, textureKey?: string, displayWidth?: number, width?: number, displayHeight?: number, height?: number, originX?: number, originY?: number }} node
+ */
+export function floatLabelBox(node) {
+  const key = node?.texture?.key || node?.textureKey || '';
+  const fallbackW = String(key).includes('back') ? 128 : 80;
+  const w = node?.displayWidth || node?.width || fallbackW;
+  const h = node?.displayHeight || node?.height || 32;
+  const ox = Number.isFinite(node?.originX) ? node.originX : 0.5;
+  const oy = Number.isFinite(node?.originY) ? node.originY : 1;
+  return { left: w * ox, right: w * (1 - ox), up: h * oy, down: h * (1 - oy) };
+}
+
+/**
+ * Camera view clipped to the world, inset by a few field px.
+ * @param {Phaser.Scene|null|undefined} scene
+ */
+export function floatView(scene) {
+  const margin = layoutPx(4);
+  const world = {
+    left: margin,
+    top: margin,
+    right: WORLD_WIDTH - margin,
+    bottom: WORLD_HEIGHT - margin,
+  };
+  const cam = scene?.cameras?.main;
+  if (!cam || !(cam.width > 0)) return world;
+  const scrollX = Number.isFinite(cam.scrollX) ? cam.scrollX : 0;
+  const scrollY = Number.isFinite(cam.scrollY) ? cam.scrollY : 0;
+  const height = cam.height > 0 ? cam.height : WORLD_HEIGHT;
+  const view = {
+    left: Math.max(world.left, scrollX + margin),
+    top: Math.max(world.top, scrollY + margin),
+    right: Math.min(world.right, scrollX + cam.width - margin),
+    bottom: Math.min(world.bottom, scrollY + height - margin),
+  };
+  if (!(view.right > view.left && view.bottom > view.top)) return world;
+  return view;
+}
+
+/**
+ * Prefer the offset point, then keep the whole label inside the view.
+ * If that lands on the hero, lift it above the hero's head.
+ * @param {number} x
+ * @param {number} y
+ * @param {{ left: number, right: number, up: number, down: number }} box
+ * @param {{ left: number, right: number, top: number, bottom: number }} view
+ * @param {{ l: number, r: number, t: number, b: number }|null} hero
+ */
+export function placeFloatLabel(x, y, box, view, hero) {
+  const fit = (px, py) => {
+    const minX = view.left + box.left;
+    const maxX = view.right - box.right;
+    const minY = view.top + box.up;
+    const maxY = view.bottom - box.down;
+    const cx = minX > maxX ? (view.left + view.right) / 2 : Math.min(maxX, Math.max(minX, px));
+    const cy = minY > maxY ? (view.top + view.bottom) / 2 : Math.min(maxY, Math.max(minY, py));
+    return { x: cx, y: cy };
+  };
+  const hits = (placed) => {
+    if (!hero) return false;
+    const label = {
+      l: placed.x - box.left,
+      r: placed.x + box.right,
+      t: placed.y - box.up,
+      b: placed.y + box.down,
+    };
+    return !(label.r <= hero.l || label.l >= hero.r || label.b <= hero.t || label.t >= hero.b);
+  };
+  const placed = fit(x, y);
+  if (!hits(placed)) return placed;
+  const above = fit(placed.x, hero.t - layoutPx(2));
+  if (!hits(above)) return above;
+  const left = fit(hero.l - box.right - layoutPx(2), above.y);
+  if (!hits(left)) return left;
+  return above;
+}
+
+/**
  * First-summon point, just behind the player. Resummon walks here when
  * nothing is on the field.
  * @param {{ x?: number, y?: number }|null|undefined} player
@@ -2035,12 +2192,16 @@ function playLoop(sprite, key) {
 /**
  * @param {Phaser.GameObjects.Sprite} sprite
  * @param {string} key
+ * @param {{ restart?: boolean }} [opts]
+ * `restart: false` leaves a strip that is already showing this key alone,
+ * so a later bite frame cannot snap it back to frame 0.
  */
-function playOnce(sprite, key) {
+function playOnce(sprite, key, opts = {}) {
   if (!sprite || !key || typeof sprite.play !== 'function') return false;
   if (!sprite.scene?.anims?.exists?.(key)) return false;
+  if (opts.restart === false && sprite.anims?.currentAnim?.key === key) return true;
   try {
-    sprite.play(key);
+    sprite.play(opts.restart === false ? { key, ignoreIfPlaying: true } : key);
   } catch (_) {
     return false;
   }

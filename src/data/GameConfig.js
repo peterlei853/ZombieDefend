@@ -28,13 +28,14 @@
  * revive after death, and orb cooldowns that auto-cast. Form 1 is unlocked.
  * Forms 2 and 3 have cast logic and placeholder FX only. v0.22.1 adds the
  * GO! / Back! floats and the recall sleep bed. v0.22.1b doubles the shared
- * pet HP pool and thins Stage 1 waves 1–3. A pet hit is a white flash, a
- * short red tint, the baby hurt strip, and an HP-bar pop. The camera does
+ * pet HP pool and thins Stage 1 waves 1–3. v0.22.1c holds the pet hit
+ * white fill for 180ms and a solid red fill for 200ms, lets the hurt
+ * strip finish, and clamps GO! / Back! into the camera. The camera does
  * not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.22.1b';
+export const APP_VERSION = '0.22.1c';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -129,9 +130,9 @@ export const GAME_CONFIG = {
    * UNLOCKED_ORBS is 1 (form 1 only). Orbs 2–3 stay visible and locked.
    *
    * FLOAT_HOLD_MS is 700 (inside 0.6–0.8s). The GO! / Back! sprite holds,
-   * then fades for FLOAT_FADE_MS. The label sits up and to the right of the
-   * pet (FLOAT_OFFSET_X 64, FLOAT_OFFSET_Y 56, field px) so it clears the
-   * hero when the pet is beside the player. Recall walks to an empty bed
+   * then fades for FLOAT_FADE_MS. The label prefers up-right of the pet
+   * (FLOAT_OFFSET_X 80, FLOAT_OFFSET_Y 68, field px) and is then clamped
+   * into the camera view so a bottom-right summon cannot clip it. Recall walks to an empty bed
    * behind the fence, plays sleep-start once, then the sleep loop. Resummon wakes
    * that body and walks it out. HP, regen, and revive stay on this table.
    * v0.22.1b raises the shared max from 96 to 192. Recall still restores
@@ -152,17 +153,22 @@ export const GAME_CONFIG = {
     /** Field px added to the zombie's body radius when it bites a pet. */
     BITE_RADIUS: 18,
     /**
-     * Flinch on the baby hurt strip (4 frames at 10 fps). A new pose waits
-     * out this window so per-frame bite DPS cannot restart it. Does not
-     * cancel a cast already in progress.
+     * Flinch lockout. The baby hurt strip is 4 frames at 10 fps (400ms).
+     * This is longer than that strip so one play finishes and the last
+     * frame holds before per-frame bite DPS may start another. Does not
+     * cancel a cast already in progress. The camera does not shake.
      */
-    HURT_MS: 400,
-    /** Pure-white body fill at the start of a flinch. */
-    HURT_FLASH_MS: 90,
-    /** Red multiply tint after the white fill. The camera does not shake. */
-    HURT_TINT_MS: 160,
-    /** World bar and portrait fill stay hot for this long after a flinch. */
-    HURT_BAR_MS: 180,
+    HURT_MS: 560,
+    /** Pure-white body fill at the start of a flinch. 150–200ms. */
+    HURT_FLASH_MS: 180,
+    /**
+     * Solid red fill after the white flash. 150–200ms.
+     * A multiply tint (the old 0xff5252) left cool-colored pets nearly black.
+     */
+    HURT_TINT_MS: 200,
+    HURT_TINT_COLOR: 0xff2a2a,
+    /** World bar and portrait fill stay hot through the white and red phases. */
+    HURT_BAR_MS: 380,
     /** Scale-pop after the sprite appears behind the player. */
     POP_MS: 160,
     /** GO! / Back! stay opaque this long, then fade. 0.6–0.8s. */
@@ -171,11 +177,12 @@ export const GAME_CONFIG = {
     FLOAT_FADE_MS: 200,
     /**
      * Field px from the pet's feet to the bottom-center of GO! / Back!.
-     * +X is toward the barricade. 64 clears the hero's right edge when the
-     * pet pops just behind the player; 56 lifts the 32px label off the shoulder.
+     * +X is toward the barricade. 80 clears Back! (128px) off the hero's
+     * back at mid-lane; 68 lifts the 32px label off the shoulder. PetCombat
+     * still clamps the label into the camera so the right edge cannot clip it.
      */
-    FLOAT_OFFSET_X: 64,
-    FLOAT_OFFSET_Y: 56,
+    FLOAT_OFFSET_X: 80,
+    FLOAT_OFFSET_Y: 68,
     /** Death lockout before the bar can summon again. 18s. */
     REVIVE_CD_MS: 18000,
     /** Fraction of max HP restored per second while recalled (alive, off field). */
