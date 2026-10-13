@@ -1643,7 +1643,11 @@ export class PetCombat {
   }
 
   /**
-   * Semi-transparent tell. S1 ring, S2 larger ring, S3 half-screen wash.
+   * Ground tell before the skill hits. S1 and S2 use the catalog rings,
+   * squashed onto the lane at the aim point. S3 uses the half-screen wash.
+   * The ring stays fully opaque for TELEGRAPH_MS, then fades. It used to
+   * lerp alpha toward 0.2 for the whole 200ms while centered on the pet,
+   * so the only circle a tester could catch was the HUD cooldown arc.
    * PIXELLAB_HOOK: assets/library/fx/v026/telegraph/
    * @param {PetActor} actor
    * @param {number} orbIndex
@@ -1654,27 +1658,39 @@ export class PetCombat {
     if (!scene || !sprite) return;
     scene.audio?.playSkillTelegraph?.();
     const pets = GAME_CONFIG.PETS;
-    const x = sprite.x;
-    const y = sprite.y;
-    const depth = depthFromY(y, 4);
+    const threat = nearestBarricadeThreat(this._liveZombies);
+    const spot = telegraphPoint(actor, orbIndex, threat);
+    const depth = depthFromY(spot.y, 24);
     let key = 'vfx-telegraph-ring';
-    let scale = layoutPx(pets.SKILL_R.s1 * 2) / 64;
+    let scale = (layoutPx(pets.SKILL_R.s1 * 2) / 64) * 1.35;
     let flipX = false;
+    let ground = true;
     if (orbIndex >= 2) {
       key = 'vfx-telegraph-half-left';
       const camW = scene.cameras?.main?.width || 1280;
       scale = camW / 2 / 192;
       flipX = true;
+      ground = false;
     } else if (orbIndex === 1) {
       key = 'vfx-telegraph-ring-128';
-      scale = layoutPx(pets.SKILL_R.s2 * 2) / 128;
+      scale = (layoutPx(pets.SKILL_R.s2 * 2) / 128) * 1.15;
     }
-    const node = playLibraryFx(scene, x, y, key, { scale, depth, flipX });
+    const node = playLibraryFx(scene, spot.x, spot.y, key, { scale, depth, flipX });
     if (!node) return;
+    if (ground && typeof node.setScale === 'function') {
+      const sx = Math.abs(node.scaleX || scale);
+      node.setScale(sx, sx * pets.TELEGRAPH_GROUND_Y);
+    }
+    const addBlend = globalThis.Phaser?.BlendModes?.ADD;
+    if (ground && addBlend != null && typeof node.setBlendMode === 'function') {
+      node.setBlendMode(addBlend);
+    }
+    if (typeof node.setAlpha === 'function') node.setAlpha(1);
     scene.tweens?.add?.({
       targets: node,
-      alpha: 0.2,
-      duration: pets.TELEGRAPH_MS,
+      alpha: 0.15,
+      delay: pets.TELEGRAPH_MS,
+      duration: pets.TELEGRAPH_FADE_MS,
       onComplete: () => destroySprite(node),
     });
   }
@@ -1760,8 +1776,9 @@ export class PetCombat {
   }
 
   /**
-   * Form 1 plays the baby skill strip and releases on its hit frame.
-   * Forms 2 and 3 release on a short telegraph; their FX are placeholders.
+   * Form 1 plays the baby skill strip during the tell and releases on its
+   * hit frame only after TELEGRAPH_MS. Forms 2 and 3 release on that same
+   * tell; their hit FX are placeholders. The ground circle is already up.
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
@@ -1790,12 +1807,15 @@ export class PetCombat {
     const playingSkill = !!(anims?.isPlaying && anims.currentAnim?.key === skill);
     const orb = actor.castQueue[0] ?? 0;
     const form1 = !(orb > 0);
-    const due = form1
-      ? frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
-        (playingSkill && progress >= 0.34) ||
-        !playingSkill ||
-        actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-      : actor.attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS;
+    const told = actor.attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS;
+    const due = !told
+      ? false
+      : form1
+        ? frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
+          (playingSkill && progress >= 0.34) ||
+          !playingSkill ||
+          actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
+        : true;
     let gold = 0;
     let kills = 0;
     if (!actor.released && due) {
@@ -2397,6 +2417,23 @@ function focusPoint(actor, threat) {
     return { x: threat.x, y: threat.y };
   }
   return { x: actor.sprite?.x ?? actor.x, y: actor.sprite?.y ?? actor.y };
+}
+
+/**
+ * Where the ground circle sits. S1 is the lane between the pet and the
+ * threat. S2 is on the threat. S3 is the pet, for the half-screen wash.
+ * @param {PetActor} actor
+ * @param {number} orbIndex
+ * @param {import('../entities/Zombie.js').Zombie|null} threat
+ */
+function telegraphPoint(actor, orbIndex, threat) {
+  const px = actor.sprite?.x ?? actor.x;
+  const py = actor.sprite?.y ?? actor.y;
+  if (orbIndex >= 2) return { x: px, y: py };
+  const focus = focusPoint(actor, threat);
+  if (orbIndex >= 1) return { x: focus.x, y: focus.y };
+  const ahead = Number.isFinite(focus.x) ? (px + focus.x) / 2 : px - layoutPx(36);
+  return { x: ahead, y: py };
 }
 
 /**

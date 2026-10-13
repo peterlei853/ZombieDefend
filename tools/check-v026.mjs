@@ -9,8 +9,9 @@ import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
 import { getGoldByHP } from '../src/data/economy.js';
 import { layoutPx } from '../src/systems/DepthView.js';
-import { expFromZombieHp } from '../src/systems/ExpOrbManager.js';
+import { expFromZombieHp, MAGNET_R } from '../src/systems/ExpOrbManager.js';
 import { PetEvolve, STAGE_EXP_CAP, T2_COST, T3_COST } from '../src/systems/PetEvolve.js';
+import { debugExpEnabled, expToNextTier, grantDebugExp } from '../src/debugExp.js';
 import { NEAR_R, pickPetTarget } from '../src/systems/ZombieAggro.js';
 import { ULT_KEYS, ULT_MS } from '../src/systems/UltCutscene.js';
 
@@ -22,13 +23,18 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.26.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.26.1', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 
-assert(expFromZombieHp(40) === 2, 'exp is floor(maxHp/20)');
-assert(expFromZombieHp(19) === 1, 'exp minimum is 1');
-assert(expFromZombieHp(100) === 5, 'exp for 100 HP');
+assert(expFromZombieHp(40) === 5, 'wave 1 exp is floor(40/8)');
+assert(expFromZombieHp(19) === 5, 'exp minimum is 5');
+assert(expFromZombieHp(70) === 8, 'wave 2 exp');
+assert(expFromZombieHp(100) === 12, 'exp for 100 HP');
+assert(expFromZombieHp(105) === 13, 'wave 3 exp');
+assert(MAGNET_R >= 240, 'orbs magnet from the approach, not only melee');
+const earlyExp = 4 * expFromZombieHp(40) + 6 * expFromZombieHp(70);
+assert(earlyExp >= 40, `wave 1–2 yield can fill tier 2 (${earlyExp})`);
 assert(T2_COST === 40 && T3_COST === 80 && STAGE_EXP_CAP === 120, 'tier costs 40 then 80');
 
 const evolveSrc = readFileSync(new URL('../src/systems/PetEvolve.js', import.meta.url), 'utf8');
@@ -38,10 +44,12 @@ const orbSrc = readFileSync(new URL('../src/systems/ExpOrbManager.js', import.me
 const ultSrc = readFileSync(new URL('../src/systems/UltCutscene.js', import.meta.url), 'utf8');
 const aggroSrc = readFileSync(new URL('../src/systems/ZombieAggro.js', import.meta.url), 'utf8');
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
+const debugExpSrc = readFileSync(new URL('../src/debugExp.js', import.meta.url), 'utf8');
 for (const [name, text] of [
   ['PetEvolve', evolveSrc],
   ['ShopScene', shopSrc],
   ['ExpOrbManager', orbSrc],
+  ['debugExp', debugExpSrc],
 ]) {
   assert(!/localStorage\.(get|set|remove|clear|key)/.test(text), `${name} does not read or write localStorage`);
 }
@@ -79,6 +87,30 @@ assert(!combatSrc.includes('.shake(') && !ultSrc.includes('.shake('), 'no camera
 assert(combatSrc.includes('playPetMeleeHit') && combatSrc.includes('playPetKnockback'), 'melee and knockback SFX');
 assert(combatSrc.includes('playSkillTelegraph'), 'telegraph SFX');
 assert(combatSrc.includes('vfx-telegraph-ring') && combatSrc.includes('vfx-telegraph-half-left'), 'telegraph keys');
+assert(combatSrc.includes('vfx-telegraph-ring-128'), 'S2 telegraph key');
+assert(
+  combatSrc.includes('attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS'),
+  'skill damage waits until the ground telegraph has played'
+);
+assert(combatSrc.includes('delay: pets.TELEGRAPH_MS'), 'telegraph stays opaque for the tell, then fades');
+assert(combatSrc.includes('TELEGRAPH_GROUND_Y'), 'ring is squashed onto the lane');
+assert(debugExpEnabled('?debugExp=1') === true, 'debugExp flag');
+assert(debugExpEnabled('?debugBgm=1') === false, 'debug BGM does not grant EXP');
+assert(debugExpEnabled('?petHurt=1') === false, 'pet hurt does not grant EXP');
+assert(debugExpEnabled('') === false, 'debug EXP is off by default');
+assert(expToNextTier(0) === 40 && expToNextTier(39) === 1, 'first grant reaches tier 2');
+assert(expToNextTier(40) === 80 && expToNextTier(119) === 1, 'second grant reaches tier 3');
+assert(expToNextTier(120) === 0, 'tier 3 does not keep granting');
+const debugEv = new PetEvolve({ events: { emit() {} }, audio: { playPetEvolve() {} } });
+assert(grantDebugExp(debugEv, ['phoenix']) === true, 'debug grant applies');
+assert(debugEv.getTier('phoenix') === 2 && debugEv.getExp('phoenix') === 40, 'one press is tier 2');
+assert(debugEv.getTier('lion') === 1, 'a named field pet does not evolve the bench');
+assert(grantDebugExp(debugEv, ['phoenix']) === true, 'second press applies');
+assert(debugEv.getTier('phoenix') === 3 && debugEv.canUseUlt('phoenix'), 'two presses reach the ult');
+assert(grantDebugExp(debugEv, ['phoenix']) === false, 'third press is a no-op');
+assert(stageSrc.includes('KeyCodes.E') && stageSrc.includes('debugExpEnabled'), 'E is wired behind the flag');
+assert(stageSrc.includes('KeyCodes.H') && stageSrc.includes('petHurt'), 'H / petHurt still wired');
+assert(stageSrc.includes('KeyCodes.V') && stageSrc.includes('debugBgmEnabled'), 'V / debugBgm still wired');
 assert(combatSrc.includes('vfx-aoe-fire') && combatSrc.includes('vfx-aoe-poison'), 'residue keys');
 assert(combatSrc.includes('vfx-evolve-stars-'), 'evolve star marker');
 assert(ultSrc.includes('playUlt'), 'ult SFX helper');

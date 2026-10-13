@@ -51,6 +51,7 @@ import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 import { debugBgmEnabled } from '../debugBgm.js';
+import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -62,6 +63,8 @@ import { debugBgmEnabled } from '../debugBgm.js';
  * Lose: barricade HP ≤ 0 → Game Over overlay (retry)
  *
  * `?debugBgm=1` (or `?debug=1`): V or the DEBUG CLEAR chip calls the same win path.
+ * `?debugExp=1`: E or the DEBUG EXP chip grants tier 2, then tier 3. Off, E does nothing.
+ * `?petHurt=1` or H still plays one hurt sequence. The three flags are independent.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -154,6 +157,9 @@ export default class StageScene extends Phaser.Scene {
     if (debugBgmEnabled()) {
       this._installDebugClear();
     }
+    if (debugExpEnabled()) {
+      this._installDebugExp();
+    }
 
     this.touchControls = new VirtualControls(this, {
       onWeapon: () => this._toggleWeapon(),
@@ -201,6 +207,44 @@ export default class StageScene extends Phaser.Scene {
       system: true,
       size: 13,
       color: '#ffd27a',
+      depth: depth + 1,
+    });
+  }
+
+  /**
+   * ?debugExp=1 only. E grants enough EXP for tier 2, then tier 3, on field
+   * pets (or every pet when none are out). Orb yield is unchanged.
+   */
+  _installDebugExp() {
+    const fire = () => {
+      if (this.ended || !debugExpEnabled()) return;
+      const field = this.defenders?.petCombat?.fieldPets?.() || [];
+      const ids = field.map((pet) => pet.id).filter(Boolean);
+      grantDebugExp(this.petEvolve, ids);
+    };
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const onDown = () => fire();
+      this._debugExpKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+      this._debugExpKey.on('down', onDown);
+      this.events.once('shutdown', () => {
+        this._debugExpKey?.off('down', onDown);
+      });
+    }
+
+    const x = GAME_WIDTH / 2;
+    const y = GAME_HEIGHT - (debugBgmEnabled() ? 186 : 150);
+    const depth = HUD_DEPTH + 50;
+    const hit = this.add
+      .rectangle(x, y, 168, 28, 0x1a1208, 0.82)
+      .setScrollFactor(0)
+      .setDepth(depth)
+      .setInteractive({ useHandCursor: true });
+    hit.on('pointerup', fire);
+    addKitText(this, x, y, 'E  DEBUG EXP', {
+      system: true,
+      size: 13,
+      color: '#9aecff',
       depth: depth + 1,
     });
   }

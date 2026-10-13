@@ -36,12 +36,14 @@
  * every frame cannot restart it. v0.22.2 wires
  * the catalog enemy HP bar, parchment joystick, and clean title splash.
  * v0.26 adds EXP orbs, evolution tiers, melee, skill telegraphs, nearby
- * aggro, a tier-3 ult, and a shop stub. Pet hurt stays a solid red fill.
- * The camera does not shake.
+ * aggro, a tier-3 ult, and a shop stub. v0.26.1 raises early orb yield
+ * and eases the Stage 1 swarm so a summoned pet can reach tier 2 before
+ * the wall breaks, and holds the ground telegraph at full opacity until
+ * that tell ends. Pet hurt stays a solid red fill. The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.26.0';
+export const APP_VERSION = '0.26.1';
 
 /** `?petHurt=1` plays the pet hurt sequence once after the stage boots. */
 export function petHurtDebugRequested() {
@@ -236,8 +238,19 @@ export const GAME_CONFIG = {
     /** Leftward pet shove. Field px over ms. Not the handgun / pellet shove. */
     KNOCKBACK_PX: 100,
     KNOCKBACK_MS: 150,
-    /** Semi-transparent tell before skill damage. */
-    TELEGRAPH_MS: 200,
+    /**
+     * Ground tell before skill damage. 150–250ms. The catalog ring stays
+     * fully opaque for this long, then TELEGRAPH_FADE_MS eases it out.
+     * Damage does not release until this window has elapsed.
+     */
+    TELEGRAPH_MS: 220,
+    /** Fade after the opaque tell. The circle is already on screen. */
+    TELEGRAPH_FADE_MS: 420,
+    /**
+     * Y scale of the ring textures so the circle lies on the lane.
+     * S3 uses the half-screen wash and ignores this.
+     */
+    TELEGRAPH_GROUND_Y: 0.46,
     HITSTOP_S2_MS: 50,
     HITSTOP_S3_MS: 80,
     /** 0-based skill frame that releases the hit. */
