@@ -30,12 +30,13 @@
  * GO! / Back! floats and the recall sleep bed. v0.22.1b doubles the shared
  * pet HP pool and thins Stage 1 waves 1–3. v0.22.1c holds the pet hit
  * white fill for 180ms and a solid red fill for 200ms, lets the hurt
- * strip finish, and clamps GO! / Back! into the camera. The camera does
- * not shake.
+ * strip finish, and clamps GO! / Back! into the camera. v0.22.2 wires
+ * the catalog enemy HP bar, parchment joystick, and clean title splash.
+ * The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.22.1c';
+export const APP_VERSION = '0.22.2';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 

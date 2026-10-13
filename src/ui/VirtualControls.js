@@ -8,6 +8,8 @@ import { FONT_INK, INK_TINT, UI, addKitText } from './uiKit.js';
  * Joystick (bottom-left) reports the same axes as WASD / arrows:
  * vertical moves the defender, horizontal is only a facing/strafe axis
  * (DefenderGroup still clamps X to the barricade lane).
+ * When the kit textures are cached, the stick is `ui-joystick-base` with
+ * `ui-joystick-knob`, swapping to `ui-joystick-knob-pressed` while active.
  * SWAP (bottom-right) cycles weapons once per tap, like SPACE.
  *
  * Both sit above the HUD (`setScrollFactor(0)`) and ignore camera X scroll.
@@ -25,6 +27,10 @@ const THUMB_RADIUS = 28;
 const BTN_RADIUS = CONTROL_DIAMETER / 2;
 /** Stick travel inside this fraction of the radius does not move. */
 const DEADZONE = 0.18;
+/** Native kit sizes. The knob center stays inside the 80×80 base. */
+const KIT_JOY_BASE = 80;
+const KIT_JOY_KNOB = 40;
+const KIT_KNOB_TRAVEL = (KIT_JOY_BASE - KIT_JOY_KNOB) / 2;
 const IDLE_ALPHA = 0.45;
 /** While a zombie body covers a control, drop it so the lane stays readable. */
 const COMBAT_ALPHA = 0.08;
@@ -128,6 +134,8 @@ export class VirtualControls {
     this.dy = 0;
     /** True while a zombie body overlaps that control. Idle alpha drops. */
     this._joyFade = false;
+    /** Parchment kit stick. Flat circles remain when those textures are missing. */
+    this._kitJoy = false;
     this._swapFade = false;
     /** Top of the control row in screen px. */
     this.layoutTop = GAME_HEIGHT - CONTROL_EDGE_PAD - CONTROL_DIAMETER;
@@ -237,7 +245,8 @@ export class VirtualControls {
   }
 
   _joyRestAlpha() {
-    return this._joyFade ? COMBAT_ALPHA : IDLE_ALPHA;
+    if (this._joyFade) return COMBAT_ALPHA;
+    return this._kitJoy ? 0.94 : IDLE_ALPHA;
   }
 
   _swapRestAlpha() {
@@ -249,18 +258,36 @@ export class VirtualControls {
     const scene = this.scene;
     const depth = CONTROL_DEPTH;
 
-    this.base = scene.add
-      .circle(0, 0, JOY_RADIUS, 0x0d1520, 0.72)
-      .setStrokeStyle(3, 0xc5d0dc, 0.9)
-      .setScrollFactor(0)
-      .setDepth(depth);
+    this._kitJoy = !!(
+      scene.textures?.exists?.(UI.joystickBase) &&
+      scene.textures?.exists?.(UI.joystickKnob) &&
+      scene.textures?.exists?.(UI.joystickKnobPressed)
+    );
+    if (this._kitJoy) {
+      this.base = scene.add
+        .image(0, 0, UI.joystickBase)
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(depth);
+      this.thumb = scene.add
+        .image(0, 0, UI.joystickKnob)
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(depth + 2);
+    } else {
+      this.base = scene.add
+        .circle(0, 0, JOY_RADIUS, 0x0d1520, 0.72)
+        .setStrokeStyle(3, 0xc5d0dc, 0.9)
+        .setScrollFactor(0)
+        .setDepth(depth);
+      this.thumb = scene.add
+        .circle(0, 0, THUMB_RADIUS, 0xe8eef5, 0.95)
+        .setScrollFactor(0)
+        .setDepth(depth + 2);
+    }
 
     this.ticks = scene.add.graphics().setScrollFactor(0).setDepth(depth + 1);
-
-    this.thumb = scene.add
-      .circle(0, 0, THUMB_RADIUS, 0xe8eef5, 0.95)
-      .setScrollFactor(0)
-      .setDepth(depth + 2);
+    if (this._kitJoy) this.ticks.setVisible(false);
 
     this._kitButton = !!scene.textures?.exists?.(UI.button);
     if (this._kitButton) {
@@ -319,6 +346,10 @@ export class VirtualControls {
   }
 
   _drawTicks() {
+    if (this._kitJoy) {
+      this.ticks?.clear();
+      return;
+    }
     const g = this.ticks;
     const cx = this.joyCX;
     const cy = this.joyCY;
@@ -412,7 +443,12 @@ export class VirtualControls {
     const axes = stickAxes(pointer.x - this.joyCX, pointer.y - this.joyCY);
     this.dx = axes.dx;
     this.dy = axes.dy;
-    this.thumb.setPosition(this.joyCX + axes.thumbX, this.joyCY + axes.thumbY);
+    // Kit knob slides inside the stone ring. Axes still use the full hit radius.
+    const travel = this._kitJoy ? KIT_KNOB_TRAVEL / JOY_RADIUS : 1;
+    this.thumb.setPosition(
+      this.joyCX + axes.thumbX * travel,
+      this.joyCY + axes.thumbY * travel
+    );
   }
 
   _resetStick() {
@@ -430,7 +466,13 @@ export class VirtualControls {
   _setJoyActive(active) {
     const a = active ? ACTIVE_ALPHA : this._joyRestAlpha();
     this.base.setAlpha(a);
-    this.ticks.setAlpha(a);
+    this.ticks.setAlpha(this._kitJoy ? 0 : a);
+    if (this._kitJoy) {
+      const key = active ? UI.joystickKnobPressed : UI.joystickKnob;
+      if (this.thumb.texture?.key !== key && this.scene.textures?.exists?.(key)) {
+        this.thumb.setTexture(key);
+      }
+    }
     this.thumb.setAlpha(active ? 1 : a);
   }
 

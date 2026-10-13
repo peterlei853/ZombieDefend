@@ -15,9 +15,10 @@ import {
 
 /**
  * Title / start screen.
- * Backdrop is the native splash via TITLE_BG_ALIAS (`bg-title-zombie-vs-buddy`
- * → `ui-title-bg`, 688×384), integer-scaled to cover the canvas.
- * `ui-title-bg-hd` (1280×720) is the fallback. The dialog covers the painted button row.
+ * Backdrop is `ui-title-bg-clean` (688×384): hero, pets, and the logo, with
+ * no baked NEW/LOAD/SCOREBOARD and no v0.21 footer. `ui-title-bg-clean-hd`
+ * is the 1280×720 fallback. START stays a separate parchment button.
+ * TITLE_BG_ALIAS (`bg-title-zombie-vs-buddy`) is only the older fallback.
  */
 export default class TitleScene extends Phaser.Scene {
   constructor() {

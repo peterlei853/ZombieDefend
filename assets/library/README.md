@@ -74,13 +74,13 @@ Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young
 
 ## UI kit
 
-`ui/` is the title and stage chrome (v0.22): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, Latin bitmap font atlases, pet float callouts, and the v0.22 Accept style fixes. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. TitleScene draws `bg-title-zombie-vs-buddy`, an alias of the native `ui-title-bg` (688×384); `ui-title-bg-hd` is the 1280×720 fallback. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
+`ui/` is the title and stage chrome (v0.22): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, Latin bitmap font atlases, pet float callouts, and the v0.22 Accept style fixes. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. TitleScene draws `ui-title-bg-clean` (688×384, no baked menu or v0.21 footer); `ui-title-bg-clean-hd` is the 1280×720 fallback. `bg-title-zombie-vs-buddy` still aliases the older `ui-title-bg` and is used only when the clean splash is missing. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
 
 **v0.22 Accept style fixes.** Bar frames, the joystick, and the title splash use origin **(0.5, 0.5)**. Enemy fill strips use **(0, 0.5)**, the same left-grow as `ui-hp-fill-*`.
 
 - Enemy HP: `ui-hp-bar-enemy` is the native **118×24** stone frame (parchment rim, cyan end glow, orange gems). `ui-hp-bar-enemy-96` is the **96×32** legacy slot. Compact fills `ui-hp-enemy-fill-ok`, `ui-hp-enemy-fill-mid`, and `ui-hp-enemy-fill-low` are **72×8**.
 - Joystick (`controls/`): parchment/stone kit, not flat circles. `ui-joystick-base` **80×80**, `ui-joystick-base-96` **96×96**, `ui-joystick-knob` and `ui-joystick-knob-pressed` **40×40**. Place the knob inside the base and swap to `-pressed` while the stick is active.
-- Clean title (`title/`, beside `ui-title-bg`): `ui-title-bg-clean` **688×384** and `ui-title-bg-clean-hd` **1280×720**. No baked v0.21 footer and no NEW / LOAD / SCOREBOARD buttons. Replace the title background with the clean splash and draw menu buttons separately.
+- Clean title (`title/`, beside `ui-title-bg`): `ui-title-bg-clean` **688×384** and `ui-title-bg-clean-hd` **1280×720**. No baked v0.21 footer and no NEW / LOAD / SCOREBOARD buttons. TitleScene draws that splash and keeps START on its own parchment button.
 
 ## Canvas, origin and facing conventions
 
