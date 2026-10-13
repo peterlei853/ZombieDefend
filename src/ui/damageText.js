@@ -1,5 +1,6 @@
 import { HUD_DEPTH, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { GAME_CONFIG } from '../data/GameConfig.js';
+import { FONT_HUD, kitFontReady } from './uiKit.js';
 
 /** Combat floating-number colors. */
 export const DAMAGE_COLORS = {
@@ -101,8 +102,17 @@ function mergeKey(coalesceKey, color) {
  * @param {string} color
  */
 function createLabel(scene, x, y, amount, color) {
+  const label = `-${amount}`;
+  // Outlined atlas is already gold with a navy edge, so it is not tinted.
+  // The color argument still separates coalesce buckets.
+  if (kitFontReady(scene, FONT_HUD) && scene.add?.bitmapText) {
+    return scene.add
+      .bitmapText(x, y, FONT_HUD, label, 32)
+      .setOrigin(0.5, 0.5)
+      .setDepth(HUD_DEPTH + 40);
+  }
   return scene.add
-    .text(x, y, `-${amount}`, {
+    .text(x, y, label, {
       fontFamily: 'system-ui, sans-serif',
       fontSize: `${layoutPx(18)}px`,
       fontStyle: 'bold',

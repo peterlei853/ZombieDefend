@@ -27,7 +27,7 @@ Auth (New/Old Game + CharSelect) is next; this deploy is the combat vertical sli
 
 ## Asset library
 
-Categorized art (hero girl, 12 zombie groups, 2 bosses, FX, pickups, barricade posts, campus backgrounds, and concepts) lives in `assets/library/`. **v0.21.0** loads the hero, the 12 zombie groups, shared FX, the campus background, `barricade-post`, the four baby pets (phoenix, panda, lion, dragon), and the pet HUD bars, heads, and orbs into Stage 1. Pets stay off the field until a bar summon; idle, move, skill, and hurt strips play only while that pet is out. Bosses have no wave spawn yet. Legacy `assets/zombies/` and `assets/player/` remain as fallbacks.
+Categorized art (hero girl, 12 zombie groups, 2 bosses, FX, pickups, barricade posts, campus backgrounds, the UI kit, and concepts) lives in `assets/library/`. **v0.22.0** loads that library plus the UI kit (`assets/library/ui/`: HP frames, parchment buttons, dialog and toast panels, icons, and the outlined / gold / cream HUD fonts) into the title screen and stage HUD. **v0.21.0** loads the hero, the 12 zombie groups, shared FX, the campus background, `barricade-post`, the four baby pets (phoenix, panda, lion, dragon), and the pet HUD bars, heads, and orbs into Stage 1. Pets stay off the field until a bar summon; idle, move, skill, and hurt strips play only while that pet is out. Bosses have no wave spawn yet. Legacy `assets/zombies/` and `assets/player/` remain as fallbacks.
 
 - Conventions and Phaser loading: [assets/library/README.md](assets/library/README.md)
 - Grouped list with thumbnails: [assets/library/CATALOG.md](assets/library/CATALOG.md)

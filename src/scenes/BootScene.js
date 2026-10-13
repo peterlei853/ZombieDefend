@@ -1,9 +1,18 @@
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
-import { layoutPx } from '../systems/DepthView.js';
 import { APP_VERSION } from '../data/GameConfig.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
+import {
+  FONT_HUD,
+  FONT_INK,
+  FONT_TINY,
+  INK_TINT,
+  UI,
+  addKitImage,
+  addKitText,
+  addParchmentButton,
+} from '../ui/uiKit.js';
 
 /**
  * Minimal boot / title stub.
@@ -28,24 +37,38 @@ export default class BootScene extends Phaser.Scene {
     registerZombieAnims(this);
     const { width, height } = this.scale;
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0x0b0f14);
+    if (this.textures.exists(UI.titleHd)) {
+      this.add.image(width / 2, height / 2, UI.titleHd).setDepth(0);
+    } else if (this.textures.exists('bg-campus-night-full')) {
+      this.add.image(0, 0, 'bg-campus-night-full').setOrigin(0, 0);
+      this.add.rectangle(width / 2, height / 2, width, height, 0x070b10, 0.5);
+    } else {
+      this.add.rectangle(width / 2, height / 2, width, height, 0x0b0f14);
+    }
 
-    this.add
-      .text(width / 2, height * 0.32, 'ZombieDefend', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${layoutPx(36)}px`,
-        color: '#e8eef5',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
+    // Sit the card over the painted button row so the splash logo stays visible.
+    const cardY = Math.round(height * 0.66);
+    addKitImage(this, width / 2, cardY, UI.dialog, { depth: 2 });
 
-    this.add
-      .text(width / 2, height * 0.44, `v${APP_VERSION} — Stage 1`, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${layoutPx(16)}px`,
-        color: '#8fa3b8',
-      })
-      .setOrigin(0.5);
+    // Dialog header is navy; the body is parchment. Outlined/cream on the
+    // header, ink on the body, parchment button in the lower band.
+    addKitText(this, width / 2, cardY - 72, 'ZombieDefend', {
+      font: FONT_HUD,
+      size: 32,
+      depth: 4,
+    });
+    addKitText(this, width / 2, cardY - 36, `v${APP_VERSION}`, {
+      font: FONT_TINY,
+      size: 16,
+      depth: 4,
+    });
+    addKitText(this, width / 2, cardY + 16, 'STAGE 1', {
+      font: FONT_INK,
+      size: 16,
+      tint: INK_TINT,
+      color: '#2a2118',
+      depth: 4,
+    });
 
     // Auth stub — no real LocalStorage register/login
     const authStub = {
@@ -58,16 +81,20 @@ export default class BootScene extends Phaser.Scene {
     this.registry.set('characterId', authStub.characterId);
     this.registry.set('stage', this.registry.get('stage') ?? 1);
 
-    const btn = this.add
-      .rectangle(width / 2, height * 0.62, layoutPx(200), layoutPx(48), 0x2e7d32)
-      .setInteractive({ useHandCursor: true });
-    const btnLabel = this.add
-      .text(width / 2, height * 0.62, 'Start Stage 1', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${layoutPx(18)}px`,
-        color: '#ffffff',
-      })
-      .setOrigin(0.5);
+    const startStage = () => {
+      this.audio?.playUiClick();
+      this.scene.start('StageScene', {
+        stage: this.registry.get('stage') || 1,
+        gold: this.registry.get('gold') || 0,
+        characterId: this.registry.get('characterId') || 'default',
+      });
+    };
+
+    addKitImage(this, width / 2 - 100, cardY + 72, UI.ready, { depth: 4 });
+    const btn = addParchmentButton(this, width / 2, cardY + 72, 'START', startStage, {
+      scale: 2,
+      depth: 4,
+    });
 
     this.audio = new SoundManager(this);
     this.events.once('shutdown', () => {
@@ -75,21 +102,10 @@ export default class BootScene extends Phaser.Scene {
       this.audio = null;
     });
 
-    btn.on('pointerover', () => btn.setFillStyle(0x388e3c));
-    btn.on('pointerout', () => btn.setFillStyle(0x2e7d32));
-    btn.on('pointerup', () => {
-      this.audio?.playUiClick();
-      this.scene.start('StageScene', {
-        stage: this.registry.get('stage') || 1,
-        gold: this.registry.get('gold') || 0,
-        characterId: this.registry.get('characterId') || 'default',
-      });
-    });
-
     // Also allow Enter / Space
-    this.input.keyboard?.once('keydown-ENTER', () => btn.emit('pointerup'));
-    this.input.keyboard?.once('keydown-SPACE', () => btn.emit('pointerup'));
+    this.input.keyboard?.once('keydown-ENTER', startStage);
+    this.input.keyboard?.once('keydown-SPACE', startStage);
 
-    void btnLabel;
+    void btn;
   }
 }

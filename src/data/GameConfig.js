@@ -30,7 +30,7 @@
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.21.0';
+export const APP_VERSION = '0.22.0';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
