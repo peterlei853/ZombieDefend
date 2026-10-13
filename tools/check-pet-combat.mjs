@@ -31,8 +31,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.22.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.22.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.25.0', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.25.0', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -46,7 +46,8 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.22.0'), 'document title is v0.22.0');
+assert(html.includes('v0.25.0'), 'document title is v0.25.0');
+assert(title.includes('startTitleBgm'), 'title plays bgm-title');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -60,8 +61,17 @@ assert(!hud.includes('沒有目標'), 'summon does not toast 沒有目標');
 assert(!combatSrc.includes('fieldLeft'), 'no on-field time limit');
 assert(!combatSrc.includes("phase = 'skill'"), 'skill cooldown is not a summon gate');
 assert(combatSrc.includes('playPetSummon'), 'summon SFX hook');
+assert(combatSrc.includes('playPetRecall'), 'recall SFX hook');
 assert(combatSrc.includes('playPetDeath'), 'death SFX hook');
 assert(combatSrc.includes('playPetReviveReady'), 'revive-ready SFX hook');
+assert(combatSrc.includes('playGoShout'), 'GO shout with the summon float');
+assert(combatSrc.includes('playBackShout'), 'Back shout with the recall float');
+assert(combatSrc.includes('playPetSleep'), 'barricade nap plays pet-sleep');
+assert(combatSrc.includes('playPetOrbReady'), 'orb-ready SFX hook');
+assert(combatSrc.includes('playPetOrbCast'), 'orb-cast SFX hook');
+assert(combatSrc.includes('playPetAttack'), 'pet attack SFX hook');
+assert(combatSrc.includes('ui-float-go'), 'GO float art');
+assert(combatSrc.includes('ui-float-back'), 'Back float art');
 assert(combatSrc.includes('OFF_FIELD_REGEN_RATIO'), 'recall regen uses the config ratio');
 
 for (const file of [

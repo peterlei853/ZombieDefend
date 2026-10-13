@@ -8,7 +8,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
-import { APP_VERSION } from '../data/GameConfig.js';
+import { APP_VERSION, isCriticalHp } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -78,6 +78,7 @@ export default class StageScene extends Phaser.Scene {
     this.registry.set('characterId', this.characterId);
 
     this.ended = false;
+    this._wallWarned = false;
     /** @type {Zombie[]} */
     this.zombies = [];
     /** Shuffled lane cycle so spawns spread across every guide before repeating. */
@@ -262,6 +263,7 @@ export default class StageScene extends Phaser.Scene {
       hold: 6500,
       y: 230,
     });
+    this.audio?.playUiToast();
     this.events.once('shutdown', () => this._clearBanner());
   }
 
@@ -335,8 +337,10 @@ export default class StageScene extends Phaser.Scene {
 
     if (this._announcedWave == null) {
       this._announcedWave = wave;
+      this.audio?.playWaveStart();
     } else if (wave !== this._announcedWave) {
       this._announcedWave = wave;
+      this.audio?.playWaveStart();
       this._showBanner({
         icon: UI.wave,
         title: `WAVE ${wave}`,
@@ -391,7 +395,18 @@ export default class StageScene extends Phaser.Scene {
     }
     let destroyed = false;
     if (barricadeDmg > 0) {
+      const beforeHp = this.barricade.hp;
       destroyed = this.barricade.applyDamage(barricadeDmg);
+      const maxHp = this.barricade.maxHp;
+      if (
+        !destroyed &&
+        !this._wallWarned &&
+        !isCriticalHp(beforeHp, maxHp) &&
+        isCriticalHp(this.barricade.hp, maxHp)
+      ) {
+        this._wallWarned = true;
+        this.audio?.playBarricadeWarning();
+      }
     }
     for (const z of attackBeats) {
       this._onBarricadeAttack(z);
@@ -500,7 +515,7 @@ export default class StageScene extends Phaser.Scene {
   _onWin() {
     if (this.ended) return;
     this.ended = true;
-    this.audio?.fadeBgm();
+    this.audio?.playVictory();
     this.registry.set('gold', this.gold);
     this._clearBanner();
 
@@ -532,7 +547,7 @@ export default class StageScene extends Phaser.Scene {
       depth: d + 3,
     });
 
-    this.time.delayedCall(900, () => {
+    this.time.delayedCall(1500, () => {
       overlay.destroy();
       this.scene.start('ShopScene', {
         stage: this.stage,
@@ -591,6 +606,7 @@ export default class StageScene extends Phaser.Scene {
       cy + 78,
       'RETRY',
       () => {
+        this.audio?.playUiClick();
         // Retry resets run gold to the purse this attempt started with.
         this.scene.start('StageScene', {
           stage: this.stage,

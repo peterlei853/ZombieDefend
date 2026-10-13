@@ -88,6 +88,7 @@ export class PetCombat {
       return { ok: true, reason: 'recall', id: actor.role.id };
     }
     this._deploy(actor, player);
+    this._showCallout(actor, 'go');
     this.scene?.audio?.playPetSummon?.();
     void zombies;
     return { ok: true, reason: 'ok', id: actor.role.id };
@@ -248,6 +249,7 @@ export class PetCombat {
       popLeft: 0,
       latched: false,
       latchId: null,
+      barked: false,
       destX: 0,
       destY: 0,
       x: 0,
@@ -284,6 +286,7 @@ export class PetCombat {
     actor.hurtLeft = 0;
     actor.latched = false;
     actor.latchId = null;
+    actor.barked = false;
     actor.castQueue = [];
     actor.destX = x;
     actor.destY = y;
@@ -301,6 +304,9 @@ export class PetCombat {
    */
   _recall(actor) {
     if (actor.phase !== 'field') return;
+    this._showCallout(actor, 'back');
+    this.scene?.audio?.playPetRecall?.();
+    this.scene?.audio?.playPetSleep?.();
     const sprite = actor.sprite;
     actor.sprite = null;
     actor.phase = 'ready';
@@ -430,6 +436,43 @@ export class PetCombat {
     this._fadeOut(sprite);
   }
 
+  /**
+   * GO! / Back! badge above the pet (~0.7s) and the matching shout.
+   * Origin (0.5, 1) sits the badge on the pet. Missing art stays silent-visual.
+   * @param {PetActor} actor
+   * @param {'go'|'back'} kind
+   */
+  _showCallout(actor, kind) {
+    const scene = this.scene;
+    if (kind === 'back') scene?.audio?.playBackShout?.();
+    else scene?.audio?.playGoShout?.();
+    const sprite = actor.sprite;
+    const key = kind === 'back' ? 'ui-float-back' : 'ui-float-go';
+    const add = scene?.add;
+    if (typeof add?.image !== 'function' || !scene?.textures?.exists?.(key)) return;
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    const baseY = y - layoutPx(44);
+    const img = add.image(x, baseY, key);
+    img.setOrigin?.(0.5, 1);
+    img.setScale?.(displayScaleFromY(y));
+    img.setDepth?.(depthFromY(y, 8));
+    scene.tweens?.add?.({
+      targets: img,
+      y: baseY - layoutPx(14),
+      alpha: 0,
+      delay: 380,
+      duration: 400,
+      onComplete: () => {
+        try {
+          img.destroy?.();
+        } catch (_) {
+          /* already destroyed */
+        }
+      },
+    });
+  }
+
   /** @param {Phaser.GameObjects.GameObject|null|undefined} sprite */
   _fadeOut(sprite) {
     if (!sprite) return;
@@ -507,6 +550,7 @@ export class PetCombat {
       remain -= orb.left;
       orb.left = 0;
       orb.flashLeft = GAME_CONFIG.PETS.ORB_FLASH_MS;
+      this.scene?.audio?.playPetOrbReady?.();
     }
   }
 
@@ -580,6 +624,10 @@ export class PetCombat {
     const dist = Math.hypot(dx, dy);
     const arrive = layoutPx(5);
     if (dist <= arrive) {
+      if (!actor.latched && !actor.barked) {
+        actor.barked = true;
+        this.scene?.audio?.playPetBark?.();
+      }
       actor.latched = true;
       sprite.x = actor.destX;
       sprite.y = actor.destY;
@@ -746,6 +794,8 @@ export class PetCombat {
       orb.left = orb.cdMs;
     }
     this.castLog.push({ id: actor.role.id, orb: orbIndex });
+    this.scene?.audio?.playPetOrbCast?.();
+    if (orbIndex <= 0) this.scene?.audio?.playPetAttack?.();
     if (orbIndex <= 0) return this._cast(actor, zombies, threat);
     if (orbIndex === 1) return this._castForm2(actor, zombies, threat);
     return this._castForm3(actor, zombies, threat);
