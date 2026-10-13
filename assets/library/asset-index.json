@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 431,
+    "total": 433,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -30,7 +30,7 @@
       },
       "ui": {
         "groups": 1,
-        "assets": 29
+        "assets": 31
       },
       "zombies": {
         "groups": 12,
@@ -66,6 +66,7 @@
       "concept": 21,
       "fx": 40,
       "icon": 57,
+      "image": 2,
       "spritesheet": 300
     }
   },
@@ -936,17 +937,19 @@
       "group": "hud-kit",
       "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
       "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures).",
+      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot.",
       "manifest": "assets/library/ui/manifest.json",
       "dir": "assets/library/ui",
       "thumb": "assets/library/previews/ui/hud-kit/preview.png",
       "sheets": [
         "assets/library/previews/ui/hud-kit/ui-kit-sheet.png"
       ],
-      "extras": [],
+      "extras": [
+        "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png"
+      ],
       "keyPrefix": "ui-",
       "mainKey": "ui-hp-bar-player",
-      "count": 29,
+      "count": 31,
       "frameSizes": [
         "16x16",
         "32x32",
@@ -961,7 +964,9 @@
         "248x36",
         "251x45",
         "512x192",
-        "512x288"
+        "512x288",
+        "688x384",
+        "1280x720"
       ],
       "framesRange": [
         1,
@@ -969,7 +974,8 @@
       ],
       "fpsRange": null,
       "types": [
-        "icon"
+        "icon",
+        "image"
       ],
       "keys": [
         "ui-hp-bar-player",
@@ -1000,7 +1006,9 @@
         "ui-font-hud-bold-atlas-gold",
         "ui-font-hud-bold-atlas-outlined",
         "ui-font-hud-tiny-atlas",
-        "ui-font-hud-tiny-atlas-cream"
+        "ui-font-hud-tiny-atlas-cream",
+        "ui-title-bg",
+        "ui-title-bg-hd"
       ]
     },
     {
@@ -9276,6 +9284,78 @@
       ],
       "extra": null,
       "action": "font-hud-tiny-atlas-cream"
+    },
+    {
+      "key": "ui-title-bg",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/title/ui-title-bg.png",
+      "type": "image",
+      "frameWidth": 688,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Title splash Zombie vs My Buddy — native night campus + girl + pets (688×384).",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "image",
+        "title",
+        "background",
+        "splash"
+      ],
+      "extra": null,
+      "action": "title-bg"
+    },
+    {
+      "key": "ui-title-bg-hd",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/title/ui-title-bg-hd.png",
+      "type": "image",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Title splash upscale 1280×720 (optional HD). Prefer ui-title-bg for pixel-perfect.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "image",
+        "title",
+        "background",
+        "splash"
+      ],
+      "extra": null,
+      "action": "title-bg-hd"
     },
     {
       "key": "zombie-brute-walk",

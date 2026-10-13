@@ -4,7 +4,7 @@
   "group": "hud-kit",
   "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
   "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures).",
+  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot.",
   "source": {
     "tool": "2-PixelLab Bot ui-kit",
     "note": "Cataloged by PixelLab Asset Pipeline from /workspace/ui-kit"
@@ -23,7 +23,9 @@
     "sheets": [
       "assets/library/previews/ui/hud-kit/ui-kit-sheet.png"
     ],
-    "extras": [],
+    "extras": [
+      "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png"
+    ],
     "animate": []
   },
   "assets": [
@@ -577,6 +579,46 @@
         "font",
         "hud"
       ]
+    },
+    {
+      "key": "ui-title-bg",
+      "path": "assets/library/ui/title/ui-title-bg.png",
+      "type": "image",
+      "frameWidth": 688,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Title splash Zombie vs My Buddy — native night campus + girl + pets (688×384).",
+      "tags": [
+        "ui",
+        "title",
+        "background",
+        "splash"
+      ]
+    },
+    {
+      "key": "ui-title-bg-hd",
+      "path": "assets/library/ui/title/ui-title-bg-hd.png",
+      "type": "image",
+      "frameWidth": 1280,
+      "frameHeight": 720,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Title splash upscale 1280×720 (optional HD). Prefer ui-title-bg for pixel-perfect.",
+      "tags": [
+        "ui",
+        "title",
+        "background",
+        "splash"
+      ]
     }
   ],
   "extra": {
@@ -585,6 +627,9 @@
       "assets/library/ui/fonts/ui-font-hud-tiny.ttf"
     ],
     "glyphOrder": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?:;'\"-+()0123456789/%*=_$",
-    "cjk": "Latin-only; engine fallback for Chinese until CJK atlas exists"
+    "cjk": "Latin-only; engine fallback for Chinese until CJK atlas exists",
+    "aliases": {
+      "bg-title-zombie-vs-buddy": "ui-title-bg"
+    }
   }
 }
