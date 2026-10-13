@@ -24,13 +24,14 @@
  * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
  * Nothing calls camera.shake: weapon fire, hits, overkill, and pet attacks.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
- * PETS is the v0.21.0 summon loop: tap to summon or recall, regen while
- * recalled, revive after death, and orb cooldowns that auto-cast. Form 1
- * is unlocked. Forms 2 and 3 have cast logic and placeholder FX only.
+ * PETS is the summon loop: tap to summon or recall, regen while recalled,
+ * revive after death, and orb cooldowns that auto-cast. Form 1 is unlocked.
+ * Forms 2 and 3 have cast logic and placeholder FX only. v0.22.1 adds the
+ * GO! / Back! floats and the recall sleep bed. The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.22.0';
+export const APP_VERSION = '0.22.1';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -124,6 +125,11 @@ export const GAME_CONFIG = {
    * for that second, then auto-casts and the cooldown restarts.
    * UNLOCKED_ORBS is 1 (form 1 only). Orbs 2–3 stay visible and locked.
    *
+   * FLOAT_HOLD_MS is 700 (inside 0.6–0.8s). The GO! / Back! sprite holds,
+   * then fades for FLOAT_FADE_MS. Recall walks to an empty bed behind the
+   * fence, plays sleep-start once, then the sleep loop. Resummon wakes
+   * that body and walks it out. HP, regen, and revive are unchanged.
+   *
    * ORB_CD_MS is [form1, form2, form3]:
    *   phoenix  9000 / 16000 / 24000
    *   panda   10000 / 18000 / 26000
@@ -141,6 +147,10 @@ export const GAME_CONFIG = {
     HURT_MS: 280,
     /** Scale-pop after the sprite appears behind the player. */
     POP_MS: 160,
+    /** GO! / Back! stay opaque this long, then fade. 0.6–0.8s. */
+    FLOAT_HOLD_MS: 700,
+    /** Fade after FLOAT_HOLD_MS. */
+    FLOAT_FADE_MS: 200,
     /** Death lockout before the bar can summon again. 18s. */
     REVIVE_CD_MS: 18000,
     /** Fraction of max HP restored per second while recalled (alive, off field). */

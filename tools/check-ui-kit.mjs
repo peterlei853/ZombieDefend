@@ -19,7 +19,7 @@ assert(supportsKitGlyphs('STAGE CLEAR'), 'stage clear is latin');
 assert(supportsKitGlyphs('GOLD 120'), 'gold line is latin');
 assert(supportsKitGlyphs('RETRY STARTS AT 0 GOLD'), 'retry line is latin');
 assert(supportsKitGlyphs('W/S LANE  SPACE SWAP'), 'tip line is latin');
-assert(supportsKitGlyphs('v0.22.0 STAGE 1'), 'version line is latin');
+assert(supportsKitGlyphs('v0.22.1 STAGE 1'), 'version line is latin');
 assert(!supportsKitGlyphs('遊戲結束'), 'chinese is not a kit glyph');
 assert(!supportsKitGlyphs('關卡通過'), 'chinese clear line is not a kit glyph');
 assert(!supportsKitGlyphs('第2波'), 'wave chinese is not a kit glyph');

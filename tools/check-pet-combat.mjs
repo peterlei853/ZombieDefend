@@ -9,10 +9,11 @@
  */
 import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
-import { PET_LINEUP, PET_STAGE_KEYS, stageLibraryFilter } from '../src/assets/petLineup.js';
-import { barricadeXAtY, layoutPx } from '../src/systems/DepthView.js';
+import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
+import { barricadeXAtY, depthFromY, layoutPx } from '../src/systems/DepthView.js';
 import { nearestFieldPet, petReachableBeforeFence } from '../src/systems/petAggro.js';
 import {
+  PET_AUDIO_KEYS,
   PetCombat,
   closestThreatWhere,
   inForwardBox,
@@ -31,8 +32,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.22.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.22.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.22.1', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.22.1', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -46,7 +47,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.22.0'), 'document title is v0.22.0');
+assert(html.includes('v0.22.1'), 'document title is v0.22.1');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -80,6 +81,12 @@ assert(PET_LINEUP.map((pet) => pet.id).join() === 'phoenix,panda,lion,dragon', '
 assert(PET_LINEUP.map((pet) => pet.element).join() === 'fire,ice,electric,poison', 'element map');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-skill'), 'phoenix skill loads');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-hurt'), 'phoenix hurt loads');
+assert(PET_STAGE_KEYS.has('pet-phoenix-baby-sleep-start'), 'phoenix sleep-start loads');
+assert(PET_STAGE_KEYS.has('pet-phoenix-baby-sleep'), 'phoenix sleep loop loads');
+assert(PET_STAGE_KEYS.has('pet-panda-baby-sleep'), 'panda sleep loads');
+assert(PET_STAGE_KEYS.has('pet-lion-baby-sleep-start'), 'lion sleep-start loads');
+assert(PET_STAGE_KEYS.has('pet-dragon-baby-sleep'), 'dragon sleep loads');
+assert(stageLibraryFilter({ category: 'pets', key: 'pet-lion-baby-sleep' }), 'baby sleep passes the stage filter');
 assert(PET_STAGE_KEYS.has('pet-panda-baby-move'), 'panda move loads');
 assert(PET_STAGE_KEYS.has('fx-pet-phoenix-spark-feather'), 'phoenix bolt loads');
 assert(PET_STAGE_KEYS.has('fx-pet-panda-roll-impact'), 'panda impact loads');
@@ -114,6 +121,14 @@ assert(GAME_CONFIG.PETS.HP > 0, 'pets have HP');
 assert(petsCfg.PHOENIX.DAMAGE < 30 && petsCfg.PANDA.DAMAGE < 30, 'pet hits stay under a handgun shot');
 assert(petsCfg.PANDA.RANGE >= 80, 'panda reach covers a zombie at the posts');
 assert(petsCfg.DRAGON.BURN > 0 && petsCfg.DRAGON.BURN_MS > 0, 'dragon burn is configured');
+assert(petsCfg.FLOAT_HOLD_MS >= 600 && petsCfg.FLOAT_HOLD_MS <= 800, 'GO!/Back! hold is 0.6–0.8s');
+assert(petsCfg.FLOAT_FADE_MS > 0, 'float fades after the hold');
+assert(PET_AUDIO_KEYS.go === 'go-shout' && PET_AUDIO_KEYS.back === 'back-shout' && PET_AUDIO_KEYS.sleep === 'pet-sleep', 'cue names are reserved');
+const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
+assert(!soundSrc.includes('go-shout') && !soundSrc.includes('back-shout') && !soundSrc.includes('pet-sleep'), 'SFX is not wired');
+assert(!combatSrc.includes("_cue('go-shout'") && !combatSrc.includes("_cueOptional('go-shout'"), 'go-shout is not cued');
+assert(combatSrc.includes('ui-float-go') && combatSrc.includes('ui-float-back'), 'float sprites use the primary keys');
+assert(!combatSrc.includes('ui-float-go-burst') || combatSrc.indexOf('ui-float-go-burst') > combatSrc.indexOf('ui-float-go'), 'non-burst float is preferred');
 
 const yNear = 220;
 const yFar = 520;
@@ -355,6 +370,67 @@ rooted.tickStatus(5000);
 rooted.update(0.05, 1100, null);
 assert(rooted.body.x > rootX, 'march resumes when the root ends');
 
+const bedScene = mockScene(audio);
+const beds = new PetCombat(bedScene);
+for (let i = 0; i < 4; i++) {
+  assert(beds.summon(i, player, []).ok, `bed summon ${PET_LINEUP[i].id}`);
+  assert(beds.summon(i, player, []).reason === 'recall', `bed recall ${PET_LINEUP[i].id}`);
+}
+assert(beds.fieldPets().length === 0, 'recalled pets are off the field while they seek a bed');
+assert(beds.floatLog.some((entry) => entry.key === 'ui-float-go'), 'summon uses ui-float-go');
+assert(beds.floatLog.some((entry) => entry.key === 'ui-float-back'), 'recall uses ui-float-back');
+assert(beds.floatLog.every((entry) => !String(entry.key).includes('burst')), 'burst floats stay unused when the primary exists');
+assert(beds.cueLog.includes('go-shout') && beds.cueLog.includes('back-shout'), 'go and back cue names are noted');
+pump(beds, bedScene, 2500, null, player);
+const slots = petLineupSlots();
+const spots = [0, 1, 2, 3].map((i) => beds.restSpot(i));
+for (let i = 0; i < 4; i++) {
+  const spot = spots[i];
+  const id = PET_LINEUP[i].id;
+  assert(spot && spot.rest === 'sleep', `${id} is asleep (${spot && spot.rest})`);
+  assert(spot.slot === i, `${id} keeps its own bed`);
+  assert(Math.abs(spot.x - slots[i].x) < 2 && Math.abs(spot.y - slots[i].y) < 2, `${id} reached the bed`);
+  assert(spot.x > barricadeXAtY(spot.y), `${id} sleeps on the safe side of the fence`);
+  assert(spot.depth === petSleepDepth(spot.y), `${id} depth is the sleep bias`);
+  assert(spot.depth < depthFromY(spot.y, -2), `${id} draws behind the fence posts`);
+  const body = bedScene._sprites.find((sprite) => sprite._played.includes(`pet-${id}-baby-sleep-start`));
+  assert(body, `${id} played sleep-start`);
+  const startAt = body._played.indexOf(`pet-${id}-baby-sleep-start`);
+  const loopAt = body._played.indexOf(`pet-${id}-baby-sleep:loop`);
+  assert(loopAt > startAt, `${id} loops sleep after sleep-start`);
+}
+for (let i = 0; i < spots.length; i++) {
+  for (let j = i + 1; j < spots.length; j++) {
+    const gap = Math.hypot(spots[i].x - spots[j].x, spots[i].y - spots[j].y);
+    assert(gap > layoutPx(40), `beds ${i} and ${j} do not overlap (${gap})`);
+  }
+}
+assert(beds.cueLog.includes('pet-sleep'), 'pet-sleep cue name is noted when they lie down');
+const home = beds.restSpot(0);
+const woke = beds.summon(0, player, [zombie]);
+assert(woke.reason === 'ok', 'resummon from sleep');
+const stepped = beds.fieldPets()[0];
+assert(Math.abs(stepped.x - home.x) < 1.5 && Math.abs(stepped.y - home.y) < 1.5, 'resummon does not teleport');
+assert(beds.restSpot(0) === null, 'a woken pet is not still in the bed list');
+const beforeThreat = Math.hypot(home.x - zombie.x, home.y - zombie.y);
+pump(beds, bedScene, 900, zombie, player);
+const walked = beds.fieldPets()[0];
+const afterThreat = Math.hypot(walked.x - zombie.x, walked.y - zombie.y);
+assert(afterThreat < beforeThreat - 40, `wakes, then walks out toward the threat (${beforeThreat} → ${afterThreat})`);
+beds.destroy();
+
+const fadeScene = mockScene(audio);
+const fades = new PetCombat(fadeScene);
+assert(fades.summon(0, player, []).ok, 'float summon');
+const go = fadeScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-go');
+assert(go && go.active, 'GO! sprite is beside the pet');
+assert(go.originX === 0.5 && go.originY === 1, 'GO! origin is bottom center');
+fades.update(petsCfg.FLOAT_HOLD_MS - 40, [], player);
+assert(go.active && go.alpha === 1, 'float holds through 0.6–0.8s');
+fades.update(40 + petsCfg.FLOAT_FADE_MS + 30, [], player);
+assert(go.active === false, 'float fades out after the hold');
+fades.destroy();
+
 if (failed) {
   console.error(`${failed} pet combat check(s) failed`);
   process.exit(1);
@@ -418,8 +494,10 @@ function mockScene(audio) {
     events: { once() {} },
     add: {
       text,
-      sprite(x, y) {
-        return mockPetSprite(scene, x, y, sprites);
+      sprite(x, y, key) {
+        const node = mockPetSprite(scene, x, y, sprites);
+        node.textureKey = key;
+        return node;
       },
       rectangle(x, y, w, h) {
         return mockRect(x, y, w, h);
@@ -450,13 +528,17 @@ function mockPetSprite(scene, x, y, sprites) {
     _anim: anim,
     _played: [],
     _flipped: false,
-    setOrigin() { return sprite; },
+    setOrigin(ox, oy) {
+      sprite.originX = ox;
+      sprite.originY = oy;
+      return sprite;
+    },
     setScale(sx, sy) {
       sprite.scaleX = sx;
       sprite.scaleY = sy ?? sx;
       return sprite;
     },
-    setDepth() { return sprite; },
+    setDepth(value) { sprite.depth = value; return sprite; },
     setFlipX(value) { sprite._flipped = value; return sprite; },
     setFlipY() { return sprite; },
     setAlpha(value) { sprite.alpha = value; return sprite; },
