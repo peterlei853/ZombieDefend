@@ -1,0 +1,77 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "pets",
+  "group": "pet-heads",
+  "title": "Pet UI Heads — baby portraits",
+  "titleZh": "寵物大頭 UI",
+  "description": "48x48 chibi head icons for Stage big-head recall HUD (v0.20.x). Transparent PNG, origin center. Grey-dead state is code desaturate — no separate grey assets.",
+  "source": {
+    "tool": "pixellab create_image_pro_flash",
+    "note": "Styled from pet-*-baby-idle frame 0; parallel fill for v0.20.0/v0.20.1 big-head UI swap-in"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [0.5, 0.5],
+    "facing": null,
+    "frameWidth": 48,
+    "frameHeight": 48,
+    "frames": 1
+  },
+  "preview": {
+    "thumb": "assets/library/previews/pets/pet-heads/heads-sheet.png",
+    "sheets": [
+      "assets/library/previews/pets/pet-heads/heads-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "ui-pet-phoenix-head",
+      "path": "assets/library/pets/ui/ui-pet-phoenix-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Azure / 藍羽 baby head — cyan phoenix crest, yellow beak. Big-head HUD.",
+      "tags": ["ui", "pet", "phoenix", "head", "icon"]
+    },
+    {
+      "key": "ui-pet-panda-head",
+      "path": "assets/library/pets/ui/ui-pet-panda-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Ink / 墨墨 baby head — black-white panda with green sprout. Big-head HUD.",
+      "tags": ["ui", "pet", "panda", "head", "icon"]
+    },
+    {
+      "key": "ui-pet-lion-head",
+      "path": "assets/library/pets/ui/ui-pet-lion-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Leo / 雷歐 baby head — golden lion with orange mane tuft. Big-head HUD.",
+      "tags": ["ui", "pet", "lion", "head", "icon"]
+    },
+    {
+      "key": "ui-pet-dragon-head",
+      "path": "assets/library/pets/ui/ui-pet-dragon-head.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [0.5, 0.5],
+      "facing": null,
+      "description": "Jadefire / 翠火 baby head — green dragon with cream horn. Big-head HUD.",
+      "tags": ["ui", "pet", "dragon", "head", "icon"]
+    }
+  ]
+}
