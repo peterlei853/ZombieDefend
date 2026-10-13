@@ -225,3 +225,37 @@ export function showDamageText(scene, x, y, damage, color, coalesceKey = null) {
   });
   return text;
 }
+
+/**
+ * Occasional crit pop above a pet hit. Display only — HP is unchanged.
+ * @param {Phaser.Scene} scene
+ * @param {number} x
+ * @param {number} y
+ * @returns {Phaser.GameObjects.Text|null}
+ */
+export function showCritText(scene, x, y) {
+  if (!scene?.add?.text || !Number.isFinite(x) || !Number.isFinite(y)) return null;
+  const text = scene.add
+    .text(x, y, 'CRIT!', {
+      fontFamily: 'system-ui, sans-serif',
+      fontSize: `${layoutPx(16)}px`,
+      fontStyle: 'bold',
+      color: '#ffe14a',
+      stroke: '#14080a',
+      strokeThickness: layoutPx(3),
+    })
+    .setOrigin(0.5, 0.5)
+    .setDepth(HUD_DEPTH + 42);
+  const juice = GAME_CONFIG.JUICE;
+  scene.tweens?.add?.({
+    targets: text,
+    y: y - juice.DAMAGE_TEXT_FLOAT_PX * LAYOUT_SCALE,
+    alpha: 0,
+    duration: juice.DAMAGE_TEXT_DURATION_MS,
+    ease: 'Back.easeOut',
+    onComplete: () => {
+      if (text.active) text.destroy();
+    },
+  });
+  return text;
+}

@@ -233,6 +233,48 @@ export class PetPortraitHud {
       if (ringRatio <= 0.02) continue;
       this._cdRing(slot.ring, orb.x, Math.min(0.999, ringRatio), view.color);
     }
+    this._syncEvolve(slot, view);
+  }
+
+  /**
+   * Tier stars and a thin EXP fill. Missing art leaves the bar unchanged.
+   * PIXELLAB_HOOK: vfx-evolve-stars-1|2|3
+   * @param {BarSlot} slot
+   * @param {BarView} view
+   */
+  _syncEvolve(slot, view) {
+    const scene = this.scene;
+    const tier = Math.max(1, Math.min(3, Math.floor(view.tier) || 1));
+    const key = `vfx-evolve-stars-${tier}`;
+    if (slot.stars && slot.starsKey !== key && scene.textures?.exists?.(key) && slot.stars.setTexture) {
+      slot.stars.setTexture(key);
+      slot.starsKey = key;
+    } else if (!slot.stars && scene.textures?.exists?.(key)) {
+      const make = scene.add?.image || scene.add?.sprite;
+      const node = make?.call(scene.add, 18 * LAYOUT_SCALE, -slot.barH / 2, key);
+      if (node) {
+        node.setOrigin?.(0.5, 1);
+        node.setScrollFactor?.(0);
+        slot.root?.add?.(node);
+        slot.stars = node;
+        slot.starsKey = key;
+      }
+    }
+    if (!slot.exp && scene.add?.rectangle) {
+      const w = 28 * LAYOUT_SCALE;
+      const h = Math.max(2, layoutPx(2));
+      const x = 30 * LAYOUT_SCALE;
+      const y = slot.barH / 2 - h;
+      const bg = scene.add.rectangle(x, y, w, h, 0x1a1208, 0.9).setOrigin(0, 0.5);
+      const fg = scene.add.rectangle(x, y, w, h, 0xffd54f, 1).setOrigin(0, 0.5);
+      slot.root?.add?.([bg, fg]);
+      slot.exp = { bg, fg, width: w };
+    }
+    if (slot.exp?.fg?.setScale) {
+      const ratio = Number.isFinite(view.expRatio) ? Math.max(0, Math.min(1, view.expRatio)) : 0;
+      slot.exp.fg.setScale(Math.max(ratio, 0.001), 1);
+      slot.exp.fg.setVisible?.(ratio > 0.02);
+    }
   }
 
   /**

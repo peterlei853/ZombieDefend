@@ -32,11 +32,13 @@
  * white fill for 180ms and a solid red fill for 200ms, lets the hurt
  * strip finish, and clamps GO! / Back! into the camera. v0.22.2 wires
  * the catalog enemy HP bar, parchment joystick, and clean title splash.
+ * v0.26 adds EXP orbs, evolution tiers, melee, skill telegraphs, nearby
+ * aggro, a tier-3 ult, and a shop stub. Pet hurt stays a solid red fill.
  * The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.22.2';
+export const APP_VERSION = '0.26.0';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -140,11 +142,9 @@ export const GAME_CONFIG = {
    * OFF_FIELD_REGEN_RATIO of that max per second, so a full heal is still
    * 4s. Forms 2 and 3 do not have their own max.
    *
-   * ORB_CD_MS is [form1, form2, form3]:
-   *   phoenix  9000 / 16000 / 24000
-   *   panda   10000 / 18000 / 26000
-   *   lion     8000 / 14000 / 22000
-   *   dragon  12000 / 20000 / 28000
+   * ORB_CD_MS is [S1, S2, S3] at a 3:2:1 ratio (S1 longest). v0.26 uses
+   * 12000 / 8000 / 4000 for every role. S3 is the tier-3 ultimate.
+   * Basic melee, knockback, and the skill radii live on MELEE / SKILL_R.
    */
   PETS: {
     /** Shared max HP for every pet and form. Zombies that reach a pet chew this instead of the barricade. */
@@ -193,15 +193,36 @@ export const GAME_CONFIG = {
     /** Form 1. Evolution can raise this; orbs above it stay locked. */
     UNLOCKED_ORBS: 1,
     /**
-     * Per-pet orb cooldowns in ms: [spark/roll/slash/breath, form 2, form 3].
-     * Orb 1 is the v0.19 baby skill. Orbs 2–3 are longer and longest.
+     * Per-pet skill cooldowns in ms: [S1, S2, S3]. Ratio 3:2:1.
+     * S1 is the baby skill. S2 is the mid AoE. S3 is the ultimate.
      */
     ORB_CD_MS: {
-      phoenix: [9000, 16000, 24000],
-      panda: [10000, 18000, 26000],
-      lion: [8000, 14000, 22000],
-      dragon: [12000, 20000, 28000],
+      phoenix: [12000, 8000, 4000],
+      panda: [12000, 8000, 4000],
+      lion: [12000, 8000, 4000],
+      dragon: [12000, 8000, 4000],
     },
+    /** No living threat inside this field radius: walk behind the fence and sleep. */
+    AGGRO_R: 96,
+    /** Basic melee box. Lengths are field px. Wind-up then recovery. */
+    MELEE: {
+      DAMAGE: 8,
+      WINDUP_MS: 120,
+      RECOVER_MS: 200,
+      GAP_MS: 260,
+      RANGE: 42,
+      Y_HALF: 28,
+      STEP_PX: 16,
+    },
+    /** Skill telegraph radii, field px. S3 is a forward half-screen rect. */
+    SKILL_R: { s1: 56, s2: 112 },
+    /** Leftward pet shove. Field px over ms. Not the handgun / pellet shove. */
+    KNOCKBACK_PX: 100,
+    KNOCKBACK_MS: 150,
+    /** Semi-transparent tell before skill damage. */
+    TELEGRAPH_MS: 200,
+    HITSTOP_S2_MS: 50,
+    HITSTOP_S3_MS: 80,
     /** 0-based skill frame that releases the hit. */
     RELEASE_FRAME: 3,
     /** Safety cap if a skill strip never finishes. */

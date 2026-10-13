@@ -206,6 +206,19 @@ export class DefenderGroup {
     return this.petCombat?.fieldPets() || [];
   }
 
+  /** True while a tier-3 ultimate letterbox is holding combat. */
+  combatFrozen() {
+    return !!this.petCombat?.ultPlaying;
+  }
+
+  /**
+   * Advance only the ult overlay. Player, pets, and bullets stay put.
+   * @param {number} deltaMs real milliseconds, not hitlag
+   */
+  tickCombatFreeze(deltaMs) {
+    return this.petCombat?.update(deltaMs, []) || { gold: 0, kills: 0 };
+  }
+
   /**
    * @param {number} deltaMs
    * @param {import('./Zombie.js').Zombie[]} zombies
