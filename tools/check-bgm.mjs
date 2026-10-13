@@ -3,7 +3,8 @@
  * Run: node tools/check-bgm.mjs
  *
  * Title, stage, shop, and victory loop at 0.28. Stage stops before the
- * game-over sting and before the victory bed. No overnight combat SFX.
+ * game-over sting and before the victory bed. Main's ult / exp / melee
+ * preload stays; this pass does not add wave, shout, or shop cues.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import {
@@ -38,10 +39,33 @@ assert(AUDIO_VOLUME.bgm === 0.28, 'BGM volume is 0.28');
 assert(BGM_TITLE_KEY === 'bgm-title' && BGM_KEY === 'bgm-stage', 'title and stage keys');
 assert(BGM_SHOP_KEY === 'bgm-shop' && BGM_VICTORY_KEY === 'bgm-victory', 'shop and victory keys');
 
-const extra = GAME_AUDIO.filter((clip) =>
-  /^(wave-|pet-|go-shout|back-shout|barricade-warning|ui-confirm|ui-toast|ui-cancel|shop-buy|heal|pearl)/.test(clip.key)
-);
-assert(extra.length === 0, `no overnight SFX in the preload list (${extra.map((c) => c.key).join(',')})`);
+const NOT_THIS_PASS = [
+  'wave-start',
+  'wave-clear',
+  'go-shout',
+  'back-shout',
+  'barricade-warning',
+  'ui-confirm',
+  'ui-toast',
+  'ui-cancel',
+  'shop-buy',
+  'heal',
+  'pearl-pickup',
+  'pet-summon',
+  'pet-death',
+  'pet-sleep',
+  'pet-bark',
+  'pet-attack',
+  'pet-orb-ready',
+  'pet-orb-cast',
+  'pet-recall',
+  'pet-revive-ready',
+];
+const extra = GAME_AUDIO.filter((clip) => NOT_THIS_PASS.includes(clip.key));
+assert(extra.length === 0, `BGM pass did not add those cues (${extra.map((c) => c.key).join(',')})`);
+for (const key of ['ult-phoenix', 'pet-melee-hit', 'exp-orb-drop', 'skill-telegraph']) {
+  assert(GAME_AUDIO.some((clip) => clip.key === key), `${key} from main stays preloaded`);
+}
 
 const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
