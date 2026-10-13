@@ -34,8 +34,6 @@ import {
   HERO_ORIGIN_Y,
   heroLocomotionKeys,
 } from '../assets/heroLoadout.js';
-import { libraryAsset } from '../assets/libraryAssets.js';
-import { petDepth, petDisplayScale, petLineupSlots } from '../assets/petLineup.js';
 import { PetCombat } from '../systems/PetCombat.js';
 
 /** Player sits this many px right of the grass edge (safe zone), in field px. */
@@ -67,9 +65,8 @@ const WEAPON_GRIP = {
 };
 
 /**
- * Player on the barricade lane, plus the four baby pets standing on the
- * safe side of the fence. Pets do not follow the hero and do not leave
- * their lineup slots. PetCombat runs idle → attack → idle on those sprites.
+ * Player on the barricade lane. Baby pets are not spawned here — the
+ * portrait HUD summons them through `summonPet`. PetCombat owns the sprites.
  */
 export class DefenderGroup {
   /**
@@ -102,14 +99,7 @@ export class DefenderGroup {
     this.player = this._createPlayerBody(scene, playerX, playerY, playerScale);
     this.weaponProp = this._createWeaponProp(scene, playerX, playerY);
 
-    this._petSlots = petLineupSlots();
-    /** @type {Phaser.GameObjects.Sprite[]} */
-    this.pets = [];
-    for (const slot of this._petSlots) {
-      const pet = this._createLineupPet(scene, slot);
-      if (pet) this.pets.push(pet);
-    }
-    this.petCombat = new PetCombat(scene, this.pets);
+    this.petCombat = new PetCombat(scene);
 
     // W/S + arrow keys for Y-only move. Touch stick is optional (VirtualControls).
     const keyboard = scene.input.keyboard;
@@ -197,26 +187,22 @@ export class DefenderGroup {
   }
 
   /**
-   * Baby idle on a fixed fence slot. No placeholder square if the strip
-   * is missing. PetCombat plays the skill strip in place — this sprite
-   * is not parented to the hero.
-   * PIXELLAB_HOOK: pet-<id>-baby-idle, feet origin, faces west.
-   * @param {Phaser.Scene} scene
-   * @param {{ id?: string, key: string, x: number, y: number }} slot
+   * Tap a ready portrait. No enemies leaves the skill cooldown untouched.
+   * @param {number} index party order
+   * @param {import('./Zombie.js').Zombie[]} zombies
    */
-  _createLineupPet(scene, slot) {
-    if (!scene.textures?.exists?.(slot.key)) return null;
-    const asset = libraryAsset(scene, slot.key);
-    const origin = asset?.origin ?? [0.5, 1];
-    const pet = scene.add.sprite(slot.x, slot.y, slot.key, 0);
-    pet.setOrigin(origin[0], origin[1]);
-    pet.setScale(petDisplayScale(slot.y));
-    pet.setDepth(petDepth(slot.y));
-    pet.setData('petId', slot.id);
-    // Library pets face west (toward the march). Do not flip.
-    if (typeof pet.setFlipX === 'function') pet.setFlipX(false);
-    if (scene.anims?.exists?.(slot.key)) pet.play(slot.key);
-    return pet;
+  summonPet(index, zombies) {
+    return (
+      this.petCombat?.summon(index, { x: this.player.x, y: this.player.y }, zombies) || {
+        ok: false,
+        reason: 'missing',
+      }
+    );
+  }
+
+  /** Living summoned pets for zombie aggro. */
+  fieldPets() {
+    return this.petCombat?.fieldPets() || [];
   }
 
   /**
@@ -263,7 +249,11 @@ export class DefenderGroup {
     if (fired === 'shotgun') this._onShotgunVolley();
     else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     this._updateStance(dy, shotgunLocked ? 0 : dx);
-    const petGain = this.petCombat?.update(deltaMs, zombies) || { gold: 0, kills: 0 };
+    const petGain =
+      this.petCombat?.update(deltaMs, zombies, { x: this.player.x, y: this.player.y }) || {
+        gold: 0,
+        kills: 0,
+      };
 
     // Move only. Range / off-view retirement happens after hit tests so a
     // pellet can still connect on the frame it reaches maxDistance.
@@ -670,7 +660,5 @@ export class DefenderGroup {
     this.weaponProp?.destroy();
     this.weaponProp = null;
     this.player.destroy();
-    for (const pet of this.pets) pet.destroy();
-    this.pets = [];
   }
 }

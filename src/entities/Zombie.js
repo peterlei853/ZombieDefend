@@ -16,7 +16,8 @@ import {
   zombieActionKey,
   zombieSheetKey,
 } from '../assets/zombieSprites.js';
-import { depthFromY, displayScaleFromY, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
+import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
+import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 
@@ -36,6 +37,8 @@ let _zombieId = 0;
 
 /**
  * Lane zombie. Walks right until barricade contact, then bites.
+ * A summoned pet in front of the fence is chased first. Pets behind the
+ * posts do not pull the zombie through the barricade.
  * Library skins (`zombie-<group>-walk|run|attack|die`) replace the rectangle
  * when that texture is loaded; otherwise the legacy west strip, then the
  * colored square. Feet stay on the lane (origin 0.5, 1). East library art
@@ -84,6 +87,8 @@ export class Zombie {
      * bank into one later popup.
      */
     this.barricadeDmgAccum = 0;
+    /** Pet being bitten this frame. Null while the barricade is the target. */
+    this.petBiteTarget = null;
     this.goldValue = getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
     this._lastX = cfg.x;
@@ -295,41 +300,129 @@ export class Zombie {
 
   /**
    * @param {number} deltaSec
-   * @param {number} contactX
+   * @param {number} contactX barricade face. The halt math is unchanged.
+   * @param {{ x: number, y: number, hp?: number, alive?: boolean, radius?: number }|null} [pet]
    */
-  update(deltaSec, contactX) {
+  update(deltaSec, contactX, pet = null) {
     if (!this.alive) return;
 
-    if (!this.atBarricade) {
-      // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
-      // Critical HP uses CRIT_SPEED_MULT (stumble sheet or not).
-      const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
-      const nextX = this.body.x + speed * LAYOUT_SCALE * deltaSec;
-      const halt = contactX - this.displayHalf;
-      if (nextX >= halt) {
-        this.body.x = halt;
-        this.atBarricade = true;
-        this._haltX = halt;
-        this._stopWalkAnim();
+    const chase = this._petToChase(pet, contactX);
+    if (chase) {
+      this._chasePet(deltaSec, chase, contactX);
+    } else {
+      this.petBiteTarget = null;
+      if (!this.atBarricade) {
+        // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
+        // Critical HP uses CRIT_SPEED_MULT (stumble sheet or not).
+        const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
+        const nextX = this.body.x + speed * LAYOUT_SCALE * deltaSec;
+        const halt = contactX - this.displayHalf;
+        if (nextX >= halt) {
+          this.body.x = halt;
+          this.atBarricade = true;
+          this._haltX = halt;
+          this._stopWalkAnim();
+        } else {
+          this.body.x = nextX;
+        }
+      }
+
+      if (this.atBarricade) {
+        this._attackCooldown -= deltaSec;
+        if (this._attackCooldown <= 0) {
+          this._attackCooldown += 1;
+          if (this._attackCooldown < 0) this._attackCooldown = 0;
+          this._playAttackPunch();
+          this._attackBeat = true;
+        }
       } else {
-        this.body.x = nextX;
+        this._syncLocomotion();
       }
     }
 
+    this._applyDepth();
+    this._syncBars();
+  }
+
+  /**
+   * Nearest living pet already in front of the fence, or null.
+   * @param {{ x: number, y: number, hp?: number, alive?: boolean, radius?: number }|null} pet
+   * @param {number} contactX
+   */
+  _petToChase(pet, contactX) {
+    if (!pet) return null;
+    const halt = contactX - this.displayHalf;
+    const radius = Number.isFinite(pet.radius) ? pet.radius : layoutPx(GAME_CONFIG.PETS.BITE_RADIUS);
+    const reach = this.displayHalf + radius;
+    if (!petReachableBeforeFence(pet, halt, reach)) return null;
+    return pet;
+  }
+
+  /**
+   * @param {{ x: number, y: number, radius?: number }} pet
+   */
+  _biteReach(pet) {
+    const radius = Number.isFinite(pet.radius) ? pet.radius : layoutPx(GAME_CONFIG.PETS.BITE_RADIUS);
+    return this.displayHalf + radius;
+  }
+
+  /**
+   * Steer toward the pet and bite it. X never passes the barricade halt.
+   * @param {number} deltaSec
+   * @param {{ x: number, y: number, radius?: number }} pet
+   * @param {number} contactX
+   */
+  _chasePet(deltaSec, pet, contactX) {
+    const reach = this._biteReach(pet);
+    const dx = pet.x - this.body.x;
+    const dy = pet.y - this.body.y;
+    const dist = Math.hypot(dx, dy);
     if (this.atBarricade) {
+      this.atBarricade = false;
+      this._haltX = null;
+      this.scene?.tweens?.killTweensOf?.(this.body);
+    }
+    if (dist <= reach) {
+      this.petBiteTarget = pet;
+      if (this._haltX == null) this._haltX = this.body.x;
       this._attackCooldown -= deltaSec;
       if (this._attackCooldown <= 0) {
         this._attackCooldown += 1;
         if (this._attackCooldown < 0) this._attackCooldown = 0;
         this._playAttackPunch();
         this._attackBeat = true;
+      } else {
+        this._stopWalkAnim();
       }
-    } else {
-      this._syncLocomotion();
+      return;
     }
+    this.petBiteTarget = null;
+    this._haltX = null;
+    this.scene?.tweens?.killTweensOf?.(this.body);
+    const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
+    const step = speed * LAYOUT_SCALE * deltaSec;
+    if (dist > 0.001) {
+      this.body.x += (dx / dist) * step;
+      this.body.y += (dy / dist) * step;
+    }
+    const halt = contactX - this.displayHalf;
+    if (this.body.x > halt) this.body.x = halt;
+    const yMin = grassYMin();
+    const yMax = grassYMax();
+    if (this.body.y < yMin) this.body.y = yMin;
+    if (this.body.y > yMax) this.body.y = yMax;
+    this.laneY = this.body.y;
+    this._syncLocomotion();
+  }
 
-    this._applyDepth();
-    this._syncBars();
+  /**
+   * Contact DPS while biting a pet. Barricade DPS stays on contactDamage.
+   * @param {number} deltaSec
+   * @returns {number}
+   */
+  petContactDamage(deltaSec) {
+    if (!this.alive || !this.petBiteTarget) return 0;
+    return this.dps * deltaSec;
   }
 
   /**
