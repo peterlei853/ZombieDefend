@@ -3,7 +3,8 @@
  * Run: node tools/check-v028.mjs
  *
  * Stage 1 spawns three profession skins. Each later stage adds one.
- * The 64px zombie-office-* sheets stay as the fallback and are not deleted.
+ * A missing strip falls back to office-worker-v2. Retired zombie-office-*
+ * keys are not a skin and are not required.
  * Shop buys and upgrades spend only through the spendGold callback.
  * Wave HP, gold-by-HP, and barricade HP stay on the v0.27 table.
  */
@@ -19,7 +20,12 @@ import {
 } from '../src/data/shopList.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS, waveDefsForStage } from '../src/data/waves.js';
 import { WaveManager } from '../src/systems/WaveManager.js';
-import { resolveSpawnSkin, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
+import {
+  isRetiredOfficeKey,
+  resolveSpawnSkin,
+  SPAWN_FALLBACK_SKIN,
+  ZOMBIE_LIBRARY_SKINS,
+} from '../src/assets/zombieSprites.js';
 
 let failed = 0;
 
@@ -29,7 +35,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.28.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.28.1', `APP_VERSION ${APP_VERSION}`);
 assert(getGoldByHP(40) === 10 && getGoldByHP(105) === 15 && getGoldByHP(165) === 20, 'gold-by-HP unchanged');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP unchanged');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'wave counts unchanged');
@@ -67,14 +73,19 @@ const mix2 = skinCounts(2);
 assert(Object.keys(mix2).sort().join() === 'chef,delivery,nurse,office-worker-v2', `stage 2 spawn mix ${Object.keys(mix2)}`);
 assert(Object.values(mix2).every((n) => n > 0), 'stage 2 uses every roster skin');
 
-const office = ZOMBIE_LIBRARY_SKINS['office-worker'];
 const v2 = ZOMBIE_LIBRARY_SKINS['office-worker-v2'];
 const nurse = ZOMBIE_LIBRARY_SKINS.nurse;
-assert(office?.actions?.walk === 'zombie-office-walk', 'old zombie-office-walk key remains');
-assert(v2?.actions?.walk === 'zombie-office-worker-v2-walk' && v2.fallbackId === 'office-worker', 'v2 prefers its own strip and falls back to office');
+assert(!ZOMBIE_LIBRARY_SKINS['office-worker'], 'retired office-worker skin is not shipped');
+assert(SPAWN_FALLBACK_SKIN === 'office-worker-v2', 'spawn fallback is office-worker-v2');
+assert(v2?.actions?.walk === 'zombie-office-worker-v2-walk' && !v2.fallbackId, 'v2 has no fallback to the removed sheets');
 assert(ZOMBIE_LIBRARY_SKINS.delivery.actions.walk === 'zombie-delivery-walk', 'delivery key');
 assert(ZOMBIE_LIBRARY_SKINS.chef.actions.walk === 'zombie-chef-walk', 'chef key');
 assert(nurse?.actions?.attach === 'zombie-nurse-attach', 'nurse attach strip is wired');
+assert(isRetiredOfficeKey('zombie-office-walk') && !isRetiredOfficeKey('zombie-office-worker-v2-walk'), 'retired office keys are distinct from v2');
+
+const spriteSrc = readFileSync(new URL('../src/assets/zombieSprites.js', import.meta.url), 'utf8');
+assert(!spriteSrc.includes('zombie-office-walk'), 'gameplay does not name zombie-office-walk');
+assert(!spriteSrc.includes("'office-worker'"), 'gameplay does not ship the office-worker skin id');
 
 function sceneWith(keys) {
   const has = new Set(keys);
@@ -84,12 +95,15 @@ function sceneWith(keys) {
   };
 }
 
-const onlyOffice = sceneWith(['zombie-office-walk']);
-assert(resolveSpawnSkin(onlyOffice, 'office-worker-v2', 'walker')?.id === 'office-worker', 'missing v2 sheet uses zombie-office');
-const both = sceneWith(['zombie-office-walk', 'zombie-office-worker-v2-walk', 'zombie-delivery-walk']);
-assert(resolveSpawnSkin(both, 'office-worker-v2', 'walker')?.id === 'office-worker-v2', 'v2 wins when its strip is loaded');
-assert(resolveSpawnSkin(both, 'delivery', 'walker')?.id === 'delivery', 'delivery is not replaced when loaded');
-assert(resolveSpawnSkin(onlyOffice, 'delivery', 'walker')?.id === 'office-worker', 'missing delivery falls back to old office');
+const onlyRetired = sceneWith(['zombie-office-walk']);
+assert(resolveSpawnSkin(onlyRetired, 'office-worker-v2', 'walker') == null, 'retired office sheet is not a fallback');
+assert(resolveSpawnSkin(onlyRetired, 'delivery', 'walker') == null, 'missing delivery does not use zombie-office');
+assert(resolveSpawnSkin(onlyRetired, 'office-worker', 'walker') == null, 'the old skin id does not use a retired sheet');
+const live = sceneWith(['zombie-office-walk', 'zombie-office-worker-v2-walk', 'zombie-delivery-walk']);
+assert(resolveSpawnSkin(live, 'office-worker-v2', 'walker')?.id === 'office-worker-v2', 'v2 wins when its strip is loaded');
+assert(resolveSpawnSkin(live, 'delivery', 'walker')?.id === 'delivery', 'delivery is not replaced when loaded');
+assert(resolveSpawnSkin(live, 'chef', 'walker')?.id === 'office-worker-v2', 'a missing profession falls back to office-worker-v2 only');
+assert(resolveSpawnSkin(live, 'office-worker', 'walker')?.id === 'office-worker-v2', 'a stale office id falls back to v2');
 
 let spends = 0;
 const purse = { gold: 80 };
