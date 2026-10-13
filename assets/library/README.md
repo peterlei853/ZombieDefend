@@ -35,6 +35,7 @@ assets/library/
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
+├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
 ```
@@ -58,6 +59,7 @@ Each texture key equals its file name without `.png`. Phaser texture keys and an
 | Environment | `barricade-post`, `barricade-post-damaged` | 32×64 wooden picket posts, origin (0.5, 1.0) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
+| UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
 
 The office worker's key prefix is `zombie-office-`, kept from its source manifest; its folder is `office-worker/`. The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
 

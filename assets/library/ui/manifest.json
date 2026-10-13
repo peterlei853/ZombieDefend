@@ -1,0 +1,590 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "ui",
+  "group": "hud-kit",
+  "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
+  "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
+  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures).",
+  "source": {
+    "tool": "2-PixelLab Bot ui-kit",
+    "note": "Cataloged by PixelLab Asset Pipeline from /workspace/ui-kit"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frames": 1
+  },
+  "preview": {
+    "thumb": "assets/library/previews/ui/hud-kit/preview.png",
+    "sheets": [
+      "assets/library/previews/ui/hud-kit/ui-kit-sheet.png"
+    ],
+    "extras": [],
+    "animate": []
+  },
+  "assets": [
+    {
+      "key": "ui-hp-bar-player",
+      "path": "assets/library/ui/bars/ui-hp-bar-player.png",
+      "type": "icon",
+      "frameWidth": 248,
+      "frameHeight": 36,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Player HP stone frame, parchment rim, cyan accents, orange gems.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-bar-barricade",
+      "path": "assets/library/ui/bars/ui-hp-bar-barricade.png",
+      "type": "icon",
+      "frameWidth": 251,
+      "frameHeight": 45,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Barricade HP wood-brown + stone frame.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-bar-enemy",
+      "path": "assets/library/ui/bars/ui-hp-bar-enemy.png",
+      "type": "icon",
+      "frameWidth": 96,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Compact enemy / world HP frame.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-trough",
+      "path": "assets/library/ui/bars/ui-hp-trough.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Empty HP trough strip (stretch).",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-fill-full",
+      "path": "assets/library/ui/bars/ui-hp-fill-full.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "HP fill red (full).",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-fill-mid",
+      "path": "assets/library/ui/bars/ui-hp-fill-mid.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "HP fill yellow (mid).",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-fill-low",
+      "path": "assets/library/ui/bars/ui-hp-fill-low.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "HP fill dark red (low).",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-hp-fill-ok",
+      "path": "assets/library/ui/bars/ui-hp-fill-ok.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "HP fill green (ok).",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-barricade-fill-ok",
+      "path": "assets/library/ui/bars/ui-barricade-fill-ok.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Barricade fill green.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-barricade-fill-mid",
+      "path": "assets/library/ui/bars/ui-barricade-fill-mid.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Barricade fill yellow.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-barricade-fill-low",
+      "path": "assets/library/ui/bars/ui-barricade-fill-low.png",
+      "type": "icon",
+      "frameWidth": 120,
+      "frameHeight": 10,
+      "frames": 1,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "description": "Barricade fill red.",
+      "tags": [
+        "ui",
+        "bar",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-dialog-panel",
+      "path": "assets/library/ui/panels/ui-dialog-panel.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 288,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Stone dialog window with parchment inset.",
+      "tags": [
+        "ui",
+        "panel",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-toast-panel",
+      "path": "assets/library/ui/toasts/ui-toast-panel.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wide toast / tip banner with cyan rune pillars.",
+      "tags": [
+        "ui",
+        "toast",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-btn-parchment",
+      "path": "assets/library/ui/buttons/ui-btn-parchment.png",
+      "type": "icon",
+      "frameWidth": 73,
+      "frameHeight": 33,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Empty parchment button (label via font).",
+      "tags": [
+        "ui",
+        "button",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-btn-piece-1",
+      "path": "assets/library/ui/buttons/ui-btn-piece-1.png",
+      "type": "icon",
+      "frameWidth": 116,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Small UI frame piece.",
+      "tags": [
+        "ui",
+        "button",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-btn-piece-2",
+      "path": "assets/library/ui/buttons/ui-btn-piece-2.png",
+      "type": "icon",
+      "frameWidth": 234,
+      "frameHeight": 148,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Large panel piece (9-slice candidate).",
+      "tags": [
+        "ui",
+        "button",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-hp-heart",
+      "path": "assets/library/ui/icons/ui-icon-hp-heart.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "HP heart tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-wave-warn",
+      "path": "assets/library/ui/icons/ui-icon-wave-warn.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave warning tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-heal",
+      "path": "assets/library/ui/icons/ui-icon-heal.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Heal tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-damage",
+      "path": "assets/library/ui/icons/ui-icon-damage.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Damage tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-pause",
+      "path": "assets/library/ui/icons/ui-icon-pause.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Pause tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-ready",
+      "path": "assets/library/ui/icons/ui-icon-ready.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Ready tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-gameover",
+      "path": "assets/library/ui/icons/ui-icon-gameover.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Game over tip icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-icon-select-x",
+      "path": "assets/library/ui/icons/ui-icon-select-x.png",
+      "type": "icon",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Select / close X icon.",
+      "tags": [
+        "ui",
+        "icon",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-font-hud-bold-atlas",
+      "path": "assets/library/ui/fonts/ui-font-hud-bold-atlas.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "description": "HUD bold font atlas black silhouettes (tint in engine). Glyph 16px, 10x8.",
+      "tags": [
+        "ui",
+        "font",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-font-hud-bold-atlas-gold",
+      "path": "assets/library/ui/fonts/ui-font-hud-bold-atlas-gold.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "description": "HUD bold atlas cream-gold fill.",
+      "tags": [
+        "ui",
+        "font",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-font-hud-bold-atlas-outlined",
+      "path": "assets/library/ui/fonts/ui-font-hud-bold-atlas-outlined.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "description": "Prefer for HUD — gold fill + navy outline.",
+      "tags": [
+        "ui",
+        "font",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-font-hud-tiny-atlas",
+      "path": "assets/library/ui/fonts/ui-font-hud-tiny-atlas.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "description": "HUD tiny font atlas black silhouettes. Glyph 8px.",
+      "tags": [
+        "ui",
+        "font",
+        "hud"
+      ]
+    },
+    {
+      "key": "ui-font-hud-tiny-atlas-cream",
+      "path": "assets/library/ui/fonts/ui-font-hud-tiny-atlas-cream.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "description": "HUD tiny atlas cream tint for small labels.",
+      "tags": [
+        "ui",
+        "font",
+        "hud"
+      ]
+    }
+  ],
+  "extra": {
+    "ttf": [
+      "assets/library/ui/fonts/ui-font-hud-bold.ttf",
+      "assets/library/ui/fonts/ui-font-hud-tiny.ttf"
+    ],
+    "glyphOrder": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?:;'\"-+()0123456789/%*=_$",
+    "cjk": "Latin-only; engine fallback for Chinese until CJK atlas exists"
+  }
+}

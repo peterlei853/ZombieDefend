@@ -25,8 +25,8 @@ CATALOG_MD_REL = f'{LIB_REL}/CATALOG.md'
 CATALOG_HTML_REL = f'{LIB_REL}/catalog.html'
 PAGES_URL = 'https://peterlei853.github.io/ZombieDefend/assets/library/catalog.html'
 
-CATEGORY_ORDER = ['hero', 'pets', 'zombies', 'bosses', 'fx', 'pickups', 'environment', 'backgrounds', 'concepts']
-CATEGORY_TITLES = {'hero': 'Hero', 'pets': 'Pets', 'zombies': 'Zombies', 'bosses': 'Bosses', 'fx': 'Shared FX',
+CATEGORY_ORDER = ['hero', 'pets', 'ui', 'zombies', 'bosses', 'fx', 'pickups', 'environment', 'backgrounds', 'concepts']
+CATEGORY_TITLES = {'hero': 'Hero', 'pets': 'Pets', 'ui': 'UI', 'zombies': 'Zombies', 'bosses': 'Bosses', 'fx': 'Shared FX',
                    'pickups': 'Pickups', 'environment': 'Environment', 'backgrounds': 'Backgrounds', 'concepts': 'Concepts'}
 VALID_TYPES = {'spritesheet', 'image', 'fx', 'icon', 'background', 'concept'}
 MAX_PREVIEW_BYTES = 1_500_000

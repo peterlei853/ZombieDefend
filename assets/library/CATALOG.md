@@ -7,6 +7,7 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 86 |
 | [Pets](#pets) | 17 | 88 |
+| [UI](#ui) | 1 | 29 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
@@ -14,7 +15,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **41** | **402** |
+| **Total** | **42** | **431** |
 
 <a id="hero"></a>
 ## Hero
@@ -419,6 +420,50 @@ Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left 
 | `ui-pet-orb-dragon-dark` | [ui-pet-orb-dragon-dark.png](pets/ui/ui-pet-orb-dragon-dark.png) | 16x16 | icon | Dragon skill orb — dark/empty (green-poison family). |
 | `ui-pet-orb-dragon-lit` | [ui-pet-orb-dragon-lit.png](pets/ui/ui-pet-orb-dragon-lit.png) | 16x16 | icon | Dragon skill orb — lit/ready. |
 | `ui-pet-orb-dragon-flash` | [ui-pet-orb-dragon-flash.png](pets/ui/ui-pet-orb-dragon-flash.png) | 16x16 | icon | Dragon skill orb — flash blink frame. |
+
+<a id="ui"></a>
+## UI
+
+### Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons (統一 UI 套件（字體／血條／面板／按鈕／提示圖示）)
+
+<img src="previews/ui/hud-kit/preview.png" alt="hud-kit preview" height="140">
+
+v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures).
+
+- group `hud-kit` · 29 assets · frame 16x16, 32x32, 64x80, 73x33, 96x32, 116x56, 120x10, 128x16, 128x160, 234x148, 248x36, 251x45, 512x192, 512x288 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
+- previews: [ui-kit-sheet.png](previews/ui/hud-kit/ui-kit-sheet.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `ui-hp-bar-player` | [ui-hp-bar-player.png](ui/bars/ui-hp-bar-player.png) | 248x36 | icon | Player HP stone frame, parchment rim, cyan accents, orange gems. |
+| `ui-hp-bar-barricade` | [ui-hp-bar-barricade.png](ui/bars/ui-hp-bar-barricade.png) | 251x45 | icon | Barricade HP wood-brown + stone frame. |
+| `ui-hp-bar-enemy` | [ui-hp-bar-enemy.png](ui/bars/ui-hp-bar-enemy.png) | 96x32 | icon | Compact enemy / world HP frame. |
+| `ui-hp-trough` | [ui-hp-trough.png](ui/bars/ui-hp-trough.png) | 128x16 | icon | Empty HP trough strip (stretch). |
+| `ui-hp-fill-full` | [ui-hp-fill-full.png](ui/bars/ui-hp-fill-full.png) | 120x10 | icon | HP fill red (full). |
+| `ui-hp-fill-mid` | [ui-hp-fill-mid.png](ui/bars/ui-hp-fill-mid.png) | 120x10 | icon | HP fill yellow (mid). |
+| `ui-hp-fill-low` | [ui-hp-fill-low.png](ui/bars/ui-hp-fill-low.png) | 120x10 | icon | HP fill dark red (low). |
+| `ui-hp-fill-ok` | [ui-hp-fill-ok.png](ui/bars/ui-hp-fill-ok.png) | 120x10 | icon | HP fill green (ok). |
+| `ui-barricade-fill-ok` | [ui-barricade-fill-ok.png](ui/bars/ui-barricade-fill-ok.png) | 120x10 | icon | Barricade fill green. |
+| `ui-barricade-fill-mid` | [ui-barricade-fill-mid.png](ui/bars/ui-barricade-fill-mid.png) | 120x10 | icon | Barricade fill yellow. |
+| `ui-barricade-fill-low` | [ui-barricade-fill-low.png](ui/bars/ui-barricade-fill-low.png) | 120x10 | icon | Barricade fill red. |
+| `ui-dialog-panel` | [ui-dialog-panel.png](ui/panels/ui-dialog-panel.png) | 512x288 | icon | Stone dialog window with parchment inset. |
+| `ui-toast-panel` | [ui-toast-panel.png](ui/toasts/ui-toast-panel.png) | 512x192 | icon | Wide toast / tip banner with cyan rune pillars. |
+| `ui-btn-parchment` | [ui-btn-parchment.png](ui/buttons/ui-btn-parchment.png) | 73x33 | icon | Empty parchment button (label via font). |
+| `ui-btn-piece-1` | [ui-btn-piece-1.png](ui/buttons/ui-btn-piece-1.png) | 116x56 | icon | Small UI frame piece. |
+| `ui-btn-piece-2` | [ui-btn-piece-2.png](ui/buttons/ui-btn-piece-2.png) | 234x148 | icon | Large panel piece (9-slice candidate). |
+| `ui-icon-hp-heart` | [ui-icon-hp-heart.png](ui/icons/ui-icon-hp-heart.png) | 32x32 | icon | HP heart tip icon. |
+| `ui-icon-wave-warn` | [ui-icon-wave-warn.png](ui/icons/ui-icon-wave-warn.png) | 32x32 | icon | Wave warning tip icon. |
+| `ui-icon-heal` | [ui-icon-heal.png](ui/icons/ui-icon-heal.png) | 32x32 | icon | Heal tip icon. |
+| `ui-icon-damage` | [ui-icon-damage.png](ui/icons/ui-icon-damage.png) | 32x32 | icon | Damage tip icon. |
+| `ui-icon-pause` | [ui-icon-pause.png](ui/icons/ui-icon-pause.png) | 32x32 | icon | Pause tip icon. |
+| `ui-icon-ready` | [ui-icon-ready.png](ui/icons/ui-icon-ready.png) | 32x32 | icon | Ready tip icon. |
+| `ui-icon-gameover` | [ui-icon-gameover.png](ui/icons/ui-icon-gameover.png) | 32x32 | icon | Game over tip icon. |
+| `ui-icon-select-x` | [ui-icon-select-x.png](ui/icons/ui-icon-select-x.png) | 16x16 | icon | Select / close X icon. |
+| `ui-font-hud-bold-atlas` | [ui-font-hud-bold-atlas.png](ui/fonts/ui-font-hud-bold-atlas.png) | 128x160 | icon | HUD bold font atlas black silhouettes (tint in engine). Glyph 16px, 10x8. |
+| `ui-font-hud-bold-atlas-gold` | [ui-font-hud-bold-atlas-gold.png](ui/fonts/ui-font-hud-bold-atlas-gold.png) | 128x160 | icon | HUD bold atlas cream-gold fill. |
+| `ui-font-hud-bold-atlas-outlined` | [ui-font-hud-bold-atlas-outlined.png](ui/fonts/ui-font-hud-bold-atlas-outlined.png) | 128x160 | icon | Prefer for HUD — gold fill + navy outline. |
+| `ui-font-hud-tiny-atlas` | [ui-font-hud-tiny-atlas.png](ui/fonts/ui-font-hud-tiny-atlas.png) | 64x80 | icon | HUD tiny font atlas black silhouettes. Glyph 8px. |
+| `ui-font-hud-tiny-atlas-cream` | [ui-font-hud-tiny-atlas-cream.png](ui/fonts/ui-font-hud-tiny-atlas-cream.png) | 64x80 | icon | HUD tiny atlas cream tint for small labels. |
 
 <a id="zombies"></a>
 ## Zombies
