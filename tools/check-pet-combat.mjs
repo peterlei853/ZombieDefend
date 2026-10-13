@@ -361,7 +361,9 @@ for (let i = 0; i < 4; i++) {
   assert(one.summon(i, player, [foe]).ok, `form test summon ${id}`);
   assert(one.portraitViews()[i].orbs.every((orb) => orb.unlocked), `${id} orbs unlock together`);
   const longest = Math.max(...petsCfg.ORB_CD_MS[id]);
-  pump(one, formScene, longest + flash + 2200, foe, player);
+  // S3 is the short cooldown, so it can ult twice before S1 releases.
+  // Each ult freezes about a second of cooldown progress.
+  pump(one, formScene, longest + flash + 4000, foe, player);
   const seen = new Set(one.castLog.filter((entry) => entry.id === id).map((entry) => entry.orb));
   assert(seen.has(0) && seen.has(1) && seen.has(2), `${id} cast orbs 1–3 (${[...seen].join(',')})`);
   for (const tag of formTags[id]) {

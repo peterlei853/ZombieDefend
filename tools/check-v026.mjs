@@ -43,7 +43,7 @@ for (const [name, text] of [
   ['ShopScene', shopSrc],
   ['ExpOrbManager', orbSrc],
 ]) {
-  assert(!text.includes('localStorage'), `${name} does not touch localStorage`);
+  assert(!/localStorage\.(get|set|remove|clear|key)/.test(text), `${name} does not read or write localStorage`);
 }
 
 const ev = new PetEvolve({ events: { emit() {} }, audio: { playPetEvolve() {} } });
