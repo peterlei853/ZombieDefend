@@ -1,0 +1,135 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "delivery",
+  "title": "Delivery Rider Zombie",
+  "titleZh": "外送員丧尸",
+  "description": "Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.",
+  "source": {
+    "pixellabCharacterId": "0c01feac-1eda-40aa-8564-e726593ea602",
+    "sourceFolder": "new-zombies/delivery",
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas 84×84."
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 84,
+    "frameHeight": 84
+  },
+  "preview": {
+    "animate": [
+      "zombie-delivery-walk",
+      "zombie-delivery-attack",
+      "zombie-delivery-hurt_burn",
+      "zombie-delivery-die1"
+    ],
+    "thumb": "assets/library/previews/zombies/delivery/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-delivery-walk",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-walk.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-run",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-run.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-die1",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die1.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-delivery-die2",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die2.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-delivery-attack",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-attack.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-bite",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-bite.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-hurt",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hurt.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-delivery-idle_itch",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-idle_itch.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-hurt_freeze",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hurt_freeze.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false
+    },
+    {
+      "key": "zombie-delivery-hurt_burn",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hurt_burn.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true
+    },
+    {
+      "key": "zombie-delivery-hurt_shock",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hurt_shock.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true
+    }
+  ]
+}
