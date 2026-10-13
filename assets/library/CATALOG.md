@@ -7,7 +7,7 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 86 |
 | [Pets](#pets) | 17 | 88 |
-| [UI](#ui) | 1 | 31 |
+| [UI](#ui) | 1 | 41 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **42** | **433** |
+| **Total** | **42** | **443** |
 
 <a id="hero"></a>
 ## Hero
@@ -428,10 +428,10 @@ Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left 
 
 <img src="previews/ui/hud-kit/preview.png" alt="hud-kit preview" height="140">
 
-v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot.
+v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/.
 
-- group `hud-kit` · 31 assets · frame 16x16, 32x32, 64x80, 73x33, 96x32, 116x56, 120x10, 128x16, 128x160, 234x148, 248x36, 251x45, 512x192, 512x288, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
-- previews: [ui-kit-sheet.png](previews/ui/hud-kit/ui-kit-sheet.png), [ui-title-bg-preview.png](previews/ui/hud-kit/ui-title-bg-preview.png)
+- group `hud-kit` · 41 assets · frame 16x16, 32x32, 40x16, 64x16, 64x80, 73x33, 80x32, 85x44, 96x32, 106x39, 116x56, 120x10, 128x16, 128x32, 128x160, 160x64, 170x88, 212x78, 234x148, 248x36, 251x45, 256x64, 512x192, 512x288, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
+- previews: [ui-kit-sheet.png](previews/ui/hud-kit/ui-kit-sheet.png), [ui-title-bg-preview.png](previews/ui/hud-kit/ui-title-bg-preview.png), [ui-float-go-back-sheet.png](previews/ui/hud-kit/ui-float-go-back-sheet.png)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
@@ -466,6 +466,16 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-font-hud-tiny-atlas-cream` | [ui-font-hud-tiny-atlas-cream.png](ui/fonts/ui-font-hud-tiny-atlas-cream.png) | 64x80 | icon | HUD tiny atlas cream tint for small labels. |
 | `ui-title-bg` | [ui-title-bg.png](ui/title/ui-title-bg.png) | 688x384 | image | Title splash Zombie vs My Buddy — native night campus + girl + pets (688×384). |
 | `ui-title-bg-hd` | [ui-title-bg-hd.png](ui/title/ui-title-bg-hd.png) | 1280x720 | image | Title splash upscale 1280×720 (optional HD). Prefer ui-title-bg for pixel-perfect. |
+| `ui-float-go` | [ui-float-go.png](ui/floats/ui-float-go.png) | 80x32 | icon | GO! cream-gold + navy outline; prefer for summon. |
+| `ui-float-go-hd` | [ui-float-go-hd.png](ui/floats/ui-float-go-hd.png) | 160x64 | icon | 2× GO! |
+| `ui-float-go-sm` | [ui-float-go-sm.png](ui/floats/ui-float-go-sm.png) | 40x16 | icon | Half-scale GO! |
+| `ui-float-back` | [ui-float-back.png](ui/floats/ui-float-back.png) | 128x32 | icon | Back! cream-gold + navy outline; prefer for recall. |
+| `ui-float-back-hd` | [ui-float-back-hd.png](ui/floats/ui-float-back-hd.png) | 256x64 | icon | 2× Back! |
+| `ui-float-back-sm` | [ui-float-back-sm.png](ui/floats/ui-float-back-sm.png) | 64x16 | icon | Half-scale Back! |
+| `ui-float-go-burst` | [ui-float-go-burst.png](ui/floats/ui-float-go-burst.png) | 85x44 | icon | Optional decorative GO! shout burst. |
+| `ui-float-go-burst-hd` | [ui-float-go-burst-hd.png](ui/floats/ui-float-go-burst-hd.png) | 170x88 | icon | 2× GO! burst. |
+| `ui-float-back-burst` | [ui-float-back-burst.png](ui/floats/ui-float-back-burst.png) | 106x39 | icon | Optional decorative Back! shout burst. |
+| `ui-float-back-burst-hd` | [ui-float-back-burst-hd.png](ui/floats/ui-float-back-burst-hd.png) | 212x78 | icon | 2× Back! burst. |
 
 <a id="zombies"></a>
 ## Zombies

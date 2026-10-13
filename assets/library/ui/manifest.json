@@ -4,7 +4,7 @@
   "group": "hud-kit",
   "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
   "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot.",
+  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/.",
   "source": {
     "tool": "2-PixelLab Bot ui-kit",
     "note": "Cataloged by PixelLab Asset Pipeline from /workspace/ui-kit"
@@ -24,7 +24,8 @@
       "assets/library/previews/ui/hud-kit/ui-kit-sheet.png"
     ],
     "extras": [
-      "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png"
+      "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png",
+      "assets/library/previews/ui/hud-kit/ui-float-go-back-sheet.png"
     ],
     "animate": []
   },
@@ -619,6 +620,246 @@
         "background",
         "splash"
       ]
+    },
+    {
+      "key": "ui-float-go",
+      "path": "assets/library/ui/floats/ui-float-go.png",
+      "type": "icon",
+      "frameWidth": 80,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "GO! cream-gold + navy outline; prefer for summon.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-go-hd",
+      "path": "assets/library/ui/floats/ui-float-go-hd.png",
+      "type": "icon",
+      "frameWidth": 160,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "2× GO!",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-go-sm",
+      "path": "assets/library/ui/floats/ui-float-go-sm.png",
+      "type": "icon",
+      "frameWidth": 40,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "Half-scale GO!",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-back",
+      "path": "assets/library/ui/floats/ui-float-back.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "Back! cream-gold + navy outline; prefer for recall.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-back-hd",
+      "path": "assets/library/ui/floats/ui-float-back-hd.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "2× Back!",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-back-sm",
+      "path": "assets/library/ui/floats/ui-float-back-sm.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 16,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "Half-scale Back!",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-go-burst",
+      "path": "assets/library/ui/floats/ui-float-go-burst.png",
+      "type": "icon",
+      "frameWidth": 85,
+      "frameHeight": 44,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "Optional decorative GO! shout burst.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-go-burst-hd",
+      "path": "assets/library/ui/floats/ui-float-go-burst-hd.png",
+      "type": "icon",
+      "frameWidth": 170,
+      "frameHeight": 88,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "2× GO! burst.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-back-burst",
+      "path": "assets/library/ui/floats/ui-float-back-burst.png",
+      "type": "icon",
+      "frameWidth": 106,
+      "frameHeight": 39,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "Optional decorative Back! shout burst.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-float-back-burst-hd",
+      "path": "assets/library/ui/floats/ui-float-back-burst-hd.png",
+      "type": "icon",
+      "frameWidth": 212,
+      "frameHeight": 78,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "description": "2× Back! burst.",
+      "tags": [
+        "ui",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      }
     }
   ],
   "extra": {

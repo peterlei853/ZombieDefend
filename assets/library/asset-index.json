@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 433,
+    "total": 443,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -30,7 +30,7 @@
       },
       "ui": {
         "groups": 1,
-        "assets": 31
+        "assets": 41
       },
       "zombies": {
         "groups": 12,
@@ -65,7 +65,7 @@
       "background": 13,
       "concept": 21,
       "fx": 40,
-      "icon": 57,
+      "icon": 67,
       "image": 2,
       "spritesheet": 300
     }
@@ -937,7 +937,7 @@
       "group": "hud-kit",
       "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
       "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot.",
+      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/.",
       "manifest": "assets/library/ui/manifest.json",
       "dir": "assets/library/ui",
       "thumb": "assets/library/previews/ui/hud-kit/preview.png",
@@ -945,24 +945,35 @@
         "assets/library/previews/ui/hud-kit/ui-kit-sheet.png"
       ],
       "extras": [
-        "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png"
+        "assets/library/previews/ui/hud-kit/ui-title-bg-preview.png",
+        "assets/library/previews/ui/hud-kit/ui-float-go-back-sheet.png"
       ],
       "keyPrefix": "ui-",
       "mainKey": "ui-hp-bar-player",
-      "count": 31,
+      "count": 41,
       "frameSizes": [
         "16x16",
         "32x32",
+        "40x16",
+        "64x16",
         "64x80",
         "73x33",
+        "80x32",
+        "85x44",
         "96x32",
+        "106x39",
         "116x56",
         "120x10",
         "128x16",
+        "128x32",
         "128x160",
+        "160x64",
+        "170x88",
+        "212x78",
         "234x148",
         "248x36",
         "251x45",
+        "256x64",
         "512x192",
         "512x288",
         "688x384",
@@ -1008,7 +1019,17 @@
         "ui-font-hud-tiny-atlas",
         "ui-font-hud-tiny-atlas-cream",
         "ui-title-bg",
-        "ui-title-bg-hd"
+        "ui-title-bg-hd",
+        "ui-float-go",
+        "ui-float-go-hd",
+        "ui-float-go-sm",
+        "ui-float-back",
+        "ui-float-back-hd",
+        "ui-float-back-sm",
+        "ui-float-go-burst",
+        "ui-float-go-burst-hd",
+        "ui-float-back-burst",
+        "ui-float-back-burst-hd"
       ]
     },
     {
@@ -9356,6 +9377,396 @@
       ],
       "extra": null,
       "action": "title-bg-hd"
+    },
+    {
+      "key": "ui-float-go",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-go.png",
+      "type": "icon",
+      "frameWidth": 80,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "GO! cream-gold + navy outline; prefer for summon.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-go"
+    },
+    {
+      "key": "ui-float-go-hd",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-go-hd.png",
+      "type": "icon",
+      "frameWidth": 160,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "2× GO!",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-go-hd"
+    },
+    {
+      "key": "ui-float-go-sm",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-go-sm.png",
+      "type": "icon",
+      "frameWidth": 40,
+      "frameHeight": 16,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Half-scale GO!",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-go-sm"
+    },
+    {
+      "key": "ui-float-back",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-back.png",
+      "type": "icon",
+      "frameWidth": 128,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Back! cream-gold + navy outline; prefer for recall.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-back"
+    },
+    {
+      "key": "ui-float-back-hd",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-back-hd.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "2× Back!",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-back-hd"
+    },
+    {
+      "key": "ui-float-back-sm",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-back-sm.png",
+      "type": "icon",
+      "frameWidth": 64,
+      "frameHeight": 16,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Half-scale Back!",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-back-sm"
+    },
+    {
+      "key": "ui-float-go-burst",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-go-burst.png",
+      "type": "icon",
+      "frameWidth": 85,
+      "frameHeight": 44,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Optional decorative GO! shout burst.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-go-burst"
+    },
+    {
+      "key": "ui-float-go-burst-hd",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-go-burst-hd.png",
+      "type": "icon",
+      "frameWidth": 170,
+      "frameHeight": 88,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "2× GO! burst.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "summon"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-go-burst-hd"
+    },
+    {
+      "key": "ui-float-back-burst",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-back-burst.png",
+      "type": "icon",
+      "frameWidth": 106,
+      "frameHeight": 39,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Optional decorative Back! shout burst.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-back-burst"
+    },
+    {
+      "key": "ui-float-back-burst-hd",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/floats/ui-float-back-burst-hd.png",
+      "type": "icon",
+      "frameWidth": 212,
+      "frameHeight": 78,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "2× Back! burst.",
+      "note": null,
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "float",
+        "pet",
+        "recall"
+      ],
+      "extra": {
+        "displayMs": "600-800",
+        "place": "above pet"
+      },
+      "action": "float-back-burst-hd"
     },
     {
       "key": "zombie-brute-walk",
