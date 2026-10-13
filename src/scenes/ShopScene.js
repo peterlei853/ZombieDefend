@@ -2,6 +2,7 @@
  * Minimal Shop stub — Architect will expand with real inventory / upgrades.
  * Receives { stage, gold, characterId } from StageScene on win.
  */
+import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 import {
   FONT_HUD,
   FONT_INK,
@@ -26,6 +27,10 @@ export default class ShopScene extends Phaser.Scene {
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
+  }
+
+  preload() {
+    preloadGameAudio(this);
   }
 
   create() {
@@ -72,6 +77,13 @@ export default class ShopScene extends Phaser.Scene {
       color: '#3a2c1c',
       depth: 4,
     });
+
+    this.audio = new SoundManager(this);
+    this.events.once('shutdown', () => {
+      this.audio?.dispose();
+      this.audio = null;
+    });
+    this.audio.startShopBgm();
 
     addParchmentButton(this, cx, cy + 96, 'NEXT', () => {
       const nextStage = this.stage + 1;
