@@ -1,4 +1,5 @@
 import BootScene from './scenes/BootScene.js';
+import TitleScene from './scenes/TitleScene.js';
 import StageScene from './scenes/StageScene.js';
 import ShopScene from './scenes/ShopScene.js';
 import { GAME_WIDTH, GAME_HEIGHT } from './data/waves.js';
@@ -15,7 +16,7 @@ const config = {
   height: GAME_HEIGHT,
   parent: 'game-host',
   backgroundColor: '#0b0f14',
-  scene: [BootScene, StageScene, ShopScene],
+  scene: [BootScene, TitleScene, StageScene, ShopScene],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

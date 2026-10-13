@@ -64,8 +64,8 @@ export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, f
  * @param {Phaser.Scene} scene
  */
 export function createLibraryAnims(scene) {
-  installUiKit(scene);
   const index = readCachedIndex(scene);
+  installUiKit(scene, index?.aliases);
   if (!index?.assets || !scene?.anims) return null;
   const filter = globalThis.Phaser?.Textures?.FilterMode?.NEAREST;
   for (const asset of index.assets) {

@@ -38,6 +38,13 @@ export const UI = {
   titleHd: 'ui-title-bg-hd',
 };
 
+/**
+ * Catalog alias for the native 688×384 title splash.
+ * `extra.aliases` in the UI manifest is the source of truth; this is the
+ * fallback when the generated index has not been read yet.
+ */
+export const TITLE_BG_ALIAS = 'bg-title-zombie-vs-buddy';
+
 /** Row-major, 8 columns × 10 rows. There is no space glyph. */
 export const KIT_GLYPHS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?:;'\"-+()0123456789/%*=_$";
@@ -137,11 +144,72 @@ export function kitFontReady(scene, fontKey) {
  * Safe to call more than once. Missing textures are skipped.
  * @param {Phaser.Scene} scene
  */
-export function installUiKit(scene) {
-  if (!scene?.cache?.bitmapFont || !scene.textures) return;
-  for (const fontKey of Object.keys(FONT_GRID)) {
-    registerBitmapFont(scene, fontKey);
+/**
+ * @param {Phaser.Scene} scene
+ * @param {Record<string, string>|null|undefined} [aliases]
+ */
+export function installUiKit(scene, aliases) {
+  if (!scene?.textures) return;
+  if (scene.cache?.bitmapFont) {
+    for (const fontKey of Object.keys(FONT_GRID)) {
+      registerBitmapFont(scene, fontKey);
+    }
   }
+  installTextureAliases(scene, aliases);
+}
+
+/**
+ * Point alias keys at textures already in the cache. Nearest filter, same
+ * pixels as the source. Safe to call more than once.
+ * @param {Phaser.Scene} scene
+ * @param {Record<string, string>|null|undefined} [aliases]
+ */
+function installTextureAliases(scene, aliases) {
+  const map = { [TITLE_BG_ALIAS]: UI.title, ...(aliases || {}) };
+  const nearest = globalThis.Phaser?.Textures?.FilterMode?.NEAREST;
+  for (const [alias, source] of Object.entries(map)) {
+    if (!alias || !source || alias === source) continue;
+    if (!scene.textures.exists(source) || scene.textures.exists(alias)) continue;
+    const image = scene.textures.get(source).getSourceImage?.();
+    if (!image) continue;
+    scene.textures.addImage(alias, image);
+    const tex = scene.textures.get(alias);
+    if (nearest !== undefined && typeof tex.setFilter === 'function') {
+      tex.setFilter(nearest);
+    }
+  }
+}
+
+/**
+ * Title backdrop. Prefers the native splash through `bg-title-zombie-vs-buddy`
+ * at an integer cover scale. Falls back to the 1280×720 HD upscale at 1:1.
+ * @param {Phaser.Scene} scene
+ * @param {number} width
+ * @param {number} height
+ * @returns {Phaser.GameObjects.Image|null}
+ */
+export function addTitleBackdrop(scene, width, height) {
+  const key = scene.textures?.exists?.(TITLE_BG_ALIAS)
+    ? TITLE_BG_ALIAS
+    : scene.textures?.exists?.(UI.title)
+      ? UI.title
+      : scene.textures?.exists?.(UI.titleHd)
+        ? UI.titleHd
+        : null;
+  if (!key || !scene.add?.image) return null;
+  const img = scene.add.image(width / 2, height / 2, key).setDepth(0);
+  const source = scene.textures.get(key).getSourceImage?.();
+  const sw = source?.width || 0;
+  const sh = source?.height || 0;
+  if (key === UI.titleHd) {
+    img.setScale(1);
+    return img;
+  }
+  if (sw > 0 && sh > 0) {
+    const cover = Math.max(width / sw, height / sh);
+    img.setScale(Math.max(1, Math.round(cover)));
+  }
+  return img;
 }
 
 /**

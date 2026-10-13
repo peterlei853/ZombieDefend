@@ -2,7 +2,8 @@
  * UI kit glyph and HP-fill checks. No Phaser.
  * Run: node tools/check-ui-kit.mjs
  */
-import { KIT_GLYPHS, hpFillKey, supportsKitGlyphs } from '../src/ui/uiKit.js';
+import { readFileSync } from 'node:fs';
+import { FONT_HUD, KIT_GLYPHS, TITLE_BG_ALIAS, UI, hpFillKey, supportsKitGlyphs } from '../src/ui/uiKit.js';
 
 let failed = 0;
 
@@ -31,6 +32,13 @@ assert(hpFillKey('player', 0.6) === 'ui-hp-fill-full', 'player mid-high is red f
 assert(hpFillKey('enemy', 0.4) === 'ui-hp-fill-mid', 'enemy mid');
 assert(hpFillKey('enemy', 0.1) === 'ui-hp-fill-low', 'enemy low');
 assert(hpFillKey('player', Number.NaN) === 'ui-hp-fill-low', 'bad ratio clamps low');
+assert(FONT_HUD === 'ui-font-hud-bold-atlas-outlined', 'hud face is the outlined atlas');
+assert(TITLE_BG_ALIAS === 'bg-title-zombie-vs-buddy', 'title alias name');
+assert(UI.title === 'ui-title-bg', 'native title key');
+assert(UI.titleHd === 'ui-title-bg-hd', 'hd title key');
+const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
+assert(titleSrc.includes('addTitleBackdrop'), 'title scene draws the splash');
+assert(titleSrc.includes('TITLE_BG_ALIAS'), 'title scene names the alias');
 
 if (failed) {
   console.error(`${failed} failed`);
