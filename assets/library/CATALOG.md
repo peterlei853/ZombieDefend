@@ -7,7 +7,7 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 86 |
 | [Pets](#pets) | 17 | 96 |
-| [UI](#ui) | 1 | 41 |
+| [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 1 | 1 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **42** | **451** |
+| **Total** | **42** | **461** |
 
 <a id="hero"></a>
 ## Hero
@@ -436,16 +436,20 @@ Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left 
 
 <img src="previews/ui/hud-kit/preview.png" alt="hud-kit preview" height="140">
 
-v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/.
+v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons.
 
-- group `hud-kit` · 41 assets · frame 16x16, 32x32, 40x16, 64x16, 64x80, 73x33, 80x32, 85x44, 96x32, 106x39, 116x56, 120x10, 128x16, 128x32, 128x160, 160x64, 170x88, 212x78, 234x148, 248x36, 251x45, 256x64, 512x192, 512x288, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
+- group `hud-kit` · 51 assets · frame 16x16, 32x32, 40x16, 40x40, 64x16, 64x80, 72x8, 73x33, 80x32, 80x80, 85x44, 96x32, 96x96, 106x39, 116x56, 118x24, 120x10, 128x16, 128x32, 128x160, 160x64, 170x88, 212x78, 234x148, 248x36, 251x45, 256x64, 512x192, 512x288, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
 - previews: [ui-kit-sheet.png](previews/ui/hud-kit/ui-kit-sheet.png), [ui-title-bg-preview.png](previews/ui/hud-kit/ui-title-bg-preview.png), [ui-float-go-back-sheet.png](previews/ui/hud-kit/ui-float-go-back-sheet.png)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
 | `ui-hp-bar-player` | [ui-hp-bar-player.png](ui/bars/ui-hp-bar-player.png) | 248x36 | icon | Player HP stone frame, parchment rim, cyan accents, orange gems. |
 | `ui-hp-bar-barricade` | [ui-hp-bar-barricade.png](ui/bars/ui-hp-bar-barricade.png) | 251x45 | icon | Barricade HP wood-brown + stone frame. |
-| `ui-hp-bar-enemy` | [ui-hp-bar-enemy.png](ui/bars/ui-hp-bar-enemy.png) | 96x32 | icon | Compact enemy / world HP frame. |
+| `ui-hp-bar-enemy` | [ui-hp-bar-enemy.png](ui/bars/ui-hp-bar-enemy.png) | 118x24 | icon | v0.22 enemy HP stone frame, parchment rim, cyan end glow, orange gems. Origin (0.5, 0.5). Native 118×24. Legacy slot is ui-hp-bar-enemy-96. |
+| `ui-hp-bar-enemy-96` | [ui-hp-bar-enemy-96.png](ui/bars/ui-hp-bar-enemy-96.png) | 96x32 | icon | v0.22 enemy HP frame nearest drop-in for the legacy 96×32 slot. Origin (0.5, 0.5). |
+| `ui-hp-enemy-fill-ok` | [ui-hp-enemy-fill-ok.png](ui/bars/ui-hp-enemy-fill-ok.png) | 72x8 | icon | Compact green enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills. |
+| `ui-hp-enemy-fill-mid` | [ui-hp-enemy-fill-mid.png](ui/bars/ui-hp-enemy-fill-mid.png) | 72x8 | icon | Compact yellow enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills. |
+| `ui-hp-enemy-fill-low` | [ui-hp-enemy-fill-low.png](ui/bars/ui-hp-enemy-fill-low.png) | 72x8 | icon | Compact red enemy HP fill (72×8). Origin (0, 0.5), same left-grow as player fills. |
 | `ui-hp-trough` | [ui-hp-trough.png](ui/bars/ui-hp-trough.png) | 128x16 | icon | Empty HP trough strip (stretch). |
 | `ui-hp-fill-full` | [ui-hp-fill-full.png](ui/bars/ui-hp-fill-full.png) | 120x10 | icon | HP fill red (full). |
 | `ui-hp-fill-mid` | [ui-hp-fill-mid.png](ui/bars/ui-hp-fill-mid.png) | 120x10 | icon | HP fill yellow (mid). |
@@ -459,6 +463,10 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-btn-parchment` | [ui-btn-parchment.png](ui/buttons/ui-btn-parchment.png) | 73x33 | icon | Empty parchment button (label via font). |
 | `ui-btn-piece-1` | [ui-btn-piece-1.png](ui/buttons/ui-btn-piece-1.png) | 116x56 | icon | Small UI frame piece. |
 | `ui-btn-piece-2` | [ui-btn-piece-2.png](ui/buttons/ui-btn-piece-2.png) | 234x148 | icon | Large panel piece (9-slice candidate). |
+| `ui-joystick-base` | [ui-joystick-base.png](ui/controls/ui-joystick-base.png) | 80x80 | icon | v0.22 virtual joystick base. Stone ring, parchment pad, orange cardinal gems, cyan runes. Origin (0.5, 0.5). Not a flat circle. |
+| `ui-joystick-base-96` | [ui-joystick-base-96.png](ui/controls/ui-joystick-base-96.png) | 96x96 | icon | v0.22 joystick base nearest 96×96 upscale. Origin (0.5, 0.5). |
+| `ui-joystick-knob` | [ui-joystick-knob.png](ui/controls/ui-joystick-knob.png) | 40x40 | icon | v0.22 joystick knob. Stone rim, parchment, orange gem, cyan cardinal dots. Origin (0.5, 0.5). |
+| `ui-joystick-knob-pressed` | [ui-joystick-knob-pressed.png](ui/controls/ui-joystick-knob-pressed.png) | 40x40 | icon | v0.22 joystick knob pressed state. Brighter cyan ring. Origin (0.5, 0.5). Swap in while the stick is active. |
 | `ui-icon-hp-heart` | [ui-icon-hp-heart.png](ui/icons/ui-icon-hp-heart.png) | 32x32 | icon | HP heart tip icon. |
 | `ui-icon-wave-warn` | [ui-icon-wave-warn.png](ui/icons/ui-icon-wave-warn.png) | 32x32 | icon | Wave warning tip icon. |
 | `ui-icon-heal` | [ui-icon-heal.png](ui/icons/ui-icon-heal.png) | 32x32 | icon | Heal tip icon. |
@@ -474,6 +482,8 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-font-hud-tiny-atlas-cream` | [ui-font-hud-tiny-atlas-cream.png](ui/fonts/ui-font-hud-tiny-atlas-cream.png) | 64x80 | icon | HUD tiny atlas cream tint for small labels. |
 | `ui-title-bg` | [ui-title-bg.png](ui/title/ui-title-bg.png) | 688x384 | image | Title splash Zombie vs My Buddy — native night campus + girl + pets (688×384). |
 | `ui-title-bg-hd` | [ui-title-bg-hd.png](ui/title/ui-title-bg-hd.png) | 1280x720 | image | Title splash upscale 1280×720 (optional HD). Prefer ui-title-bg for pixel-perfect. |
+| `ui-title-bg-clean` | [ui-title-bg-clean.png](ui/title/ui-title-bg-clean.png) | 688x384 | image | v0.22 clean title splash. Hero, four baby pets, night campus, ZOMBIE VS MY BUDDY logo. Origin (0.5, 0.5). No baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. |
+| `ui-title-bg-clean-hd` | [ui-title-bg-clean-hd.png](ui/title/ui-title-bg-clean-hd.png) | 1280x720 | image | v0.22 clean title splash upscale 1280×720. Origin (0.5, 0.5). No baked menu buttons or version footer. Prefer ui-title-bg-clean for pixel-perfect. |
 | `ui-float-go` | [ui-float-go.png](ui/floats/ui-float-go.png) | 80x32 | icon | GO! cream-gold + navy outline; prefer for summon. |
 | `ui-float-go-hd` | [ui-float-go-hd.png](ui/floats/ui-float-go-hd.png) | 160x64 | icon | 2× GO! |
 | `ui-float-go-sm` | [ui-float-go-sm.png](ui/floats/ui-float-go-sm.png) | 40x16 | icon | Half-scale GO! |
