@@ -8,6 +8,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
+import { APP_VERSION } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -225,7 +226,7 @@ export default class StageScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(d + 1);
     this.hudStage = this.add
-      .text(GAME_WIDTH - layoutPx(16), textY, `Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
+      .text(GAME_WIDTH - layoutPx(16), textY, `v${APP_VERSION} · Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
       .setOrigin(1, 0)
       .setScrollFactor(0)
       .setDepth(d + 1);
@@ -309,11 +310,14 @@ export default class StageScene extends Phaser.Scene {
     // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts.
     // Damage totals still apply every frame; floating numbers pop on the ~1s bite.
     let barricadeDmg = 0;
+    let statusGold = 0;
     /** @type {Zombie[]} */
     const attackBeats = [];
     for (const z of this.zombies) {
       if (!z.alive) continue;
       z.update(deltaSec, this.barricade.contactXAt(z.y));
+      const status = z.tickStatus(deltaMs);
+      statusGold += status?.gold || 0;
       const dealt = z.contactDamage(deltaSec);
       barricadeDmg += dealt;
       z.addBarricadeDmg(dealt);
@@ -331,10 +335,10 @@ export default class StageScene extends Phaser.Scene {
       return;
     }
 
-    // Defenders fire + hits (WeaponSystem cadence / ballistics / pet AOE)
+    // Defenders fire + hits. Pet gold includes baby-pet kills; burn gold is statusGold.
     const petGain = this.defenders.update(deltaMs, this.zombies);
     const hitGain = this.defenders.resolveHits(this.zombies);
-    const gold = (petGain?.gold || 0) + (hitGain?.gold || 0);
+    const gold = statusGold + (petGain?.gold || 0) + (hitGain?.gold || 0);
     if (gold > 0) {
       this.gold += gold;
       this.registry.set('gold', this.gold);

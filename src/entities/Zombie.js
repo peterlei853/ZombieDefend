@@ -64,6 +64,14 @@ export class Zombie {
     this.baseSize = cfg.hp >= 150 ? 26 : cfg.hp >= 100 ? 22 : 18;
     this.alive = true;
     this.atBarricade = false;
+    /** Panda slow. March speed only — barricade bite DPS is untouched. */
+    this._slowMs = 0;
+    this._slowMult = 1;
+    /** Dragon smoke burn. Ticked by tickStatus; does not change contact DPS. */
+    this._burnLeft = 0;
+    this._burnAcc = 0;
+    this._burnDmg = 0;
+    this._burnInterval = 450;
     /** Seconds until the next barricade bite (punch + hit VFX). */
     this._attackCooldown = 1;
     this._attackBeat = false;
@@ -295,7 +303,7 @@ export class Zombie {
     if (!this.atBarricade) {
       // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
       // Critical HP uses CRIT_SPEED_MULT (stumble sheet or not).
-      const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp);
+      const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
       const nextX = this.body.x + speed * LAYOUT_SCALE * deltaSec;
       const halt = contactX - this.displayHalf;
       if (nextX >= halt) {
@@ -322,6 +330,85 @@ export class Zombie {
 
     this._applyDepth();
     this._syncBars();
+  }
+
+  /**
+   * Brief march slow. Does not change barricade contact DPS.
+   * A stronger or longer application replaces the one already running.
+   * @param {number} mult
+   * @param {number} durationMs
+   */
+  applySlow(mult, durationMs) {
+    if (!this.alive) return;
+    const factor = Math.min(1, Math.max(0.05, Number(mult) || 1));
+    const dur = Math.max(0, Number(durationMs) || 0);
+    if (!(this._slowMs > 0) || factor < this._slowMult || dur >= this._slowMs) {
+      this._slowMult = factor;
+      this._slowMs = dur;
+    }
+  }
+
+  /**
+   * Brief burn. Damage ticks from tickStatus, not from the bite.
+   * @param {number} damage
+   * @param {number} intervalMs
+   * @param {number} durationMs
+   */
+  applyBurn(damage, intervalMs, durationMs) {
+    if (!this.alive) return;
+    const dmg = Math.max(0, Number(damage) || 0);
+    const interval = Math.max(50, Number(intervalMs) || 450);
+    const dur = Math.max(0, Number(durationMs) || 0);
+    if (!(this._burnLeft > 0) || dmg >= this._burnDmg) {
+      this._burnDmg = dmg;
+      this._burnInterval = interval;
+    }
+    this._burnLeft = Math.max(this._burnLeft || 0, dur);
+  }
+
+  /** 1 while unslowed. */
+  _slowFactor() {
+    if (!(this._slowMs > 0)) return 1;
+    return this._slowMult > 0 ? this._slowMult : 1;
+  }
+
+  /**
+   * Decay slow and tick burn. Gold is only from a burn kill.
+   * @param {number} deltaMs
+   * @returns {{ gold: number, kills: number }}
+   */
+  tickStatus(deltaMs) {
+    const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    if (this._slowMs > 0) {
+      this._slowMs = Math.max(0, this._slowMs - dt);
+      if (this._slowMs <= 0) this._slowMult = 1;
+    }
+    if (!(this._burnLeft > 0) || !this.alive) return { gold: 0, kills: 0 };
+    this._burnLeft -= dt;
+    this._burnAcc += dt;
+    let gold = 0;
+    let kills = 0;
+    const interval = this._burnInterval || 450;
+    let guard = 0;
+    while (this.alive && this._burnAcc >= interval && guard < 4) {
+      guard += 1;
+      this._burnAcc -= interval;
+      const hx = this.x;
+      const hy = Number.isFinite(this.visualTop) ? this.visualTop : this.y;
+      const goldVal = this.goldValue || 0;
+      const killed = this.takeDamage(this._burnDmg, { kind: 'pet' });
+      showDamageText(this.scene, hx, hy, this._burnDmg, DAMAGE_COLORS.dragon, this.id);
+      if (killed) {
+        gold += goldVal;
+        kills += 1;
+        break;
+      }
+    }
+    if (this._burnLeft <= 0 || !this.alive) {
+      this._burnLeft = 0;
+      this._burnAcc = 0;
+    }
+    return { gold, kills };
   }
 
   /**

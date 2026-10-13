@@ -61,19 +61,9 @@ export const SHOTGUN_VFX_MS = SHOTGUN_CFG.MUZZLE_VFX_MS;
 export const SHOTGUN_MUZZLE_VFX_RADIUS = 48;
 
 /**
- * Pet: spawn PetBullet every 1.0s toward nearest zombie.
- * On hit: AOE radius 80px, damage 28 at impact point (not before collision).
- */
-export const PET_AOE_INTERVAL_MS = 1000;
-export const PET_AOE_RADIUS = 80;
-export const PET_AOE_DAMAGE = 28;
-export const PET_AOE_VFX_MS = 150;
-/** PetBullet direct contact damage (AOE carries the real payload). */
-export const PET_BULLET_DAMAGE = 0;
-
-/**
  * Owns weapon state, nearest-enemy targeting, fire cadence, and ballistics.
  * DefenderGroup pushes bullets / applies hits and plays shotgun recoil.
+ * Baby pets are PetCombat, not a bullet kind here.
  * StageScene toggles SPACE and the HUD. The camera does not shake.
  */
 export class WeaponSystem {
@@ -89,7 +79,6 @@ export class WeaponSystem {
     /** Defender display scale captured at the last shot, for FX size. */
     this._visScale = LAYOUT_SCALE;
     this._playerCooldown = 0;
-    this._petCooldown = 0;
     /** @type {{ gfx: Phaser.GameObjects.Rectangle, vx: number, vy: number, life: number, max: number, spin: number }[]} */
     this._casings = [];
   }
@@ -253,41 +242,8 @@ export class WeaponSystem {
   }
 
   /**
-   * Tick pet every 1.0s: spawn PetBullet toward nearest living zombie (no AOE yet).
-   * @param {number} deltaMs
-   * @param {number} petX
-   * @param {number} petY
-   * @param {import('../entities/Zombie.js').Zombie[]} zombies
-   * @param {object[]} bullets
-   */
-  updatePetFire(deltaMs, petX, petY, zombies, bullets) {
-    this._petCooldown -= deltaMs;
-    if (this._petCooldown > 0) return;
-    if (!Array.isArray(bullets)) return;
-
-    this._petCooldown = PET_AOE_INTERVAL_MS;
-
-    const living = (Array.isArray(zombies) ? zombies : []).filter(
-      (z) => z?.alive && z.body
-    );
-    const nearest = this.findNearest(living, petX, petY);
-    if (!nearest) return;
-
-    const fromX = petX - 10 * LAYOUT_SCALE;
-    const fromY = petY;
-    const { vx, vy } = this.aimVelocity(fromX, fromY, nearest);
-    this._spawnBullet(bullets, fromX, fromY, vx, vy, {
-      damage: PET_BULLET_DAMAGE,
-      kind: 'pet',
-      size: Math.max(6, BULLET_SIZE - 1) * LAYOUT_SCALE,
-      maxDistance: null,
-      knockback: 0,
-    });
-  }
-
-  /**
    * Integrate bullet motion. Shotgun pellets accumulate travel for maxDistance.
-   * Handgun and PetBullet are uncapped (retired only when they leave the view).
+   * Handgun slugs are uncapped (retired only when they leave the view).
    * @param {object[]} bullets
    * @param {number} deltaSec
    */
@@ -418,44 +374,6 @@ export class WeaponSystem {
   }
 
   /**
-   * PetBullet on-hit AOE at impact point. Filter-then-damage; VFX 150ms then force-destroy.
-   * @param {number} cx
-   * @param {number} cy
-   * @param {import('../entities/Zombie.js').Zombie[]} zombies
-   * @returns {{ gold: number, kills: number }}
-   */
-  applyPetAoe(cx, cy, zombies) {
-    if (!Number.isFinite(cx) || !Number.isFinite(cy)) {
-      return { gold: 0, kills: 0 };
-    }
-
-    this._drawPetAoeRing(cx, cy);
-
-    const list = Array.isArray(zombies) ? zombies : [];
-    const eligible = list.filter((z) => {
-      if (!z?.alive || !z.body) return false;
-      const dist = Phaser.Math.Distance.Between(cx, cy, z.x, z.y);
-      return dist <= PET_AOE_RADIUS * LAYOUT_SCALE;
-    });
-
-    let gold = 0;
-    let kills = 0;
-    for (const z of eligible) {
-      if (!z.alive || !z.body) continue;
-      const hx = z.x;
-      const hy = Number.isFinite(z.visualTop) ? z.visualTop : z.y - z.displayHalf;
-      const goldVal = z.goldValue;
-      const killed = z.takeDamage(PET_AOE_DAMAGE, { kind: 'pet' });
-      showDamageText(this.scene, hx, hy, PET_AOE_DAMAGE, DAMAGE_COLORS.pet, z.id);
-      if (killed) {
-        gold += goldVal;
-        kills += 1;
-      }
-    }
-    return { gold, kills };
-  }
-
-  /**
    * @param {object[]} bullets
    * @param {number} x
    * @param {number} y
@@ -494,7 +412,7 @@ export class WeaponSystem {
    * @param {number} y
    * @param {number} vx
    * @param {number} vy
-   * @param {{ damage: number, kind: 'handgun'|'shotgun'|'pet', size?: number, maxDistance?: number|null, knockback?: number, fxKey?: string|null }} meta
+   * @param {{ damage: number, kind: 'handgun'|'shotgun', size?: number, maxDistance?: number|null, knockback?: number, fxKey?: string|null }} meta
    */
   _spawnBullet(bullets, x, y, vx, vy, meta) {
     const libraryGfx = this._spawnLibraryProjectile(x, y, vx, vy, meta);
@@ -537,12 +455,6 @@ export class WeaponSystem {
       size = meta.size ?? SHOTGUN_PELLET_SIZE;
       gfx = this.scene.add.rectangle(x, y, size, size, color);
       gfx.setStrokeStyle(1, 0xfff3e0);
-    } else if (meta.kind === 'pet') {
-      // PIXELLAB_HOOK: replace with sprite PetBullet
-      color = 0xb388ff; // purple/cyan pet projectile
-      size = meta.size ?? Math.max(6, BULLET_SIZE - 1) * LAYOUT_SCALE;
-      gfx = this.scene.add.rectangle(x, y, size, size, color);
-      gfx.setStrokeStyle(1, 0x42a5f5);
     } else {
       gfx = this.scene.add.rectangle(x, y, size, size, color);
     }
@@ -747,26 +659,6 @@ export class WeaponSystem {
     g.fillPath();
     g.setDepth(depthFromY(y, 5));
     this.scene.time.delayedCall(SHOTGUN_VFX_MS, () => {
-      this._safeDestroyGraphics(g);
-    });
-  }
-
-  /**
-   * Brief purple/blue AOE ring at impact. Always force-destroys after PET_AOE_VFX_MS (150ms).
-   * @param {number} x
-   * @param {number} y
-   */
-  _drawPetAoeRing(x, y) {
-    // PIXELLAB_HOOK: replace with sprite pet AOE ring VFX
-    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
-    const g = this.scene.add.graphics();
-    const radius = PET_AOE_RADIUS * LAYOUT_SCALE;
-    g.lineStyle(3 * LAYOUT_SCALE, 0x7e57c2, 0.85);
-    g.strokeCircle(x, y, radius);
-    g.fillStyle(0x42a5f5, 0.22);
-    g.fillCircle(x, y, radius);
-    g.setDepth(depthFromY(y, 5));
-    this.scene.time.delayedCall(PET_AOE_VFX_MS, () => {
       this._safeDestroyGraphics(g);
     });
   }

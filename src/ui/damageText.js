@@ -6,6 +6,10 @@ export const DAMAGE_COLORS = {
   handgun: '#00ffff',
   shotgun: '#ffaa00',
   pet: '#aa00ff',
+  phoenix: '#ffb74d',
+  panda: '#c5e1a5',
+  lion: '#ffe082',
+  dragon: '#80deea',
   barricade: '#ff0000',
 };
 

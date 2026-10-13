@@ -2,6 +2,7 @@ import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprite
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { layoutPx } from '../systems/DepthView.js';
+import { APP_VERSION } from '../data/GameConfig.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 
 /**
@@ -39,7 +40,7 @@ export default class BootScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height * 0.44, 'v0.18.1 — Stage 1', {
+      .text(width / 2, height * 0.44, `v${APP_VERSION} — Stage 1`, {
         fontFamily: 'system-ui, sans-serif',
         fontSize: `${layoutPx(16)}px`,
         color: '#8fa3b8',
