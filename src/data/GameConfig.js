@@ -24,13 +24,14 @@
  * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
  * Nothing calls camera.shake: weapon fire, hits, overkill, and pet attacks.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
- * PETS is the v0.21.0 summon loop: tap to summon or recall, regen while
+ * PETS is the v0.21 summon loop: tap to summon or recall, regen while
  * recalled, revive after death, and orb cooldowns that auto-cast. Form 1
- * is unlocked. Forms 2 and 3 have cast logic and placeholder FX only.
+ * is unlocked. Forms 2 and 3 keep that cast logic and play young / ancient
+ * library cast strips and FX. The pet on the field stays the baby skin.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.21.0';
+export const APP_VERSION = '0.21.1';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -208,9 +209,9 @@ export const GAME_CONFIG = {
       MOUTH_Y: -22,
     },
     /**
-     * Form 2 / form 3. Cast logic is live; visuals are tinted circles until
-     * themed FX exist. Lengths are field px. Orbs 2–3 stay locked while
-     * UNLOCKED_ORBS is 1, so these do not fire in the current stage.
+     * Form 2 / form 3. Cast logic is live and the visuals are the young /
+     * ancient library strips. Lengths are field px. Orbs 2–3 stay locked
+     * while UNLOCKED_ORBS is 1, so these do not fire in the current stage.
      */
     FORM2: {
       phoenix: { damage: 8, radius: 72, burn: 4, burnIntervalMs: 450, burnMs: 1350 },

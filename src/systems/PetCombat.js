@@ -17,22 +17,15 @@ import {
 
 const EMPTY = { gold: 0, kills: 0 };
 
-/** Tinted circles stand in for form-2 / form-3 FX until themed art exists. */
-const PLACEHOLDER_TINT = {
-  phoenix: 0xff6d00,
-  panda: 0xb3e5fc,
-  lion: 0xffee58,
-  dragon: 0x76ff03,
-};
-
 /**
  * Summoned baby pets. Off the field until the bar is tapped.
  * Tap again to recall: the pet leaves, sits behind the barricade, and
  * regens. There is no deploy cooldown and no on-field time limit.
  * Death (HP ≤ 0) greys the bar for REVIVE_CD_MS.
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
- * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
- * Forms 2 and 3 use placeholder circles and stay locked until evolution.
+ * fills, flashes, then auto-casts. The body stays the baby skin.
+ * Orb 1 plays the baby cast. Orbs 2 and 3 play the young and ancient cast
+ * strips plus their library FX, and stay locked until something unlocks them.
  * The camera does not shake.
  */
 export class PetCombat {
@@ -47,8 +40,6 @@ export class PetCombat {
     this._charges = [];
     /** @type {GroundZone[]} */
     this._zones = [];
-    /** @type {FxBlob[]} */
-    this._blobs = [];
     /** @type {{ id: string, orb: number }[]} */
     this.castLog = [];
     /** @type {string[]} */
@@ -58,7 +49,8 @@ export class PetCombat {
   }
 
   /**
-   * Evolution hook. 1 is form 1 only. 3 unlocks the placeholder forms.
+   * Evolution hook. 1 is form 1 only. Raising this unlocks orb casts.
+   * It does not swap the pet's idle / move / hurt skin.
    * @param {number} count
    */
   setUnlockedOrbs(count) {
@@ -207,7 +199,6 @@ export class PetCombat {
     const zones = this._stepZones(dt, list);
     gold += zones.gold;
     kills += zones.kills;
-    this._stepBlobs(dt);
     return { gold, kills };
   }
 
@@ -218,8 +209,6 @@ export class PetCombat {
     this._charges = [];
     for (const zone of this._zones) destroySprite(zone?.node);
     this._zones = [];
-    for (const blob of this._blobs) destroySprite(blob?.node);
-    this._blobs = [];
     for (const actor of this._actors) {
       this._destroyBars(actor);
       destroySprite(actor.sprite);
@@ -244,6 +233,8 @@ export class PetCombat {
       state: 'idle',
       attackElapsed: 0,
       released: false,
+      /** Cast strip for the swing in progress. Baby idle resumes after it. */
+      attackSkill: '',
       hurtLeft: 0,
       popLeft: 0,
       latched: false,
@@ -281,6 +272,7 @@ export class PetCombat {
     actor.state = 'idle';
     actor.attackElapsed = 0;
     actor.released = false;
+    actor.attackSkill = '';
     actor.hurtLeft = 0;
     actor.latched = false;
     actor.latchId = null;
@@ -666,8 +658,9 @@ export class PetCombat {
   }
 
   /**
-   * Form 1 plays the baby skill strip and releases on its hit frame.
-   * Forms 2 and 3 release on a short telegraph; their FX are placeholders.
+   * Every orb plays its cast strip and releases on the hit frame.
+   * Orb 1 is the baby strip. Orb 2 is young. Orb 3 is ancient.
+   * Idle and move stay on the baby skin.
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
@@ -677,7 +670,8 @@ export class PetCombat {
     actor.hurtLeft = 0;
     faceLeft(actor.sprite);
     const orb = actor.castQueue[0] ?? 0;
-    if (orb <= 0) playOnce(actor.sprite, actor.role.skill);
+    actor.attackSkill = skillKeyFor(actor.role, orb);
+    playOnce(actor.sprite, actor.attackSkill);
   }
 
   /**
@@ -687,19 +681,16 @@ export class PetCombat {
    */
   _advanceAttack(actor, zombies, threat) {
     const sprite = actor.sprite;
-    const skill = actor.role.skill;
+    const skill = actor.attackSkill || actor.role.skill;
     const anims = sprite?.anims;
     const frame = anims?.currentFrame?.index ?? 0;
     const progress = typeof anims?.getProgress === 'function' ? anims.getProgress() : 0;
     const playingSkill = !!(anims?.isPlaying && anims.currentAnim?.key === skill);
-    const orb = actor.castQueue[0] ?? 0;
-    const form1 = !(orb > 0);
-    const due = form1
-      ? frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
-        (playingSkill && progress >= 0.34) ||
-        !playingSkill ||
-        actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-      : actor.attackElapsed >= 90;
+    const due =
+      frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
+      (playingSkill && progress >= 0.34) ||
+      !playingSkill ||
+      actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS;
     let gold = 0;
     let kills = 0;
     if (!actor.released && due) {
@@ -711,9 +702,7 @@ export class PetCombat {
         kills += gain.kills;
       }
     }
-    const swingDone = form1
-      ? !playingSkill || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-      : actor.released;
+    const swingDone = !playingSkill || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS;
     if (actor.released && swingDone) {
       if (actor.castQueue.length > 0) this._beginAttack(actor);
       else this._enterIdle(actor);
@@ -903,7 +892,8 @@ export class PetCombat {
   }
 
   /**
-   * Fire nova on the fence threat. Chip plus a short burn.
+   * Phoenix rain over the lane in front of the pet. Bolts fall and burst.
+   * The nova still chips and burns zombies inside the focus radius.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {import('../entities/Zombie.js').Zombie|null} threat
@@ -912,7 +902,7 @@ export class PetCombat {
     const cfg = GAME_CONFIG.PETS.FORM2.phoenix;
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.phoenix, 420, 'phoenix-nova');
+    this._spawnRain(actor);
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -928,7 +918,38 @@ export class PetCombat {
   }
 
   /**
-   * A line charge traveling left from the pet. Wide enough to cross one lane.
+   * Falling rain bolts, 40–140 field px west of the pet, starting above the lane.
+   * @param {PetActor} actor
+   */
+  _spawnRain(actor) {
+    const sprite = actor.sprite;
+    const ox = sprite?.x ?? actor.x;
+    const oy = sprite?.y ?? actor.y;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const key = actor.role.rainBolt;
+    const drops = [48, 92, 132];
+    for (let i = 0; i < drops.length; i++) {
+      const x = ox - layoutPx(drops[i]);
+      const y = oy - layoutPx(64 + i * 12);
+      this._markFx(key);
+      const node = spawnProjectile(this.scene, x, y, key, scale);
+      this._bolts.push({
+        sprite: node,
+        x,
+        y,
+        vx: -120 * LAYOUT_SCALE,
+        vy: 360 * LAYOUT_SCALE,
+        hitIds: new Set(),
+        impact: actor.role.rainImpact,
+        scale,
+        kind: 'rain',
+        groundY: oy,
+      });
+    }
+  }
+
+  /**
+   * Blazing rebirth on the ground under the pet, plus the lane charge.
    * @param {PetActor} actor
    */
   _phoenixDive(actor) {
@@ -936,16 +957,13 @@ export class PetCombat {
     const sprite = actor.sprite;
     const x = sprite?.x ?? actor.x;
     const y = sprite?.y ?? actor.y;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    this._playFx(x, y, actor.role.rebirth, scale);
     const length = cfg.length * LAYOUT_SCALE;
     const halfW = cfg.halfWidth * LAYOUT_SCALE;
     const speed = 480 * LAYOUT_SCALE;
-    for (let i = 1; i <= 4; i++) {
-      this._spawnBlob(x - (length * i) / 5, y, layoutPx(8), PLACEHOLDER_TINT.phoenix, 320, 'phoenix-dive');
-    }
-    const node = this.scene?.add?.rectangle?.(x, y, layoutPx(18), Math.max(layoutPx(8), halfW * 2), PLACEHOLDER_TINT.phoenix, 0.4) ?? null;
-    node?.setDepth?.(depthFromY(y, 5));
     this._charges.push({
-      node,
+      node: null,
       x,
       y,
       vx: -speed,
@@ -960,36 +978,43 @@ export class PetCombat {
   }
 
   /**
-   * One target, the nearest fence threat in range, locked in place.
+   * Bamboo sweep from the chest. One target in range is rooted.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    */
   _pandaFreeze(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.FORM2.panda;
     const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const chest = framePoint(sprite, -4, -22);
+    this._playFx(chest.x, chest.y, actor.role.sweep, scale);
     const range = cfg.range * LAYOUT_SCALE;
     const target = closestThreatWhere(
       zombies,
       (z) => Math.hypot((sprite?.x ?? actor.x) - z.x, (sprite?.y ?? actor.y) - z.y) <= range
     );
     if (!target) return EMPTY;
-    this._spawnBlob(target.x, chestY(target), layoutPx(16), PLACEHOLDER_TINT.panda, 520, 'panda-freeze');
     const gain = strike(this.scene, target, cfg.damage, DAMAGE_COLORS.panda);
     if (!gain.killed && typeof target.applyRoot === 'function') target.applyRoot(cfg.rootMs);
     return gain;
   }
 
   /**
-   * Slow and a light burn on every zombie in a circle on the threat.
+   * Chi blast on the ground under the panda. Slow and a light burn
+   * on every zombie inside the focus radius.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {import('../entities/Zombie.js').Zombie|null} threat
    */
   _pandaBlizzard(actor, zombies, threat) {
     const cfg = GAME_CONFIG.PETS.FORM3.panda;
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    this._playFx(x, y, actor.role.chi, scale);
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.panda, 640, 'panda-blizzard');
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -1004,14 +1029,16 @@ export class PetCombat {
   }
 
   /**
-   * Primary target plus jumps to nearby bodies. Damage steps down the chain.
+   * Roar wave from the mouth. Primary target plus jumps; damage steps down.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    */
   _lionChain(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.FORM2.lion;
     const sprite = actor.sprite;
-    const from = framePoint(sprite, GAME_CONFIG.PETS.LION.FORWARD_X, GAME_CONFIG.PETS.LION.FORWARD_Y);
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const from = framePoint(sprite, -4, -26);
+    this._playFx(from.x, from.y, actor.role.roar, scale);
     const hits = chainTargets(
       zombies,
       from.x,
@@ -1023,20 +1050,16 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     hits.forEach((z, i) => {
-      this._spawnBlob(z.x, chestY(z), layoutPx(10), PLACEHOLDER_TINT.lion, 280, 'lion-chain');
       const dmg = cfg.damages[Math.min(i, cfg.damages.length - 1)];
       const gain = strike(this.scene, z, dmg, DAMAGE_COLORS.lion);
       gold += gain.gold;
       kills += gain.kills;
     });
-    if (!hits.length) {
-      this._spawnBlob(from.x - layoutPx(24), from.y, layoutPx(8), PLACEHOLDER_TINT.lion, 220, 'lion-chain');
-    }
     return { gold, kills };
   }
 
   /**
-   * Circle around the cub. Damage plus a short root.
+   * Sunder strike on the ground under the lion. Damage plus a short root.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    */
@@ -1045,8 +1068,9 @@ export class PetCombat {
     const sprite = actor.sprite;
     const x = sprite?.x ?? actor.x;
     const y = sprite?.y ?? actor.y;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    this._playFx(x, y, actor.role.sunder, scale);
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(x, y, radius, PLACEHOLDER_TINT.lion, 420, 'lion-stomp');
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -1060,7 +1084,8 @@ export class PetCombat {
   }
 
   /**
-   * A poison puddle on the threat that ticks while it lasts.
+   * Fireball from the mouth toward the threat. The splash is the impact FX.
+   * A tick zone keeps the form-2 damage on that point.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie|null} threat
    */
@@ -1068,9 +1093,32 @@ export class PetCombat {
     const cfg = GAME_CONFIG.PETS.FORM2.dragon;
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    const node = this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.dragon, cfg.durationMs, 'dragon-cloud');
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const mouth = framePoint(sprite, GAME_CONFIG.PETS.DRAGON.MOUTH_X, GAME_CONFIG.PETS.DRAGON.MOUTH_Y);
+    const speed = 320 * LAYOUT_SCALE;
+    const limit = (GAME_CONFIG.PETS.DRAGON.HALF_ANGLE_DEG * Math.PI) / 180;
+    const { vx, vy } = leftBoltVelocity(mouth.x, mouth.y, focus.x, focus.y, speed, limit);
+    this._markFx(actor.role.fireball);
+    const node = spawnProjectile(this.scene, mouth.x, mouth.y, actor.role.fireball, scale);
+    if (node && typeof node.setRotation === 'function') {
+      node.setRotation(aimRotation(vx, vy, 'west'));
+    }
+    this._bolts.push({
+      sprite: node,
+      x: mouth.x,
+      y: mouth.y,
+      vx,
+      vy,
+      hitIds: new Set(),
+      impact: actor.role.fireballImpact,
+      scale,
+      kind: 'fireball',
+      targetX: focus.x,
+      targetY: focus.y,
+    });
     this._zones.push({
-      node,
+      node: null,
       x: focus.x,
       y: focus.y,
       radius,
@@ -1084,25 +1132,23 @@ export class PetCombat {
   }
 
   /**
-   * A drop on each nearby fence threat. Chip plus burn.
+   * Apocalypse flame from the mouth. Chip plus burn on nearby threats.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    */
   _dragonRain(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.FORM3.dragon;
     const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const mouth = framePoint(sprite, GAME_CONFIG.PETS.DRAGON.MOUTH_X, GAME_CONFIG.PETS.DRAGON.MOUTH_Y);
+    this._playFx(mouth.x, mouth.y, actor.role.apocalypse, scale);
     const x = sprite?.x ?? actor.x;
     const y = sprite?.y ?? actor.y;
     const range = cfg.range * LAYOUT_SCALE;
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= range).slice(0, cfg.targets);
-    if (!hits.length) {
-      this._spawnBlob(x - layoutPx(40), y, layoutPx(8), PLACEHOLDER_TINT.dragon, 300, 'dragon-rain');
-      return EMPTY;
-    }
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      this._spawnBlob(z.x, chestY(z) - layoutPx(18), layoutPx(8), PLACEHOLDER_TINT.dragon, 360, 'dragon-rain');
       const gain = strike(this.scene, z, cfg.chip, DAMAGE_COLORS.dragon);
       gold += gain.gold;
       kills += gain.kills;
@@ -1116,39 +1162,17 @@ export class PetCombat {
   /**
    * @param {number} x
    * @param {number} y
-   * @param {number} radius
-   * @param {number} color
-   * @param {number} lifeMs
-   * @param {string} tag
+   * @param {string|undefined} key
+   * @param {number} scale
    */
-  _spawnBlob(x, y, radius, color, lifeMs, tag) {
-    const scene = this.scene;
-    const r = Math.max(layoutPx(4), radius);
-    /** @type {Phaser.GameObjects.Arc|Phaser.GameObjects.Rectangle|null} */
-    let node = null;
-    if (scene?.add?.circle) node = scene.add.circle(x, y, r, color, 0.45);
-    else if (scene?.add?.rectangle) node = scene.add.rectangle(x, y, r * 2, r * 2, color, 0.45);
-    if (node) {
-      node.setDepth?.(depthFromY(y, 6));
-      node.setData?.('petFx', tag);
-    }
-    this.fxLog.push(tag);
-    this._blobs.push({ node, life: lifeMs });
-    return node;
+  _playFx(x, y, key, scale) {
+    this._markFx(key);
+    playCastFx(this.scene, x, y, key, scale, y);
   }
 
-  /** @param {number} dt */
-  _stepBlobs(dt) {
-    const keep = [];
-    for (const blob of this._blobs) {
-      blob.life -= dt;
-      if (blob.life <= 0 || (blob.node && blob.node.active === false)) {
-        destroySprite(blob.node);
-        continue;
-      }
-      keep.push(blob);
-    }
-    this._blobs = keep;
+  /** @param {string|undefined} key */
+  _markFx(key) {
+    if (key) this.fxLog.push(key);
   }
 
   /**
@@ -1245,6 +1269,25 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const bolt of this._bolts) {
+      if (bolt.kind === 'rain') {
+        if (this._landRain(bolt)) continue;
+        if (boltOutOfPlay(bolt)) {
+          destroySprite(bolt.sprite);
+          continue;
+        }
+        keep.push(bolt);
+        continue;
+      }
+      if (bolt.kind === 'fireball') {
+        if (this._landFireball(bolt, zombies)) continue;
+        if (boltOutOfPlay(bolt)) {
+          this._playFx(bolt.x, bolt.y, bolt.impact, bolt.scale);
+          destroySprite(bolt.sprite);
+          continue;
+        }
+        keep.push(bolt);
+        continue;
+      }
       if (boltOutOfPlay(bolt)) {
         destroySprite(bolt.sprite);
         continue;
@@ -1271,6 +1314,34 @@ export class PetCombat {
     }
     this._bolts = keep;
     return { gold, kills };
+  }
+
+  /**
+   * Rain bolt bursts when it reaches the lane.
+   * @param {PhoenixBolt} bolt
+   */
+  _landRain(bolt) {
+    const ground = Number.isFinite(bolt.groundY) ? bolt.groundY : bolt.y;
+    if (bolt.y < ground) return false;
+    this._playFx(bolt.x, ground, bolt.impact, bolt.scale);
+    destroySprite(bolt.sprite);
+    return true;
+  }
+
+  /**
+   * Fireball bursts on the first body it crosses, or when it reaches the aim point.
+   * @param {PhoenixBolt} bolt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   */
+  _landFireball(bolt, zombies) {
+    const list = Array.isArray(zombies) ? zombies : [];
+    const hit = list.some((z) => z?.alive && z.body && boltOverlaps(z, bolt.x, bolt.y));
+    const targetX = Number.isFinite(bolt.targetX) ? bolt.targetX : bolt.x - 1;
+    if (!hit && bolt.x > targetX) return false;
+    const y = hit ? bolt.y : (Number.isFinite(bolt.targetY) ? bolt.targetY : bolt.y);
+    this._playFx(bolt.x, y, bolt.impact, bolt.scale);
+    destroySprite(bolt.sprite);
+    return true;
   }
 }
 
@@ -1536,6 +1607,17 @@ function playLoop(sprite, key) {
 }
 
 /**
+ * Orb 0 stays on the baby cast. Orb 1 is the young strip. Orb 2 is ancient.
+ * @param {{ skill: string, skillYoung?: string, skillAncient?: string }} role
+ * @param {number} orbIndex
+ */
+function skillKeyFor(role, orbIndex) {
+  if (orbIndex === 1 && role.skillYoung) return role.skillYoung;
+  if (orbIndex >= 2 && role.skillAncient) return role.skillAncient;
+  return role.skill;
+}
+
+/**
  * @param {Phaser.GameObjects.Sprite} sprite
  * @param {string} key
  */
@@ -1653,6 +1735,7 @@ function wrapPi(rad) {
  * @property {number} reviveLeft
  * @property {'idle'|'move'|'attack'|'hurt'} state
  * @property {boolean} released
+ * @property {string} attackSkill
  * @property {number} attackElapsed
  * @property {number[]} castQueue
  * @property {OrbState[]} orbs
@@ -1681,6 +1764,10 @@ function wrapPi(rad) {
  * @property {Set<number>} hitIds
  * @property {string|undefined} impact
  * @property {number} scale
+ * @property {'spark'|'rain'|'fireball'|undefined} [kind]
+ * @property {number} [groundY]
+ * @property {number} [targetX]
+ * @property {number} [targetY]
  */
 
 /**
@@ -1708,10 +1795,4 @@ function wrapPi(rad) {
  * @property {number} acc
  * @property {number} left
  * @property {string} hitColor
- */
-
-/**
- * @typedef {object} FxBlob
- * @property {Phaser.GameObjects.GameObject|null} node
- * @property {number} life
  */
