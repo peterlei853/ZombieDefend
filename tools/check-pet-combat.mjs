@@ -5,7 +5,7 @@
  * Portraits own summon. Pets start off the field. Timeout starts skill CD
  * only. Death starts revive CD only. A tap with no enemies does not spend CD.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
 import { PET_LINEUP, PET_STAGE_KEYS, stageLibraryFilter } from '../src/assets/petLineup.js';
 import { barricadeXAtY, layoutPx } from '../src/systems/DepthView.js';
@@ -29,8 +29,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.20.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.20.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.20.1', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.20.1', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -42,7 +42,7 @@ const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.met
 assert(boot.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!boot.includes('v0.19'), 'boot title is not 0.19');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.20.0'), 'document title is v0.20.0');
+assert(html.includes('v0.20.1'), 'document title is v0.20.1');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from portraits');
@@ -79,7 +79,32 @@ assert(PET_STAGE_KEYS.has('fx-pet-dragon-smoke-breath'), 'dragon breath loads');
 assert(!PET_STAGE_KEYS.has('fx-pet-dragon-fireball'), 'baby dragon does not load fireball');
 assert(!PET_STAGE_KEYS.has('pet-phoenix-young-skill'), 'young form stays unloaded');
 assert(stageLibraryFilter({ category: 'hero', key: 'player-girl' }), 'hero still loads');
+assert(stageLibraryFilter({ category: 'hero', key: 'icon-flame', type: 'icon' }), 'hero icons still load');
 assert(!stageLibraryFilter({ category: 'pets', key: 'pet-lion-ancient-idle' }), 'ancient filtered');
+
+const HEAD_KEYS = [
+  'ui-pet-phoenix-head',
+  'ui-pet-panda-head',
+  'ui-pet-lion-head',
+  'ui-pet-dragon-head',
+];
+assert(PET_LINEUP.map((pet) => pet.portrait).join() === HEAD_KEYS.join(), 'portrait keys are formal heads');
+for (const key of HEAD_KEYS) {
+  assert(PET_STAGE_KEYS.has(key), `${key} is queued with the stage`);
+  assert(!key.includes('baby-idle'), `${key} is not an idle strip`);
+}
+const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+const headManifest = JSON.parse(
+  readFileSync(new URL('../assets/library/pets/ui/manifest.json', import.meta.url), 'utf8')
+);
+for (const key of HEAD_KEYS) {
+  const asset = index.assets.find((entry) => entry.key === key);
+  assert(asset?.type === 'icon' && asset.category === 'pets', `${key} is a pets icon in the catalog`);
+  assert(asset.frames === 1 && asset.frameWidth === 48 && asset.frameHeight === 48, `${key} is 48×48`);
+  assert(headManifest.assets.some((entry) => entry.key === key && entry.path === asset.path), `${key} manifest path matches catalog`);
+  assert(existsSync(new URL(`../${asset.path}`, import.meta.url)), `${key} png exists`);
+  assert(stageLibraryFilter(asset), `${key} passes the stage filter`);
+}
 
 const summon = GAME_CONFIG.PETS.SUMMON;
 assert(summon.phoenix.skillCdMs === 8000 && summon.phoenix.fieldMs === 12000 && summon.phoenix.reviveCdMs === 20000, 'phoenix 8/12/20');
@@ -141,9 +166,12 @@ const scene = mockScene(audio);
 const combat = new PetCombat(scene);
 const views0 = combat.portraitViews();
 assert(views0.length === 4, 'four portrait slots');
-assert(views0.every((view) => view.portraitKey.endsWith('-baby-idle')), 'portraits are baby idle strips');
-assert(hud.includes('key, 0'), 'portrait image is idle frame 0');
-assert(!hud.includes('pet-portrait-icon'), 'no dedicated portrait icons');
+assert(views0.map((view) => view.portraitKey).join() === HEAD_KEYS.join(), 'views use ui-pet-*-head');
+assert(views0.every((view) => !view.portraitKey.includes('baby-idle') && view.crop == null), 'portraits are not idle-frame crops');
+assert(!hud.includes('setCrop'), 'HUD does not crop an idle frame');
+assert(!hud.includes('setFrame'), 'HUD does not pin idle frame 0');
+assert(hud.includes('setTint'), 'grey state is a code tint');
+assert(hud.includes('setAlpha'), 'dim state is code alpha');
 assert(views0.every((view) => view.phase === 'ready' && view.tappable && view.bar === 1), 'starts ready, off the field');
 assert(combat.fieldPets().length === 0, 'nothing is summoned at stage start');
 

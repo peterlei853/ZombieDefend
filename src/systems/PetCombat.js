@@ -103,8 +103,7 @@ export class PetCombat {
         grey: actor.phase === 'revive',
         badge: actor.phase === 'field' ? '出戰中' : '',
         bar: clamp01(bar),
-        portraitKey: actor.role.key,
-        crop: actor.role.portrait,
+        portraitKey: actor.role.portrait,
       };
     });
   }

@@ -12,8 +12,8 @@ import {
  * face west) and the baby skill FX. Young / ancient forms stay on disk.
  * Order is party order: far → near, and the portrait column top → bottom.
  * Pets are not spawned with the stage. Portraits summon them.
- * `portrait` is the big-head crop of idle frame 0 (texture px). The library
- * has no dedicated portrait icons; the HUD shows that frame directly.
+ * `portrait` is the 48×48 library head icon (`ui-pet-*-head`). Bright, dim,
+ * and grey states are tint and alpha on that texture.
  */
 export const PET_LINEUP = [
   {
@@ -26,7 +26,7 @@ export const PET_LINEUP = [
     hurt: 'pet-phoenix-baby-hurt',
     projectile: 'fx-pet-phoenix-spark-feather',
     impact: 'fx-pet-phoenix-spark-feather-hit',
-    portrait: { x: 6, y: 2, width: 36, height: 28 },
+    portrait: 'ui-pet-phoenix-head',
   },
   {
     id: 'panda',
@@ -38,7 +38,7 @@ export const PET_LINEUP = [
     hurt: 'pet-panda-baby-hurt',
     windup: 'fx-pet-panda-roll-dust',
     impact: 'fx-pet-panda-roll-impact',
-    portrait: { x: 8, y: 8, width: 30, height: 24 },
+    portrait: 'ui-pet-panda-head',
   },
   {
     id: 'lion',
@@ -49,7 +49,7 @@ export const PET_LINEUP = [
     skill: 'pet-lion-baby-skill',
     hurt: 'pet-lion-baby-hurt',
     impact: 'fx-pet-lion-pounce-slash',
-    portrait: { x: 4, y: 12, width: 28, height: 22 },
+    portrait: 'ui-pet-lion-head',
   },
   {
     id: 'dragon',
@@ -60,7 +60,7 @@ export const PET_LINEUP = [
     skill: 'pet-dragon-baby-skill',
     hurt: 'pet-dragon-baby-hurt',
     breath: 'fx-pet-dragon-smoke-breath',
-    portrait: { x: 5, y: 2, width: 32, height: 28 },
+    portrait: 'ui-pet-dragon-head',
   },
 ];
 
@@ -72,12 +72,20 @@ export const PET_ELEMENT_TINT = {
   poison: 0x9ccc65,
 };
 
-/** Idle, move, skill, hurt, and the baby FX each role actually casts. */
+/** Idle, move, skill, hurt, the HUD head icon, and the baby FX each role casts. */
 export const PET_STAGE_KEYS = new Set(
   PET_LINEUP.flatMap((pet) =>
-    [pet.key, pet.move, pet.skill, pet.hurt, pet.projectile, pet.windup, pet.impact, pet.breath].filter(
-      Boolean
-    )
+    [
+      pet.key,
+      pet.move,
+      pet.skill,
+      pet.hurt,
+      pet.portrait,
+      pet.projectile,
+      pet.windup,
+      pet.impact,
+      pet.breath,
+    ].filter(Boolean)
   )
 );
 
@@ -91,8 +99,10 @@ export const PET_STAGE_KEYS = new Set(
 export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
- * Stage load filter. Non-pet categories pass through. From `pets`, only
- * the four baby idle/move/skill/hurt strips and their phase-1 FX are queued.
+ * Stage load filter. Non-pet categories pass through (hero icons included).
+ * From `pets`, only the four baby strips, their phase-1 FX, and the four
+ * `ui-pet-*-head` icons are queued. The loader still reads path and type
+ * from the asset index.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {
