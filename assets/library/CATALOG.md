@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 86 |
+| [Hero](#hero) | 3 | 91 |
 | [Pets](#pets) | 17 | 88 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
@@ -14,7 +14,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **41** | **402** |
+| **Total** | **41** | **407** |
 
 <a id="hero"></a>
 ## Hero
@@ -85,41 +85,46 @@ Chibi girl hero with red cap and backpack; base moves plus six weapons (water, b
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake + v0.16.2 sling stone pellet/impact.
+Hero girl weapon FX v0.22 remake (Peter 2026-10-13): water AoE blob, black sling + knockback, transparent split bubbles, lightning chain=3, frost snowflake freeze, flame cone 1/6→2/3 + burn DoT.
 
-- group `girl-fx` · 30 assets · frame 8x8, 12x12, 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 36x32, 40x18, 40x40, 48x24, 64x16, 64x24, 64x64, 96x40 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
-- previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png)
+- group `girl-fx` · 35 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `fx-bubble-muzzle` | 4 | 32x28 | 12 | once | (1.0, 0.5) |  |
-| `fx-bubble-pop` | 6 | 24x24 | 16 | once | (0.5, 0.5) |  |
-| `fx-bubble-proj-l` | 4 | 16x16 | 8 | loop | (0.5, 0.5) |  |
-| `fx-bubble-proj-m` | 4 | 12x12 | 8 | loop | (0.5, 0.5) |  |
-| `fx-bubble-proj-s` | 4 | 8x8 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-pop` | 6 | 48x48 | 16 | once | (0.5, 0.5) |  |
+| `fx-bubble-proj-l` | 4 | 48x48 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-proj-m` | 4 | 24x24 | 8 | loop | (0.5, 0.5) |  |
+| `fx-bubble-proj-s` | 4 | 16x16 | 8 | loop | (0.5, 0.5) |  |
 | `fx-bubble-trap-form` | 6 | 64x64 | 12 | once | (0.5, 1.0) |  |
 | `fx-bubble-trap-loop` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
 | `fx-bubble-trap-pop` | 6 | 64x64 | 16 | once | (0.5, 1.0) |  |
-| `fx-flame-cone` | 6 | 96x40 | 12 | loop | (1.0, 0.5) |  |
+| `fx-flame-burn` | 6 | 48x48 | 12 | loop | (0.5, 0.7) |  |
+| `fx-flame-cone` | 6 | 128x48 | 12 | loop | (1.0, 0.5) |  |
+| `fx-flame-cone-short` | 4 | 48x32 | 12 | loop | (1.0, 0.5) |  |
 | `fx-flame-ground` | 6 | 48x24 | 10 | loop | (0.5, 0.92) |  |
 | `fx-flame-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
 | `fx-flame-muzzle` | 4 | 24x24 | 14 | once | (1.0, 0.5) |  |
 | `fx-flame-smoke` | 8 | 32x32 | 12 | loop | (0.5, 0.5) |  |
 | `fx-frost-beam` | 4 | 64x16 | 12 | loop | (0.15, 0.5) |  |
-| `fx-frost-impact` | 8 | 40x40 | 12 | once | (0.5, 0.83) |  |
+| `fx-frost-freeze` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
+| `fx-frost-impact` | 6 | 48x48 | 12 | once | (0.5, 0.5) |  |
 | `fx-frost-muzzle` | 4 | 24x32 | 12 | once | (1.0, 0.5) |  |
-| `fx-frost-pellet` | 4 | 16x16 | 12 | loop | (0.5, 0.5) |  |
+| `fx-frost-pellet` | 4 | 24x24 | 12 | loop | (0.5, 0.5) |  |
 | `fx-frost-shatter` | 10 | 64x64 | 14 | once | (0.5, 0.7) |  |
-| `fx-lightning-bolt` | 4 | 48x24 | 16 | loop | (0.18, 0.5) |  |
+| `fx-lightning-bolt` | 4 | 64x24 | 16 | loop | (0.15, 0.5) |  |
 | `fx-lightning-chain` | 4 | 64x24 | 16 | loop | (0.0, 0.5) |  |
-| `fx-lightning-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) |  |
+| `fx-lightning-impact` | 6 | 48x48 | 14 | once | (0.5, 0.5) |  |
 | `fx-lightning-muzzle` | 4 | 28x24 | 14 | once | (1.0, 0.5) |  |
 | `fx-lightning-paralyze` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) |  |
-| `fx-sling-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) | v0.16.2: brown/gray stone-chip splash (no fire) |
-| `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.38, 0.5) | v0.16.2: brown stone/pebble (NOT blue cube); spins; short dust trail east; travel west |
-| `fx-water-impact` | 6 | 36x32 | 12 | once | (0.5, 0.69) |  |
+| `fx-sling-impact` | 6 | 48x48 | 14 | once | (0.5, 0.5) |  |
+| `fx-sling-knockback` | 4 | 64x24 | 14 | once | (0.0, 0.5) |  |
+| `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.5, 0.5) |  |
+| `fx-water-impact` | 6 | 64x64 | 12 | once | (0.5, 0.5) |  |
 | `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
+| `fx-water-proj` | 4 | 32x32 | 10 | loop | (0.5, 0.5) |  |
 | `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) |  |
 | `fx-water-wet` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
 

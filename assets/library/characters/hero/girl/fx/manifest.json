@@ -2,9 +2,9 @@
   "schema": "zombiedefend-asset-group/1",
   "category": "hero",
   "group": "girl-fx",
-  "title": "Player Girl \u2014 weapon FX",
-  "titleZh": "\u5973\u4e3b\u89d2\u6b66\u5668\u7279\u6548",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.16.1 clarity remake + v0.16.2 sling stone pellet/impact.",
+  "title": "Player Girl — weapon FX",
+  "titleZh": "女主角武器特效",
+  "description": "Hero girl weapon FX v0.22 remake (Peter 2026-10-13): water AoE blob, black sling + knockback, transparent split bubbles, lightning chain=3, frost snowflake freeze, flame cone 1/6→2/3 + burn DoT.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -16,7 +16,7 @@
     "animate": [
       "fx-water-impact",
       "fx-lightning-impact",
-      "fx-frost-shatter",
+      "fx-frost-freeze",
       "fx-flame-cone"
     ],
     "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
@@ -24,7 +24,7 @@
       "assets/library/previews/hero/girl-fx/fx-sheet.png"
     ],
     "extras": [
-      "assets/library/characters/hero/girl/preview/sling-pellet-v0162.png"
+      "assets/library/characters/hero/girl/preview/weapon-fx-v022.png"
     ]
   },
   "assets": [
@@ -45,8 +45,8 @@
     {
       "key": "fx-bubble-pop",
       "path": "assets/library/characters/hero/girl/fx/fx-bubble-pop.png",
-      "frameWidth": 24,
-      "frameHeight": 24,
+      "frameWidth": 48,
+      "frameHeight": 48,
       "frames": 6,
       "frameRate": 16,
       "loop": false,
@@ -56,12 +56,79 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "fast soap pop + sparkles; no solid slime body"
+        "gameplayNotes": {
+          "role": "hitPop"
+        },
+        "note": "v0.22 soap pop + sparkles on hit/split"
       }
     },
     {
       "key": "fx-bubble-proj-l",
       "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-l.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "primaryProjectile",
+          "sizeMultiplier": 4.0,
+          "speedMultiplier": 0.35,
+          "speedRank": "slowest",
+          "shape": "transparent soap bubble",
+          "onHitSplit": {
+            "count": 2,
+            "anglesDeg": [
+              -45,
+              45
+            ],
+            "childKey": "fx-bubble-proj-m",
+            "recursive": true
+          }
+        },
+        "note": "v0.22 4× transparent parent bubble; slowest weapon; splits ±45°"
+      }
+    },
+    {
+      "key": "fx-bubble-proj-m",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-m.png",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "splitChild",
+          "sizeMultiplier": 2.0,
+          "speedMultiplier": 0.35,
+          "onHitSplit": {
+            "count": 2,
+            "anglesDeg": [
+              -45,
+              45
+            ],
+            "childKey": "fx-bubble-proj-s",
+            "recursive": true
+          }
+        },
+        "note": "v0.22 medium split child; can split again to S"
+      }
+    },
+    {
+      "key": "fx-bubble-proj-s",
+      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-s.png",
       "frameWidth": 16,
       "frameHeight": 16,
       "frames": 4,
@@ -71,35 +138,16 @@
         0.5,
         0.5
       ],
-      "type": "fx"
-    },
-    {
-      "key": "fx-bubble-proj-m",
-      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-m.png",
-      "frameWidth": 12,
-      "frameHeight": 12,
-      "frames": 4,
-      "frameRate": 8,
-      "loop": true,
-      "origin": [
-        0.5,
-        0.5
-      ],
-      "type": "fx"
-    },
-    {
-      "key": "fx-bubble-proj-s",
-      "path": "assets/library/characters/hero/girl/fx/fx-bubble-proj-s.png",
-      "frameWidth": 8,
-      "frameHeight": 8,
-      "frames": 4,
-      "frameRate": 8,
-      "loop": true,
-      "origin": [
-        0.5,
-        0.5
-      ],
-      "type": "fx"
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "splitGrandchild",
+          "sizeMultiplier": 1.0,
+          "speedMultiplier": 0.35,
+          "onHitSplit": null
+        },
+        "note": "v0.22 small final split child"
+      }
     },
     {
       "key": "fx-bubble-trap-form",
@@ -115,7 +163,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "play once then trap-loop then trap-pop; soap film + sparkle ring (non-enemy)"
+        "note": "optional trap path; primary combat is split projectiles"
       }
     },
     {
@@ -132,7 +180,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "semi-transparent soap + sparkle ring \u2014 do not treat as enemy"
+        "note": "optional trap loop"
       }
     },
     {
@@ -149,14 +197,35 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "fast soap dissolve"
+        "note": "optional trap pop"
+      }
+    },
+    {
+      "key": "fx-flame-burn",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-burn.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.7
+      ],
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "dotBurnOnEnemy",
+          "loopOnEnemy": true
+        },
+        "note": "v0.22 sustained burn DoT overlay while enemy is in flame"
       }
     },
     {
       "key": "fx-flame-cone",
       "path": "assets/library/characters/hero/girl/fx/fx-flame-cone.png",
-      "frameWidth": 96,
-      "frameHeight": 40,
+      "frameWidth": 128,
+      "frameHeight": 48,
       "frames": 6,
       "frameRate": 12,
       "loop": true,
@@ -165,8 +234,43 @@
         0.5
       ],
       "type": "fx",
+      "facing": "west",
       "extra": {
-        "note": "origin at nozzle (right); thick near nozzle, tapers west; high-contrast fire"
+        "gameplayNotes": {
+          "role": "continuousSprayMax",
+          "rangeScreenFraction": {
+            "start": 0.166,
+            "max": 0.666
+          },
+          "continuous": true,
+          "dotBurn": true,
+          "burnFx": "fx-flame-burn",
+          "shortVariant": "fx-flame-cone-short"
+        },
+        "note": "v0.22 long flame cone (~2/3 screen max). Origin at nozzle (right). Scale in Gameplay from 1/6→2/3."
+      }
+    },
+    {
+      "key": "fx-flame-cone-short",
+      "path": "assets/library/characters/hero/girl/fx/fx-flame-cone-short.png",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        1.0,
+        0.5
+      ],
+      "type": "fx",
+      "facing": "west",
+      "extra": {
+        "gameplayNotes": {
+          "role": "continuousSprayStart",
+          "rangeScreenFraction": 0.166,
+          "continuous": true
+        },
+        "note": "v0.22 short flame cone (~1/6 screen start range)"
       }
     },
     {
@@ -197,7 +301,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "short warm hit burst"
+        "note": "optional short hit burst; prefer fx-flame-burn for DoT"
       }
     },
     {
@@ -228,7 +332,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "v0.16.1: warm ember fireball \u2014 Flame shotgun pellet (NOT gray smoke)"
+        "note": "legacy ember pellet; flame primary is continuous cone"
       }
     },
     {
@@ -244,26 +348,53 @@
         0.5
       ],
       "type": "fx",
+      "facing": "west",
       "extra": {
-        "note": "ice-crystal spear; west tip sharp; readable as rotating shotgun pellets"
-      },
-      "facing": "west"
+        "deprecated": true,
+        "replacedBy": "fx-frost-pellet",
+        "note": "DEPRECATED as primary v0.22 — keep for legacy; use fx-frost-pellet snowflake"
+      }
+    },
+    {
+      "key": "fx-frost-freeze",
+      "path": "assets/library/characters/hero/girl/fx/fx-frost-freeze.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "statusFreeze",
+          "loopOnEnemy": true
+        },
+        "note": "v0.22 ice encase / frost coat overlay on frozen enemy (origin feet)"
+      }
     },
     {
       "key": "fx-frost-impact",
       "path": "assets/library/characters/hero/girl/fx/fx-frost-impact.png",
-      "frameWidth": 40,
-      "frameHeight": 40,
-      "frames": 8,
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 6,
       "frameRate": 12,
       "loop": false,
       "origin": [
         0.5,
-        0.83
+        0.5
       ],
       "type": "fx",
       "extra": {
-        "note": "ice-crystal fan erupt"
+        "gameplayNotes": {
+          "role": "hitFreezeFlash",
+          "status": "freeze"
+        },
+        "note": "v0.22 freeze hit flash / ice crystal burst"
       }
     },
     {
@@ -283,8 +414,8 @@
     {
       "key": "fx-frost-pellet",
       "path": "assets/library/characters/hero/girl/fx/fx-frost-pellet.png",
-      "frameWidth": 16,
-      "frameHeight": 16,
+      "frameWidth": 24,
+      "frameHeight": 24,
       "frames": 4,
       "frameRate": 12,
       "loop": true,
@@ -293,8 +424,17 @@
         0.5
       ],
       "type": "fx",
+      "facing": "west",
       "extra": {
-        "note": "NEW v0.16.1: compact ice crystal for shotgun pellets \u2014 prefer over beam for Frost profile"
+        "gameplayNotes": {
+          "role": "primaryProjectile",
+          "sizeMultiplier": 2.0,
+          "speedMultiplier": 1.0,
+          "shape": "snowflake",
+          "statusOnHit": "freeze",
+          "statusFx": "fx-frost-freeze"
+        },
+        "note": "v0.22 primary frost = snowflake pellet (2×, normal speed). Prefer over beam."
       }
     },
     {
@@ -309,25 +449,37 @@
         0.5,
         0.7
       ],
-      "type": "fx"
+      "type": "fx",
+      "extra": {
+        "note": "optional large shatter"
+      }
     },
     {
       "key": "fx-lightning-bolt",
       "path": "assets/library/characters/hero/girl/fx/fx-lightning-bolt.png",
-      "frameWidth": 48,
+      "frameWidth": 64,
       "frameHeight": 24,
       "frames": 4,
       "frameRate": 16,
       "loop": true,
       "origin": [
-        0.18,
+        0.15,
         0.5
       ],
       "type": "fx",
+      "facing": "west",
       "extra": {
-        "note": "cyan energy orb + jagged arc; west-facing tip at left; travel west"
-      },
-      "facing": "west"
+        "gameplayNotes": {
+          "role": "primaryProjectile",
+          "sizeMultiplier": 1.0,
+          "speedMultiplier": 2.0,
+          "speedRank": "fastest",
+          "shape": "straight lightning bolt",
+          "chainCount": 3,
+          "chainFx": "fx-lightning-chain"
+        },
+        "note": "v0.22 straight lightning bolt west; fastest; chain initial 3"
+      }
     },
     {
       "key": "fx-lightning-chain",
@@ -343,14 +495,19 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "tileable horizontal arc (ends at y=12); use TileSprite or scaleX to span targets"
+        "gameplayNotes": {
+          "role": "chainArc",
+          "chainCount": 3,
+          "tileable": true
+        },
+        "note": "v0.22 chain arc between targets; scaleX/TileSprite to span"
       }
     },
     {
       "key": "fx-lightning-impact",
       "path": "assets/library/characters/hero/girl/fx/fx-lightning-impact.png",
-      "frameWidth": 40,
-      "frameHeight": 40,
+      "frameWidth": 48,
+      "frameHeight": 48,
       "frames": 6,
       "frameRate": 14,
       "loop": false,
@@ -358,7 +515,13 @@
         0.5,
         0.5
       ],
-      "type": "fx"
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "hitZap"
+        },
+        "note": "v0.22 strong lightning zap on hit"
+      }
     },
     {
       "key": "fx-lightning-muzzle",
@@ -374,7 +537,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "optional cyan muzzle flash; nozzle at right"
+        "note": "optional cyan muzzle"
       }
     },
     {
@@ -391,7 +554,7 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "overlay on paralysed zombie (origin feet)"
+        "note": "optional paralyze overlay (origin feet)"
       }
     },
     {
@@ -414,8 +577,8 @@
     {
       "key": "fx-sling-impact",
       "path": "assets/library/characters/hero/girl/fx/fx-sling-impact.png",
-      "frameWidth": 40,
-      "frameHeight": 40,
+      "frameWidth": 48,
+      "frameHeight": 48,
       "frames": 6,
       "frameRate": 14,
       "loop": false,
@@ -424,7 +587,37 @@
         0.5
       ],
       "type": "fx",
-      "note": "v0.16.2: brown/gray stone-chip splash (no fire)"
+      "extra": {
+        "gameplayNotes": {
+          "role": "hit",
+          "knockbackBodyLengths": 2,
+          "pairWith": "fx-sling-knockback"
+        },
+        "note": "v0.22 impact burst + knockback feel"
+      }
+    },
+    {
+      "key": "fx-sling-knockback",
+      "path": "assets/library/characters/hero/girl/fx/fx-sling-knockback.png",
+      "frameWidth": 64,
+      "frameHeight": 24,
+      "frames": 4,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.0,
+        0.5
+      ],
+      "type": "fx",
+      "facing": "west",
+      "extra": {
+        "gameplayNotes": {
+          "role": "knockbackStreak",
+          "knockbackBodyLengths": 2,
+          "direction": "west"
+        },
+        "note": "v0.22 optional motion trails / push arrows west"
+      }
     },
     {
       "key": "fx-sling-pellet",
@@ -435,25 +628,44 @@
       "frameRate": 14,
       "loop": true,
       "origin": [
-        0.38,
+        0.5,
         0.5
       ],
       "type": "fx",
-      "note": "v0.16.2: brown stone/pebble (NOT blue cube); spins; short dust trail east; travel west"
+      "facing": "west",
+      "extra": {
+        "gameplayNotes": {
+          "role": "primaryProjectile",
+          "sizeMultiplier": 1.0,
+          "speedMultiplier": 1.0,
+          "shape": "perfect solid black circle",
+          "knockbackBodyLengths": 2,
+          "knockbackDirection": "west"
+        },
+        "note": "v0.22 solid black circle pellet (1×, normal speed)"
+      }
     },
     {
       "key": "fx-water-impact",
       "path": "assets/library/characters/hero/girl/fx/fx-water-impact.png",
-      "frameWidth": 36,
-      "frameHeight": 32,
+      "frameWidth": 64,
+      "frameHeight": 64,
       "frames": 6,
       "frameRate": 12,
       "loop": false,
       "origin": [
         0.5,
-        0.69
+        0.5
       ],
-      "type": "fx"
+      "type": "fx",
+      "extra": {
+        "gameplayNotes": {
+          "role": "hitAoE",
+          "aoeSplash": true,
+          "sizeMultiplier": 3.0
+        },
+        "note": "v0.22 AoE splash ring / range damage visual"
+      }
     },
     {
       "key": "fx-water-muzzle",
@@ -470,6 +682,32 @@
       "type": "fx"
     },
     {
+      "key": "fx-water-proj",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-proj.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "facing": "west",
+      "extra": {
+        "gameplayNotes": {
+          "role": "primaryProjectile",
+          "sizeMultiplier": 3.0,
+          "speedMultiplier": 0.5,
+          "shape": "heavy aqua water blob",
+          "aoeOnHit": true,
+          "groundFx": "fx-water-wet"
+        },
+        "note": "v0.22 primary water projectile (3× size, 0.5× speed). Prefer over fx-water-stream."
+      }
+    },
+    {
       "key": "fx-water-stream",
       "path": "assets/library/characters/hero/girl/fx/fx-water-stream.png",
       "frameWidth": 64,
@@ -483,7 +721,9 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "seamless horizontal tile; repeat/stretch leftward from muzzle (TileSprite)"
+        "deprecated": true,
+        "replacedBy": "fx-water-proj",
+        "note": "DEPRECATED v0.22 — thin stream; use fx-water-proj for heavy water blob."
       }
     },
     {
@@ -500,7 +740,11 @@
       ],
       "type": "fx",
       "extra": {
-        "note": "overlay on a wet zombie (feet at origin)"
+        "gameplayNotes": {
+          "role": "groundWet",
+          "place": "floor under impact"
+        },
+        "note": "v0.22 wet puddle on floor (origin feet)"
       }
     }
   ]

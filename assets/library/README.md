@@ -365,4 +365,4 @@ python3 tools/build-asset-catalog.py --check
 
 ## Provenance
 
-The art was made with PixelLab plus procedural FX and hand fixes, through polish passes in Oct 2026. Only final deliverables are included: no `*_old` files, `work/`, `gen/`, `raw/` or debug files. `source.pixellabCharacterId` in each manifest identifies the PixelLab character for future animations.
+The art was made with PixelLab plus procedural FX and hand fixes, through polish passes in Oct 2026. Hero weapon FX remade in **v0.22** (water AoE blob, black sling+knockback, split bubbles, lightning chain=3, frost snowflake freeze, flame cone range + burn DoT). Only final deliverables are included: no `*_old` files, `work/`, `gen/`, `raw/` or debug files. `source.pixellabCharacterId` in each manifest identifies the PixelLab character for future animations.
