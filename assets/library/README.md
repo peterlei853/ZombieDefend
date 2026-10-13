@@ -21,7 +21,7 @@ assets/library/
 ├── asset-index.json          ← GENERATED
 ├── CATALOG.md                ← GENERATED
 ├── catalog.html              ← GENERATED (inline index included)
-├── characters/hero/girl/     manifest.json + strips/   (player-girl-*)
+├── characters/hero/girl/     manifest.json + strips/ + front/ + back/   (player-girl-*)
 │   ├── fx/                   manifest.json + fx-*.png  (weapon FX)
 │   └── icons/                manifest.json + icon-*.png
 ├── enemies/
@@ -89,6 +89,10 @@ Shared FX under `fx/v026/` (category `fx`, five groups). Notes live in [`fx/v026
 - `vfx-aoe-ice` is flagged for a possible shatter retouch later. It may read as an orb or crystal blob rather than a shatter puddle.
 - Stars `vfx-evolve-stars-1` / `-2` / `-3` are pet head markers (T1 / T2 / T3). Origin is the feet / bottom, (0.5, 1). The single `vfx-evolve-star` is 32×32 with origin (0.5, 0.5).
 - `vfx-telegraph-ring` is the 64×64 S1 ring. Its file is `vfx-telegraph-ring-64.png`. `vfx-telegraph-ring-128` is the S2 nearest upscale. `vfx-telegraph-half-left` is a procedural 192×108 half-screen wash with origin (0, 0.5).
+
+## Front-float combat (v0.27)
+
+Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Run sheets `player-girl-run-*` are not in the library; walk is the fallback. Front stills (`player-girl-front-*-still`) were not shipped.
 
 ## UI kit
 

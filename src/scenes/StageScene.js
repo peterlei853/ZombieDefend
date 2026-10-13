@@ -52,6 +52,7 @@ import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 import { debugBgmEnabled } from '../debugBgm.js';
 import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
+import { grantStageWeapons } from '../assets/heroDeploy.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -84,9 +85,11 @@ export default class StageScene extends Phaser.Scene {
     this.gold = this.runStartGold;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
 
-    this.ownedWeapons = Array.isArray(data?.ownedWeapons)
+    const carried = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
       : this.registry.get('ownedWeapons') || [];
+    // Stage 1 playtest deploys all six guns. Later stages keep the owned list.
+    this.ownedWeapons = grantStageWeapons(this.stage, carried);
     this.weaponUpgrades = { ...(data?.upgrades || this.registry.get('weaponUpgrades') || {}) };
 
     this.registry.set('stage', this.stage);
@@ -134,7 +137,7 @@ export default class StageScene extends Phaser.Scene {
       maxHp: BARRICADE_MAX_HP,
     });
 
-    this.defenders = new DefenderGroup(this, {});
+    this.defenders = new DefenderGroup(this, { ownedWeapons: this.ownedWeapons });
     this.petEvolve = new PetEvolve(this);
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);
     this.defenders.petCombat?.setEvolve?.(this.petEvolve);
@@ -143,7 +146,7 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE toggles Handgun ↔ Shotgun (once per press); combat math stays in WeaponSystem.
+    // SPACE cycles the highlighted gun. All owned guns fire after deploy.
     // The touch SWAP button uses the same toggle.
     const keyboard = this.input.keyboard;
     if (keyboard) {
@@ -425,9 +428,9 @@ export default class StageScene extends Phaser.Scene {
     this._announcedWave = null;
     this._showBanner({
       icon: UI.ready,
-      title: 'AUTO-FIRE',
+      title: 'STOP TO FIRE',
       sub: 'W/S LANE SWAP',
-      zh: '自動射擊 · 換道 · 換武器',
+      zh: '停步展開射擊 · 換道 · 換武器',
       hold: 6500,
       y: 230,
     });

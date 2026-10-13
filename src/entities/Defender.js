@@ -10,6 +10,7 @@ import {
   layoutPx,
 } from '../systems/DepthView.js';
 import { WeaponSystem, WEAPON_SHOTGUN } from '../systems/WeaponSystem.js';
+import { HeroFloats } from '../systems/HeroFloats.js';
 import {
   PLAYER_FRAME_SIZE,
   PLAYER_ORIGIN_X,
@@ -32,8 +33,15 @@ import {
 import {
   HERO_ORIGIN_X,
   HERO_ORIGIN_Y,
+  heroLibraryReady,
   heroLocomotionKeys,
 } from '../assets/heroLoadout.js';
+import {
+  HERO_UNARMED,
+  createDeployMachine,
+  stepDeploy,
+  unarmedAnimKeys,
+} from '../assets/heroDeploy.js';
 import { PetCombat } from '../systems/PetCombat.js';
 
 /** Player sits this many px right of the grass edge (safe zone), in field px. */
@@ -77,6 +85,12 @@ export class DefenderGroup {
     this.scene = scene;
     this.bullets = [];
     this.weapons = new WeaponSystem(scene);
+    this.weapons.setOwnedWeapons(opts.ownedWeapons || []);
+    this.floats = new HeroFloats(scene);
+    this.floats.setWeapons(this.weapons.ownedIds());
+    this._deploy = createDeployMachine();
+    /** Unarmed girl + front-float guns. Legacy handgun/shotgun stays when that sheet is missing. */
+    this._frontFloat = heroLibraryReady(scene);
     /**
      * Additive world-X kick from the latest shotgun volley. Eases back to 0.
      * Not underscored: Phaser skips tween props whose names start with `_`.
@@ -125,10 +139,11 @@ export class DefenderGroup {
    * Rectangle remains only if the sheet failed to load.
    */
   _createPlayerBody(scene, playerX, playerY, playerScale) {
-    const skin = this.weapons.getSkin?.();
-    const heroKey = skin?.idle;
+    const heroKey = this._frontFloat
+      ? HERO_UNARMED.idle
+      : this.weapons.getSkin?.()?.idle;
     if (heroKey && scene.textures.exists(heroKey) && scene.anims.exists(heroKey)) {
-      // PIXELLAB_HOOK: player-girl-<weapon>-idle — 92px, feet at y=76, faces west
+      // PIXELLAB_HOOK: player-girl-idle — 92px, feet at y=76, faces west. Guns float in front.
       const player = scene.add.sprite(playerX, playerY, heroKey, 0);
       player.setOrigin(HERO_ORIGIN_X, HERO_ORIGIN_Y);
       player.setScale(playerScale);
@@ -153,8 +168,8 @@ export class DefenderGroup {
   }
 
   _createWeaponProp(scene, playerX, playerY) {
-    // Library sheets already draw the weapon. The loose gun icon is legacy-only.
-    if (this.weapons.getSkin?.()) return null;
+    // Front-float guns replace the loose icon. Armed library sheets did too.
+    if (this._frontFloat || this.weapons.getSkin?.()) return null;
     const key = scene.textures.exists('handgun')
       ? 'handgun'
       : scene.textures.exists('shotgun')
@@ -228,41 +243,70 @@ export class DefenderGroup {
     // Player Y-only move (W/S, arrows, or the touch stick). X always tracks
     // the barricade edge. A/D, left/right, and stick X only pick a walk sheet.
     const deltaSec = deltaMs / 1000;
-    if (this.weapons.getWeapon() !== WEAPON_SHOTGUN) {
+    if (this._frontFloat || this.weapons.getWeapon() !== WEAPON_SHOTGUN) {
       this._shotgunLockMs = 0;
     } else if (this._shotgunLockMs > 0) {
       this._shotgunLockMs = Math.max(0, this._shotgunLockMs - deltaMs);
     }
     const { dx, dy: inputDy } = this._inputAxes();
     // Lane keys (W/S, arrows, joystick Y) drive the defender. A/D and stick X
-    // do not change position, so they do not count as shotgun "moving".
+    // do not change position. Either axis is "moving" for gun deploy: walk
+    // hides the guns and blocks fire.
     const laneHeld = inputDy !== 0;
-    const shotgunLocked = this._shotgunLockMs > 0;
+    const shotgunLocked = !this._frontFloat && this._shotgunLockMs > 0;
     const dy = shotgunLocked ? 0 : inputDy;
     if (dy !== 0) {
       this.player.y += dy * PLAYER_MOVE_SPEED * deltaSec;
     }
     this._syncPlayerTransform();
 
-    // Handgun keeps firing while the lane is held. Shotgun waits until the
-    // defender is fully stopped and the post-fire lock has expired.
-    const fired = this.weapons.updatePlayerFire(
-      deltaMs,
-      this.player.x,
-      this.player.y,
-      zombies,
-      this.bullets,
-      {
-        scaleX: this.player.scaleX,
-        scaleY: this.player.scaleY,
-        canFireShotgun: !laneHeld && !shotgunLocked,
-      }
-    );
-    // One fire SFX per volley. Shotgun returns once for the whole fan, not per pellet.
-    if (fired) this.scene.audio?.playWeaponShot(this.weapons.getSkin?.(), fired);
-    if (fired === 'shotgun') this._onShotgunVolley();
-    else if (fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
-    this._updateStance(dy, shotgunLocked ? 0 : dx);
+    let fired = null;
+    if (this._frontFloat) {
+      const moving = dy !== 0 || dx !== 0;
+      this._deploy = stepDeploy(this._deploy, moving, deltaMs);
+      this._updateUnarmedPose(this._deploy.phase, dy, dx);
+      this.floats?.setSelected(this.weapons.getSkin?.()?.id);
+      this.floats?.sync(this.player, this._deploy);
+      const visualScale = Math.abs(this.player.scaleX || 1) / LAYOUT_SCALE;
+      fired = this.weapons.updatePlayerFire(
+        deltaMs,
+        this.player.x,
+        this.player.y,
+        zombies,
+        this.bullets,
+        {
+          frontFloat: true,
+          canFire: this._deploy.canFire,
+          muzzles: this.floats?.muzzles() || [],
+          visualScale,
+          scaleX: this.player.scaleX,
+          scaleY: this.player.scaleY,
+        }
+      );
+    } else {
+      // Handgun keeps firing while the lane is held. Shotgun waits until the
+      // defender is fully stopped and the post-fire lock has expired.
+      fired = this.weapons.updatePlayerFire(
+        deltaMs,
+        this.player.x,
+        this.player.y,
+        zombies,
+        this.bullets,
+        {
+          scaleX: this.player.scaleX,
+          scaleY: this.player.scaleY,
+          canFireShotgun: !laneHeld && !shotgunLocked,
+        }
+      );
+      this._updateStance(dy, shotgunLocked ? 0 : dx);
+    }
+    // One fire SFX per volley. Front-float passes the weapon id that actually shot.
+    if (fired) {
+      const cue = this._frontFloat ? { id: fired } : this.weapons.getSkin?.();
+      this.scene.audio?.playWeaponShot(cue, fired);
+    }
+    if (!this._frontFloat && fired === 'shotgun') this._onShotgunVolley();
+    else if (!this._frontFloat && fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
     const petGain =
       this.petCombat?.update(deltaMs, zombies, { x: this.player.x, y: this.player.y }) || {
         gold: 0,
@@ -273,6 +317,7 @@ export class DefenderGroup {
     // pellet can still connect on the frame it reaches maxDistance.
     this.weapons.stepBullets(this.bullets, deltaSec);
     this.weapons.stepCasings(deltaMs);
+    this.weapons.stepOverlays?.(deltaMs);
 
     return petGain;
   }
@@ -338,6 +383,33 @@ export class DefenderGroup {
    * @param {number} dy
    * @param {number} dx
    */
+  /**
+   * Unarmed body. Deploy plays once; idle fire stays on player-girl-idle.
+   * Walk prefers a run sheet when one is loaded.
+   * @param {'move'|'hold'|'deploy'|'fire'} phase
+   * @param {number} dy
+   * @param {number} dx
+   */
+  _updateUnarmedPose(phase, dy, dx) {
+    const player = this.player;
+    if (!player) return;
+    if (typeof player.setFlipX === 'function') {
+      player.setFlipX(false);
+      player.setFlipY(false);
+    }
+    if (typeof player.play !== 'function') return;
+    if (phase === 'deploy') {
+      const key = HERO_UNARMED.deploy;
+      if (this._currentAnimKey() !== key) this._playAnim(key, true);
+      return;
+    }
+    if (phase === 'move') {
+      this._playFirstExisting(unarmedAnimKeys(dy, dx));
+      return;
+    }
+    this._playFirstExisting([HERO_UNARMED.idle, 'player-idle']);
+  }
+
   _updateStance(dy, dx) {
     const player = this.player;
     if (!player) return;
@@ -581,6 +653,7 @@ export class DefenderGroup {
     let gold = 0;
     let kills = 0;
     const list = Array.isArray(zombies) ? zombies : [];
+    this.weapons.armHits?.(list, this.bullets);
     /** @type {Set<number>} */
     const remove = new Set();
     /** @type {{ index: number, bullet: object, zombie: import('./Zombie.js').Zombie, bx: number, by: number }[]} */
@@ -601,6 +674,13 @@ export class DefenderGroup {
 
       for (const z of list) {
         if (!z?.alive || !z.body) continue;
+        if (
+          b.ignoreId != null &&
+          z.id === b.ignoreId &&
+          (b.traveled || 0) < (b.armTravel || 0)
+        ) {
+          continue;
+        }
         const bounds = z.getBounds();
         if (!bounds) continue;
         if (
@@ -635,7 +715,8 @@ export class DefenderGroup {
     const indices = Array.from(remove).sort((a, b) => b - a);
     for (const i of indices) this._retireBullet(i);
 
-    return { gold, kills };
+    const pending = this.weapons.consumePending?.() || { gold: 0, kills: 0 };
+    return { gold: gold + (pending.gold || 0), kills: kills + (pending.kills || 0) };
   }
 
   /**
@@ -668,6 +749,8 @@ export class DefenderGroup {
     this._shotgunLockMs = 0;
     this.petCombat?.destroy();
     this.petCombat = null;
+    this.floats?.destroy();
+    this.floats = null;
     this.weapons.destroyEffects();
     for (const b of this.bullets) this._destroyBulletParts(b);
     this.bullets = [];

@@ -40,10 +40,13 @@
  * v0.26.2 keeps the ground tell opaque for at least 300ms, lets that tell
  * finish during a bite, and fires the tier-3 letterbox once the ult is
  * unlocked. Pet hurt stays a solid red fill. The camera does not shake.
+ * v0.27 deploys owned guns only after the hero has been stopped (180ms,
+ * then the deploy one-shot). Shots travel west along the forward ray.
+ * The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.26.2';
+export const APP_VERSION = '0.27.0';
 
 /** `?petHurt=1` plays the pet hurt sequence once after the stage boots. */
 export function petHurtDebugRequested() {

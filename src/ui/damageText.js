@@ -6,6 +6,12 @@ import { FONT_HUD, kitFontReady } from './uiKit.js';
 export const DAMAGE_COLORS = {
   handgun: '#00ffff',
   shotgun: '#ffaa00',
+  water: '#4fc3f7',
+  sling: '#eceff1',
+  bubble: '#b3e5fc',
+  lightning: '#fff59d',
+  frost: '#e0f7fa',
+  flame: '#ffab91',
   pet: '#aa00ff',
   phoenix: '#ffb74d',
   panda: '#c5e1a5',
