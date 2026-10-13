@@ -12,14 +12,16 @@
 ### Fonts (`fonts/`)
 | Key | File | Size | Notes |
 |-----|------|------|-------|
-| `ui-font-hud-bold` | `ui-font-hud-bold.ttf` + `ui-font-hud-bold-atlas.png` | glyph 16px; atlas 128×160 | PixelLab `create_font` Bold. Raw atlas = **black silhouettes** (tint in engine). |
-| `ui-font-hud-bold-gold` | `ui-font-hud-bold-atlas-gold.png` | 128×160 | Post-tint cream-gold fill (no outline). |
-| `ui-font-hud-bold-outlined` | `ui-font-hud-bold-atlas-outlined.png` | 128×160 | **Prefer for HUD** — gold fill + navy outline. |
-| `ui-font-hud-tiny` | `ui-font-hud-tiny.ttf` + `ui-font-hud-tiny-atlas.png` | glyph 8px; atlas 64×80 | Black silhouettes. |
-| `ui-font-hud-tiny-cream` | `ui-font-hud-tiny-atlas-cream.png` | 64×80 | Cream tint for small labels. |
+| `ui-font-hud-bold` | `ui-font-hud-bold.ttf` + `ui-font-hud-bold-atlas.png` | glyph 16px; atlas 128×160 | PixelLab `create_font` Bold. Raw atlas = **black silhouettes** (tint in engine). v0.26.1 redraws digits 0–9. |
+| `ui-font-hud-bold-gold` | `ui-font-hud-bold-atlas-gold.png` | 128×160 | Post-tint cream-gold fill (no outline). v0.26.1 redraws digits 0–9. |
+| `ui-font-hud-bold-outlined` | `ui-font-hud-bold-atlas-outlined.png` | 128×160 | **Prefer for HUD** — gold fill + navy exterior outline. v0.26.1 redraws digits 0–9. |
+| `ui-font-hud-tiny` | `ui-font-hud-tiny.ttf` + `ui-font-hud-tiny-atlas.png` | glyph 8px; atlas 64×80 | Black silhouettes. v0.26.1 redraws digits 0–9. |
+| `ui-font-hud-tiny-cream` | `ui-font-hud-tiny-atlas-cream.png` | 64×80 | Cream tint for the version line. v0.26.1 redraws digits 0–9. |
 
 Glyph order (atlas row-major, 10×8, **no space glyph**):  
 `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,!?:;'"-+()0123456789/%*=_$`
+
+**v0.26.1 digits:** cells `0–9` redrawn in place so `0` is an open ring, `1` is a stem with a top serif and base, and `6` is open at the top-right with a holed bowl (`9` mirrors that). Letters and punctuation stay the prior kit. The outlined atlas uses an exterior-only navy stroke so counters stay open. TTF companions were not regenerated.
 
 **CJK:** PixelLab `create_font` is Latin-only. Chinese prompts (血量 / 波次 / 準備 / 遊戲結束…) need a separate bitmap sheet or engine fallback (system font / custom CJK atlas). Latin labels covered: HP, WAVE, READY, GAME OVER, PAUSE, SCORE, SELECT, NEW GAME, etc.
 
