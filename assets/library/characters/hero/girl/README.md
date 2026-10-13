@@ -96,11 +96,28 @@ alpha = t
 | key | file | size | frames | fps | loop |
 |-----|------|------|--------|-----|------|
 | player-girl-front-water | `front/player-girl-front-water.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-water-still | `front/player-girl-front-water-still.png` | 56×56 | 1 | – | static |
 | player-girl-front-sling | `front/player-girl-front-sling.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-sling-still | `front/player-girl-front-sling-still.png` | 56×56 | 1 | – | static |
 | player-girl-front-bubble | `front/player-girl-front-bubble.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-bubble-still | `front/player-girl-front-bubble-still.png` | 56×56 | 1 | – | static |
 | player-girl-front-lightning | `front/player-girl-front-lightning.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-lightning-still | `front/player-girl-front-lightning-still.png` | 56×56 | 1 | – | static |
 | player-girl-front-frost | `front/player-girl-front-frost.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-frost-still | `front/player-girl-front-frost-still.png` | 56×56 | 1 | – | static |
 | player-girl-front-flame | `front/player-girl-front-flame.png` | 56×56 | 8 | 8 | yes |
+| player-girl-front-flame-still | `front/player-girl-front-flame-still.png` | 56×56 | 1 | – | static |
+
+Each still is `type: image`, origin `(0.5, 0.5)`, facing west. The bob entry's `extra.stillKey` points at it.
+
+### Run
+
+| key | file | size | frames | fps | loop |
+|-----|------|------|--------|-----|------|
+| player-girl-run-north | `strips/player-girl-run-north.png` | 92×92 | 8 | 12 | yes |
+| player-girl-run-south | `strips/player-girl-run-south.png` | 92×92 | 8 | 12 | yes |
+
+Origin `(0.5, 0.8261)`. Facing matches the key. Walk strips stay for slower move. Preview: [`previews/hero/girl/hero-run-ns-sheet.png`](../../../previews/hero/girl/hero-run-ns-sheet.png).
 
 ### Back float
 
@@ -118,8 +135,6 @@ alpha = t
 | key | file | size | frames | fps | loop |
 |-----|------|------|--------|-----|------|
 | player-girl-deploy | `strips/player-girl-deploy.png` | 92×92 | 8 | 12 | **no** (one-shot) |
-
-No separate `*-still.png` frames shipped with this drop. Crop one cell from the strip if a static texture is needed.
 
 ## Muzzle hint
 

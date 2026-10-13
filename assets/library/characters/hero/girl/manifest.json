@@ -4,7 +4,7 @@
   "group": "girl",
   "title": "Player Girl (hero)",
   "titleZh": "女主角",
-  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
+  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
   "source": {
     "pixellabCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
     "sourceFolder": "player-girl"
@@ -834,7 +834,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-water-still.",
+      "extra": {
+        "stillKey": "player-girl-front-water-still"
+      }
+    },
+    {
+      "key": "player-girl-front-water-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-water-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-water. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-water"
+      }
     },
     {
       "key": "player-girl-front-sling",
@@ -849,7 +869,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-sling-still.",
+      "extra": {
+        "stillKey": "player-girl-front-sling-still"
+      }
+    },
+    {
+      "key": "player-girl-front-sling-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-sling-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-sling. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-sling"
+      }
     },
     {
       "key": "player-girl-front-bubble",
@@ -864,7 +904,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-bubble-still.",
+      "extra": {
+        "stillKey": "player-girl-front-bubble-still"
+      }
+    },
+    {
+      "key": "player-girl-front-bubble-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-bubble-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-bubble. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-bubble"
+      }
     },
     {
       "key": "player-girl-front-lightning",
@@ -879,7 +939,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-lightning-still.",
+      "extra": {
+        "stillKey": "player-girl-front-lightning-still"
+      }
+    },
+    {
+      "key": "player-girl-front-lightning-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-lightning-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-lightning. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-lightning"
+      }
     },
     {
       "key": "player-girl-front-frost",
@@ -894,7 +974,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-frost-still.",
+      "extra": {
+        "stillKey": "player-girl-front-frost-still"
+      }
+    },
+    {
+      "key": "player-girl-front-frost-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-frost-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-frost. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-frost"
+      }
     },
     {
       "key": "player-girl-front-flame",
@@ -909,7 +1009,27 @@
         0.5
       ],
       "facing": "west",
-      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip."
+      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-flame-still.",
+      "extra": {
+        "stillKey": "player-girl-front-flame-still"
+      }
+    },
+    {
+      "key": "player-girl-front-flame-still",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-flame-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "note": "Static sibling of player-girl-front-flame. 56×56 front-float, no bob.",
+      "extra": {
+        "bobKey": "player-girl-front-flame"
+      }
     },
     {
       "key": "player-girl-back-sling",

@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 542,
+    "total": 548,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 106
+        "assets": 112
       },
       "pets": {
         "groups": 17,
@@ -66,7 +66,7 @@
       "concept": 21,
       "fx": 61,
       "icon": 75,
-      "image": 4,
+      "image": 10,
       "spritesheet": 368
     }
   },
@@ -77,7 +77,7 @@
       "group": "girl",
       "title": "Player Girl (hero)",
       "titleZh": "女主角",
-      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
+      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
       "manifest": "assets/library/characters/hero/girl/manifest.json",
       "dir": "assets/library/characters/hero/girl",
       "thumb": "assets/library/previews/hero/girl/preview.gif",
@@ -96,14 +96,14 @@
       ],
       "keyPrefix": "player-girl-",
       "mainKey": "player-girl-idle",
-      "count": 65,
+      "count": 71,
       "frameSizes": [
         "32x32",
         "56x56",
         "92x92"
       ],
       "framesRange": [
-        4,
+        1,
         9
       ],
       "fpsRange": [
@@ -111,6 +111,7 @@
         12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
@@ -168,11 +169,17 @@
         "player-girl-sling-walk-east",
         "player-girl-deploy",
         "player-girl-front-water",
+        "player-girl-front-water-still",
         "player-girl-front-sling",
+        "player-girl-front-sling-still",
         "player-girl-front-bubble",
+        "player-girl-front-bubble-still",
         "player-girl-front-lightning",
+        "player-girl-front-lightning-still",
         "player-girl-front-frost",
+        "player-girl-front-frost-still",
         "player-girl-front-flame",
+        "player-girl-front-flame-still",
         "player-girl-back-sling",
         "player-girl-back-bubble",
         "player-girl-back-frost",
@@ -4335,7 +4342,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-water — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-water-still.",
       "tags": [
         "hero",
         "girl",
@@ -4343,8 +4350,46 @@
         "water",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-water-still"
+      },
       "action": "front-water"
+    },
+    {
+      "key": "player-girl-front-water-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-water-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-water-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-water. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "water"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-water"
+      },
+      "action": "front-water-still"
     },
     {
       "key": "player-girl-front-sling",
@@ -4370,7 +4415,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-sling — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-sling-still.",
       "tags": [
         "hero",
         "girl",
@@ -4378,8 +4423,46 @@
         "sling",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-sling-still"
+      },
       "action": "front-sling"
+    },
+    {
+      "key": "player-girl-front-sling-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-sling-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-sling-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-sling. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "sling"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-sling"
+      },
+      "action": "front-sling-still"
     },
     {
       "key": "player-girl-front-bubble",
@@ -4405,7 +4488,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-bubble — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-bubble-still.",
       "tags": [
         "hero",
         "girl",
@@ -4413,8 +4496,46 @@
         "bubble",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-bubble-still"
+      },
       "action": "front-bubble"
+    },
+    {
+      "key": "player-girl-front-bubble-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-bubble-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-bubble-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-bubble. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "bubble"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-bubble"
+      },
+      "action": "front-bubble-still"
     },
     {
       "key": "player-girl-front-lightning",
@@ -4440,7 +4561,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-lightning — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-lightning-still.",
       "tags": [
         "hero",
         "girl",
@@ -4448,8 +4569,46 @@
         "lightning",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-lightning-still"
+      },
       "action": "front-lightning"
+    },
+    {
+      "key": "player-girl-front-lightning-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-lightning-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-lightning-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-lightning. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "lightning"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-lightning"
+      },
+      "action": "front-lightning-still"
     },
     {
       "key": "player-girl-front-frost",
@@ -4475,7 +4634,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-frost — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-frost-still.",
       "tags": [
         "hero",
         "girl",
@@ -4483,8 +4642,46 @@
         "frost",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-frost-still"
+      },
       "action": "front-frost"
+    },
+    {
+      "key": "player-girl-front-frost-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-frost-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-frost-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-frost. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "frost"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-frost"
+      },
+      "action": "front-frost-still"
     },
     {
       "key": "player-girl-front-flame",
@@ -4510,7 +4707,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
       "description": "Player Girl (hero): front-flame — 8 frames 56x56 @ 8 fps, loop.",
-      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip. Static sibling: player-girl-front-flame-still.",
       "tags": [
         "hero",
         "girl",
@@ -4518,8 +4715,46 @@
         "flame",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "stillKey": "player-girl-front-flame-still"
+      },
       "action": "front-flame"
+    },
+    {
+      "key": "player-girl-front-flame-still",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-flame-still.png",
+      "type": "image",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-flame-still (56x56 image).",
+      "note": "Static sibling of player-girl-front-flame. 56×56 front-float, no bob.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "flame"
+      ],
+      "extra": {
+        "bobKey": "player-girl-front-flame"
+      },
+      "action": "front-flame-still"
     },
     {
       "key": "player-girl-back-sling",
