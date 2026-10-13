@@ -11,6 +11,7 @@ import {
 } from '../systems/DepthView.js';
 import { WeaponSystem, WEAPON_SHOTGUN } from '../systems/WeaponSystem.js';
 import { HeroFloats } from '../systems/HeroFloats.js';
+import { libraryAnimReady, playLibraryAnim } from '../assets/libraryAssets.js';
 import {
   PLAYER_FRAME_SIZE,
   PLAYER_ORIGIN_X,
@@ -148,7 +149,7 @@ export class DefenderGroup {
       player.setOrigin(HERO_ORIGIN_X, HERO_ORIGIN_Y);
       player.setScale(playerScale);
       player.setDepth(depthFromY(playerY));
-      player.play(heroKey);
+      playLibraryAnim(player, heroKey, scene);
       return player;
     }
     if (scene.textures.exists('player-idle') && scene.anims.exists('player-idle')) {
@@ -156,7 +157,7 @@ export class DefenderGroup {
       player.setOrigin(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
       player.setScale(playerScale);
       player.setDepth(depthFromY(playerY));
-      player.play('player-idle');
+      playLibraryAnim(player, 'player-idle', scene);
       return player;
     }
 
@@ -365,6 +366,13 @@ export class DefenderGroup {
     const anims = this.scene?.anims;
     if (!anims || typeof anims.exists !== 'function') return false;
     if (!anims.exists(key)) return false;
+    let anim = null;
+    try {
+      anim = typeof anims.get === 'function' ? anims.get(key) : null;
+    } catch (_) {
+      anim = null;
+    }
+    if (!libraryAnimReady(anim)) return false;
     try {
       player.play(key, ignoreIfPlaying);
       return true;

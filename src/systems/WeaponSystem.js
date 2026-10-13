@@ -19,7 +19,7 @@ import {
   orderWeapons,
   splitVelocities,
 } from '../assets/heroDeploy.js';
-import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
+import { aimRotation, libraryAsset, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
@@ -791,7 +791,7 @@ export class WeaponSystem {
       this._flame = this.scene.add.sprite(muzzle.x, muzzle.y, key);
       const origin = asset?.origin || [1, 0.5];
       this._flame.setOrigin(origin[0], origin[1]);
-      if (this.scene.anims?.exists?.(key)) this._flame.play(key);
+      playLibraryAnim(this._flame, key, this.scene);
     }
     const sy = this._visualScale || 1;
     this._flame.setPosition(muzzle.x, muzzle.y);
@@ -908,7 +908,7 @@ export class WeaponSystem {
     sprite.setScale(Math.max(0.2, dist / Math.max(1, fw)), this._visualScale || 1);
     sprite.setRotation(aimRotation(dx, dy, asset?.facing || 'west'));
     sprite.setDepth(depthFromY((y1 + y2) / 2, 6));
-    if (this.scene.anims?.exists?.(key)) sprite.play(key);
+    playLibraryAnim(sprite, key, this.scene);
     this.scene.time?.delayedCall?.(180, () => this._safeDestroyGraphics(sprite));
   }
 
@@ -1042,7 +1042,7 @@ export class WeaponSystem {
     const facing = asset?.facing || 'west';
     const rotate = meta.rotate != null ? meta.rotate : skin?.rotate !== false;
     if (rotate) sprite.setRotation(aimRotation(vx, vy, facing));
-    if (this.scene.anims?.exists?.(key)) sprite.play(key);
+    playLibraryAnim(sprite, key, this.scene);
     sprite.setDepth(depthFromY(y));
     return { sprite, rotate, facing };
   }
