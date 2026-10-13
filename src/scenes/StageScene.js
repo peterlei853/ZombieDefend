@@ -317,12 +317,12 @@ export default class StageScene extends Phaser.Scene {
   _refreshHud() {
     const t = Math.min(STAGE_DURATION, Math.floor(this.waveManager.getElapsed()));
     const alive = this.zombies.filter((z) => z.alive).length;
-    const remaining = alive + this.waveManager.getRemainingToSpawn();
     const wave = this.waveManager.getCurrentWave();
 
     this.hudTime.setText(`TIME ${t}s`);
     this.hudWave.setText(`WAVE ${wave}`);
-    this.hudEnemies.setText(`ENEMIES ${remaining}`);
+    // On-field only. Adding the unspawned budget showed 118 at stage start.
+    this.hudEnemies.setText(`ENEMIES ${alive}`);
     this.hudBarricade.setText(`WALL ${Math.ceil(this.barricade.hp)}`);
     this.hudGold.setText(`GOLD ${this.gold}`);
     this.hudWeapon.setText(this._weaponName());
