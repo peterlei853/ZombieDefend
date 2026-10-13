@@ -21,7 +21,9 @@ assets/library/
 ├── asset-index.json          ← GENERATED
 ├── CATALOG.md                ← GENERATED
 ├── catalog.html              ← GENERATED (inline index included)
-├── characters/hero/girl/     manifest.json + strips/   (player-girl-*)
+├── characters/hero/girl/     manifest.json, README.md, strips/   (player-girl-*)
+│   ├── front/                player-girl-front-* (56×56 front-float bob)
+│   ├── back/                 player-girl-back-* (32×32 back-float bob)
 │   ├── fx/                   manifest.json + fx-*.png  (weapon FX)
 │   └── icons/                manifest.json + icon-*.png
 ├── enemies/
@@ -59,6 +61,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Bosses | `zombie-boss-<lava\|steel>-<action>` | `zombie-boss-lava-volcanic_breath` |
 | Boss FX | `zombie-boss-<lava\|steel>-fx-<name>` | `zombie-boss-steel-fx-acid` |
 | Hero | `player-girl-<action>` / `player-girl-<weapon>-<action>` | `player-girl-water-fire`, `player-girl-sling-walk-north` |
+| Hero front-float | `player-girl-deploy`, `player-girl-front-<weapon>`, `player-girl-back-<weapon>` | `player-girl-deploy`, `player-girl-front-water`, `player-girl-back-sling` |
 | Hero FX | `fx-<weapon>-<name>` | `fx-frost-beam`, `fx-sling-dizzy` |
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
@@ -109,7 +112,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 | Zombies | **64×64**. Exceptions: brute **96×96**, profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
 | Bosses | **128×128** | **(0.5, 1.0)** | **east** |
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
-| Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north` or `-walk-south` |
+| Hero | **92×92** girl strips (deploy included). Front-float weapons **56×56**. Back-float weapons **32×32** | **(0.5, 76/92 ≈ 0.8261)** on girl strips: feet at y = 76. Weapon strips **(0.5, 0.5)** | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north` or `-walk-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
 | Shared FX | 160×160 blast | (0.5, 0.5) | – |
 | v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |
@@ -120,6 +123,32 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 - To mirror a sprite, use `setFlipX(true)` **and** mirror the origin's x (`1 - ox`) for asymmetric origins (FX). Also negate the x of any attach offset.
 - Note on the legacy sheets: `assets/zombies/manifest.json` labels the walker/runner/tank strips "west". The library zombies are authored facing **east** (they move from the left spawn toward the barricade on the right). Check this in game and flip the legacy sheets if they disagree.
 - Render with `pixelArt: true` (already set in `main.js`), or set the NEAREST filter per texture as in the loader below.
+
+## Front-float combat (v0.23)
+
+Owned weapons float in front of the girl (west) in a vertical arc while she is idle. No glow rings. Full writeup, deploy lerp timeline, back-stack fallback, and muzzle hint: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Overview: [`previews/hero/girl/front-float-deploy-sheet.png`](previews/hero/girl/front-float-deploy-sheet.png).
+
+| State | Girl anim | Weapons | Fire |
+|-------|-----------|---------|------|
+| **MOVE** | walk / run | **hidden** | no |
+| **STOP** | `player-girl-deploy` once (`loop: false`, 12 fps, 8×92) | lerp hidden → front arc over the deploy | no until frame 7 |
+| **IDLE FIRE** | `player-girl-idle` | `player-girl-front-*` bob (`loop: true`, 8 fps, 8×56) | yes, from each muzzle |
+| **MOVE again** | walk / run | hide immediately | no |
+
+Front arc offsets are px from the girl origin. Negative X is west (in front). Draw weapons **after** the girl.
+
+```
+n=1: [ {x:-36, y:-8} ]
+n=2: [ {x:-36, y:-22}, {x:-34, y:8} ]
+n=3: [ {x:-38, y:-30}, {x:-36, y:-8}, {x:-38, y:16} ]
+n=4: [ {x:-40, y:-36}, {x:-36, y:-16}, {x:-36, y:4}, {x:-40, y:24} ]
+n=5: [ {x:-42, y:-40}, {x:-38, y:-22}, {x:-36, y:-6}, {x:-38, y:10}, {x:-42, y:28} ]
+n=6: [ {x:-44, y:-42}, {x:-38, y:-26}, {x:-36, y:-10}, {x:-36, y:6}, {x:-38, y:22}, {x:-44, y:36} ]
+```
+
+Shop order: `water, sling, bubble, lightning, frost, flame`.
+
+`weapon.y` adds `bobY` from the strip (already baked: ±3px front, ±2px back). This library drop adds `player-girl-deploy`, all six `player-girl-front-*` strips, and the missing backs `player-girl-back-sling`, `player-girl-back-bubble`, `player-girl-back-frost`. Existing `player-girl-back-water`, `player-girl-back-lightning`, and `player-girl-back-flame` are left untouched when present.
 
 ## Playback: loop, once, and sustained (start/loop/end)
 
