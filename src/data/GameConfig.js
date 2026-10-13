@@ -44,10 +44,12 @@
  * then the deploy one-shot). Shots travel west along the forward ray.
  * The camera does not shake. v0.27.1 refuses a library FX anim whose
  * frames are missing so playback cannot stop the Phaser loop.
+ * v0.28 mixes profession zombie skins by stage and spends run gold in
+ * the post-clear shop list. Barricade physics and gold-by-HP stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.27.1';
+export const APP_VERSION = '0.28.0';
 
 /** `?petHurt=1` plays the pet hurt sequence once after the stage boots. */
 export function petHurtDebugRequested() {

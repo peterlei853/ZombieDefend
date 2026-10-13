@@ -1,4 +1,5 @@
 import { GAME_CONFIG } from './GameConfig.js';
+import { rosterForStage } from './stageRoster.js';
 
 /**
  * Stage 1 wave schedule (timer 0–90s).
@@ -23,6 +24,8 @@ import { GAME_CONFIG } from './GameConfig.js';
  *
  * `variant` is a spawn hook only (walker / runner / tank). It does not change
  * HP, speed, DPS, weight, gold, barricade HP, or stage length.
+ * v0.28 stamps a visual `skins` list in waveDefsForStage. Those ids do not
+ * change the numbers on these rows.
  */
 export const STAGE_DURATION = 90;
 
@@ -60,6 +63,19 @@ export const WAVE_DEFS = [
     ],
   },
 ];
+
+/**
+ * Same HP / speed / DPS / weight / variant rows, plus the stage roster.
+ * The copy is what WaveManager spawns. WAVE_DEFS itself stays the combat table.
+ * @param {number} stage
+ */
+export function waveDefsForStage(stage) {
+  const skins = rosterForStage(stage);
+  return WAVE_DEFS.map((def) => ({
+    ...def,
+    archetypes: def.archetypes.map((arch) => ({ ...arch, skins })),
+  }));
+}
 
 /** Barricade contact X — zombies stop here and deal DPS. */
 export const BARRICADE_X = 650;

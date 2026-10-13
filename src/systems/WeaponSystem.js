@@ -20,6 +20,7 @@ import {
   splitVelocities,
 } from '../assets/heroDeploy.js';
 import { aimRotation, libraryAsset, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
+import { upgradedDamage } from '../data/shopList.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
@@ -92,6 +93,8 @@ export class WeaponSystem {
     this._casings = [];
     /** Shop-order ids that deploy and fire together. */
     this._ownedIds = [];
+    /** @type {Record<string, number>} Shop ranks. 0 leaves trait damage unchanged. */
+    this._upgrades = {};
     /** @type {Record<string, number>} */
     this._cooldowns = {};
     this._visualScale = 1;
@@ -122,6 +125,22 @@ export class WeaponSystem {
       const idx = HERO_WEAPONS.findIndex((w) => w.id === first);
       if (idx >= 0) this._skinIndex = idx;
     }
+  }
+
+  /**
+   * Ranks bought in the shopping list. Missing ids stay at base damage.
+   * @param {Record<string, number>|null|undefined} map
+   */
+  setUpgrades(map) {
+    this._upgrades = { ...(map || {}) };
+  }
+
+  /**
+   * @param {string} id
+   * @param {number} base
+   */
+  _scaledDamage(id, base) {
+    return upgradedDamage(base, this._upgrades?.[id] || 0);
   }
 
   /** @returns {string[]} */
@@ -538,7 +557,7 @@ export class WeaponSystem {
    */
   _spawnFrontBullet(bullets, x, y, vx, vy, trait, extra = {}) {
     const fxKey = extra.fxKey || trait.projectile;
-    const damage = extra.damage ?? trait.damage;
+    const damage = this._scaledDamage(trait.id, extra.damage ?? trait.damage);
     const meta = {
       kind: trait.id,
       weaponId: trait.id,
@@ -663,7 +682,7 @@ export class WeaponSystem {
       if (!z?.alive || !z.body || z === primary) continue;
       const reach = radius + (z.displayHalf || 0);
       if (Math.hypot(z.x - px, z.y - py) > reach) continue;
-      const gain = this._hurtZombie(z, trait.splash, { weaponId: 'water' }, { impact: false, knock: false });
+      const gain = this._hurtZombie(z, this._scaledDamage('water', trait.splash), { weaponId: 'water' }, { impact: false, knock: false });
       gold += gain.gold;
       kills += gain.kills;
     }
@@ -736,7 +755,7 @@ export class WeaponSystem {
         best.x,
         best.bodyCenterY || best.y
       );
-      const dmg = trait.chainDamage?.[i] ?? trait.damage;
+      const dmg = this._scaledDamage('lightning', trait.chainDamage?.[i] ?? trait.damage);
       const gain = this._hurtZombie(
         best,
         dmg,
@@ -810,10 +829,10 @@ export class WeaponSystem {
       const reach = halfY + (z.displayHalf || 0);
       if (Math.abs(z.y - muzzle.y) > reach) continue;
       if (typeof z.applyBurn === 'function') {
-        z.applyBurn(trait.burn, trait.burnIntervalMs, trait.burnMs);
+        z.applyBurn(this._scaledDamage('flame', trait.burn), trait.burnIntervalMs, trait.burnMs);
       }
       this._attachFollow(z, trait.burnFx, trait.burnMs);
-      const gain = this._hurtZombie(z, trait.chip, { weaponId: 'flame' }, { impact: false, knock: false });
+      const gain = this._hurtZombie(z, this._scaledDamage('flame', trait.chip), { weaponId: 'flame' }, { impact: false, knock: false });
       this._pending.gold += gain.gold;
       this._pending.kills += gain.kills;
     }
