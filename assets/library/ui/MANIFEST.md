@@ -60,6 +60,27 @@ Glyph order (atlas row-major, 10×8, **no space glyph**):
 | `ui-icon-gameover` | `ui-icon-gameover.png` | 32×32 | (0.5, 0.5) |
 | `ui-icon-select-x` | `ui-icon-select-x.png` | 16×16 | (0.5, 0.5) |
 
+
+### Float text — pet summon / recall (`floats/`)
+Pet callouts for **v0.22.1** (GO! / Back!). Latin primary (matches HUD fonts). Transparent bg. Show ~0.6–0.8s beside pet; **not** title-banner size.
+
+| Key | File | Size | Origin | Notes |
+|-----|------|------|--------|-------|
+| `ui-float-go` | `floats/ui-float-go.png` | 80×32 | **(0.5, 1)** above pet | **GO!** cream-gold + navy outline + cyan micro-glow. Composited from `ui-font-hud-bold-outlined` (exact kit font). |
+| `ui-float-go-hd` | `floats/ui-float-go-hd.png` | 160×64 | (0.5, 1) | 2× nearest of primary. |
+| `ui-float-go-sm` | `floats/ui-float-go-sm.png` | 40×16 | (0.5, 1) | Mobile / half scale. |
+| `ui-float-back` | `floats/ui-float-back.png` | 128×32 | **(0.5, 1)** above pet | **Back!** same style. |
+| `ui-float-back-hd` | `floats/ui-float-back-hd.png` | 256×64 | (0.5, 1) | 2× nearest. |
+| `ui-float-back-sm` | `floats/ui-float-back-sm.png` | 64×16 | (0.5, 1) | Mobile / half scale. |
+| `ui-float-go-burst` | `floats/ui-float-go-burst.png` | 85×44 | (0.5, 1) | Optional Pro decorative shout (bevel + cream/gold). PixelLab job `09ad03b2-3053-403e-b538-1a7914e913ba` cand0. |
+| `ui-float-go-burst-hd` | `floats/ui-float-go-burst-hd.png` | 170×88 | (0.5, 1) | 2× burst. |
+| `ui-float-back-burst` | `floats/ui-float-back-burst.png` | 106×39 | (0.5, 1) | Optional Pro decorative. Job `08a9526c-292f-4b59-85ff-c6567c65217b` cand1. |
+| `ui-float-back-burst-hd` | `floats/ui-float-back-burst-hd.png` | 212×78 | (0.5, 1) | 2× burst. |
+
+**Wire notes (assets only — no game code here):** prefer origin `(0.5, 1)` so badge sits just above pet head; alt `(0.5, 0.5)` if centering on pet. Fade 0.6–0.8s. Prefer primary atlas floats for font match with HUD; burst = louder summon/recall pop. Chinese 「出戰」 not generated (Latin-only font tool) — engine Text fallback if needed.
+
+**Jobs:** GO Pro `09ad03b2-3053-403e-b538-1a7914e913ba` (asset `c9ad087b-7428-5f73-b0c2-a68fbd053742`); Back Pro `08a9526c-292f-4b59-85ff-c6567c65217b` (asset `8755a0e2-7f8c-5194-8e7f-fe691b09a57a`). Extra Pro cands in `_raw/floats-pro/`.
+
 ### Existing pet HUD (copied for reference — already on main)
 `existing-pet-hud/` — keys `ui-pet-*-head` 48×48, `ui-pet-*-bar` 64×32 origin (0, 0.5), `ui-pet-orb-*-{dark|lit|flash}` 16×16. Keep as-is; do not restyle unless Peter asks.
 
@@ -102,4 +123,5 @@ Runtime (code, not assets): `StageScene` flat HUD bar + Phaser `Text`; `Barricad
 - [ ] Swap stage HUD labels to bitmap / TTF; keep Chinese via fallback until CJK sheet exists  
 - [ ] Toast/dialog for wave / tip / game over using panels + icons  
 - [ ] Menu buttons: parchment + font labels (NEW GAME / OLD GAME / SCOREBOARD)  
+- [ ] Pet summon/recall: `ui-float-go` / `ui-float-back` (0.6–0.8s, origin 0.5,1)
 - [ ] Leave `// PIXELLAB_HOOK` if any; catalog PR via PixelLab Asset Pipeline when shipping to `assets/library/ui/`
