@@ -1,5 +1,6 @@
 import { GAME_WIDTH, GAME_HEIGHT } from '../data/waves.js';
 import { HUD_DEPTH } from '../systems/DepthView.js';
+import { FONT_INK, INK_TINT, UI, addKitText } from './uiKit.js';
 
 /**
  * Screen-space touch controls for StageScene.
@@ -183,7 +184,38 @@ export class VirtualControls {
     if (which === 'joy') {
       return this._rectHitsCircle(x, topY, feetY, halfW, this.joyCX, this.joyCY, JOY_RADIUS);
     }
+    if (this._kitButton && this.button?.getBounds) {
+      const b = this.button.getBounds();
+      return this._rectHitsRect(x, topY, feetY, halfW, b.left, b.top, b.right, b.bottom);
+    }
     return this._rectHitsCircle(x, topY, feetY, halfW, this.btnCX, this.btnCY, BTN_RADIUS);
+  }
+
+  /**
+   * @param {number} x
+   * @param {number} top
+   * @param {number} bottom
+   * @param {number} halfW
+   * @param {number} left
+   * @param {number} boxTop
+   * @param {number} right
+   * @param {number} boxBottom
+   */
+  _rectHitsRect(x, top, bottom, halfW, left, boxTop, right, boxBottom) {
+    if (![x, top, bottom, halfW, left, boxTop, right, boxBottom].every(Number.isFinite)) return false;
+    const l = x - halfW;
+    const r = x + halfW;
+    const t = Math.min(top, bottom);
+    const b = Math.max(top, bottom);
+    return r >= left && l <= right && b >= boxTop && t <= boxBottom;
+  }
+
+  _hitButton(x, y) {
+    if (this._kitButton && this.button?.getBounds) {
+      const b = this.button.getBounds();
+      return x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+    }
+    return pointInCircle(x, y, this.btnCX, this.btnCY, BTN_RADIUS);
   }
 
   /**
@@ -209,7 +241,8 @@ export class VirtualControls {
   }
 
   _swapRestAlpha() {
-    return this._swapFade ? COMBAT_ALPHA : IDLE_ALPHA;
+    if (this._swapFade) return COMBAT_ALPHA;
+    return this._kitButton ? 0.94 : IDLE_ALPHA;
   }
 
   _createObjects() {
@@ -229,22 +262,30 @@ export class VirtualControls {
       .setScrollFactor(0)
       .setDepth(depth + 2);
 
-    this.button = scene.add
-      .circle(0, 0, BTN_RADIUS, 0x1b2836, 0.82)
-      .setStrokeStyle(3, 0x90caf9, 0.95)
-      .setScrollFactor(0)
-      .setDepth(depth);
+    this._kitButton = !!scene.textures?.exists?.(UI.button);
+    if (this._kitButton) {
+      this.button = scene.add
+        .image(0, 0, UI.button)
+        .setOrigin(0.5)
+        .setScale(2)
+        .setScrollFactor(0)
+        .setDepth(depth);
+    } else {
+      this.button = scene.add
+        .circle(0, 0, BTN_RADIUS, 0x1b2836, 0.82)
+        .setStrokeStyle(3, 0x90caf9, 0.95)
+        .setScrollFactor(0)
+        .setDepth(depth);
+    }
 
-    this.buttonLabel = scene.add
-      .text(0, 0, 'SWAP', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '22px',
-        fontStyle: 'bold',
-        color: '#e8eef5',
-      })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(depth + 2);
+    this.buttonLabel = addKitText(scene, 0, 0, 'SWAP', {
+      font: FONT_INK,
+      size: 16,
+      tint: INK_TINT,
+      color: '#e8eef5',
+      depth: depth + 2,
+      scrollFactor: 0,
+    });
 
     this._setIdleAlpha();
   }
@@ -256,8 +297,15 @@ export class VirtualControls {
     const viewH = this.scene.scale?.height || GAME_HEIGHT;
     this.joyCX = insets.left + JOY_RADIUS;
     this.joyCY = viewH - insets.bottom - JOY_RADIUS;
-    this.btnCX = viewW - insets.right - BTN_RADIUS;
-    this.btnCY = viewH - insets.bottom - BTN_RADIUS;
+    if (this._kitButton) {
+      const halfW = this.button.displayWidth / 2;
+      const halfH = this.button.displayHeight / 2;
+      this.btnCX = viewW - insets.right - halfW;
+      this.btnCY = viewH - insets.bottom - halfH;
+    } else {
+      this.btnCX = viewW - insets.right - BTN_RADIUS;
+      this.btnCY = viewH - insets.bottom - BTN_RADIUS;
+    }
     this.layoutTop = Math.min(this.joyCY - JOY_RADIUS, this.btnCY - BTN_RADIUS);
 
     this.base.setPosition(this.joyCX, this.joyCY);
@@ -312,7 +360,7 @@ export class VirtualControls {
     if (this._destroyed || !pointer) return;
     const x = pointer.x;
     const y = pointer.y;
-    if (this._weaponPointerId == null && pointInCircle(x, y, this.btnCX, this.btnCY, BTN_RADIUS)) {
+    if (this._weaponPointerId == null && this._hitButton(x, y)) {
       this._weaponPointerId = pointer.id;
       this._weaponArmed = true;
       this._setButtonPressed(true);
@@ -332,7 +380,7 @@ export class VirtualControls {
       return;
     }
     if (pointer.id !== this._weaponPointerId) return;
-    const inside = pointInCircle(pointer.x, pointer.y, this.btnCX, this.btnCY, BTN_RADIUS);
+    const inside = this._hitButton(pointer.x, pointer.y);
     this._weaponArmed = inside;
     this._setButtonPressed(inside);
   }
@@ -353,7 +401,7 @@ export class VirtualControls {
     const stillOnButton =
       insideCanvas &&
       this._weaponArmed &&
-      pointInCircle(pointer.x, pointer.y, this.btnCX, this.btnCY, BTN_RADIUS);
+      this._hitButton(pointer.x, pointer.y);
     this._weaponPointerId = null;
     this._weaponArmed = false;
     this._setButtonPressed(false);
@@ -387,7 +435,12 @@ export class VirtualControls {
   }
 
   _setButtonPressed(pressed) {
-    this.button.setFillStyle(pressed ? 0x1565c0 : 0x1b2836, pressed ? 0.95 : 0.82);
+    if (this._kitButton) {
+      if (pressed) this.button.setTint(0xffe3a4);
+      else this.button.clearTint();
+    } else {
+      this.button.setFillStyle(pressed ? 0x1565c0 : 0x1b2836, pressed ? 0.95 : 0.82);
+    }
     const a = pressed ? 1 : this._swapRestAlpha();
     this.button.setAlpha(a);
     this.buttonLabel.setAlpha(a);

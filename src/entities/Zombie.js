@@ -20,6 +20,7 @@ import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layo
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { KitHpBar } from '../ui/uiKit.js';
 
 /** Near-black track. The old 0x1a1a1a tick disappeared into green slime shading. */
 const HP_BAR_TRACK = 0x050308;
@@ -127,13 +128,21 @@ export class Zombie {
     this._barW = metrics.barW;
     this._barH = metrics.barH;
     this._barPad = metrics.pad;
-    this.hpBarBg = scene.add.rectangle(cfg.x, metrics.barY, metrics.barW, metrics.barH, HP_BAR_TRACK);
-    this.hpBarBg.setStrokeStyle(metrics.pad, HP_BAR_OUTLINE);
-    this.hpBarFg = scene.add
-      .rectangle(cfg.x - metrics.barW / 2, metrics.barY, metrics.barW, metrics.barH, HP_BAR_FILL)
-      .setOrigin(0, 0.5);
-    // Full HP stays hidden. applyHpBarDensity shows the tick once damaged.
-    this.setHpBarShown(false);
+    // Empty enemy frame + width-scaled fill. Full HP stays hidden.
+    this._hpBar = new KitHpBar(scene, 'enemy', cfg.x, metrics.barY, {
+      scrollFactor: 1,
+      depth: 0,
+      visible: false,
+      fallback: {
+        w: metrics.barW,
+        h: metrics.barH,
+        track: HP_BAR_TRACK,
+        fill: HP_BAR_FILL,
+        outline: HP_BAR_OUTLINE,
+      },
+    });
+    this.hpBarBg = this._hpBar.frame;
+    this.hpBarFg = this._hpBar.fill;
 
     this._applyDepth();
     this._syncLocomotion();
@@ -249,9 +258,7 @@ export class Zombie {
 
   /** @param {boolean} shown */
   setHpBarShown(shown) {
-    const visible = !!shown;
-    if (this.hpBarBg) this.hpBarBg.setVisible(visible);
-    if (this.hpBarFg) this.hpBarFg.setVisible(visible);
+    this._hpBar?.setVisible(!!shown);
   }
 
   /**
@@ -871,32 +878,21 @@ export class Zombie {
   }
 
   _syncBars() {
-    if (!this.hpBarBg || !this.hpBarFg || !this.body) return;
-    const { barW, barH, pad, barY } = this._barMetrics();
-    this._barW = barW;
-    this._barH = barH;
-    this._barPad = pad;
-    this.hpBarBg.setSize(barW, barH);
-    this.hpBarBg.setStrokeStyle(pad, HP_BAR_OUTLINE);
-    this.hpBarBg.x = this.body.x;
-    this.hpBarBg.y = barY;
-    this.hpBarFg.setFillStyle(HP_BAR_FILL);
-    this.hpBarFg.setSize(barW, barH);
-    this.hpBarFg.x = this.body.x - barW / 2;
-    this.hpBarFg.y = barY;
+    if (!this._hpBar || !this.body) return;
+    const h = this._hpBar.displayHeight;
+    const barY = this._crownY() - layoutPx(2) - h / 2;
     const ratio = this.maxHp > 0 ? Math.max(0, this.hp / this.maxHp) : 0;
-    this.hpBarFg.width = barW * ratio;
+    this._barW = this._hpBar.displayWidth;
+    this._barH = h;
+    this._hpBar.setPosition(this.body.x, barY);
+    this._hpBar.setRatio(ratio);
   }
 
   _releaseBars() {
-    if (this.hpBarBg) {
-      this.hpBarBg.destroy();
-      this.hpBarBg = null;
-    }
-    if (this.hpBarFg) {
-      this.hpBarFg.destroy();
-      this.hpBarFg = null;
-    }
+    this._hpBar?.destroy();
+    this._hpBar = null;
+    this.hpBarBg = null;
+    this.hpBarFg = null;
   }
 
   /** Axis-aligned hitbox. Sprites stand on the lane; squares stay centered. */
@@ -931,10 +927,10 @@ export class Zombie {
   }
 }
 
-/** Vertical gap under which two ticks read as one stripe. */
-const HP_BAR_STACK_Y = layoutPx(10);
-/** Horizontal gap under which two ticks on the same row collide. */
-const HP_BAR_STACK_X = layoutPx(26);
+/** Vertical gap under which two enemy frames read as one stripe. */
+const HP_BAR_STACK_Y = 36;
+/** Horizontal gap under which two 96px enemy frames collide. */
+const HP_BAR_STACK_X = 84;
 
 /**
  * Full-HP zombies stay unmarked. Damaged ticks sit on the crown; hide one

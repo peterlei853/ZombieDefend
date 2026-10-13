@@ -5,6 +5,7 @@
  */
 
 import { stageLibraryFilter } from './petLineup.js';
+import { installUiKit } from '../ui/uiKit.js';
 
 export const LIBRARY_INDEX_KEY = 'asset-library-index';
 const INDEX_URL = 'assets/library/asset-index.json';
@@ -21,6 +22,7 @@ export const STAGE_LIBRARY_CATEGORIES = [
   'backgrounds',
   'pets',
   'environment',
+  'ui',
 ];
 
 /**
@@ -62,6 +64,7 @@ export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, f
  * @param {Phaser.Scene} scene
  */
 export function createLibraryAnims(scene) {
+  installUiKit(scene);
   const index = readCachedIndex(scene);
   if (!index?.assets || !scene?.anims) return null;
   const filter = globalThis.Phaser?.Textures?.FilterMode?.NEAREST;

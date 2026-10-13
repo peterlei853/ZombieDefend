@@ -1,4 +1,4 @@
-import { BARRICADE_MAX_HP } from '../data/waves.js';
+import { BARRICADE_MAX_HP, GAME_WIDTH } from '../data/waves.js';
 import {
   HUD_DEPTH,
   depthFromY,
@@ -9,6 +9,7 @@ import {
   LAYOUT_SCALE,
   layoutPx,
 } from '../systems/DepthView.js';
+import { KitHpBar } from '../ui/uiKit.js';
 
 /**
  * Slanted defensive wall along the grass right edge (2.5D trapezoid).
@@ -72,23 +73,24 @@ export class Barricade {
       this._drawSilhouette(yMin, yMax);
     }
 
-    // HP bar: camera-fixed near top of wall (scrollFactor 0)
+    // HP bar: camera-fixed near the top, over the wall's screen X.
+    // The kit frame is empty; the fill width tracks HP. Physics is unchanged.
     const cam = scene.cameras.main;
     const midY = (yMin + yMax) / 2;
-    const screenX = barricadeXAtY(midY) - cam.scrollX;
-    const barY = layoutPx(48);
-    const barW = layoutPx(80);
-    const barH = layoutPx(8);
-    this._barW = barW;
-    this.hpBarBg = scene.add
-      .rectangle(screenX, barY, barW, barH, 0x222222)
-      .setScrollFactor(0)
-      .setDepth(HUD_DEPTH + 10);
-    this.hpBarFg = scene.add
-      .rectangle(screenX - barW / 2, barY, barW, barH, 0x3ecf5a)
-      .setOrigin(0, 0.5)
-      .setScrollFactor(0)
-      .setDepth(HUD_DEPTH + 11);
+    const half = 251 / 2;
+    let screenX = barricadeXAtY(midY) - cam.scrollX;
+    const viewW = scene.scale?.width || GAME_WIDTH;
+    screenX = Math.min(viewW - half - 8, Math.max(half + 8, screenX));
+    const barY = 24;
+    this._hpBar = new KitHpBar(scene, 'barricade', screenX, barY, {
+      scrollFactor: 0,
+      depth: HUD_DEPTH + 10,
+      ratio: 1,
+      fallback: { w: layoutPx(80), h: layoutPx(8), track: 0x222222, fill: 0x3ecf5a },
+    });
+    this.hpBarBg = this._hpBar.frame;
+    this.hpBarFg = this._hpBar.fill;
+    this._barW = this._hpBar.displayWidth;
   }
 
   /**
@@ -257,10 +259,7 @@ export class Barricade {
 
   _refreshHpBar() {
     const ratio = this.maxHp > 0 ? this.hp / this.maxHp : 0;
-    this.hpBarFg.width = this._barW * ratio;
-    if (ratio > 0.5) this.hpBarFg.setFillStyle(0x3ecf5a);
-    else if (ratio > 0.25) this.hpBarFg.setFillStyle(0xe0b040);
-    else this.hpBarFg.setFillStyle(0xe04848);
+    this._hpBar?.setRatio(ratio);
     this._syncFenceDamage(ratio);
   }
 
@@ -290,7 +289,8 @@ export class Barricade {
     for (const m of this.contactMarkers) m.destroy();
     this.posts = [];
     this.contactMarkers = [];
-    this.hpBarBg.destroy();
-    this.hpBarFg.destroy();
+    this._hpBar?.destroy();
+    this.hpBarBg = null;
+    this.hpBarFg = null;
   }
 }
