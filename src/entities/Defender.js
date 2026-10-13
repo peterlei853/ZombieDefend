@@ -87,6 +87,7 @@ export class DefenderGroup {
     this.bullets = [];
     this.weapons = new WeaponSystem(scene);
     this.weapons.setOwnedWeapons(opts.ownedWeapons || []);
+    this.weapons.setUpgrades(opts.upgrades);
     this.floats = new HeroFloats(scene);
     this.floats.setWeapons(this.weapons.ownedIds());
     this._deploy = createDeployMachine();

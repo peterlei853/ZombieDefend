@@ -1,4 +1,5 @@
-import { WAVE_DEFS, STAGE_DURATION } from '../data/waves.js';
+import { rosterForStage } from '../data/stageRoster.js';
+import { STAGE_DURATION, waveDefsForStage } from '../data/waves.js';
 
 /**
  * Spreads spawn events across each wave window and tracks remaining-to-spawn.
@@ -7,11 +8,15 @@ import { WAVE_DEFS, STAGE_DURATION } from '../data/waves.js';
 export class WaveManager {
   /**
    * @param {object} [opts]
-   * @param {typeof WAVE_DEFS} [opts.waveDefs]
+   * @param {number} [opts.stage]
+   * @param {string[]} [opts.roster]
+   * @param {object[]} [opts.waveDefs]
    * @param {number} [opts.duration]
    */
   constructor(opts = {}) {
-    this.waveDefs = opts.waveDefs || WAVE_DEFS;
+    this.stage = Math.max(1, Math.floor(Number(opts.stage) || 1));
+    this.roster = Array.isArray(opts.roster) && opts.roster.length ? opts.roster : rosterForStage(this.stage);
+    this.waveDefs = opts.waveDefs || waveDefsForStage(this.stage);
     this.duration = opts.duration ?? STAGE_DURATION;
     this.elapsed = 0;
     this.finished = false;
@@ -19,6 +24,8 @@ export class WaveManager {
     this.queue = [];
     this.spawnedCount = 0;
     this.totalPlanned = 0;
+    /** Round-robin across the stage roster so a wave is not one skin. */
+    this._skinCursor = 0;
     this._buildQueue();
   }
 
@@ -44,15 +51,31 @@ export class WaveManager {
 
   _pickArchetype(archetypes) {
     if (!archetypes || archetypes.length === 0) {
-      return { hp: 40, speed: 40, dps: 12 };
+      return { hp: 40, speed: 40, dps: 12, skin: this._nextSkin(null) };
     }
     const totalWeight = archetypes.reduce((s, a) => s + (a.weight || 1), 0);
     let roll = Math.random() * totalWeight;
+    let picked = archetypes[archetypes.length - 1];
     for (const a of archetypes) {
       roll -= a.weight || 1;
-      if (roll <= 0) return { ...a };
+      if (roll <= 0) {
+        picked = a;
+        break;
+      }
     }
-    return { ...archetypes[archetypes.length - 1] };
+    return { ...picked, skin: this._nextSkin(picked.skins) };
+  }
+
+  /**
+   * Next roster skin. `skins` on the row wins; otherwise the stage roster.
+   * @param {string[]|null|undefined} skins
+   */
+  _nextSkin(skins) {
+    const pool = Array.isArray(skins) && skins.length ? skins : this.roster;
+    if (!pool.length) return null;
+    const skin = pool[this._skinCursor % pool.length];
+    this._skinCursor += 1;
+    return skin;
   }
 
   /**
@@ -99,6 +122,7 @@ export class WaveManager {
     this.elapsed = 0;
     this.finished = false;
     this.spawnedCount = 0;
+    this._skinCursor = 0;
     this._buildQueue();
   }
 }

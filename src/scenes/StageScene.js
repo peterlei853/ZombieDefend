@@ -137,12 +137,15 @@ export default class StageScene extends Phaser.Scene {
       maxHp: BARRICADE_MAX_HP,
     });
 
-    this.defenders = new DefenderGroup(this, { ownedWeapons: this.ownedWeapons });
+    this.defenders = new DefenderGroup(this, {
+      ownedWeapons: this.ownedWeapons,
+      upgrades: this.weaponUpgrades,
+    });
     this.petEvolve = new PetEvolve(this);
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);
     this.defenders.petCombat?.setEvolve?.(this.petEvolve);
 
-    this.waveManager = new WaveManager();
+    this.waveManager = new WaveManager({ stage: this.stage });
 
     this._buildHud();
 
@@ -648,6 +651,7 @@ export default class StageScene extends Phaser.Scene {
       dps: arch.dps,
       wave: intent.wave,
       variant: arch.variant,
+      skin: arch.skin,
     });
     // Inset by the measured half-body so the left edge does not crop it.
     z.placeAt(zombieSpawnWorldX(z.displayHalf));

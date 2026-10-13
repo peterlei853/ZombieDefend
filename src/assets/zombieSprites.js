@@ -120,7 +120,14 @@ function textureFrameCount(tex) {
  * @type {Record<string, { id: string, facing: 'east'|'west', actions: Record<string, string|null>, blastFx?: string }>}
  */
 export const ZOMBIE_LIBRARY_SKINS = {
+  /** 64px sheets. Fallback only — stage roster prefers office-worker-v2. */
   'office-worker': skin('office-worker', 'zombie-office', { death: 'zombie-office-die1' }),
+  'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2', {
+    fallbackId: 'office-worker',
+  }),
+  delivery: skin('delivery', 'zombie-delivery'),
+  chef: skin('chef', 'zombie-chef'),
+  nurse: skin('nurse', 'zombie-nurse', { attach: 'zombie-nurse-attach' }),
   clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
   cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
   slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
@@ -173,7 +180,7 @@ export const ZOMBIE_BOSS_SKINS = {
 /** Visual pools. HP / speed / DPS stay on the wave archetype. */
 const SKIN_POOLS = {
   walker: [
-    'office-worker',
+    'office-worker-v2',
     'clown',
     'cyborg',
     'slime',
@@ -182,7 +189,7 @@ const SKIN_POOLS = {
     'riot-bare',
     'trashcan-bare',
   ],
-  runner: ['sprinter', 'clown', 'office-worker', 'exploder', 'cyborg'],
+  runner: ['sprinter', 'clown', 'office-worker-v2', 'exploder', 'cyborg'],
   tank: ['brute', 'trashcan', 'riot'],
 };
 
@@ -199,6 +206,7 @@ function skin(id, prefix, extra = {}) {
     id,
     facing: /** @type {'east'} */ ('east'),
     blastFx: extra.blastFx || null,
+    fallbackId: extra.fallbackId || null,
     actions: {
       walk: `${prefix}-walk`,
       run: `${prefix}-run`,
@@ -206,8 +214,35 @@ function skin(id, prefix, extra = {}) {
       death: extra.death || `${prefix}-die1`,
       hurt: `${prefix}-hurt`,
       blast: extra.blast || null,
+      attach: extra.attach || null,
     },
   };
+}
+
+/**
+ * Preferred library skin, then its fallback, then the 64px office sheets.
+ * Returns null when none of those walk/run strips are registered.
+ * @param {Phaser.Scene} scene
+ * @param {string|null|undefined} skinId
+ * @param {string} variant
+ */
+export function resolveSpawnSkin(scene, skinId, variant) {
+  /** @type {string[]} */
+  const chain = [];
+  const push = (id) => {
+    if (!id || chain.includes(id)) return;
+    chain.push(id);
+  };
+  push(skinId);
+  push(ZOMBIE_LIBRARY_SKINS[skinId]?.fallbackId);
+  if (skinId && skinId !== 'office-worker') push('office-worker');
+  for (const id of chain) {
+    const def = ZOMBIE_LIBRARY_SKINS[id];
+    if (!def) continue;
+    const walk = zombieActionKey(def, variant, 'walk');
+    if (walk && scene?.textures?.exists?.(walk) && scene?.anims?.exists?.(walk)) return def;
+  }
+  return null;
 }
 
 /**

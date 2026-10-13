@@ -12,6 +12,7 @@ import {
   ZOMBIE_ORIGIN_Y,
   hasZombieAnim,
   registerZombieAnims,
+  resolveSpawnSkin,
   takeZombieSkin,
   zombieActionKey,
   zombieSheetKey,
@@ -48,7 +49,7 @@ let _zombieId = 0;
 export class Zombie {
   /**
    * @param {Phaser.Scene} scene
-   * @param {{ x: number, y: number, hp: number, speed: number, dps: number, wave?: number, variant?: string }} cfg
+   * @param {{ x: number, y: number, hp: number, speed: number, dps: number, wave?: number, variant?: string, skin?: string }} cfg
    */
   constructor(scene, cfg) {
     this.scene = scene;
@@ -102,10 +103,13 @@ export class Zombie {
     this._flashToken = 0;
 
     registerZombieAnims(scene);
-    this.skin = takeZombieSkin(this.variant);
+    this.skin = cfg.skin
+      ? resolveSpawnSkin(scene, cfg.skin, this.variant)
+      : takeZombieSkin(this.variant);
     const libraryWalk = zombieActionKey(this.skin, this.variant, 'walk');
     const legacyWalk = zombieSheetKey(this.variant, 'walk');
     const libraryReady = !!(
+      this.skin &&
       libraryWalk &&
       scene.textures?.exists?.(libraryWalk) &&
       scene.anims?.exists?.(libraryWalk)
@@ -662,7 +666,8 @@ export class Zombie {
     this.scene.tweens.killTweensOf(this.body);
     this.body.x = homeX;
     this._stopWalkAnim();
-    const attackKey = this._animKey('attack');
+    const attachKey = this._animKey('attach');
+    const attackKey = this._animReady(attachKey) ? attachKey : this._animKey('attack');
     if (this._isSprite && this._animReady(attackKey)) {
       this.body.play(attackKey);
     }
