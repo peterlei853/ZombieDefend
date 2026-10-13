@@ -66,7 +66,7 @@ const WEAPON_GRIP = {
 
 /**
  * Player on the barricade lane. Baby pets are not spawned here — the
- * portrait HUD summons them through `summonPet`. PetCombat owns the sprites.
+ * pet bar summons and recalls them through `summonPet`. PetCombat owns the sprites.
  */
 export class DefenderGroup {
   /**
@@ -187,7 +187,8 @@ export class DefenderGroup {
   }
 
   /**
-   * Tap a ready portrait. No enemies leaves the skill cooldown untouched.
+   * Tap a pet bar. Ready summons (no deploy cooldown, enemies not required).
+   * On the field, the same tap recalls. Revive rejects the tap.
    * @param {number} index party order
    * @param {import('./Zombie.js').Zombie[]} zombies
    */

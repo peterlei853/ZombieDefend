@@ -10,10 +10,11 @@ import {
 /**
  * First form only. Baby idle / move / skill / hurt strips (48×48, feet origin,
  * face west) and the baby skill FX. Young / ancient forms stay on disk.
- * Order is party order: far → near, and the portrait column top → bottom.
- * Pets are not spawned with the stage. Portraits summon them.
- * `portrait` is the big-head crop of idle frame 0 (texture px). The library
- * has no dedicated portrait icons; the HUD shows that frame directly.
+ * Order is party order: far → near, and the HUD column top → bottom.
+ * Pets are not spawned with the stage. The bar summons and recalls them.
+ * `hudBar` is the 64×32 bar (head already composited on the left).
+ * `hudHead` is the 48×48 icon that art baked into that bar.
+ * Orb keys are 16×16 dark / lit / flash. The CD ring is drawn in code.
  */
 export const PET_LINEUP = [
   {
@@ -26,7 +27,11 @@ export const PET_LINEUP = [
     hurt: 'pet-phoenix-baby-hurt',
     projectile: 'fx-pet-phoenix-spark-feather',
     impact: 'fx-pet-phoenix-spark-feather-hit',
-    portrait: { x: 6, y: 2, width: 36, height: 28 },
+    hudBar: 'ui-pet-phoenix-bar',
+    hudHead: 'ui-pet-phoenix-head',
+    orbDark: 'ui-pet-orb-phoenix-dark',
+    orbLit: 'ui-pet-orb-phoenix-lit',
+    orbFlash: 'ui-pet-orb-phoenix-flash',
   },
   {
     id: 'panda',
@@ -38,7 +43,11 @@ export const PET_LINEUP = [
     hurt: 'pet-panda-baby-hurt',
     windup: 'fx-pet-panda-roll-dust',
     impact: 'fx-pet-panda-roll-impact',
-    portrait: { x: 8, y: 8, width: 30, height: 24 },
+    hudBar: 'ui-pet-panda-bar',
+    hudHead: 'ui-pet-panda-head',
+    orbDark: 'ui-pet-orb-panda-dark',
+    orbLit: 'ui-pet-orb-panda-lit',
+    orbFlash: 'ui-pet-orb-panda-flash',
   },
   {
     id: 'lion',
@@ -49,7 +58,11 @@ export const PET_LINEUP = [
     skill: 'pet-lion-baby-skill',
     hurt: 'pet-lion-baby-hurt',
     impact: 'fx-pet-lion-pounce-slash',
-    portrait: { x: 4, y: 12, width: 28, height: 22 },
+    hudBar: 'ui-pet-lion-bar',
+    hudHead: 'ui-pet-lion-head',
+    orbDark: 'ui-pet-orb-lion-dark',
+    orbLit: 'ui-pet-orb-lion-lit',
+    orbFlash: 'ui-pet-orb-lion-flash',
   },
   {
     id: 'dragon',
@@ -60,7 +73,11 @@ export const PET_LINEUP = [
     skill: 'pet-dragon-baby-skill',
     hurt: 'pet-dragon-baby-hurt',
     breath: 'fx-pet-dragon-smoke-breath',
-    portrait: { x: 5, y: 2, width: 32, height: 28 },
+    hudBar: 'ui-pet-dragon-bar',
+    hudHead: 'ui-pet-dragon-head',
+    orbDark: 'ui-pet-orb-dragon-dark',
+    orbLit: 'ui-pet-orb-dragon-lit',
+    orbFlash: 'ui-pet-orb-dragon-flash',
   },
 ];
 
@@ -72,12 +89,24 @@ export const PET_ELEMENT_TINT = {
   poison: 0x9ccc65,
 };
 
-/** Idle, move, skill, hurt, and the baby FX each role actually casts. */
+/** Baby strips, the form-1 FX they cast, and the v0.21 bar / head / orb HUD icons. */
 export const PET_STAGE_KEYS = new Set(
   PET_LINEUP.flatMap((pet) =>
-    [pet.key, pet.move, pet.skill, pet.hurt, pet.projectile, pet.windup, pet.impact, pet.breath].filter(
-      Boolean
-    )
+    [
+      pet.key,
+      pet.move,
+      pet.skill,
+      pet.hurt,
+      pet.projectile,
+      pet.windup,
+      pet.impact,
+      pet.breath,
+      pet.hudBar,
+      pet.hudHead,
+      pet.orbDark,
+      pet.orbLit,
+      pet.orbFlash,
+    ].filter(Boolean)
   )
 );
 
@@ -92,7 +121,8 @@ export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
  * Stage load filter. Non-pet categories pass through. From `pets`, only
- * the four baby idle/move/skill/hurt strips and their phase-1 FX are queued.
+ * the four baby idle/move/skill/hurt strips, their form-1 FX, and the HUD
+ * bar / head / orb icons are queued.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {
@@ -107,7 +137,7 @@ export function petRole(id) {
 }
 
 /**
- * Legacy fence ranks (safe side of the posts). v0.20 does not spawn these.
+ * Legacy fence ranks (safe side of the posts). v0.21 does not spawn these.
  * Summon placement starts behind the player and walks toward the threat.
  * Kept so slot math stays available for tooling.
  */
