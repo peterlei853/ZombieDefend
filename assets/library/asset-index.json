@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 522,
+    "total": 535,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 86
+        "assets": 99
       },
       "pets": {
         "groups": 17,
@@ -67,7 +67,7 @@
       "fx": 56,
       "icon": 75,
       "image": 4,
-      "spritesheet": 353
+      "spritesheet": 366
     }
   },
   "groups": [
@@ -77,12 +77,13 @@
       "group": "girl",
       "title": "Player Girl (hero)",
       "titleZh": "女主角",
-      "description": "Chibi girl hero with red cap and backpack; base moves plus six weapons (water, bubble, lightning crossbow, frost, flame, sling). Faces WEST unless the key ends in -walk-east/-north/-south.",
+      "description": "Chibi girl hero with red cap and backpack; base moves plus six weapons (water, bubble, lightning crossbow, frost, flame, sling). Faces WEST unless the key ends in -walk-east/-north/-south. Front-float combat: MOVE hides weapons; STOP plays player-girl-deploy once and lerps owned weapons onto the front arc; IDLE FIRE loops player-girl-front-* and fires. Layout: README.md in this folder.",
       "manifest": "assets/library/characters/hero/girl/manifest.json",
       "dir": "assets/library/characters/hero/girl",
       "thumb": "assets/library/previews/hero/girl/preview.gif",
       "sheets": [
-        "assets/library/previews/hero/girl/all-base-sheet.png"
+        "assets/library/previews/hero/girl/all-base-sheet.png",
+        "assets/library/previews/hero/girl/front-float-deploy-sheet.png"
       ],
       "extras": [
         "assets/library/previews/hero/girl/weapon-water.gif",
@@ -94,8 +95,10 @@
       ],
       "keyPrefix": "player-girl-",
       "mainKey": "player-girl-idle",
-      "count": 50,
+      "count": 63,
       "frameSizes": [
+        "32x32",
+        "56x56",
         "92x92"
       ],
       "framesRange": [
@@ -159,7 +162,20 @@
         "player-girl-flame-walk-west",
         "player-girl-flame-walk-east",
         "player-girl-sling-walk-west",
-        "player-girl-sling-walk-east"
+        "player-girl-sling-walk-east",
+        "player-girl-deploy",
+        "player-girl-front-water",
+        "player-girl-front-sling",
+        "player-girl-front-bubble",
+        "player-girl-front-lightning",
+        "player-girl-front-frost",
+        "player-girl-front-flame",
+        "player-girl-back-sling",
+        "player-girl-back-bubble",
+        "player-girl-back-frost",
+        "player-girl-back-water",
+        "player-girl-back-lightning",
+        "player-girl-back-flame"
       ]
     },
     {
@@ -4182,6 +4198,460 @@
       ],
       "extra": null,
       "action": "sling-walk-east"
+    },
+    {
+      "key": "player-girl-deploy",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-deploy.png",
+      "type": "spritesheet",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): deploy — 8 frames 92x92 @ 12 fps, once.",
+      "note": "One-shot hand-sweep on STOP (west). Play once at 12 fps, then player-girl-idle. Lerp weapons from hidden to the front arc across these 8 frames; enable fire after frame 7.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "deploy"
+    },
+    {
+      "key": "player-girl-front-water",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-water.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-water — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float water bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "water",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-water"
+    },
+    {
+      "key": "player-girl-front-sling",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-sling.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-sling — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float sling bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "sling",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-sling"
+    },
+    {
+      "key": "player-girl-front-bubble",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-bubble.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-bubble — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float bubble bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "bubble",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-bubble"
+    },
+    {
+      "key": "player-girl-front-lightning",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-lightning.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-lightning — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float lightning bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "lightning",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-lightning"
+    },
+    {
+      "key": "player-girl-front-frost",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-frost.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-frost — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float frost bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "frost",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-frost"
+    },
+    {
+      "key": "player-girl-front-flame",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/front/player-girl-front-flame.png",
+      "type": "spritesheet",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): front-flame — 8 frames 56x56 @ 8 fps, loop.",
+      "note": "Front-float flame bob. Held-size, no glow ring. ±3px bob is baked into the strip.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "flame",
+        "loop"
+      ],
+      "extra": null,
+      "action": "front-flame"
+    },
+    {
+      "key": "player-girl-back-sling",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-sling.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-sling — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float sling bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "sling",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-sling"
+    },
+    {
+      "key": "player-girl-back-bubble",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-bubble.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-bubble — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float bubble bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "bubble",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-bubble"
+    },
+    {
+      "key": "player-girl-back-frost",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-frost.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-frost — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float frost bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "frost",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-frost"
+    },
+    {
+      "key": "player-girl-back-water",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-back-water.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-water — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float water bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "water",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-water"
+    },
+    {
+      "key": "player-girl-back-lightning",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-back-lightning.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-lightning — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float lightning bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "lightning",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-lightning"
+    },
+    {
+      "key": "player-girl-back-flame",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-back-flame.png",
+      "type": "spritesheet",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Player Girl (hero): back-flame — 8 frames 32x32 @ 8 fps, loop.",
+      "note": "Back-float flame bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons.",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "flame",
+        "loop"
+      ],
+      "extra": null,
+      "action": "back-flame"
     },
     {
       "key": "fx-bubble-muzzle",
