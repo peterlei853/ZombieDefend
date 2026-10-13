@@ -3,8 +3,8 @@
  *
  * Stage 1 spawns the first three profession skins. Each later stage appends
  * the next id. Visual only: HP, speed, DPS, and gold-by-HP stay on the wave
- * row. `office-worker` (64px `zombie-office-*`) is not in this list; it is
- * the fallback when a preferred strip is missing.
+ * row. A missing strip falls back to `office-worker-v2` only. The removed
+ * 64px `zombie-office-*` group is not a skin and not a fallback.
  */
 
 /** @type {string[]} */

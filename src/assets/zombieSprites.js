@@ -120,11 +120,8 @@ function textureFrameCount(tex) {
  * @type {Record<string, { id: string, facing: 'east'|'west', actions: Record<string, string|null>, blastFx?: string }>}
  */
 export const ZOMBIE_LIBRARY_SKINS = {
-  /** 64px sheets. Fallback only — stage roster prefers office-worker-v2. */
-  'office-worker': skin('office-worker', 'zombie-office', { death: 'zombie-office-die1' }),
-  'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2', {
-    fallbackId: 'office-worker',
-  }),
+  /** 84px profession sheets. Missing walks fall back here, never the removed 64px office group. */
+  'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2'),
   delivery: skin('delivery', 'zombie-delivery'),
   chef: skin('chef', 'zombie-chef'),
   nurse: skin('nurse', 'zombie-nurse', { attach: 'zombie-nurse-attach' }),
@@ -198,7 +195,7 @@ const skinCursor = { walker: 0, runner: 0, tank: 0 };
 
 /**
  * @param {string} id
- * @param {string} prefix key prefix, e.g. `zombie-office`
+ * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
  * @param {{ attack?: string|null, death?: string, blast?: string, blastFx?: string }} [extra]
  */
 function skin(id, prefix, extra = {}) {
@@ -219,9 +216,21 @@ function skin(id, prefix, extra = {}) {
   };
 }
 
+/** Last resort when the requested profession strip is not loaded. */
+export const SPAWN_FALLBACK_SKIN = 'office-worker-v2';
+
 /**
- * Preferred library skin, then its fallback, then the 64px office sheets.
- * Returns null when none of those walk/run strips are registered.
+ * The removed 64px group. `zombie-office-worker-v2-*` does not match this.
+ * @param {string|null|undefined} key
+ */
+export function isRetiredOfficeKey(key) {
+  return typeof key === 'string' && key.startsWith('zombie-office-') && !key.startsWith('zombie-office-worker-v2-');
+}
+
+/**
+ * Preferred library skin, then that skin's fallback, then office-worker-v2.
+ * Retired `zombie-office-*` keys are skipped even if a caller still names them.
+ * Returns null when no live walk/run strip is registered.
  * @param {Phaser.Scene} scene
  * @param {string|null|undefined} skinId
  * @param {string} variant
@@ -235,12 +244,13 @@ export function resolveSpawnSkin(scene, skinId, variant) {
   };
   push(skinId);
   push(ZOMBIE_LIBRARY_SKINS[skinId]?.fallbackId);
-  if (skinId && skinId !== 'office-worker') push('office-worker');
+  push(SPAWN_FALLBACK_SKIN);
   for (const id of chain) {
     const def = ZOMBIE_LIBRARY_SKINS[id];
     if (!def) continue;
     const walk = zombieActionKey(def, variant, 'walk');
-    if (walk && scene?.textures?.exists?.(walk) && scene?.anims?.exists?.(walk)) return def;
+    if (!walk || isRetiredOfficeKey(walk)) continue;
+    if (scene?.textures?.exists?.(walk) && scene?.anims?.exists?.(walk)) return def;
   }
   return null;
 }
