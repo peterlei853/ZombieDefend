@@ -10,12 +10,12 @@
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 12 | 145 |
 | [Bosses](#bosses) | 4 | 39 |
-| [Shared FX](#fx) | 1 | 1 |
+| [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **42** | **461** |
+| **Total** | **47** | **477** |
 
 <a id="hero"></a>
 ## Hero
@@ -891,6 +891,67 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `zombie-exploder-blast` | 10 | 160x160 | 12 | once | (0.5, 0.5) |  |
+
+### AoE Residue (範圍殘留)
+
+v0.26 AoE residue, 96×96, origin centre (0.5, 0.5). vfx-aoe-lightning is procedural. vfx-aoe-ice is flagged for a possible shatter retouch later.
+
+- group `aoe-residue` · 4 assets · frame 96x96 · key prefix `vfx-aoe-` · manifest [fx/v026/aoe/manifest.json](fx/v026/aoe/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-aoe-fire` | 1 | 96x96 | – | static | (0.5, 0.5) | Origin (0.5, 0.5). |
+| `vfx-aoe-ice` | 1 | 96x96 | – | static | (0.5, 0.5) | Flagged for a possible shatter retouch later. May read as an orb or crystal blob rather than a shatter puddle. Origin (0.5, 0.5). |
+| `vfx-aoe-poison` | 1 | 96x96 | – | static | (0.5, 0.5) | Origin (0.5, 0.5). |
+| `vfx-aoe-lightning` | 1 | 96x96 | – | static | (0.5, 0.5) | Procedural scorch and arcs. Origin (0.5, 0.5). |
+
+### Evolve Stars (進化星標)
+
+v0.26 evolve stars. The single gold star is 32×32 with origin centre (0.5, 0.5). vfx-evolve-stars-1/2/3 are T1/T2/T3 pet head markers; origin is the feet/bottom (0.5, 1).
+
+- group `evolve-stars` · 4 assets · frame 12x12, 25x12, 32x32, 38x12 · key prefix `vfx-evolve-` · manifest [fx/v026/evolve-stars/manifest.json](fx/v026/evolve-stars/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-evolve-star` | 1 | 32x32 | – | static | (0.5, 0.5) | Transparent. Origin (0.5, 0.5). Source star for the T1/T2/T3 head markers. |
+| `vfx-evolve-stars-1` | 1 | 12x12 | – | static | (0.5, 1.0) | Pet head marker (T1). Origin feet/bottom (0.5, 1). |
+| `vfx-evolve-stars-2` | 1 | 25x12 | – | static | (0.5, 1.0) | Pet head marker (T2). Origin feet/bottom (0.5, 1). |
+| `vfx-evolve-stars-3` | 1 | 38x12 | – | static | (0.5, 1.0) | Pet head marker (T3). Origin feet/bottom (0.5, 1). |
+
+### EXP Orb (經驗寶珠)
+
+v0.26 cyan crystal gem EXP pickup, 32×32, origin centre (0.5, 0.5). Transparent.
+
+- group `exp-orb` · 1 assets · frame 32x32 · manifest [fx/v026/exp-orb/manifest.json](fx/v026/exp-orb/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `exp-orb` | 1 | 32x32 | – | static | (0.5, 0.5) | Transparent pickup. Origin (0.5, 0.5). |
+
+### Cast Telegraphs (技能預告)
+
+v0.26 cast telegraphs. vfx-telegraph-ring is the 64×64 S1 preview (file vfx-telegraph-ring-64.png) and vfx-telegraph-ring-128 is the S2 nearest upscale, both origin centre (0.5, 0.5). vfx-telegraph-half-left is a procedural S3 half-screen wash, 192×108, origin (0, 0.5).
+
+- group `telegraph` · 3 assets · frame 64x64, 128x128, 192x108 · key prefix `vfx-telegraph-` · manifest [fx/v026/telegraph/manifest.json](fx/v026/telegraph/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-telegraph-ring` | 1 | 64x64 | – | static | (0.5, 0.5) | File is vfx-telegraph-ring-64.png; texture key omits -64. Transparent. Origin (0.5, 0.5). |
+| `vfx-telegraph-ring-128` | 1 | 128x128 | – | static | (0.5, 0.5) | Nearest upscale of vfx-telegraph-ring. Origin (0.5, 0.5). |
+| `vfx-telegraph-half-left` | 1 | 192x108 | – | static | (0, 0.5) | Procedural half-screen wash. Origin (0, 0.5). |
+
+### Pet Ultimate Keyframes (寵物大招過場)
+
+v0.26 pet ultimate keyframes, 384×216, origin centre (0.5, 0.5). Each frame is a single cinematic overlay (an opaque letterbox background is OK). The engine letterboxes and fades it over 0.8–1.2s.
+
+- group `pet-ults` · 4 assets · frame 384x216 · key prefix `vfx-ult-` · manifest [fx/v026/ults/manifest.json](fx/v026/ults/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-ult-phoenix` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
+| `vfx-ult-panda` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
+| `vfx-ult-lion` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
+| `vfx-ult-dragon` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
 
 <a id="pickups"></a>
 ## Pickups

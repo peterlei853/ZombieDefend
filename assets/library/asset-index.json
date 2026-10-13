@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 461,
+    "total": 477,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -41,8 +41,8 @@
         "assets": 39
       },
       "fx": {
-        "groups": 1,
-        "assets": 1
+        "groups": 6,
+        "assets": 17
       },
       "pickups": {
         "groups": 1,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 40,
+      "fx": 56,
       "icon": 75,
       "image": 4,
       "spritesheet": 308
@@ -1863,6 +1863,172 @@
       ],
       "keys": [
         "zombie-exploder-blast"
+      ]
+    },
+    {
+      "id": "fx/aoe-residue",
+      "category": "fx",
+      "group": "aoe-residue",
+      "title": "AoE Residue",
+      "titleZh": "範圍殘留",
+      "description": "v0.26 AoE residue, 96×96, origin centre (0.5, 0.5). vfx-aoe-lightning is procedural. vfx-aoe-ice is flagged for a possible shatter retouch later.",
+      "manifest": "assets/library/fx/v026/aoe/manifest.json",
+      "dir": "assets/library/fx/v026/aoe",
+      "thumb": null,
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-aoe-",
+      "mainKey": "vfx-aoe-fire",
+      "count": 4,
+      "frameSizes": [
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-aoe-fire",
+        "vfx-aoe-ice",
+        "vfx-aoe-poison",
+        "vfx-aoe-lightning"
+      ]
+    },
+    {
+      "id": "fx/evolve-stars",
+      "category": "fx",
+      "group": "evolve-stars",
+      "title": "Evolve Stars",
+      "titleZh": "進化星標",
+      "description": "v0.26 evolve stars. The single gold star is 32×32 with origin centre (0.5, 0.5). vfx-evolve-stars-1/2/3 are T1/T2/T3 pet head markers; origin is the feet/bottom (0.5, 1).",
+      "manifest": "assets/library/fx/v026/evolve-stars/manifest.json",
+      "dir": "assets/library/fx/v026/evolve-stars",
+      "thumb": null,
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-evolve-",
+      "mainKey": "vfx-evolve-star",
+      "count": 4,
+      "frameSizes": [
+        "12x12",
+        "25x12",
+        "32x32",
+        "38x12"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-evolve-star",
+        "vfx-evolve-stars-1",
+        "vfx-evolve-stars-2",
+        "vfx-evolve-stars-3"
+      ]
+    },
+    {
+      "id": "fx/exp-orb",
+      "category": "fx",
+      "group": "exp-orb",
+      "title": "EXP Orb",
+      "titleZh": "經驗寶珠",
+      "description": "v0.26 cyan crystal gem EXP pickup, 32×32, origin centre (0.5, 0.5). Transparent.",
+      "manifest": "assets/library/fx/v026/exp-orb/manifest.json",
+      "dir": "assets/library/fx/v026/exp-orb",
+      "thumb": null,
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "",
+      "mainKey": "exp-orb",
+      "count": 1,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "exp-orb"
+      ]
+    },
+    {
+      "id": "fx/telegraph",
+      "category": "fx",
+      "group": "telegraph",
+      "title": "Cast Telegraphs",
+      "titleZh": "技能預告",
+      "description": "v0.26 cast telegraphs. vfx-telegraph-ring is the 64×64 S1 preview (file vfx-telegraph-ring-64.png) and vfx-telegraph-ring-128 is the S2 nearest upscale, both origin centre (0.5, 0.5). vfx-telegraph-half-left is a procedural S3 half-screen wash, 192×108, origin (0, 0.5).",
+      "manifest": "assets/library/fx/v026/telegraph/manifest.json",
+      "dir": "assets/library/fx/v026/telegraph",
+      "thumb": null,
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-telegraph-",
+      "mainKey": "vfx-telegraph-ring",
+      "count": 3,
+      "frameSizes": [
+        "64x64",
+        "128x128",
+        "192x108"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-telegraph-ring",
+        "vfx-telegraph-ring-128",
+        "vfx-telegraph-half-left"
+      ]
+    },
+    {
+      "id": "fx/pet-ults",
+      "category": "fx",
+      "group": "pet-ults",
+      "title": "Pet Ultimate Keyframes",
+      "titleZh": "寵物大招過場",
+      "description": "v0.26 pet ultimate keyframes, 384×216, origin centre (0.5, 0.5). Each frame is a single cinematic overlay (an opaque letterbox background is OK). The engine letterboxes and fades it over 0.8–1.2s.",
+      "manifest": "assets/library/fx/v026/ults/manifest.json",
+      "dir": "assets/library/fx/v026/ults",
+      "thumb": null,
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-ult-",
+      "mainKey": "vfx-ult-phoenix",
+      "count": 4,
+      "frameSizes": [
+        "384x216"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-ult-phoenix",
+        "vfx-ult-panda",
+        "vfx-ult-lion",
+        "vfx-ult-dragon"
       ]
     },
     {
@@ -17140,6 +17306,583 @@
       ],
       "extra": null,
       "action": "zombie-exploder-blast"
+    },
+    {
+      "key": "vfx-aoe-fire",
+      "category": "fx",
+      "group": "aoe-residue",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-fire.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Fire residue / impact puff, 96×96, origin centre.",
+      "note": "Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "aoe-residue",
+        "fire",
+        "aoe",
+        "residue",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "fire"
+    },
+    {
+      "key": "vfx-aoe-ice",
+      "category": "fx",
+      "group": "aoe-residue",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-ice.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Ice residue, 96×96, origin centre. Flagged for a possible shatter retouch.",
+      "note": "Flagged for a possible shatter retouch later. May read as an orb or crystal blob rather than a shatter puddle. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "aoe-residue",
+        "aoe",
+        "residue",
+        "ice",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "ice"
+    },
+    {
+      "key": "vfx-aoe-poison",
+      "category": "fx",
+      "group": "aoe-residue",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-poison.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Poison fog residue, 96×96, origin centre.",
+      "note": "Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "aoe-residue",
+        "aoe",
+        "residue",
+        "poison",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "poison"
+    },
+    {
+      "key": "vfx-aoe-lightning",
+      "category": "fx",
+      "group": "aoe-residue",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-lightning.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Procedural lightning scorch and arcs, 96×96, origin centre.",
+      "note": "Procedural scorch and arcs. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "aoe-residue",
+        "aoe",
+        "residue",
+        "lightning",
+        "procedural",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "lightning"
+    },
+    {
+      "key": "vfx-evolve-star",
+      "category": "fx",
+      "group": "evolve-stars",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-star.png",
+      "type": "fx",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Single gold evolve star, 32×32, origin centre.",
+      "note": "Transparent. Origin (0.5, 0.5). Source star for the T1/T2/T3 head markers.",
+      "tags": [
+        "fx",
+        "evolve-stars",
+        "star",
+        "evolve",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "star"
+    },
+    {
+      "key": "vfx-evolve-stars-1",
+      "category": "fx",
+      "group": "evolve-stars",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-1.png",
+      "type": "fx",
+      "frameWidth": 12,
+      "frameHeight": 12,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "T1 pet head marker, one gold star, 12×12.",
+      "note": "Pet head marker (T1). Origin feet/bottom (0.5, 1).",
+      "tags": [
+        "fx",
+        "evolve-stars",
+        "star",
+        "evolve",
+        "marker",
+        "pet",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "stars-1"
+    },
+    {
+      "key": "vfx-evolve-stars-2",
+      "category": "fx",
+      "group": "evolve-stars",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-2.png",
+      "type": "fx",
+      "frameWidth": 25,
+      "frameHeight": 12,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "T2 pet head marker, two gold stars, 25×12.",
+      "note": "Pet head marker (T2). Origin feet/bottom (0.5, 1).",
+      "tags": [
+        "fx",
+        "evolve-stars",
+        "star",
+        "evolve",
+        "marker",
+        "pet",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "stars-2"
+    },
+    {
+      "key": "vfx-evolve-stars-3",
+      "category": "fx",
+      "group": "evolve-stars",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-3.png",
+      "type": "fx",
+      "frameWidth": 38,
+      "frameHeight": 12,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "T3 pet head marker, three gold stars, 38×12.",
+      "note": "Pet head marker (T3). Origin feet/bottom (0.5, 1).",
+      "tags": [
+        "fx",
+        "evolve-stars",
+        "star",
+        "evolve",
+        "marker",
+        "pet",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "stars-3"
+    },
+    {
+      "key": "exp-orb",
+      "category": "fx",
+      "group": "exp-orb",
+      "path": "assets/library/fx/v026/exp-orb/exp-orb.png",
+      "type": "fx",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "Cyan crystal gem EXP pickup, 32×32, origin centre.",
+      "note": "Transparent pickup. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "exp-orb",
+        "pickup",
+        "exp",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "exp-orb"
+    },
+    {
+      "key": "vfx-telegraph-ring",
+      "category": "fx",
+      "group": "telegraph",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-ring-64.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "S1 cast-preview ring, 64×64, origin centre.",
+      "note": "File is vfx-telegraph-ring-64.png; texture key omits -64. Transparent. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "telegraph",
+        "ring",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "ring"
+    },
+    {
+      "key": "vfx-telegraph-ring-128",
+      "category": "fx",
+      "group": "telegraph",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-ring-128.png",
+      "type": "fx",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "S2 cast-preview ring, 128×128 nearest upscale of the 64 ring.",
+      "note": "Nearest upscale of vfx-telegraph-ring. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "telegraph",
+        "ring",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "ring-128"
+    },
+    {
+      "key": "vfx-telegraph-half-left",
+      "category": "fx",
+      "group": "telegraph",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-half-left.png",
+      "type": "fx",
+      "frameWidth": 192,
+      "frameHeight": 108,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "S3 half-screen telegraph wash, 192×108, origin left-middle.",
+      "note": "Procedural half-screen wash. Origin (0, 0.5).",
+      "tags": [
+        "fx",
+        "telegraph",
+        "wash",
+        "procedural",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "half-left"
+    },
+    {
+      "key": "vfx-ult-phoenix",
+      "category": "fx",
+      "group": "pet-ults",
+      "path": "assets/library/fx/v026/ults/vfx-ult-phoenix.png",
+      "type": "fx",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "烈陽瀑布 cinematic keyframe (wings and sun), 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "pet-ults",
+        "overlay",
+        "ult",
+        "phoenix",
+        "cinematic",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "phoenix"
+    },
+    {
+      "key": "vfx-ult-panda",
+      "category": "fx",
+      "group": "pet-ults",
+      "path": "assets/library/fx/v026/ults/vfx-ult-panda.png",
+      "type": "fx",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "雪域封城 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "pet-ults",
+        "overlay",
+        "ult",
+        "panda",
+        "cinematic",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "panda"
+    },
+    {
+      "key": "vfx-ult-lion",
+      "category": "fx",
+      "group": "pet-ults",
+      "path": "assets/library/fx/v026/ults/vfx-ult-lion.png",
+      "type": "fx",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "雷霆開路 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "pet-ults",
+        "overlay",
+        "ult",
+        "lion",
+        "cinematic",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "lion"
+    },
+    {
+      "key": "vfx-ult-dragon",
+      "category": "fx",
+      "group": "pet-ults",
+      "path": "assets/library/fx/v026/ults/vfx-ult-dragon.png",
+      "type": "fx",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": null,
+      "description": "毒霧淹城 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": [
+        "fx",
+        "pet-ults",
+        "overlay",
+        "ult",
+        "dragon",
+        "cinematic",
+        "v0.26"
+      ],
+      "extra": null,
+      "action": "dragon"
     },
     {
       "key": "zombie-clown-coin",
