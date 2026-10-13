@@ -607,8 +607,8 @@ export class PetCombat {
     const node = actor.float;
     const sprite = actor.sprite;
     if (!node || !sprite) return;
-    node.x = sprite.x + layoutPx(30);
-    node.y = sprite.y - layoutPx(40);
+    node.x = sprite.x + layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_X);
+    node.y = sprite.y - layoutPx(GAME_CONFIG.PETS.FLOAT_OFFSET_Y);
     node.setDepth?.(depthFromY(sprite.y, 8));
   }
 

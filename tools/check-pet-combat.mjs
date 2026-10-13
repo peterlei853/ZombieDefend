@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
 import { WAVE_DEFS, BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
-import { barricadeXAtY, depthFromY, layoutPx } from '../src/systems/DepthView.js';
+import { barricadeXAtY, depthFromY, displayScaleFromY, grassYMax, layoutPx } from '../src/systems/DepthView.js';
 import { nearestFieldPet, petReachableBeforeFence } from '../src/systems/petAggro.js';
 import {
   PET_AUDIO_KEYS,
@@ -131,6 +131,7 @@ assert(petsCfg.PANDA.RANGE >= 80, 'panda reach covers a zombie at the posts');
 assert(petsCfg.DRAGON.BURN > 0 && petsCfg.DRAGON.BURN_MS > 0, 'dragon burn is configured');
 assert(petsCfg.FLOAT_HOLD_MS >= 600 && petsCfg.FLOAT_HOLD_MS <= 800, 'GO!/Back! hold is 0.6–0.8s');
 assert(petsCfg.FLOAT_FADE_MS > 0, 'float fades after the hold');
+assert(petsCfg.FLOAT_OFFSET_X === 64 && petsCfg.FLOAT_OFFSET_Y === 56, 'GO!/Back! sits up-right of the pet');
 assert(PET_AUDIO_KEYS.go === 'go-shout' && PET_AUDIO_KEYS.back === 'back-shout' && PET_AUDIO_KEYS.sleep === 'pet-sleep', 'cue names are reserved');
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 assert(!soundSrc.includes('go-shout') && !soundSrc.includes('back-shout') && !soundSrc.includes('pet-sleep'), 'SFX is not wired');
@@ -457,6 +458,14 @@ assert(fades.summon(0, player, []).ok, 'float summon');
 const go = fadeScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-go');
 assert(go && go.active, 'GO! sprite is beside the pet');
 assert(go.originX === 0.5 && go.originY === 1, 'GO! origin is bottom center');
+assert(floatClearsHero(go, player), 'GO! does not cover the hero beside the pet');
+const nearPlayer = { x: player.x, y: grassYMax() };
+const nearScene = mockScene(audio);
+const near = new PetCombat(nearScene);
+assert(near.summon(0, nearPlayer, []).ok, 'near-lane float summon');
+const nearGo = nearScene._sprites.find((sprite) => sprite.textureKey === 'ui-float-go');
+assert(floatClearsHero(nearGo, nearPlayer), 'GO! clears the hero on the near lane');
+near.destroy();
 fades.update(petsCfg.FLOAT_HOLD_MS - 40, [], player);
 assert(go.active && go.alpha === 1, 'float holds through 0.6–0.8s');
 fades.update(40 + petsCfg.FLOAT_FADE_MS + 30, [], player);
@@ -468,6 +477,20 @@ if (failed) {
   process.exit(1);
 }
 console.log('pet combat checks passed');
+
+/** 80×32 label, origin bottom-center, must miss the 92px hero at the player's feet. */
+function floatClearsHero(node, player) {
+  if (!node || !player) return false;
+  const scale = displayScaleFromY(player.y);
+  const hero = {
+    l: player.x - 46 * scale,
+    r: player.x + 46 * scale,
+    t: player.y - 76 * scale,
+    b: player.y + 16 * scale,
+  };
+  const label = { l: node.x - 40, r: node.x + 40, t: node.y - 32, b: node.y };
+  return label.r <= hero.l || label.l >= hero.r || label.b <= hero.t || label.t >= hero.b;
+}
 
 function pump(combat, scene, ms, foe, player) {
   const step = 50;

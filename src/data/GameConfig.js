@@ -129,8 +129,10 @@ export const GAME_CONFIG = {
    * UNLOCKED_ORBS is 1 (form 1 only). Orbs 2–3 stay visible and locked.
    *
    * FLOAT_HOLD_MS is 700 (inside 0.6–0.8s). The GO! / Back! sprite holds,
-   * then fades for FLOAT_FADE_MS. Recall walks to an empty bed behind the
-   * fence, plays sleep-start once, then the sleep loop. Resummon wakes
+   * then fades for FLOAT_FADE_MS. The label sits up and to the right of the
+   * pet (FLOAT_OFFSET_X 64, FLOAT_OFFSET_Y 56, field px) so it clears the
+   * hero when the pet is beside the player. Recall walks to an empty bed
+   * behind the fence, plays sleep-start once, then the sleep loop. Resummon wakes
    * that body and walks it out. HP, regen, and revive stay on this table.
    * v0.22.1b raises the shared max from 96 to 192. Recall still restores
    * OFF_FIELD_REGEN_RATIO of that max per second, so a full heal is still
@@ -167,6 +169,13 @@ export const GAME_CONFIG = {
     FLOAT_HOLD_MS: 700,
     /** Fade after FLOAT_HOLD_MS. */
     FLOAT_FADE_MS: 200,
+    /**
+     * Field px from the pet's feet to the bottom-center of GO! / Back!.
+     * +X is toward the barricade. 64 clears the hero's right edge when the
+     * pet pops just behind the player; 56 lifts the 32px label off the shoulder.
+     */
+    FLOAT_OFFSET_X: 64,
+    FLOAT_OFFSET_Y: 56,
     /** Death lockout before the bar can summon again. 18s. */
     REVIVE_CD_MS: 18000,
     /** Fraction of max HP restored per second while recalled (alive, off field). */
