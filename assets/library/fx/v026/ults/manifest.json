@@ -1,0 +1,69 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "pet-ults",
+  "title": "Pet Ultimate Keyframes",
+  "titleZh": "寵物大招過場",
+  "description": "v0.26 pet ultimate keyframes, 384×216, origin centre (0.5, 0.5). Each frame is a single cinematic overlay (an opaque letterbox background is OK). The engine letterboxes and fades it over 0.8–1.2s.",
+  "source": {
+    "tool": "2-PixelLab Bot overnight VFX",
+    "sourceFolder": "fx/v026/ults",
+    "pixellabJobIds": {
+      "vfx-ult-phoenix": "fafad261-c0a0-43e2-a7c8-e66263abc1f1",
+      "vfx-ult-panda": "6e0b702d-0587-445a-8e63-4ae916764825",
+      "vfx-ult-lion": "d5680cda-db22-40fa-8647-47cc1c2e041c",
+      "vfx-ult-dragon": "7195a199-a975-4466-ab89-a11bb2c6582d"
+    },
+    "note": "One still per pet. Animated strips are still open. See assets/library/fx/v026/INVENTORY.md"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [0.5, 0.5],
+    "facing": null,
+    "frames": 1,
+    "loop": false
+  },
+  "preview": {
+    "animate": [],
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "vfx-ult-phoenix",
+      "path": "assets/library/fx/v026/ults/vfx-ult-phoenix.png",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "description": "烈陽瀑布 cinematic keyframe (wings and sun), 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": ["ult", "phoenix", "overlay", "cinematic", "v0.26"]
+    },
+    {
+      "key": "vfx-ult-panda",
+      "path": "assets/library/fx/v026/ults/vfx-ult-panda.png",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "description": "雪域封城 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": ["ult", "panda", "overlay", "cinematic", "v0.26"]
+    },
+    {
+      "key": "vfx-ult-lion",
+      "path": "assets/library/fx/v026/ults/vfx-ult-lion.png",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "description": "雷霆開路 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": ["ult", "lion", "overlay", "cinematic", "v0.26"]
+    },
+    {
+      "key": "vfx-ult-dragon",
+      "path": "assets/library/fx/v026/ults/vfx-ult-dragon.png",
+      "frameWidth": 384,
+      "frameHeight": 216,
+      "description": "毒霧淹城 cinematic keyframe, 384×216.",
+      "note": "Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5).",
+      "tags": ["ult", "dragon", "overlay", "cinematic", "v0.26"]
+    }
+  ]
+}

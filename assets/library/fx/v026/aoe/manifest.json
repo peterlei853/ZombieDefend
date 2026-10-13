@@ -1,0 +1,68 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "aoe-residue",
+  "title": "AoE Residue",
+  "titleZh": "範圍殘留",
+  "description": "v0.26 AoE residue, 96×96, origin centre (0.5, 0.5). vfx-aoe-lightning is procedural. vfx-aoe-ice is flagged for a possible shatter retouch later.",
+  "source": {
+    "tool": "2-PixelLab Bot overnight VFX",
+    "sourceFolder": "fx/v026/aoe",
+    "pixellabJobIds": {
+      "vfx-aoe-fire": "c83e262c-01c1-4e8f-99f1-15e6518fc1ac",
+      "vfx-aoe-poison": "d97f1a91-f807-49c3-be41-b35b9e3b2786",
+      "vfx-aoe-ice": "b88f1307-6076-4554-8586-3129607985e9"
+    },
+    "note": "Lightning has no PixelLab id; it is procedural. See assets/library/fx/v026/INVENTORY.md"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [0.5, 0.5],
+    "facing": null,
+    "frames": 1,
+    "loop": false
+  },
+  "preview": {
+    "animate": [],
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "vfx-aoe-fire",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-fire.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "description": "Fire residue / impact puff, 96×96, origin centre.",
+      "note": "Origin (0.5, 0.5).",
+      "tags": ["aoe", "residue", "fire", "v0.26"]
+    },
+    {
+      "key": "vfx-aoe-ice",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-ice.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "description": "Ice residue, 96×96, origin centre. Flagged for a possible shatter retouch.",
+      "note": "Flagged for a possible shatter retouch later. May read as an orb or crystal blob rather than a shatter puddle. Origin (0.5, 0.5).",
+      "tags": ["aoe", "residue", "ice", "v0.26"]
+    },
+    {
+      "key": "vfx-aoe-poison",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-poison.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "description": "Poison fog residue, 96×96, origin centre.",
+      "note": "Origin (0.5, 0.5).",
+      "tags": ["aoe", "residue", "poison", "v0.26"]
+    },
+    {
+      "key": "vfx-aoe-lightning",
+      "path": "assets/library/fx/v026/aoe/vfx-aoe-lightning.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "description": "Procedural lightning scorch and arcs, 96×96, origin centre.",
+      "note": "Procedural scorch and arcs. Origin (0.5, 0.5).",
+      "tags": ["aoe", "residue", "lightning", "procedural", "v0.26"]
+    }
+  ]
+}

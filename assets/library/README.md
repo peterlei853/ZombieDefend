@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 12 zombie groups, 2 bosses with skill FX, shared FX, pickups, environment props (barricade), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 12 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -31,7 +31,13 @@ assets/library/
 │   └── bosses/<slug>/        manifest.json + strips/   (zombie-boss-<lava|steel>-*)
 │       └── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
-├── fx/                       manifest.json + shared FX (zombie-exploder-blast)
+├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
+│   └── v026/                 v0.26 overnight pack + INVENTORY.md
+│       ├── exp-orb/          exp-orb (32×32 pickup)
+│       ├── evolve-stars/     vfx-evolve-star + T1/T2/T3 head markers
+│       ├── telegraph/        ring 64/128 + half-left wash
+│       ├── aoe/              fire / ice / poison / lightning residue
+│       └── ults/             phoenix / panda / lion / dragon keyframes
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
@@ -44,7 +50,7 @@ assets/library/
 
 ## Naming convention (keys)
 
-Each texture key equals its file name without `.png`. Phaser texture keys and animation keys use the same string.
+Each texture key equals its file name without `.png`, except `vfx-telegraph-ring` (file `vfx-telegraph-ring-64.png`). Phaser texture keys and animation keys use the same string.
 
 | Category | Key pattern | Examples |
 |---|---|---|
@@ -55,6 +61,7 @@ Each texture key equals its file name without `.png`. Phaser texture keys and an
 | Hero FX | `fx-<weapon>-<name>` | `fx-frost-beam`, `fx-sling-dizzy` |
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
+| v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
 | Environment | `barricade-post`, `barricade-post-damaged` | 32×64 wooden picket posts, origin (0.5, 1.0) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
@@ -71,6 +78,16 @@ Category `pets/` holds four chibi companions (phoenix / panda / lion / dragon), 
 - `pets/<pet>/fx/fx-pet-<pet>-*.png` (standalone skill FX + evolve)
 
 Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128). Origin `(0.5, 1)`. Facing west. Skill = cast strip + FX; see group manifest `castFrame` / `spawnOffset`.
+
+## v0.26 overnight VFX
+
+Shared FX under `fx/v026/` (category `fx`, five groups). Notes live in [`fx/v026/INVENTORY.md`](fx/v026/INVENTORY.md). `*-miss` and `*-raw` files are not cataloged. Pickup, rings, and stars are transparent.
+
+- Ult frames (`vfx-ult-phoenix`, `vfx-ult-panda`, `vfx-ult-lion`, `vfx-ult-dragon`) are single keyframes used as a cinematic overlay. The engine letterboxes and fades each one over 0.8–1.2s. Canvas 384×216, origin (0.5, 0.5). An opaque letterbox background is OK.
+- `vfx-aoe-lightning` is procedural (96×96 scorch and arcs).
+- `vfx-aoe-ice` is flagged for a possible shatter retouch later. It may read as an orb or crystal blob rather than a shatter puddle.
+- Stars `vfx-evolve-stars-1` / `-2` / `-3` are pet head markers (T1 / T2 / T3). Origin is the feet / bottom, (0.5, 1). The single `vfx-evolve-star` is 32×32 with origin (0.5, 0.5).
+- `vfx-telegraph-ring` is the 64×64 S1 ring. Its file is `vfx-telegraph-ring-64.png`. `vfx-telegraph-ring-128` is the S2 nearest upscale. `vfx-telegraph-half-left` is a procedural 192×108 half-screen wash with origin (0, 0.5).
 
 ## UI kit
 
@@ -94,6 +111,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 | Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north` or `-walk-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
 | Shared FX | 160×160 blast | (0.5, 0.5) | – |
+| v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |
 | Pickups | coin/gems 16×16, pile 64×32 | coin/gems (0.5, 0.5); pile (0.5, 1.0) | – |
 | Backgrounds | 1280×720 (bleed 1360×768) | (0, 0) | – |
 

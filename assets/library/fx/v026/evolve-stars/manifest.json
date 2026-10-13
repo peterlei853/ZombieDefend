@@ -1,0 +1,65 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "evolve-stars",
+  "title": "Evolve Stars",
+  "titleZh": "進化星標",
+  "description": "v0.26 evolve stars. The single gold star is 32×32 with origin centre (0.5, 0.5). vfx-evolve-stars-1/2/3 are T1/T2/T3 pet head markers; origin is the feet/bottom (0.5, 1).",
+  "source": {
+    "tool": "2-PixelLab Bot overnight VFX",
+    "pixellabJobId": "b21200fe-0317-415d-b788-0f81d7edbfb1",
+    "sourceFolder": "fx/v026/evolve-stars",
+    "note": "Composites are head markers built from the single star. See assets/library/fx/v026/INVENTORY.md"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [0.5, 1.0],
+    "facing": null,
+    "frames": 1,
+    "loop": false
+  },
+  "preview": {
+    "animate": [],
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "vfx-evolve-star",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-star.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [0.5, 0.5],
+      "description": "Single gold evolve star, 32×32, origin centre.",
+      "note": "Transparent. Origin (0.5, 0.5). Source star for the T1/T2/T3 head markers.",
+      "tags": ["star", "evolve", "v0.26"]
+    },
+    {
+      "key": "vfx-evolve-stars-1",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-1.png",
+      "frameWidth": 12,
+      "frameHeight": 12,
+      "description": "T1 pet head marker, one gold star, 12×12.",
+      "note": "Pet head marker (T1). Origin feet/bottom (0.5, 1).",
+      "tags": ["star", "evolve", "marker", "pet", "v0.26"]
+    },
+    {
+      "key": "vfx-evolve-stars-2",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-2.png",
+      "frameWidth": 25,
+      "frameHeight": 12,
+      "description": "T2 pet head marker, two gold stars, 25×12.",
+      "note": "Pet head marker (T2). Origin feet/bottom (0.5, 1).",
+      "tags": ["star", "evolve", "marker", "pet", "v0.26"]
+    },
+    {
+      "key": "vfx-evolve-stars-3",
+      "path": "assets/library/fx/v026/evolve-stars/vfx-evolve-stars-3.png",
+      "frameWidth": 38,
+      "frameHeight": 12,
+      "description": "T3 pet head marker, three gold stars, 38×12.",
+      "note": "Pet head marker (T3). Origin feet/bottom (0.5, 1).",
+      "tags": ["star", "evolve", "marker", "pet", "v0.26"]
+    }
+  ]
+}

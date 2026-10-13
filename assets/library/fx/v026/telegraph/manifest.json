@@ -1,0 +1,56 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "telegraph",
+  "title": "Cast Telegraphs",
+  "titleZh": "技能預告",
+  "description": "v0.26 cast telegraphs. vfx-telegraph-ring is the 64×64 S1 preview (file vfx-telegraph-ring-64.png) and vfx-telegraph-ring-128 is the S2 nearest upscale, both origin centre (0.5, 0.5). vfx-telegraph-half-left is a procedural S3 half-screen wash, 192×108, origin (0, 0.5).",
+  "source": {
+    "tool": "2-PixelLab Bot overnight VFX",
+    "pixellabJobId": "df86326d-9714-44ad-8665-8e77d4bd0713",
+    "sourceFolder": "fx/v026/telegraph",
+    "note": "Ring 128 is a nearest upscale of the 64 ring. Half-left wash is procedural. See assets/library/fx/v026/INVENTORY.md"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [0.5, 0.5],
+    "facing": null,
+    "frames": 1,
+    "loop": false
+  },
+  "preview": {
+    "animate": [],
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "vfx-telegraph-ring",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-ring-64.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "description": "S1 cast-preview ring, 64×64, origin centre.",
+      "note": "File is vfx-telegraph-ring-64.png; texture key omits -64. Transparent. Origin (0.5, 0.5).",
+      "tags": ["telegraph", "ring", "v0.26"]
+    },
+    {
+      "key": "vfx-telegraph-ring-128",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-ring-128.png",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "description": "S2 cast-preview ring, 128×128 nearest upscale of the 64 ring.",
+      "note": "Nearest upscale of vfx-telegraph-ring. Origin (0.5, 0.5).",
+      "tags": ["telegraph", "ring", "v0.26"]
+    },
+    {
+      "key": "vfx-telegraph-half-left",
+      "path": "assets/library/fx/v026/telegraph/vfx-telegraph-half-left.png",
+      "frameWidth": 192,
+      "frameHeight": 108,
+      "origin": [0, 0.5],
+      "description": "S3 half-screen telegraph wash, 192×108, origin left-middle.",
+      "note": "Procedural half-screen wash. Origin (0, 0.5).",
+      "tags": ["telegraph", "wash", "procedural", "v0.26"]
+    }
+  ]
+}

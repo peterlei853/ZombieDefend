@@ -1,0 +1,37 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "exp-orb",
+  "title": "EXP Orb",
+  "titleZh": "經驗寶珠",
+  "description": "v0.26 cyan crystal gem EXP pickup, 32×32, origin centre (0.5, 0.5). Transparent.",
+  "source": {
+    "tool": "2-PixelLab Bot overnight VFX",
+    "pixellabJobId": "baf7309d-f094-495c-a07e-0601757daa51",
+    "sourceFolder": "fx/v026/exp-orb",
+    "note": "See assets/library/fx/v026/INVENTORY.md"
+  },
+  "defaults": {
+    "type": "fx",
+    "origin": [0.5, 0.5],
+    "facing": null,
+    "frames": 1,
+    "loop": false
+  },
+  "preview": {
+    "animate": [],
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "exp-orb",
+      "path": "assets/library/fx/v026/exp-orb/exp-orb.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "description": "Cyan crystal gem EXP pickup, 32×32, origin centre.",
+      "note": "Transparent pickup. Origin (0.5, 0.5).",
+      "tags": ["pickup", "exp", "v0.26"]
+    }
+  ]
+}
