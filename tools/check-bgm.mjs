@@ -7,6 +7,7 @@
  * preload stays; this pass does not add wave, shout, or shop cues.
  */
 import { existsSync, readFileSync } from 'node:fs';
+import { debugBgmEnabled } from '../src/debugBgm.js';
 import {
   AUDIO_VOLUME,
   BGM_KEY,
@@ -78,6 +79,24 @@ assert(stageSrc.includes('playVictory()'), 'StageScene plays victory on clear');
 assert(stageSrc.includes('playGameOver()'), 'StageScene still uses the game-over sting');
 assert(stageSrc.includes('delayedCall(1500'), 'victory hold before the shop bed');
 assert(shopSrc.includes('startShopBgm()'), 'ShopScene starts bgm-shop');
+assert(
+  /if \(debugBgmEnabled\(\)\) \{\s*this\._installDebugClear\(\);/.test(stageSrc),
+  'debug clear stays off unless the query flag is on'
+);
+assert(debugBgmEnabled('') === false, 'debug shortcut is off with no query');
+assert(debugBgmEnabled('?debugBgm=0') === false, 'debugBgm=0 stays off');
+assert(debugBgmEnabled('?debug=0') === false, 'debug=0 stays off');
+assert(debugBgmEnabled('?debugBgm=1') === true, 'debugBgm=1 opens the shortcut');
+assert(debugBgmEnabled('?debug=1') === true, 'debug=1 opens the shortcut');
+assert(debugBgmEnabled('?stage=2&debugBgm=1') === true, 'debugBgm=1 works beside other params');
+assert(stageSrc.includes('KeyCodes.V'), 'V triggers the debug clear');
+assert(stageSrc.includes('DEBUG CLEAR'), 'on-screen DEBUG CLEAR chip is present');
+assert(
+  /_installDebugClear\(\) \{[\s\S]*?this\._onWin\(\)/.test(stageSrc),
+  'debug clear uses the real win path'
+);
+const wavesSrc = readFileSync(new URL('../src/data/waves.js', import.meta.url), 'utf8');
+assert(/export const STAGE_DURATION = 90;/.test(wavesSrc), 'stage timer stays 90s');
 assert(!shopSrc.includes('playUiConfirm') && !stageSrc.includes('playWaveStart'), 'no extra UI or wave cues');
 assert(!soundSrc.includes('wave-clear') && !soundSrc.includes('go-shout'), 'SoundManager stays BGM-only for the new cues');
 
