@@ -8,44 +8,76 @@ import {
 } from '../systems/DepthView.js';
 
 /**
- * First form only. Baby idle + skill strips (48×48, feet origin, face west)
- * and the baby skill FX. Young / ancient forms stay on disk.
- * Order is far → near along the fence. Combat reads `id`; placement uses
- * `key` plus the slot math below — pets are not moved behind the hero.
+ * First form only. Baby idle / move / skill / hurt strips (48×48, feet origin,
+ * face west) and the baby skill FX. Young / ancient forms stay on disk.
+ * Order is party order: far → near, and the portrait column top → bottom.
+ * Pets are not spawned with the stage. Portraits summon them.
+ * `portrait` is the big-head crop of idle frame 0 (texture px). The library
+ * has no dedicated portrait icons; the HUD shows that frame directly.
  */
 export const PET_LINEUP = [
   {
     id: 'phoenix',
+    element: 'fire',
+    elementZh: '火',
     key: 'pet-phoenix-baby-idle',
+    move: 'pet-phoenix-baby-move',
     skill: 'pet-phoenix-baby-skill',
+    hurt: 'pet-phoenix-baby-hurt',
     projectile: 'fx-pet-phoenix-spark-feather',
     impact: 'fx-pet-phoenix-spark-feather-hit',
+    portrait: { x: 6, y: 2, width: 36, height: 28 },
   },
   {
     id: 'panda',
+    element: 'ice',
+    elementZh: '冰',
     key: 'pet-panda-baby-idle',
+    move: 'pet-panda-baby-move',
     skill: 'pet-panda-baby-skill',
+    hurt: 'pet-panda-baby-hurt',
     windup: 'fx-pet-panda-roll-dust',
     impact: 'fx-pet-panda-roll-impact',
+    portrait: { x: 8, y: 8, width: 30, height: 24 },
   },
   {
     id: 'lion',
+    element: 'electric',
+    elementZh: '電',
     key: 'pet-lion-baby-idle',
+    move: 'pet-lion-baby-move',
     skill: 'pet-lion-baby-skill',
+    hurt: 'pet-lion-baby-hurt',
     impact: 'fx-pet-lion-pounce-slash',
+    portrait: { x: 4, y: 12, width: 28, height: 22 },
   },
   {
     id: 'dragon',
+    element: 'poison',
+    elementZh: '毒',
     key: 'pet-dragon-baby-idle',
+    move: 'pet-dragon-baby-move',
     skill: 'pet-dragon-baby-skill',
+    hurt: 'pet-dragon-baby-hurt',
     breath: 'fx-pet-dragon-smoke-breath',
+    portrait: { x: 5, y: 2, width: 32, height: 28 },
   },
 ];
 
-/** Idle, skill, and the baby FX each role actually casts. */
+/** Rim / bar tint for the four elements. Dragon's element is poison. */
+export const PET_ELEMENT_TINT = {
+  fire: 0xff7043,
+  ice: 0x81d4fa,
+  electric: 0xffee58,
+  poison: 0x9ccc65,
+};
+
+/** Idle, move, skill, hurt, and the baby FX each role actually casts. */
 export const PET_STAGE_KEYS = new Set(
   PET_LINEUP.flatMap((pet) =>
-    [pet.key, pet.skill, pet.projectile, pet.windup, pet.impact, pet.breath].filter(Boolean)
+    [pet.key, pet.move, pet.skill, pet.hurt, pet.projectile, pet.windup, pet.impact, pet.breath].filter(
+      Boolean
+    )
   )
 );
 
@@ -60,7 +92,7 @@ export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
  * Stage load filter. Non-pet categories pass through. From `pets`, only
- * the four baby idle/skill strips and their phase-1 FX are queued.
+ * the four baby idle/move/skill/hurt strips and their phase-1 FX are queued.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {
@@ -75,9 +107,9 @@ export function petRole(id) {
 }
 
 /**
- * Even slots along the slanted fence, safe side (larger X than the posts).
- * The band is inset so the near pet's tail stays inside the camera; the
- * near fence already sits close to the right edge of the view.
+ * Legacy fence ranks (safe side of the posts). v0.20 does not spawn these.
+ * Summon placement starts behind the player and walks toward the threat.
+ * Kept so slot math stays available for tooling.
  */
 export function petLineupSlots() {
   const y0 = grassYMin();

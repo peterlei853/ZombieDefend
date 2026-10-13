@@ -24,11 +24,12 @@
  * Hit shove, flash, hitlag, and the critical-HP ratio live in JUICE.
  * Nothing calls camera.shake: weapon fire, hits, overkill, and pet attacks.
  * WEAPONS knockback mirrors those two shove values so older readers stay put.
- * PETS is baby-form support only (no ultimates, cooldown HUD, or evolution).
+ * PETS is baby-form support only (no ultimates or evolution). Summon, field,
+ * and revive timers drive the portrait HUD. In-field casts keep the short cadence.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.19.0';
+export const APP_VERSION = '0.20.0';
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;
 
@@ -109,20 +110,39 @@ export const GAME_CONFIG = {
     },
   },
   /**
-   * Baby pets behind the fence. Lengths are field px (callers × LAYOUT_SCALE).
-   * Cadence is the gap between attack starts. Damage stays under a handgun
-   * shot (30) so the four of them support the player instead of replacing them.
-   * The camera does not shake.
+   * Baby pets are summoned from the portrait HUD. They are not on the field
+   * until a ready portrait is tapped. Lengths are field px (callers × LAYOUT_SCALE).
+   * COOLDOWN_* is the gap between casts while a pet is out. SUMMON is the
+   * portrait skill CD, the on-field limit, and the death revive CD.
+   * Party order is phoenix → panda → lion → dragon (far → near).
+   * Damage stays under a handgun shot (30). The camera does not shake.
    */
   PETS: {
     COOLDOWN_MIN_MS: 1000,
     COOLDOWN_MAX_MS: 1500,
+    /** Shared max HP. Zombies that reach a pet chew this instead of the barricade. */
+    HP: 96,
+    /** Field px/s while walking from behind the player toward the threat. */
+    MOVE_SPEED: 170,
+    /** Field px added to the zombie's body radius when it bites a pet. */
+    BITE_RADIUS: 18,
+    /** Flinch on the hurt strip. Does not cancel a cast already in progress. */
+    HURT_MS: 280,
+    /** Scale-pop after the sprite appears behind the player. */
+    POP_MS: 160,
+    /** Brief windup so the summon pop reads before the first cast. */
+    SUMMON_WINDUP_MS: 220,
     /**
-     * Countdown from stage start, lineup order (far → near).
-     * A timer that hits 0 with no zombies holds there, so the first cast
-     * still lands inside a few seconds of the first spawn.
+     * Skill CD / on-field limit / revive CD, in ms.
+     * Timeout recall starts skill CD only. Death starts revive CD only.
+     * Phoenix fire, panda ice, lion electric, dragon poison.
      */
-    FIRST_DELAY_MS: [480, 820, 1160, 1480],
+    SUMMON: {
+      phoenix: { skillCdMs: 8000, fieldMs: 12000, reviveCdMs: 20000 },
+      panda: { skillCdMs: 10000, fieldMs: 14000, reviveCdMs: 22000 },
+      lion: { skillCdMs: 7000, fieldMs: 10000, reviveCdMs: 18000 },
+      dragon: { skillCdMs: 12000, fieldMs: 16000, reviveCdMs: 25000 },
+    },
     /** 0-based skill frame that releases the hit. */
     RELEASE_FRAME: 3,
     /** Safety cap if a skill strip never finishes. */

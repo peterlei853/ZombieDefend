@@ -33,6 +33,8 @@ import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
+import { nearestFieldPet } from '../systems/petAggro.js';
+import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -119,6 +121,14 @@ export default class StageScene extends Phaser.Scene {
       onWeapon: () => this._toggleWeapon(),
     });
     this.defenders.touchControls = this.touchControls;
+    this.petHud = new PetPortraitHud(this, {
+      views: () => this.defenders.petCombat?.portraitViews() || [],
+      onSummon: (index) => this.defenders.summonPet(index, this.zombies),
+    });
+    this.events.once('shutdown', () => {
+      this.petHud?.destroy();
+      this.petHud = null;
+    });
     this.audio.startStageBgm();
   }
 
@@ -308,20 +318,28 @@ export default class StageScene extends Phaser.Scene {
     }
 
     // Zombies move / contact DPS — per-zombie contactXAt(y) matches slanted posts.
+    // A pet in front of the fence is bitten instead. The halt itself is unchanged.
     // Damage totals still apply every frame; floating numbers pop on the ~1s bite.
     let barricadeDmg = 0;
     let statusGold = 0;
     /** @type {Zombie[]} */
     const attackBeats = [];
+    const fieldPets = this.defenders.fieldPets();
     for (const z of this.zombies) {
       if (!z.alive) continue;
-      z.update(deltaSec, this.barricade.contactXAt(z.y));
+      const pet = nearestFieldPet(z, fieldPets);
+      z.update(deltaSec, this.barricade.contactXAt(z.y), pet);
       const status = z.tickStatus(deltaMs);
       statusGold += status?.gold || 0;
-      const dealt = z.contactDamage(deltaSec);
-      barricadeDmg += dealt;
-      z.addBarricadeDmg(dealt);
-      if (z.consumeAttackBeat()) attackBeats.push(z);
+      const petDmg = z.petContactDamage(deltaSec);
+      if (petDmg > 0 && z.petBiteTarget) {
+        z.petBiteTarget.takeDamage(petDmg);
+      } else {
+        const dealt = z.contactDamage(deltaSec);
+        barricadeDmg += dealt;
+        z.addBarricadeDmg(dealt);
+      }
+      if (z.consumeAttackBeat() && !z.petBiteTarget) attackBeats.push(z);
     }
     let destroyed = false;
     if (barricadeDmg > 0) {
@@ -351,6 +369,7 @@ export default class StageScene extends Phaser.Scene {
     }
 
     this._refreshHud();
+    this.petHud?.update(deltaMs);
     applyHpBarDensity(this.zombies);
     this._syncControlFade();
 

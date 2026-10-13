@@ -217,6 +217,24 @@ export class SoundManager {
     this._cue('ui-click', AUDIO_VOLUME.ui);
   }
 
+  /**
+   * Portrait summon pop. No clip is packed yet — the scale punch carries it.
+   * Drop `pet-summon` into the audio cache later and this starts playing.
+   */
+  playPetSummon() {
+    this._cueOptional('pet-summon', AUDIO_VOLUME.ui);
+  }
+
+  /** Pet HP hit zero and the portrait went grey. */
+  playPetDeath() {
+    this._cueOptional('pet-death', AUDIO_VOLUME.death);
+  }
+
+  /** Revive cooldown finished; the portrait is summonable again. */
+  playPetReviveReady() {
+    this._cueOptional('pet-revive', AUDIO_VOLUME.ui);
+  }
+
   /** Fail sting plus BGM fade. Combat tails are cut so they do not sit on the sting. */
   playGameOver() {
     this._stopFireVoice();
@@ -240,6 +258,20 @@ export class SoundManager {
     if (this._disposed) return null;
     if (!this._passCooldown(key, cooldownMs)) return null;
     return this._playNowOrPending(key, volume);
+  }
+
+  /**
+   * Play only when this key is actually cached. Missing pet cues stay silent.
+   * `_cached` reports true when the scene has no audio cache API, so a key
+   * that was never queued must not be sent to the mixer.
+   * @param {string} key
+   * @param {number} volume
+   */
+  _cueOptional(key, volume) {
+    if (AUDIO_KEYS.has(key)) return this._cue(key, volume);
+    const exists = this.scene?.cache?.audio?.exists;
+    if (typeof exists !== 'function' || !exists.call(this.scene.cache.audio, key)) return null;
+    return this._cue(key, volume);
   }
 
   /**
