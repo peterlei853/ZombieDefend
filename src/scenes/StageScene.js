@@ -8,7 +8,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
-import { APP_VERSION } from '../data/GameConfig.js';
+import { APP_VERSION, petHurtDebugRequested } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -144,6 +144,12 @@ export default class StageScene extends Phaser.Scene {
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       this._spaceKey.on('down', () => this._toggleWeapon());
+      // One flinch: white fill, red fill, hurt strip. Does not restart mid-sequence.
+      this._hurtKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
+      this._hurtKey.on('down', () => this._debugPetHurt());
+    }
+    if (petHurtDebugRequested()) {
+      this.time.delayedCall(400, () => this._debugPetHurt());
     }
     if (debugBgmEnabled()) {
       this._installDebugClear();
@@ -197,6 +203,16 @@ export default class StageScene extends Phaser.Scene {
       color: '#ffd27a',
       depth: depth + 1,
     });
+  }
+
+  /**
+   * ?petHurt=1 on the page URL, or the H key. Plays the hurt sequence once.
+   * A bite already in progress is left alone.
+   */
+  _debugPetHurt() {
+    const player = this.defenders?.player;
+    const anchor = player ? { x: player.x, y: player.y } : null;
+    this.defenders?.petCombat?.debugHurtOnce?.(anchor);
   }
 
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
