@@ -1,24 +1,25 @@
 /** Tiny helpers for Title/Auth scenes — Architect-owned. */
 
+import { FONT_INK, INK_TINT, addKitText, addParchmentButton } from './uiKit.js';
+
 export function addTitle(scene, text, y = 56) {
-  return scene.add
-    .text(400, y, text, { fontFamily: 'system-ui', fontSize: '28px', color: '#e8eef5' })
-    .setOrigin(0.5);
+  return addKitText(scene, 400, y, text, {
+    font: FONT_INK,
+    size: 32,
+    tint: INK_TINT,
+    color: '#e8eef5',
+    scrollFactor: 0,
+  });
 }
 
 export function addButton(scene, x, y, label, onClick, opts = {}) {
-  const w = opts.w ?? 220;
-  const h = opts.h ?? 44;
-  const fill = opts.fill ?? 0x1e88e5;
-  const hover = opts.hover ?? 0x42a5f5;
-  const bg = scene.add.rectangle(x, y, w, h, fill).setInteractive({ useHandCursor: true });
-  const txt = scene.add
-    .text(x, y, label, { fontFamily: 'system-ui', fontSize: '18px', color: '#ffffff' })
-    .setOrigin(0.5);
-  bg.on('pointerover', () => bg.setFillStyle(hover));
-  bg.on('pointerout', () => bg.setFillStyle(fill));
-  bg.on('pointerup', onClick);
-  return { bg, txt };
+  return addParchmentButton(scene, x, y, label, onClick, {
+    scale: opts.scale ?? 3,
+    fontSize: opts.fontSize ?? 16,
+    w: opts.w ?? 220,
+    h: opts.h ?? 44,
+    fill: opts.fill ?? 0x6b5344,
+  });
 }
 
 export function addError(scene, y = 400) {

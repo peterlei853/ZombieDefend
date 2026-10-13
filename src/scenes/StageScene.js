@@ -27,6 +27,19 @@ import {
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
+import {
+  FONT_GOLD,
+  FONT_HUD,
+  FONT_INK,
+  FONT_TINY,
+  INK_TINT,
+  UI,
+  KitHpBar,
+  addKitImage,
+  addKitText,
+  addParchmentButton,
+  showKitBanner,
+} from '../ui/uiKit.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
@@ -135,8 +148,16 @@ export default class StageScene extends Phaser.Scene {
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
   _toggleWeapon() {
     this.defenders.weapons.toggleWeapon();
-    this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    this.hudWeapon?.setText(this._weaponName());
+    this._reflowHud();
     this.audio?.playWeaponSwap();
+  }
+
+  /** Short weapon name. The icon sits beside it, so the "Weapon:" prefix is dropped. */
+  _weaponName() {
+    const skin = this.defenders?.weapons?.getSkin?.();
+    if (skin?.label) return skin.label;
+    return this.defenders?.weapons?.weapon || '';
   }
 
   _drawWorld() {
@@ -188,114 +209,141 @@ export default class StageScene extends Phaser.Scene {
   }
 
   _buildHud() {
-    const style = {
-      fontFamily: 'system-ui, sans-serif',
-      fontSize: `${layoutPx(14)}px`,
-      color: '#e8eef5',
-    };
     const d = HUD_DEPTH;
-    const textY = layoutPx(8);
-    const hudH = layoutPx(32);
+    const barY = 22;
+    // Heart + player frame. The defender has no HP pool, so this fill stays full.
+    addKitImage(this, 26, barY, UI.heart, { depth: d + 4, scrollFactor: 0 });
+    this.playerHp = new KitHpBar(this, 'player', 174, barY, {
+      scrollFactor: 0,
+      depth: d + 2,
+      ratio: 1,
+    });
 
-    this.hudBg = this.add
-      .rectangle(GAME_WIDTH / 2, hudH / 2, GAME_WIDTH, hudH, 0x0a1018, 0.85)
-      .setScrollFactor(0)
-      .setDepth(d);
+    const rowY = 58;
+    const textOpts = { size: 16, originX: 0, originY: 0.5, depth: d + 3 };
+    this.hudTime = addKitText(this, 16, rowY, 'TIME 0s', textOpts);
+    this.hudWave = addKitText(this, 16, rowY, 'WAVE 1', textOpts);
+    this.hudEnemies = addKitText(this, 16, rowY, 'ENEMIES 0', textOpts);
+    this.hudGold = addKitText(this, 16, rowY, `GOLD ${this.gold}`, {
+      ...textOpts,
+      font: FONT_GOLD,
+    });
+    this.hudWeapon = addKitText(this, 16, rowY, this._weaponName(), textOpts);
+    this.hudBarricade = addKitText(this, 16, rowY, `WALL ${BARRICADE_MAX_HP}`, textOpts);
+    this.hudStage = addKitText(this, GAME_WIDTH - 12, rowY, `v${APP_VERSION} STAGE ${this.stage}`, {
+      font: FONT_TINY,
+      size: 16,
+      originX: 1,
+      originY: 0.5,
+      depth: d + 3,
+    });
 
-    // Column starts for a 1280-wide bar. The old 800px columns collided once
-    // the font grew with the canvas (Weapon ran into Stage).
-    this.hudTime = this.add.text(20, textY, 'Time: 0s', style).setScrollFactor(0).setDepth(d + 1);
-    this.hudWave = this.add.text(170, textY, 'Wave: 1', style).setScrollFactor(0).setDepth(d + 1);
-    this.hudEnemies = this.add
-      .text(300, textY, 'Enemies: 0', style)
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    this.hudBarricade = this.add
-      .text(500, textY, `Barricade: ${BARRICADE_MAX_HP}`, style)
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    this.hudGold = this.add
-      .text(720, textY, `Gold: ${this.gold}`, { ...style, color: '#ffd54f' })
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    const weaponLabel = this.defenders.weapons.getWeaponLabel();
     const weaponIconKey = this.defenders.weapons.getSkin?.()?.icon;
     if (weaponIconKey && this.textures.exists(weaponIconKey)) {
       this.hudWeaponIcon = this.add
-        .image(868, textY + layoutPx(8), weaponIconKey)
+        .image(0, rowY, weaponIconKey)
         .setOrigin(0, 0.5)
-        .setScale(0.7)
+        .setScale(0.5)
         .setScrollFactor(0)
-        .setDepth(d + 1);
+        .setDepth(d + 3);
     }
-    this.hudWeapon = this.add
-      .text(900, textY, weaponLabel, {
-        ...style,
-        color: '#90caf9',
-      })
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    this.hudStage = this.add
-      .text(GAME_WIDTH - layoutPx(16), textY, `v${APP_VERSION} · Stage ${this.stage}`, { ...style, color: '#8fa3b8' })
-      .setOrigin(1, 0)
-      .setScrollFactor(0)
-      .setDepth(d + 1);
 
-    // Onboarding line under the HUD, in the sky band, so it never sits on
-    // the bottom lane. Fire is automatic; the mouse does not aim.
-    const hintEn = 'Auto-fire · W/S lane · SPACE weapon swap · mouse does not aim';
-    const hintZh = '自動射擊 · W/S 換道 · SPACE 換武器 · 滑鼠不瞄準';
-    const hintSize = layoutPx(13);
-    const hintY = hudH + layoutPx(6);
-    this.hudHint = this.add
-      .text(GAME_WIDTH / 2, hintY, hintEn, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${hintSize}px`,
-        color: '#fff4c2',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    this.hudHintZh = this.add
-      .text(GAME_WIDTH / 2, hintY + this.hudHint.height + layoutPx(2), hintZh, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${layoutPx(12)}px`,
-        color: '#ffe082',
-      })
-      .setOrigin(0.5, 0)
-      .setScrollFactor(0)
-      .setDepth(d + 1);
-    const hintW = Math.max(this.hudHint.width, this.hudHintZh.width) + layoutPx(28);
-    const hintTop = hintY - layoutPx(4);
-    const hintBottom = this.hudHintZh.y + this.hudHintZh.height + layoutPx(4);
-    this.hudHintBg = this.add
-      .rectangle(
-        GAME_WIDTH / 2,
-        (hintTop + hintBottom) / 2,
-        hintW,
-        hintBottom - hintTop,
-        0x0a1018,
-        0.88
-      )
-      .setScrollFactor(0)
-      .setDepth(d);
+    this._hudRow = [this.hudTime, this.hudWave, this.hudEnemies, this.hudGold];
+    if (this.hudWeaponIcon) this._hudRow.push(this.hudWeaponIcon);
+    this._hudRow.push(this.hudWeapon, this.hudBarricade);
+    this._reflowHud();
+
+    this._announcedWave = null;
+    this._showBanner({
+      icon: UI.ready,
+      title: 'AUTO-FIRE',
+      sub: 'W/S LANE SWAP',
+      zh: '自動射擊 · 換道 · 換武器',
+      hold: 6500,
+      y: 230,
+    });
+    this.events.once('shutdown', () => this._clearBanner());
+  }
+
+  _reflowHud() {
+    let x = 16;
+    const y = 58;
+    const gap = 16;
+    const versionLeft = (this.hudStage?.x ?? GAME_WIDTH - 12) - (this.hudStage?.width ?? 0) - 12;
+    for (const go of this._hudRow || []) {
+      if (!go?.setPosition) continue;
+      go.setPosition(x, y);
+      const w = go.displayWidth || go.width || 0;
+      x += w + gap;
+      if (x > versionLeft) break;
+    }
+  }
+
+  /**
+   * @param {{ icon?: string, title?: string, sub?: string, zh?: string, hold?: number, y?: number, panel?: string, onParchment?: boolean, titleSize?: number }} opts
+   */
+  _showBanner(opts) {
+    this._clearBanner();
+    this._banner = showKitBanner(this, {
+      x: GAME_WIDTH / 2,
+      y: opts.y ?? 230,
+      depth: HUD_DEPTH + 40,
+      ...opts,
+    });
+    if (opts.hold > 0) {
+      this._bannerTimer = this.time.delayedCall(opts.hold, () => {
+        const banner = this._banner;
+        if (!banner || banner.dead) return;
+        this.tweens.add({
+          targets: banner.objects,
+          alpha: 0,
+          duration: 280,
+          onComplete: () => {
+            if (this._banner === banner) this._clearBanner();
+            else banner.destroy();
+          },
+        });
+      });
+    }
+  }
+
+  _clearBanner() {
+    this._bannerTimer?.remove?.();
+    this._bannerTimer = null;
+    this._banner?.destroy?.();
+    this._banner = null;
   }
 
   _refreshHud() {
     const t = Math.min(STAGE_DURATION, Math.floor(this.waveManager.getElapsed()));
     const alive = this.zombies.filter((z) => z.alive).length;
     const remaining = alive + this.waveManager.getRemainingToSpawn();
+    const wave = this.waveManager.getCurrentWave();
 
-    this.hudTime.setText(`Time: ${t}s`);
-    this.hudWave.setText(`Wave: ${this.waveManager.getCurrentWave()}`);
-    this.hudEnemies.setText(`Enemies: ${remaining}`);
-    this.hudBarricade.setText(`Barricade: ${Math.ceil(this.barricade.hp)}`);
-    this.hudGold.setText(`Gold: ${this.gold}`);
-    this.hudWeapon.setText(this.defenders.weapons.getWeaponLabel());
+    this.hudTime.setText(`TIME ${t}s`);
+    this.hudWave.setText(`WAVE ${wave}`);
+    this.hudEnemies.setText(`ENEMIES ${remaining}`);
+    this.hudBarricade.setText(`WALL ${Math.ceil(this.barricade.hp)}`);
+    this.hudGold.setText(`GOLD ${this.gold}`);
+    this.hudWeapon.setText(this._weaponName());
+    this.playerHp?.setRatio(1);
     const iconKey = this.defenders.weapons.getSkin?.()?.icon;
     if (this.hudWeaponIcon && iconKey && this.textures.exists(iconKey)) {
       this.hudWeaponIcon.setTexture(iconKey);
+    }
+    this._reflowHud();
+
+    if (this._announcedWave == null) {
+      this._announcedWave = wave;
+    } else if (wave !== this._announcedWave) {
+      this._announcedWave = wave;
+      this._showBanner({
+        icon: UI.wave,
+        title: `WAVE ${wave}`,
+        zh: `第${wave}波`,
+        hold: 2400,
+        y: 230,
+      });
     }
   }
 
@@ -454,36 +502,35 @@ export default class StageScene extends Phaser.Scene {
     this.ended = true;
     this.audio?.fadeBgm();
     this.registry.set('gold', this.gold);
+    this._clearBanner();
 
     const d = HUD_DEPTH + 100;
+    const cx = GAME_WIDTH / 2;
+    const cy = GAME_HEIGHT / 2;
     const overlay = this._pinOverlay(
-      this.add
-        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.55)
-        .setDepth(d)
+      this.add.rectangle(cx, cy, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.55).setDepth(d)
     );
-
-    this._pinOverlay(
-      this.add
-        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.38, 'Stage Clear!', {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: `${layoutPx(36)}px`,
-          color: '#81c784',
-          fontStyle: 'bold',
-        })
-        .setOrigin(0.5)
-        .setDepth(d + 1)
-    );
-
-    this._pinOverlay(
-      this.add
-        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.5, `Gold: ${this.gold}`, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: `${layoutPx(18)}px`,
-          color: '#ffd54f',
-        })
-        .setOrigin(0.5)
-        .setDepth(d + 1)
-    );
+    addKitImage(this, cx, cy, UI.dialog, { depth: d + 1 });
+    // Navy header: outlined Latin. The ready icon is a dark glyph, so it
+    // sits on the parchment body beside the gold line.
+    addKitText(this, cx, cy - 72, 'STAGE CLEAR', {
+      font: FONT_HUD,
+      size: 32,
+      depth: d + 3,
+    });
+    addKitText(this, cx, cy - 36, '關卡通過', {
+      system: true,
+      size: 18,
+      color: '#f6e7c2',
+      depth: d + 3,
+    });
+    this._pairIconText(cx, cy + 36, UI.ready, `GOLD ${this.gold}`, {
+      font: FONT_INK,
+      size: 16,
+      tint: INK_TINT,
+      color: '#2a2118',
+      depth: d + 3,
+    });
 
     this.time.delayedCall(900, () => {
       overlay.destroy();
@@ -502,80 +549,78 @@ export default class StageScene extends Phaser.Scene {
     // Failed attempt does not keep kill gold. The next run starts at the
     // purse this attempt was given (0 from Boot, or Shop gold after a win).
     this.registry.set('gold', this.runStartGold);
+    this._clearBanner();
 
     const d = HUD_DEPTH + 100;
+    const cx = GAME_WIDTH / 2;
+    const cy = GAME_HEIGHT / 2;
+    const survived = Math.floor(this.waveManager.getElapsed());
 
     this._pinOverlay(
-      this.add
-        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x1a0000, 0.7)
-        .setDepth(d)
+      this.add.rectangle(cx, cy, GAME_WIDTH, GAME_HEIGHT, 0x1a0000, 0.7).setDepth(d)
     );
-
-    this._pinOverlay(
-      this.add
-        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.32, 'Game Over', {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: `${layoutPx(40)}px`,
-          color: '#ef5350',
-          fontStyle: 'bold',
-        })
-        .setOrigin(0.5)
-        .setDepth(d + 1)
-    );
-
-    this._pinOverlay(
-      this.add
-        .text(
-          GAME_WIDTH / 2,
-          GAME_HEIGHT * 0.46,
-          `Survived ${Math.floor(this.waveManager.getElapsed())}s · Gold ${this.gold}`,
-          {
-            fontFamily: 'system-ui, sans-serif',
-            fontSize: `${layoutPx(16)}px`,
-            color: '#cfd8dc',
-          }
-        )
-        .setOrigin(0.5)
-        .setDepth(d + 1)
-    );
-
-    const btn = this._pinOverlay(
-      this.add
-        .rectangle(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, layoutPx(180), layoutPx(44), 0x455a64)
-        .setInteractive({ useHandCursor: true })
-        .setDepth(d + 1)
-    );
-    this._pinOverlay(
-      this.add
-        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.62, 'Retry', {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: `${layoutPx(18)}px`,
-          color: '#ffffff',
-        })
-        .setOrigin(0.5)
-        .setDepth(d + 2)
-    );
-
-    this._pinOverlay(
-      this.add
-        .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.54, `Retry starts at ${this.runStartGold} gold`, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: `${layoutPx(14)}px`,
-          color: '#ffd54f',
-        })
-        .setOrigin(0.5)
-        .setDepth(d + 1)
-    );
-
-    btn.on('pointerover', () => btn.setFillStyle(0x546e7a));
-    btn.on('pointerout', () => btn.setFillStyle(0x455a64));
-    btn.on('pointerup', () => {
-      // Retry resets run gold to the purse this attempt started with.
-      this.scene.start('StageScene', {
-        stage: this.stage,
-        gold: this.runStartGold,
-        characterId: this.characterId,
-      });
+    addKitImage(this, cx, cy, UI.dialog, { depth: d + 1 });
+    // Header is navy, so outlined Latin and cream Chinese live there.
+    // The parchment body only has room for one line plus the scale-2 button.
+    this._pairIconText(cx, cy - 76, UI.gameover, 'GAME OVER', {
+      font: FONT_HUD,
+      size: 32,
+      depth: d + 3,
     });
+    addKitText(this, cx, cy - 42, '遊戲結束', {
+      system: true,
+      size: 18,
+      color: '#f6e7c2',
+      depth: d + 3,
+    });
+    addKitText(this, cx, cy - 16, `RETRY STARTS AT ${this.runStartGold} GOLD`, {
+      font: FONT_HUD,
+      size: 16,
+      depth: d + 3,
+    });
+    this._pairIconText(cx, cy + 22, UI.damage, `SURVIVED ${survived}s  GOLD ${this.gold}`, {
+      font: FONT_INK,
+      size: 16,
+      tint: INK_TINT,
+      color: '#2a2118',
+      depth: d + 3,
+    });
+    addParchmentButton(
+      this,
+      cx,
+      cy + 78,
+      'RETRY',
+      () => {
+        // Retry resets run gold to the purse this attempt started with.
+        this.scene.start('StageScene', {
+          stage: this.stage,
+          gold: this.runStartGold,
+          characterId: this.characterId,
+        });
+      },
+      { scale: 2, depth: d + 4 }
+    );
+  }
+
+  /**
+   * Icon then bitmap label, centered as a pair. Missing icons leave the label centered.
+   * @param {number} x
+   * @param {number} y
+   * @param {string} iconKey
+   * @param {string} label
+   * @param {object} textOpts
+   */
+  _pairIconText(x, y, iconKey, label, textOpts) {
+    const title = addKitText(this, x, y, label, textOpts);
+    const icon = addKitImage(this, x, y, iconKey, { depth: textOpts.depth, scrollFactor: 0 });
+    if (icon && title) {
+      const gap = 8;
+      const tw = title.width || 0;
+      const iw = icon.displayWidth || 32;
+      const total = iw + gap + tw;
+      icon.setPosition(x - total / 2 + iw / 2, y);
+      title.setPosition(x - total / 2 + iw + gap + tw / 2, y);
+    }
+    return title;
   }
 }

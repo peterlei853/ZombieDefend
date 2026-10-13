@@ -72,6 +72,10 @@ Category `pets/` holds four chibi companions (phoenix / panda / lion / dragon), 
 
 Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128). Origin `(0.5, 1)`. Facing west. Skill = cast strip + FX; see group manifest `castFrame` / `spawnOffset`.
 
+## UI kit
+
+`ui/` is the title and stage chrome (v0.22.0): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, and Latin bitmap font atlases. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
+
 ## Canvas, origin and facing conventions
 
 All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Every PNG is exactly `frameWidth*frames × frameHeight`, and the build script checks this. The `origin` value is the Phaser `setOrigin(x, y)`.
