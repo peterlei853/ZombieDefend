@@ -151,9 +151,9 @@ Runtime (code, not assets): `StageScene` flat HUD bar + Phaser `Text`; `Barricad
 - [ ] Menu buttons: parchment + font labels (NEW GAME / OLD GAME / SCOREBOARD)  
 - [ ] Pet summon/recall: `ui-float-go` / `ui-float-back` (0.6–0.8s, origin 0.5,1)
 - [ ] Leave `// PIXELLAB_HOOK` if any; catalog PR via PixelLab Asset Pipeline when shipping to `assets/library/ui/`
-- [ ] **v0.22 Accept:** wire `ui-hp-bar-enemy` (118×24, origin 0.5,0.5) or legacy `ui-hp-bar-enemy-96` (96×32) plus `ui-hp-enemy-fill-{ok,mid,low}` (origin 0,0.5)
-- [ ] **v0.22 Accept:** swap the flat joystick for `ui-joystick-base` / `ui-joystick-knob` / `ui-joystick-knob-pressed` (origin 0.5,0.5)
-- [ ] **v0.22 Accept:** replace the title background with `ui-title-bg-clean` (no baked footer or menu buttons)
+- [x] **v0.22 Accept:** wire `ui-hp-bar-enemy` (118×24, origin 0.5,0.5) or legacy `ui-hp-bar-enemy-96` (96×32) plus `ui-hp-enemy-fill-{ok,mid,low}` (origin 0,0.5)
+- [x] **v0.22 Accept:** swap the flat joystick for `ui-joystick-base` / `ui-joystick-knob` / `ui-joystick-knob-pressed` (origin 0.5,0.5)
+- [x] **v0.22 Accept:** replace the title background with `ui-title-bg-clean` (no baked footer or menu buttons)
 
 ---
 

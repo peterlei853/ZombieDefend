@@ -128,7 +128,7 @@ export class Zombie {
     this._barW = metrics.barW;
     this._barH = metrics.barH;
     this._barPad = metrics.pad;
-    // Empty enemy frame + width-scaled fill. Full HP stays hidden.
+    // ui-hp-bar-enemy (118×24) plus ui-hp-enemy-fill-*. Full HP stays hidden.
     this._hpBar = new KitHpBar(scene, 'enemy', cfg.x, metrics.barY, {
       scrollFactor: 1,
       depth: 0,
@@ -929,8 +929,8 @@ export class Zombie {
 
 /** Vertical gap under which two enemy frames read as one stripe. */
 const HP_BAR_STACK_Y = 36;
-/** Horizontal gap under which two 96px enemy frames collide. */
-const HP_BAR_STACK_X = 84;
+/** Horizontal gap under which two 118×24 enemy frames collide. */
+const HP_BAR_STACK_X = 106;
 
 /**
  * Full-HP zombies stay unmarked. Damaged ticks sit on the crown; hide one

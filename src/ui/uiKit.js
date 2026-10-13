@@ -1,7 +1,7 @@
 import { HUD_DEPTH } from '../systems/DepthView.js';
 
 /**
- * ZombieDefend UI kit (v0.22.1).
+ * ZombieDefend UI kit (v0.22.2).
  *
  * Textures load from assets/library/ui/ through the asset index.
  * HP frames are empty; the fill strip is cropped to the HP ratio and
@@ -9,6 +9,8 @@ import { HUD_DEPTH } from '../systems/DepthView.js';
  * Chinese is not in those atlases, so it stays on the system font.
  * The defender has no HP pool: the player frame in the HUD stays full.
  * Barricade and enemy bars track real HP. Pet HUD keys are not touched.
+ * v0.22.2 draws the 118×24 enemy frame with the compact enemy fills,
+ * and the title prefers the clean splash (no baked menu or v0.21 footer).
  */
 
 /** Catalog keys. Outlined, gold, and cream are the faces used on screen. */
@@ -36,6 +38,12 @@ export const UI = {
   select: 'ui-icon-select-x',
   title: 'ui-title-bg',
   titleHd: 'ui-title-bg-hd',
+  /** Clean splash: no baked NEW/LOAD/SCOREBOARD and no v0.21 footer. */
+  titleClean: 'ui-title-bg-clean',
+  titleCleanHd: 'ui-title-bg-clean-hd',
+  joystickBase: 'ui-joystick-base',
+  joystickKnob: 'ui-joystick-knob',
+  joystickKnobPressed: 'ui-joystick-knob-pressed',
 };
 
 /**
@@ -80,9 +88,10 @@ export const HP_FRAMES = {
   },
   enemy: {
     frame: 'ui-hp-bar-enemy',
-    w: 96,
-    h: 32,
-    trough: { x: 11, y: 14, w: 74, h: 4 },
+    w: 118,
+    h: 24,
+    // Navy interior of the 118×24 stone frame (rows 10–14, columns 16–101).
+    trough: { x: 16, y: 10, w: 86, h: 5 },
   },
 };
 
@@ -101,7 +110,9 @@ export function supportsKitGlyphs(text) {
 
 /**
  * Fill strip for a ratio in 0..1.
- * Player and enemy: green ok, red full, yellow mid, critical low.
+ * Player: green ok above 75%, red full above 50%, yellow mid above 25%, critical low.
+ * Enemy: compact strips. Green ok above 50%, yellow mid above 25%, red low.
+ * Those mid/low cuts match the rectangle fallback and the barricade bar.
  * Barricade: green ok, yellow mid, red low (same cuts as the old wall bar).
  * @param {'player'|'barricade'|'enemy'} kind
  * @param {number} ratio
@@ -113,6 +124,11 @@ export function hpFillKey(kind, ratio) {
     if (r > 0.5) return 'ui-barricade-fill-ok';
     if (r > 0.25) return 'ui-barricade-fill-mid';
     return 'ui-barricade-fill-low';
+  }
+  if (kind === 'enemy') {
+    if (r > 0.5) return 'ui-hp-enemy-fill-ok';
+    if (r > 0.25) return 'ui-hp-enemy-fill-mid';
+    return 'ui-hp-enemy-fill-low';
   }
   if (r > 0.75) return 'ui-hp-fill-ok';
   if (r > 0.5) return 'ui-hp-fill-full';
@@ -128,6 +144,18 @@ function clamp01(ratio) {
   const n = Number(ratio);
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(1, n));
+}
+
+/**
+ * @param {Phaser.Scene} scene
+ * @param {string[]} keys
+ * @returns {string|null}
+ */
+function firstReadyTexture(scene, keys) {
+  for (const key of keys) {
+    if (key && scene.textures?.exists?.(key)) return key;
+  }
+  return null;
 }
 
 /**
@@ -180,28 +208,33 @@ function installTextureAliases(scene, aliases) {
   }
 }
 
+/** 1280×720 splashes already match the canvas, so they stay at 1:1. */
+const TITLE_HD_KEYS = new Set([UI.titleCleanHd, UI.titleHd]);
+
 /**
- * Title backdrop. Prefers the native splash through `bg-title-zombie-vs-buddy`
- * at an integer cover scale. Falls back to the 1280×720 HD upscale at 1:1.
+ * Title backdrop. Prefers `ui-title-bg-clean` (688×384, no baked menu or
+ * v0.21 footer) at an integer cover scale. `ui-title-bg-clean-hd` is the
+ * 1280×720 fallback at 1:1. The older alias and `ui-title-bg` remain if
+ * the clean textures are not in the cache. Menu buttons stay separate UI.
  * @param {Phaser.Scene} scene
  * @param {number} width
  * @param {number} height
  * @returns {Phaser.GameObjects.Image|null}
  */
 export function addTitleBackdrop(scene, width, height) {
-  const key = scene.textures?.exists?.(TITLE_BG_ALIAS)
-    ? TITLE_BG_ALIAS
-    : scene.textures?.exists?.(UI.title)
-      ? UI.title
-      : scene.textures?.exists?.(UI.titleHd)
-        ? UI.titleHd
-        : null;
+  const key = firstReadyTexture(scene, [
+    UI.titleClean,
+    UI.titleCleanHd,
+    TITLE_BG_ALIAS,
+    UI.title,
+    UI.titleHd,
+  ]);
   if (!key || !scene.add?.image) return null;
   const img = scene.add.image(width / 2, height / 2, key).setDepth(0);
   const source = scene.textures.get(key).getSourceImage?.();
   const sw = source?.width || 0;
   const sh = source?.height || 0;
-  if (key === UI.titleHd) {
+  if (TITLE_HD_KEYS.has(key)) {
     img.setScale(1);
     return img;
   }
