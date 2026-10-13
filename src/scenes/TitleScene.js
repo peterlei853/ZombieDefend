@@ -81,6 +81,7 @@ export default class TitleScene extends Phaser.Scene {
       this.audio?.dispose();
       this.audio = null;
     });
+    this.audio.startTitleBgm();
 
     this.input.keyboard?.once('keydown-ENTER', startStage);
     this.input.keyboard?.once('keydown-SPACE', startStage);

@@ -1,10 +1,12 @@
 /**
- * First-pass BGM + SFX for Stage 1.
+ * BGM + SFX for ZombieDefend.
  * Phaser 3 `scene.sound` only — no second audio engine.
  *
- * Volumes match the v0.17.0 pack. Cooldowns keep auto-fire, multi-pellet
- * hits, and barricade bites from stacking into noise. Shotgun callers must
- * invoke `playWeaponShot` once per volley (WeaponSystem already returns one
+ * Volumes stay in the v0.25.0 pack range: BGM 0.28 (inside 0.25–0.32),
+ * weapon fire 0.35, combat about 0.30–0.35, UI 0.4, game-over 0.45,
+ * pet-sleep 0.2. Cooldowns keep auto-fire, multi-pellet hits, and
+ * barricade bites from stacking into noise. Shotgun callers must invoke
+ * `playWeaponShot` once per volley (WeaponSystem already returns one
  * fire per fan, not per pellet).
  */
 
@@ -16,10 +18,17 @@ export const AUDIO_VOLUME = {
   hit: 0.3,
   hurt: 0.3,
   death: 0.3,
-  barricade: 0.25,
+  barricade: 0.32,
   coin: 0.3,
+  pearl: 0.32,
+  swap: 0.32,
+  wave: 0.35,
   ui: 0.4,
   gameOver: 0.45,
+  pet: 0.35,
+  petSleep: 0.2,
+  shout: 0.4,
+  heal: 0.35,
 };
 
 /** Minimum gap between repeats of the same cue. Hit/hurt cap at ~8/sec. */
@@ -29,15 +38,26 @@ export const AUDIO_COOLDOWN_MS = {
   hurt: 125,
   death: 180,
   barricade: 400,
+  barricadeWarn: 2500,
   coin: 180,
+  pearl: 180,
+  pet: 160,
+  petSleep: 450,
+  shout: 160,
 };
 
 export const BGM_KEY = 'bgm-stage';
+export const BGM_TITLE_KEY = 'bgm-title';
+export const BGM_SHOP_KEY = 'bgm-shop';
+export const BGM_VICTORY_KEY = 'bgm-victory';
 export const BGM_FADE_MS = 700;
 
 /** Keys match `assets/audio/<key>.mp3`. */
 export const GAME_AUDIO = [
+  { key: 'bgm-title', url: 'assets/audio/bgm-title.mp3' },
   { key: 'bgm-stage', url: 'assets/audio/bgm-stage.mp3' },
+  { key: 'bgm-shop', url: 'assets/audio/bgm-shop.mp3' },
+  { key: 'bgm-victory', url: 'assets/audio/bgm-victory.mp3' },
   { key: 'shoot-sling', url: 'assets/audio/shoot-sling.mp3' },
   { key: 'shoot-bubble', url: 'assets/audio/shoot-bubble.mp3' },
   { key: 'shoot-lightning', url: 'assets/audio/shoot-lightning.mp3' },
@@ -50,10 +70,30 @@ export const GAME_AUDIO = [
   { key: 'zombie-hurt', url: 'assets/audio/zombie-hurt.mp3' },
   { key: 'zombie-death', url: 'assets/audio/zombie-death.mp3' },
   { key: 'barricade-hit', url: 'assets/audio/barricade-hit.mp3' },
+  { key: 'barricade-warning', url: 'assets/audio/barricade-warning.mp3' },
   { key: 'coin-pickup', url: 'assets/audio/coin-pickup.mp3' },
+  { key: 'pearl-pickup', url: 'assets/audio/pearl-pickup.mp3' },
   { key: 'weapon-swap', url: 'assets/audio/weapon-swap.mp3' },
+  { key: 'wave-start', url: 'assets/audio/wave-start.mp3' },
+  { key: 'wave-clear', url: 'assets/audio/wave-clear.mp3' },
   { key: 'ui-click', url: 'assets/audio/ui-click.mp3' },
+  { key: 'ui-confirm', url: 'assets/audio/ui-confirm.mp3' },
+  { key: 'ui-cancel', url: 'assets/audio/ui-cancel.mp3' },
+  { key: 'ui-toast', url: 'assets/audio/ui-toast.mp3' },
   { key: 'game-over', url: 'assets/audio/game-over.mp3' },
+  { key: 'shop-buy', url: 'assets/audio/shop-buy.mp3' },
+  { key: 'heal', url: 'assets/audio/heal.mp3' },
+  { key: 'go-shout', url: 'assets/audio/go-shout.mp3' },
+  { key: 'back-shout', url: 'assets/audio/back-shout.mp3' },
+  { key: 'pet-summon', url: 'assets/audio/pet-summon.mp3' },
+  { key: 'pet-recall', url: 'assets/audio/pet-recall.mp3' },
+  { key: 'pet-attack', url: 'assets/audio/pet-attack.mp3' },
+  { key: 'pet-bark', url: 'assets/audio/pet-bark.mp3' },
+  { key: 'pet-death', url: 'assets/audio/pet-death.mp3' },
+  { key: 'pet-orb-ready', url: 'assets/audio/pet-orb-ready.mp3' },
+  { key: 'pet-orb-cast', url: 'assets/audio/pet-orb-cast.mp3' },
+  { key: 'pet-revive-ready', url: 'assets/audio/pet-revive-ready.mp3' },
+  { key: 'pet-sleep', url: 'assets/audio/pet-sleep.mp3' },
 ];
 
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
@@ -97,6 +137,8 @@ export class SoundManager {
     this._pending = new Map();
     /** @type {Phaser.Sound.BaseSound|null} */
     this._bgm = null;
+    /** @type {string|null} */
+    this._bgmKey = null;
     this._bgmAllowed = false;
     /** @type {Function|null} */
     this._bgmUnlock = null;
@@ -108,20 +150,29 @@ export class SoundManager {
     this._disposed = false;
   }
 
-  /** Looping stage bed. No-op until the cache has the clip. Waits out a locked context. */
-  startStageBgm() {
+  /**
+   * Looping bed. Replaces whatever bed is playing. No-op until the cache
+   * has the clip. Waits out a locked context.
+   * Title uses `bgm-title`. Shop (and a future char-select) uses `bgm-shop`.
+   * Stage uses `bgm-stage`. Victory uses `bgm-victory`.
+   * @param {string} [key]
+   */
+  startBgm(key = BGM_KEY) {
     if (this._disposed) return;
+    if (this._bgmAllowed && this._bgmKey === key && this._bgm && !this._fading) return;
     this._bgmAllowed = true;
+    this._bgmKey = key;
     const sound = this._sound();
-    if (!sound || !this._cached(BGM_KEY)) return;
+    if (!sound || !this._cached(key)) return;
     const begin = () => {
       this._bgmUnlock = null;
-      if (this._disposed || !this._bgmAllowed) return;
+      if (this._disposed || !this._bgmAllowed || this._bgmKey !== key) return;
       this._stopBgmNow();
       try {
-        const bgm = sound.add(BGM_KEY, { loop: true, volume: AUDIO_VOLUME.bgm });
+        const bgm = sound.add(key, { loop: true, volume: AUDIO_VOLUME.bgm });
         bgm?.play?.();
         this._bgm = bgm || null;
+        this._bgmKey = key;
       } catch (_) {
         this._bgm = null;
       }
@@ -133,6 +184,21 @@ export class SoundManager {
       return;
     }
     begin();
+  }
+
+  /** Looping stage bed. */
+  startStageBgm() {
+    this.startBgm(BGM_KEY);
+  }
+
+  /** Title / splash menu bed. */
+  startTitleBgm() {
+    this.startBgm(BGM_TITLE_KEY);
+  }
+
+  /** Shop bed. Char-select should call this too when that scene exists. */
+  startShopBgm() {
+    this.startBgm(BGM_SHOP_KEY);
   }
 
   /**
@@ -171,6 +237,7 @@ export class SoundManager {
   /** Hard stop. Used on scene shutdown so Shop / retry do not keep the loop. */
   stopBgm() {
     this._bgmAllowed = false;
+    this._bgmKey = null;
     this._clearBgmUnlock();
     this._stopBgmNow();
   }
@@ -205,41 +272,133 @@ export class SoundManager {
     this._cue('barricade-hit', AUDIO_VOLUME.barricade, AUDIO_COOLDOWN_MS.barricade);
   }
 
+  /** Low-HP warning. Callers should also gate this to the downward crossing. */
+  playBarricadeWarning() {
+    this._cue('barricade-warning', AUDIO_VOLUME.barricade, AUDIO_COOLDOWN_MS.barricadeWarn);
+  }
+
   playCoin() {
     this._cue('coin-pickup', AUDIO_VOLUME.coin, AUDIO_COOLDOWN_MS.coin);
   }
 
+  /** Auto-pearl chime. No pearl drop exists yet; the helper is ready. */
+  playPearl() {
+    this._cue('pearl-pickup', AUDIO_VOLUME.pearl, AUDIO_COOLDOWN_MS.pearl);
+  }
+
   playWeaponSwap() {
-    this._cue('weapon-swap', AUDIO_VOLUME.ui);
+    this._cue('weapon-swap', AUDIO_VOLUME.swap);
+  }
+
+  playWaveStart() {
+    this._cue('wave-start', AUDIO_VOLUME.wave);
+  }
+
+  playWaveClear() {
+    this._cue('wave-clear', AUDIO_VOLUME.wave);
   }
 
   playUiClick() {
     this._cue('ui-click', AUDIO_VOLUME.ui);
   }
 
-  /**
-   * Portrait summon pop. No clip is packed yet — the scale punch carries it.
-   * Drop `pet-summon` into the audio cache later and this starts playing.
-   */
+  playUiConfirm() {
+    this._cue('ui-confirm', AUDIO_VOLUME.ui);
+  }
+
+  /** Soft cancel. No cancel control exists yet; the helper is ready. */
+  playUiCancel() {
+    this._cue('ui-cancel', AUDIO_VOLUME.ui);
+  }
+
+  playUiToast() {
+    this._cue('ui-toast', AUDIO_VOLUME.ui);
+  }
+
+  /** Soft restore. The defender has no heal action yet; the helper is ready. */
+  playHeal() {
+    this._cue('heal', AUDIO_VOLUME.heal);
+  }
+
+  /** Purchase success. The shop stub has no buy; the helper is ready. */
+  playShopBuy() {
+    this._cue('shop-buy', AUDIO_VOLUME.ui);
+  }
+
+  /** Portrait summon sparkle. */
   playPetSummon() {
-    this._cueOptional('pet-summon', AUDIO_VOLUME.ui);
+    this._cue('pet-summon', AUDIO_VOLUME.pet);
+  }
+
+  /** Pet leaves the field for the barricade. */
+  playPetRecall() {
+    this._cue('pet-recall', AUDIO_VOLUME.pet);
+  }
+
+  /** Swipe / comic bite when a form-1 orb releases. */
+  playPetAttack() {
+    this._cue('pet-attack', AUDIO_VOLUME.pet, AUDIO_COOLDOWN_MS.pet);
+  }
+
+  /** Cute buddy yelp when a pet first reaches a threat. */
+  playPetBark() {
+    this._cue('pet-bark', AUDIO_VOLUME.pet, AUDIO_COOLDOWN_MS.pet);
   }
 
   /** Pet HP hit zero and the portrait went grey. */
   playPetDeath() {
-    this._cueOptional('pet-death', AUDIO_VOLUME.death);
+    this._cue('pet-death', AUDIO_VOLUME.death);
+  }
+
+  /** Unlocked orb finished filling and started its flash. */
+  playPetOrbReady() {
+    this._cue('pet-orb-ready', AUDIO_VOLUME.pet, AUDIO_COOLDOWN_MS.pet);
+  }
+
+  /** Orb skill actually released. */
+  playPetOrbCast() {
+    this._cue('pet-orb-cast', AUDIO_VOLUME.pet, AUDIO_COOLDOWN_MS.pet);
   }
 
   /** Revive cooldown finished; the portrait is summonable again. */
   playPetReviveReady() {
-    this._cueOptional('pet-revive', AUDIO_VOLUME.ui);
+    this._cue('pet-revive-ready', AUDIO_VOLUME.ui);
   }
 
-  /** Fail sting plus BGM fade. Combat tails are cut so they do not sit on the sting. */
+  /** Quiet settle while the pet naps behind the barricade. */
+  playPetSleep() {
+    this._cue('pet-sleep', AUDIO_VOLUME.petSleep, AUDIO_COOLDOWN_MS.petSleep);
+  }
+
+  /** Punchy “GO!” with the summon float. */
+  playGoShout() {
+    this._cue('go-shout', AUDIO_VOLUME.shout, AUDIO_COOLDOWN_MS.shout);
+  }
+
+  /** “Back!” with the recall float. */
+  playBackShout() {
+    this._cue('back-shout', AUDIO_VOLUME.shout, AUDIO_COOLDOWN_MS.shout);
+  }
+
+  /**
+   * Fail sting. Stage BGM is stopped first so the loop does not sit under it.
+   * Combat tails are cut so they do not sit on the sting.
+   */
   playGameOver() {
     this._stopFireVoice();
-    this.fadeBgm();
+    this.stopBgm();
     this._cue('game-over', AUDIO_VOLUME.gameOver);
+  }
+
+  /**
+   * Stage clear. Stops the stage bed, plays the clear chime, then loops
+   * the victory sting until the scene shuts down.
+   */
+  playVictory() {
+    this._stopFireVoice();
+    this.stopBgm();
+    this._cue('wave-clear', AUDIO_VOLUME.wave);
+    this.startBgm(BGM_VICTORY_KEY);
   }
 
   /** Stop the bed and drop unlock hooks. One-shots already queued still flush. */
@@ -258,20 +417,6 @@ export class SoundManager {
     if (this._disposed) return null;
     if (!this._passCooldown(key, cooldownMs)) return null;
     return this._playNowOrPending(key, volume);
-  }
-
-  /**
-   * Play only when this key is actually cached. Missing pet cues stay silent.
-   * `_cached` reports true when the scene has no audio cache API, so a key
-   * that was never queued must not be sent to the mixer.
-   * @param {string} key
-   * @param {number} volume
-   */
-  _cueOptional(key, volume) {
-    if (AUDIO_KEYS.has(key)) return this._cue(key, volume);
-    const exists = this.scene?.cache?.audio?.exists;
-    if (typeof exists !== 'function' || !exists.call(this.scene.cache.audio, key)) return null;
-    return this._cue(key, volume);
   }
 
   /**
