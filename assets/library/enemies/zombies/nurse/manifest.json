@@ -4,7 +4,7 @@
   "group": "nurse",
   "title": "Nurse Zombie",
   "titleZh": "護士丧尸",
-  "description": "Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.",
+  "description": "Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.",
   "source": {
     "pixellabCharacterId": "2ddf1ba9-8a95-4821-971b-97c2ceb05284",
     "sourceFolder": "new-zombies/nurse",

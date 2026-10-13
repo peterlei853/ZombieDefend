@@ -8,14 +8,14 @@
 | [Hero](#hero) | 3 | 112 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
-| [Zombies](#zombies) | 16 | 190 |
+| [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **548** |
+| **Total** | **50** | **537** |
 
 <a id="hero"></a>
 ## Hero
@@ -555,7 +555,7 @@ Large 96x96 mini-boss zombie with heavy hurt, part break, blast-back and defeat 
 
 <img src="previews/zombies/chef/preview.gif" alt="chef preview" height="140">
 
-Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.
+Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.
 
 - group `chef` · 11 assets · frame 84x84 · key prefix `zombie-chef-` · manifest [enemies/zombies/chef/manifest.json](enemies/zombies/chef/manifest.json)
 
@@ -628,7 +628,7 @@ Half-machine zombie: spark hurt, fall, and self-destruct explode strips.
 
 <img src="previews/zombies/delivery/preview.gif" alt="delivery preview" height="140">
 
-Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker. hurt_shock is 8 frames.
+Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.
 
 - group `delivery` · 11 assets · frame 84x84 · key prefix `zombie-delivery-` · manifest [enemies/zombies/delivery/manifest.json](enemies/zombies/delivery/manifest.json)
 
@@ -675,7 +675,7 @@ Self-destructing zombie. `zombie-exploder-explode` is the body animation; spawn 
 
 <img src="previews/zombies/nurse/preview.gif" alt="nurse preview" height="140">
 
-Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.
+Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.
 
 - group `nurse` · 12 assets · frame 84x84 · key prefix `zombie-nurse-` · manifest [enemies/zombies/nurse/manifest.json](enemies/zombies/nurse/manifest.json)
 
@@ -694,34 +694,11 @@ Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with
 | `zombie-nurse-hurt_shock` | 4 | 84x84 | 12 | loop | (0.5, 1.0) | 4 frames. |
 | `zombie-nurse-attach` | 8 | 84x84 | 10 | once | (0.5, 1.0) | Latch onto a barricade: lunge, plant syringe and IV, cling. Plays once. |
 
-### Office Worker Zombie (上班族丧尸)
-
-<img src="previews/zombies/office-worker/preview.gif" alt="office-worker preview" height="140">
-
-Monster 01. Baseline shambling salaryman zombie: walk/run, attack/bite loops, two deaths, hurt and elemental hit reactions.
-
-- group `office-worker` · 11 assets · frame 64x64 · key prefix `zombie-office-` · manifest [enemies/zombies/office-worker/manifest.json](enemies/zombies/office-worker/manifest.json)
-- previews: [all-actions-sheet.png](previews/zombies/office-worker/all-actions-sheet.png), [attack-bite-sheet.png](previews/zombies/office-worker/attack-bite-sheet.png), [elemental-hits-sheet.png](previews/zombies/office-worker/elemental-hits-sheet.png)
-
-| Key | Frames | Size | FPS | Playback | Origin | Notes |
-|---|---:|---|---:|---|---|---|
-| `zombie-office-walk` | 8 | 64x64 | 8 | loop | (0.5, 1.0) |  |
-| `zombie-office-run` | 8 | 64x64 | 12 | loop | (0.5, 1.0) |  |
-| `zombie-office-die1` | 8 | 64x64 | 10 | once | (0.5, 1.0) |  |
-| `zombie-office-die2` | 8 | 64x64 | 10 | once | (0.5, 1.0) |  |
-| `zombie-office-attack` | 8 | 64x64 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-office-bite` | 8 | 64x64 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-office-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
-| `zombie-office-idle_itch` | 8 | 64x64 | 6 | loop | (0.5, 1.0) |  |
-| `zombie-office-hurt_freeze` | 8 | 64x64 | 10 | once | (0.5, 1.0) |  |
-| `zombie-office-hurt_burn` | 8 | 64x64 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-office-hurt_shock` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
-
 ### Office Worker Zombie v2 (上班族丧尸)
 
 <img src="previews/zombies/office-worker-v2/preview.gif" alt="office-worker-v2 preview" height="140">
 
-84×84 sheet refresh of the salaryman zombie (east, origin 0.5, 1.0). Same eleven actions as the 64×64 office-worker group, which stays in the catalog until a later deprecate. hurt_shock is 8 frames in this drop (the 64×64 strip is 6).
+84×84 salaryman zombie (east, origin 0.5, 1.0). Eleven actions; hurt_shock is 8 frames. The 64×64 zombie-office-* group was deprecated after v0.28 Accept and removed from the catalog.
 
 - group `office-worker-v2` · 11 assets · frame 84x84 · key prefix `zombie-office-worker-v2-` · manifest [enemies/zombies/office-worker-v2/manifest.json](enemies/zombies/office-worker-v2/manifest.json)
 
@@ -737,7 +714,7 @@ Monster 01. Baseline shambling salaryman zombie: walk/run, attack/bite loops, tw
 | `zombie-office-worker-v2-idle_itch` | 8 | 84x84 | 6 | loop | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-hurt_freeze` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-hurt_burn` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-office-worker-v2-hurt_shock` | 8 | 84x84 | 12 | loop | (0.5, 1.0) | 8 frames (64×64 office-worker hurt_shock is 6). |
+| `zombie-office-worker-v2-hurt_shock` | 8 | 84x84 | 12 | loop | (0.5, 1.0) | 8 frames. |
 
 ### Heavy Armored Riot Zombie (armored) (重裝防爆喪屍（可破甲）)
 

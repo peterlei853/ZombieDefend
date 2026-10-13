@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 16 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -26,7 +26,7 @@ assets/library/
 │   └── icons/                manifest.json + icon-*.png
 ├── enemies/
 │   ├── zombies/<slug>/       manifest.json + strips/   (zombie-<slug>-*)
-│   │     office-worker, office-worker-v2, delivery, chef, nurse,
+│   │     office-worker-v2, delivery, chef, nurse,
 │   │     trashcan, trashcan-bare, brute, cyborg, slime, slime-mini,
 │   │     riot, riot-bare, exploder, sprinter, clown
 │   └── bosses/<slug>/        manifest.json + strips/   (zombie-boss-<lava|steel>-*)
@@ -55,7 +55,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 
 | Category | Key pattern | Examples |
 |---|---|---|
-| Zombies | `zombie-<slug>-<action>` | `zombie-office-walk`, `zombie-trashcan-bare-die1`, `zombie-slime-mini-run` |
+| Zombies | `zombie-<slug>-<action>` | `zombie-office-worker-v2-walk`, `zombie-trashcan-bare-die1`, `zombie-slime-mini-run` |
 | Bosses | `zombie-boss-<lava\|steel>-<action>` | `zombie-boss-lava-volcanic_breath` |
 | Boss FX | `zombie-boss-<lava\|steel>-fx-<name>` | `zombie-boss-steel-fx-acid` |
 | Hero | `player-girl-<action>` / `player-girl-<weapon>-<action>` | `player-girl-water-fire`, `player-girl-sling-walk-north` |
@@ -69,7 +69,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
 
-The office worker's key prefix is `zombie-office-`, kept from its source manifest; its folder is `office-worker/`. The 84×84 refresh is a separate group, `office-worker-v2/` with keys `zombie-office-worker-v2-*`, and does not replace the 64×64 `zombie-office-*` strips. Delivery, chef, and nurse use `zombie-delivery-*`, `zombie-chef-*`, and `zombie-nurse-*` (nurse also has `zombie-nurse-attach`). The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
+The office worker lives in `office-worker-v2/` with keys `zombie-office-worker-v2-*` (84×84). The earlier 64×64 `zombie-office-*` group (`office-worker/`) was deprecated after v0.28 Accept and removed from the catalog. Delivery, chef, and nurse use `zombie-delivery-*`, `zombie-chef-*`, and `zombie-nurse-*` (nurse also has `zombie-nurse-attach`). The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
 
 ## Pets
 
@@ -316,7 +316,7 @@ preload() { preloadLibrary(this); }
 create() {
   createLibraryAnims(this);
   // zombie: feet on the lane, facing east
-  addLibrarySprite(this, WORLD_SHIFT_X + 200, 432, 'zombie-office-walk').play('zombie-office-walk');
+  addLibrarySprite(this, WORLD_SHIFT_X + 200, 432, 'zombie-office-worker-v2-walk').play('zombie-office-worker-v2-walk');
   // hero: sustained flamethrower while the button is held
   const hero = addLibrarySprite(this, WORLD_SHIFT_X + 1119, 432, 'player-girl-flame-idle');
   playSustained(hero, 'player-girl-flame-fire');        // on press
@@ -331,7 +331,7 @@ create() {
 }
 ```
 
-Loading everything costs about 290 textures. For production, pass a `filter`, for example `(a) => a.group === 'office-worker' || a.category === 'hero'`, to load only what a stage needs.
+Loading everything costs about 290 textures. For production, pass a `filter`, for example `(a) => a.group === 'office-worker-v2' || a.category === 'hero'`, to load only what a stage needs.
 
 ## Index format (`asset-index.json`)
 
@@ -352,19 +352,19 @@ Loading everything costs about 290 textures. For production, pass a `filter`, fo
 {
   "schema": "zombiedefend-asset-group/1",
   "category": "zombies",              // hero | zombies | bosses | fx | pickups | backgrounds | concepts
-  "group": "office-worker",           // unique slug
-  "title": "Office Worker Zombie", "titleZh": "上班族丧尸",
+  "group": "office-worker-v2",       // unique slug
+  "title": "Office Worker Zombie v2", "titleZh": "上班族丧尸",
   "description": "…",
   "source": { "pixellabCharacterId": "…", "sourceFolder": "…" },
-  "defaults": { "type": "spritesheet", "origin": [0.5, 1.0], "facing": "east", "frameWidth": 64, "frameHeight": 64 },
+  "defaults": { "type": "spritesheet", "origin": [0.5, 1.0], "facing": "east", "frameWidth": 84, "frameHeight": 84 },
   "preview": {
-    "animate": ["zombie-office-walk", "…"],   // keys composed into previews/<cat>/<group>/preview.gif by --previews
-    "thumb": "assets/library/previews/zombies/office-worker/preview.gif",
+    "animate": ["zombie-office-worker-v2-walk", "…"],   // keys composed into previews/<cat>/<group>/preview.gif by --previews
+    "thumb": "assets/library/previews/zombies/office-worker-v2/preview.gif",
     "sheets": ["…png"], "extras": ["…gif"]
   },
   "assets": [
-    { "key": "zombie-office-walk", "path": "assets/library/enemies/zombies/office-worker/strips/zombie-office-walk.png",
-      "frameWidth": 64, "frameHeight": 64, "frames": 8, "frameRate": 8, "loop": true }
+    { "key": "zombie-office-worker-v2-walk", "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-walk.png",
+      "frameWidth": 84, "frameHeight": 84, "frames": 8, "frameRate": 8, "loop": true }
   ]
 }
 ```
