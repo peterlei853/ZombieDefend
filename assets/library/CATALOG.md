@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 86 |
+| [Hero](#hero) | 4 | 92 |
 | [Pets](#pets) | 17 | 88 |
 | [UI](#ui) | 1 | 31 |
 | [Zombies](#zombies) | 12 | 145 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 1 | 2 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **42** | **433** |
+| **Total** | **43** | **439** |
 
 <a id="hero"></a>
 ## Hero
@@ -81,6 +81,24 @@ Chibi girl hero with red cap and backpack; base moves plus six weapons (water, b
 | `player-girl-flame-walk-east` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces east |
 | `player-girl-sling-walk-west` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) |  |
 | `player-girl-sling-walk-east` | 6 | 92x92 | 10 | loop | (0.5, 0.8261) | faces east |
+
+### Player Girl — back-mounted weapons (float) (背掛飄浮武器)
+
+<img src="previews/hero/girl-back/back-weapons-sheet.png" alt="girl-back preview" height="140">
+
+Owned weapons shown floating on the hero girl's back (west-facing). Subtle up-down bob idle loop. First batch: water, lightning, flame. Keys player-girl-back-<weapon>. Still variants *-still for single-frame attach. Place slightly above torso origin; stack when multiple owned.
+
+- group `girl-back` · 6 assets · frame 48x48 · key prefix `player-girl-back-` · manifest [characters/hero/girl/back/manifest.json](characters/hero/girl/back/manifest.json)
+- previews: [back-weapons-sheet.png](previews/hero/girl-back/back-weapons-sheet.png)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `player-girl-back-water` | 8 | 48x48 | 8 | loop | (0.5, 0.5) |  |
+| `player-girl-back-water-still` | 1 | 48x48 | 8 | static | (0.5, 0.5) |  |
+| `player-girl-back-lightning` | 8 | 48x48 | 8 | loop | (0.5, 0.5) |  |
+| `player-girl-back-lightning-still` | 1 | 48x48 | 8 | static | (0.5, 0.5) |  |
+| `player-girl-back-flame` | 8 | 48x48 | 8 | loop | (0.5, 0.5) |  |
+| `player-girl-back-flame-still` | 1 | 48x48 | 8 | static | (0.5, 0.5) |  |
 
 ### Player Girl — weapon FX (女主角武器特效)
 

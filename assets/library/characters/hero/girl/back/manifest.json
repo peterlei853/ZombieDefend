@@ -1,0 +1,142 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "hero",
+  "group": "girl-back",
+  "title": "Player Girl — back-mounted weapons (float)",
+  "titleZh": "背掛飄浮武器",
+  "description": "Owned weapons shown floating on the hero girl's back (west-facing). Subtle up-down bob idle loop. First batch: water, lightning, flame. Keys player-girl-back-<weapon>. Still variants *-still for single-frame attach. Place slightly above torso origin; stack when multiple owned.",
+  "source": {
+    "sourceFolder": "back-weapons-work",
+    "note": "Stills via PixelLab create_image_pro_flash (style=icon-*); bob strips procedural ±2px sine 8f for shape-stable float."
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": "west",
+    "frameWidth": 48,
+    "frameHeight": 48,
+    "frames": 8,
+    "frameRate": 8,
+    "loop": true
+  },
+  "preview": {
+    "thumb": "assets/library/previews/hero/girl-back/back-weapons-sheet.png",
+    "sheets": [
+      "assets/library/previews/hero/girl-back/back-weapons-sheet.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "player-girl-back-water",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-water.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "type": "spritesheet",
+      "extra": {
+        "bobAmpPx": 2,
+        "note": "Water gun / 水槍 — blue tank blaster, muzzle up-left",
+        "stillKey": "player-girl-back-water-still"
+      }
+    },
+    {
+      "key": "player-girl-back-water-still",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-water-still.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "type": "image",
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "extra": {
+        "note": "Static frame of water back weapon; use animated key for float."
+      }
+    },
+    {
+      "key": "player-girl-back-lightning",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-lightning.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "type": "spritesheet",
+      "extra": {
+        "bobAmpPx": 2,
+        "note": "Lightning crossbow / 電磁弩 — cyan glow limbs, muzzle up-left",
+        "stillKey": "player-girl-back-lightning-still"
+      }
+    },
+    {
+      "key": "player-girl-back-lightning-still",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-lightning-still.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "type": "image",
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "extra": {
+        "note": "Static frame of lightning back weapon; use animated key for float."
+      }
+    },
+    {
+      "key": "player-girl-back-flame",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-flame.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "type": "spritesheet",
+      "extra": {
+        "bobAmpPx": 2,
+        "note": "Flamethrower / 火焰噴射 — red/orange core, muzzle up-left",
+        "stillKey": "player-girl-back-flame-still"
+      }
+    },
+    {
+      "key": "player-girl-back-flame-still",
+      "path": "assets/library/characters/hero/girl/back/player-girl-back-flame-still.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "type": "image",
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "extra": {
+        "note": "Static frame of flame back weapon; use animated key for float."
+      }
+    }
+  ]
+}
