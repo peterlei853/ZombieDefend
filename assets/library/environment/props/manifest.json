@@ -4,7 +4,7 @@
   "group": "props",
   "title": "Weapon Mounts",
   "titleZh": "武器架",
-  "description": "Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal with bright cyan tips (prop-water-mount, hi-vis, front-alt); float player-girl-front-water-still. v0.32 sling mounts are the same silhouette family with amber accents, not water cyan (prop-sling-mount, hi-vis, front-alt); float player-girl-front-sling-still. No gun or girl is baked in. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.",
+  "description": "Empty steel cradles for the front-float guns. No gun or girl is baked in. Accents: water cyan, sling amber, bubble magenta, lightning electric yellow, frost ice blue, flame fire orange. Each weapon has a primary Y-fork, a hi-vis alternate, and a front dual-post. Float the matching player-girl-front-*-still at the cradle. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.",
   "source": {
     "tool": "pixellab create_object_pro_flash",
     "pixellabObjectId": "5c81fc88-c574-4992-b0e3-8713bd224099",
@@ -28,7 +28,15 @@
       "prop-sling-mount",
       "prop-sling-mount-hi-vis",
       "prop-water-mount-front-alt",
-      "prop-sling-mount-front-alt"
+      "prop-sling-mount-front-alt",
+      "prop-bubble-mount",
+      "prop-bubble-mount-hi-vis",
+      "prop-lightning-mount",
+      "prop-lightning-mount-hi-vis",
+      "prop-frost-mount",
+      "prop-frost-mount-hi-vis",
+      "prop-flame-mount",
+      "prop-flame-mount-hi-vis"
     ],
     "thumb": "assets/library/previews/environment/props/preview.gif",
     "sheets": [],
@@ -239,6 +247,266 @@
         "gunFloat": "player-girl-front-sling-still",
         "role": "secondary",
         "prefer": "prop-sling-mount"
+      }
+    },
+    {
+      "key": "prop-bubble-mount",
+      "path": "assets/library/environment/props/prop-bubble-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "description": "Empty steel Y-fork with magenta cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.33 primary bubble mount. Same silhouette family as the water and sling cradles, magenta instead of cyan or amber. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-bubble-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-bubble-mount-hi-vis.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "c781ef5d-a9e6-4b8d-b77b-cdd57a6c2ff1",
+        "material": "steel-magenta",
+        "accent": "magenta",
+        "gunFloat": "player-girl-front-bubble-still",
+        "role": "primary",
+        "brighterAlternate": "prop-bubble-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-bubble-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-bubble-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["alternate", "hi-vis"],
+      "description": "Hot-pink alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-bubble-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate. Swap in if prop-bubble-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "6937f594-41a7-4322-b612-a095e77f4ac2",
+        "material": "steel-magenta-hi-vis",
+        "accent": "hot-pink",
+        "gunFloat": "player-girl-front-bubble-still",
+        "role": "alternate",
+        "prefer": "prop-bubble-mount"
+      }
+    },
+    {
+      "key": "prop-bubble-mount-front-alt",
+      "path": "assets/library/environment/props/prop-bubble-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["secondary"],
+      "description": "Front dual-post steel bubble mount with a magenta U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-bubble-mount.",
+      "note": "Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-bubble-mount (side Y-fork) for the gun cradle.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "68f50511-e3c4-4e07-bedb-8c4b5381e350",
+        "material": "steel-magenta",
+        "accent": "magenta",
+        "gunFloat": "player-girl-front-bubble-still",
+        "role": "secondary",
+        "prefer": "prop-bubble-mount"
+      }
+    },
+    {
+      "key": "prop-lightning-mount",
+      "path": "assets/library/environment/props/prop-lightning-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "description": "Empty steel Y-fork with electric-yellow cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.33 primary lightning mount. Electric yellow / gold accents. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-lightning-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-lightning-mount-hi-vis.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "10fe253c-f1ed-4694-aea7-7fa040d408cd",
+        "material": "steel-yellow",
+        "accent": "electric-yellow",
+        "gunFloat": "player-girl-front-lightning-still",
+        "role": "primary",
+        "brighterAlternate": "prop-lightning-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-lightning-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-lightning-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["alternate", "hi-vis"],
+      "description": "Bright-gold alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-lightning-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate. Swap in if prop-lightning-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "991e15e4-5209-43c2-a52a-799b2251c33b",
+        "material": "steel-yellow-hi-vis",
+        "accent": "gold",
+        "gunFloat": "player-girl-front-lightning-still",
+        "role": "alternate",
+        "prefer": "prop-lightning-mount"
+      }
+    },
+    {
+      "key": "prop-lightning-mount-front-alt",
+      "path": "assets/library/environment/props/prop-lightning-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["secondary"],
+      "description": "Front dual-post steel lightning mount with a gold U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-lightning-mount.",
+      "note": "Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-lightning-mount (side Y-fork) for the gun cradle.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "9f5fb064-9b90-4748-9e4a-adbcf972e80c",
+        "material": "steel-yellow",
+        "accent": "gold",
+        "gunFloat": "player-girl-front-lightning-still",
+        "role": "secondary",
+        "prefer": "prop-lightning-mount"
+      }
+    },
+    {
+      "key": "prop-frost-mount",
+      "path": "assets/library/environment/props/prop-frost-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "description": "Empty steel Y-fork with ice-blue cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.33 primary frost mount. Ice blue accents, distinct from water cyan. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-frost-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-frost-mount-hi-vis.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "b224a9f4-ca29-40a2-a3b5-f2669423a0f7",
+        "material": "steel-ice",
+        "accent": "ice-blue",
+        "gunFloat": "player-girl-front-frost-still",
+        "role": "primary",
+        "brighterAlternate": "prop-frost-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-frost-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-frost-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["alternate", "hi-vis"],
+      "description": "Brighter ice alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-frost-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate. Swap in if prop-frost-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "eba414b0-6900-453d-b335-53313aa96070",
+        "material": "steel-ice-hi-vis",
+        "accent": "ice-blue",
+        "gunFloat": "player-girl-front-frost-still",
+        "role": "alternate",
+        "prefer": "prop-frost-mount"
+      }
+    },
+    {
+      "key": "prop-frost-mount-front-alt",
+      "path": "assets/library/environment/props/prop-frost-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["secondary"],
+      "description": "Front dual-post steel frost mount with an ice-blue U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-frost-mount.",
+      "note": "Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-frost-mount (side Y-fork) for the gun cradle.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "8533b830-0050-4d28-b847-933de95cb69c",
+        "material": "steel-ice",
+        "accent": "ice-blue",
+        "gunFloat": "player-girl-front-frost-still",
+        "role": "secondary",
+        "prefer": "prop-frost-mount"
+      }
+    },
+    {
+      "key": "prop-flame-mount",
+      "path": "assets/library/environment/props/prop-flame-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "description": "Empty steel Y-fork with fire-orange cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.33 primary flame mount. Fire orange accents. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-flame-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-flame-mount-hi-vis.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "82bc6557-d216-4008-9c64-daa4ea204ad5",
+        "material": "steel-orange",
+        "accent": "fire-orange",
+        "gunFloat": "player-girl-front-flame-still",
+        "role": "primary",
+        "brighterAlternate": "prop-flame-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-flame-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-flame-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["alternate", "hi-vis"],
+      "description": "Bright red-orange alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-flame-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "195ff43e-862d-48e0-a3ff-473c21180eea",
+        "material": "steel-orange-hi-vis",
+        "accent": "red-orange",
+        "gunFloat": "player-girl-front-flame-still",
+        "role": "alternate",
+        "prefer": "prop-flame-mount"
+      }
+    },
+    {
+      "key": "prop-flame-mount-front-alt",
+      "path": "assets/library/environment/props/prop-flame-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [0.5, 0.9375],
+      "facing": "west",
+      "tags": ["secondary"],
+      "description": "Front dual-post steel flame mount with an ember U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-flame-mount.",
+      "note": "Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle.",
+      "anchors": {"cradlePx": [32, 12], "offsetFromOrigin": [0, -48]},
+      "extra": {
+        "pixellabObjectId": "b4c02bc3-65df-4902-b84c-54c51e089fe1",
+        "material": "steel-orange",
+        "accent": "ember",
+        "gunFloat": "player-girl-front-flame-still",
+        "role": "secondary",
+        "prefer": "prop-flame-mount"
       }
     }
   ]

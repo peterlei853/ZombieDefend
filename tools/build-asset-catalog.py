@@ -415,7 +415,7 @@ def build_index(groups, assets):
         ('hero', '92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south'),
         ('fx', 'origin per key; hero FX point west, boss FX east'),
         ('loop', 'loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once'),
-        ('environment', 'barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Water mount 64x64 steel/gunmetal with a bright cyan empty cradle; sling mount is the same silhouette with amber accents. Origin (0.5, 0.9375) feet at y=60, cradle at (32, 12); hi-vis alts carry more accent. Gun floats separately'),
+        ('environment', 'barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Empty 64x64 steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange. Origin (0.5, 0.9375) feet at y=60, cradle at (32, 12). Gun floats separately'),
         ('backgrounds', '1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6'),
         ('concepts', 'concept art only; not game-ready'),
     ])

@@ -41,7 +41,7 @@ assets/library/
 │       └── ults/             phoenix / panda / lion / dragon keyframes
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
-├── environment/props/        water mounts (cyan) and sling mounts (amber): prop-{water,sling}-mount, -hi-vis, -front-alt
+├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
@@ -65,7 +65,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount*`, `prop-sling-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375); water cyan, sling amber |
+| Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
@@ -122,6 +122,20 @@ Profession body-hit overlays are stone, pebble, and dust, not a water splash. 8�
 
 `?weapon=sling` holds `player-girl-tower-fire` while she fires from a mount and aims at the nearest living zombie. Contact plays `fx-sling-impact` (else `fx-sling-pellet`) at the body center, sorted just above the zombie’s feet sprite and scaled 1.75× the field taper so the burst reads on the body. HP and the two-body knockback wait for the middle of that sheet, and the 8-frame profession overlay plays on that same beat at the same depth and scale. Other skins look up `fx-hit-sling-<skinId>` and fall back to the impact or pellet sheet. The projectile stays the bright amber pellet sheet with no runtime tint. Gold amounts, saves, and barricade contact math stay as they are.
 
+## Mounts v0.33
+
+Four more empty steel cradles, same 64×64 layout as water and sling. No gun and no girl are baked in. Origin is the feet at (32, 60) ≈ (0.5, 0.9375). The gun float attaches at cradle pixel (32, 12), 48px above the feet. `player-girl-tower-fire` and `player-girl-command` are reused and were not changed.
+
+Accent map for all six turrets: water cyan, sling amber, bubble magenta, lightning electric yellow, frost ice blue, flame fire orange.
+
+| Weapon | Primary | Hi-vis | Front alt | Float |
+|---|---|---|---|---|
+| Bubble | `prop-bubble-mount` | `prop-bubble-mount-hi-vis` | `prop-bubble-mount-front-alt` | `player-girl-front-bubble-still` |
+| Lightning | `prop-lightning-mount` | `prop-lightning-mount-hi-vis` | `prop-lightning-mount-front-alt` | `player-girl-front-lightning-still` |
+| Frost | `prop-frost-mount` | `prop-frost-mount-hi-vis` | `prop-frost-mount-front-alt` | `player-girl-front-frost-still` |
+| Flame | `prop-flame-mount` | `prop-flame-mount-hi-vis` | `prop-flame-mount-front-alt` | `player-girl-front-flame-still` |
+
+The primary is the side Y-fork. Hi-vis is the higher-contrast swap if the primary washes out on the barricade. The front dual-post is secondary. This catalog does not change gold, saves, or barricade physics.
 
 ## Front-float combat (v0.27)
 
