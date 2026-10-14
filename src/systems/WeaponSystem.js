@@ -20,8 +20,14 @@ import {
   splitVelocities,
 } from '../assets/heroDeploy.js';
 import { aimRotation, libraryAsset, libraryFxDuration, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
-import { waterAimVelocity, waterImpactBeatMs } from '../assets/waterMounts.js';
-import { zombieHitFxKey } from '../assets/zombieSprites.js';
+import {
+  waterAimVelocity,
+  waterImpactBeatMs,
+  waterSheetFallback,
+  waterSplashKey,
+  waterWetKey,
+} from '../assets/waterMounts.js';
+import { waterBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
 import { upgradedDamage } from '../data/shopList.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
@@ -693,7 +699,7 @@ export class WeaponSystem {
     if (opts.impact && bullet?.impact) {
       this._spawnImpactKey(bullet.impact, hx, Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : hy, zombie);
     }
-    this._spawnSkinHit(zombie);
+    this._spawnSkinHit(zombie, bullet?.weaponId);
     const killed = zombie.takeDamage(dmg, { kind: bullet?.weaponId || bullet?.kind });
     if (dmg > 0) this.scene.audio?.playHitImpact();
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
@@ -713,8 +719,9 @@ export class WeaponSystem {
     const px = primary.x;
     const py = primary.y;
     const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : py;
-    this._spawnImpactKey(trait.impact, px, hy, primary);
-    this._spawnGround(trait.ground, px, py);
+    const exists = (key) => !!this.scene?.textures?.exists?.(key);
+    this._spawnImpactKey(waterSplashKey(exists), px, hy, primary);
+    this._spawnGround(waterWetKey(exists), px, py);
     const radius = layoutPx(trait.splashRadius || 56);
     /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
     const hits = [{ zombie: primary, damage: bullet.damage, knock: true }];
@@ -736,11 +743,13 @@ export class WeaponSystem {
   }
 
   /**
-   * Half of `fx-water-impact` when that anim is loaded, else the authored 250ms.
+   * Half of the splash sheet that will actually play.
+   * fx-water-splash-big is 8×12fps; fx-water-impact stays the fallback.
    * @returns {number}
    */
   _waterBeatMs() {
-    const key = WEAPON_TRAITS.water.impact;
+    const exists = (key) => !!this.scene?.textures?.exists?.(key);
+    const key = waterSplashKey(exists);
     let anim = null;
     const anims = this.scene?.anims;
     if (anims && typeof anims.exists === 'function' && anims.exists(key) && typeof anims.get === 'function') {
@@ -751,7 +760,7 @@ export class WeaponSystem {
       }
     }
     const asset = libraryAsset(this.scene, key);
-    const full = libraryFxDuration(anim, asset || { frames: 6, frameRate: 12 });
+    const full = libraryFxDuration(anim, asset || waterSheetFallback(key));
     return waterImpactBeatMs(full);
   }
 
@@ -977,13 +986,25 @@ export class WeaponSystem {
   }
 
   /**
-   * Per-skin puff on the takeDamage frame, at the body center.
-   * PIXELLAB_HOOK: fx-hit-<skinId> — see zombieHitFxKey.
+   * Body-center puff on the takeDamage frame.
+   * Water prefers fx-hit-water-{office-v2,delivery,chef,nurse}, then
+   * fx-water-impact, then fx-water-splash-big.
+   * PIXELLAB_HOOK: fx-hit-<skinId> for skins without a water overlay.
    * @param {{ x: number, y: number, bodyCenterY?: number, scale?: number, skin?: { id?: string } }} zombie
+   * @param {string} [weaponId]
    */
-  _spawnSkinHit(zombie) {
-    const key = zombieHitFxKey(zombie?.skin?.id);
-    if (!key || !this.scene?.textures?.exists?.(key)) return;
+  _spawnSkinHit(zombie, weaponId) {
+    const exists = (key) => !!this.scene?.textures?.exists?.(key);
+    let key = null;
+    if (weaponId === 'water') {
+      const mapped = waterBodyHitKey(zombie?.skin?.id);
+      const order = [mapped, 'fx-water-impact', 'fx-water-splash-big'].filter(Boolean);
+      key = order.find((name) => exists(name)) || null;
+    } else {
+      const generic = zombieHitFxKey(zombie?.skin?.id);
+      key = generic && exists(generic) ? generic : null;
+    }
+    if (!key) return;
     const x = zombie.x;
     const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
     playLibraryFx(this.scene, x, y, key, {

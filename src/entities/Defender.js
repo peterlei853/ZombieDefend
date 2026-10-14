@@ -277,6 +277,7 @@ export class DefenderGroup {
       const moving = dy !== 0 || dx !== 0;
       this._deploy = stepDeploy(this._deploy, moving, deltaMs);
       const waterSlot = this.waterMounts?.aligned(this.player.y) || null;
+      this.waterMounts?.setActive(waterSlot ? waterSlot.index : -1);
       const command =
         !!waterSlot &&
         this._deploy.phase === 'fire' &&
@@ -435,9 +436,9 @@ export class DefenderGroup {
       return;
     }
     if (phase === 'fire' && pose.command) {
-      // PIXELLAB_HOOK: player-girl-command — west/front point, unarmed.
-      // No command strip is loaded yet, so this falls through to idle.
+      // player-girl-command is a one-frame still, so it has no anim.
       if (this._playFirstExisting([HERO_UNARMED.command])) return;
+      if (this._holdStill(HERO_UNARMED.command)) return;
     }
     this._playFirstExisting([HERO_UNARMED.idle, 'player-idle']);
   }
@@ -517,6 +518,25 @@ export class DefenderGroup {
       return this._playAnim(key, true);
     }
     return false;
+  }
+
+  /**
+   * Show a one-frame library still (player-girl-command). Origin stays
+   * whatever the body was created with — command shares the idle feet.
+   * @param {string} textureKey
+   */
+  _holdStill(textureKey) {
+    const player = this.player;
+    if (!player || typeof player.setTexture !== 'function') return false;
+    if (!this.scene?.textures?.exists?.(textureKey)) return false;
+    if (player.texture?.key === textureKey && !player.anims?.isPlaying) return true;
+    try {
+      player.anims?.stop?.();
+    } catch (_) {
+      /* rectangle / missing anim component */
+    }
+    player.setTexture(textureKey);
+    return true;
   }
 
   /**

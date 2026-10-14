@@ -10,10 +10,19 @@
 import { grassYMax, grassYMin, layoutPx } from '../systems/DepthView.js';
 
 export const WATER_MOUNT_COUNT = 6;
-/** PIXELLAB_HOOK: prop-water-mount — gun sprite on the fence post. */
+/** Side Y-fork cradle. Feet origin (0.5, 0.9375). */
 export const WATER_MOUNT_KEY = 'prop-water-mount';
-/** Drawn when the mount sheet is not in the library yet. */
-export const WATER_MOUNT_FALLBACK_KEY = 'player-girl-front-water-still';
+/** Front dual-post. Used for the mount the hero is stopped behind. */
+export const WATER_MOUNT_ALT_KEY = 'prop-water-mount-front-alt';
+/** Seated in the cradle. Not a substitute for the mount post. */
+export const WATER_MOUNT_GUN_KEY = 'player-girl-front-water-still';
+/** @deprecated use WATER_MOUNT_GUN_KEY. Kept so older checks still name the still. */
+export const WATER_MOUNT_FALLBACK_KEY = WATER_MOUNT_GUN_KEY;
+
+/** Frame px. Origin y is 60/64. Cradle pixel (32, 12) is 48px above the feet. */
+export const WATER_MOUNT_FRAME = 64;
+export const WATER_MOUNT_CRADLE_UP = 48;
+export const WATER_MOUNT_ORIGIN = [0.5, 0.9375];
 
 /**
  * Field px. Half the fence gap is ~28, so 18 leaves a dead zone between
@@ -21,11 +30,18 @@ export const WATER_MOUNT_FALLBACK_KEY = 'player-girl-front-water-still';
  */
 export const WATER_MOUNT_ALIGN_FIELD = 18;
 
-/** `fx-water-impact` is 6 frames at 12 fps (500ms), played once. */
+/** `fx-water-splash-big` is 8 frames at 12 fps, played once. Legacy impact is 6. */
+export const WATER_SPLASH_FRAMES = 8;
+export const WATER_SPLASH_FPS = 12;
 export const WATER_IMPACT_FRAMES = 6;
 export const WATER_IMPACT_FPS = 12;
-/** HP drops at the middle of that sheet (frame 3). */
+/** HP drops at the middle of the splash sheet. */
 export const WATER_IMPACT_BEAT = 0.5;
+
+/** Preferred splash, then the v0.22 impact. */
+export const WATER_SPLASH_KEYS = ['fx-water-splash-big', 'fx-water-impact'];
+/** Preferred puddle, then the v0.22 wet sheet. */
+export const WATER_WET_KEYS = ['fx-water-wet-ground', 'fx-water-wet'];
 
 /** Gun sits this fraction of the post height above the sole. */
 export const WATER_MOUNT_GUN_RISE = 0.62;
@@ -33,13 +49,46 @@ export const WATER_MOUNT_GUN_RISE = 0.62;
 export const WATER_MOUNT_MUZZLE_FIELD = 16;
 
 /**
- * @param {number} [durationMs] full impact length; defaults to the authored sheet
+ * @param {number} [durationMs] full splash length. Defaults to fx-water-splash-big.
  * @returns {number}
  */
 export function waterImpactBeatMs(durationMs) {
-  const authored = (WATER_IMPACT_FRAMES / WATER_IMPACT_FPS) * 1000;
+  const authored = (WATER_SPLASH_FRAMES / WATER_SPLASH_FPS) * 1000;
   const full = Number.isFinite(durationMs) && durationMs > 0 ? durationMs : authored;
   return full * WATER_IMPACT_BEAT;
+}
+
+/**
+ * Frame count used when the library index is not cached.
+ * @param {string} key
+ * @returns {{ frames: number, frameRate: number }}
+ */
+export function waterSheetFallback(key) {
+  if (key === 'fx-water-impact') return { frames: WATER_IMPACT_FRAMES, frameRate: WATER_IMPACT_FPS };
+  if (key === 'fx-water-wet' || key === 'fx-water-wet-ground') return { frames: 6, frameRate: 8 };
+  return { frames: WATER_SPLASH_FRAMES, frameRate: WATER_SPLASH_FPS };
+}
+
+/**
+ * First key whose texture is loaded, else the preferred name.
+ * @param {(key: string) => boolean} [exists]
+ * @param {string[]} keys
+ */
+export function resolveLibraryKey(exists, keys) {
+  for (const key of keys) {
+    if (typeof exists === 'function' && exists(key)) return key;
+  }
+  return keys[0];
+}
+
+/** @param {(key: string) => boolean} [exists] */
+export function waterSplashKey(exists) {
+  return resolveLibraryKey(exists, WATER_SPLASH_KEYS);
+}
+
+/** @param {(key: string) => boolean} [exists] */
+export function waterWetKey(exists) {
+  return resolveLibraryKey(exists, WATER_WET_KEYS);
 }
 
 /**
@@ -68,15 +117,19 @@ export function buildWaterMountSlots(anchorAt, yMin = grassYMin(), yMax = grassY
   const muzzle = layoutPx(WATER_MOUNT_MUZZLE_FIELD);
   return waterMountYs(yMin, yMax).map((y, index) => {
     const anchor = anchorAt(y);
-    const gunY = anchor.groundY - anchor.postH * WATER_MOUNT_GUN_RISE;
+    const postH = anchor.postH > 0 ? anchor.postH : WATER_MOUNT_FRAME;
+    const scale = postH / WATER_MOUNT_FRAME;
+    const cradleY = anchor.groundY - WATER_MOUNT_CRADLE_UP * scale;
     return {
       index,
       x: anchor.x,
       y,
+      feetY: anchor.groundY,
+      scale,
       gunX: anchor.x,
-      gunY,
+      gunY: cradleY,
       muzzleX: anchor.x - muzzle,
-      muzzleY: gunY,
+      muzzleY: cradleY,
     };
   });
 }
