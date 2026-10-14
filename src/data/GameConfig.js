@@ -61,10 +61,13 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * (water, sling, bubble, lightning, frost, flame). The override is
  * in-memory for that page load. Gold, saves, barricade, roster, and BGM
  * stay put. The camera does not shake.
+ * v0.31 keeps those freezes. Water plays its splash and wet FX first and
+ * drops primary plus splash HP on the impact beat. Six fence mounts are
+ * the water fire points; the other five guns still shoot west.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.30.0';
+export const APP_VERSION = '0.31.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

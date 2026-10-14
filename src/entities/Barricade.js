@@ -141,6 +141,24 @@ export class Barricade {
     return this.baseWidth * (0.85 + 0.2 * s);
   }
 
+  /**
+   * Visual center of the post at this lane Y.
+   * Water mounts read this. contactXAt is unchanged.
+   * @param {number} y
+   * @returns {{ x: number, groundY: number, postW: number, postH: number }}
+   */
+  postAnchorAt(y) {
+    const s = scaleFromY(y);
+    const postH = Math.max(36, 52 * s) * LAYOUT_SCALE;
+    const postW = this._postWidthAt(y);
+    return {
+      x: barricadeXAtY(y, postW / 2),
+      groundY: y,
+      postW,
+      postH,
+    };
+  }
+
   _drawSilhouette(yMin, yMax) {
     const samples = [];
     for (let y = yMin; y <= yMax; y += layoutPx(3)) {

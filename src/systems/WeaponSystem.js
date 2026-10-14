@@ -19,7 +19,9 @@ import {
   orderWeapons,
   splitVelocities,
 } from '../assets/heroDeploy.js';
-import { aimRotation, libraryAsset, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
+import { aimRotation, libraryAsset, libraryFxDuration, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
+import { waterAimVelocity, waterImpactBeatMs } from '../assets/waterMounts.js';
+import { zombieHitFxKey } from '../assets/zombieSprites.js';
 import { upgradedDamage } from '../data/shopList.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
@@ -111,6 +113,12 @@ export class WeaponSystem {
     this._liveZombies = [];
     /** @type {object[]|null} */
     this._liveBullets = null;
+    /**
+     * Water hits wait for the impact sheet. Each entry is the primary
+     * plus splash victims, damaged together on the FX beat.
+     * @type {{ life: number, hits: { zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[], knockbackBodies: number }[]}
+     */
+    this._waterBeats = [];
   }
 
   /**
@@ -398,6 +406,7 @@ export class WeaponSystem {
     this._casings = [];
     for (const f of this._follows || []) this._safeDestroyGraphics(f?.sprite);
     this._follows = [];
+    this._waterBeats = [];
     this._destroyFlame();
   }
 
@@ -456,6 +465,7 @@ export class WeaponSystem {
    */
   stepOverlays(deltaMs) {
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    this._stepWaterBeats(dt);
     const alive = [];
     for (const f of this._follows || []) {
       f.life -= dt;
@@ -497,6 +507,7 @@ export class WeaponSystem {
     }
 
     this._spawnImpactFx(hx, hy, zombie);
+    this._spawnSkinHit(zombie);
     const killed = zombie.takeDamage(damage, { kind: bullet.kind });
     if (damage > 0) this.scene.audio?.playHitImpact();
     const color =
@@ -523,6 +534,7 @@ export class WeaponSystem {
       Number.isFinite(opts.visualScale) && opts.visualScale > 0 ? opts.visualScale : 1;
     const canFire = opts.canFire === true;
     const muzzles = new Map((opts.muzzles || []).map((m) => [m.id, m]));
+    const waterSlot = opts.waterMount || null;
     if (!canFire || !Array.isArray(bullets)) {
       this._wasFrontFire = false;
       this._syncFlame(false, null, dt, zombies);
@@ -540,8 +552,18 @@ export class WeaponSystem {
     let flame = false;
     for (const id of this._ownedIds) {
       const trait = WEAPON_TRAITS[id];
+      if (!trait) continue;
+      if (id === 'water') {
+        if (!waterSlot) continue;
+        this._cooldowns[id] = (this._cooldowns[id] || 0) - dt;
+        if (this._cooldowns[id] > 0) continue;
+        this._cooldowns[id] = trait.fireMs;
+        this._spawnWaterShot(bullets, waterSlot, zombies, trait);
+        fired = fired || id;
+        continue;
+      }
       const muzzle = muzzles.get(id);
-      if (!trait || !muzzle) continue;
+      if (!muzzle) continue;
       if (trait.continuous) {
         flame = true;
         this._syncFlame(true, muzzle, dt, zombies);
@@ -629,16 +651,14 @@ export class WeaponSystem {
    */
   _applyFrontHit(zombie, bullet) {
     const trait = WEAPON_TRAITS[bullet.weaponId];
-    const water = trait?.id === 'water';
+    if (trait?.id === 'water') {
+      this._queueWaterSplash(zombie, bullet);
+      return { gold: 0, kills: 0 };
+    }
     const gain = this._hurtZombie(zombie, bullet.damage, bullet, {
-      impact: !water,
+      impact: true,
       knock: true,
     });
-    if (water) {
-      const splash = this._waterSplash(zombie);
-      gain.gold += splash.gold;
-      gain.kills += splash.kills;
-    }
     if (trait?.id === 'bubble' && bullet.split) this._splitBubble(zombie, bullet);
     if (trait?.id === 'lightning') {
       const chain = this._chainLightning(zombie);
@@ -673,6 +693,7 @@ export class WeaponSystem {
     if (opts.impact && bullet?.impact) {
       this._spawnImpactKey(bullet.impact, hx, Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : hy, zombie);
     }
+    this._spawnSkinHit(zombie);
     const killed = zombie.takeDamage(dmg, { kind: bullet?.weaponId || bullet?.kind });
     if (dmg > 0) this.scene.audio?.playHitImpact();
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
@@ -682,27 +703,122 @@ export class WeaponSystem {
   }
 
   /**
+   * Splash ring and wet ground play on contact. HP for the primary and
+   * every neighbor in the splash waits for the same impact beat.
    * @param {import('../entities/Zombie.js').Zombie} primary
+   * @param {object} bullet
    */
-  _waterSplash(primary) {
+  _queueWaterSplash(primary, bullet) {
     const trait = WEAPON_TRAITS.water;
-    const radius = layoutPx(trait.splashRadius || 56);
     const px = primary.x;
     const py = primary.y;
-    let gold = 0;
-    let kills = 0;
     const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : py;
     this._spawnImpactKey(trait.impact, px, hy, primary);
     this._spawnGround(trait.ground, px, py);
+    const radius = layoutPx(trait.splashRadius || 56);
+    /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
+    const hits = [{ zombie: primary, damage: bullet.damage, knock: true }];
     for (const z of this._liveZombies || []) {
       if (!z?.alive || !z.body || z === primary) continue;
       const reach = radius + (z.displayHalf || 0);
       if (Math.hypot(z.x - px, z.y - py) > reach) continue;
-      const gain = this._hurtZombie(z, this._scaledDamage('water', trait.splash), { weaponId: 'water' }, { impact: false, knock: false });
-      gold += gain.gold;
-      kills += gain.kills;
+      hits.push({
+        zombie: z,
+        damage: this._scaledDamage('water', trait.splash),
+        knock: false,
+      });
     }
-    return { gold, kills };
+    this._waterBeats.push({
+      life: this._waterBeatMs(),
+      hits,
+      knockbackBodies: bullet.knockbackBodies || 0,
+    });
+  }
+
+  /**
+   * Half of `fx-water-impact` when that anim is loaded, else the authored 250ms.
+   * @returns {number}
+   */
+  _waterBeatMs() {
+    const key = WEAPON_TRAITS.water.impact;
+    let anim = null;
+    const anims = this.scene?.anims;
+    if (anims && typeof anims.exists === 'function' && anims.exists(key) && typeof anims.get === 'function') {
+      try {
+        anim = anims.get(key);
+      } catch (_) {
+        anim = null;
+      }
+    }
+    const asset = libraryAsset(this.scene, key);
+    const full = libraryFxDuration(anim, asset || { frames: 6, frameRate: 12 });
+    return waterImpactBeatMs(full);
+  }
+
+  /**
+   * @param {object[]} bullets
+   * @param {{ muzzleX: number, muzzleY: number }} slot
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {object} trait
+   */
+  _spawnWaterShot(bullets, slot, zombies, trait) {
+    const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
+    const target = this._nearestLiving(zombies, slot.muzzleX, slot.muzzleY);
+    const aim = target
+      ? {
+          x: target.x,
+          y: Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y,
+        }
+      : null;
+    const { vx, vy } = waterAimVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
+    this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait);
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {number} x
+   * @param {number} y
+   */
+  _nearestLiving(zombies, x, y) {
+    let best = null;
+    let bestD = Infinity;
+    for (const z of zombies || []) {
+      if (!z?.alive || !z.body) continue;
+      const zx = z.x;
+      const zy = z.y;
+      if (!Number.isFinite(zx) || !Number.isFinite(zy)) continue;
+      const dist = Math.hypot(zx - x, zy - y);
+      if (dist < bestD) {
+        best = z;
+        bestD = dist;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * @param {number} dt
+   */
+  _stepWaterBeats(dt) {
+    const pending = [];
+    for (const beat of this._waterBeats || []) {
+      beat.life -= dt;
+      if (beat.life > 0) {
+        pending.push(beat);
+        continue;
+      }
+      for (const hit of beat.hits) {
+        const gain = this._hurtZombie(
+          hit.zombie,
+          hit.damage,
+          { weaponId: 'water', impact: WEAPON_TRAITS.water.impact, knockbackBodies: beat.knockbackBodies },
+          { impact: false, knock: hit.knock }
+        );
+        this._pending.gold += gain.gold;
+        this._pending.kills += gain.kills;
+      }
+    }
+    this._waterBeats = pending;
   }
 
   /**
@@ -861,6 +977,23 @@ export class WeaponSystem {
   }
 
   /**
+   * Per-skin puff on the takeDamage frame, at the body center.
+   * PIXELLAB_HOOK: fx-hit-<skinId> — see zombieHitFxKey.
+   * @param {{ x: number, y: number, bodyCenterY?: number, scale?: number, skin?: { id?: string } }} zombie
+   */
+  _spawnSkinHit(zombie) {
+    const key = zombieHitFxKey(zombie?.skin?.id);
+    if (!key || !this.scene?.textures?.exists?.(key)) return;
+    const x = zombie.x;
+    const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+    playLibraryFx(this.scene, x, y, key, {
+      scale: this._visualScale || Math.abs(zombie.scale || 1) || 1,
+      depth: depthFromY(y, 5),
+    });
+  }
+
+  /**
+   * Impact at the body center (not the feet, not the crown).
    * @param {string|null|undefined} key
    * @param {number} x
    * @param {number} y

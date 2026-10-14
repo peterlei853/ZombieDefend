@@ -90,6 +90,12 @@ export class DefenderGroup {
     this.weapons.setUpgrades(opts.upgrades);
     this.floats = new HeroFloats(scene);
     this.floats.setWeapons(this.weapons.ownedIds());
+    /** @type {import('../systems/WaterMounts.js').WaterMounts|null} */
+    this.waterMounts = opts.waterMounts || null;
+    const ownedNow = this.weapons.ownedIds();
+    if (this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water') {
+      this.floats.setFenceMounts(true);
+    }
     this._deploy = createDeployMachine();
     /** Unarmed girl + front-float guns. Legacy handgun/shotgun stays when that sheet is missing. */
     this._frontFloat = heroLibraryReady(scene);
@@ -107,7 +113,11 @@ export class DefenderGroup {
 
     const yMin = grassYMin();
     const yMax = grassYMax();
-    const playerY = (yMin + yMax) / 2;
+    let playerY = (yMin + yMax) / 2;
+    if (this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water') {
+      const slot = this.waterMounts.nearest(playerY);
+      if (slot) playerY = slot.y;
+    }
     const playerX = barricadeXAtY(playerY) + PLAYER_SAFE_OFFSET;
     const playerScale = displayScaleFromY(playerY);
 
@@ -266,7 +276,12 @@ export class DefenderGroup {
     if (this._frontFloat) {
       const moving = dy !== 0 || dx !== 0;
       this._deploy = stepDeploy(this._deploy, moving, deltaMs);
-      this._updateUnarmedPose(this._deploy.phase, dy, dx);
+      const waterSlot = this.waterMounts?.aligned(this.player.y) || null;
+      const command =
+        !!waterSlot &&
+        this._deploy.phase === 'fire' &&
+        this.weapons.ownedIds().includes('water');
+      this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
       this.floats?.setSelected(this.weapons.getSkin?.()?.id);
       this.floats?.sync(this.player, this._deploy);
       const visualScale = Math.abs(this.player.scaleX || 1) / LAYOUT_SCALE;
@@ -280,6 +295,7 @@ export class DefenderGroup {
           frontFloat: true,
           canFire: this._deploy.canFire,
           muzzles: this.floats?.muzzles() || [],
+          waterMount: waterSlot,
           visualScale,
           scaleX: this.player.scaleX,
           scaleY: this.player.scaleY,
@@ -393,13 +409,15 @@ export class DefenderGroup {
    * @param {number} dx
    */
   /**
-   * Unarmed body. Deploy plays once; idle fire stays on player-girl-idle.
+   * Unarmed body. Deploy plays once. Fire stays on idle unless the hero
+   * is stopped behind a water mount, which prefers the command point.
    * Walk prefers a run sheet when one is loaded.
    * @param {'move'|'hold'|'deploy'|'fire'} phase
    * @param {number} dy
    * @param {number} dx
+   * @param {{ command?: boolean }} [pose]
    */
-  _updateUnarmedPose(phase, dy, dx) {
+  _updateUnarmedPose(phase, dy, dx, pose = {}) {
     const player = this.player;
     if (!player) return;
     if (typeof player.setFlipX === 'function') {
@@ -415,6 +433,11 @@ export class DefenderGroup {
     if (phase === 'move') {
       this._playFirstExisting(unarmedAnimKeys(dy, dx));
       return;
+    }
+    if (phase === 'fire' && pose.command) {
+      // PIXELLAB_HOOK: player-girl-command — west/front point, unarmed.
+      // No command strip is loaded yet, so this falls through to idle.
+      if (this._playFirstExisting([HERO_UNARMED.command])) return;
     }
     this._playFirstExisting([HERO_UNARMED.idle, 'player-idle']);
   }
