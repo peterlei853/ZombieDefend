@@ -71,10 +71,20 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * and draws the six fence cradles from prop-water-mount-hi-vis, falling
  * back to prop-water-mount. The cradle scale and lift keep the fork on
  * the stake. Gold, saves, and barricade physics stay put.
+ * v0.32 keeps those freezes. Sling plays its pellet impact first and
+ * drops HP plus knockback on that beat. Profession hits prefer
+ * fx-hit-sling-office-v2, fx-hit-sling-delivery, fx-hit-sling-chef,
+ * and fx-hit-sling-nurse; other skins use fx-hit-sling-<id> when that
+ * sheet is loaded. ?weapon=sling draws six cradles from
+ * prop-sling-mount-hi-vis, then prop-sling-mount, then the water
+ * hi-vis cradle. The slot she is stopped behind uses
+ * prop-sling-mount-front-alt. She holds player-girl-tower-fire while
+ * firing there and aims at the nearest living zombie. Beside water,
+ * sling still shoots west from the front arc.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.31.2';
+export const APP_VERSION = '0.32.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

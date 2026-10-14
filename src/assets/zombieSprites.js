@@ -238,7 +238,32 @@ export function waterBodyHitKey(skinId) {
 }
 
 /**
+ * Sling body-hit overlays. The four profession sheets match the catalog.
+ * Other skins keep a PIXELLAB_HOOK name and play only when that texture
+ * is loaded. office-worker-v2 uses the office-v2 suffix, same as water.
+ * @type {Record<string, string>}
+ */
+export const SLING_BODY_HIT_FX = {
+  'office-worker-v2': 'fx-hit-sling-office-v2',
+  delivery: 'fx-hit-sling-delivery',
+  chef: 'fx-hit-sling-chef',
+  nurse: 'fx-hit-sling-nurse',
+};
+
+/**
+ * @param {string|null|undefined} skinId
+ * @returns {string|null}
+ */
+export function slingBodyHitKey(skinId) {
+  if (!skinId || typeof skinId !== 'string') return null;
+  if (SLING_BODY_HIT_FX[skinId]) return SLING_BODY_HIT_FX[skinId];
+  // PIXELLAB_HOOK: fx-hit-sling-<skinId>
+  return `fx-hit-sling-${skinId}`;
+}
+
+/**
  * Generic per-skin puff name. Water prefers waterBodyHitKey.
+ * Sling prefers slingBodyHitKey.
  * PIXELLAB_HOOK: fx-hit-<skinId> for professions that do not have a
  * fx-hit-water-* sheet yet (clown, cyborg, slime, exploder, and the rest).
  * @param {string|null|undefined} skinId

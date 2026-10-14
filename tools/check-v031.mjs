@@ -51,8 +51,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const mountSrc = readFileSync(new URL('../src/systems/WaterMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.31.2' && APP_VERSION === '0.31.2', 'package and APP_VERSION are 0.31.2');
-assert(html.includes('v0.31.2'), 'document title is v0.31.2');
+assert(pkg.version === '0.32.0' && APP_VERSION === '0.32.0', 'package and APP_VERSION are 0.32.0');
+assert(html.includes('v0.32.0'), 'document title is v0.32.0');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(HERO_UNARMED.command === 'player-girl-command', 'command pose stays the backup');
 assert(WATER_MOUNT_HI_VIS_KEY === 'prop-water-mount-hi-vis', 'hi-vis mount sprite key');
@@ -312,7 +312,7 @@ slingGun.applyDirectHit(slingZ, {
   impact: 'fx-sling-impact',
   knockbackBodies: 2,
 });
-assert(slingHits.includes(16) && slingHits[0] === 'knock', 'sling still damages on contact');
+assert(slingHits.length === 0, 'sling contact waits for the impact beat');
 
 const bullets = [];
 const lane = new WeaponSystem(scene);

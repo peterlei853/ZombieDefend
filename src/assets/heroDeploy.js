@@ -4,9 +4,10 @@
  * The girl stays on the unarmed sheets. Owned guns are separate front-float
  * sprites. Moving hides them and blocks fire. A stop that lasts DEPLOY_HOLD_MS
  * plays `player-girl-deploy` once while the guns lerp into the front arc.
- * Fire starts only after that one-shot finishes. Sling, bubble, lightning,
- * frost, and flame travel along the hero forward ray (west, vy = 0).
- * Water fires from a fence mount toward the nearest living enemy.
+ * Fire starts only after that one-shot finishes. Bubble, lightning, frost,
+ * and flame travel along the hero forward ray (west, vy = 0). Water fires
+ * from a fence mount toward the nearest living enemy. Sling does the same
+ * when it owns the fence (?weapon=sling); beside water it stays on the ray.
  *
  * Run sheets (`player-girl-run-*`) are preferred when present. They are not
  * in the library yet; walk sheets are the fallback.
