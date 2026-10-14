@@ -26,8 +26,13 @@ export const HERO_UNARMED = {
   idle: 'player-girl-idle',
   deploy: 'player-girl-deploy',
   /**
-   * West point while stopped behind a water mount.
-   * One still frame (92×92, same feet origin as idle). Unarmed — no held gun.
+   * West operator still while stopped behind a water mount.
+   * One frame (92×92, same feet origin as idle). Unarmed — no held gun.
+   * `command` is the backup when this texture is missing.
+   */
+  towerFire: 'player-girl-tower-fire',
+  /**
+   * Backup operator still. Same feet origin. Used only if tower-fire is absent.
    */
   command: 'player-girl-command',
   walk: {

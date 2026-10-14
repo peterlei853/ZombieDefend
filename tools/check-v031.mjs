@@ -17,7 +17,10 @@ import {
   WATER_MOUNT_COUNT,
   WATER_MOUNT_FALLBACK_KEY,
   WATER_MOUNT_GUN_KEY,
+  WATER_MOUNT_HI_VIS_KEY,
   WATER_MOUNT_KEY,
+  WATER_MOUNT_LIFT,
+  WATER_MOUNT_SCALE,
   WATER_SPLASH_FPS,
   WATER_SPLASH_FRAMES,
   buildWaterMountSlots,
@@ -48,15 +51,20 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const mountSrc = readFileSync(new URL('../src/systems/WaterMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.31.1' && APP_VERSION === '0.31.1', 'package and APP_VERSION are 0.31.1');
-assert(html.includes('v0.31.1'), 'document title is v0.31.1');
-assert(HERO_UNARMED.command === 'player-girl-command', 'command pose key');
-assert(WATER_MOUNT_KEY === 'prop-water-mount', 'mount sprite key');
+assert(pkg.version === '0.31.2' && APP_VERSION === '0.31.2', 'package and APP_VERSION are 0.31.2');
+assert(html.includes('v0.31.2'), 'document title is v0.31.2');
+assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
+assert(HERO_UNARMED.command === 'player-girl-command', 'command pose stays the backup');
+assert(WATER_MOUNT_HI_VIS_KEY === 'prop-water-mount-hi-vis', 'hi-vis mount sprite key');
+assert(WATER_MOUNT_KEY === 'prop-water-mount', 'fallback mount sprite key');
 assert(WATER_MOUNT_ALT_KEY === 'prop-water-mount-front-alt', 'front alt mount key');
 assert(WATER_MOUNT_GUN_KEY === 'player-girl-front-water-still', 'cradle gun still');
 assert(WATER_MOUNT_FALLBACK_KEY === WATER_MOUNT_GUN_KEY, 'still remains the missing-mount fallback');
+assert(WATER_MOUNT_SCALE === 0.85 && WATER_MOUNT_LIFT === 4, 'cradle scale and lift keep the fork on the stake');
 assert(mountSrc.includes('setActive') && mountSrc.includes('WATER_MOUNT_ALT_KEY'), 'active slot swaps to the front alt');
-assert(defenderSrc.includes('_holdStill(HERO_UNARMED.command)'), 'command still is held on the mount');
+assert(mountSrc.includes('WATER_MOUNT_HI_VIS_KEY') && mountSrc.includes('WATER_MOUNT_KEY'), 'row prefers hi-vis, then the steel fork');
+assert(defenderSrc.includes('HERO_UNARMED.towerFire') && defenderSrc.includes('HERO_UNARMED.command'), 'tower-fire is held before the command backup');
+assert(defenderSrc.indexOf('HERO_UNARMED.towerFire') < defenderSrc.indexOf('HERO_UNARMED.command'), 'tower-fire is tried first');
 assert(weaponSrc.includes('waterSplashKey') && weaponSrc.includes('waterWetKey'), 'splash path resolves catalog keys');
 assert(weaponSrc.includes('PIXELLAB_HOOK: fx-hit-<skinId>'), 'unmapped skins keep the generic hit hook');
 assert(waterBodyHitKey('office-worker-v2') === 'fx-hit-water-office-v2', 'office water hit');
@@ -99,6 +107,12 @@ assert(ys[0] > grassYMin() && ys[ys.length - 1] < grassYMax(), 'mounts sit insid
 
 const slots = buildWaterMountSlots((y) => ({ x: 900, groundY: y, postH: 80 }));
 assert(slots.length === 6 && slots.every((s) => s.muzzleX < s.x), 'muzzles point west of the post');
+const frameScale = 80 / 64;
+assert(slots.every((s) => Math.abs(s.scale - frameScale * WATER_MOUNT_SCALE) < 1e-9), 'mount scale is under the post height');
+assert(
+  slots.every((s) => Math.abs(s.feetY - (s.y - WATER_MOUNT_LIFT * frameScale)) < 1e-6),
+  'mount feet lift clear of the picket tip'
+);
 const align = layoutPx(WATER_MOUNT_ALIGN_FIELD);
 assert(nearestWaterMount(slots[2].y, slots, align) === slots[2], 'standing on a mount aligns');
 const between = (slots[2].y + slots[3].y) / 2;
@@ -167,7 +181,11 @@ const fallback = new WaterMounts(makeScene([WATER_MOUNT_FALLBACK_KEY]), anchor);
 assert(fallback.sprites.length === 6 && fallback.guns.length === 0, 'missing cradle falls back to the gun still');
 assert(fallback.sprites.every((s) => s.key === WATER_MOUNT_FALLBACK_KEY), 'placeholder gun until prop-water-mount exists');
 
+const plain = new WaterMounts(makeScene([WATER_MOUNT_KEY, WATER_MOUNT_GUN_KEY]), anchor);
+assert(plain.sprites.every((s) => s.key === WATER_MOUNT_KEY), 'missing hi-vis falls back to prop-water-mount');
+
 const scene = makeScene([
+  WATER_MOUNT_HI_VIS_KEY,
   WATER_MOUNT_KEY,
   WATER_MOUNT_ALT_KEY,
   WATER_MOUNT_GUN_KEY,
@@ -179,13 +197,13 @@ const scene = makeScene([
 ]);
 const mounts = new WaterMounts(scene, anchor);
 assert(mounts.sprites.length === 6 && mounts.guns.length === 6, 'six cradles and six seated guns');
-assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_KEY), 'side cradle is the row');
+assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_HI_VIS_KEY), 'hi-vis cradle is the row');
 assert(mounts.guns.every((s) => s.key === WATER_MOUNT_GUN_KEY), 'still sits in the cradle');
 mounts.setActive(4);
 assert(mounts.sprites[4].key === WATER_MOUNT_ALT_KEY, 'aligned slot uses the front alt');
-assert(mounts.sprites.every((s, i) => i === 4 || s.key === WATER_MOUNT_KEY), 'other slots stay the side cradle');
+assert(mounts.sprites.every((s, i) => i === 4 || s.key === WATER_MOUNT_HI_VIS_KEY), 'other slots stay the hi-vis cradle');
 mounts.setActive(-1);
-assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_KEY), 'clearing the slot restores the side cradle');
+assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_HI_VIS_KEY), 'clearing the slot restores the hi-vis cradle');
 assert(mounts.aligned(mounts.slots[4].y)?.index === 4, 'aligned() matches the slot under the hero');
 assert(mounts.aligned(between) === null, 'aligned() refuses the gap');
 
