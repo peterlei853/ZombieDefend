@@ -123,7 +123,11 @@ export class WeaponSystem {
     const first = this._ownedIds[0];
     if (first) {
       const idx = HERO_WEAPONS.findIndex((w) => w.id === first);
-      if (idx >= 0) this._skinIndex = idx;
+      if (idx >= 0) {
+        this._skinIndex = idx;
+        const skin = HERO_WEAPONS[idx];
+        this.weapon = skin.profile === 'shotgun' ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
+      }
     }
   }
 
@@ -177,6 +181,18 @@ export class WeaponSystem {
    * @returns {WeaponId}
    */
   toggleWeapon() {
+    // One owned gun (the ?weapon= immerse) stays equipped. SPACE and SWAP
+    // do not walk the other five.
+    if (this._ownedIds.length === 1) {
+      const only = this._ownedIds[0];
+      const idx = HERO_WEAPONS.findIndex((w) => w.id === only);
+      if (idx >= 0) {
+        this._skinIndex = idx;
+        const skin = HERO_WEAPONS[idx];
+        this.weapon = skin.profile === 'shotgun' ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
+      }
+      return this.weapon;
+    }
     const tex = this.scene?.textures;
     const library = tex?.exists?.('player-girl-idle') || tex?.exists?.(HERO_WEAPONS[0].idle);
     if (!library) {

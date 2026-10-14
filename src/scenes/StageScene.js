@@ -8,7 +8,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
-import { APP_VERSION, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -52,7 +52,7 @@ import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
 import { PetPortraitHud } from '../ui/PetPortraitHud.js';
 import { debugBgmEnabled } from '../debugBgm.js';
 import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
-import { grantStageWeapons } from '../assets/heroDeploy.js';
+import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
 
 /**
  * Stage combat vertical slice — 2.5D side strip.
@@ -70,6 +70,9 @@ import { grantStageWeapons } from '../assets/heroDeploy.js';
  * `?petHurt=1` or H still plays one hurt sequence. `?petLowHp=1` or L drops
  * every field pet under 30% HP so the bar pulses and Recall! floats once.
  * The flags are independent.
+ * `?weapon=<id>` (water, sling, bubble, lightning, frost, flame) boots
+ * this run with only that gun. SPACE stays on it. The list is registry
+ * memory for the page load, not a save write.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -90,8 +93,9 @@ export default class StageScene extends Phaser.Scene {
     const carried = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
       : this.registry.get('ownedWeapons') || [];
-    // Stage 1 playtest deploys all six guns. Later stages keep the owned list.
-    this.ownedWeapons = grantStageWeapons(this.stage, carried);
+    // Stage 1 playtest deploys all six guns unless ?weapon=<id> is set.
+    // That id is this run only. It is not written to MockDB or localStorage.
+    this.ownedWeapons = resolveOwnedWeapons(this.stage, carried, demoWeaponId());
     this.weaponUpgrades = { ...(data?.upgrades || this.registry.get('weaponUpgrades') || {}) };
 
     this.registry.set('stage', this.stage);
