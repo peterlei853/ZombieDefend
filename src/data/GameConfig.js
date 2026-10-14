@@ -81,10 +81,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * prop-sling-mount-front-alt. She holds player-girl-tower-fire while
  * firing there and aims at the nearest living zombie. Beside water,
  * sling still shoots west from the front arc.
+ * v0.32.1 keeps those freezes. The projectile is the bright fx-sling-pellet
+ * sheet, untinted. Impact and fx-hit-sling-* spawn at the body center,
+ * above the zombie sprite, large enough to read. HP still lands on the
+ * middle of the impact sheet.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.32.0';
+export const APP_VERSION = '0.32.1';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
