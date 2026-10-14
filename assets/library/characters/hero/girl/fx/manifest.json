@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, and fx-water-stream stay.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, fx-water-stream, and the existing sling pellet/impact strips stay.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -18,6 +18,7 @@
       "fx-water-splash-big",
       "fx-water-wet-ground",
       "fx-hit-water-office-v2",
+      "fx-hit-sling-office-v2",
       "fx-lightning-impact",
       "fx-frost-shatter",
       "fx-flame-cone",
@@ -892,6 +893,104 @@
           "playBeforeHpTick": true
         },
         "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
+      }
+    },
+    {
+      "key": "fx-hit-sling-office-v2",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-office-v2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.32 office sling body-hit. Stone, pebble, and dust with a light gray sparkle — not a water splash. 8×64 @ 18 fps, once, origin center. Untinted master fx-hit-sling-shared is not a separate key.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "office-worker-v2",
+          "tint": "gray",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e",
+        "pixellabImageId": "126bc410-1708-451f-b966-1d60f92085c8",
+        "workbenchStep": "03e935f7-1d06-4ee4-b964-dc15c3541c7c"
+      }
+    },
+    {
+      "key": "fx-hit-sling-delivery",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-delivery.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.32 delivery sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "delivery",
+          "tint": "yellow",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
+      }
+    },
+    {
+      "key": "fx-hit-sling-chef",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-chef.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.32 chef sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "chef",
+          "tint": "white",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
+      }
+    },
+    {
+      "key": "fx-hit-sling-nurse",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-nurse.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.32 nurse sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "nurse",
+          "tint": "pink",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
       }
     }
   ]
