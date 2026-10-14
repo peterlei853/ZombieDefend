@@ -4,7 +4,7 @@
   "group": "girl",
   "title": "Player Girl (hero)",
   "titleZh": "女主角",
-  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 adds player-girl-command, a west pointing still on the same 92×92 foot line.",
+  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 tower attack is girl-only: player-girl-tower-fire is the preferred west operator still (both fists on invisible handles), player-girl-command is the same braced stance as a backup overwrite of the old one-finger point, and player-girl-tower-fire-strip is an optional 4-frame micro-bob. No mount or gun is baked into these poses.",
   "source": {
     "pixellabCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
     "sourceFolder": "player-girl"
@@ -1133,12 +1133,63 @@
         0.8261
       ],
       "facing": "west",
-      "description": "West-facing command pose: red-cap girl pointing left, 92×92 still.",
-      "note": "Still only (no micro-bob). Shoes end at y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. The handoff point (46, 88) ≈ (0.5, 0.96) sits in empty padding under the sprite.",
+      "description": "West braced operator stance: both fists forward on invisible handles, wide feet, 92×92 still. Replaces the one-finger point. Girl only — no mount or gun.",
+      "note": "Backup to player-girl-tower-fire (command-v2). Shoes end near y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. Still only. Compose in front of prop-water-mount; float player-girl-front-water-still at the cradle.",
       "extra": {
-        "pixellabCharacterId": "76c4002b-aeea-4050-98f5-e146b6832450",
+        "pixellabCharacterId": "4214f885-53e5-472b-8170-8dbf3e96446a",
         "sourceCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
-        "stateName": "command"
+        "stateName": "command-v2",
+        "priorState": "76c4002b-aeea-4050-98f5-e146b6832450",
+        "prefer": "player-girl-tower-fire"
+      }
+    },
+    {
+      "key": "player-girl-tower-fire",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-tower-fire.png",
+      "type": "image",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "description": "West tower-operator attack still: wide braced stance, both fists forward on invisible handles. Girl only — no mount, no gun, no cradle. 92×92.",
+      "note": "Preferred attack pose behind prop-water-mount. Origin matches hero feet (0.5, 0.8261); shoes end near y=78. State tower-fire-v2. The optional micro-bob is a separate key, player-girl-tower-fire-strip; this still stays frame 0 / the main texture. Rejected baked-mount state bb2ec441 is not this sprite.",
+      "extra": {
+        "pixellabCharacterId": "f03b4ed4-519f-4984-a720-91e49a79c6e6",
+        "sourceCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
+        "stateName": "tower-fire-v2",
+        "role": "primary",
+        "mount": "prop-water-mount",
+        "gunFloat": "player-girl-front-water-still",
+        "bobKey": "player-girl-tower-fire-strip"
+      }
+    },
+    {
+      "key": "player-girl-tower-fire-strip",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-tower-fire-strip.png",
+      "type": "spritesheet",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "tags": [
+        "optional"
+      ],
+      "description": "Optional 4-frame micro hold/bob of the west tower-operator pose, 92×92. Arms stay forward. Girl only.",
+      "note": "Horizontal strip, 368×92, four frames. Nice-to-have sibling of player-girl-tower-fire. The still is the attack texture; do not replace that key with this sheet. QA before wiring the loop in gameplay. Feet stay on the shared hero origin (0.5, 0.8261).",
+      "extra": {
+        "pixellabJobId": "b5225ad5-ffd1-444d-9a10-9931d6486816",
+        "stillKey": "player-girl-tower-fire",
+        "role": "optional-bob"
       }
     }
   ],

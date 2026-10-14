@@ -41,7 +41,7 @@ assets/library/
 │       └── ults/             phoenix / panda / lion / dragon keyframes
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
-├── environment/props/        prop-water-mount.png + prop-water-mount-front-alt.png
+├── environment/props/        prop-water-mount.png, prop-water-mount-hi-vis.png, prop-water-mount-front-alt.png
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
@@ -65,7 +65,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount` | 32×64 posts, origin (0.5, 1.0); water mount 64×64, origin (0.5, 0.9375) |
+| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount`, `prop-water-mount-hi-vis`, `prop-water-mount-front-alt` | 32×64 posts, origin (0.5, 1.0); water mounts 64×64 steel + cyan, origin (0.5, 0.9375) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
@@ -102,9 +102,11 @@ Merged v0.31 still times the HP drop to `fx-water-impact` (6×64 @ 12 fps, once;
 
 Profession body-hit overlays (same splash, light tint, origin center, once @ 12 fps): `fx-hit-water-office-v2` (gray), `fx-hit-water-delivery` (yellow), `fx-hit-water-chef` (white), `fx-hit-water-nurse` (pink). The merged hook looks up `fx-hit-<skinId>` (`fx-hit-office-worker-v2`, `fx-hit-delivery`, `fx-hit-chef`, `fx-hit-nurse`) and skips the puff when that texture is missing. These water keys are the catalog names; pointing the hook at them is a later code change.
 
-`prop-water-mount` (`environment/props/`) is the empty Y-fork cradle, 64×64, facing west-ish. Origin is the feet at (32, 60) ≈ (0.5, 0.94), stored as (0.5, 0.9375). Attach `player-girl-front-water-still` at cradle pixel (32, 12), 48px above the feet (`anchors.offsetFromOrigin` `[0, -48]`, y negative = up). `prop-water-mount-front-alt` is the secondary front dual-post; prefer the Y-fork. The merged drawer places the mount at the gun slot with origin (0.5, 0.5) and falls back to `player-girl-front-water-still` when `prop-water-mount` is not loaded.
+`prop-water-mount` (`environment/props/`) is the empty steel/gunmetal Y-fork with bright cyan cradle tips, 64×64, facing west-ish. It replaces the wooden cradle, which disappeared against the wooden barricade (0 cyan pixels). This primary has about 20 cyan pixels and no brown. Origin is the feet at (32, 60) ≈ (0.5, 0.94), stored as (0.5, 0.9375). Attach `player-girl-front-water-still` at cradle pixel (32, 12), 48px above the feet (`anchors.offsetFromOrigin` `[0, -48]`, y negative = up). The gun is not baked into the mount.
 
-`player-girl-command` is a 92×92 west pointing still (no bob) under `characters/hero/girl/strips/`. Shoes end at y=77, so the origin is the shared hero foot line (0.5, 0.8261), not the handoff point (46, 88) which is empty padding. The pose hook plays an animation key; this one-frame image does not register an anim, so the hero stays on idle until a hold-frame uses the texture.
+`prop-water-mount-hi-vis` is the same empty Y-fork with more cyan (about 67 pixels) on the cradle and bands. Use it if the primary still reads faint on the barricade. `prop-water-mount-front-alt` is the dual-post steel post with a cyan U-cradle, also empty. Prefer the primary Y-fork. The merged drawer places the mount at the gun slot with origin (0.5, 0.5) and falls back to `player-girl-front-water-still` when `prop-water-mount` is not loaded.
+
+`player-girl-tower-fire` is the preferred 92×92 west operator still under `characters/hero/girl/strips/`: wide braced stance, both fists forward on invisible handles. Girl only — no mount, no gun. Origin is the shared hero foot line (0.5, 0.8261); shoes end near y=78. `player-girl-command` is the backup overwrite of the old one-finger point, same braced family (`command-v2`), same origin (shoes near y=77). `player-girl-tower-fire-strip` is an optional 4×92 micro hold/bob at 8 fps; the still stays the attack texture. QA that strip before wiring it as a loop. Rejected baked-mount state `bb2ec441` is not in the catalog. The pose hook plays an animation key; a one-frame image does not register an anim, so the hero stays on idle until a hold-frame uses the texture.
 
 ## Front-float combat (v0.27)
 

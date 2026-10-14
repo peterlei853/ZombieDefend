@@ -136,13 +136,17 @@ Origin `(0.5, 0.8261)`. Facing matches the key. Walk strips stay for slower move
 |-----|------|------|--------|-----|------|
 | player-girl-deploy | `strips/player-girl-deploy.png` | 92×92 | 8 | 12 | **no** (one-shot) |
 
-### Command (v0.31)
+### Tower attack (v0.31)
+
+Girl only. Both fists sit forward as if on invisible tower handles. No mount, no gun, and no cradle in the pixels. Compose with `prop-water-mount` and float `player-girl-front-water-still` at the cradle. Origin `(0.5, 0.8261)`, the same feet as idle (shoes end near y=77–78).
 
 | key | file | size | frames | fps | loop |
 |-----|------|------|--------|-----|------|
+| player-girl-tower-fire | `strips/player-girl-tower-fire.png` | 92×92 | 1 | – | static |
 | player-girl-command | `strips/player-girl-command.png` | 92×92 | 1 | – | static |
+| player-girl-tower-fire-strip | `strips/player-girl-tower-fire-strip.png` | 92×92 | 4 | 8 | yes |
 
-West pointing still (`type: image`). Origin `(0.5, 0.8261)`, the same feet as idle. No micro-bob strip. The v0.31 pose hook only plays an animation of this key, so the still needs a hold-frame before it replaces idle.
+`player-girl-tower-fire` is the preferred west attack still (`type: image`, state `tower-fire-v2`). `player-girl-command` is the backup overwrite of the old one-finger point: same braced operator family (`command-v2`), not a soft point. `player-girl-tower-fire-strip` is an optional 368×92 micro hold/bob (arms stay forward). The still stays the main key; QA the strip before wiring it as a loop. Rejected baked-mount state `bb2ec441` is not cataloged.
 
 ## Muzzle hint
 
