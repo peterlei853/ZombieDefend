@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, fx-water-stream, and the existing sling pellet/impact strips stay.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). Legacy water FX stay.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -525,13 +525,14 @@
         0.5
       ],
       "type": "fx",
+      "note": "v0.32.1 brighter sling impact (6×48 @ 14 fps, once, origin center). Replaces the faint v0.22 burst that was hard to see on the body.",
       "extra": {
         "gameplayNotes": {
           "role": "hit",
           "knockbackBodyLengths": 2,
           "pairWith": "fx-sling-knockback"
         },
-        "note": "v0.22 impact burst + knockback feel"
+        "note": "v0.22 impact burst + knockback feel. v0.32.1 visibility remake."
       }
     },
     {
@@ -548,16 +549,17 @@
       ],
       "type": "fx",
       "facing": "west",
+      "note": "v0.32.1 bright amber stone with a navy outline (4×16 @ 14 fps, loop, origin center). Mean luminance ~91 (was ~13, near-black on asphalt). Same 1× size and speed.",
       "extra": {
         "gameplayNotes": {
           "role": "primaryProjectile",
           "sizeMultiplier": 1.0,
           "speedMultiplier": 1.0,
-          "shape": "perfect solid black circle",
+          "shape": "bright amber stone with navy outline",
           "knockbackBodyLengths": 2,
           "knockbackDirection": "west"
         },
-        "note": "v0.22 solid black circle pellet (1×, normal speed)"
+        "note": "v0.32.1 visibility remake of the v0.22 pellet. Pipeline bright amber pebble, not a solid black circle."
       }
     },
     {
@@ -908,7 +910,7 @@
         0.5
       ],
       "type": "fx",
-      "note": "v0.32 office sling body-hit. Stone, pebble, and dust with a light gray sparkle — not a water splash. 8×64 @ 18 fps, once, origin center. Untinted master fx-hit-sling-shared is not a separate key.",
+      "note": "v0.32.1 office sling body-hit. 2-PixelLab contrast remake: white/amber lift and a navy outline, light gray sparkle. 8×64 @ 18 fps, once, origin center. Not a water splash. Untinted master fx-hit-sling-shared is not a separate key.",
       "extra": {
         "gameplayNotes": {
           "role": "bodyHitOverlay",
@@ -934,7 +936,7 @@
         0.5
       ],
       "type": "fx",
-      "note": "v0.32 delivery sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center.",
+      "note": "v0.32.1 delivery sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center.",
       "extra": {
         "gameplayNotes": {
           "role": "bodyHitOverlay",
@@ -958,7 +960,7 @@
         0.5
       ],
       "type": "fx",
-      "note": "v0.32 chef sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center.",
+      "note": "v0.32.1 chef sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center.",
       "extra": {
         "gameplayNotes": {
           "role": "bodyHitOverlay",
@@ -982,7 +984,7 @@
         0.5
       ],
       "type": "fx",
-      "note": "v0.32 nurse sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center.",
+      "note": "v0.32.1 nurse sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center.",
       "extra": {
         "gameplayNotes": {
           "role": "bodyHitOverlay",

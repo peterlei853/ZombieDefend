@@ -110,7 +110,7 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, fx-water-stream, and the existing sling pellet/impact strips stay.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). Legacy water FX stay.
 
 - group `girl-fx` · 45 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
@@ -141,8 +141,8 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-lightning-muzzle` | 4 | 28x24 | 14 | once | (1.0, 0.5) |  |
 | `fx-lightning-paralyze` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) |  |
-| `fx-sling-impact` | 6 | 48x48 | 14 | once | (0.5, 0.5) |  |
-| `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.5, 0.5) |  |
+| `fx-sling-impact` | 6 | 48x48 | 14 | once | (0.5, 0.5) | v0.32.1 brighter sling impact (6×48 @ 14 fps, once, origin center). Replaces the faint v0.22 burst that was hard to see on the body. |
+| `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.5, 0.5) | v0.32.1 bright amber stone with a navy outline (4×16 @ 14 fps, loop, origin center). Mean luminance ~91 (was ~13, near-black on asphalt). Same 1× size and speed. |
 | `fx-water-impact` | 6 | 64x64 | 12 | once | (0.5, 0.5) | Legacy v0.22 AoE splash (6×64 @ 12 fps, once). Merged v0.31 still times the HP drop to this sheet. fx-water-splash-big is the clearer splash for that path. |
 | `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
 | `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) |  |
@@ -158,10 +158,10 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-hit-water-delivery` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 delivery body-hit overlay. Same splash as fx-water-splash-big with a light yellow tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-chef` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 chef body-hit overlay. Same splash as fx-water-splash-big with a light white tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-nurse` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 nurse body-hit overlay. Same splash as fx-water-splash-big with a light pink tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
-| `fx-hit-sling-office-v2` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 office sling body-hit. Stone, pebble, and dust with a light gray sparkle — not a water splash. 8×64 @ 18 fps, once, origin center. Untinted master fx-hit-sling-shared is not a separate key. |
-| `fx-hit-sling-delivery` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 delivery sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center. |
-| `fx-hit-sling-chef` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 chef sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center. |
-| `fx-hit-sling-nurse` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 nurse sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center. |
+| `fx-hit-sling-office-v2` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 office sling body-hit. 2-PixelLab contrast remake: white/amber lift and a navy outline, light gray sparkle. 8×64 @ 18 fps, once, origin center. Not a water splash. Untinted master fx-hit-sling-shared is not a separate key. |
+| `fx-hit-sling-delivery` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 delivery sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center. |
+| `fx-hit-sling-chef` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 chef sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center. |
+| `fx-hit-sling-nurse` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 nurse sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center. |
 
 ### Player Girl — weapon icons (武器圖示)
 
