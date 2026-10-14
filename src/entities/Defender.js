@@ -94,10 +94,14 @@ export class DefenderGroup {
     this.waterMounts = opts.waterMounts || null;
     /** @type {import('../systems/SlingMounts.js').SlingMounts|null} */
     this.slingMounts = opts.slingMounts || null;
+    /** @type {import('../systems/FenceMounts.js').FenceMounts|null} */
+    this.fenceMounts = opts.fenceMounts || null;
     const ownedNow = this.weapons.ownedIds();
     const soleWater = this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water';
     const soleSling = this.slingMounts && ownedNow.length === 1 && ownedNow[0] === 'sling';
-    if (soleWater || soleSling) {
+    if (this.fenceMounts) {
+      this.floats.setFenceMounts('all');
+    } else if (soleWater || soleSling) {
       this.floats.setFenceMounts(true);
     }
     this._deploy = createDeployMachine();
@@ -118,6 +122,10 @@ export class DefenderGroup {
     const yMin = grassYMin();
     const yMax = grassYMax();
     let playerY = (yMin + yMax) / 2;
+    if (this.fenceMounts) {
+      const slot = this.fenceMounts.nearest(playerY);
+      if (slot) playerY = slot.y;
+    }
     if (this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water') {
       const slot = this.waterMounts.nearest(playerY);
       if (slot) playerY = slot.y;
@@ -284,14 +292,18 @@ export class DefenderGroup {
     if (this._frontFloat) {
       const moving = dy !== 0 || dx !== 0;
       this._deploy = stepDeploy(this._deploy, moving, deltaMs);
-      const waterSlot = this.waterMounts?.aligned(this.player.y) || null;
-      this.waterMounts?.setActive(waterSlot ? waterSlot.index : -1);
-      const slingSlot = this.slingMounts?.aligned(this.player.y) || null;
-      this.slingMounts?.setActive(slingSlot ? slingSlot.index : -1);
+      const fenceSlot = this.fenceMounts?.aligned(this.player.y) || null;
+      this.fenceMounts?.setActive(fenceSlot ? fenceSlot.index : -1);
+      if (fenceSlot?.weaponId) this.weapons.selectOwned(fenceSlot.weaponId);
+      const waterSlot = this.fenceMounts ? null : (this.waterMounts?.aligned(this.player.y) || null);
+      if (!this.fenceMounts) this.waterMounts?.setActive(waterSlot ? waterSlot.index : -1);
+      const slingSlot = this.fenceMounts ? null : (this.slingMounts?.aligned(this.player.y) || null);
+      if (!this.fenceMounts) this.slingMounts?.setActive(slingSlot ? slingSlot.index : -1);
       const ownedIds = this.weapons.ownedIds();
       const command =
         this._deploy.phase === 'fire' &&
-        ((!!waterSlot && ownedIds.includes('water')) ||
+        (!!fenceSlot ||
+          (!!waterSlot && ownedIds.includes('water')) ||
           (!!slingSlot && ownedIds.includes('sling')));
       this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
       this.floats?.setSelected(this.weapons.getSkin?.()?.id);
@@ -306,10 +318,12 @@ export class DefenderGroup {
         {
           frontFloat: true,
           canFire: this._deploy.canFire,
-          muzzles: this.floats?.muzzles() || [],
+          muzzles: this.fenceMounts ? [] : this.floats?.muzzles() || [],
           waterMount: waterSlot,
           slingFromMount: !!this.slingMounts,
           slingMount: slingSlot,
+          fenceOnly: !!this.fenceMounts,
+          fenceMount: fenceSlot,
           visualScale,
           scaleX: this.player.scaleX,
           scaleY: this.player.scaleY,
@@ -424,7 +438,7 @@ export class DefenderGroup {
    */
   /**
    * Unarmed body. Deploy plays once. Fire stays on idle unless the hero
-   * is stopped behind a water or sling mount, which holds the tower-fire
+   * is stopped behind a fence mount, which holds the tower-fire
    * still (command is the backup). Walk prefers a run sheet when one is loaded.
    * @param {'move'|'hold'|'deploy'|'fire'} phase
    * @param {number} dy
