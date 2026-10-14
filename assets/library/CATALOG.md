@@ -5,17 +5,17 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 121 |
+| [Hero](#hero) | 3 | 125 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 5 |
+| [Environment](#environment) | 2 | 8 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **549** |
+| **Total** | **51** | **556** |
 
 <a id="hero"></a>
 ## Hero
@@ -110,9 +110,9 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, and fx-water-stream stay.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, fx-water-stream, and the existing sling pellet/impact strips stay.
 
-- group `girl-fx` · 41 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 45 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -158,6 +158,10 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-hit-water-delivery` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 delivery body-hit overlay. Same splash as fx-water-splash-big with a light yellow tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-chef` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 chef body-hit overlay. Same splash as fx-water-splash-big with a light white tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-nurse` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 nurse body-hit overlay. Same splash as fx-water-splash-big with a light pink tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
+| `fx-hit-sling-office-v2` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 office sling body-hit. Stone, pebble, and dust with a light gray sparkle — not a water splash. 8×64 @ 18 fps, once, origin center. Untinted master fx-hit-sling-shared is not a separate key. |
+| `fx-hit-sling-delivery` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 delivery sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center. |
+| `fx-hit-sling-chef` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 chef sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center. |
+| `fx-hit-sling-nurse` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32 nurse sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center. |
 
 ### Player Girl — weapon icons (武器圖示)
 
@@ -1091,19 +1095,22 @@ Tileable wooden picket barricade posts with clear gaps between stakes (bullets r
 | `barricade-post` | [barricade-post.png](environment/barricade/barricade-post.png) | 32x64 | icon | Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face). |
 | `barricade-post-damaged` | [barricade-post-damaged.png](environment/barricade/barricade-post-damaged.png) | 32x64 | icon | Optional HP-threshold swap; same origin and scale as barricade-post. |
 
-### Water Gun Mount (水槍架)
+### Weapon Mounts (武器架)
 
 <img src="previews/environment/props/preview.gif" alt="props preview" height="140">
 
-v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.
+Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal with bright cyan tips (prop-water-mount, hi-vis, front-alt); float player-girl-front-water-still. v0.32 sling mounts are the same silhouette family with amber accents, not water cyan (prop-sling-mount, hi-vis, front-alt); float player-girl-front-sling-still. No gun or girl is baked in. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.
 
-- group `props` · 3 assets · frame 64x64 · key prefix `prop-water-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
+- group `props` · 6 assets · frame 64x64 · key prefix `prop-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
 | `prop-water-mount` | [prop-water-mount.png](environment/props/prop-water-mount.png) | 64x64 | image | Primary mount. Replaces the wooden cradle (Tester Fail: wood-on-wood, 0 cyan). This steel version has ~20 cyan pixels and 0 brown. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-water-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-water-mount-hi-vis. |
 | `prop-water-mount-hi-vis` | [prop-water-mount-hi-vis.png](environment/props/prop-water-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate (~67 cyan pixels, 0 brown). Swap in if prop-water-mount still reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-water-mount-front-alt` | [prop-water-mount-front-alt.png](environment/props/prop-water-mount-front-alt.png) | 64x64 | image | Front dual-post alt in the same steel+cyan family (replaces the wooden front post). Same feet origin (32, 60) and cradle height. Prefer prop-water-mount (side Y-fork) for the gun cradle. |
+| `prop-sling-mount` | [prop-sling-mount.png](environment/props/prop-sling-mount.png) | 64x64 | image | v0.32 primary sling mount. Same silhouette family as prop-water-mount, amber instead of water cyan (~32 amber pixels). Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-sling-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-sling-mount-hi-vis. Reuse player-girl-tower-fire; do not bake the gun. |
+| `prop-sling-mount-hi-vis` | [prop-sling-mount-hi-vis.png](environment/props/prop-sling-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate (~135 amber pixels, 0 water cyan). Swap in if prop-sling-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-sling-mount-front-alt` | [prop-sling-mount-front-alt.png](environment/props/prop-sling-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt (~82 amber pixels). Same feet origin (32, 60) and cradle height. Prefer prop-sling-mount (side Y-fork) for the gun cradle. |
 
 <a id="backgrounds"></a>
 ## Backgrounds

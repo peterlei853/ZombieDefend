@@ -2,9 +2,9 @@
   "schema": "zombiedefend-asset-group/1",
   "category": "environment",
   "group": "props",
-  "title": "Water Gun Mount",
-  "titleZh": "水槍架",
-  "description": "v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.",
+  "title": "Weapon Mounts",
+  "titleZh": "武器架",
+  "description": "Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal with bright cyan tips (prop-water-mount, hi-vis, front-alt); float player-girl-front-water-still. v0.32 sling mounts are the same silhouette family with amber accents, not water cyan (prop-sling-mount, hi-vis, front-alt); float player-girl-front-sling-still. No gun or girl is baked in. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.",
   "source": {
     "tool": "pixellab create_object_pro_flash",
     "pixellabObjectId": "5c81fc88-c574-4992-b0e3-8713bd224099",
@@ -25,7 +25,10 @@
     "animate": [
       "prop-water-mount",
       "prop-water-mount-hi-vis",
-      "prop-water-mount-front-alt"
+      "prop-sling-mount",
+      "prop-sling-mount-hi-vis",
+      "prop-water-mount-front-alt",
+      "prop-sling-mount-front-alt"
     ],
     "thumb": "assets/library/previews/environment/props/preview.gif",
     "sheets": [],
@@ -132,6 +135,110 @@
         "gunFloat": "player-girl-front-water-still",
         "role": "secondary",
         "prefer": "prop-water-mount"
+      }
+    },
+    {
+      "key": "prop-sling-mount",
+      "path": "assets/library/environment/props/prop-sling-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "description": "Empty steel Y-fork with amber cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.32 primary sling mount. Same silhouette family as prop-water-mount, amber instead of water cyan (~32 amber pixels). Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-sling-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-sling-mount-hi-vis. Reuse player-girl-tower-fire; do not bake the gun.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "extra": {
+        "pixellabObjectId": "699f0ecd-7665-4056-a651-238e07f3f038",
+        "material": "steel-amber",
+        "gunFloat": "player-girl-front-sling-still",
+        "pose": "player-girl-tower-fire",
+        "role": "primary",
+        "brighterAlternate": "prop-sling-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-sling-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-sling-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "tags": [
+        "alternate",
+        "hi-vis"
+      ],
+      "description": "Higher-amber alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-sling-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate (~135 amber pixels, 0 water cyan). Swap in if prop-sling-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "extra": {
+        "pixellabObjectId": "0dbd4642-beee-4718-84b2-786b99735045",
+        "material": "steel-amber-hi-vis",
+        "gunFloat": "player-girl-front-sling-still",
+        "role": "alternate",
+        "prefer": "prop-sling-mount"
+      }
+    },
+    {
+      "key": "prop-sling-mount-front-alt",
+      "path": "assets/library/environment/props/prop-sling-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "tags": [
+        "secondary"
+      ],
+      "description": "Front dual-post steel sling mount with an amber U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-sling-mount.",
+      "note": "Secondary front dual-post alt (~82 amber pixels). Same feet origin (32, 60) and cradle height. Prefer prop-sling-mount (side Y-fork) for the gun cradle.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "extra": {
+        "pixellabObjectId": "12d78931-7894-4329-b4c8-93381795de8e",
+        "material": "steel-amber",
+        "gunFloat": "player-girl-front-sling-still",
+        "role": "secondary",
+        "prefer": "prop-sling-mount"
       }
     }
   ]

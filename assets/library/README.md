@@ -41,7 +41,7 @@ assets/library/
 │       └── ults/             phoenix / panda / lion / dragon keyframes
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
-├── environment/props/        prop-water-mount.png, prop-water-mount-hi-vis.png, prop-water-mount-front-alt.png
+├── environment/props/        water mounts (cyan) and sling mounts (amber): prop-{water,sling}-mount, -hi-vis, -front-alt
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
@@ -65,7 +65,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount`, `prop-water-mount-hi-vis`, `prop-water-mount-front-alt` | 32×64 posts, origin (0.5, 1.0); water mounts 64×64 steel + cyan, origin (0.5, 0.9375) |
+| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount*`, `prop-sling-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375); water cyan, sling amber |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
@@ -107,6 +107,16 @@ Profession body-hit overlays (same splash, light tint, origin center, once @ 12 
 `prop-water-mount-hi-vis` is the same empty Y-fork with more cyan (about 67 pixels) on the cradle and bands. v0.31.2 draws the six fence slots from this sheet because the primary still reads faint on the barricade, and falls back to `prop-water-mount` when the hi-vis texture is missing. The cradle is drawn at 0.85 of the post height and lifted 4 source pixels so the fork stays inside the stake. `prop-water-mount-front-alt` is the dual-post steel post with a cyan U-cradle, also empty, and still marks the slot she is stopped behind. The gun still is `player-girl-front-water-still`. When neither mount sheet is loaded, that still is the placeholder.
 
 `player-girl-tower-fire` is the preferred 92×92 west operator still under `characters/hero/girl/strips/`: wide braced stance, both fists forward on invisible handles. Girl only — no mount, no gun. Origin is the shared hero foot line (0.5, 0.8261); shoes end near y=78. `player-girl-command` is the backup overwrite of the old one-finger point, same braced family (`command-v2`), same origin (shoes near y=77). `player-girl-tower-fire-strip` is an optional 4×92 micro hold/bob at 8 fps; the still stays the attack texture. QA that strip before wiring it as a loop. Rejected baked-mount state `bb2ec441` is not in the catalog. v0.31.2 holds `player-girl-tower-fire` while she fires from a mount. The still has no anim, so the hero swaps to that texture; `player-girl-command` is the backup. The micro-bob strip stays unwired.
+
+## Sling v0.32
+
+Empty steel cradles in the same family as the water mounts, with amber accents instead of cyan. No gun and no girl are baked in. `player-girl-tower-fire` and `player-girl-command` are reused unchanged. The gun float is the existing `player-girl-front-sling-still`.
+
+- `prop-sling-mount` — primary Y-fork, 64×64, origin (0.5, 0.9375) feet at (32, 60). Cradle pixel (32, 12), 48px above the feet. About 32 amber pixels.
+- `prop-sling-mount-hi-vis` — same silhouette, higher amber contrast (about 135 amber pixels, no water cyan). Prefer the primary unless the barricade washes it out.
+- `prop-sling-mount-front-alt` — secondary front dual-post (about 82 amber pixels). Prefer the Y-fork.
+
+Profession body-hit overlays are stone, pebble, and dust, not a water splash. 8×64, once, 18 fps (the workbench step), origin (0.5, 0.5): `fx-hit-sling-office-v2` (gray), `fx-hit-sling-delivery` (yellow), `fx-hit-sling-chef` (white), `fx-hit-sling-nurse` (pink). The untinted master `fx-hit-sling-shared.png` is not a separate key, matching water (no `fx-hit-water-shared` key). Existing `fx-sling-impact`, `fx-sling-pellet`, and `fx-sling-knockback` stay. This catalog does not change gold, saves, or barricade physics.
 
 ## Front-float combat (v0.27)
 

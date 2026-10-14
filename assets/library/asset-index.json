@@ -13,16 +13,16 @@
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
     "fx": "origin per key; hero FX point west, boss FX east",
     "loop": "loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once",
-    "environment": "barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Water mount 64x64 steel/gunmetal with a bright cyan empty cradle, origin (0.5, 0.9375) feet at y=60, cradle at (32, 12); hi-vis alt has more cyan. Gun floats separately",
+    "environment": "barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Water mount 64x64 steel/gunmetal with a bright cyan empty cradle; sling mount is the same silhouette with amber accents. Origin (0.5, 0.9375) feet at y=60, cradle at (32, 12); hi-vis alts carry more accent. Gun floats separately",
     "backgrounds": "1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6",
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 549,
+    "total": 556,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 121
+        "assets": 125
       },
       "pets": {
         "groups": 17,
@@ -50,7 +50,7 @@
       },
       "environment": {
         "groups": 2,
-        "assets": 5
+        "assets": 8
       },
       "backgrounds": {
         "groups": 1,
@@ -64,9 +64,9 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 67,
+      "fx": 71,
       "icon": 75,
-      "image": 15,
+      "image": 18,
       "spritesheet": 358
     }
   },
@@ -197,7 +197,7 @@
       "group": "girl-fx",
       "title": "Player Girl — weapon FX",
       "titleZh": "女主角武器特效",
-      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, and fx-water-stream stay.",
+      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, fx-water-stream, and the existing sling pellet/impact strips stay.",
       "manifest": "assets/library/characters/hero/girl/fx/manifest.json",
       "dir": "assets/library/characters/hero/girl/fx",
       "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
@@ -210,7 +210,7 @@
       ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 41,
+      "count": 45,
       "frameSizes": [
         "16x16",
         "24x24",
@@ -234,7 +234,7 @@
       ],
       "fpsRange": [
         8,
-        16
+        18
       ],
       "types": [
         "fx"
@@ -280,7 +280,11 @@
         "fx-hit-water-office-v2",
         "fx-hit-water-delivery",
         "fx-hit-water-chef",
-        "fx-hit-water-nurse"
+        "fx-hit-water-nurse",
+        "fx-hit-sling-office-v2",
+        "fx-hit-sling-delivery",
+        "fx-hit-sling-chef",
+        "fx-hit-sling-nurse"
       ]
     },
     {
@@ -2274,17 +2278,17 @@
       "id": "environment/props",
       "category": "environment",
       "group": "props",
-      "title": "Water Gun Mount",
-      "titleZh": "水槍架",
-      "description": "v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.",
+      "title": "Weapon Mounts",
+      "titleZh": "武器架",
+      "description": "Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal with bright cyan tips (prop-water-mount, hi-vis, front-alt); float player-girl-front-water-still. v0.32 sling mounts are the same silhouette family with amber accents, not water cyan (prop-sling-mount, hi-vis, front-alt); float player-girl-front-sling-still. No gun or girl is baked in. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.",
       "manifest": "assets/library/environment/props/manifest.json",
       "dir": "assets/library/environment/props",
       "thumb": "assets/library/previews/environment/props/preview.gif",
       "sheets": [],
       "extras": [],
-      "keyPrefix": "prop-water-",
+      "keyPrefix": "prop-",
       "mainKey": "prop-water-mount",
-      "count": 3,
+      "count": 6,
       "frameSizes": [
         "64x64"
       ],
@@ -2299,7 +2303,10 @@
       "keys": [
         "prop-water-mount",
         "prop-water-mount-hi-vis",
-        "prop-water-mount-front-alt"
+        "prop-water-mount-front-alt",
+        "prop-sling-mount",
+        "prop-sling-mount-hi-vis",
+        "prop-sling-mount-front-alt"
       ]
     },
     {
@@ -6792,6 +6799,180 @@
         "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
       },
       "action": "hit-water-nurse"
+    },
+    {
+      "key": "fx-hit-sling-office-v2",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-office-v2.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: hit-sling-office-v2 — 8 frames 64x64 @ 18 fps, once.",
+      "note": "v0.32 office sling body-hit. Stone, pebble, and dust with a light gray sparkle — not a water splash. 8×64 @ 18 fps, once, origin center. Untinted master fx-hit-sling-shared is not a separate key.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "sling",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "office-worker-v2",
+          "tint": "gray",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e",
+        "pixellabImageId": "126bc410-1708-451f-b966-1d60f92085c8",
+        "workbenchStep": "03e935f7-1d06-4ee4-b964-dc15c3541c7c"
+      },
+      "action": "hit-sling-office-v2"
+    },
+    {
+      "key": "fx-hit-sling-delivery",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-delivery.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: hit-sling-delivery — 8 frames 64x64 @ 18 fps, once.",
+      "note": "v0.32 delivery sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "sling",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "delivery",
+          "tint": "yellow",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
+      },
+      "action": "hit-sling-delivery"
+    },
+    {
+      "key": "fx-hit-sling-chef",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-chef.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: hit-sling-chef — 8 frames 64x64 @ 18 fps, once.",
+      "note": "v0.32 chef sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "sling",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "chef",
+          "tint": "white",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
+      },
+      "action": "hit-sling-chef"
+    },
+    {
+      "key": "fx-hit-sling-nurse",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-nurse.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 18,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: hit-sling-nurse — 8 frames 64x64 @ 18 fps, once.",
+      "note": "v0.32 nurse sling body-hit. Same pebble/dust strip as fx-hit-sling-office-v2 with a light pink tint. 8×64 @ 18 fps, once, origin center.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "sling",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "nurse",
+          "tint": "pink",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "6fea2ed3-5cdc-4a35-b80c-7fbd18dc995e"
+      },
+      "action": "hit-sling-nurse"
     },
     {
       "key": "icon-water",
@@ -21043,7 +21224,7 @@
         "role": "primary",
         "brighterAlternate": "prop-water-mount-hi-vis"
       },
-      "action": "mount"
+      "action": "water-mount"
     },
     {
       "key": "prop-water-mount-hi-vis",
@@ -21092,7 +21273,7 @@
         "role": "alternate",
         "prefer": "prop-water-mount"
       },
-      "action": "mount-hi-vis"
+      "action": "water-mount-hi-vis"
     },
     {
       "key": "prop-water-mount-front-alt",
@@ -21140,7 +21321,155 @@
         "role": "secondary",
         "prefer": "prop-water-mount"
       },
-      "action": "mount-front-alt"
+      "action": "water-mount-front-alt"
+    },
+    {
+      "key": "prop-sling-mount",
+      "category": "environment",
+      "group": "props",
+      "path": "assets/library/environment/props/prop-sling-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/props/preview.gif",
+      "description": "Empty steel Y-fork with amber cradle accents, 64×64. Facing west-ish. No gun baked in.",
+      "note": "v0.32 primary sling mount. Same silhouette family as prop-water-mount, amber instead of water cyan (~32 amber pixels). Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-sling-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-sling-mount-hi-vis. Reuse player-girl-tower-fire; do not bake the gun.",
+      "tags": [
+        "environment",
+        "props",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "699f0ecd-7665-4056-a651-238e07f3f038",
+        "material": "steel-amber",
+        "gunFloat": "player-girl-front-sling-still",
+        "pose": "player-girl-tower-fire",
+        "role": "primary",
+        "brighterAlternate": "prop-sling-mount-hi-vis"
+      },
+      "action": "sling-mount"
+    },
+    {
+      "key": "prop-sling-mount-hi-vis",
+      "category": "environment",
+      "group": "props",
+      "path": "assets/library/environment/props/prop-sling-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/props/preview.gif",
+      "description": "Higher-amber alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-sling-mount. No gun baked in.",
+      "note": "Optional high-contrast alternate (~135 amber pixels, 0 water cyan). Swap in if prop-sling-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "tags": [
+        "environment",
+        "props",
+        "image",
+        "alternate",
+        "hi-vis"
+      ],
+      "extra": {
+        "pixellabObjectId": "0dbd4642-beee-4718-84b2-786b99735045",
+        "material": "steel-amber-hi-vis",
+        "gunFloat": "player-girl-front-sling-still",
+        "role": "alternate",
+        "prefer": "prop-sling-mount"
+      },
+      "action": "sling-mount-hi-vis"
+    },
+    {
+      "key": "prop-sling-mount-front-alt",
+      "category": "environment",
+      "group": "props",
+      "path": "assets/library/environment/props/prop-sling-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/props/preview.gif",
+      "description": "Front dual-post steel sling mount with an amber U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-sling-mount.",
+      "note": "Secondary front dual-post alt (~82 amber pixels). Same feet origin (32, 60) and cradle height. Prefer prop-sling-mount (side Y-fork) for the gun cradle.",
+      "tags": [
+        "environment",
+        "props",
+        "image",
+        "secondary"
+      ],
+      "extra": {
+        "pixellabObjectId": "12d78931-7894-4329-b4c8-93381795de8e",
+        "material": "steel-amber",
+        "gunFloat": "player-girl-front-sling-still",
+        "role": "secondary",
+        "prefer": "prop-sling-mount"
+      },
+      "action": "sling-mount-front-alt"
     },
     {
       "key": "bg-campus-a",
