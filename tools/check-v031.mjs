@@ -3,24 +3,30 @@
  * Run: node tools/check-v031.mjs
  *
  * ?weapon=water: six fence mounts, stop behind one, shot aims at the
- * nearest living zombie, HP drops on the fx-water-impact beat.
+ * nearest living zombie, HP drops on the fx-water-splash-big beat.
  * Other guns still travel straight west. Barricade contact math stays.
  */
 import { readFileSync } from 'node:fs';
 import { APP_VERSION } from '../src/data/GameConfig.js';
 import { BULLET_SPEED } from '../src/data/waves.js';
 import { HERO_UNARMED, WEAPON_TRAITS, forwardVelocity } from '../src/assets/heroDeploy.js';
-import { zombieHitFxKey } from '../src/assets/zombieSprites.js';
+import { waterBodyHitKey, zombieHitFxKey } from '../src/assets/zombieSprites.js';
 import {
   WATER_MOUNT_ALIGN_FIELD,
+  WATER_MOUNT_ALT_KEY,
   WATER_MOUNT_COUNT,
   WATER_MOUNT_FALLBACK_KEY,
+  WATER_MOUNT_GUN_KEY,
   WATER_MOUNT_KEY,
+  WATER_SPLASH_FPS,
+  WATER_SPLASH_FRAMES,
   buildWaterMountSlots,
   nearestWaterMount,
   waterAimVelocity,
   waterImpactBeatMs,
   waterMountYs,
+  waterSplashKey,
+  waterWetKey,
 } from '../src/assets/waterMounts.js';
 import { WaterMounts } from '../src/systems/WaterMounts.js';
 import { WeaponSystem } from '../src/systems/WeaponSystem.js';
@@ -42,23 +48,37 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const mountSrc = readFileSync(new URL('../src/systems/WaterMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.31.0' && APP_VERSION === '0.31.0', 'package and APP_VERSION are 0.31.0');
-assert(html.includes('v0.31.0'), 'document title is v0.31.0');
+assert(pkg.version === '0.31.1' && APP_VERSION === '0.31.1', 'package and APP_VERSION are 0.31.1');
+assert(html.includes('v0.31.1'), 'document title is v0.31.1');
 assert(HERO_UNARMED.command === 'player-girl-command', 'command pose key');
 assert(WATER_MOUNT_KEY === 'prop-water-mount', 'mount sprite key');
-assert(WATER_MOUNT_FALLBACK_KEY === 'player-girl-front-water-still', 'mount placeholder key');
-assert(mountSrc.includes('PIXELLAB_HOOK: prop-water-mount'), 'mount art hook');
-assert(defenderSrc.includes('PIXELLAB_HOOK: player-girl-command'), 'command pose hook');
-assert(weaponSrc.includes('PIXELLAB_HOOK: fx-hit-<skinId>'), 'per-skin hit hook');
+assert(WATER_MOUNT_ALT_KEY === 'prop-water-mount-front-alt', 'front alt mount key');
+assert(WATER_MOUNT_GUN_KEY === 'player-girl-front-water-still', 'cradle gun still');
+assert(WATER_MOUNT_FALLBACK_KEY === WATER_MOUNT_GUN_KEY, 'still remains the missing-mount fallback');
+assert(mountSrc.includes('setActive') && mountSrc.includes('WATER_MOUNT_ALT_KEY'), 'active slot swaps to the front alt');
+assert(defenderSrc.includes('_holdStill(HERO_UNARMED.command)'), 'command still is held on the mount');
+assert(weaponSrc.includes('waterSplashKey') && weaponSrc.includes('waterWetKey'), 'splash path resolves catalog keys');
+assert(weaponSrc.includes('PIXELLAB_HOOK: fx-hit-<skinId>'), 'unmapped skins keep the generic hit hook');
+assert(waterBodyHitKey('office-worker-v2') === 'fx-hit-water-office-v2', 'office water hit');
+assert(waterBodyHitKey('delivery') === 'fx-hit-water-delivery', 'delivery water hit');
+assert(waterBodyHitKey('chef') === 'fx-hit-water-chef', 'chef water hit');
+assert(waterBodyHitKey('nurse') === 'fx-hit-water-nurse', 'nurse water hit');
+assert(waterBodyHitKey('clown') === null && waterBodyHitKey('') === null, 'unmapped skin has no water overlay');
 assert(zombieHitFxKey('chef') === 'fx-hit-chef', 'chef hit fx key');
 assert(zombieHitFxKey('office-worker-v2') === 'fx-hit-office-worker-v2', 'office hit fx key');
 assert(zombieHitFxKey('') === null && zombieHitFxKey(null) === null, 'empty skin has no hit fx');
+assert(waterSplashKey((key) => key === 'fx-water-splash-big') === 'fx-water-splash-big', 'splash prefers the big sheet');
+assert(waterSplashKey((key) => key === 'fx-water-impact') === 'fx-water-impact', 'splash falls back to the legacy impact');
+assert(waterWetKey((key) => key === 'fx-water-wet-ground') === 'fx-water-wet-ground', 'wet prefers the ground sheet');
+assert(waterWetKey((key) => key === 'fx-water-wet') === 'fx-water-wet', 'wet falls back to the legacy puddle');
 
 assert(WEAPON_TRAITS.water.projectile === 'fx-water-proj', 'water projectile key');
-assert(WEAPON_TRAITS.water.impact === 'fx-water-impact', 'water impact key');
-assert(WEAPON_TRAITS.water.ground === 'fx-water-wet', 'water wet key');
+assert(WEAPON_TRAITS.water.impact === 'fx-water-impact', 'water trait keeps the legacy impact name');
+assert(WEAPON_TRAITS.water.ground === 'fx-water-wet', 'water trait keeps the legacy wet name');
 assert(WEAPON_TRAITS.water.splash === 10 && WEAPON_TRAITS.water.splashRadius === 56, 'splash table unchanged');
-assert(waterImpactBeatMs() === 250 && waterImpactBeatMs(500) === 250, 'HP beat is mid impact sheet');
+const splashBeat = (WATER_SPLASH_FRAMES / WATER_SPLASH_FPS) * 1000 * 0.5;
+assert(Math.abs(waterImpactBeatMs() - splashBeat) < 1e-6, 'HP beat is mid splash-big sheet');
+assert(waterImpactBeatMs(500) === 250, 'legacy impact sheet still beats at 250ms');
 
 const west = forwardVelocity(100);
 assert(west.vx === -100 && west.vy === 0, 'other guns stay on the west ray');
@@ -105,37 +125,67 @@ function label() {
 function sprite(x, y, key) {
   const obj = {
     x, y, key, active: true,
+    texture: { key },
     setOrigin() { return obj; },
     setScale() { return obj; },
     setDepth() { return obj; },
     setFlipX() { return obj; },
     setRotation() { return obj; },
+    setTexture(next) {
+      obj.key = next;
+      obj.texture = { key: next };
+      return obj;
+    },
     once() { return obj; },
   };
   spawned.push(obj);
   return obj;
 }
-const scene = {
-  textures: { exists: (key) => key === 'fx-water-impact' || key === 'fx-water-wet' || key === WATER_MOUNT_FALLBACK_KEY },
-  anims: { exists: () => false },
-  add: {
-    sprite,
-    rectangle(x, y, w, h, color) {
-      return sprite(x, y, `rect:${color}`);
+function makeScene(keys) {
+  const known = new Set(keys);
+  return {
+    textures: { exists: (key) => known.has(key) },
+    anims: { exists: () => false },
+    add: {
+      sprite,
+      rectangle(x, y, w, h, color) {
+        return sprite(x, y, `rect:${color}`);
+      },
+      text() { return label(); },
     },
-    text() { return label(); },
-  },
-  tweens: { add: () => ({}), killTweensOf() {} },
-  time: { now: 0 },
-};
-
-const mounts = new WaterMounts(scene, {
+    tweens: { add: () => ({}), killTweensOf() {} },
+    time: { now: 0 },
+  };
+}
+const anchor = {
   postAnchorAt(y) {
     return { x: 880, groundY: y, postH: 90 };
   },
-});
-assert(mounts.sprites.length === 6, 'six mount sprites');
-assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_FALLBACK_KEY), 'placeholder gun until prop-water-mount exists');
+};
+
+const fallback = new WaterMounts(makeScene([WATER_MOUNT_FALLBACK_KEY]), anchor);
+assert(fallback.sprites.length === 6 && fallback.guns.length === 0, 'missing cradle falls back to the gun still');
+assert(fallback.sprites.every((s) => s.key === WATER_MOUNT_FALLBACK_KEY), 'placeholder gun until prop-water-mount exists');
+
+const scene = makeScene([
+  WATER_MOUNT_KEY,
+  WATER_MOUNT_ALT_KEY,
+  WATER_MOUNT_GUN_KEY,
+  'fx-water-splash-big',
+  'fx-water-wet-ground',
+  'fx-water-impact',
+  'fx-water-wet',
+  'fx-hit-water-chef',
+]);
+const mounts = new WaterMounts(scene, anchor);
+assert(mounts.sprites.length === 6 && mounts.guns.length === 6, 'six cradles and six seated guns');
+assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_KEY), 'side cradle is the row');
+assert(mounts.guns.every((s) => s.key === WATER_MOUNT_GUN_KEY), 'still sits in the cradle');
+mounts.setActive(4);
+assert(mounts.sprites[4].key === WATER_MOUNT_ALT_KEY, 'aligned slot uses the front alt');
+assert(mounts.sprites.every((s, i) => i === 4 || s.key === WATER_MOUNT_KEY), 'other slots stay the side cradle');
+mounts.setActive(-1);
+assert(mounts.sprites.every((s) => s.key === WATER_MOUNT_KEY), 'clearing the slot restores the side cradle');
 assert(mounts.aligned(mounts.slots[4].y)?.index === 4, 'aligned() matches the slot under the hero');
 assert(mounts.aligned(between) === null, 'aligned() refuses the gap');
 
@@ -173,19 +223,51 @@ spawned.length = 0;
 const early = guns.applyDirectHit(primary, { weaponId: 'water', damage: 18, knockbackBodies: 0 });
 assert(early.gold === 0 && early.kills === 0, 'contact does not pay gold');
 assert(damaged.length === 0, 'contact does not drop HP');
-const impact = spawned.find((s) => s.key === 'fx-water-impact');
-const wet = spawned.find((s) => s.key === 'fx-water-wet');
-assert(impact && impact.y === primary.bodyCenterY, 'impact FX is at the body center');
+const splash = spawned.find((s) => s.key === 'fx-water-splash-big');
+const wet = spawned.find((s) => s.key === 'fx-water-wet-ground');
+assert(splash && splash.y === primary.bodyCenterY, 'splash FX is at the body center');
 assert(wet && wet.y === primary.y, 'wet FX is on the feet');
-guns.stepOverlays(249);
-assert(damaged.length === 0, 'HP waits through the first half of the impact');
+assert(!spawned.some((s) => s.key === 'fx-hit-water-chef'), 'profession hit waits for the damage beat');
+guns.stepOverlays(splashBeat - 1);
+assert(damaged.length === 0, 'HP waits through the first half of the splash');
 guns.stepOverlays(1);
 assert(damaged.length === 2, 'primary and splash share one beat');
 assert(damaged[0].id === 1 && damaged[0].amount === 18, 'primary takes the direct hit on the beat');
 assert(damaged[1].id === 2 && damaged[1].amount === 10, 'neighbor takes splash damage on the same beat');
 assert(!damaged.some((d) => d.id === 3), 'outside the splash radius is spared');
+const bodyHits = spawned.filter((s) => s.key === 'fx-hit-water-chef');
+assert(bodyHits.length === 2 && bodyHits.every((s) => s.y === primary.bodyCenterY), 'chef hit FX lands at both body centers');
 const pending = guns.consumePending();
 assert(pending.gold === 4 && pending.kills === 1, 'kill gold lands with the FX beat');
+
+const legacyScene = makeScene(['fx-water-impact', 'fx-water-wet']);
+const legacyHits = [];
+const legacyZ = {
+  id: 7,
+  x: 0,
+  y: 40,
+  alive: true,
+  body: { active: true },
+  bodyCenterY: 20,
+  displayHalf: 10,
+  goldValue: 0,
+  skin: { id: 'clown' },
+  takeDamage(amount) {
+    legacyHits.push(amount);
+    return false;
+  },
+};
+const legacy = new WeaponSystem(legacyScene);
+legacy.armHits([legacyZ], []);
+spawned.length = 0;
+legacy.applyDirectHit(legacyZ, { weaponId: 'water', damage: 9, knockbackBodies: 0 });
+assert(spawned.some((s) => s.key === 'fx-water-impact' && s.y === legacyZ.bodyCenterY), 'missing splash-big uses fx-water-impact');
+assert(spawned.some((s) => s.key === 'fx-water-wet' && s.y === legacyZ.y), 'missing wet-ground uses fx-water-wet');
+legacy.stepOverlays(249);
+assert(legacyHits.length === 0, 'legacy sheet still waits 250ms');
+legacy.stepOverlays(1);
+assert(legacyHits.length === 1 && legacyHits[0] === 9, 'legacy sheet drops HP at 250ms');
+assert(spawned.filter((s) => s.key === 'fx-water-impact').length >= 2, 'unmapped skin falls back to the legacy impact on the beat');
 
 const slingHits = [];
 const slingZ = {

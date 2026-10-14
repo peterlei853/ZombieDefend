@@ -64,10 +64,13 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * v0.31 keeps those freezes. Water plays its splash and wet FX first and
  * drops primary plus splash HP on the impact beat. Six fence mounts are
  * the water fire points; the other five guns still shoot west.
+ * v0.31.1 draws prop-water-mount, holds player-girl-command on a mount,
+ * and plays fx-water-splash-big / fx-water-wet-ground plus the
+ * profession fx-hit-water overlays. Legacy fx-water-* stays the fallback.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.31.0';
+export const APP_VERSION = '0.31.1';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

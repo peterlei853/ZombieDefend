@@ -217,11 +217,30 @@ function skin(id, prefix, extra = {}) {
 }
 
 /**
- * Per-profession hit puff. None of these sheets are in the library yet.
- * PIXELLAB_HOOK: fx-hit-<skinId> at the body center, same frame as takeDamage
- * and the hurt flash. Skins: office-worker-v2, delivery, chef, nurse, clown,
- * cyborg, slime, slime-mini, exploder, riot-bare, trashcan-bare, sprinter,
- * brute, trashcan, riot.
+ * Water body-hit overlays from the v0.31 catalog. Play at the body center
+ * on the frame before takeDamage. Other skins fall back to fx-water-impact.
+ * @type {Record<string, string>}
+ */
+export const WATER_BODY_HIT_FX = {
+  'office-worker-v2': 'fx-hit-water-office-v2',
+  delivery: 'fx-hit-water-delivery',
+  chef: 'fx-hit-water-chef',
+  nurse: 'fx-hit-water-nurse',
+};
+
+/**
+ * @param {string|null|undefined} skinId
+ * @returns {string|null}
+ */
+export function waterBodyHitKey(skinId) {
+  if (!skinId || typeof skinId !== 'string') return null;
+  return WATER_BODY_HIT_FX[skinId] || null;
+}
+
+/**
+ * Generic per-skin puff name. Water prefers waterBodyHitKey.
+ * PIXELLAB_HOOK: fx-hit-<skinId> for professions that do not have a
+ * fx-hit-water-* sheet yet (clown, cyborg, slime, exploder, and the rest).
  * @param {string|null|undefined} skinId
  * @returns {string|null}
  */

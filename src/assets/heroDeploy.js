@@ -26,9 +26,8 @@ export const HERO_UNARMED = {
   idle: 'player-girl-idle',
   deploy: 'player-girl-deploy',
   /**
-   * West/front point while stopped behind a water mount.
-   * PIXELLAB_HOOK: player-girl-command — unarmed body, no held gun.
-   * The library has no command/point strip yet; fire stays on idle until it ships.
+   * West point while stopped behind a water mount.
+   * One still frame (92×92, same feet origin as idle). Unarmed — no held gun.
    */
   command: 'player-girl-command',
   walk: {
