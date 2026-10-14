@@ -5,17 +5,17 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 119 |
+| [Hero](#hero) | 3 | 121 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 4 |
+| [Environment](#environment) | 2 | 5 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **546** |
+| **Total** | **51** | **549** |
 
 <a id="hero"></a>
 ## Hero
@@ -24,9 +24,9 @@
 
 <img src="previews/hero/girl/preview.gif" alt="girl preview" height="140">
 
-Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 adds player-girl-command, a west pointing still on the same 92×92 foot line.
+Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 tower attack is girl-only: player-girl-tower-fire is the preferred west operator still (both fists on invisible handles), player-girl-command is the same braced stance as a backup overwrite of the old one-finger point, and player-girl-tower-fire-strip is an optional 4-frame micro-bob. No mount or gun is baked into these poses.
 
-- group `girl` · 72 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
+- group `girl` · 74 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
 - previews: [all-base-sheet.png](previews/hero/girl/all-base-sheet.png), [hero-run-ns-sheet.png](previews/hero/girl/hero-run-ns-sheet.png), [weapon-water.gif](previews/hero/girl/weapon-water.gif), [weapon-bubble.gif](previews/hero/girl/weapon-bubble.gif), [weapon-lightning.gif](previews/hero/girl/weapon-lightning.gif), [weapon-frost.gif](previews/hero/girl/weapon-frost.gif), [weapon-flame.gif](previews/hero/girl/weapon-flame.gif), [weapon-sling.gif](previews/hero/girl/weapon-sling.gif), [front-float-deploy-sheet.png](previews/hero/girl/front-float-deploy-sheet.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -102,7 +102,9 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 | `player-girl-back-water` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float water bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-lightning` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float lightning bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-flame` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float flame bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
-| `player-girl-command` | 1 | 92x92 | – | static | (0.5, 0.8261) | Still only (no micro-bob). Shoes end at y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. The handoff point (46, 88) ≈ (0.5, 0.96) sits in empty padding under the sprite. |
+| `player-girl-command` | 1 | 92x92 | – | static | (0.5, 0.8261) | Backup to player-girl-tower-fire (command-v2). Shoes end near y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. Still only. Compose in front of prop-water-mount; float player-girl-front-water-still at the cradle. |
+| `player-girl-tower-fire` | 1 | 92x92 | – | static | (0.5, 0.8261) | Preferred attack pose behind prop-water-mount. Origin matches hero feet (0.5, 0.8261); shoes end near y=78. State tower-fire-v2. The optional micro-bob is a separate key, player-girl-tower-fire-strip; this still stays frame 0 / the main texture. Rejected baked-mount state bb2ec441 is not this sprite. |
+| `player-girl-tower-fire-strip` | 4 | 92x92 | 8 | loop | (0.5, 0.8261) | Horizontal strip, 368×92, four frames. Nice-to-have sibling of player-girl-tower-fire. The still is the attack texture; do not replace that key with this sheet. QA before wiring the loop in gameplay. Feet stay on the shared hero origin (0.5, 0.8261). |
 
 ### Player Girl — weapon FX (女主角武器特效)
 
@@ -1093,14 +1095,15 @@ Tileable wooden picket barricade posts with clear gaps between stakes (bullets r
 
 <img src="previews/environment/props/preview.gif" alt="props preview" height="140">
 
-v0.31 empty wooden cradle for the front-float water gun. Primary is a single-post Y-fork facing west-ish; the front dual-post is a secondary alt. Gun is not baked in — attach player-girl-front-water-still at the cradle. Visual only.
+v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.
 
-- group `props` · 2 assets · frame 64x64 · key prefix `prop-water-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
+- group `props` · 3 assets · frame 64x64 · key prefix `prop-water-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
-| `prop-water-mount` | [prop-water-mount.png](environment/props/prop-water-mount.png) | 64x64 | image | Primary mount. Origin feet (32, 60) ≈ (0.5, 0.94). Attach player-girl-front-water-still at the cradle pixel (32, 12), 48px above the feet. |
-| `prop-water-mount-front-alt` | [prop-water-mount-front-alt.png](environment/props/prop-water-mount-front-alt.png) | 64x64 | image | Secondary alt. Prefer prop-water-mount (side Y-fork) for the gun cradle. |
+| `prop-water-mount` | [prop-water-mount.png](environment/props/prop-water-mount.png) | 64x64 | image | Primary mount. Replaces the wooden cradle (Tester Fail: wood-on-wood, 0 cyan). This steel version has ~20 cyan pixels and 0 brown. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-water-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-water-mount-hi-vis. |
+| `prop-water-mount-hi-vis` | [prop-water-mount-hi-vis.png](environment/props/prop-water-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate (~67 cyan pixels, 0 brown). Swap in if prop-water-mount still reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-water-mount-front-alt` | [prop-water-mount-front-alt.png](environment/props/prop-water-mount-front-alt.png) | 64x64 | image | Front dual-post alt in the same steel+cyan family (replaces the wooden front post). Same feet origin (32, 60) and cradle height. Prefer prop-water-mount (side Y-fork) for the gun cradle. |
 
 <a id="backgrounds"></a>
 ## Backgrounds

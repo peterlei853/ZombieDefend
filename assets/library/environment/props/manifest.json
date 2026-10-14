@@ -4,11 +4,11 @@
   "group": "props",
   "title": "Water Gun Mount",
   "titleZh": "水槍架",
-  "description": "v0.31 empty wooden cradle for the front-float water gun. Primary is a single-post Y-fork facing west-ish; the front dual-post is a secondary alt. Gun is not baked in — attach player-girl-front-water-still at the cradle. Visual only.",
+  "description": "v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.",
   "source": {
     "tool": "pixellab create_object_pro_flash",
-    "pixellabObjectId": "e229c059-c57e-4d1f-a9f8-65ed0251586c",
-    "note": "Primary view=side, n_directions=1 (prop-water-mount-side). Alt object ba4c83a8-43b2-4a9e-85f6-9bbd84cb4624."
+    "pixellabObjectId": "5c81fc88-c574-4992-b0e3-8713bd224099",
+    "note": "Primary view=side, n_directions=1, name prop-water-mount-steel-cyan (object 5c81fc88). Replaces the wooden cradle. Hi-vis is a higher-cyan alternate of the same silhouette. Front alt is the dual-post steel U-cradle."
   },
   "defaults": {
     "type": "image",
@@ -24,6 +24,7 @@
   "preview": {
     "animate": [
       "prop-water-mount",
+      "prop-water-mount-hi-vis",
       "prop-water-mount-front-alt"
     ],
     "thumb": "assets/library/previews/environment/props/preview.gif",
@@ -43,8 +44,8 @@
         0.9375
       ],
       "facing": "west",
-      "description": "Empty wooden Y-fork cradle on a barricade-style post, 64×64. Facing west-ish.",
-      "note": "Primary mount. Origin feet (32, 60) ≈ (0.5, 0.94). Attach player-girl-front-water-still at the cradle pixel (32, 12), 48px above the feet.",
+      "description": "Empty steel/gunmetal Y-fork with bright cyan cradle tips, 64×64. High contrast on the wooden barricade. Facing west-ish. No gun baked in.",
+      "note": "Primary mount. Replaces the wooden cradle (Tester Fail: wood-on-wood, 0 cyan). This steel version has ~20 cyan pixels and 0 brown. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-water-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-water-mount-hi-vis.",
       "anchors": {
         "cradlePx": [
           32,
@@ -56,9 +57,47 @@
         ]
       },
       "extra": {
-        "pixellabObjectId": "e229c059-c57e-4d1f-a9f8-65ed0251586c",
+        "pixellabObjectId": "5c81fc88-c574-4992-b0e3-8713bd224099",
+        "pixellabName": "prop-water-mount-steel-cyan",
+        "material": "steel-cyan",
         "gunFloat": "player-girl-front-water-still",
-        "role": "primary"
+        "role": "primary",
+        "brighterAlternate": "prop-water-mount-hi-vis"
+      }
+    },
+    {
+      "key": "prop-water-mount-hi-vis",
+      "path": "assets/library/environment/props/prop-water-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "tags": [
+        "alternate",
+        "hi-vis"
+      ],
+      "description": "Brighter cyan alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-water-mount with more cyan on the cradle and bands. No gun baked in.",
+      "note": "Optional high-contrast alternate (~67 cyan pixels, 0 brown). Swap in if prop-water-mount still reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "extra": {
+        "material": "steel-cyan-hi-vis",
+        "gunFloat": "player-girl-front-water-still",
+        "role": "alternate",
+        "prefer": "prop-water-mount"
       }
     },
     {
@@ -76,10 +115,21 @@
       "tags": [
         "secondary"
       ],
-      "description": "Optional front dual-post water mount, 64×64. Secondary to prop-water-mount.",
-      "note": "Secondary alt. Prefer prop-water-mount (side Y-fork) for the gun cradle.",
+      "description": "Dual-post steel water mount with a bright cyan U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-water-mount.",
+      "note": "Front dual-post alt in the same steel+cyan family (replaces the wooden front post). Same feet origin (32, 60) and cradle height. Prefer prop-water-mount (side Y-fork) for the gun cradle.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
       "extra": {
-        "pixellabObjectId": "ba4c83a8-43b2-4a9e-85f6-9bbd84cb4624",
+        "material": "steel-cyan",
+        "gunFloat": "player-girl-front-water-still",
         "role": "secondary",
         "prefer": "prop-water-mount"
       }

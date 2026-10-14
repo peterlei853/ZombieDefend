@@ -13,16 +13,16 @@
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
     "fx": "origin per key; hero FX point west, boss FX east",
     "loop": "loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once",
-    "environment": "barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Water mount 64x64, origin (0.5, 0.9375) feet at y=60, cradle at (32, 12)",
+    "environment": "barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Water mount 64x64 steel/gunmetal with a bright cyan empty cradle, origin (0.5, 0.9375) feet at y=60, cradle at (32, 12); hi-vis alt has more cyan. Gun floats separately",
     "backgrounds": "1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6",
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 546,
+    "total": 549,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 119
+        "assets": 121
       },
       "pets": {
         "groups": 17,
@@ -50,7 +50,7 @@
       },
       "environment": {
         "groups": 2,
-        "assets": 4
+        "assets": 5
       },
       "backgrounds": {
         "groups": 1,
@@ -66,8 +66,8 @@
       "concept": 21,
       "fx": 67,
       "icon": 75,
-      "image": 13,
-      "spritesheet": 357
+      "image": 15,
+      "spritesheet": 358
     }
   },
   "groups": [
@@ -77,7 +77,7 @@
       "group": "girl",
       "title": "Player Girl (hero)",
       "titleZh": "女主角",
-      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 adds player-girl-command, a west pointing still on the same 92×92 foot line.",
+      "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 tower attack is girl-only: player-girl-tower-fire is the preferred west operator still (both fists on invisible handles), player-girl-command is the same braced stance as a backup overwrite of the old one-finger point, and player-girl-tower-fire-strip is an optional 4-frame micro-bob. No mount or gun is baked into these poses.",
       "manifest": "assets/library/characters/hero/girl/manifest.json",
       "dir": "assets/library/characters/hero/girl",
       "thumb": "assets/library/previews/hero/girl/preview.gif",
@@ -96,7 +96,7 @@
       ],
       "keyPrefix": "player-girl-",
       "mainKey": "player-girl-idle",
-      "count": 72,
+      "count": 74,
       "frameSizes": [
         "32x32",
         "56x56",
@@ -186,7 +186,9 @@
         "player-girl-back-water",
         "player-girl-back-lightning",
         "player-girl-back-flame",
-        "player-girl-command"
+        "player-girl-command",
+        "player-girl-tower-fire",
+        "player-girl-tower-fire-strip"
       ]
     },
     {
@@ -2274,7 +2276,7 @@
       "group": "props",
       "title": "Water Gun Mount",
       "titleZh": "水槍架",
-      "description": "v0.31 empty wooden cradle for the front-float water gun. Primary is a single-post Y-fork facing west-ish; the front dual-post is a secondary alt. Gun is not baked in — attach player-girl-front-water-still at the cradle. Visual only.",
+      "description": "v0.31 empty steel/gunmetal cradle for the front-float water gun. The wooden Y-fork blended into the wooden barricade, so the primary is now a single-post Y-fork with bright cyan tips. prop-water-mount-hi-vis is the brighter cyan alternate if the primary still reads faint. prop-water-mount-front-alt is the dual-post steel post with a cyan U-cradle. No gun is baked in — float player-girl-front-water-still at the cradle. Visual only.",
       "manifest": "assets/library/environment/props/manifest.json",
       "dir": "assets/library/environment/props",
       "thumb": "assets/library/previews/environment/props/preview.gif",
@@ -2282,7 +2284,7 @@
       "extras": [],
       "keyPrefix": "prop-water-",
       "mainKey": "prop-water-mount",
-      "count": 2,
+      "count": 3,
       "frameSizes": [
         "64x64"
       ],
@@ -2296,6 +2298,7 @@
       ],
       "keys": [
         "prop-water-mount",
+        "prop-water-mount-hi-vis",
         "prop-water-mount-front-alt"
       ]
     },
@@ -4980,19 +4983,103 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl/preview.gif",
-      "description": "West-facing command pose: red-cap girl pointing left, 92×92 still.",
-      "note": "Still only (no micro-bob). Shoes end at y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. The handoff point (46, 88) ≈ (0.5, 0.96) sits in empty padding under the sprite.",
+      "description": "West braced operator stance: both fists forward on invisible handles, wide feet, 92×92 still. Replaces the one-finger point. Girl only — no mount or gun.",
+      "note": "Backup to player-girl-tower-fire (command-v2). Shoes end near y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. Still only. Compose in front of prop-water-mount; float player-girl-front-water-still at the cradle.",
       "tags": [
         "hero",
         "girl",
         "image"
       ],
       "extra": {
-        "pixellabCharacterId": "76c4002b-aeea-4050-98f5-e146b6832450",
+        "pixellabCharacterId": "4214f885-53e5-472b-8170-8dbf3e96446a",
         "sourceCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
-        "stateName": "command"
+        "stateName": "command-v2",
+        "priorState": "76c4002b-aeea-4050-98f5-e146b6832450",
+        "prefer": "player-girl-tower-fire"
       },
       "action": "command"
+    },
+    {
+      "key": "player-girl-tower-fire",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-tower-fire.png",
+      "type": "image",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "West tower-operator attack still: wide braced stance, both fists forward on invisible handles. Girl only — no mount, no gun, no cradle. 92×92.",
+      "note": "Preferred attack pose behind prop-water-mount. Origin matches hero feet (0.5, 0.8261); shoes end near y=78. State tower-fire-v2. The optional micro-bob is a separate key, player-girl-tower-fire-strip; this still stays frame 0 / the main texture. Rejected baked-mount state bb2ec441 is not this sprite.",
+      "tags": [
+        "hero",
+        "girl",
+        "image",
+        "fire"
+      ],
+      "extra": {
+        "pixellabCharacterId": "f03b4ed4-519f-4984-a720-91e49a79c6e6",
+        "sourceCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
+        "stateName": "tower-fire-v2",
+        "role": "primary",
+        "mount": "prop-water-mount",
+        "gunFloat": "player-girl-front-water-still",
+        "bobKey": "player-girl-tower-fire-strip"
+      },
+      "action": "tower-fire"
+    },
+    {
+      "key": "player-girl-tower-fire-strip",
+      "category": "hero",
+      "group": "girl",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-tower-fire-strip.png",
+      "type": "spritesheet",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 4,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl/preview.gif",
+      "description": "Optional 4-frame micro hold/bob of the west tower-operator pose, 92×92. Arms stay forward. Girl only.",
+      "note": "Horizontal strip, 368×92, four frames. Nice-to-have sibling of player-girl-tower-fire. The still is the attack texture; do not replace that key with this sheet. QA before wiring the loop in gameplay. Feet stay on the shared hero origin (0.5, 0.8261).",
+      "tags": [
+        "hero",
+        "girl",
+        "spritesheet",
+        "fire",
+        "loop",
+        "optional"
+      ],
+      "extra": {
+        "pixellabJobId": "b5225ad5-ffd1-444d-9a10-9931d6486816",
+        "stillKey": "player-girl-tower-fire",
+        "role": "optional-bob"
+      },
+      "action": "tower-fire-strip"
     },
     {
       "key": "fx-bubble-muzzle",
@@ -20941,19 +21028,71 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/environment/props/preview.gif",
-      "description": "Empty wooden Y-fork cradle on a barricade-style post, 64×64. Facing west-ish.",
-      "note": "Primary mount. Origin feet (32, 60) ≈ (0.5, 0.94). Attach player-girl-front-water-still at the cradle pixel (32, 12), 48px above the feet.",
+      "description": "Empty steel/gunmetal Y-fork with bright cyan cradle tips, 64×64. High contrast on the wooden barricade. Facing west-ish. No gun baked in.",
+      "note": "Primary mount. Replaces the wooden cradle (Tester Fail: wood-on-wood, 0 cyan). This steel version has ~20 cyan pixels and 0 brown. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-water-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-water-mount-hi-vis.",
       "tags": [
         "environment",
         "props",
         "image"
       ],
       "extra": {
-        "pixellabObjectId": "e229c059-c57e-4d1f-a9f8-65ed0251586c",
+        "pixellabObjectId": "5c81fc88-c574-4992-b0e3-8713bd224099",
+        "pixellabName": "prop-water-mount-steel-cyan",
+        "material": "steel-cyan",
         "gunFloat": "player-girl-front-water-still",
-        "role": "primary"
+        "role": "primary",
+        "brighterAlternate": "prop-water-mount-hi-vis"
       },
       "action": "mount"
+    },
+    {
+      "key": "prop-water-mount-hi-vis",
+      "category": "environment",
+      "group": "props",
+      "path": "assets/library/environment/props/prop-water-mount-hi-vis.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/props/preview.gif",
+      "description": "Brighter cyan alternate of the empty steel Y-fork, 64×64. Same silhouette as prop-water-mount with more cyan on the cradle and bands. No gun baked in.",
+      "note": "Optional high-contrast alternate (~67 cyan pixels, 0 brown). Swap in if prop-water-mount still reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this.",
+      "tags": [
+        "environment",
+        "props",
+        "image",
+        "alternate",
+        "hi-vis"
+      ],
+      "extra": {
+        "material": "steel-cyan-hi-vis",
+        "gunFloat": "player-girl-front-water-still",
+        "role": "alternate",
+        "prefer": "prop-water-mount"
+      },
+      "action": "mount-hi-vis"
     },
     {
       "key": "prop-water-mount-front-alt",
@@ -20973,13 +21112,22 @@
         0.9375
       ],
       "facing": "west",
-      "anchors": null,
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
       "timing": null,
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/environment/props/preview.gif",
-      "description": "Optional front dual-post water mount, 64×64. Secondary to prop-water-mount.",
-      "note": "Secondary alt. Prefer prop-water-mount (side Y-fork) for the gun cradle.",
+      "description": "Dual-post steel water mount with a bright cyan U-cradle, 64×64. Empty; no gun baked in. Secondary to prop-water-mount.",
+      "note": "Front dual-post alt in the same steel+cyan family (replaces the wooden front post). Same feet origin (32, 60) and cradle height. Prefer prop-water-mount (side Y-fork) for the gun cradle.",
       "tags": [
         "environment",
         "props",
@@ -20987,7 +21135,8 @@
         "secondary"
       ],
       "extra": {
-        "pixellabObjectId": "ba4c83a8-43b2-4a9e-85f6-9bbd84cb4624",
+        "material": "steel-cyan",
+        "gunFloat": "player-girl-front-water-still",
         "role": "secondary",
         "prefer": "prop-water-mount"
       },
