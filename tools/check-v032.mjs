@@ -33,8 +33,8 @@ import {
   slingRowKey,
 } from '../src/assets/slingMounts.js';
 import { SlingMounts } from '../src/systems/SlingMounts.js';
-import { WeaponSystem } from '../src/systems/WeaponSystem.js';
-import { layoutPx, LAYOUT_SCALE } from '../src/systems/DepthView.js';
+import { SLING_OVERLAY_DEPTH_BIAS, SLING_OVERLAY_SCALE, WeaponSystem } from '../src/systems/WeaponSystem.js';
+import { depthFromY, layoutPx, LAYOUT_SCALE } from '../src/systems/DepthView.js';
 
 let failed = 0;
 
@@ -53,8 +53,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const mountSrc = readFileSync(new URL('../src/systems/SlingMounts.js', import.meta.url), 'utf8');
 const slingAssetSrc = readFileSync(new URL('../src/assets/slingMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.32.0' && APP_VERSION === '0.32.0', 'package and APP_VERSION are 0.32.0');
-assert(html.includes('v0.32.0'), 'document title is v0.32.0');
+assert(pkg.version === '0.32.1' && APP_VERSION === '0.32.1', 'package and APP_VERSION are 0.32.1');
+assert(html.includes('v0.32.1'), 'document title is v0.32.1');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(SLING_MOUNT_HI_VIS_KEY === 'prop-sling-mount-hi-vis', 'sling hi-vis mount key');
 assert(SLING_MOUNT_KEY === 'prop-sling-mount', 'sling mount key');
@@ -134,8 +134,8 @@ function sprite(x, y, key) {
     x, y, key, active: true,
     texture: { key },
     setOrigin() { return obj; },
-    setScale() { return obj; },
-    setDepth() { return obj; },
+    setScale(scale) { obj.scale = scale; return obj; },
+    setDepth(depth) { obj.depth = depth; return obj; },
     setFlipX() { return obj; },
     setRotation() { return obj; },
     setTexture(next) {
@@ -241,7 +241,10 @@ const early = guns.applyDirectHit(primary, {
 assert(early.gold === 0 && early.kills === 0, 'contact does not pay gold');
 assert(damaged.length === 0 && knocked.length === 0, 'contact does not drop HP or shove');
 const burst = spawned.find((s) => s.key === 'fx-sling-impact');
+const aboveBody = depthFromY(primary.y) + SLING_OVERLAY_DEPTH_BIAS;
 assert(burst && burst.y === primary.bodyCenterY, 'impact FX is at the body center');
+assert(burst.depth === aboveBody && burst.depth > depthFromY(primary.bodyCenterY), 'impact sorts above the zombie sprite');
+assert(burst.scale === SLING_OVERLAY_SCALE, 'impact scale reads on the body');
 assert(!spawned.some((s) => s.key === 'fx-hit-sling-chef'), 'profession hit waits for the damage beat');
 guns.stepOverlays(impactBeat - 1);
 assert(damaged.length === 0 && knocked.length === 0, 'HP waits through the first half of the impact');
@@ -249,7 +252,9 @@ guns.stepOverlays(2);
 assert(knocked[0] === 1 && damaged[0]?.id === 1 && damaged[0].amount === 16, 'knockback then HP land on the beat');
 const bodyHits = spawned.filter((s) => s.key === 'fx-hit-sling-chef');
 assert(bodyHits.length === 1 && bodyHits[0].y === primary.bodyCenterY, 'chef hit FX lands at the body center');
-assert(spawned.some((s) => s.key === 'fx-sling-knockback'), 'knockback streak plays on the beat');
+assert(bodyHits[0].depth === aboveBody && bodyHits[0].scale === SLING_OVERLAY_SCALE, 'chef hit sorts above the body and stays large');
+const streak = spawned.find((s) => s.key === 'fx-sling-knockback');
+assert(streak && streak.y === primary.bodyCenterY && streak.depth === aboveBody, 'knockback streak plays above the body on the beat');
 const pending = guns.consumePending();
 assert(pending.gold === 4 && pending.kills === 1, 'kill gold lands with the FX beat');
 
@@ -275,7 +280,7 @@ const legacy = new WeaponSystem(legacyScene);
 legacy.armHits([legacyZ], []);
 spawned.length = 0;
 legacy.applyDirectHit(legacyZ, { weaponId: 'sling', damage: 9, knockbackBodies: 2 });
-assert(spawned.some((s) => s.key === 'fx-sling-pellet' && s.y === legacyZ.bodyCenterY), 'missing impact uses the pellet sheet');
+assert(spawned.some((s) => s.key === 'fx-sling-pellet' && s.y === legacyZ.bodyCenterY && s.depth === depthFromY(legacyZ.y) + SLING_OVERLAY_DEPTH_BIAS), 'missing impact uses the pellet sheet above the body');
 const pelletBeat = slingImpactBeatMs((4 / 14) * 1000);
 legacy.stepOverlays(pelletBeat - 1);
 assert(legacyHits.length === 0, 'pellet sheet still waits for its midpoint');

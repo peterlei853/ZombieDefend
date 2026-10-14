@@ -36,6 +36,15 @@ import {
 import { slingBodyHitKey, waterBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
 import { upgradedDamage } from '../data/shopList.js';
 
+/**
+ * Sling impact and profession overlays sort with the feet sprite, then sit
+ * a few slots above it. Bias stays under one pixel of Y so a nearer lane
+ * still wins. Scale is the field taper times this so a 48/64 sheet reads
+ * on the body. The bright fx-sling-pellet sheet is used untinted.
+ */
+export const SLING_OVERLAY_DEPTH_BIAS = 6;
+export const SLING_OVERLAY_SCALE = 1.75;
+
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
 export const WEAPON_HANDGUN = /** @type {WeaponId} */ ('Handgun');
@@ -1134,10 +1143,37 @@ export class WeaponSystem {
     if (!key) return;
     const x = zombie.x;
     const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+    const sling = weaponId === 'sling';
     playLibraryFx(this.scene, x, y, key, {
-      scale: this._visualScale || Math.abs(zombie.scale || 1) || 1,
-      depth: depthFromY(y, 5),
+      scale: sling ? this._slingOverlayScale(zombie) : (this._visualScale || Math.abs(zombie.scale || 1) || 1),
+      depth: sling ? this._slingOverlayDepth(zombie) : depthFromY(y, 5),
     });
+  }
+
+  /**
+   * Feet depth, not the chest. A chest Y sorts the splash behind the sprite.
+   * @param {{ y?: number, body?: { depth?: number } }} zombie
+   */
+  _slingOverlayDepth(zombie) {
+    const feet = Number.isFinite(zombie?.y) ? zombie.y : 0;
+    const fromFeet = depthFromY(feet);
+    const fromBody = Number.isFinite(zombie?.body?.depth) ? zombie.body.depth : fromFeet;
+    return Math.max(fromFeet, fromBody) + SLING_OVERLAY_DEPTH_BIAS;
+  }
+
+  /**
+   * @param {{ scale?: number }} [zombie]
+   */
+  _slingOverlayScale(zombie) {
+    const base = this._visualScale || Math.abs(zombie?.scale || 1) || 1;
+    return base * SLING_OVERLAY_SCALE;
+  }
+
+  /**
+   * @param {string} key
+   */
+  _isSlingImpactKey(key) {
+    return key === 'fx-sling-impact' || key === 'fx-sling-pellet';
   }
 
   /**
@@ -1150,9 +1186,10 @@ export class WeaponSystem {
   _spawnImpactKey(key, x, y, zombie) {
     if (!key) return;
     const hy = Number.isFinite(zombie?.bodyCenterY) ? zombie.bodyCenterY : y;
+    const sling = this._isSlingImpactKey(key);
     playLibraryFx(this.scene, x, hy, key, {
-      scale: this._visualScale || Math.abs(zombie?.scale || 1) || 1,
-      depth: depthFromY(hy, 4),
+      scale: sling ? this._slingOverlayScale(zombie) : (this._visualScale || Math.abs(zombie?.scale || 1) || 1),
+      depth: sling ? this._slingOverlayDepth(zombie) : depthFromY(hy, 4),
     });
   }
 
@@ -1177,9 +1214,10 @@ export class WeaponSystem {
    */
   _playStreak(zombie, key) {
     const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+    const sling = typeof key === 'string' && key.startsWith('fx-sling');
     playLibraryFx(this.scene, zombie.x, y, key, {
-      scale: this._visualScale || 1,
-      depth: depthFromY(y, 5),
+      scale: sling ? this._slingOverlayScale(zombie) : (this._visualScale || 1),
+      depth: sling ? this._slingOverlayDepth(zombie) : depthFromY(y, 5),
       flipX: true,
     });
   }
