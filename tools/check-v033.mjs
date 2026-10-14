@@ -62,17 +62,24 @@ assert(
   'bubble prefers its own hi-vis cradle'
 );
 assert(
-  fenceRowKey('lightning', (key) => key === SLING_MOUNT_HI_VIS_KEY) === SLING_MOUNT_HI_VIS_KEY,
-  'lightning falls back to the sling hi-vis cradle'
+  fenceRowKey('lightning', (key) => key === 'prop-lightning-mount-hi-vis') === 'prop-lightning-mount-hi-vis',
+  'lightning cradle is its hi-vis'
 );
 assert(
-  fenceRowKey('frost', (key) => key === WATER_MOUNT_HI_VIS_KEY) === WATER_MOUNT_HI_VIS_KEY,
-  'frost falls back to the water hi-vis cradle'
+  fenceRowKey('lightning', (key) => key === SLING_MOUNT_HI_VIS_KEY) === null,
+  'lightning does not borrow the sling cradle'
+);
+assert(
+  fenceRowKey('frost', (key) => key === 'prop-frost-mount') === 'prop-frost-mount',
+  'frost plain mount is next when hi-vis is missing'
 );
 assert(fenceRowKey('flame', () => false) === null, 'a missing cradle chain is null');
 assert(fenceActiveKey('water', (key) => key === WATER_MOUNT_ALT_KEY) === WATER_MOUNT_ALT_KEY, 'water active slot is the front alt');
 assert(fenceActiveKey('sling', (key) => key === SLING_MOUNT_ALT_KEY) === SLING_MOUNT_ALT_KEY, 'sling active slot is the front alt');
 assert(fenceActiveKey('bubble', (key) => key === SLING_MOUNT_ALT_KEY) === null, 'bubble does not borrow the sling front alt');
+assert(fenceActiveKey('bubble', (key) => key === 'prop-bubble-mount-front-alt') === 'prop-bubble-mount-front-alt', 'bubble active slot is its front alt');
+assert(fenceActiveKey('lightning', (key) => key === 'prop-lightning-mount-front-alt') === 'prop-lightning-mount-front-alt', 'lightning active slot is its front alt');
+assert(fenceActiveKey('frost', (key) => key === 'prop-frost-mount-front-alt') === 'prop-frost-mount-front-alt', 'frost active slot is its front alt');
 assert(
   fenceActiveKey('flame', (key) => key === 'prop-flame-mount-front-alt') === 'prop-flame-mount-front-alt',
   'flame uses its own front alt when that sheet is loaded'
@@ -171,11 +178,23 @@ const anchor = {
     return { x: 880, groundY: y, postH: 90 };
   },
 };
-const loaded = [
+const ROW = [
   WATER_MOUNT_HI_VIS_KEY,
-  WATER_MOUNT_ALT_KEY,
   SLING_MOUNT_HI_VIS_KEY,
+  'prop-bubble-mount-hi-vis',
+  'prop-lightning-mount-hi-vis',
+  'prop-frost-mount-hi-vis',
+  'prop-flame-mount-hi-vis',
+];
+const ALT = [
+  WATER_MOUNT_ALT_KEY,
   SLING_MOUNT_ALT_KEY,
+  'prop-bubble-mount-front-alt',
+  'prop-lightning-mount-front-alt',
+  'prop-frost-mount-front-alt',
+  'prop-flame-mount-front-alt',
+];
+const floats = [
   'player-girl-front-water-still',
   'player-girl-front-sling-still',
   'player-girl-front-bubble-still',
@@ -183,19 +202,20 @@ const loaded = [
   'player-girl-front-frost-still',
   'player-girl-front-flame-still',
 ];
-const mounts = new FenceMounts(makeScene(loaded), anchor);
+const mounts = new FenceMounts(makeScene([...ROW, ...ALT, ...floats]), anchor);
 assert(mounts.sprites.length === 6 && mounts.guns.length === 6, 'six cradles and six seated guns');
-assert(mounts.sprites[0].key === WATER_MOUNT_HI_VIS_KEY, 'water slot cradle');
-assert(mounts.sprites[1].key === SLING_MOUNT_HI_VIS_KEY, 'sling slot cradle');
-assert(mounts.sprites[2].key === SLING_MOUNT_HI_VIS_KEY, 'bubble borrows the sling cradle');
-assert(mounts.guns.map((g) => g.key).join() === loaded.slice(4).join(), 'each cradle floats a different still');
+assert(mounts.sprites.map((s) => s.key).join() === ROW.join(), 'each slot uses its own hi-vis cradle');
+assert(mounts.guns.map((g) => g.key).join() === floats.join(), 'each cradle floats a different still');
 assert(mounts.sprites.every((s, i) => s.key !== mounts.guns[i].key), 'the gun is not baked into the cradle');
 mounts.setActive(0);
 assert(mounts.sprites[0].key === WATER_MOUNT_ALT_KEY, 'water slot uses the front alt while she is stopped there');
-assert(mounts.sprites[1].key === SLING_MOUNT_HI_VIS_KEY, 'sling cradle stays put while water is active');
+assert(mounts.sprites[2].key === 'prop-bubble-mount-hi-vis', 'bubble cradle stays put while water is active');
 mounts.setActive(2);
 assert(mounts.sprites[0].key === WATER_MOUNT_HI_VIS_KEY, 'leaving water restores the hi-vis cradle');
-assert(mounts.sprites[2].key === SLING_MOUNT_HI_VIS_KEY, 'bubble has no front alt, so the cradle stays');
+assert(mounts.sprites[2].key === 'prop-bubble-mount-front-alt', 'bubble slot uses its front alt');
+mounts.setActive(5);
+assert(mounts.sprites[5].key === 'prop-flame-mount-front-alt', 'flame slot uses its front alt');
+assert(mounts.sprites[2].key === 'prop-bubble-mount-hi-vis', 'leaving bubble restores its hi-vis cradle');
 mounts.setActive(1);
 assert(mounts.sprites[1].key === SLING_MOUNT_ALT_KEY, 'sling slot uses the front alt');
 assert(mounts.aligned(mounts.slots[4].y)?.weaponId === 'frost', 'aligned() is the frost mount');
@@ -206,7 +226,7 @@ const own = new FenceMounts(
   anchor
 );
 assert(own.sprites[2].key === 'prop-bubble-mount-hi-vis', 'a dedicated bubble cradle wins');
-assert(own.sprites[3].key === SLING_MOUNT_HI_VIS_KEY, 'lightning still uses the sling cradle');
+assert(own.sprites[3].key !== SLING_MOUNT_HI_VIS_KEY, 'lightning does not borrow the sling cradle');
 
 function zed(id, x, y) {
   return {

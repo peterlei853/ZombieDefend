@@ -143,7 +143,7 @@ The default stage draws six cradles on the same fence geometry as the water moun
 
 - Water: `prop-water-mount-hi-vis` (then `prop-water-mount`) and `player-girl-front-water-still`. The slot she is stopped behind uses `prop-water-mount-front-alt`.
 - Sling: `prop-sling-mount-hi-vis` (then `prop-sling-mount`, then the water hi-vis cradle) and `player-girl-front-sling-still`. Active slot uses `prop-sling-mount-front-alt`.
-- Bubble, lightning, frost, flame: `prop-<id>-mount-hi-vis` when that sheet exists, otherwise the sling hi-vis cradle, then the water hi-vis cradle. The float is `player-girl-front-<id>-still`, then `icon-<id>`. `prop-<id>-mount-front-alt` is used on the active slot only when it is loaded.
+- Bubble, lightning, frost, flame: idle `prop-<id>-mount-hi-vis` (then `prop-<id>-mount`). The slot she is stopped behind uses `prop-<id>-mount-front-alt`. The float is `player-girl-front-<id>-still`, then `icon-<id>`. These four do not borrow the sling cradle.
 
 `?weapon=water` and `?weapon=sling` keep the single-gun rows. Gold, saves, and barricade contact math stay as they are.
 

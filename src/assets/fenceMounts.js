@@ -6,10 +6,10 @@
  * bubble, lightning, frost, flame. Each slot is an empty cradle plus
  * that weapon's still (or icon). The gun is not baked into the cradle.
  *
- * Water uses prop-water-mount-hi-vis. Sling uses prop-sling-mount-hi-vis.
- * The other four prefer prop-<id>-mount-hi-vis, then the sling hi-vis
- * cradle, then the water hi-vis cradle. The slot she is stopped behind
- * uses prop-<id>-mount-front-alt when that sheet is loaded.
+ * Each slot uses its own cradle. Idle is prop-<id>-mount-hi-vis
+ * (then prop-<id>-mount). The slot she is stopped behind uses
+ * prop-<id>-mount-front-alt. Water and sling keep those same keys.
+ * Bubble, lightning, frost, and flame do not borrow a sling cradle.
  *
  * Fire points only. contactXAt, gold, and saves do not read this module.
  */
@@ -48,13 +48,7 @@ export function fenceCradleCandidates(id) {
   if (id === 'sling') {
     return [SLING_MOUNT_HI_VIS_KEY, SLING_MOUNT_KEY, WATER_MOUNT_HI_VIS_KEY, WATER_MOUNT_KEY];
   }
-  return [
-    `prop-${id}-mount-hi-vis`,
-    SLING_MOUNT_HI_VIS_KEY,
-    WATER_MOUNT_HI_VIS_KEY,
-    SLING_MOUNT_KEY,
-    WATER_MOUNT_KEY,
-  ];
+  return [`prop-${id}-mount-hi-vis`, `prop-${id}-mount`];
 }
 
 /**
