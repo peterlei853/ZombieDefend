@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade and the v0.31 water mount), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -41,6 +41,7 @@ assets/library/
 │       └── ults/             phoenix / panda / lion / dragon keyframes
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
+├── environment/props/        prop-water-mount.png + prop-water-mount-front-alt.png
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
@@ -64,7 +65,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `barricade-post-damaged` | 32×64 wooden picket posts, origin (0.5, 1.0) |
+| Environment | `barricade-post`, `barricade-post-damaged`, `prop-water-mount` | 32×64 posts, origin (0.5, 1.0); water mount 64×64, origin (0.5, 0.9375) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
@@ -90,6 +91,21 @@ Shared FX under `fx/v026/` (category `fx`, five groups). Notes live in [`fx/v026
 - Stars `vfx-evolve-stars-1` / `-2` / `-3` are pet head markers (T1 / T2 / T3). Origin is the feet / bottom, (0.5, 1). The single `vfx-evolve-star` is 32×32 with origin (0.5, 0.5).
 - `vfx-telegraph-ring` is the 64×64 S1 ring. Its file is `vfx-telegraph-ring-64.png`. `vfx-telegraph-ring-128` is the S2 nearest upscale. `vfx-telegraph-half-left` is a procedural 192×108 half-screen wash with origin (0, 0.5).
 
+## Water v0.31
+
+New water-gun art sits beside the existing hero water FX. Legacy `fx-water-impact`, `fx-water-wet`, `fx-water-proj`, `fx-water-muzzle`, and `fx-water-stream` stay.
+
+Merged v0.31 still times the HP drop to `fx-water-impact` (6×64 @ 12 fps, once; damage at the midpoint) and lays `fx-water-wet` on the floor. For a clearer splash on that same path, prefer:
+
+- `fx-water-splash-big` — 8×64 @ 12 fps, once, origin (0.5, 0.5). Play the splash, then apply damage. Supersedes `fx-water-impact` for v0.31 water hit timing. The untinted master `fx-hit-water-shared.png` is the same image and is not a separate key.
+- `fx-water-wet-ground` — 6×64 @ 8 fps, loop, origin (0.5, 0.75) at puddle pixel (32, 48). Supersedes `fx-water-wet` on that path.
+
+Profession body-hit overlays (same splash, light tint, origin center, once @ 12 fps): `fx-hit-water-office-v2` (gray), `fx-hit-water-delivery` (yellow), `fx-hit-water-chef` (white), `fx-hit-water-nurse` (pink). The merged hook looks up `fx-hit-<skinId>` (`fx-hit-office-worker-v2`, `fx-hit-delivery`, `fx-hit-chef`, `fx-hit-nurse`) and skips the puff when that texture is missing. These water keys are the catalog names; pointing the hook at them is a later code change.
+
+`prop-water-mount` (`environment/props/`) is the empty Y-fork cradle, 64×64, facing west-ish. Origin is the feet at (32, 60) ≈ (0.5, 0.94), stored as (0.5, 0.9375). Attach `player-girl-front-water-still` at cradle pixel (32, 12), 48px above the feet (`anchors.offsetFromOrigin` `[0, -48]`, y negative = up). `prop-water-mount-front-alt` is the secondary front dual-post; prefer the Y-fork. The merged drawer places the mount at the gun slot with origin (0.5, 0.5) and falls back to `player-girl-front-water-still` when `prop-water-mount` is not loaded.
+
+`player-girl-command` is a 92×92 west pointing still (no bob) under `characters/hero/girl/strips/`. Shoes end at y=77, so the origin is the shared hero foot line (0.5, 0.8261), not the handoff point (46, 88) which is empty padding. The pose hook plays an animation key; this one-frame image does not register an anim, so the hero stays on idle until a hold-frame uses the texture.
+
 ## Front-float combat (v0.27)
 
 Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.
@@ -113,7 +129,7 @@ All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Ev
 | Zombies | **64×64**. Exceptions: brute **96×96**, profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
 | Bosses | **128×128** | **(0.5, 1.0)** | **east** |
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
-| Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76 | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
+| Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76. `player-girl-command` uses the same foot line (shoes end at y=77) | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
 | Shared FX | 160×160 blast | (0.5, 0.5) | – |
 | v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |

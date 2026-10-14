@@ -4,7 +4,7 @@
   "group": "girl",
   "title": "Player Girl (hero)",
   "titleZh": "女主角",
-  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.",
+  "description": "Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 adds player-girl-command, a west pointing still on the same 92×92 foot line.",
   "source": {
     "pixellabCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
     "sourceFolder": "player-girl"
@@ -1120,6 +1120,26 @@
       ],
       "facing": "west",
       "note": "Back-float flame bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons."
+    },
+    {
+      "key": "player-girl-command",
+      "path": "assets/library/characters/hero/girl/strips/player-girl-command.png",
+      "type": "image",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.8261
+      ],
+      "facing": "west",
+      "description": "West-facing command pose: red-cap girl pointing left, 92×92 still.",
+      "note": "Still only (no micro-bob). Shoes end at y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. The handoff point (46, 88) ≈ (0.5, 0.96) sits in empty padding under the sprite.",
+      "extra": {
+        "pixellabCharacterId": "76c4002b-aeea-4050-98f5-e146b6832450",
+        "sourceCharacterId": "a1c34927-9d88-4f93-be00-0af46d5d4409",
+        "stateName": "command"
+      }
     }
   ],
   "extra": {
