@@ -3,8 +3,8 @@ import { T2_COST, T3_COST } from './systems/PetEvolve.js';
 
 /**
  * Playtest shortcut for tier 2 then tier 3. Off unless the page URL has
- * `debugExp=1`. Does not change orb yield. Separate from `?petHurt=1` / H
- * and `?debugBgm=1` / V.
+ * `debugExp=1`. Does not change orb yield. Separate from `?petHurt=1` / H,
+ * `?petLowHp=1` / L, and `?debugBgm=1` / V.
  * @param {string} [search]
  */
 export function debugExpEnabled(search) {
