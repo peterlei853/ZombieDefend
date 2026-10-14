@@ -36,8 +36,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.29.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.29.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.29.1', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.29.1', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -51,7 +51,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.29.0'), 'document title is v0.29.0');
+assert(html.includes('v0.29.1'), 'document title is v0.29.1');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -134,6 +134,8 @@ assert(petsCfg.HURT_TINT_COLOR === 0xff2a2a, 'red phase is a solid fill, not a l
 assert(combatSrc.includes('setTintFill') && !combatSrc.includes('setTint(0xff5252)'), 'pet hurt fill is not a multiply tint');
 assert(combatSrc.includes('debugHurtOnce'), 'debug one-shot can force the hurt sequence');
 assert(stage.includes("_hurtKey") && stage.includes('petHurt'), 'H key and ?petHurt=1 are wired');
+assert(combatSrc.includes('debugLowHp'), 'debug low HP drops the bar under the pulse line');
+assert(stage.includes('KeyCodes.L') && stage.includes('petLowHp'), 'L key and ?petLowHp=1 are wired');
 assert(petsCfg.HURT_BAR_MS >= petsCfg.HURT_FLASH_MS, 'bar pop lasts through the white flash');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'v0.26.2 stage 1 counts');
 assert(WAVE_DEFS[0].archetypes[0].hp === 40 && WAVE_DEFS[1].archetypes[0].hp === 70, 'wave 1–2 HP rows are unchanged');

@@ -15,9 +15,12 @@
  *    ~0.3s after it ends.
  * 5. DPS budget — PETS.SURROUND_DPS_RATIO (default 0.50, band 0.40–0.60)
  *    is the whole pet team's share of HERO_REFERENCE_DPS while surrounded.
+ *
+ * v0.29.1 Player Tester: hard-refresh, `?petLowHp=1` or press L with a
+ * pet on field → bar pulses + one Recall!. `?petHurt=1` / H stays visual.
  */
 import { readFileSync } from 'node:fs';
-import { APP_VERSION, GAME_CONFIG, HERO_REFERENCE_DPS, petSurroundHitScale } from '../src/data/GameConfig.js';
+import { APP_VERSION, GAME_CONFIG, HERO_REFERENCE_DPS, petHurtDebugRequested, petLowHpDebugRequested, petSurroundHitScale } from '../src/data/GameConfig.js';
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 import { barricadeXAtY, layoutPx, grassYMax, grassYMin } from '../src/systems/DepthView.js';
@@ -39,9 +42,11 @@ const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.meta.url), 'utf8');
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const hudSrc = readFileSync(new URL('../src/ui/PetPortraitHud.js', import.meta.url), 'utf8');
+const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
+const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.29.0' && APP_VERSION === '0.29.0', 'package and APP_VERSION are v0.29.0');
-assert(html.includes('v0.29.0'), 'document title is v0.29.0');
+assert(pkg.version === '0.29.1' && APP_VERSION === '0.29.1', 'package and APP_VERSION are v0.29.1');
+assert(html.includes('v0.29.1'), 'document title is v0.29.1');
 assert(pets.HP === 192 && BARRICADE_MAX_HP === 720, 'pet HP and barricade HP stay put');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15, 'gold-by-HP stays put');
 
@@ -194,6 +199,41 @@ combat.update(pets.ULT_RESUME_MS, [zombie], player);
 assert(combat.attackHoldMs === 0, 'resume hold ends');
 
 combat.destroy();
+
+const lowTarget = Math.max(1, Math.floor(pets.HP * 0.25));
+const low = new PetCombat(scene);
+assert(low.debugLowHp(player) === true, 'empty field still gets a low-HP body');
+assert(low.fieldPets().length === 1, 'debug low HP summons one pet when the field is empty');
+assert(low.fieldPets()[0].hp === lowTarget, `summoned pet sits at 25% of max (${low.fieldPets()[0].hp})`);
+assert(low.fieldPets()[0].hp / pets.HP < pets.LOW_HP_RATIO, 'summoned pet is under the pulse line');
+assert(low.portraitViews()[0].lowHp === true, 'portrait pulses from the debug drop');
+assert(low.fxLog.filter((tag) => tag === 'low-hp-recall').length === 1, 'one Recall! on the first drop');
+assert(low.debugLowHp(player) === true, 'a second L still applies');
+assert(low.fxLog.filter((tag) => tag === 'low-hp-recall').length === 1, 'Recall! does not repeat while still low');
+low.destroy();
+
+const pair = new PetCombat(scene);
+assert(pair.summon(0, player, []).ok && pair.summon(1, player, []).ok, 'two field pets for the low-HP debug');
+assert(pair.debugLowHp(player) === true, 'debug low HP hits every field pet');
+const dropped = pair.fieldPets();
+assert(dropped.length === 2 && dropped.every((pet) => pet.hp === lowTarget && pet.hp / pets.HP < pets.LOW_HP_RATIO), 'each field pet is just under 30%');
+assert(pair.portraitViews().filter((view) => view.lowHp).length === 2, 'both bars pulse');
+assert(pair.fxLog.filter((tag) => tag === 'low-hp-recall').length === 2, 'one Recall! per field pet');
+const held = pair.fieldPets()[0].hp;
+assert(pair.debugHurtOnce(player) === true, 'H still plays the visual flinch');
+assert(pair.fieldPets()[0].hp === held, 'H does not spend the HP the low-HP debug set');
+pair.destroy();
+
+assert(combatSrc.includes('debugLowHp') && combatSrc.includes('Math.floor(max * 0.25)'), 'debug low HP sets 25% and uses the recall latch');
+assert(stageSrc.includes('KeyCodes.L') && stageSrc.includes('petLowHp') && stageSrc.includes('debugLowHp'), 'L and ?petLowHp=1 are wired');
+assert(stageSrc.includes('KeyCodes.H') && stageSrc.includes('debugHurtOnce'), 'H stays the visual hurt path');
+assert(titleSrc.includes('petLowHpDebugRequested'), 'title boots the stage for ?petLowHp=1');
+const prevLocation = globalThis.location;
+globalThis.location = { search: '?petLowHp=1' };
+assert(petLowHpDebugRequested() === true && petHurtDebugRequested() === false, '?petLowHp=1 does not request the hurt strip');
+globalThis.location = { search: '?petHurt=1' };
+assert(petHurtDebugRequested() === true && petLowHpDebugRequested() === false, '?petHurt=1 stays visual-only');
+globalThis.location = prevLocation;
 
 if (failed) {
   console.error(`${failed} v0.29 check(s) failed`);

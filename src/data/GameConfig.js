@@ -55,10 +55,12 @@ import { WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * bias, an aim-ray offset, a short pause after the ult letterbox, and a
  * surrounded pet DPS budget. Barricade physics, gold, shop, roster, and
  * BGM are unchanged. The camera does not shake.
+ * v0.29.1 adds ?petLowHp=1 / L so the low-HP bar pulse and one Recall!
+ * can be shown without spending HP on the hurt strip.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.29.0';
+export const APP_VERSION = '0.29.1';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -88,6 +90,15 @@ function directGunDps(trait) {
 export function petHurtDebugRequested() {
   try {
     return new URLSearchParams(globalThis.location?.search || '').get('petHurt') === '1';
+  } catch (_) {
+    return false;
+  }
+}
+
+/** `?petLowHp=1` drops field pets under the low-HP pulse after the stage boots. */
+export function petLowHpDebugRequested() {
+  try {
+    return new URLSearchParams(globalThis.location?.search || '').get('petLowHp') === '1';
   } catch (_) {
     return false;
   }

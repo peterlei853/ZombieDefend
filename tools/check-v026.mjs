@@ -23,7 +23,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.29.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.29.1', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 
@@ -105,6 +105,7 @@ assert(combatSrc.includes('forceUlt'), 'debug ult can start the letterbox immedi
 assert(debugExpEnabled('?debugExp=1') === true, 'debugExp flag');
 assert(debugExpEnabled('?debugBgm=1') === false, 'debug BGM does not grant EXP');
 assert(debugExpEnabled('?petHurt=1') === false, 'pet hurt does not grant EXP');
+assert(debugExpEnabled('?petLowHp=1') === false, 'pet low HP does not grant EXP');
 assert(debugExpEnabled('') === false, 'debug EXP is off by default');
 assert(expToNextTier(0) === 40 && expToNextTier(39) === 1, 'first grant reaches tier 2');
 assert(expToNextTier(40) === 80 && expToNextTier(119) === 1, 'second grant reaches tier 3');
@@ -119,6 +120,7 @@ assert(grantDebugExp(debugEv, ['phoenix']) === false, 'third press is a no-op');
 assert(stageSrc.includes('KeyCodes.E') && stageSrc.includes('debugExpEnabled'), 'E is wired behind the flag');
 assert(stageSrc.includes('KeyCodes.U') && stageSrc.includes('forceUlt'), 'U plays the ult behind the same flag');
 assert(stageSrc.includes('KeyCodes.H') && stageSrc.includes('petHurt'), 'H / petHurt still wired');
+assert(stageSrc.includes('KeyCodes.L') && stageSrc.includes('petLowHp'), 'L / petLowHp is wired');
 assert(stageSrc.includes('KeyCodes.V') && stageSrc.includes('debugBgmEnabled'), 'V / debugBgm still wired');
 assert(combatSrc.includes('vfx-aoe-fire') && combatSrc.includes('vfx-aoe-poison'), 'residue keys');
 assert(combatSrc.includes('vfx-evolve-stars-'), 'evolve star marker');

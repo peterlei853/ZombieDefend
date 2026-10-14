@@ -1137,6 +1137,32 @@ export class PetCombat {
   }
 
   /**
+   * Set every field pet just under LOW_HP_RATIO (25% of max) and run the
+   * same latch that pulses the bar and floats Recall! once. A second call
+   * while they are still low does not float another hint. Does not play
+   * the hurt strip. Summons the phoenix when the field is empty.
+   * @param {{ x?: number, y?: number }|null} [player]
+   * @returns {boolean}
+   */
+  debugLowHp(player = null) {
+    const living = () => this._actors.filter((entry) => entry.phase === 'field' && entry.hp > 0 && entry.sprite?.active);
+    let field = living();
+    if (!field.length) {
+      const summoned = this.summon(0, player || this._anchor, []);
+      if (!summoned.ok) return false;
+      field = living();
+    }
+    if (!field.length) return false;
+    for (const actor of field) {
+      const max = actor.maxHp > 0 ? actor.maxHp : GAME_CONFIG.PETS.HP;
+      actor.hp = Math.max(1, Math.floor(max * 0.25));
+      this._syncLowHp(actor);
+      this._syncBars(actor);
+    }
+    return true;
+  }
+
+  /**
    * @param {PetActor} actor
    * @param {'flash'|'hurt'|'clear'} mode
    */

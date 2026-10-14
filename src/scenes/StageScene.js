@@ -8,7 +8,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
-import { APP_VERSION, petHurtDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -67,7 +67,9 @@ import { grantStageWeapons } from '../assets/heroDeploy.js';
  * `?debugExp=1`: E or the DEBUG EXP chip grants tier 2, then tier 3. U or the
  * DEBUG ULT chip tops a field pet up to tier 3 and plays the letterbox now.
  * Off, E and U do nothing.
- * `?petHurt=1` or H still plays one hurt sequence. The three flags are independent.
+ * `?petHurt=1` or H still plays one hurt sequence. `?petLowHp=1` or L drops
+ * every field pet under 30% HP so the bar pulses and Recall! floats once.
+ * The flags are independent.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -158,9 +160,14 @@ export default class StageScene extends Phaser.Scene {
       // One flinch: white fill, red fill, hurt strip. Does not restart mid-sequence.
       this._hurtKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
       this._hurtKey.on('down', () => this._debugPetHurt());
+      this._lowHpKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+      this._lowHpKey.on('down', () => this._debugPetLowHp());
     }
     if (petHurtDebugRequested()) {
       this.time.delayedCall(400, () => this._debugPetHurt());
+    }
+    if (petLowHpDebugRequested()) {
+      this.time.delayedCall(400, () => this._debugPetLowHp());
     }
     if (debugBgmEnabled()) {
       this._installDebugClear();
@@ -318,6 +325,16 @@ export default class StageScene extends Phaser.Scene {
     const player = this.defenders?.player;
     const anchor = player ? { x: player.x, y: player.y } : null;
     this.defenders?.petCombat?.debugHurtOnce?.(anchor);
+  }
+
+  /**
+   * ?petLowHp=1 on the page URL, or the L key. Drops field pets under 30%
+   * HP and floats Recall! once. Does not play the hurt strip.
+   */
+  _debugPetLowHp() {
+    const player = this.defenders?.player;
+    const anchor = player ? { x: player.x, y: player.y } : null;
+    this.defenders?.petCombat?.debugLowHp?.(anchor);
   }
 
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
