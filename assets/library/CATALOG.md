@@ -12,10 +12,10 @@
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 8 |
+| [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **556** |
+| **Total** | **51** | **568** |
 
 <a id="hero"></a>
 ## Hero
@@ -1099,9 +1099,9 @@ Tileable wooden picket barricade posts with clear gaps between stakes (bullets r
 
 <img src="previews/environment/props/preview.gif" alt="props preview" height="140">
 
-Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal with bright cyan tips (prop-water-mount, hi-vis, front-alt); float player-girl-front-water-still. v0.32 sling mounts are the same silhouette family with amber accents, not water cyan (prop-sling-mount, hi-vis, front-alt); float player-girl-front-sling-still. No gun or girl is baked in. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.
+Empty steel cradles for the front-float guns. No gun or girl is baked in. Accents: water cyan, sling amber, bubble magenta, lightning electric yellow, frost ice blue, flame fire orange. Each weapon has a primary Y-fork, a hi-vis alternate, and a front dual-post. Float the matching player-girl-front-*-still at the cradle. Visual only. player-girl-tower-fire and player-girl-command are reused and are not part of this group.
 
-- group `props` · 6 assets · frame 64x64 · key prefix `prop-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
+- group `props` · 18 assets · frame 64x64 · key prefix `prop-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
 
 | Key | File | Size | Type | Notes |
 |---|---|---|---|---|
@@ -1111,6 +1111,18 @@ Empty steel cradles for the front-float guns. v0.31 water mounts are gunmetal wi
 | `prop-sling-mount` | [prop-sling-mount.png](environment/props/prop-sling-mount.png) | 64x64 | image | v0.32 primary sling mount. Same silhouette family as prop-water-mount, amber instead of water cyan (~32 amber pixels). Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-sling-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-sling-mount-hi-vis. Reuse player-girl-tower-fire; do not bake the gun. |
 | `prop-sling-mount-hi-vis` | [prop-sling-mount-hi-vis.png](environment/props/prop-sling-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate (~135 amber pixels, 0 water cyan). Swap in if prop-sling-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-sling-mount-front-alt` | [prop-sling-mount-front-alt.png](environment/props/prop-sling-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt (~82 amber pixels). Same feet origin (32, 60) and cradle height. Prefer prop-sling-mount (side Y-fork) for the gun cradle. |
+| `prop-bubble-mount` | [prop-bubble-mount.png](environment/props/prop-bubble-mount.png) | 64x64 | image | v0.33 primary bubble mount. Same silhouette family as the water and sling cradles, magenta instead of cyan or amber. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-bubble-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-bubble-mount-hi-vis. |
+| `prop-bubble-mount-hi-vis` | [prop-bubble-mount-hi-vis.png](environment/props/prop-bubble-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-bubble-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-bubble-mount-front-alt` | [prop-bubble-mount-front-alt.png](environment/props/prop-bubble-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-bubble-mount (side Y-fork) for the gun cradle. |
+| `prop-lightning-mount` | [prop-lightning-mount.png](environment/props/prop-lightning-mount.png) | 64x64 | image | v0.33 primary lightning mount. Electric yellow / gold accents. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-lightning-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-lightning-mount-hi-vis. |
+| `prop-lightning-mount-hi-vis` | [prop-lightning-mount-hi-vis.png](environment/props/prop-lightning-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-lightning-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-lightning-mount-front-alt` | [prop-lightning-mount-front-alt.png](environment/props/prop-lightning-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-lightning-mount (side Y-fork) for the gun cradle. |
+| `prop-frost-mount` | [prop-frost-mount.png](environment/props/prop-frost-mount.png) | 64x64 | image | v0.33 primary frost mount. Ice blue accents, distinct from water cyan. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-frost-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-frost-mount-hi-vis. |
+| `prop-frost-mount-hi-vis` | [prop-frost-mount-hi-vis.png](environment/props/prop-frost-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-frost-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-frost-mount-front-alt` | [prop-frost-mount-front-alt.png](environment/props/prop-frost-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-frost-mount (side Y-fork) for the gun cradle. |
+| `prop-flame-mount` | [prop-flame-mount.png](environment/props/prop-flame-mount.png) | 64x64 | image | v0.33 primary flame mount. Fire orange accents. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-flame-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-flame-mount-hi-vis. |
+| `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
+| `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
 
 <a id="backgrounds"></a>
 ## Backgrounds
