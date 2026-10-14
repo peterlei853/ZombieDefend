@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, and fx-water-stream stay.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -15,6 +15,9 @@
   "preview": {
     "animate": [
       "fx-water-impact",
+      "fx-water-splash-big",
+      "fx-water-wet-ground",
+      "fx-hit-water-office-v2",
       "fx-lightning-impact",
       "fx-frost-shatter",
       "fx-flame-cone",
@@ -569,6 +572,7 @@
         0.5
       ],
       "type": "fx",
+      "note": "Legacy v0.22 AoE splash (6×64 @ 12 fps, once). Merged v0.31 still times the HP drop to this sheet. fx-water-splash-big is the clearer splash for that path.",
       "extra": {
         "gameplayNotes": {
           "role": "hitAoE",
@@ -622,6 +626,7 @@
         1.0
       ],
       "type": "fx",
+      "note": "Legacy v0.22 wet puddle (6×64 @ 8 fps, loop, origin feet). Merged v0.31 still uses this ground sheet. fx-water-wet-ground is the clearer puddle for that path.",
       "extra": {
         "gameplayNotes": {
           "role": "groundWet",
@@ -742,6 +747,151 @@
           "groundFx": "fx-water-wet"
         },
         "note": "v0.22 primary water projectile (3× size, 0.5× speed). Prefer over fx-water-stream."
+      }
+    },
+    {
+      "key": "fx-water-splash-big",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-splash-big.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.31 clearer AoE splash (8×64 @ 12 fps, once, origin center). Use for damage-after-FX: play this, then apply damage. Supersedes fx-water-impact on that path; the legacy impact stays. Untinted master (fx-hit-water-shared is the same image and is not a separate key).",
+      "extra": {
+        "gameplayNotes": {
+          "role": "hitAoE",
+          "aoeSplash": true,
+          "supersedes": "fx-water-impact",
+          "damageAfterFx": true
+        },
+        "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4",
+        "pixellabImageId": "21dbca4b-7f72-4c14-b422-4b63c15689da"
+      }
+    },
+    {
+      "key": "fx-water-wet-ground",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-wet-ground.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 6,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "type": "fx",
+      "note": "v0.31 clearer wet-ground puddle (6×64 @ 8 fps, loop). Origin (0.5, 0.75) is puddle pixel (32, 48). Supersedes fx-water-wet on the v0.31 sync path; the legacy puddle stays.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "groundWet",
+          "place": "floor under impact",
+          "supersedes": "fx-water-wet"
+        },
+        "pixellabEffectId": "83a02f54-c7eb-4b88-b5ac-44bbe5b606fc",
+        "pixellabImageId": "b96b4dc4-9126-4269-90e9-c807a486856e"
+      }
+    },
+    {
+      "key": "fx-hit-water-office-v2",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-office-v2.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.31 office body-hit overlay. Same splash as fx-water-splash-big with a light gray sparkle. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "office-worker-v2",
+          "tint": "gray",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
+      }
+    },
+    {
+      "key": "fx-hit-water-delivery",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-delivery.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.31 delivery body-hit overlay. Same splash as fx-water-splash-big with a light yellow tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "delivery",
+          "tint": "yellow",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
+      }
+    },
+    {
+      "key": "fx-hit-water-chef",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-chef.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.31 chef body-hit overlay. Same splash as fx-water-splash-big with a light white tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "chef",
+          "tint": "white",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
+      }
+    },
+    {
+      "key": "fx-hit-water-nurse",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-nurse.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.31 nurse body-hit overlay. Same splash as fx-water-splash-big with a light pink tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "nurse",
+          "tint": "pink",
+          "playBeforeHpTick": true
+        },
+        "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
       }
     }
   ]

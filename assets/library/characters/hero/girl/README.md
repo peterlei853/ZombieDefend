@@ -136,6 +136,14 @@ Origin `(0.5, 0.8261)`. Facing matches the key. Walk strips stay for slower move
 |-----|------|------|--------|-----|------|
 | player-girl-deploy | `strips/player-girl-deploy.png` | 92×92 | 8 | 12 | **no** (one-shot) |
 
+### Command (v0.31)
+
+| key | file | size | frames | fps | loop |
+|-----|------|------|--------|-----|------|
+| player-girl-command | `strips/player-girl-command.png` | 92×92 | 1 | – | static |
+
+West pointing still (`type: image`). Origin `(0.5, 0.8261)`, the same feet as idle. No micro-bob strip. The v0.31 pose hook only plays an animation of this key, so the still needs a hold-frame before it replaces idle.
+
 ## Muzzle hint
 
 Approximate muzzle = weapon center + `{x: -contentW*0.35, y: 0}` (west tip).

@@ -1,0 +1,88 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "props",
+  "title": "Water Gun Mount",
+  "titleZh": "水槍架",
+  "description": "v0.31 empty wooden cradle for the front-float water gun. Primary is a single-post Y-fork facing west-ish; the front dual-post is a secondary alt. Gun is not baked in — attach player-girl-front-water-still at the cradle. Visual only.",
+  "source": {
+    "tool": "pixellab create_object_pro_flash",
+    "pixellabObjectId": "e229c059-c57e-4d1f-a9f8-65ed0251586c",
+    "note": "Primary view=side, n_directions=1 (prop-water-mount-side). Alt object ba4c83a8-43b2-4a9e-85f6-9bbd84cb4624."
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      0.9375
+    ],
+    "facing": "west",
+    "frameWidth": 64,
+    "frameHeight": 64,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "prop-water-mount",
+      "prop-water-mount-front-alt"
+    ],
+    "thumb": "assets/library/previews/environment/props/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "prop-water-mount",
+      "path": "assets/library/environment/props/prop-water-mount.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "description": "Empty wooden Y-fork cradle on a barricade-style post, 64×64. Facing west-ish.",
+      "note": "Primary mount. Origin feet (32, 60) ≈ (0.5, 0.94). Attach player-girl-front-water-still at the cradle pixel (32, 12), 48px above the feet.",
+      "anchors": {
+        "cradlePx": [
+          32,
+          12
+        ],
+        "offsetFromOrigin": [
+          0,
+          -48
+        ]
+      },
+      "extra": {
+        "pixellabObjectId": "e229c059-c57e-4d1f-a9f8-65ed0251586c",
+        "gunFloat": "player-girl-front-water-still",
+        "role": "primary"
+      }
+    },
+    {
+      "key": "prop-water-mount-front-alt",
+      "path": "assets/library/environment/props/prop-water-mount-front-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.9375
+      ],
+      "facing": "west",
+      "tags": [
+        "secondary"
+      ],
+      "description": "Optional front dual-post water mount, 64×64. Secondary to prop-water-mount.",
+      "note": "Secondary alt. Prefer prop-water-mount (side Y-fork) for the gun cradle.",
+      "extra": {
+        "pixellabObjectId": "ba4c83a8-43b2-4a9e-85f6-9bbd84cb4624",
+        "role": "secondary",
+        "prefer": "prop-water-mount"
+      }
+    }
+  ]
+}

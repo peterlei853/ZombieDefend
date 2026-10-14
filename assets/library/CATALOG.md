@@ -5,17 +5,17 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 112 |
+| [Hero](#hero) | 3 | 119 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 6 | 17 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 1 | 2 |
+| [Environment](#environment) | 2 | 4 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **50** | **537** |
+| **Total** | **51** | **546** |
 
 <a id="hero"></a>
 ## Hero
@@ -24,9 +24,9 @@
 
 <img src="previews/hero/girl/preview.gif" alt="girl preview" height="140">
 
-Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south.
+Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk body; owned guns are front-float sprites (player-girl-front-*) that deploy with player-girl-deploy. Static poses are player-girl-front-*-still. Back-float strips are an optional MOVE fallback. Faces WEST unless the key ends in -walk-east/-north/-south or -run-north/-south. v0.31 adds player-girl-command, a west pointing still on the same 92×92 foot line.
 
-- group `girl` · 71 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
+- group `girl` · 72 assets · frame 32x32, 56x56, 92x92 · key prefix `player-girl-` · manifest [characters/hero/girl/manifest.json](characters/hero/girl/manifest.json)
 - previews: [all-base-sheet.png](previews/hero/girl/all-base-sheet.png), [hero-run-ns-sheet.png](previews/hero/girl/hero-run-ns-sheet.png), [weapon-water.gif](previews/hero/girl/weapon-water.gif), [weapon-bubble.gif](previews/hero/girl/weapon-bubble.gif), [weapon-lightning.gif](previews/hero/girl/weapon-lightning.gif), [weapon-frost.gif](previews/hero/girl/weapon-frost.gif), [weapon-flame.gif](previews/hero/girl/weapon-flame.gif), [weapon-sling.gif](previews/hero/girl/weapon-sling.gif), [front-float-deploy-sheet.png](previews/hero/girl/front-float-deploy-sheet.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -102,14 +102,15 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 | `player-girl-back-water` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float water bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-lightning` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float lightning bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
 | `player-girl-back-flame` | 8 | 32x32 | 8 | loop | (0.5, 0.5) | Back-float flame bob (~1/3 held). ±2px bob is baked in. Optional MOVE fallback or inventory preview; default MOVE hides weapons. |
+| `player-girl-command` | 1 | 92x92 | – | static | (0.5, 0.8261) | Still only (no micro-bob). Shoes end at y=77, so this uses the shared hero feet origin (0.5, 0.8261), the same ground line as player-girl-idle. The handoff point (46, 88) ≈ (0.5, 0.96) sits in empty padding under the sprite. |
 
 ### Player Girl — weapon FX (女主角武器特效)
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. Legacy fx-water-impact, fx-water-wet, fx-water-proj, fx-water-muzzle, and fx-water-stream stay.
 
-- group `girl-fx` · 35 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 41 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -140,15 +141,21 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-sling-dizzy` | 8 | 40x18 | 10 | loop | (0.5, 1.0) |  |
 | `fx-sling-impact` | 6 | 48x48 | 14 | once | (0.5, 0.5) |  |
 | `fx-sling-pellet` | 4 | 16x16 | 14 | loop | (0.5, 0.5) |  |
-| `fx-water-impact` | 6 | 64x64 | 12 | once | (0.5, 0.5) |  |
+| `fx-water-impact` | 6 | 64x64 | 12 | once | (0.5, 0.5) | Legacy v0.22 AoE splash (6×64 @ 12 fps, once). Merged v0.31 still times the HP drop to this sheet. fx-water-splash-big is the clearer splash for that path. |
 | `fx-water-muzzle` | 4 | 28x24 | 12 | once | (1.0, 0.5) |  |
 | `fx-water-stream` | 4 | 64x16 | 12 | loop | (0.5, 0.5) |  |
-| `fx-water-wet` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
+| `fx-water-wet` | 6 | 64x64 | 8 | loop | (0.5, 1.0) | Legacy v0.22 wet puddle (6×64 @ 8 fps, loop, origin feet). Merged v0.31 still uses this ground sheet. fx-water-wet-ground is the clearer puddle for that path. |
 | `fx-flame-burn` | 6 | 48x48 | 12 | loop | (0.5, 0.7) |  |
 | `fx-flame-cone-short` | 4 | 48x32 | 12 | loop | (1.0, 0.5) |  |
 | `fx-frost-freeze` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `fx-sling-knockback` | 4 | 64x24 | 14 | once | (0.0, 0.5) |  |
 | `fx-water-proj` | 4 | 32x32 | 10 | loop | (0.5, 0.5) |  |
+| `fx-water-splash-big` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 clearer AoE splash (8×64 @ 12 fps, once, origin center). Use for damage-after-FX: play this, then apply damage. Supersedes fx-water-impact on that path; the legacy impact stays. Untinted master (fx-hit-water-shared is the same image and is not a separate key). |
+| `fx-water-wet-ground` | 6 | 64x64 | 8 | loop | (0.5, 0.75) | v0.31 clearer wet-ground puddle (6×64 @ 8 fps, loop). Origin (0.5, 0.75) is puddle pixel (32, 48). Supersedes fx-water-wet on the v0.31 sync path; the legacy puddle stays. |
+| `fx-hit-water-office-v2` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 office body-hit overlay. Same splash as fx-water-splash-big with a light gray sparkle. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
+| `fx-hit-water-delivery` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 delivery body-hit overlay. Same splash as fx-water-splash-big with a light yellow tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
+| `fx-hit-water-chef` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 chef body-hit overlay. Same splash as fx-water-splash-big with a light white tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
+| `fx-hit-water-nurse` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 nurse body-hit overlay. Same splash as fx-water-splash-big with a light pink tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 
 ### Player Girl — weapon icons (武器圖示)
 
@@ -1081,6 +1088,19 @@ Tileable wooden picket barricade posts with clear gaps between stakes (bullets r
 |---|---|---|---|---|
 | `barricade-post` | [barricade-post.png](environment/barricade/barricade-post.png) | 32x64 | icon | Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face). |
 | `barricade-post-damaged` | [barricade-post-damaged.png](environment/barricade/barricade-post-damaged.png) | 32x64 | icon | Optional HP-threshold swap; same origin and scale as barricade-post. |
+
+### Water Gun Mount (水槍架)
+
+<img src="previews/environment/props/preview.gif" alt="props preview" height="140">
+
+v0.31 empty wooden cradle for the front-float water gun. Primary is a single-post Y-fork facing west-ish; the front dual-post is a secondary alt. Gun is not baked in — attach player-girl-front-water-still at the cradle. Visual only.
+
+- group `props` · 2 assets · frame 64x64 · key prefix `prop-water-` · manifest [environment/props/manifest.json](environment/props/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `prop-water-mount` | [prop-water-mount.png](environment/props/prop-water-mount.png) | 64x64 | image | Primary mount. Origin feet (32, 60) ≈ (0.5, 0.94). Attach player-girl-front-water-still at the cradle pixel (32, 12), 48px above the feet. |
+| `prop-water-mount-front-alt` | [prop-water-mount-front-alt.png](environment/props/prop-water-mount-front-alt.png) | 64x64 | image | Secondary alt. Prefer prop-water-mount (side Y-fork) for the gun cradle. |
 
 <a id="backgrounds"></a>
 ## Backgrounds
