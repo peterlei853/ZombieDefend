@@ -26,6 +26,15 @@ export class HeroFloats {
     this._selected = null;
     /** @type {string[]} */
     this.missing = [];
+    /** Water-only demo draws the guns on the fence, not in the front arc. */
+    this._fenceMounts = false;
+  }
+
+  /**
+   * @param {boolean} on
+   */
+  setFenceMounts(on) {
+    this._fenceMounts = !!on;
   }
 
   /**
@@ -57,7 +66,9 @@ export class HeroFloats {
   sync(girl, deploy) {
     if (!girl?.active || !this._guns.length) return;
     const phase = deploy?.phase || 'move';
-    const hidden = phase === 'move' || phase === 'hold';
+    const loneWater =
+      this._fenceMounts && this._guns.length === 1 && this._guns[0].id === 'water';
+    const hidden = loneWater || phase === 'move' || phase === 'hold';
     const scale = Math.abs(girl.scaleX || 1) || 1;
     const arc = frontArcFor(this._guns.length);
     const t = phase === 'fire' ? 1 : phase === 'deploy' ? deploy.t || 0 : 0;

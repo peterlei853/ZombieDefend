@@ -1,5 +1,6 @@
 import { WaveManager } from '../systems/WaveManager.js';
 import { Barricade } from '../entities/Barricade.js';
+import { WaterMounts } from '../systems/WaterMounts.js';
 import { applyHpBarDensity, Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
@@ -142,10 +143,14 @@ export default class StageScene extends Phaser.Scene {
     this.barricade = new Barricade(this, {
       maxHp: BARRICADE_MAX_HP,
     });
+    this.waterMounts = this.ownedWeapons.includes('water')
+      ? new WaterMounts(this, this.barricade)
+      : null;
 
     this.defenders = new DefenderGroup(this, {
       ownedWeapons: this.ownedWeapons,
       upgrades: this.weaponUpgrades,
+      waterMounts: this.waterMounts,
     });
     this.petEvolve = new PetEvolve(this);
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);

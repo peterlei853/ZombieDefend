@@ -216,6 +216,20 @@ function skin(id, prefix, extra = {}) {
   };
 }
 
+/**
+ * Per-profession hit puff. None of these sheets are in the library yet.
+ * PIXELLAB_HOOK: fx-hit-<skinId> at the body center, same frame as takeDamage
+ * and the hurt flash. Skins: office-worker-v2, delivery, chef, nurse, clown,
+ * cyborg, slime, slime-mini, exploder, riot-bare, trashcan-bare, sprinter,
+ * brute, trashcan, riot.
+ * @param {string|null|undefined} skinId
+ * @returns {string|null}
+ */
+export function zombieHitFxKey(skinId) {
+  if (!skinId || typeof skinId !== 'string') return null;
+  return `fx-hit-${skinId}`;
+}
+
 /** Last resort when the requested profession strip is not loaded. */
 export const SPAWN_FALLBACK_SKIN = 'office-worker-v2';
 

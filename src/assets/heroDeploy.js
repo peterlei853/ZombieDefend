@@ -4,8 +4,9 @@
  * The girl stays on the unarmed sheets. Owned guns are separate front-float
  * sprites. Moving hides them and blocks fire. A stop that lasts DEPLOY_HOLD_MS
  * plays `player-girl-deploy` once while the guns lerp into the front arc.
- * Fire starts only after that one-shot finishes, and every shot travels along
- * the hero forward ray (west, vy = 0). There is no nearest-enemy aim.
+ * Fire starts only after that one-shot finishes. Sling, bubble, lightning,
+ * frost, and flame travel along the hero forward ray (west, vy = 0).
+ * Water fires from a fence mount toward the nearest living enemy.
  *
  * Run sheets (`player-girl-run-*`) are preferred when present. They are not
  * in the library yet; walk sheets are the fallback.
@@ -24,6 +25,12 @@ export const OWNED_WEAPON_ORDER = ['water', 'sling', 'bubble', 'lightning', 'fro
 export const HERO_UNARMED = {
   idle: 'player-girl-idle',
   deploy: 'player-girl-deploy',
+  /**
+   * West/front point while stopped behind a water mount.
+   * PIXELLAB_HOOK: player-girl-command — unarmed body, no held gun.
+   * The library has no command/point strip yet; fire stays on idle until it ships.
+   */
+  command: 'player-girl-command',
   walk: {
     west: 'player-girl-walk-west',
     east: 'player-girl-walk-east',
