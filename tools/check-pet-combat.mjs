@@ -36,8 +36,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.28.1', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.28.1', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.29.0', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.29.0', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -51,7 +51,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.28.1'), 'document title is v0.28.1');
+assert(html.includes('v0.29.0'), 'document title is v0.29.0');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -307,7 +307,7 @@ gatePet.takeDamage(10);
 gatePet.takeDamage(10);
 assert(gateHurts() === 0, 'hits do not start the hurt strip during the white fill');
 assert(gate.portraitViews()[0].hitSeq === 1, 'portrait hit pulse stays gated for the flinch');
-assert(Math.abs(gatePet.hp - (petsCfg.HP - 20)) < 0.01, 'gated feedback still applies HP');
+assert(Math.abs(gatePet.hp - (petsCfg.HP - 10)) < 0.01, 'the opening hit applies; invuln blocks the second');
 assert(gateBody._tintFill === 0xffffff, 'the flinch opens on a white fill');
 for (let i = 0; i < 6; i++) {
   gatePet.takeDamage(0.35);

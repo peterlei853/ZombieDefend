@@ -23,7 +23,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.28.1', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.29.0', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 
@@ -73,9 +73,14 @@ for (const id of ['phoenix', 'panda', 'lion', 'dragon']) {
   assert(cds[id].join() === '12000,8000,4000', `${id} cooldowns are 12/8/4`);
 }
 assert(GAME_CONFIG.PETS.MELEE.DAMAGE === 8, 'melee damage');
-assert(GAME_CONFIG.PETS.KNOCKBACK_PX === 100 && GAME_CONFIG.PETS.KNOCKBACK_MS === 150, 'knockback 100px / 150ms');
-assert(GAME_CONFIG.PETS.TELEGRAPH_MS >= 300, 'telegraph stays opaque for at least 300ms');
-assert(GAME_CONFIG.PETS.HITSTOP_S2_MS === 50 && GAME_CONFIG.PETS.HITSTOP_S3_MS === 80, 'skill hitstop');
+assert(GAME_CONFIG.PETS.KNOCKBACK_PX >= 4 && GAME_CONFIG.PETS.KNOCKBACK_PX <= 8 && GAME_CONFIG.PETS.KNOCKBACK_MS === 150, 'v0.29 knockback is a 4–8px shove');
+assert(GAME_CONFIG.PETS.TELEGRAPH_MS >= 220, 'telegraph stays opaque for at least 220ms');
+assert(
+  GAME_CONFIG.PETS.HITSTOP_HIT_MS >= 30 && GAME_CONFIG.PETS.HITSTOP_HIT_MS <= 50
+    && GAME_CONFIG.PETS.HITSTOP_S2_MS >= 30 && GAME_CONFIG.PETS.HITSTOP_S2_MS <= 50
+    && GAME_CONFIG.PETS.HITSTOP_S3_MS >= 30 && GAME_CONFIG.PETS.HITSTOP_S3_MS <= 50,
+  'pet hitstop is 30–50ms'
+);
 assert(ULT_MS >= 800 && ULT_MS <= 1200, 'ult freeze is 0.8–1.2s');
 assert(ULT_KEYS.phoenix === 'vfx-ult-phoenix' && ULT_KEYS.dragon === 'vfx-ult-dragon', 'ult texture keys');
 

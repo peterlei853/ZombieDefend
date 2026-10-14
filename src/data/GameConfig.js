@@ -1,3 +1,5 @@
+import { WEAPON_TRAITS } from '../assets/heroDeploy.js';
+
 /**
  * Central combat tunables for ZombieDefend.
  *
@@ -48,10 +50,39 @@
  * the post-clear shop list. Barricade physics and gold-by-HP stay put.
  * v0.28.1 drops the removed 64px office sheets. Spawn fallback is
  * office-worker-v2 only.
+ * v0.29 retunes pet hit feel: a 4–8px shove, a 30–50ms hitch, a one-frame
+ * melee fan, 150ms hurt invulnerability, a low-HP bar pulse, tier target
+ * bias, an aim-ray offset, a short pause after the ult letterbox, and a
+ * surrounded pet DPS budget. Barricade physics, gold, shop, roster, and
+ * BGM are unchanged. The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.28.1';
+export const APP_VERSION = '0.29.0';
+
+/**
+ * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
+ * so the pet budget has a stable hero number to sit under.
+ * water 18/680ms, sling 16/420ms, bubble 12/900ms, lightning 14/340ms,
+ * frost 14/560ms, flame chip 4/200ms.
+ */
+export const HERO_REFERENCE_DPS = ['water', 'sling', 'bubble', 'lightning', 'frost', 'flame'].reduce(
+  (sum, id) => sum + directGunDps(WEAPON_TRAITS[id]),
+  0
+);
+
+/**
+ * @param {{ continuous?: boolean, chip?: number, tickMs?: number, damage?: number, fireMs?: number }} trait
+ */
+function directGunDps(trait) {
+  if (!trait) return 0;
+  if (trait.continuous) {
+    const tick = Number(trait.tickMs);
+    return tick > 0 ? (Number(trait.chip) * 1000) / tick : 0;
+  }
+  const fire = Number(trait.fireMs);
+  return fire > 0 ? (Number(trait.damage) * 1000) / fire : 0;
+}
 
 /** `?petHurt=1` plays the pet hurt sequence once after the stage boots. */
 export function petHurtDebugRequested() {
@@ -240,15 +271,23 @@ export const GAME_CONFIG = {
       RANGE: 42,
       Y_HALF: 28,
       STEP_PX: 16,
+      /** One-frame faint fan in front of the swing. Set false to hide it. */
+      FAN: true,
+      FAN_MS: 16,
     },
     /** Skill telegraph radii, field px. S3 is a forward half-screen rect. */
     SKILL_R: { s1: 56, s2: 112 },
-    /** Leftward pet shove. Field px over ms. Not the handgun / pellet shove. */
-    KNOCKBACK_PX: 100,
+    /**
+     * Leftward pet shove. Field px over ms. Not the handgun / pellet shove.
+     * 4 field px is 6 canvas px after LAYOUT_SCALE (1.6), inside the 4–8px
+     * on-zombie band.
+     */
+    KNOCKBACK_PX: 4,
     KNOCKBACK_MS: 150,
     /**
-     * Ground tell before skill damage. Fully opaque for at least 300ms,
-     * then TELEGRAPH_FADE_MS eases it out. Damage waits for this window.
+     * Ground tell before skill damage. Fully opaque for at least 220ms
+     * (v0.29 floor; this hold is longer so the disc can be read), then
+     * TELEGRAPH_FADE_MS eases it out. Damage waits for this window.
      * A bite does not pause the clock.
      */
     TELEGRAPH_MS: 420,
@@ -259,8 +298,47 @@ export const GAME_CONFIG = {
      * S3 uses the half-screen wash and ignores this.
      */
     TELEGRAPH_GROUND_Y: 0.46,
-    HITSTOP_S2_MS: 50,
-    HITSTOP_S3_MS: 80,
+    /** Hitch on a pet hit. Melee, skills, and the ult all use this. 30–50ms. */
+    HITSTOP_HIT_MS: 40,
+    HITSTOP_S2_MS: 40,
+    HITSTOP_S3_MS: 40,
+    /**
+     * After a bite lands, further pet damage is ignored for this long.
+     * The white → red → hurt strip still plays. 120–180ms.
+     */
+    HURT_INVULN_MS: 150,
+    /** Portrait and world bars pulse while a living pet is under this fraction. */
+    LOW_HP_RATIO: 0.3,
+    /** Basics and small skills stay paused this long after the letterbox ends. */
+    ULT_RESUME_MS: 300,
+    /**
+     * Whole on-field pet team, while surrounded, as a share of HERO_REFERENCE_DPS.
+     * Tune this. The feel band is 0.40–0.60. Default 0.50.
+     * petSurroundHitScale() turns it into the per-hit multiplier.
+     */
+    SURROUND_DPS_RATIO: 0.5,
+    /** Zombies in the melee box before the surrounded scale applies. */
+    SURROUND_COUNT: 3,
+    /** Bodies assumed per swing when estimating surrounded pack DPS. */
+    SURROUND_HITS: 3,
+    /** Tier 1 slows and roots last this much longer. Damage tables stay put. */
+    T1_CC_MULT: 1.25,
+    /** Tier 2 bonus against a zombie at or under this HP fraction. */
+    T2_FINISHER_HP: 0.4,
+    T2_FINISHER_MULT: 1.35,
+    /** Tier 3 ultimate hits, on top of the surrounded scale when it applies. */
+    T3_ULT_MULT: 1.2,
+    /**
+     * Preferred lane offset from the hero's west shot ray, as a fraction of
+     * the grass band. Pets aim inside RAY_OFFSET_MIN–RAY_OFFSET_MAX so they
+     * do not stack the zombie the guns are already hitting.
+     */
+    RAY_OFFSET: 0.15,
+    RAY_OFFSET_MIN: 0.1,
+    RAY_OFFSET_MAX: 0.2,
+    /** Field px from the fence. This many zombies inside it is high pressure. */
+    PRESSURE_GAP: 72,
+    PRESSURE_COUNT: 3,
     /** 0-based skill frame that releases the hit. */
     RELEASE_FRAME: 3,
     /** Safety cap if a skill strip never finishes. */
@@ -478,4 +556,19 @@ export function isOverkillHit(kind, damage) {
   if (kind === 'shotgun') return true;
   const amount = Number(damage);
   return Number.isFinite(amount) && amount >= GAME_CONFIG.JUICE.OVERKILL_DAMAGE;
+}
+
+/**
+ * Per-hit multiplier while a pet's melee box holds SURROUND_COUNT zombies.
+ * Four pets connecting SURROUND_HITS bodies each land on
+ * SURROUND_DPS_RATIO × HERO_REFERENCE_DPS. Gold and EXP do not read this.
+ * @returns {number}
+ */
+export function petSurroundHitScale() {
+  const pets = GAME_CONFIG.PETS;
+  const cycleSec = (pets.MELEE.WINDUP_MS + pets.MELEE.RECOVER_MS + pets.MELEE.GAP_MS) / 1000;
+  const teamPack = 4 * (pets.MELEE.DAMAGE / cycleSec) * pets.SURROUND_HITS;
+  const target = HERO_REFERENCE_DPS * pets.SURROUND_DPS_RATIO;
+  if (!(teamPack > 0) || !Number.isFinite(target)) return 1;
+  return target / teamPack;
 }
