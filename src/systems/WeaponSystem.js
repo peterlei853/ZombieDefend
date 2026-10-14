@@ -27,7 +27,13 @@ import {
   waterSplashKey,
   waterWetKey,
 } from '../assets/waterMounts.js';
-import { waterBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
+import {
+  slingAimVelocity,
+  slingImpactBeatMs,
+  slingImpactKey,
+  slingSheetFallback,
+} from '../assets/slingMounts.js';
+import { slingBodyHitKey, waterBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
 import { upgradedDamage } from '../data/shopList.js';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
@@ -125,6 +131,11 @@ export class WeaponSystem {
      * @type {{ life: number, hits: { zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[], knockbackBodies: number }[]}
      */
     this._waterBeats = [];
+    /**
+     * Sling hits wait for the impact sheet. HP and knockback land together.
+     * @type {{ life: number, zombie: import('../entities/Zombie.js').Zombie, damage: number, knockbackBodies: number, streak: string|null }[]}
+     */
+    this._slingBeats = [];
   }
 
   /**
@@ -413,6 +424,7 @@ export class WeaponSystem {
     for (const f of this._follows || []) this._safeDestroyGraphics(f?.sprite);
     this._follows = [];
     this._waterBeats = [];
+    this._slingBeats = [];
     this._destroyFlame();
   }
 
@@ -472,6 +484,7 @@ export class WeaponSystem {
   stepOverlays(deltaMs) {
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     this._stepWaterBeats(dt);
+    this._stepSlingBeats(dt);
     const alive = [];
     for (const f of this._follows || []) {
       f.life -= dt;
@@ -568,6 +581,16 @@ export class WeaponSystem {
         fired = fired || id;
         continue;
       }
+      if (id === 'sling' && opts.slingFromMount) {
+        const slingSlot = opts.slingMount || null;
+        if (!slingSlot) continue;
+        this._cooldowns[id] = (this._cooldowns[id] || 0) - dt;
+        if (this._cooldowns[id] > 0) continue;
+        this._cooldowns[id] = trait.fireMs;
+        this._spawnSlingShot(bullets, slingSlot, zombies, trait);
+        fired = fired || id;
+        continue;
+      }
       const muzzle = muzzles.get(id);
       if (!muzzle) continue;
       if (trait.continuous) {
@@ -659,6 +682,10 @@ export class WeaponSystem {
     const trait = WEAPON_TRAITS[bullet.weaponId];
     if (trait?.id === 'water') {
       this._queueWaterSplash(zombie, bullet);
+      return { gold: 0, kills: 0 };
+    }
+    if (trait?.id === 'sling') {
+      this._queueSlingImpact(zombie, bullet);
       return { gold: 0, kills: 0 };
     }
     const gain = this._hurtZombie(zombie, bullet.damage, bullet, {
@@ -831,6 +858,99 @@ export class WeaponSystem {
   }
 
   /**
+   * Impact (or the pellet sheet) plays on contact. HP and the body shove
+   * wait for the middle of that sheet. The per-skin hook plays with them.
+   * @param {import('../entities/Zombie.js').Zombie} primary
+   * @param {object} bullet
+   */
+  _queueSlingImpact(primary, bullet) {
+    const trait = WEAPON_TRAITS.sling;
+    const px = primary.x;
+    const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : primary.y;
+    const exists = (key) => !!this.scene?.textures?.exists?.(key);
+    this._spawnImpactKey(slingImpactKey(exists), px, hy, primary);
+    this._slingBeats.push({
+      life: this._slingBeatMs(),
+      zombie: primary,
+      damage: bullet.damage,
+      knockbackBodies: bullet.knockbackBodies || trait.knockbackBodies || 0,
+      streak: trait.streak || null,
+    });
+  }
+
+  /**
+   * Half of the impact sheet that will actually play.
+   * fx-sling-impact is 6×14fps; fx-sling-pellet stays the fallback.
+   * @returns {number}
+   */
+  _slingBeatMs() {
+    const exists = (key) => !!this.scene?.textures?.exists?.(key);
+    const key = slingImpactKey(exists);
+    let anim = null;
+    const anims = this.scene?.anims;
+    if (anims && typeof anims.exists === 'function' && anims.exists(key) && typeof anims.get === 'function') {
+      try {
+        anim = anims.get(key);
+      } catch (_) {
+        anim = null;
+      }
+    }
+    const asset = libraryAsset(this.scene, key);
+    const full = libraryFxDuration(anim, asset || slingSheetFallback(key));
+    return slingImpactBeatMs(full);
+  }
+
+  /**
+   * @param {object[]} bullets
+   * @param {{ muzzleX: number, muzzleY: number }} slot
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {object} trait
+   */
+  _spawnSlingShot(bullets, slot, zombies, trait) {
+    const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
+    const target = this._nearestLiving(zombies, slot.muzzleX, slot.muzzleY);
+    const aim = target
+      ? {
+          x: target.x,
+          y: Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y,
+        }
+      : null;
+    const { vx, vy } = slingAimVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
+    this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait);
+  }
+
+  /**
+   * @param {number} dt
+   */
+  _stepSlingBeats(dt) {
+    const pending = [];
+    for (const beat of this._slingBeats || []) {
+      beat.life -= dt;
+      if (beat.life > 0) {
+        pending.push(beat);
+        continue;
+      }
+      const zombie = beat.zombie;
+      if (zombie?.alive && zombie.body) {
+        const gain = this._hurtZombie(
+          zombie,
+          beat.damage,
+          {
+            weaponId: 'sling',
+            impact: WEAPON_TRAITS.sling.impact,
+            knockbackBodies: beat.knockbackBodies,
+          },
+          { impact: false, knock: true }
+        );
+        this._pending.gold += gain.gold;
+        this._pending.kills += gain.kills;
+        if (beat.streak) this._playStreak(zombie, beat.streak);
+      }
+    }
+    this._slingBeats = pending;
+  }
+
+  /**
    * @param {import('../entities/Zombie.js').Zombie} zombie
    * @param {object} bullet
    */
@@ -989,6 +1109,9 @@ export class WeaponSystem {
    * Body-center puff on the takeDamage frame.
    * Water prefers fx-hit-water-{office-v2,delivery,chef,nurse}, then
    * fx-water-impact, then fx-water-splash-big.
+   * Sling prefers fx-hit-sling-<skin> (office-worker-v2 → office-v2),
+   * then fx-sling-impact, then fx-sling-pellet.
+   * PIXELLAB_HOOK: fx-hit-sling-<skinId> for each monster skin.
    * PIXELLAB_HOOK: fx-hit-<skinId> for skins without a water overlay.
    * @param {{ x: number, y: number, bodyCenterY?: number, scale?: number, skin?: { id?: string } }} zombie
    * @param {string} [weaponId]
@@ -999,6 +1122,10 @@ export class WeaponSystem {
     if (weaponId === 'water') {
       const mapped = waterBodyHitKey(zombie?.skin?.id);
       const order = [mapped, 'fx-water-impact', 'fx-water-splash-big'].filter(Boolean);
+      key = order.find((name) => exists(name)) || null;
+    } else if (weaponId === 'sling') {
+      const mapped = slingBodyHitKey(zombie?.skin?.id);
+      const order = [mapped, 'fx-sling-impact', 'fx-sling-pellet'].filter(Boolean);
       key = order.find((name) => exists(name)) || null;
     } else {
       const generic = zombieHitFxKey(zombie?.skin?.id);

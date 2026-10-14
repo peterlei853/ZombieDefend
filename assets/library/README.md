@@ -113,10 +113,13 @@ Profession body-hit overlays (same splash, light tint, origin center, once @ 12 
 Empty steel cradles in the same family as the water mounts, with amber accents instead of cyan. No gun and no girl are baked in. `player-girl-tower-fire` and `player-girl-command` are reused unchanged. The gun float is the existing `player-girl-front-sling-still`.
 
 - `prop-sling-mount` — primary Y-fork, 64×64, origin (0.5, 0.9375) feet at (32, 60). Cradle pixel (32, 12), 48px above the feet. About 32 amber pixels.
-- `prop-sling-mount-hi-vis` — same silhouette, higher amber contrast (about 135 amber pixels, no water cyan). Prefer the primary unless the barricade washes it out.
-- `prop-sling-mount-front-alt` — secondary front dual-post (about 82 amber pixels). Prefer the Y-fork.
+- `prop-sling-mount-hi-vis` — same silhouette, higher amber contrast (about 135 amber pixels, no water cyan). The six fence slots draw this sheet first, then `prop-sling-mount`, because the plain fork can wash out on the barricade. If neither sling sheet is loaded, the slot uses `prop-water-mount-hi-vis`.
+- `prop-sling-mount-front-alt` — front dual-post. Gameplay puts this on the slot she is stopped behind.
 
-Profession body-hit overlays are stone, pebble, and dust, not a water splash. 8×64, once, 18 fps (the workbench step), origin (0.5, 0.5): `fx-hit-sling-office-v2` (gray), `fx-hit-sling-delivery` (yellow), `fx-hit-sling-chef` (white), `fx-hit-sling-nurse` (pink). The untinted master `fx-hit-sling-shared.png` is not a separate key, matching water (no `fx-hit-water-shared` key). Existing `fx-sling-impact`, `fx-sling-pellet`, and `fx-sling-knockback` stay. This catalog does not change gold, saves, or barricade physics.
+Profession body-hit overlays are stone, pebble, and dust, not a water splash. 8×64, once, 18 fps, origin (0.5, 0.5): `fx-hit-sling-office-v2` (gray), `fx-hit-sling-delivery` (yellow), `fx-hit-sling-chef` (white), `fx-hit-sling-nurse` (pink). The untinted master `fx-hit-sling-shared.png` is not a separate key. Existing `fx-sling-impact`, `fx-sling-pellet`, and `fx-sling-knockback` stay.
+
+`?weapon=sling` holds `player-girl-tower-fire` while she fires from a mount and aims at the nearest living zombie. Contact plays `fx-sling-impact` (else `fx-sling-pellet`). HP and the two-body knockback wait for the middle of that sheet, and the 8-frame profession overlay plays on that same beat. Other skins look up `fx-hit-sling-<skinId>` and fall back to the impact or pellet sheet. Gold amounts, saves, and barricade contact math stay as they are.
+
 
 ## Front-float combat (v0.27)
 

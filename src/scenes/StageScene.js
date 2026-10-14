@@ -1,6 +1,7 @@
 import { WaveManager } from '../systems/WaveManager.js';
 import { Barricade } from '../entities/Barricade.js';
 import { WaterMounts } from '../systems/WaterMounts.js';
+import { SlingMounts } from '../systems/SlingMounts.js';
 import { applyHpBarDensity, Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
@@ -73,7 +74,8 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * The flags are independent.
  * `?weapon=<id>` (water, sling, bubble, lightning, frost, flame) boots
  * this run with only that gun. SPACE stays on it. The list is registry
- * memory for the page load, not a save write.
+ * memory for the page load, not a save write. `?weapon=sling` places
+ * six fence mounts and fires only while she is stopped behind one.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -143,14 +145,20 @@ export default class StageScene extends Phaser.Scene {
     this.barricade = new Barricade(this, {
       maxHp: BARRICADE_MAX_HP,
     });
-    this.waterMounts = this.ownedWeapons.includes('water')
-      ? new WaterMounts(this, this.barricade)
-      : null;
+    const ownsWater = this.ownedWeapons.includes('water');
+    this.waterMounts = ownsWater ? new WaterMounts(this, this.barricade) : null;
+    // Sling takes the fence only when water is not already using it.
+    // ?weapon=sling is that case. A mixed stage keeps sling on the west ray.
+    this.slingMounts =
+      !ownsWater && this.ownedWeapons.includes('sling')
+        ? new SlingMounts(this, this.barricade)
+        : null;
 
     this.defenders = new DefenderGroup(this, {
       ownedWeapons: this.ownedWeapons,
       upgrades: this.weaponUpgrades,
       waterMounts: this.waterMounts,
+      slingMounts: this.slingMounts,
     });
     this.petEvolve = new PetEvolve(this);
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);
