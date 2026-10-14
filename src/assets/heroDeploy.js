@@ -233,6 +233,23 @@ export function grantStageWeapons(stage, owned) {
 }
 
 /**
+ * Owned guns for this stage boot.
+ * A valid `?weapon=` id replaces the stage-1 all-six grant for this call.
+ * Unknown or missing demo ids leave the normal grant in place.
+ * The caller keeps the result in memory. This does not write a save.
+ * @param {number} stage
+ * @param {string[]|null|undefined} owned
+ * @param {string|null|undefined} demoId lowercase weapon id, or null
+ * @returns {string[]}
+ */
+export function resolveOwnedWeapons(stage, owned, demoId) {
+  if (typeof demoId === 'string' && OWNED_WEAPON_ORDER.includes(demoId)) {
+    return [demoId];
+  }
+  return grantStageWeapons(stage, owned);
+}
+
+/**
  * @param {number} count
  * @returns {{ x: number, y: number }[]}
  */

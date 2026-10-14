@@ -1,6 +1,6 @@
 {
   "name": "zombie-defend",
-  "version": "0.29.1",
+  "version": "0.30.0",
   "private": true,
   "description": "ZombieDefend — Phaser 3 tower-defense shell",
   "scripts": {
@@ -13,6 +13,7 @@
     "check:hero": "node tools/check-hero-deploy.mjs",
     "check:v028": "node tools/check-v028.mjs",
     "check:v029": "node tools/check-v029.mjs",
+    "check:v030": "node tools/check-v030.mjs",
     "check:fx": "node tools/check-library-fx.mjs"
   },
   "type": "module"

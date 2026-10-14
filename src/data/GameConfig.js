@@ -1,4 +1,4 @@
-import { WEAPON_TRAITS } from '../assets/heroDeploy.js';
+import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
 
 /**
  * Central combat tunables for ZombieDefend.
@@ -57,10 +57,14 @@ import { WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * BGM are unchanged. The camera does not shake.
  * v0.29.1 adds ?petLowHp=1 / L so the low-HP bar pulse and one Recall!
  * can be shown without spending HP on the hurt strip.
+ * v0.30 adds ?weapon=<id> so one Pages link immerses a single stage gun
+ * (water, sling, bubble, lightning, frost, flame). The override is
+ * in-memory for that page load. Gold, saves, barricade, roster, and BGM
+ * stay put. The camera does not shake.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.29.1';
+export const APP_VERSION = '0.30.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -101,6 +105,26 @@ export function petLowHpDebugRequested() {
     return new URLSearchParams(globalThis.location?.search || '').get('petLowHp') === '1';
   } catch (_) {
     return false;
+  }
+}
+
+/**
+ * `?weapon=<id>` immerses this page load in one stage gun.
+ * The id is one of water, sling, bubble, lightning, frost, flame
+ * (case-insensitive). Missing or unknown ids return null so the
+ * normal stage grant runs. This does not write LocalStorage, MockDB,
+ * or SaveManager.
+ * @param {string} [search]
+ * @returns {string|null}
+ */
+export function demoWeaponId(search) {
+  try {
+    const raw = search ?? (globalThis.location?.search || '');
+    const id = (new URLSearchParams(raw || '').get('weapon') || '').trim().toLowerCase();
+    if (!OWNED_WEAPON_ORDER.includes(id)) return null;
+    return id;
+  } catch (_) {
+    return null;
   }
 }
 const KNOCKBACK_HANDGUN_PX = 10;
