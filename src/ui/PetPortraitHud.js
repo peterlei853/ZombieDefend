@@ -204,11 +204,15 @@ export class PetPortraitHud {
       if (seq > 0) slot.hitLeft = GAME_CONFIG.PETS.HURT_BAR_MS;
     }
     const flashing = slot.hitLeft > 0 && !view.grey;
-    slot.hp.fg.setScale(Math.max(ratio, 0.001), flashing ? 1.45 : 1);
+    const low = !!view.lowHp && !view.grey && !flashing && ratio > 0;
+    const lowWave = low ? 0.5 + 0.5 * Math.sin(this._pulse / 90) : 0;
+    slot.hp.fg.setScale(Math.max(ratio, 0.001), flashing ? 1.45 : 1 + lowWave * 0.55);
     slot.hp.fg.setVisible?.(ratio > 0.01);
     if (view.grey) slot.bar.setTint?.(0x8d8d8d);
     else if (flashing) slot.bar.setTint?.(0xff8a80);
+    else if (low) slot.bar.setTint?.(lowWave > 0.5 ? 0xffab91 : 0xffcc80);
     else slot.bar.clearTint?.();
+    slot.bar.setAlpha?.(low ? 0.72 + lowWave * 0.28 : 1);
     const fill = view.grey ? 0x9e9e9e : flashing ? 0xfff6e8 : view.color;
     slot.hp.fg.setFillStyle?.(fill);
     const blinkOn = Math.floor(this._pulse / 120) % 2 === 0;

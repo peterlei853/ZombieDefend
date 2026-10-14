@@ -1,6 +1,7 @@
-import { GAME_CONFIG } from '../data/GameConfig.js';
+import { GAME_CONFIG, petSurroundHitScale } from '../data/GameConfig.js';
 import { DAMAGE_COLORS, showCritText, showDamageText } from '../ui/damageText.js';
 import { beginHitstop } from './combatJuice.js';
+import { pickPetCombatTarget } from './petTarget.js';
 import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
@@ -94,6 +95,10 @@ export class PetCombat {
     /** @type {import('./PetEvolve.js').PetEvolve|null} */
     this.evolve = null;
     this.ult = new UltCutscene(scene);
+    /** Basics and small skills stay quiet this long after a letterbox. */
+    this._attackHold = 0;
+    /** True while a tier-3 swing should use the ult damage bias. */
+    this._ultSwing = false;
     this._loot = { gold: 0, kills: 0 };
     /** @type {import('../entities/Zombie.js').Zombie[]} */
     this._liveZombies = [];
@@ -107,6 +112,16 @@ export class PetCombat {
   /** True while the tier-3 letterbox is holding this scene. */
   get ultPlaying() {
     return !!this.ult?.playing;
+  }
+
+  /** Ms left before basics and small skills may fire after a letterbox. */
+  get attackHoldMs() {
+    return this._attackHold || 0;
+  }
+
+  /** @returns {boolean} */
+  _attacksPaused() {
+    return this.ultPlaying || this._attackHold > 0;
   }
 
   /**
@@ -126,6 +141,7 @@ export class PetCombat {
    * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
    */
   tryBasic(actor, zombies) {
+    if (this._attacksPaused()) return false;
     if (!actor || actor.state === 'attack' || actor.meleePhase || actor.hurtLeft > 0) return false;
     if (actor.meleeGap > 0) return false;
     const sprite = actor.sprite;
@@ -221,6 +237,87 @@ export class PetCombat {
     return this.evolve?.getTier?.(actor.role.id) ?? 1;
   }
 
+  /**
+   * Lane pick for this pet. High wall pressure taunts the breach.
+   * Otherwise the pet sits 10–20% off the hero's west ray.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {{ x?: number, y?: number }|null} player
+   * @param {Set<object>} claimed
+   */
+  _threatFor(actor, zombies, player, claimed) {
+    return pickPetCombatTarget(zombies, {
+      heroY: Number.isFinite(player?.y) ? player.y : null,
+      tier: this._tierOf(actor),
+      slot: Math.max(0, this._actors.indexOf(actor)),
+      claimed,
+    });
+  }
+
+  /**
+   * @param {PetActor} actor
+   * @param {{ knockback?: boolean, critChance?: number, hitstop?: boolean, ult?: boolean }} [extra]
+   */
+  _hitOpts(actor, extra = {}) {
+    const tier = actor ? this._tierOf(actor) : 1;
+    const packed = actor ? this._packCount(actor) : 0;
+    const pets = GAME_CONFIG.PETS;
+    return {
+      knockback: extra.knockback,
+      critChance: extra.critChance,
+      hitstop: extra.hitstop,
+      scale: packed >= pets.SURROUND_COUNT ? petSurroundHitScale() : 1,
+      finisher: tier === 2,
+      ult: !!((extra.ult || this._ultSwing) && tier >= 3),
+    };
+  }
+
+  /**
+   * @param {PetActor|null|undefined} actor
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {number} damage
+   * @param {string} color
+   * @param {{ knockback?: boolean, critChance?: number, hitstop?: boolean, ult?: boolean }} [extra]
+   */
+  _strike(actor, zombie, damage, color, extra) {
+    return strike(this.scene, zombie, damage, color, this._hitOpts(actor, extra));
+  }
+
+  /**
+   * @param {PetActor|null|undefined} actor
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {number} damage
+   * @param {string} color
+   * @param {{ knockback?: boolean, critChance?: number, hitstop?: boolean, ult?: boolean }} [extra]
+   */
+  _strikeAll(actor, zombies, damage, color, extra) {
+    return strikeAll(this.scene, zombies, damage, color, this._hitOpts(actor, extra));
+  }
+
+  /** Tier 1 crowd-control bias. Damage numbers stay on the skill table. @param {PetActor} actor @param {number} ms */
+  _ccMs(actor, ms) {
+    if (this._tierOf(actor) <= 1) return Math.round(ms * GAME_CONFIG.PETS.T1_CC_MULT);
+    return ms;
+  }
+
+  /** Living zombies standing in this pet's melee box. @param {PetActor} actor */
+  _packCount(actor) {
+    const sprite = actor?.sprite;
+    const x = sprite?.x ?? actor?.x;
+    const y = sprite?.y ?? actor?.y;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return 0;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    const range = layoutPx(pets.RANGE);
+    const yHalf = layoutPx(pets.Y_HALF);
+    let n = 0;
+    for (const z of this._liveZombies) {
+      if (!z?.alive || !z.body) continue;
+      if (!Number.isFinite(z.x) || !Number.isFinite(z.y)) continue;
+      if (inForwardBox(x, y, z.x, z.y, range, yHalf)) n += 1;
+    }
+    return n;
+  }
+
   /** S3 plays only at tier 3, or when a test override unlocks every orb. */
   _allowUlt(actor) {
     if ((this._unlockedOrbs ?? 0) >= 3) return true;
@@ -291,6 +388,7 @@ export class PetCombat {
         tappable: actor.phase !== 'revive',
         grey: actor.phase === 'revive',
         hp: actor.maxHp > 0 ? clamp01(actor.hp / actor.maxHp) : 0,
+        lowHp: actor.phase !== 'revive' && actor.hp > 0 && actor.maxHp > 0 && actor.hp / actor.maxHp < GAME_CONFIG.PETS.LOW_HP_RATIO,
         hitSeq: actor.hitSeq || 0,
         tier: this._tierOf(actor),
         expRatio: this.evolve?.expRatio?.(actor.role.id) ?? 0,
@@ -341,12 +439,19 @@ export class PetCombat {
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     const list = Array.isArray(zombies) ? zombies : [];
     this._liveZombies = list;
+    this._ageMeleeFans(dt);
+    let justEnded = false;
     if (this.ult?.playing) {
       this._loot = { gold: 0, kills: 0 };
       this.ult.update(dt);
-      return this._takeLoot();
+      if (this.ult.playing) return this._takeLoot();
+      this._attackHold = GAME_CONFIG.PETS.ULT_RESUME_MS;
+      justEnded = true;
     }
-    const threat = nearestBarricadeThreat(list);
+    if (!justEnded && this._attackHold > 0) {
+      this._attackHold = Math.max(0, this._attackHold - dt);
+    }
+    const claimed = new Set();
     let gold = 0;
     let kills = 0;
     for (const actor of this._actors) {
@@ -366,6 +471,9 @@ export class PetCombat {
         this._tickFloat(actor, dt);
         continue;
       }
+      const threat = this._threatFor(actor, list, player, claimed);
+      actor.focusThreat = threat;
+      if (threat) claimed.add(threat);
       const gain = this.tickAi(actor, dt, list, threat, player);
       gold += gain.gold;
       kills += gain.kills;
@@ -402,8 +510,10 @@ export class PetCombat {
     this._blobs = [];
     this.ult?._clear?.();
     this.ult && (this.ult.playing = false);
-    for (const actor of this._actors) {
+      for (const actor of this._actors) {
       this._clearTelegraph(actor);
+      this._clearMeleeFan(actor);
+      this._clearLowHint(actor);
       this._clearFloat(actor);
       this._destroyBars(actor);
       destroySprite(actor.stars);
@@ -463,6 +573,13 @@ export class PetCombat {
       meleePhase: null,
       meleeLeft: 0,
       meleeGap: 0,
+      meleeFan: null,
+      invulnLeft: 0,
+      lowLatched: false,
+      lowHint: null,
+      lowHintLeft: 0,
+      lowPulse: 0,
+      focusThreat: null,
       shownTier: 1,
       stars: null,
       starsKey: '',
@@ -897,9 +1014,11 @@ export class PetCombat {
    */
   _damage(actor, amount) {
     if (actor.phase !== 'field' || !(actor.hp > 0)) return false;
+    if (actor.invulnLeft > 0) return false;
     const dmg = Number(amount);
     if (!(dmg > 0) || !Number.isFinite(dmg)) return false;
     actor.hp -= dmg;
+    actor.invulnLeft = GAME_CONFIG.PETS.HURT_INVULN_MS;
     this.scene?.events?.emit?.('pet:hit', { petId: actor.role.id, amount: dmg });
     const sprite = actor.sprite;
     if (sprite) {
@@ -919,8 +1038,60 @@ export class PetCombat {
       this._dismiss(actor);
       return true;
     }
+    this._syncLowHp(actor);
     this._syncBars(actor);
     return false;
+  }
+
+  /**
+   * One Recall! hint the first time a field pet drops under LOW_HP_RATIO.
+   * The latch clears once they are back over the line.
+   * @param {PetActor} actor
+   */
+  _syncLowHp(actor) {
+    const ratio = actor.maxHp > 0 ? actor.hp / actor.maxHp : 1;
+    const low = actor.phase === 'field' && actor.hp > 0 && ratio < GAME_CONFIG.PETS.LOW_HP_RATIO;
+    if (!low) {
+      actor.lowLatched = false;
+      return;
+    }
+    if (actor.lowLatched) return;
+    actor.lowLatched = true;
+    this._showLowHint(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _showLowHint(actor) {
+    this.fxLog.push('low-hp-recall');
+    const scene = this.scene;
+    const sprite = actor.sprite;
+    if (!scene?.add?.text || !sprite) return;
+    this._clearLowHint(actor);
+    const node = scene.add.text(sprite.x, sprite.y - layoutPx(48), 'Recall!');
+    node.setOrigin?.(0.5, 1);
+    node.setDepth?.(depthFromY(sprite.y, 9));
+    actor.lowHint = node;
+    actor.lowHintLeft = GAME_CONFIG.PETS.FLOAT_HOLD_MS;
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _tickLowHint(actor, dt) {
+    const node = actor.lowHint;
+    if (!node) return;
+    const sprite = actor.sprite;
+    if (sprite) {
+      node.x = sprite.x;
+      node.y = sprite.y - layoutPx(48);
+    }
+    actor.lowHintLeft -= Number.isFinite(dt) ? dt : 0;
+    if (actor.lowHintLeft <= 0 || node.active === false) this._clearLowHint(actor);
+  }
+
+  /** @param {PetActor} actor */
+  _clearLowHint(actor) {
+    destroySprite(actor.lowHint);
+    actor.lowHint = null;
+    actor.lowHintLeft = 0;
   }
 
   /**
@@ -992,6 +1163,7 @@ export class PetCombat {
 
   /** Drop a flinch so recall, wake, and a fresh deploy are not stuck tinted. @param {PetActor} actor */
   _clearHitLook(actor) {
+    actor.invulnLeft = 0;
     actor.hurtLeft = 0;
     actor.hurtStrip = false;
     actor.hitPhase = '';
@@ -1105,6 +1277,8 @@ export class PetCombat {
   /** @param {PetActor} actor */
   _dismiss(actor) {
     this._clearTelegraph(actor);
+    this._clearMeleeFan(actor);
+    this._clearLowHint(actor);
     if (actor.phase !== 'field') return;
     const sprite = actor.sprite;
     actor.sprite = null;
@@ -1165,6 +1339,7 @@ export class PetCombat {
     const ratio = GAME_CONFIG.PETS.OFF_FIELD_REGEN_RATIO;
     const gain = actor.maxHp * ratio * (dt / 1000);
     actor.hp = Math.min(actor.maxHp, actor.hp + gain);
+    this._syncLowHp(actor);
   }
 
   /** @param {PetActor} actor @param {number} dt */
@@ -1208,6 +1383,10 @@ export class PetCombat {
    */
   _tickOrb(actor, orb, dt) {
     if (orb.pending || actor.phase !== 'field') return;
+    if (this._attacksPaused()) {
+      if (!(orb.flashLeft > 0) && orb.left > 0) orb.left = Math.max(0, orb.left - Math.max(0, dt));
+      return;
+    }
     let remain = Math.max(0, dt);
     let guard = 0;
     while (remain > 0 && guard < 12 && !orb.pending) {
@@ -1272,7 +1451,10 @@ export class PetCombat {
     const sprite = actor.sprite;
     if (!sprite?.active) return EMPTY;
     let dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    if (actor.invulnLeft > 0) actor.invulnLeft = Math.max(0, actor.invulnLeft - dt);
+    actor.lowPulse = (actor.lowPulse || 0) + dt;
     this._tickHitLook(actor, dt);
+    this._tickLowHint(actor, dt);
     let gain = EMPTY;
     try {
       if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
@@ -1280,7 +1462,8 @@ export class PetCombat {
 
       // Skills keep moving during a bite so the ground tell and the ult
       // are not frozen for the whole flinch. skills advance during a bite.
-      if (actor.wakeLeft <= 0) {
+      const attacksPaused = this._attacksPaused();
+      if (actor.wakeLeft <= 0 && !attacksPaused) {
         if (actor.castQueue.length > 0 && actor.state !== 'attack') {
           this._beginAttack(actor);
         }
@@ -1289,7 +1472,7 @@ export class PetCombat {
           gain = this._advanceAttack(actor, zombies, threat);
         }
       }
-      if (actor.telegraph) this._ageTelegraph(actor, dt);
+      if (!attacksPaused && actor.telegraph) this._ageTelegraph(actor, dt);
 
       if (actor.hitPhase) {
         this._presentHurt(actor);
@@ -1307,6 +1490,8 @@ export class PetCombat {
       }
 
       if (actor.state === 'attack') return gain;
+
+      if (this._attacksPaused()) return gain;
 
       if (actor.meleeGap > 0) actor.meleeGap = Math.max(0, actor.meleeGap - dt);
       if (actor.meleePhase) {
@@ -1558,9 +1743,45 @@ export class PetCombat {
     const hits = threatsInShape(zombies, (z) =>
       inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
     );
-    this.scene?.audio?.playPetMeleeHit?.();
+    this._showMeleeFan(actor);
+    if (hits.length) this.scene?.audio?.playPetMeleeHit?.();
     const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
-    return strikeAll(this.scene, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
+    return this._strikeAll(actor, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
+  }
+
+  /**
+   * One-frame faint cone in front of the pet. MELEE.FAN turns it off.
+   * @param {PetActor} actor
+   */
+  _showMeleeFan(actor) {
+    if (GAME_CONFIG.PETS.MELEE.FAN === false) return;
+    const sprite = actor.sprite;
+    if (!sprite) return;
+    this._clearMeleeFan(actor);
+    const range = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+    const yHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+    const node = makeMeleeFan(this.scene, sprite.x, sprite.y, range, yHalf);
+    if (!node) return;
+    actor.meleeFan = { node, life: GAME_CONFIG.PETS.MELEE.FAN_MS };
+    this.fxLog.push('melee-fan');
+  }
+
+  /** @param {number} dt */
+  _ageMeleeFans(dt) {
+    const step = Number.isFinite(dt) ? dt : 0;
+    for (const actor of this._actors) {
+      const fan = actor.meleeFan;
+      if (!fan) continue;
+      fan.life -= step;
+      if (fan.life <= 0) this._clearMeleeFan(actor);
+    }
+  }
+
+  /** @param {PetActor} actor */
+  _clearMeleeFan(actor) {
+    if (!actor?.meleeFan) return;
+    destroySprite(actor.meleeFan.node);
+    actor.meleeFan = null;
   }
 
   /** @param {PetActor} actor */
@@ -1573,13 +1794,15 @@ export class PetCombat {
     const y = sprite.y - layoutPx(36);
     const ratio = actor.maxHp > 0 ? Math.max(0, actor.hp / actor.maxHp) : 0;
     const hot = actor.barFlashLeft > 0;
+    const low = ratio > 0 && ratio < GAME_CONFIG.PETS.LOW_HP_RATIO;
+    const lowWave = low && !hot ? 1 + 0.35 * (0.5 + 0.5 * Math.sin((actor.lowPulse || 0) / 80)) : 1;
     const element = PET_ELEMENT_TINT[actor.role.element] ?? 0xfff3c4;
     bg.x = sprite.x;
     bg.y = y;
     fg.x = sprite.x - w / 2;
     fg.y = y;
     if (typeof fg.setFillStyle === 'function') fg.setFillStyle(hot ? 0xfff6e8 : element);
-    if (typeof fg.setScale === 'function') fg.setScale(Math.max(0.02, ratio), hot ? 1.7 : 1);
+    if (typeof fg.setScale === 'function') fg.setScale(Math.max(0.02, ratio), (hot ? 1.7 : 1) * lowWave);
     const depth = depthFromY(y, 2);
     bg.setDepth?.(depth);
     fg.setDepth?.(depth + 1);
@@ -1679,7 +1902,7 @@ export class PetCombat {
     if (!scene?.add || !sprite) return;
     scene.audio?.playSkillTelegraph?.();
     const pets = GAME_CONFIG.PETS;
-    const threat = nearestBarricadeThreat(this._liveZombies);
+    const threat = actor.focusThreat || nearestBarricadeThreat(this._liveZombies);
     const aim = telegraphPoint(actor, orbIndex, threat);
     if (orbIndex >= 2) {
       this._showHalfTell(actor, scene, aim);
@@ -1808,12 +2031,18 @@ export class PetCombat {
     this._showResidue(actor, focus.x, focus.y);
     this.hitstop(GAME_CONFIG.PETS.HITSTOP_S3_MS);
     const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
-    const gain = this._withCrit(0.55, () => {
-      const themed = this._castForm3(actor, zombies, threat);
-      const hits = this._halfScreenHits(actor, zombies);
-      const aoe = strikeAll(this.scene, hits, 10, color, { knockback: true, critChance: 0.55 });
-      return { gold: (themed?.gold || 0) + aoe.gold, kills: (themed?.kills || 0) + aoe.kills };
-    });
+    this._ultSwing = true;
+    let gain = EMPTY;
+    try {
+      gain = this._withCrit(0.55, () => {
+        const themed = this._castForm3(actor, zombies, threat);
+        const hits = this._halfScreenHits(actor, zombies);
+        const aoe = this._strikeAll(actor, hits, 10, color, { knockback: true, critChance: 0.55, ult: true });
+        return { gold: (themed?.gold || 0) + aoe.gold, kills: (themed?.kills || 0) + aoe.kills };
+      });
+    } finally {
+      this._ultSwing = false;
+    }
     this._loot.gold = (this._loot.gold || 0) + gain.gold;
     this._loot.kills = (this._loot.kills || 0) + gain.kills;
   }
@@ -1946,7 +2175,12 @@ export class PetCombat {
       return this._withCrit(0.45, () => this._castForm2(actor, zombies, threat));
     }
     this.hitstop(GAME_CONFIG.PETS.HITSTOP_S3_MS);
-    return this._withCrit(0.55, () => this._castForm3(actor, zombies, threat));
+    this._ultSwing = true;
+    try {
+      return this._withCrit(0.55, () => this._castForm3(actor, zombies, threat));
+    } finally {
+      this._ultSwing = false;
+    }
   }
 
   /**
@@ -1986,6 +2220,7 @@ export class PetCombat {
     }
     this._bolts.push({
       sprite: bolt,
+      actor,
       x: from.x,
       y: from.y,
       vx,
@@ -2016,9 +2251,9 @@ export class PetCombat {
     if (!target) return EMPTY;
     const hy = chestY(target);
     playCastFx(this.scene, target.x, hy, actor.role.impact, scale, hy);
-    const gain = strike(this.scene, target, cfg.DAMAGE, DAMAGE_COLORS.panda);
+    const gain = this._strike(actor, target, cfg.DAMAGE, DAMAGE_COLORS.panda);
     if (!gain.killed && typeof target.applySlow === 'function') {
-      target.applySlow(cfg.SLOW_MULT, cfg.SLOW_MS);
+      target.applySlow(cfg.SLOW_MULT, this._ccMs(actor, cfg.SLOW_MS));
     }
     return gain;
   }
@@ -2039,7 +2274,7 @@ export class PetCombat {
     const hits = threatsInShape(zombies, (z) =>
       inLeftCone(from.x, from.y, z.x, chestY(z), range, half)
     ).slice(0, cfg.MAX_TARGETS);
-    return strikeAll(this.scene, hits, cfg.DAMAGE, DAMAGE_COLORS.lion);
+    return this._strikeAll(actor, hits, cfg.DAMAGE, DAMAGE_COLORS.lion);
   }
 
   /**
@@ -2062,7 +2297,7 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      const gain = strike(this.scene, z, cfg.CHIP, DAMAGE_COLORS.dragon);
+      const gain = this._strike(actor, z, cfg.CHIP, DAMAGE_COLORS.dragon);
       gold += gain.gold;
       kills += gain.kills;
       if (!gain.killed && typeof z.applyBurn === 'function') {
@@ -2115,7 +2350,7 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      const gain = strike(this.scene, z, cfg.damage, DAMAGE_COLORS.phoenix);
+      const gain = this._strike(actor, z, cfg.damage, DAMAGE_COLORS.phoenix);
       gold += gain.gold;
       kills += gain.kills;
       if (!gain.killed && typeof z.applyBurn === 'function') {
@@ -2144,6 +2379,7 @@ export class PetCombat {
     node?.setDepth?.(depthFromY(y, 5));
     this._charges.push({
       node,
+      actor,
       x,
       y,
       vx: -speed,
@@ -2172,8 +2408,8 @@ export class PetCombat {
     );
     if (!target) return EMPTY;
     this._spawnBlob(target.x, chestY(target), layoutPx(16), PLACEHOLDER_TINT.panda, 520, 'panda-freeze');
-    const gain = strike(this.scene, target, cfg.damage, DAMAGE_COLORS.panda);
-    if (!gain.killed && typeof target.applyRoot === 'function') target.applyRoot(cfg.rootMs);
+    const gain = this._strike(actor, target, cfg.damage, DAMAGE_COLORS.panda);
+    if (!gain.killed && typeof target.applyRoot === 'function') target.applyRoot(this._ccMs(actor, cfg.rootMs));
     return gain;
   }
 
@@ -2192,9 +2428,9 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      if (typeof z.applySlow === 'function') z.applySlow(cfg.slowMult, cfg.slowMs);
+      if (typeof z.applySlow === 'function') z.applySlow(cfg.slowMult, this._ccMs(actor, cfg.slowMs));
       if (typeof z.applyBurn === 'function') z.applyBurn(cfg.dot, cfg.dotIntervalMs, cfg.dotMs);
-      const gain = strike(this.scene, z, cfg.dot, DAMAGE_COLORS.panda);
+      const gain = this._strike(actor, z, cfg.dot, DAMAGE_COLORS.panda);
       gold += gain.gold;
       kills += gain.kills;
     }
@@ -2223,7 +2459,7 @@ export class PetCombat {
     hits.forEach((z, i) => {
       this._spawnBlob(z.x, chestY(z), layoutPx(10), PLACEHOLDER_TINT.lion, 280, 'lion-chain');
       const dmg = cfg.damages[Math.min(i, cfg.damages.length - 1)];
-      const gain = strike(this.scene, z, dmg, DAMAGE_COLORS.lion);
+      const gain = this._strike(actor, z, dmg, DAMAGE_COLORS.lion);
       gold += gain.gold;
       kills += gain.kills;
     });
@@ -2249,10 +2485,10 @@ export class PetCombat {
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      const gain = strike(this.scene, z, cfg.damage, DAMAGE_COLORS.lion);
+      const gain = this._strike(actor, z, cfg.damage, DAMAGE_COLORS.lion);
       gold += gain.gold;
       kills += gain.kills;
-      if (!gain.killed && typeof z.applyRoot === 'function') z.applyRoot(cfg.rootMs);
+      if (!gain.killed && typeof z.applyRoot === 'function') z.applyRoot(this._ccMs(actor, cfg.rootMs));
     }
     return { gold, kills };
   }
@@ -2270,6 +2506,7 @@ export class PetCombat {
     if (threat) this.applyKnockback(threat);
     this._zones.push({
       node,
+      actor,
       x: focus.x,
       y: focus.y,
       radius,
@@ -2302,7 +2539,7 @@ export class PetCombat {
     let kills = 0;
     for (const z of hits) {
       this._spawnBlob(z.x, chestY(z) - layoutPx(18), layoutPx(8), PLACEHOLDER_TINT.dragon, 360, 'dragon-rain');
-      const gain = strike(this.scene, z, cfg.chip, DAMAGE_COLORS.dragon);
+      const gain = this._strike(actor, z, cfg.chip, DAMAGE_COLORS.dragon);
       gold += gain.gold;
       kills += gain.kills;
       if (!gain.killed && typeof z.applyBurn === 'function') {
@@ -2375,7 +2612,7 @@ export class PetCombat {
         if (Math.abs(z.y - charge.y) > charge.halfW) continue;
         if (z.x < minX || z.x > maxX) continue;
         charge.hitIds.add(z.id);
-        const gain = strike(this.scene, z, charge.damage, charge.color);
+        const gain = this._strike(charge.actor, z, charge.damage, charge.color);
         gold += gain.gold;
         kills += gain.kills;
       }
@@ -2406,7 +2643,7 @@ export class PetCombat {
         zone.acc -= zone.interval;
         const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - zone.x, z.y - zone.y) <= zone.radius);
         for (const z of hits) {
-          const gain = strike(this.scene, z, zone.damage, zone.hitColor, { knockback: false });
+          const gain = this._strike(zone.actor, z, zone.damage, zone.hitColor, { knockback: false, hitstop: false });
           gold += gain.gold;
           kills += gain.kills;
         }
@@ -2457,7 +2694,7 @@ export class PetCombat {
         const damage = bolt.hitIds.size === 1 ? cfg.DAMAGE : cfg.PIERCE_DAMAGE;
         const hy = chestY(z);
         playCastFx(this.scene, bolt.x, hy, bolt.impact, bolt.scale, hy);
-        const gain = strike(this.scene, z, damage, DAMAGE_COLORS.phoenix);
+        const gain = this._strike(bolt.actor, z, damage, DAMAGE_COLORS.phoenix);
         gold += gain.gold;
         kills += gain.kills;
         if (bolt.hitIds.size > cfg.PIERCE) {
@@ -2538,6 +2775,37 @@ function clampTellPoint(scene, x, y, halfW, halfH) {
  * @param {number} width
  * @param {number} height
  */
+/**
+ * One-frame cone outline opening west. A missing graphics API falls back
+ * to a faint disc so the swing is still visible.
+ * @param {Phaser.Scene} scene
+ * @param {number} x
+ * @param {number} y
+ * @param {number} range
+ * @param {number} yHalf
+ */
+function makeMeleeFan(scene, x, y, range, yHalf) {
+  const g = scene?.add?.graphics?.();
+  if (g?.lineStyle && g.beginPath) {
+    g.lineStyle(Math.max(1, layoutPx(1)), 0xfff4c8, 0.55);
+    g.beginPath();
+    g.moveTo(x, y);
+    g.lineTo(x - range, y - yHalf);
+    g.lineTo(x - range * 0.72, y);
+    g.lineTo(x - range, y + yHalf);
+    g.closePath();
+    g.strokePath?.();
+    g.setDepth?.(depthFromY(y, 6));
+    g.setAlpha?.(0.7);
+    return g;
+  }
+  const node = scene?.add?.ellipse?.(x - range * 0.45, y, range, yHalf * 2, 0xfff4c8, 0.18)
+    || scene?.add?.circle?.(x - range * 0.45, y, Math.max(layoutPx(8), yHalf * 0.65), 0xfff4c8, 0.18);
+  node?.setDepth?.(depthFromY(y, 6));
+  node?.setAlpha?.(0.35);
+  return node || null;
+}
+
 function makeTellDisc(scene, x, y, width, height) {
   const color = 0x39f3ff;
   const fill = 0.92;
@@ -2918,17 +3186,27 @@ function strikeAll(scene, zombies, damage, color, opts) {
  */
 function strike(scene, zombie, damage, color, opts = {}) {
   if (!zombie?.alive || !zombie.body) return { gold: 0, kills: 0, killed: false };
+  const pets = GAME_CONFIG.PETS;
+  let amount = Number(damage);
+  if (!(amount > 0) || !Number.isFinite(amount)) return { gold: 0, kills: 0, killed: false };
+  if (opts.scale > 0 && opts.scale !== 1) amount *= opts.scale;
+  if (opts.finisher && zombie.maxHp > 0 && zombie.hp / zombie.maxHp <= pets.T2_FINISHER_HP) {
+    amount *= pets.T2_FINISHER_MULT;
+  }
+  if (opts.ult) amount *= pets.T3_ULT_MULT;
+  amount = Math.max(1, Math.round(amount));
   if (opts.knockback !== false && typeof zombie.beginPetSlide === 'function') {
-    const px = layoutPx(GAME_CONFIG.PETS.KNOCKBACK_PX);
-    zombie.beginPetSlide(px, GAME_CONFIG.PETS.KNOCKBACK_MS);
+    const px = layoutPx(pets.KNOCKBACK_PX);
+    zombie.beginPetSlide(px, pets.KNOCKBACK_MS);
     scene?.audio?.playPetKnockback?.();
   }
+  if (opts.hitstop !== false) beginHitstop(scene, pets.HITSTOP_HIT_MS);
   const hx = zombie.x;
   const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : chestY(zombie);
   const goldVal = zombie.goldValue || 0;
-  const killed = zombie.takeDamage(damage, { kind: 'pet' });
-  if (damage > 0) scene?.audio?.playHitImpact?.();
-  showDamageText(scene, hx, hy, damage, color, zombie.id);
+  const killed = zombie.takeDamage(amount, { kind: 'pet' });
+  if (amount > 0) scene?.audio?.playHitImpact?.();
+  showDamageText(scene, hx, hy, amount, color, zombie.id);
   const chance = Number.isFinite(opts.critChance) ? opts.critChance : (scene?._zdCrit ?? 0.15);
   if (chance > 0 && Math.random() < chance) showCritText(scene, hx, hy - layoutPx(12));
   if (killed) return { gold: goldVal, kills: 1, killed: true };
