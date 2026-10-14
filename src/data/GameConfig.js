@@ -67,10 +67,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * v0.31.1 draws prop-water-mount, holds player-girl-command on a mount,
  * and plays fx-water-splash-big / fx-water-wet-ground plus the
  * profession fx-hit-water overlays. Legacy fx-water-* stays the fallback.
+ * v0.31.2 holds player-girl-tower-fire on a mount (command is the backup)
+ * and draws the six fence cradles from prop-water-mount-hi-vis, falling
+ * back to prop-water-mount. The cradle scale and lift keep the fork on
+ * the stake. Gold, saves, and barricade physics stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.31.1';
+export const APP_VERSION = '0.31.2';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

@@ -10,10 +10,25 @@
 import { grassYMax, grassYMin, layoutPx } from '../systems/DepthView.js';
 
 export const WATER_MOUNT_COUNT = 6;
-/** Side Y-fork cradle. Feet origin (0.5, 0.9375). */
+/**
+ * Brighter steel Y-fork. The six fence slots use this when it is loaded.
+ * Feet origin (0.5, 0.9375), same cradle as the fallback.
+ */
+export const WATER_MOUNT_HI_VIS_KEY = 'prop-water-mount-hi-vis';
+/** Same silhouette with less cyan. Row texture when the hi-vis sheet is missing. */
 export const WATER_MOUNT_KEY = 'prop-water-mount';
 /** Front dual-post. Used for the mount the hero is stopped behind. */
 export const WATER_MOUNT_ALT_KEY = 'prop-water-mount-front-alt';
+/**
+ * The 64px frame scaled to the full post puts the fork through the picket
+ * tip and the gaps beside it. 0.85 keeps the cradle inside the stake.
+ */
+export const WATER_MOUNT_SCALE = 0.85;
+/**
+ * Source px above the post sole, applied before WATER_MOUNT_SCALE.
+ * With the scale above, 4px seats the fork on the stake.
+ */
+export const WATER_MOUNT_LIFT = 4;
 /** Seated in the cradle. Not a substitute for the mount post. */
 export const WATER_MOUNT_GUN_KEY = 'player-girl-front-water-still';
 /** @deprecated use WATER_MOUNT_GUN_KEY. Kept so older checks still name the still. */
@@ -118,13 +133,15 @@ export function buildWaterMountSlots(anchorAt, yMin = grassYMin(), yMax = grassY
   return waterMountYs(yMin, yMax).map((y, index) => {
     const anchor = anchorAt(y);
     const postH = anchor.postH > 0 ? anchor.postH : WATER_MOUNT_FRAME;
-    const scale = postH / WATER_MOUNT_FRAME;
-    const cradleY = anchor.groundY - WATER_MOUNT_CRADLE_UP * scale;
+    const frameScale = postH / WATER_MOUNT_FRAME;
+    const scale = frameScale * WATER_MOUNT_SCALE;
+    const feetY = anchor.groundY - WATER_MOUNT_LIFT * frameScale;
+    const cradleY = feetY - WATER_MOUNT_CRADLE_UP * scale;
     return {
       index,
       x: anchor.x,
       y,
-      feetY: anchor.groundY,
+      feetY,
       scale,
       gunX: anchor.x,
       gunY: cradleY,

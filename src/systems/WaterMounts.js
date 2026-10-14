@@ -4,6 +4,7 @@ import {
   WATER_MOUNT_ALIGN_FIELD,
   WATER_MOUNT_ALT_KEY,
   WATER_MOUNT_GUN_KEY,
+  WATER_MOUNT_HI_VIS_KEY,
   WATER_MOUNT_KEY,
   WATER_MOUNT_ORIGIN,
   buildWaterMountSlots,
@@ -12,8 +13,9 @@ import {
 
 /**
  * Six water cradles on the fence. Visual + muzzle anchors.
- * Barricade HP, contactXAt, and the post list are not modified.
- * The side mount is the row. The front alt is the slot she is stopped behind.
+ * Barricade HP, contactXAt, gold, and saves are not modified.
+ * The row is prop-water-mount-hi-vis, then prop-water-mount.
+ * The front alt is the slot she is stopped behind.
  */
 export class WaterMounts {
   /**
@@ -57,7 +59,7 @@ export class WaterMounts {
   setActive(index) {
     const tex = this.scene?.textures;
     const alt = tex?.exists?.(WATER_MOUNT_ALT_KEY) ? WATER_MOUNT_ALT_KEY : null;
-    const side = tex?.exists?.(WATER_MOUNT_KEY) ? WATER_MOUNT_KEY : null;
+    const side = this._rowKey(tex);
     if (!side && !alt) return;
     for (let i = 0; i < this.sprites.length; i++) {
       const sprite = this.sprites[i];
@@ -90,11 +92,8 @@ export class WaterMounts {
   _make(scene, slot) {
     const tex = scene.textures;
     const depth = depthFromY(slot.y, 8);
-    const cradle = tex?.exists?.(WATER_MOUNT_KEY)
-      ? WATER_MOUNT_KEY
-      : tex?.exists?.(WATER_MOUNT_ALT_KEY)
-        ? WATER_MOUNT_ALT_KEY
-        : null;
+    const cradle = this._rowKey(tex)
+      || (tex?.exists?.(WATER_MOUNT_ALT_KEY) ? WATER_MOUNT_ALT_KEY : null);
     if (cradle && scene.add?.sprite) {
       const mount = scene.add.sprite(slot.x, slot.feetY, cradle);
       this._applyOrigin(mount, cradle);
@@ -123,6 +122,17 @@ export class WaterMounts {
     rect.setStrokeStyle?.(Math.max(1, layoutPx(1)), 0x01579b);
     rect.setDepth?.(depth);
     return { mount: rect, gun: null };
+  }
+
+  /**
+   * Hi-vis cradle, then the fainter steel fork. Null when neither is loaded.
+   * @param {{ exists?: (key: string) => boolean }|null|undefined} tex
+   * @returns {string|null}
+   */
+  _rowKey(tex) {
+    if (tex?.exists?.(WATER_MOUNT_HI_VIS_KEY)) return WATER_MOUNT_HI_VIS_KEY;
+    if (tex?.exists?.(WATER_MOUNT_KEY)) return WATER_MOUNT_KEY;
+    return null;
   }
 
   /**

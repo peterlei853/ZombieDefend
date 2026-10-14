@@ -411,8 +411,8 @@ export class DefenderGroup {
    */
   /**
    * Unarmed body. Deploy plays once. Fire stays on idle unless the hero
-   * is stopped behind a water mount, which prefers the command point.
-   * Walk prefers a run sheet when one is loaded.
+   * is stopped behind a water mount, which holds the tower-fire still
+   * (command is the backup). Walk prefers a run sheet when one is loaded.
    * @param {'move'|'hold'|'deploy'|'fire'} phase
    * @param {number} dy
    * @param {number} dx
@@ -436,9 +436,12 @@ export class DefenderGroup {
       return;
     }
     if (phase === 'fire' && pose.command) {
-      // player-girl-command is a one-frame still, so it has no anim.
-      if (this._playFirstExisting([HERO_UNARMED.command])) return;
-      if (this._holdStill(HERO_UNARMED.command)) return;
+      // Both poses are one-frame stills, so neither registers an anim.
+      const poses = [HERO_UNARMED.towerFire, HERO_UNARMED.command];
+      if (this._playFirstExisting(poses)) return;
+      for (const key of poses) {
+        if (this._holdStill(key)) return;
+      }
     }
     this._playFirstExisting([HERO_UNARMED.idle, 'player-idle']);
   }
@@ -521,8 +524,8 @@ export class DefenderGroup {
   }
 
   /**
-   * Show a one-frame library still (player-girl-command). Origin stays
-   * whatever the body was created with — command shares the idle feet.
+   * Show a one-frame library still (tower-fire, or command as backup).
+   * Origin stays whatever the body was created with — both share the idle feet.
    * @param {string} textureKey
    */
   _holdStill(textureKey) {
