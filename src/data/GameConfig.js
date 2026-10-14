@@ -85,10 +85,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * sheet, untinted. Impact and fx-hit-sling-* spawn at the body center,
  * above the zombie sprite, large enough to read. HP still lands on the
  * middle of the impact sheet.
+ * v0.33 keeps those freezes. The default stage draws six fence mounts,
+ * one weapon each, top to bottom: water, sling, bubble, lightning, frost,
+ * flame. Stopping behind a mount holds tower-fire and fires only that
+ * gun at the nearest living enemy. ?weapon= still immerses one gun.
+ * Gold, saves, barricade physics, roster, and BGM stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.32.1';
+export const APP_VERSION = '0.33.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

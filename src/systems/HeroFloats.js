@@ -26,15 +26,19 @@ export class HeroFloats {
     this._selected = null;
     /** @type {string[]} */
     this.missing = [];
-    /** Sole water or sling demo draws that gun on the fence, not in the arc. */
+    /**
+     * true: a lone water or sling demo draws that gun on the fence.
+     * 'all': the composite row owns every gun, so the arc stays empty.
+     * @type {boolean|'all'}
+     */
     this._fenceMounts = false;
   }
 
   /**
-   * @param {boolean} on
+   * @param {boolean|'all'} on
    */
   setFenceMounts(on) {
-    this._fenceMounts = !!on;
+    this._fenceMounts = on === 'all' ? 'all' : !!on;
   }
 
   /**
@@ -68,8 +72,8 @@ export class HeroFloats {
     const phase = deploy?.phase || 'move';
     const loneId = this._guns.length === 1 ? this._guns[0].id : null;
     const loneFence =
-      this._fenceMounts && (loneId === 'water' || loneId === 'sling');
-    const hidden = loneFence || phase === 'move' || phase === 'hold';
+      this._fenceMounts === true && (loneId === 'water' || loneId === 'sling');
+    const hidden = this._fenceMounts === 'all' || loneFence || phase === 'move' || phase === 'hold';
     const scale = Math.abs(girl.scaleX || 1) || 1;
     const arc = frontArcFor(this._guns.length);
     const t = phase === 'fire' ? 1 : phase === 'deploy' ? deploy.t || 0 : 0;

@@ -137,6 +137,16 @@ Accent map for all six turrets: water cyan, sling amber, bubble magenta, lightni
 
 The primary is the side Y-fork. Hi-vis is the higher-contrast swap if the primary washes out on the barricade. The front dual-post is secondary. This catalog does not change gold, saves, or barricade physics.
 
+## Composite fence (v0.33)
+
+The default stage draws six cradles on the same fence geometry as the water mounts (scale 0.85, 4px lift). Top to bottom they are water, sling, bubble, lightning, frost, flame. The gun is not baked into the cradle.
+
+- Water: `prop-water-mount-hi-vis` (then `prop-water-mount`) and `player-girl-front-water-still`. The slot she is stopped behind uses `prop-water-mount-front-alt`.
+- Sling: `prop-sling-mount-hi-vis` (then `prop-sling-mount`, then the water hi-vis cradle) and `player-girl-front-sling-still`. Active slot uses `prop-sling-mount-front-alt`.
+- Bubble, lightning, frost, flame: `prop-<id>-mount-hi-vis` when that sheet exists, otherwise the sling hi-vis cradle, then the water hi-vis cradle. The float is `player-girl-front-<id>-still`, then `icon-<id>`. `prop-<id>-mount-front-alt` is used on the active slot only when it is loaded.
+
+`?weapon=water` and `?weapon=sling` keep the single-gun rows. Gold, saves, and barricade contact math stay as they are.
+
 ## Front-float combat (v0.27)
 
 Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.

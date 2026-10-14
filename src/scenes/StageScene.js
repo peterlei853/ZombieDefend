@@ -2,6 +2,7 @@ import { WaveManager } from '../systems/WaveManager.js';
 import { Barricade } from '../entities/Barricade.js';
 import { WaterMounts } from '../systems/WaterMounts.js';
 import { SlingMounts } from '../systems/SlingMounts.js';
+import { FenceMounts } from '../systems/FenceMounts.js';
 import { applyHpBarDensity, Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
@@ -74,8 +75,9 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * The flags are independent.
  * `?weapon=<id>` (water, sling, bubble, lightning, frost, flame) boots
  * this run with only that gun. SPACE stays on it. The list is registry
- * memory for the page load, not a save write. `?weapon=sling` places
- * six fence mounts and fires only while she is stopped behind one.
+ * memory for the page load, not a save write. `?weapon=water` and
+ * `?weapon=sling` keep the single-gun fence immerse. Without that
+ * query the stage places six mounts, one weapon each, top to bottom.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -98,7 +100,8 @@ export default class StageScene extends Phaser.Scene {
       : this.registry.get('ownedWeapons') || [];
     // Stage 1 playtest deploys all six guns unless ?weapon=<id> is set.
     // That id is this run only. It is not written to MockDB or localStorage.
-    this.ownedWeapons = resolveOwnedWeapons(this.stage, carried, demoWeaponId());
+    this.weaponImmerse = demoWeaponId();
+    this.ownedWeapons = resolveOwnedWeapons(this.stage, carried, this.weaponImmerse);
     this.weaponUpgrades = { ...(data?.upgrades || this.registry.get('weaponUpgrades') || {}) };
 
     this.registry.set('stage', this.stage);
@@ -145,20 +148,30 @@ export default class StageScene extends Phaser.Scene {
     this.barricade = new Barricade(this, {
       maxHp: BARRICADE_MAX_HP,
     });
-    const ownsWater = this.ownedWeapons.includes('water');
-    this.waterMounts = ownsWater ? new WaterMounts(this, this.barricade) : null;
-    // Sling takes the fence only when water is not already using it.
-    // ?weapon=sling is that case. A mixed stage keeps sling on the west ray.
-    this.slingMounts =
-      !ownsWater && this.ownedWeapons.includes('sling')
-        ? new SlingMounts(this, this.barricade)
-        : null;
+    // Default stage: six cradles, one gun each. ?weapon= keeps the
+    // single-gun immerse (water/sling mounts, or a lone front-float).
+    if (this.weaponImmerse) {
+      const ownsWater = this.ownedWeapons.includes('water');
+      this.fenceMounts = null;
+      this.waterMounts = ownsWater ? new WaterMounts(this, this.barricade) : null;
+      // Sling takes the fence only when water is not already using it.
+      // ?weapon=sling is that case. A mixed stage keeps sling on the west ray.
+      this.slingMounts =
+        !ownsWater && this.ownedWeapons.includes('sling')
+          ? new SlingMounts(this, this.barricade)
+          : null;
+    } else {
+      this.fenceMounts = new FenceMounts(this, this.barricade);
+      this.waterMounts = null;
+      this.slingMounts = null;
+    }
 
     this.defenders = new DefenderGroup(this, {
       ownedWeapons: this.ownedWeapons,
       upgrades: this.weaponUpgrades,
       waterMounts: this.waterMounts,
       slingMounts: this.slingMounts,
+      fenceMounts: this.fenceMounts,
     });
     this.petEvolve = new PetEvolve(this);
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);
@@ -463,14 +476,25 @@ export default class StageScene extends Phaser.Scene {
     this._reflowHud();
 
     this._announcedWave = null;
-    this._showBanner({
-      icon: UI.ready,
-      title: 'STOP TO FIRE',
-      sub: 'W/S LANE SWAP',
-      zh: '停步展開射擊 · 換道 · 換武器',
-      hold: 6500,
-      y: 230,
-    });
+    this._showBanner(
+      this.fenceMounts
+        ? {
+            icon: UI.ready,
+            title: 'STOP TO FIRE',
+            sub: 'STAND BEHIND A GUN',
+            zh: '停在炮台後，只開那一把',
+            hold: 6500,
+            y: 230,
+          }
+        : {
+            icon: UI.ready,
+            title: 'STOP TO FIRE',
+            sub: 'W/S LANE SWAP',
+            zh: '停步展開射擊 · 換道 · 換武器',
+            hold: 6500,
+            y: 230,
+          }
+    );
     this.events.once('shutdown', () => this._clearBanner());
   }
 

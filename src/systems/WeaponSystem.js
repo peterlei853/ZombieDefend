@@ -186,6 +186,22 @@ export class WeaponSystem {
     return this._ownedIds.slice();
   }
 
+  /**
+   * Point the HUD skin at an owned gun. Damage tables stay on WEAPON_TRAITS.
+   * Unknown or unowned ids are ignored.
+   * @param {string|null|undefined} id
+   * @returns {boolean}
+   */
+  selectOwned(id) {
+    if (!id || !this._ownedIds.includes(id)) return false;
+    const idx = HERO_WEAPONS.findIndex((w) => w.id === id);
+    if (idx < 0) return false;
+    this._skinIndex = idx;
+    const skin = HERO_WEAPONS[idx];
+    this.weapon = skin.profile === 'shotgun' ? WEAPON_SHOTGUN : WEAPON_HANDGUN;
+    return true;
+  }
+
   /** @returns {WeaponId} */
   getWeapon() {
     return this.weapon;
@@ -568,6 +584,7 @@ export class WeaponSystem {
       this._syncFlame(false, null, dt, zombies);
       return null;
     }
+    if (opts.fenceOnly) return this._updateFenceFire(dt, zombies, bullets, opts);
     if (!this._wasFrontFire) {
       this._ownedIds.forEach((id, i) => {
         this._cooldowns[id] = i * 70;
@@ -620,6 +637,64 @@ export class WeaponSystem {
     }
     if (!flame) this._syncFlame(false, null, dt, zombies);
     return fired;
+  }
+
+  /**
+   * One mount, one gun. Water and sling keep their beat-timed shots.
+   * Bubble, lightning, and frost reuse the front slug (split / chain / freeze).
+   * Flame reuses the west cone. The shot aims at the nearest living enemy.
+   * @param {number} dt
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {object[]} bullets
+   * @param {{ fenceMount?: { weaponId?: string, muzzleX: number, muzzleY: number }|null }} opts
+   * @returns {string|null}
+   */
+  _updateFenceFire(dt, zombies, bullets, opts) {
+    if (!this._wasFrontFire) {
+      this._ownedIds.forEach((id, i) => {
+        this._cooldowns[id] = i * 70;
+      });
+      this._flameMs = 0;
+      this._flameTick = 0;
+    }
+    this._wasFrontFire = true;
+    const slot = opts.fenceMount || null;
+    const id = slot && this._ownedIds.includes(slot.weaponId) ? slot.weaponId : null;
+    const trait = id ? WEAPON_TRAITS[id] : null;
+    if (!trait || !Number.isFinite(slot?.muzzleX) || !Number.isFinite(slot?.muzzleY)) {
+      this._syncFlame(false, null, dt, zombies);
+      return null;
+    }
+    if (trait.continuous) {
+      this._syncFlame(true, { x: slot.muzzleX, y: slot.muzzleY }, dt, zombies);
+      return null;
+    }
+    this._syncFlame(false, null, dt, zombies);
+    this._cooldowns[id] = (this._cooldowns[id] || 0) - dt;
+    if (this._cooldowns[id] > 0) return null;
+    this._cooldowns[id] = trait.fireMs;
+    if (id === 'water') {
+      this._spawnWaterShot(bullets, slot, zombies, trait);
+      return id;
+    }
+    if (id === 'sling') {
+      this._spawnSlingShot(bullets, slot, zombies, trait);
+      return id;
+    }
+    const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
+    const target = this._nearestLiving(zombies, slot.muzzleX, slot.muzzleY);
+    const aim = target
+      ? {
+          x: target.x,
+          y: Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y,
+        }
+      : null;
+    const { vx, vy } = waterAimVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
+    this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
+      split: id === 'bubble',
+      tier: trait.tier || null,
+    });
+    return id;
   }
 
   /**
