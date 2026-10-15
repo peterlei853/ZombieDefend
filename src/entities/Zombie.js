@@ -780,10 +780,16 @@ export class Zombie {
 
   /**
    * Key 2. Attack strip (not the nurse attach skill) plus the barricade lunge.
+   * `onContact` runs when `hitFrame` is the frame on screen. A missing
+   * strip, or no hit frame, runs it immediately — there is no strike to wait for.
+   * The contact is the anim update, not a timer.
+   * @param {number|null|undefined} hitFrame
+   * @param {(() => void)|undefined} onContact
    * @returns {boolean}
    */
-  playShowcaseAttack() {
+  playShowcaseAttack(hitFrame, onContact) {
     if (!this.alive || !this.body) return false;
+    this._clearAttackContact();
     const attackKey = this._animKey('attack');
     const played = attackKey ? this.playShowcaseStrip(attackKey) : false;
     const homeX = this.body.x;
@@ -805,7 +811,63 @@ export class Zombie {
         this._syncBars();
       },
     });
+    this._armAttackContact(played ? attackKey : null, hitFrame, onContact);
     return played;
+  }
+
+  /** Drop a pending key-2 contact so a replay or a despawn cannot flinch late. */
+  _clearAttackContact() {
+    const handler = this._attackContactHandler;
+    this._attackContactHandler = null;
+    if (handler && this.body?.off) this.body.off('animationupdate', handler);
+    this._attackContactToken = (this._attackContactToken || 0) + 1;
+  }
+
+  /**
+   * Fire `onContact` once, on the attack frame that is actually showing.
+   * @param {string|null} attackKey
+   * @param {number|null|undefined} hitFrame
+   * @param {(() => void)|undefined} onContact
+   */
+  _armAttackContact(attackKey, hitFrame, onContact) {
+    if (typeof onContact !== 'function') return;
+    const token = this._attackContactToken;
+    const fire = () => {
+      if (this._attackContactToken !== token) return;
+      const handler = this._attackContactHandler;
+      this._attackContactHandler = null;
+      if (handler && this.body?.off) this.body.off('animationupdate', handler);
+      this._attackContactToken = token + 1;
+      onContact();
+    };
+    const ready = !!(
+      attackKey &&
+      this._animReady(attackKey) &&
+      Number.isInteger(hitFrame) &&
+      hitFrame >= 0
+    );
+    if (!ready) {
+      fire();
+      return;
+    }
+    const total = this.scene?.anims?.get?.(attackKey)?.frames?.length || 0;
+    if (total > 0 && hitFrame >= total) {
+      fire();
+      return;
+    }
+    const onUpdate = (anim, animFrame) => {
+      if (this._attackContactToken !== token) return;
+      if (anim?.key !== attackKey) return;
+      const index = Number.isFinite(animFrame?.index) ? animFrame.index : Number(animFrame?.textureFrame);
+      if (index !== hitFrame) return;
+      fire();
+    };
+    this._attackContactHandler = onUpdate;
+    this.body.on('animationupdate', onUpdate);
+    const showing = this.body.anims?.currentAnim?.key === attackKey
+      ? this.body.anims.currentFrame?.index
+      : undefined;
+    if (showing === hitFrame) fire();
   }
 
   /** Hurt strip after the white flash. No-op when that sheet is not loaded. */
@@ -1061,6 +1123,7 @@ export class Zombie {
   }
 
   destroyVisuals() {
+    this._clearAttackContact();
     if (this.body) {
       this._lastX = this.body.x;
       this._lastY = this.body.y;

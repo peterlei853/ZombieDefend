@@ -115,6 +115,66 @@ export function enemySfxClips() {
 }
 
 /**
+ * Feel-booth key 1. Cyan body overlay from the girl FX catalog.
+ * Same family as `fx-hit-water-*`: 8×64, origin center, played once
+ * on the enemy body in the same turn as the hit cue and the HP tick.
+ */
+export const FEEL_HIT_BURST = 'fx-hit-water-burst';
+
+/**
+ * 0-based frame of the attack strip where the east strike first reaches
+ * the target. These attack sheets have no `timing.impactFrame` marker.
+ * The index is the first frame whose striking limb is within 2px of its
+ * furthest east reach (the arms; riot’s low bat/shield). Key 2 starts
+ * `player-girl-hurt` and `sfx-enemy-<id>-hurt` when that frame is shown.
+ * slime-mini has no attack strip, so it is absent and key 2 reacts at once.
+ *
+ * office-worker-v2 4 — arms jump to full extension and hold through 7
+ * delivery 5 — arm arrives; frame 6 is 1px of follow-through
+ * chef 5 — cleaver at full reach
+ * nurse 6 — arm jumps to full reach (frames 0–1 are a held weapon, not the strike)
+ * brute 4 — fist at full reach
+ * riot 4 — low weapon/shield at full reach
+ * trashcan 3 — arms at full reach
+ * sprinter 4 — lunge arrives; frame 5 is 2px of follow-through
+ * slime 4 — body at the strike; frame 5 is 2px of follow-through
+ * exploder 4 — arms at full reach
+ * cyborg 5 — arm at full reach
+ * clown 4 — arms at full reach
+ * lava-balon 4 — arm at full reach
+ * steel-balam 4 — arm at full reach
+ *
+ * @type {Record<string, number>}
+ */
+export const ENEMY_ATTACK_HIT_FRAME = {
+  'office-worker-v2': 4,
+  delivery: 5,
+  chef: 5,
+  nurse: 6,
+  brute: 4,
+  riot: 4,
+  trashcan: 3,
+  sprinter: 4,
+  slime: 4,
+  exploder: 4,
+  cyborg: 5,
+  clown: 4,
+  'lava-balon': 4,
+  'steel-balam': 4,
+};
+
+/**
+ * Attack contact frame for the feel booth, or null when that id has no strike.
+ * @param {string|null|undefined} id
+ * @returns {number|null}
+ */
+export function feelAttackHitFrame(id) {
+  if (!id || !Object.prototype.hasOwnProperty.call(ENEMY_ATTACK_HIT_FRAME, id)) return null;
+  const frame = ENEMY_ATTACK_HIT_FRAME[id];
+  return Number.isInteger(frame) ? frame : null;
+}
+
+/**
  * Key 1 chips about a third of the showcase HP so the third press
  * reaches the death strip and `die` cue. Does not change gold-by-HP.
  * @param {number} maxHp

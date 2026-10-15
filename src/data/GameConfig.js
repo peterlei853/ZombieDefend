@@ -99,10 +99,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * `?feel=1` (keys 1/2/3/R for hit, hurt, skill, and reset). Feel is a
  * no-op without a known enemy id. Gold, saves, barricade physics,
  * wave tables, BGM/SFX volumes, and the camera stay put.
+ * v0.35.1 starts the hero hurt pose on the enemy attack's hit frame
+ * in that booth (key 2), and plays the hurt cue on the same frame.
+ * Key 1 plays `fx-hit-water-burst` on the enemy body with the hit cue.
+ * Gold, saves, barricade physics, wave tables, BGM/SFX volumes, and
+ * the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.0';
+export const APP_VERSION = '0.35.1';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

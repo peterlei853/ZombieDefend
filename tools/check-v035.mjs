@@ -7,6 +7,10 @@
  * feel is a no-op and the stage still runs the v0.34.1 wave path.
  * Gold, barricade HP, wave totals, and the loudness table stay put.
  *
+ * v0.35.1: key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt`
+ * on the attack strip's hit frame (`animationupdate`), not on a timer.
+ * Key 1 plays `fx-hit-water-burst` on the enemy body with the hit cue.
+ *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
 import { existsSync, readFileSync } from 'node:fs';
@@ -17,12 +21,15 @@ import {
   enemyFeelEnabled,
 } from '../src/data/GameConfig.js';
 import {
+  ENEMY_ATTACK_HIT_FRAME,
   ENEMY_SFX_FILES,
+  FEEL_HIT_BURST,
   ENEMY_SKILL_STRIPS,
   enemySfxClips,
   enemySfxKey,
   enemySfxUrl,
   enemySkillStrips,
+  feelAttackHitFrame,
   feelHitDamage,
 } from '../src/data/enemyShowcase.js';
 import { AUDIO_VOLUME } from '../src/systems/SoundManager.js';
@@ -64,8 +71,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.0' && APP_VERSION === '0.35.0', 'package and APP_VERSION are 0.35.0');
-assert(html.includes('v0.35.0'), 'document title is v0.35.0');
+assert(pkg.version === '0.35.1' && APP_VERSION === '0.35.1', 'package and APP_VERSION are 0.35.1');
+assert(html.includes('v0.35.1'), 'document title is v0.35.1');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -122,6 +129,66 @@ assert(stageSrc.includes('waveDefs: []'), 'solo arena does not queue the normal 
 assert(stageSrc.includes('if (this.enemyFeel)'), 'feel mode holds the combat loop');
 assert(stageSrc.includes('playEnemyCue'), 'stage plays the per-enemy cues');
 assert(zombieSrc.includes('playEnemyCue'), 'zombie hits use the showcase cue when that enemy is selected');
+
+const HIT_FRAMES = {
+  'office-worker-v2': 4,
+  delivery: 5,
+  chef: 5,
+  nurse: 6,
+  brute: 4,
+  riot: 4,
+  trashcan: 3,
+  sprinter: 4,
+  slime: 4,
+  exploder: 4,
+  cyborg: 5,
+  clown: 4,
+  'lava-balon': 4,
+  'steel-balam': 4,
+};
+for (const id of IDS) {
+  const skin = ZOMBIE_LIBRARY_SKINS[id] || ZOMBIE_BOSS_SKINS[id];
+  const attack = skin?.actions?.attack;
+  if (!attack) {
+    assert(feelAttackHitFrame(id) == null, `${id} without an attack strip has no hit frame`);
+    assert(!(id in ENEMY_ATTACK_HIT_FRAME), `${id} is not in the hit-frame table`);
+  } else {
+    assert(feelAttackHitFrame(id) === HIT_FRAMES[id], `${id} attack hit frame is ${HIT_FRAMES[id]}`);
+    assert(ENEMY_ATTACK_HIT_FRAME[id] === HIT_FRAMES[id], `${id} table matches feelAttackHitFrame`);
+  }
+}
+assert(Object.keys(HIT_FRAMES).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
+assert(feelAttackHitFrame('office-worker-v2') === 4, 'office-worker-v2 strike is attack frame 4');
+
+const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
+assert(FEEL_HIT_BURST === 'fx-hit-water-burst', 'feel hit overlay is the cyan burst');
+assert(hitFn.includes('_playFeelHitBurst'), 'key 1 plays the burst');
+assert(!hitFn.includes('playLibraryFx'), 'key 1 delegates the overlay to the burst helper');
+const burstFn = stageSrc.slice(stageSrc.indexOf('\n  _playFeelHitBurst(z) {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));
+assert(burstFn.includes('playLibraryFx') && burstFn.includes('FEEL_HIT_BURST'), 'burst uses playLibraryFx');
+assert(burstFn.includes('bodyCenterY'), 'burst is centered on the enemy body');
+assert(hitFn.indexOf('_playFeelHitBurst') < hitFn.indexOf('takeDamage'), 'burst plays before the HP tick');
+const burstPng = new URL('../assets/library/characters/hero/girl/fx/fx-hit-water-burst.png', import.meta.url);
+assert(existsSync(burstPng), 'fx-hit-water-burst.png is in the catalog');
+const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+const burst = index.assets.find((asset) => asset.key === 'fx-hit-water-burst');
+assert(burst?.category === 'hero' && burst?.frames === 8, 'burst is an 8-frame hero fx sheet');
+assert(burst?.frameWidth === 64 && burst?.frameHeight === 64 && burst?.frameRate === 14, 'burst is 64×64 @ 14fps');
+assert(burst?.origin?.[0] === 0.5 && burst?.origin?.[1] === 0.5 && burst?.loop === false, 'burst origin is center, once');
+
+const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _playFeelHitBurst(z) {'));
+const onHitFn = stageSrc.slice(stageSrc.indexOf('\n  _onFeelAttackHit() {'), stageSrc.indexOf('\n  _feelSkill() {'));
+assert(hurtFn.includes('feelAttackHitFrame'), 'key 2 reads the attack hit frame');
+assert(hurtFn.includes('playShowcaseAttack'), 'key 2 plays the attack strip');
+assert(!hurtFn.includes('_playHeroFeel'), 'key 2 does not start the hero hurt before contact');
+assert(!hurtFn.includes('delayedCall'), 'key 2 does not delay the hurt on a timer');
+assert(hurtFn.includes('_onFeelAttackHit'), 'key 2 hands contact to the hit callback');
+assert(onHitFn.includes("_playHeroFeel('hurt')"), 'contact plays player-girl-hurt');
+assert(onHitFn.includes('playEnemyCue') && onHitFn.includes("'hurt'"), 'hurt sfx shares the contact frame');
+assert(stageSrc.includes('player-girl-hurt'), 'the hurt pose is player-girl-hurt');
+assert(zombieSrc.includes("on('animationupdate'"), 'contact listens to the attack frame');
+assert(zombieSrc.includes('animFrame.index'), 'contact reads the shown frame index');
+assert(!zombieSrc.slice(zombieSrc.indexOf('_armAttackContact'), zombieSrc.indexOf('_playHurtStrip')).includes('delayedCall'), 'attack contact is not a delayed timer');
 assert(zombieSrc.includes("playZombieHurt"), 'normal hits still use the shared hurt cue');
 assert(soundSrc.includes('enemySfxClips()'), 'SoundManager preloads the enemy pack');
 assert(soundSrc.includes('playEnemyCue'), 'SoundManager exposes playEnemyCue');
