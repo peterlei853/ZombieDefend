@@ -706,7 +706,7 @@ export class Zombie {
 
   /**
    * @param {number} amount
-   * @param {{ kind?: string }} [hit]
+   * @param {{ kind?: string, feel?: boolean, flashMs?: number }} [hit]
    * @returns {boolean} true if killed
    */
   takeDamage(amount, hit = {}) {
@@ -728,7 +728,7 @@ export class Zombie {
       if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
     }
-    this._playHitFlash();
+    this._playHitFlash(hit?.flashMs);
     if (amount > 0) {
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
       else this.scene.audio?.playZombieHurt();
@@ -878,22 +878,25 @@ export class Zombie {
   }
 
   /**
-   * Pure white for HIT_FLASH_MS, then the previous fill / tint.
+   * Pure white, then the previous fill / tint.
+   * Feel hits pass 40ms. Everyone else keeps JUICE.HIT_FLASH_MS.
    * Safe to call on the killing blow; death mode decides whether it restores.
+   * @param {number} [ms]
    */
-  _playHitFlash() {
+  _playHitFlash(ms) {
     const body = this.body;
     if (!body?.active) return;
     const token = (this._flashToken || 0) + 1;
     this._flashToken = token;
     const juice = GAME_CONFIG.JUICE;
+    const dur = Number(ms) > 0 ? Number(ms) : juice.HIT_FLASH_MS;
     if (this._isSprite && typeof body.setTintFill === 'function') {
       body.setTintFill(juice.HIT_FLASH_COLOR);
     } else if (typeof body.setFillStyle === 'function') {
       body.setFillStyle(juice.HIT_FLASH_COLOR);
       if (typeof body.setStrokeStyle === 'function') body.setStrokeStyle(1, juice.HIT_FLASH_COLOR);
     }
-    this.scene.time?.delayedCall?.(juice.HIT_FLASH_MS, () => {
+    this.scene.time?.delayedCall?.(dur, () => {
       if (this._flashToken !== token || !body.active) return;
       if (this._deathMode === 'overkill') return;
       this._restoreBodyColor(body);
@@ -913,7 +916,7 @@ export class Zombie {
 
   /**
    * @param {number} amount
-   * @param {{ kind?: string }} hit
+   * @param {{ kind?: string, flashMs?: number }} hit
    */
   _beginDeath(amount, hit) {
     const body = this.body;
@@ -927,7 +930,7 @@ export class Zombie {
 
     const overkill = isOverkillHit(hit?.kind, amount);
     this._deathMode = overkill ? 'overkill' : 'normal';
-    this._playHitFlash();
+    this._playHitFlash(hit?.flashMs);
 
     const deathKey = this._libraryDeathKey(overkill);
     if (deathKey) {

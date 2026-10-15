@@ -101,13 +101,19 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * wave tables, BGM/SFX volumes, and the camera stay put.
  * v0.35.1 starts the hero hurt pose on the enemy attack's hit frame
  * in that booth (key 2), and plays the hurt cue on the same frame.
- * Key 1 plays `fx-hit-water-burst` on the enemy body with the hit cue.
+ * Key 1 played `fx-hit-water-burst` on the enemy body with the hit cue.
  * Gold, saves, barricade physics, wave tables, BGM/SFX volumes, and
  * the camera stay put.
+ * v0.35.2 removes that water burst. Key 1 (ranged) and key 4 (melee)
+ * play a 40ms monster hitstop and white flash, 8–12 impact sparks, and
+ * a 2px X knockback along the shot. Melee spawns `fx-slash-overhead`
+ * above the enemy with no rotation. `fx-slash` is the side spare only.
+ * Keys 2, 3, and R are unchanged. Gold, saves, barricade physics, wave
+ * tables, BGM/SFX volumes, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.1';
+export const APP_VERSION = '0.35.2';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

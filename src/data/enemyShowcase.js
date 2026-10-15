@@ -115,13 +115,6 @@ export function enemySfxClips() {
 }
 
 /**
- * Feel-booth key 1. Cyan body overlay from the girl FX catalog.
- * Same family as `fx-hit-water-*`: 8×64, origin center, played once
- * on the enemy body in the same turn as the hit cue and the HP tick.
- */
-export const FEEL_HIT_BURST = 'fx-hit-water-burst';
-
-/**
  * 0-based frame of the attack strip where the east strike first reaches
  * the target. These attack sheets have no `timing.impactFrame` marker.
  * The index is the first frame whose striking limb is within 2px of its
