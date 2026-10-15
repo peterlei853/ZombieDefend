@@ -11,7 +11,7 @@ import {
   GAME_HEIGHT,
   STAGE_DURATION,
 } from '../data/waves.js';
-import { APP_VERSION, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, debugPetSkillEnabled, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -72,6 +72,8 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * Off, E and U do nothing.
  * `?petHurt=1` or H still plays one hurt sequence. `?petLowHp=1` or L drops
  * every field pet under 30% HP so the bar pulses and Recall! floats once.
+ * `?debugPetSkill=1`: keys 0/1/2, or the BABY / YOUNG / ANCIENT chips, force
+ * the current pet's form skill. The hint reads "0/1/2 = force skill".
  * The flags are independent.
  * `?weapon=<id>` (water, sling, bubble, lightning, frost, flame) boots
  * this run with only that gun. SPACE stays on it. The list is registry
@@ -206,6 +208,9 @@ export default class StageScene extends Phaser.Scene {
       this._installDebugExp();
       this._installDebugUlt();
     }
+    if (debugPetSkillEnabled()) {
+      this._installDebugPetSkill();
+    }
 
     this.touchControls = new VirtualControls(this, {
       onWeapon: () => this._toggleWeapon(),
@@ -327,6 +332,72 @@ export default class StageScene extends Phaser.Scene {
       size: 13,
       color: '#ffd2a8',
       depth: depth + 1,
+    });
+  }
+
+  /**
+   * `?debugPetSkill=1` only. 0 / 1 / 2 force the current pet's baby, young,
+   * and ancient cast. The chips do the same thing.
+   */
+  _installDebugPetSkill() {
+    const combat = this.defenders?.petCombat;
+    if (combat) combat.debugSkills = true;
+    const fire = (orb) => {
+      if (this.ended || !debugPetSkillEnabled()) return;
+      const player = this.defenders?.player;
+      const anchor = player ? { x: player.x, y: player.y } : null;
+      const ok = this.defenders?.petCombat?.forceSkill?.(orb, anchor);
+      if (!ok || !this._debugSkillHint?.setText) return;
+      const last = this.defenders?.petCombat?.lastForcedSkill;
+      this._debugSkillHint.setText(last ? `0/1/2 = force skill  ${last}` : '0/1/2 = force skill');
+    };
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const codes = [
+        [Phaser.Input.Keyboard.KeyCodes.ZERO, Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO, 0],
+        [Phaser.Input.Keyboard.KeyCodes.ONE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE, 1],
+        [Phaser.Input.Keyboard.KeyCodes.TWO, Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO, 2],
+      ];
+      const bound = [];
+      for (const [code, pad, orb] of codes) {
+        const onDown = () => fire(orb);
+        const key = keyboard.addKey(code);
+        const num = keyboard.addKey(pad);
+        key.on('down', onDown);
+        num.on('down', onDown);
+        bound.push([key, onDown], [num, onDown]);
+      }
+      this.events.once('shutdown', () => {
+        for (const [key, onDown] of bound) key.off('down', onDown);
+      });
+    }
+
+    const depth = HUD_DEPTH + 50;
+    const hintY = GAME_HEIGHT - 72;
+    this._debugSkillHint = addKitText(this, GAME_WIDTH / 2, hintY, '0/1/2 = force skill', {
+      system: true,
+      size: 14,
+      color: '#ffe7a0',
+      depth: depth + 1,
+    });
+    const labels = ['0 BABY', '1 YOUNG', '2 ANCIENT'];
+    const gap = 136;
+    const origin = GAME_WIDTH / 2 - gap;
+    const y = GAME_HEIGHT - 38;
+    labels.forEach((label, orb) => {
+      const x = origin + orb * gap;
+      const hit = this.add
+        .rectangle(x, y, 124, 28, 0x1a1208, 0.82)
+        .setScrollFactor(0)
+        .setDepth(depth)
+        .setInteractive({ useHandCursor: true });
+      hit.on('pointerup', () => fire(orb));
+      addKitText(this, x, y, label, {
+        system: true,
+        size: 13,
+        color: '#ffe7a0',
+        depth: depth + 1,
+      });
     });
   }
 

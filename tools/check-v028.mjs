@@ -35,7 +35,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.34.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.34.1', `APP_VERSION ${APP_VERSION}`);
 assert(getGoldByHP(40) === 10 && getGoldByHP(105) === 15 && getGoldByHP(165) === 20, 'gold-by-HP unchanged');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP unchanged');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'wave counts unchanged');

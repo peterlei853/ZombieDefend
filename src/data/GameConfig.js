@@ -91,12 +91,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * gun at the nearest living enemy. ?weapon= still immerses one gun.
  * Gold, saves, barricade physics, roster, and BGM stay put.
  * v0.34 plays all twelve pet-form cast strips and their catalog FX.
+ * v0.34.1 adds `?debugPetSkill=1`. Keys 0/1/2 force the current pet's
+ * baby, young, and ancient cast. Normal cooldowns and damage stay put.
  * Gold, saves, barricade physics, BGM/SFX volumes, and the six-mount
  * fence stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.34.0';
+export const APP_VERSION = '0.34.1';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -135,6 +137,20 @@ export function petHurtDebugRequested() {
 export function petLowHpDebugRequested() {
   try {
     return new URLSearchParams(globalThis.location?.search || '').get('petLowHp') === '1';
+  } catch (_) {
+    return false;
+  }
+}
+
+/**
+ * `?debugPetSkill=1` lets 0/1/2 force the current pet's baby, young, and
+ * ancient cast. Off, those keys do nothing. Does not write a save.
+ * @param {string} [search]
+ */
+export function debugPetSkillEnabled(search) {
+  try {
+    const raw = search ?? (globalThis.location?.search || '');
+    return new URLSearchParams(raw || '').get('debugPetSkill') === '1';
   } catch (_) {
     return false;
   }
