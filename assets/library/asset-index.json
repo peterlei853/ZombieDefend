@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 570,
+    "total": 571,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 127
+        "assets": 128
       },
       "pets": {
         "groups": 17,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 73,
+      "fx": 74,
       "icon": 75,
       "image": 30,
       "spritesheet": 358
@@ -197,7 +197,7 @@
       "group": "girl-fx",
       "title": "Player Girl — weapon FX",
       "titleZh": "女主角武器特效",
-      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). Legacy water FX stay.",
+      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash, the side-crescent rotatable spare. v0.35.3 adds fx-slash-overhead, the primary overhead melee chop (spawn above the target). Legacy water FX stay.",
       "manifest": "assets/library/characters/hero/girl/fx/manifest.json",
       "dir": "assets/library/characters/hero/girl/fx",
       "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
@@ -210,7 +210,7 @@
       ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 47,
+      "count": 48,
       "frameSizes": [
         "16x16",
         "24x24",
@@ -284,6 +284,7 @@
         "fx-hit-water-nurse",
         "fx-hit-water-burst",
         "fx-slash",
+        "fx-slash-overhead",
         "fx-hit-sling-office-v2",
         "fx-hit-sling-delivery",
         "fx-hit-sling-chef",
@@ -6889,7 +6890,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
       "description": "Player Girl — weapon FX: slash — 8 frames 96x96 @ 14 fps, once.",
-      "note": "v0.35.2 feel-booth melee slash crescent. White/cream/amber ADD-blend knife arc (2-PixelLab handoff). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing.",
+      "note": "v0.35.2 feel-booth melee slash crescent. White/cream/amber ADD-blend knife arc (2-PixelLab handoff). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Side crescent / rotatable spare; primary overhead melee is fx-slash-overhead.",
       "tags": [
         "hero",
         "girl-fx",
@@ -6910,6 +6911,56 @@
         }
       },
       "action": "slash"
+    },
+    {
+      "key": "fx-slash-overhead",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-slash-overhead.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: slash-overhead — 8 frames 96x96 @ 14 fps, once.",
+      "note": "v0.35.3 feel-booth primary overhead melee. White/cream/amber vertical C / top→bottom chop (2-PixelLab handoff). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn above the enemy. fx-slash remains the side crescent / rotatable spare.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "feelBooth": true,
+          "primary": true,
+          "orientation": "overhead",
+          "spawn": "above-enemy",
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "spare": "fx-slash",
+          "pairWith": "hitstop-flash-particles-knockback"
+        },
+        "pixellabJobs": {
+          "effectId": "432e7684-6aac-4d58-a3ad-378b9e443efb",
+          "imageId": "3bf68ebc-0b1a-4cdb-92ad-971e5abb2ad0"
+        }
+      },
+      "action": "slash-overhead"
     },
     {
       "key": "fx-hit-sling-office-v2",
