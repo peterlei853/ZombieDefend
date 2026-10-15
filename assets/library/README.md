@@ -34,6 +34,7 @@ assets/library/
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
 │   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
+│   ├── bullet-hit/           fx-hit-fire, fx-hit-water (5×16 @ 20 fps)
 │   └── v026/                 v0.26 overnight pack + INVENTORY.md
 │       ├── exp-orb/          exp-orb (32×32 pickup)
 │       ├── evolve-stars/     vfx-evolve-star + T1/T2/T3 head markers
@@ -65,6 +66,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | Shared melee | `fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot` | combat FX in `fx/melee/` (not hero-only) |
+| Bullet hits | `fx-hit-fire`, `fx-hit-water` | 5×16 @ 20 fps. 24px upscales are not cataloged |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
 | Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
@@ -159,7 +161,7 @@ Feel-booth close-range slash sheets live with the other hero weapon FX in `chara
 
 ### Shared melee (catalog only)
 
-Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10-15. They are **not** wired into the feel booth. `fx-slash-ninja` stays the feel-booth `4` primary. `fx-slash` and `fx-slash-overhead` stay as they are. Fire / lightning / water hit FX are not in this catalog. No slash audio is cataloged here.
+Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10-15. They are **not** wired into live combat. `fx-slash-ninja` stays the feel-booth `4` primary. Feel-booth keys 5, 6, and 7 only preview the three slashes below. `fx-slash` and `fx-slash-overhead` stay as they are. `sfx-slash-dot` is a Sound Effect follow-up and is not in this catalog.
 
 | Key | Display | Color | Direction | Frames | FPS | Fit | Sheet |
 |---|---|---|---|---|---|---|---|
@@ -183,7 +185,18 @@ Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays 
 
 **Sheet layout.** These are **not** horizontal strips. Faction sheets are 3 columns × 2 rows: frame *i* is column `i % 3`, row `floor(i / 3)`. Frame 4 is blank, and the bottom-right cell is unused. The DoT sheet is 2×2 of 30×30: frame *i* is column `i % 2`, row `floor(i / 2)`. Frame 3 is blank. `load.spritesheet` with `frameWidth` / `frameHeight` already walks that order.
 
-**Gameplay handoff (not wired here).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. The `sfx-slash-dot` pack is a follow-up Sound PR (`/workspace/sfx-slash-dot/`); it is not in this catalog.
+**Gameplay handoff (not wired into combat).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. The `sfx-slash-dot` pack stays with Sound Effect for a follow-up audio PR.
+
+### Bullet hits (catalog + feel demo)
+
+`fx/bullet-hit/` holds the 16px pellet bursts. Both canonical keys are 5×16 @ 20 fps, once, origin (0.5, 0.5), about 0.25s. Blend `ADD` or `NORMAL`. The feel booth uses ADD and does not deal damage.
+
+| Key | Element | Frames | Fit | Sheet |
+|---|---|---|---|---|
+| `fx-hit-fire` | fire swirl-starburst | 5 @ 20 | 16×16 | 80×16 horizontal |
+| `fx-hit-water` | water splash-starburst | 5 @ 20 | 16×16 | 80×16 horizontal |
+
+**Scale rule.** Display size is the bullet / pellet (these frames are already 16px). Place them at the impact point. No extra scale multiplier unless Gameplay later wants a 1.25× punch. Feel-booth keys 8 and 9 preview `fx-hit-fire` and `fx-hit-water` at scale 1. 24px upscales are not cataloged. `fx-hit-electric` is not in this wave.
 
 ## Front-float combat (v0.27)
 

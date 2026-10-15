@@ -10,12 +10,12 @@
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
-| [Shared FX](#fx) | 7 | 20 |
+| [Shared FX](#fx) | 8 | 22 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **52** | **575** |
+| **Total** | **53** | **577** |
 
 <a id="hero"></a>
 ## Hero
@@ -1001,11 +1001,24 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 |---|---:|---|---:|---|---|---|
 | `zombie-exploder-blast` | 10 | 160x160 | 12 | once | (0.5, 0.5) |  |
 
+### Bullet Hit FX (子彈命中)
+
+<img src="previews/fx/bullet-hit/preview.gif" alt="bullet-hit preview" height="140">
+
+Peter-approved 16px bullet hits (2026-10-15). Feel-booth preview only — not wired into live combat. fx-hit-fire and fx-hit-water are 5×16 @ 20 fps (~0.25s), once, origin (0.5, 0.5) at the impact point. Display size is the bullet / pellet (these frames are already 16px). No extra scale multiplier unless Gameplay later wants a 1.25× punch. Blend ADD or NORMAL; the feel booth uses ADD. 24px upscales are not cataloged. fx-hit-electric is not in this wave.
+
+- group `bullet-hit` · 2 assets · frame 16x16 · key prefix `fx-hit-` · manifest [fx/bullet-hit/manifest.json](fx/bullet-hit/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-hit-fire` | 5 | 16x16 | 20 | once | (0.5, 0.5) | Canonical fire bullet hit. Swirl-starburst, dark outline. 5×16 @ 20 fps, once (~0.25s). Sheet 80×16 is a horizontal strip (fx-hit-fire-bullet16). Origin (0.5, 0.5) at the impact point. Display size is the 16px bullet / pellet. No extra scale multiplier unless Gameplay wants a 1.25× punch. Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Demo only — not wired into live combat. fx-hit-electric is not in this wave. |
+| `fx-hit-water` | 5 | 16x16 | 20 | once | (0.5, 0.5) | Canonical water bullet hit. Splash-starburst, dark outline. 5×16 @ 20 fps, once (~0.25s). Sheet 80×16 is a horizontal strip (fx-hit-water-bullet16). Origin (0.5, 0.5) at the impact point. Display size is the 16px bullet / pellet. No extra scale multiplier unless Gameplay wants a 1.25× punch. Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Demo only — not wired into live combat. |
+
 ### Shared Melee Slash (近身斬擊)
 
 <img src="previews/fx/melee-slash/preview.gif" alt="melee-slash preview" height="140">
 
-Peter-approved melee slashes (2026-10-15). Catalog only. Enemy attacks use fx-slash-enemy-red (敵紅小斬, red, top-left → bottom-right). Ally / player melee uses fx-slash-ally-white (友白小斬, white, top-right → bottom-left). Both are 5 frames @ 30 fps, once, ADD blend, origin (0.5, 0.5) near the body center. Scale rule: authored for 128px-tall characters; slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units. DoT / AoE ticks use fx-slash-dot (持續傷害小斬, white X + amber sparks): 4×30 @ 20 fps (~0.2s, about 5/sec), ADD, body center, dotScale = 0.5 × slashScale (half of the ally white slash). Faction sheets are 3×2 grids; the DoT sheet is 2×2. The last listed frame of each sheet is blank. fx-slash-ninja stays the feel-booth 4 primary. fx-slash and fx-slash-overhead stay as they are. Fire/lightning/water hit FX are not in this catalog. Audio is not in this catalog.
+Peter-approved melee slashes (2026-10-15). Catalog only. Enemy attacks use fx-slash-enemy-red (敵紅小斬, red, top-left → bottom-right). Ally / player melee uses fx-slash-ally-white (友白小斬, white, top-right → bottom-left). Both are 5 frames @ 30 fps, once, ADD blend, origin (0.5, 0.5) near the body center. Scale rule: authored for 128px-tall characters; slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units. DoT / AoE ticks use fx-slash-dot (持續傷害小斬, white X + amber sparks): 4×30 @ 20 fps (~0.2s, about 5/sec), ADD, body center, dotScale = 0.5 × slashScale (half of the ally white slash). Faction sheets are 3×2 grids; the DoT sheet is 2×2. The last listed frame of each sheet is blank. fx-slash-ninja stays the feel-booth 4 primary. Keys 5–7 of the feel booth only preview these three slashes. fx-slash and fx-slash-overhead stay as they are. fx-hit-fire and fx-hit-water live in fx/bullet-hit. fx-hit-electric is not in this wave. sfx-slash-dot is a Sound Effect follow-up and is not in this catalog.
 
 - group `melee-slash` · 3 assets · frame 30x30, 71x70, 72x72 · key prefix `fx-slash-` · manifest [fx/melee/manifest.json](fx/melee/manifest.json)
 
