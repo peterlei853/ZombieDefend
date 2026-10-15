@@ -240,7 +240,8 @@ function feelBodyY(zombie, body) {
 /**
  * Feel-booth preview of this wave's cataloged FX. Visual only.
  * Keys 5–9 call `playFeelWaveFx`. Key 4 stays `fx-slash-ninja`.
- * No damage, gold, save, or barricade write. No `sfx-slash-dot`.
+ * No damage, gold, save, or barricade write. The dot preview plays the
+ * cataloged `sfx-slash-dot` default. The other four previews stay silent.
  */
 export const FEEL_WAVE_DEMOS = [
   { id: 'enemy-red', key: 'fx-slash-enemy-red', kind: 'slash' },
@@ -280,8 +281,8 @@ export function feelWaveScale(kind, unitDisplayHeight) {
 }
 
 /**
- * Spawn one cataloged wave FX at the body center. Does not move the body,
- * play audio, or apply damage.
+ * Spawn one cataloged wave FX at the body center. Does not move the body
+ * or apply damage. The dot preview plays the cataloged `sfx-slash-dot`.
  * @param {Phaser.Scene} scene
  * @param {import('../entities/Zombie.js').Zombie} zombie
  * @param {string} id `enemy-red`, `ally-white`, `dot`, `fire`, or `water`
@@ -302,5 +303,6 @@ export function playFeelWaveFx(scene, zombie, id) {
   if (sprite && add != null && typeof sprite.setBlendMode === 'function') {
     sprite.setBlendMode(add);
   }
+  if (sprite && spec.kind === 'dot') scene.audio?.playFeelDotTick?.();
   return sprite;
 }
