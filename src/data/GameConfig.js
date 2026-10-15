@@ -116,10 +116,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * sheet (`fx-slash-ninja` / `fx-slash-diagonal`) is cataloged. Keys 1,
  * 2, 3, and R are unchanged. Gold, saves, barricade physics, wave
  * tables, BGM/SFX volumes, and the camera stay put.
+ * v0.35.4 plays `fx-slash-ninja` on key 4 at the enemy body center, with
+ * no rotation, and `sfx-slash-ninja` through `playFeelMeleeSlash` (melee
+ * volume, hit cooldown). The same 40ms hitstop, white flash, 8–12 sparks,
+ * and 2px X knockback stay. `fx-slash-overhead` and a rotated `fx-slash`
+ * stay unwired. Keys 1, 2, 3, and R are unchanged. Gold, saves, barricade
+ * physics, wave tables, BGM/SFX volumes, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.3';
+export const APP_VERSION = '0.35.4';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
