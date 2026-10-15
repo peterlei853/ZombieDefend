@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 128 |
+| [Hero](#hero) | 3 | 129 |
 | [Pets](#pets) | 17 | 96 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **51** | **571** |
+| **Total** | **51** | **572** |
 
 <a id="hero"></a>
 ## Hero
@@ -110,9 +110,9 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. Peter prefers a coming Fruit-Ninja diagonal slash (fx-slash-ninja / fx-slash-diagonal). Legacy water FX stay.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay.
 
-- group `girl-fx` · 48 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 96x96, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 49 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 96x96, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -159,8 +159,9 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-hit-water-chef` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 chef body-hit overlay. Same splash as fx-water-splash-big with a light white tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-nurse` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 nurse body-hit overlay. Same splash as fx-water-splash-big with a light pink tint. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
 | `fx-hit-water-burst` | 8 | 64x64 | 14 | once | (0.5, 0.5) | v0.35.1 feel-booth normal hit overlay. Glowing cyan liquid splash + shockwave (Peter prompt). 8×64 @ 14 fps, once, origin center. Play on the zombie before the HP tick. |
-| `fx-slash` | 8 | 96x96 | 14 | once | (0.5, 0.5) | Side crescent spare only — not the feel-booth melee primary and not an overhead backup for feel-booth 4. White/cream/amber ADD-blend knife arc (2-PixelLab handoff, v0.35.2). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Feel-booth 4 primary will be the incoming Fruit-Ninja diagonal slash (fx-slash-ninja / fx-slash-diagonal). |
-| `fx-slash-overhead` | 8 | 96x96 | 14 | once | (0.5, 0.5) | DEPRECATED for feel melee primary. Reserved/unused spare; not the feel-booth 4 primary. Peter cancelled the overhead (top-down chop) in favor of a coming Fruit-Ninja-style diagonal slash (incoming as fx-slash-ninja / fx-slash-diagonal; not in this catalog yet). PNG kept. White/cream/amber vertical C (2-PixelLab handoff, v0.35.3). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. |
+| `fx-slash` | 8 | 96x96 | 14 | once | (0.5, 0.5) | Side crescent spare only — not the feel-booth melee primary and not an overhead backup for feel-booth 4. White/cream/amber ADD-blend knife arc (2-PixelLab handoff, v0.35.2). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Feel-booth 4 primary is fx-slash-ninja. |
+| `fx-slash-overhead` | 8 | 96x96 | 14 | once | (0.5, 0.5) | DEPRECATED for feel melee primary. Reserved/unused spare; not the feel-booth 4 primary. Peter cancelled the overhead (top-down chop) in favor of fx-slash-ninja (Fruit Ninja diagonal; feel-booth 4 primary). PNG kept. White/cream/amber vertical C (2-PixelLab handoff, v0.35.3). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. |
+| `fx-slash-ninja` | 5 | 96x96 | 30 | once | (0.5, 0.5) | v0.35.4 feel-booth 4 primary melee. Fruit Ninja thin fast straight diagonal TL→BR, pure white / light gray (2-PixelLab handoff). 5×96 @ 30 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn on the target body center. fx-slash stays the side crescent spare; fx-slash-overhead stays deprecated. |
 | `fx-hit-sling-office-v2` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 office sling body-hit. 2-PixelLab contrast remake: white/amber lift and a navy outline, light gray sparkle. 8×64 @ 18 fps, once, origin center. Not a water splash. Untinted master fx-hit-sling-shared is not a separate key. |
 | `fx-hit-sling-delivery` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 delivery sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light yellow tint. 8×64 @ 18 fps, once, origin center. |
 | `fx-hit-sling-chef` | 8 | 64x64 | 18 | once | (0.5, 0.5) | v0.32.1 chef sling body-hit. Same contrast-boosted pebble/dust strip as fx-hit-sling-office-v2 with a light white tint. 8×64 @ 18 fps, once, origin center. |

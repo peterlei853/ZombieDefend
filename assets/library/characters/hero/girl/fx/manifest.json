@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. Peter prefers a coming Fruit-Ninja diagonal slash (fx-slash-ninja / fx-slash-diagonal). Legacy water FX stay.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -941,7 +941,7 @@
       ],
       "type": "fx",
       "tags": ["spare"],
-      "note": "Side crescent spare only — not the feel-booth melee primary and not an overhead backup for feel-booth 4. White/cream/amber ADD-blend knife arc (2-PixelLab handoff, v0.35.2). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Feel-booth 4 primary will be the incoming Fruit-Ninja diagonal slash (fx-slash-ninja / fx-slash-diagonal).",
+      "note": "Side crescent spare only — not the feel-booth melee primary and not an overhead backup for feel-booth 4. White/cream/amber ADD-blend knife arc (2-PixelLab handoff, v0.35.2). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Feel-booth 4 primary is fx-slash-ninja.",
       "extra": {
         "gameplayNotes": {
           "role": "meleeSlashVfx",
@@ -975,7 +975,7 @@
       ],
       "type": "fx",
       "tags": ["deprecated", "spare"],
-      "note": "DEPRECATED for feel melee primary. Reserved/unused spare; not the feel-booth 4 primary. Peter cancelled the overhead (top-down chop) in favor of a coming Fruit-Ninja-style diagonal slash (incoming as fx-slash-ninja / fx-slash-diagonal; not in this catalog yet). PNG kept. White/cream/amber vertical C (2-PixelLab handoff, v0.35.3). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD.",
+      "note": "DEPRECATED for feel melee primary. Reserved/unused spare; not the feel-booth 4 primary. Peter cancelled the overhead (top-down chop) in favor of fx-slash-ninja (Fruit Ninja diagonal; feel-booth 4 primary). PNG kept. White/cream/amber vertical C (2-PixelLab handoff, v0.35.3). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD.",
       "extra": {
         "gameplayNotes": {
           "role": "meleeSlashVfx",
@@ -992,6 +992,43 @@
         "pixellabJobs": {
           "effectId": "432e7684-6aac-4d58-a3ad-378b9e443efb",
           "imageId": "3bf68ebc-0b1a-4cdb-92ad-971e5abb2ad0"
+        }
+      }
+    },
+    {
+      "key": "fx-slash-ninja",
+      "path": "assets/library/characters/hero/girl/fx/fx-slash-ninja.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 30,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "tags": ["primary"],
+      "note": "v0.35.4 feel-booth 4 primary melee. Fruit Ninja thin fast straight diagonal TL→BR, pure white / light gray (2-PixelLab handoff). 5×96 @ 30 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn on the target body center. fx-slash stays the side crescent spare; fx-slash-overhead stays deprecated.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "status": "primary",
+          "feelBooth": true,
+          "feelBoothKey": "4",
+          "primary": true,
+          "orientation": "diagonal-tl-br",
+          "style": "fruit-ninja-thin-straight-white",
+          "spawn": "target-body-center",
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "pairWith": "hitstop-flash-particles-knockback",
+          "spare": "fx-slash",
+          "deprecatedSpare": "fx-slash-overhead"
+        },
+        "pixellabJobs": {
+          "effectId": "ec7e4db9-019c-44ca-9b65-b1e6075b7233",
+          "imageId": "9de29e4c-8d8b-4793-9e3e-41b74317da43"
         }
       }
     },
