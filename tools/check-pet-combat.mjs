@@ -8,7 +8,7 @@
  * play their cast strip and catalog FX. Orbs 2–3 stay locked until unlocked.
  */
 import { readFileSync } from 'node:fs';
-import { GAME_CONFIG, APP_VERSION } from '../src/data/GameConfig.js';
+import { GAME_CONFIG, APP_VERSION, debugPetSkillEnabled } from '../src/data/GameConfig.js';
 import { WAVE_DEFS, BARRICADE_MAX_HP, GAME_WIDTH, GAME_HEIGHT } from '../src/data/waves.js';
 import { PET_LINEUP, PET_STAGE_KEYS, petLineupSlots, petSleepDepth, stageLibraryFilter } from '../src/assets/petLineup.js';
 import { PET_SKILL_LOAD_KEYS, PET_SKILL_SPECS } from '../src/assets/petSkills.js';
@@ -37,8 +37,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.34.0', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.34.0', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.34.1', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.34.1', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -52,7 +52,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.34.0'), 'document title is v0.34.0');
+assert(html.includes('v0.34.1'), 'document title is v0.34.1');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -156,6 +156,15 @@ assert(petsCfg.HURT_TINT_COLOR === 0xff2a2a, 'red phase is a solid fill, not a l
 assert(combatSrc.includes('setTintFill') && !combatSrc.includes('setTint(0xff5252)'), 'pet hurt fill is not a multiply tint');
 assert(combatSrc.includes('debugHurtOnce'), 'debug one-shot can force the hurt sequence');
 assert(stage.includes("_hurtKey") && stage.includes('petHurt'), 'H key and ?petHurt=1 are wired');
+assert(debugPetSkillEnabled('') === false, 'pet skill debug is off by default');
+assert(debugPetSkillEnabled('?debugPetSkill=1') === true, '?debugPetSkill=1 enables force skill');
+assert(debugPetSkillEnabled('?debugExp=1') === false, 'debug EXP does not force skills');
+assert(combatSrc.includes('if (!this.debugSkills) return false'), 'force skill is gated on the debug flag');
+assert(combatSrc.includes('index >= this._unlockedCount(actor)'), 'trySkill still gates locked orbs');
+assert(stage.includes('0/1/2 = force skill'), 'stage shows the force-skill hint');
+assert(stage.includes('KeyCodes.ZERO') && stage.includes('KeyCodes.ONE') && stage.includes('KeyCodes.TWO'), '0/1/2 force the form skills');
+assert(stage.includes('debugPetSkillEnabled') && stage.includes('forceSkill'), 'stage wires the debug flag to forceSkill');
+assert(title.includes('debugPetSkillEnabled'), 'title boots the stage for ?debugPetSkill=1');
 assert(combatSrc.includes('debugLowHp'), 'debug low HP drops the bar under the pulse line');
 assert(stage.includes('KeyCodes.L') && stage.includes('petLowHp'), 'L key and ?petLowHp=1 are wired');
 assert(petsCfg.HURT_BAR_MS >= petsCfg.HURT_FLASH_MS, 'bar pop lasts through the white flash');
@@ -474,6 +483,77 @@ for (let i = 0; i < 4; i++) {
   if (id === 'lion') assert(foe.rootMs > 0, 'lion stomp roots');
   one.destroy();
 }
+
+const forceFx = [
+  ['fx-pet-phoenix-spark-feather', 'fx-pet-phoenix-rain-bolt', 'fx-pet-phoenix-blazing-rebirth'],
+  ['fx-pet-panda-roll-dust', 'fx-pet-panda-bamboo-sweep', 'fx-pet-panda-chi-blast'],
+  ['fx-pet-lion-pounce-slash', 'fx-pet-lion-roar-wave', 'fx-pet-lion-sunder-strike'],
+  ['fx-pet-dragon-smoke-breath', 'fx-pet-dragon-fireball', 'fx-pet-dragon-apocalypse-flame'],
+];
+const forceStrips = ['baby', 'young', 'ancient'];
+const locked = new PetCombat(mockScene(audio));
+assert(locked.forceSkill(0, player) === false, 'force skill is off without the debug flag');
+assert(locked.fieldPets().length === 0, 'a blocked force does not summon');
+assert(locked.castLog.length === 0, 'a blocked force does not cast');
+assert(locked.summon(2, player, []).ok, 'lion can still be summoned normally');
+assert(locked.forceSkill(1, player) === false, 'young stays locked when the debug flag is off');
+locked.update(800, [], player);
+assert(!locked.castLog.some((entry) => entry.orb > 0), 'a blocked force does not release a locked orb');
+locked.destroy();
+
+for (let i = 0; i < 4; i++) {
+  const id = PET_LINEUP[i].id;
+  const foe = mockZombie(foeX, laneY);
+  const forceScene = mockScene(audio);
+  const skill = new PetCombat(forceScene);
+  skill.debugSkills = true;
+  assert(skill.summon(i, player, [foe]).ok, `debug summon ${id}`);
+  const view = skill.portraitViews()[i];
+  assert(view.orbs[0].unlocked && !view.orbs[1].unlocked && !view.orbs[2].unlocked, `${id} young and ancient stay locked`);
+  const cdFull = view.orbs[0].ratio < 0.05;
+  assert(cdFull, `${id} baby orb is still on cooldown`);
+  for (let orb = 0; orb < 3; orb++) {
+    const before = skill.castLog.length;
+    assert(skill.forceSkill(orb, player) === true, `${id} force orb ${orb}`);
+    assert(skill.lastForcedSkill.includes(id), `${id} hint names the pet`);
+    pump(skill, forceScene, 1600, foe, player);
+    const strip = `pet-${id}-${forceStrips[orb]}-skill`;
+    const played = forceScene._sprites.flatMap((sprite) => sprite._played);
+    assert(played.includes(strip), `${id} force played ${strip}`);
+    assert(skill.castLog.some((entry) => entry.id === id && entry.orb === orb), `${id} force released orb ${orb}`);
+    assert(skill.castLog.length === before + 1, `${id} force orb ${orb} released once`);
+    assert(played.includes(forceFx[i][orb]) || skill.fxLog.includes(forceFx[i][orb]), `${id} force spawned ${forceFx[i][orb]}`);
+  }
+  const after = skill.portraitViews()[i];
+  assert(after.orbs[0].unlocked && !after.orbs[1].unlocked && !after.orbs[2].unlocked, `${id} force does not unlock orbs`);
+  assert(petsCfg.UNLOCKED_ORBS === 1, 'normal unlock count stays 1');
+  skill.destroy();
+}
+
+const coverScene = mockScene(audio);
+const cover = new PetCombat(coverScene);
+cover.debugSkills = true;
+assert(cover.summon(2, player, []).ok, 'lion summon for the hurt cover');
+assert(cover.forceSkill(0, player) === true, 'lion baby force while a bite lands');
+const coverBody = coverScene._sprites.find((sprite) => sprite.textureKey === 'pet-lion-baby-idle');
+const coverPet = cover.fieldPets()[0];
+coverPet.takeDamage(12);
+assert(coverBody._tintFill == null, 'debug force holds the hurt fill off the cast');
+assert(coverBody.anims.currentAnim.key === 'pet-lion-baby-skill', 'Cub Pounce stays up through a bite');
+assert(coverPet.hp < petsCfg.HP, 'the bite still spends HP');
+assert(coverBody._played.filter((key) => key === 'pet-lion-baby-hurt').length === 0, 'the hurt strip does not cover the forced cast');
+pump(cover, coverScene, 1600, null, player);
+assert(cover.fxLog.includes('fx-pet-lion-pounce-slash'), 'Cub Pounce still releases its slash');
+cover.destroy();
+
+const emptyForce = new PetCombat(mockScene(audio));
+emptyForce.debugSkills = true;
+assert(emptyForce.forceSkill(2, player) === true, 'empty field force summons and casts ancient');
+assert(emptyForce.castLog.length === 0, 'ancient FX waits for castFrame');
+pump(emptyForce, emptyForce.scene, 1600, null, player);
+assert(emptyForce.castLog.some((entry) => entry.id === 'phoenix' && entry.orb === 2), 'empty field force releases the ancient cast');
+assert(emptyForce.fxLog.includes('fx-pet-phoenix-blazing-rebirth'), 'empty field ancient FX plays');
+emptyForce.destroy();
 combat.destroy();
 
 const wallScene = mockZombieScene();

@@ -23,7 +23,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.34.0', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.34.1', `APP_VERSION ${APP_VERSION}`);
 assert(GAME_CONFIG.PETS.HP === 192, 'pet HP stays 192');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
 
@@ -106,6 +106,7 @@ assert(debugExpEnabled('?debugExp=1') === true, 'debugExp flag');
 assert(debugExpEnabled('?debugBgm=1') === false, 'debug BGM does not grant EXP');
 assert(debugExpEnabled('?petHurt=1') === false, 'pet hurt does not grant EXP');
 assert(debugExpEnabled('?petLowHp=1') === false, 'pet low HP does not grant EXP');
+assert(debugExpEnabled('?debugPetSkill=1') === false, 'pet skill debug does not grant EXP');
 assert(debugExpEnabled('') === false, 'debug EXP is off by default');
 assert(expToNextTier(0) === 40 && expToNextTier(39) === 1, 'first grant reaches tier 2');
 assert(expToNextTier(40) === 80 && expToNextTier(119) === 1, 'second grant reaches tier 3');

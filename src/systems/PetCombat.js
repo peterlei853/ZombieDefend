@@ -100,6 +100,12 @@ export class PetCombat {
     this._loot = { gold: 0, kills: 0 };
     /** @type {import('../entities/Zombie.js').Zombie[]} */
     this._liveZombies = [];
+    /** Set by StageScene when `?debugPetSkill=1` is on. Off, forceSkill no-ops. */
+    this.debugSkills = false;
+    /** Party index of the last pet sent out. Keys 0/1/2 fire this body. */
+    this._debugFocus = 0;
+    /** Last debug cast, for the on-screen hint. */
+    this.lastForcedSkill = '';
   }
 
   /** @param {import('./PetEvolve.js').PetEvolve|null} evolve */
@@ -167,6 +173,79 @@ export class PetCombat {
     if (index === 2 && !this._allowUlt(actor)) return false;
     this._commitOrb(actor, index);
     return true;
+  }
+
+  /**
+   * Debug only. Force the focused field pet's baby (0), young (1), or
+   * ancient (2) cast now. Ignores cooldown and unlock. The strip still
+   * releases its FX on castFrame. A bite during the tell does not cover
+   * the strip. Damage tables are unchanged. No-op unless `debugSkills`.
+   * @param {number} orbIndex
+   * @param {{ x?: number, y?: number }|null} [player]
+   * @returns {boolean}
+   */
+  forceSkill(orbIndex, player = null) {
+    if (!this.debugSkills) return false;
+    const index = Math.floor(Number(orbIndex));
+    if (index < 0 || index > 2) return false;
+    let actor = this._focusedField();
+    if (!actor) {
+      const slot = Number.isInteger(this._debugFocus) ? this._debugFocus : 0;
+      const summoned = this.summon(slot, player || this._anchor, []);
+      actor = summoned.ok ? this._focusedField() : null;
+      if (!actor && slot !== 0) {
+        const fallback = this.summon(0, player || this._anchor, []);
+        if (fallback.ok) actor = this._focusedField();
+      }
+    }
+    if (!actor) return false;
+    this._forceCast(actor, index);
+    const spec = petSkillSpec(petSkillKey(actor.role.id, index));
+    const form = spec?.form || '';
+    const name = spec?.name || '';
+    this.lastForcedSkill = `${actor.role.id} ${form} ${name}`.trim();
+    return true;
+  }
+
+  /** @param {PetActor|null|undefined} actor */
+  _onField(actor) {
+    return !!(actor && actor.phase === 'field' && actor.hp > 0 && actor.sprite?.active);
+  }
+
+  /** Last deployed pet if they are still out, otherwise the first field pet. */
+  _focusedField() {
+    const focus = this._actors[this._debugFocus];
+    if (this._onField(focus)) return focus;
+    return this._actors.find((entry) => this._onField(entry)) || null;
+  }
+
+  /**
+   * Restart the cast strip immediately. A skill already swinging is replaced.
+   * @param {PetActor} actor
+   * @param {number} orbIndex
+   */
+  _forceCast(actor, orbIndex) {
+    if (actor.meleePhase) {
+      actor.meleePhase = null;
+      if (actor.state === 'melee') actor.state = 'idle';
+    }
+    actor.wakeLeft = 0;
+    for (const orb of actor.orbs) {
+      if (!orb.pending && !(orb.flashLeft > 0)) continue;
+      orb.pending = false;
+      orb.flashLeft = 0;
+      orb.left = orb.cdMs;
+    }
+    const orb = actor.orbs[orbIndex];
+    if (orb) {
+      orb.pending = false;
+      orb.flashLeft = 0;
+      orb.left = orb.cdMs;
+    }
+    actor.castQueue = [orbIndex];
+    this._clearHitLook(actor);
+    actor.debugSkillGuard = GAME_CONFIG.PETS.TELEGRAPH_MS + 900;
+    this._beginAttack(actor);
   }
 
   /**
@@ -581,6 +660,8 @@ export class PetCombat {
       meleeGap: 0,
       meleeFan: null,
       invulnLeft: 0,
+      /** Ms left to keep a debug force-cast visible through a bite. */
+      debugSkillGuard: 0,
       lowLatched: false,
       lowHint: null,
       lowHintLeft: 0,
@@ -644,6 +725,8 @@ export class PetCombat {
     actor.x = x;
     actor.y = y;
     actor.popLeft = GAME_CONFIG.PETS.POP_MS;
+    const focus = this._actors.indexOf(actor);
+    if (focus >= 0) this._debugFocus = focus;
     actor.sprite = this._spawnSprite(actor, x, y);
     this._attachBars(actor);
     this._showFloat(actor, 'go', player);
@@ -666,6 +749,8 @@ export class PetCombat {
     actor.wakeLeft = lying ? WAKE_MS : 0;
     if (lying) this.scene?.events?.emit?.('pet:wake', { petId: actor.role.id });
     actor.leaving = true;
+    const focus = this._actors.indexOf(actor);
+    if (focus >= 0) this._debugFocus = focus;
     actor.attackElapsed = 0;
     actor.released = false;
     this._clearHitLook(actor);
@@ -1038,7 +1123,9 @@ export class PetCombat {
         showDamageText(this.scene, sprite.x, hy, whole, '#ff4040', `pet-${actor.role.id}`);
       }
     }
-    if (!actor.hitPhase) this._beginHitReact(actor);
+    // Debug force-casts hold the fill off so the strip stays readable.
+    // HP and the invuln window still apply. A normal bite is unchanged.
+    if (!(actor.debugSkillGuard > 0) && !actor.hitPhase) this._beginHitReact(actor);
     if (actor.hp <= 0) {
       actor.hp = 0;
       this._dismiss(actor);
@@ -1484,6 +1571,7 @@ export class PetCombat {
     if (!sprite?.active) return EMPTY;
     let dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     if (actor.invulnLeft > 0) actor.invulnLeft = Math.max(0, actor.invulnLeft - dt);
+    if (actor.debugSkillGuard > 0) actor.debugSkillGuard = Math.max(0, actor.debugSkillGuard - dt);
     actor.lowPulse = (actor.lowPulse || 0) + dt;
     this._tickHitLook(actor, dt);
     this._tickLowHint(actor, dt);
