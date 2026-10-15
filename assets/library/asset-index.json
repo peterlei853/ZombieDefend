@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 569,
+    "total": 570,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 126
+        "assets": 127
       },
       "pets": {
         "groups": 17,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 72,
+      "fx": 73,
       "icon": 75,
       "image": 30,
       "spritesheet": 358
@@ -210,7 +210,7 @@
       ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 46,
+      "count": 47,
       "frameSizes": [
         "16x16",
         "24x24",
@@ -226,6 +226,7 @@
         "64x16",
         "64x24",
         "64x64",
+        "96x96",
         "128x48"
       ],
       "framesRange": [
@@ -282,6 +283,7 @@
         "fx-hit-water-chef",
         "fx-hit-water-nurse",
         "fx-hit-water-burst",
+        "fx-slash",
         "fx-hit-sling-office-v2",
         "fx-hit-sling-delivery",
         "fx-hit-sling-chef",
@@ -6862,6 +6864,52 @@
         }
       },
       "action": "hit-water-burst"
+    },
+    {
+      "key": "fx-slash",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-slash.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: slash — 8 frames 96x96 @ 14 fps, once.",
+      "note": "v0.35.2 feel-booth melee slash crescent. White/cream/amber ADD-blend knife arc (2-PixelLab handoff). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "once"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "feelBooth": true,
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "pairWith": "hitstop-flash-particles-knockback"
+        },
+        "pixellabJobs": {
+          "effectId": "0cd2c8c4-2b7f-4bed-b315-188271cadcfa",
+          "imageId": "60be7e45-ac0b-4f31-980b-70ee8c36ceb8"
+        }
+      },
+      "action": "slash"
     },
     {
       "key": "fx-hit-sling-office-v2",

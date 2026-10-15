@@ -928,6 +928,34 @@
       }
     },
     {
+      "key": "fx-slash",
+      "path": "assets/library/characters/hero/girl/fx/fx-slash.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.35.2 feel-booth melee slash crescent. White/cream/amber ADD-blend knife arc (2-PixelLab handoff). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "feelBooth": true,
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "pairWith": "hitstop-flash-particles-knockback"
+        },
+        "pixellabJobs": {
+          "effectId": "0cd2c8c4-2b7f-4bed-b315-188271cadcfa",
+          "imageId": "60be7e45-ac0b-4f31-980b-70ee8c36ceb8"
+        }
+      }
+    },
+    {
       "key": "fx-hit-sling-office-v2",
       "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-office-v2.png",
       "frameWidth": 64,
