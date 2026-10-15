@@ -4,7 +4,7 @@
   "group": "phoenix-young",
   "title": "Azure / 藍羽 — Young",
   "titleZh": "藍羽·青年",
-  "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.",
+  "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
   "source": {
     "pixellabCharacterId": "38781a23-dee8-45b8-93d5-ece6bbeebc84",
     "sourceFolder": "pets/phoenix/young"
@@ -29,7 +29,10 @@
     "animate": [
       "pet-phoenix-young-idle",
       "pet-phoenix-young-move",
-      "pet-phoenix-young-skill"
+      "pet-phoenix-young-skill",
+      "pet-phoenix-young-claw",
+      "pet-phoenix-young-skill-aoe",
+      "pet-phoenix-young-evolve-from-baby"
     ],
     "thumb": "assets/library/previews/pets/phoenix-young.gif"
   },
@@ -103,6 +106,67 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-phoenix-young-appearance",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet."
+    },
+    {
+      "key": "pet-phoenix-young-claw",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-claw.png",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging cyan claw."
+    },
+    {
+      "key": "pet-phoenix-young-skill-aoe",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-skill-aoe.png",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Phoenix Rain",
+      "skillZh": "鳳凰火雨",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged."
+    },
+    {
+      "key": "pet-phoenix-young-evolve-from-baby",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-evolve-from-baby.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired."
     }
   ]
 }

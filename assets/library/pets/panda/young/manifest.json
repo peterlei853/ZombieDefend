@@ -4,7 +4,7 @@
   "group": "panda-young",
   "title": "Momo / 墨墨 — Young",
   "titleZh": "墨墨·青年",
-  "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.",
+  "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
   "source": {
     "pixellabCharacterId": "55cdb271-abc0-4a66-882a-0e8cd317a102",
     "sourceFolder": "pets/panda/young"
@@ -29,7 +29,10 @@
     "animate": [
       "pet-panda-young-idle",
       "pet-panda-young-move",
-      "pet-panda-young-skill"
+      "pet-panda-young-skill",
+      "pet-panda-young-claw",
+      "pet-panda-young-skill-aoe",
+      "pet-panda-young-evolve-from-baby"
     ],
     "thumb": "assets/library/previews/pets/panda-young.gif"
   },
@@ -100,6 +103,67 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-panda-young-appearance",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet."
+    },
+    {
+      "key": "pet-panda-young-claw",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-claw.png",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging dark claw."
+    },
+    {
+      "key": "pet-panda-young-skill-aoe",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill-aoe.png",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Bamboo Sweep",
+      "skillZh": "竹林橫掃",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged."
+    },
+    {
+      "key": "pet-panda-young-evolve-from-baby",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-evolve-from-baby.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired."
     }
   ]
 }

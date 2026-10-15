@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 589,
+    "total": 605,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -26,7 +26,7 @@
       },
       "pets": {
         "groups": 17,
-        "assets": 108
+        "assets": 124
       },
       "ui": {
         "groups": 1,
@@ -66,8 +66,8 @@
       "concept": 21,
       "fx": 80,
       "icon": 75,
-      "image": 34,
-      "spritesheet": 366
+      "image": 38,
+      "spritesheet": 378
     }
   },
   "groups": [
@@ -457,7 +457,7 @@
       "group": "dragon-young",
       "title": "Jade / 翠火 — Young",
       "titleZh": "翠火·青年",
-      "description": "Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST.",
+      "description": "Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
       "manifest": "assets/library/pets/dragon/young/manifest.json",
       "dir": "assets/library/pets/dragon/young",
       "thumb": "assets/library/previews/pets/dragon-young.gif",
@@ -465,26 +465,34 @@
       "extras": [],
       "keyPrefix": "pet-dragon-young-",
       "mainKey": "pet-dragon-young-idle",
-      "count": 4,
+      "count": 8,
       "frameSizes": [
-        "64x64"
+        "64x64",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         8
       ],
       "fpsRange": [
-        6,
-        10
+        5,
+        12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
         "pet-dragon-young-idle",
         "pet-dragon-young-move",
         "pet-dragon-young-skill",
-        "pet-dragon-young-hurt"
+        "pet-dragon-young-hurt",
+        "pet-dragon-young-appearance",
+        "pet-dragon-young-claw",
+        "pet-dragon-young-skill-aoe",
+        "pet-dragon-young-evolve-from-baby"
       ]
     },
     {
@@ -613,7 +621,7 @@
       "group": "lion-young",
       "title": "Leo / 雷歐 — Young",
       "titleZh": "雷歐·青年",
-      "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.",
+      "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
       "manifest": "assets/library/pets/lion/young/manifest.json",
       "dir": "assets/library/pets/lion/young",
       "thumb": "assets/library/previews/pets/lion-young.gif",
@@ -621,26 +629,34 @@
       "extras": [],
       "keyPrefix": "pet-lion-young-",
       "mainKey": "pet-lion-young-idle",
-      "count": 4,
+      "count": 8,
       "frameSizes": [
-        "64x64"
+        "64x64",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         8
       ],
       "fpsRange": [
-        8,
+        5,
         12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
         "pet-lion-young-idle",
         "pet-lion-young-move",
         "pet-lion-young-skill",
-        "pet-lion-young-hurt"
+        "pet-lion-young-hurt",
+        "pet-lion-young-appearance",
+        "pet-lion-young-claw",
+        "pet-lion-young-skill-aoe",
+        "pet-lion-young-evolve-from-baby"
       ]
     },
     {
@@ -771,7 +787,7 @@
       "group": "panda-young",
       "title": "Momo / 墨墨 — Young",
       "titleZh": "墨墨·青年",
-      "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.",
+      "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
       "manifest": "assets/library/pets/panda/young/manifest.json",
       "dir": "assets/library/pets/panda/young",
       "thumb": "assets/library/previews/pets/panda-young.gif",
@@ -779,26 +795,34 @@
       "extras": [],
       "keyPrefix": "pet-panda-young-",
       "mainKey": "pet-panda-young-idle",
-      "count": 4,
+      "count": 8,
       "frameSizes": [
-        "64x64"
+        "64x64",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         8
       ],
       "fpsRange": [
-        8,
+        5,
         12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
         "pet-panda-young-idle",
         "pet-panda-young-move",
         "pet-panda-young-skill",
-        "pet-panda-young-hurt"
+        "pet-panda-young-hurt",
+        "pet-panda-young-appearance",
+        "pet-panda-young-claw",
+        "pet-panda-young-skill-aoe",
+        "pet-panda-young-evolve-from-baby"
       ]
     },
     {
@@ -931,7 +955,7 @@
       "group": "phoenix-young",
       "title": "Azure / 藍羽 — Young",
       "titleZh": "藍羽·青年",
-      "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.",
+      "description": "Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
       "manifest": "assets/library/pets/phoenix/young/manifest.json",
       "dir": "assets/library/pets/phoenix/young",
       "thumb": "assets/library/previews/pets/phoenix-young.gif",
@@ -939,26 +963,34 @@
       "extras": [],
       "keyPrefix": "pet-phoenix-young-",
       "mainKey": "pet-phoenix-young-idle",
-      "count": 4,
+      "count": 8,
       "frameSizes": [
-        "64x64"
+        "64x64",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         8
       ],
       "fpsRange": [
-        8,
-        10
+        5,
+        12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
         "pet-phoenix-young-idle",
         "pet-phoenix-young-move",
         "pet-phoenix-young-skill",
-        "pet-phoenix-young-hurt"
+        "pet-phoenix-young-hurt",
+        "pet-phoenix-young-appearance",
+        "pet-phoenix-young-claw",
+        "pet-phoenix-young-skill-aoe",
+        "pet-phoenix-young-evolve-from-baby"
       ]
     },
     {
@@ -8275,6 +8307,142 @@
       "action": "hurt"
     },
     {
+      "key": "pet-dragon-young-appearance",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: appearance (96x96 image).",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "dragon-young",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-dragon-young-claw",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). HAND claw (arm swipe).",
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-dragon-young-skill-aoe",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Scorching Fireball",
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Scorching Fireball.",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
+      "key": "pet-dragon-young-evolve-from-baby",
+      "category": "pets",
+      "group": "dragon-young",
+      "path": "assets/library/pets/dragon/young/strips/pet-dragon-young-evolve-from-baby.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-young.gif",
+      "description": "Jade / 翠火 — Young: evolve-from-baby — 5 frames 96x96 @ 5 fps, once.",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired.",
+      "tags": [
+        "pets",
+        "dragon-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve-from-baby"
+    },
+    {
       "key": "pet-lion-ancient-idle",
       "category": "pets",
       "group": "lion-ancient",
@@ -9002,6 +9170,142 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "pet-lion-young-appearance",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: appearance (96x96 image).",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "lion-young",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-lion-young-claw",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Gold slash LEFT.",
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-lion-young-skill-aoe",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Lion Roar",
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Lion Roar.",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (gold). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
+      "key": "pet-lion-young-evolve-from-baby",
+      "category": "pets",
+      "group": "lion-young",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-evolve-from-baby.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-young.gif",
+      "description": "Leo / 雷歐 — Young: evolve-from-baby — 5 frames 96x96 @ 5 fps, once.",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired.",
+      "tags": [
+        "pets",
+        "lion-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve-from-baby"
     },
     {
       "key": "pet-panda-ancient-idle",
@@ -9768,6 +10072,142 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "pet-panda-young-appearance",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: appearance (96x96 image).",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "panda-young",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-panda-young-claw",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging dark claw.",
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-panda-young-skill-aoe",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Bamboo Sweep",
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Bamboo Sweep.",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
+      "key": "pet-panda-young-evolve-from-baby",
+      "category": "pets",
+      "group": "panda-young",
+      "path": "assets/library/pets/panda/young/strips/pet-panda-young-evolve-from-baby.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-young.gif",
+      "description": "Momo / 墨墨 — Young: evolve-from-baby — 5 frames 96x96 @ 5 fps, once.",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired.",
+      "tags": [
+        "pets",
+        "panda-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve-from-baby"
     },
     {
       "key": "pet-phoenix-ancient-idle",
@@ -10573,6 +11013,142 @@
       ],
       "extra": null,
       "action": "hurt"
+    },
+    {
+      "key": "pet-phoenix-young-appearance",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: appearance (96x96 image).",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-phoenix-young-claw",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging cyan claw.",
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-phoenix-young-skill-aoe",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Phoenix Rain",
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Phoenix Rain.",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
+      "key": "pet-phoenix-young-evolve-from-baby",
+      "category": "pets",
+      "group": "phoenix-young",
+      "path": "assets/library/pets/phoenix/young/strips/pet-phoenix-young-evolve-from-baby.png",
+      "type": "spritesheet",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-young.gif",
+      "description": "Azure / 藍羽 — Young: evolve-from-baby — 5 frames 96x96 @ 5 fps, once.",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired.",
+      "tags": [
+        "pets",
+        "phoenix-young",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "evolve-from-baby"
     },
     {
       "key": "ui-pet-phoenix-head",

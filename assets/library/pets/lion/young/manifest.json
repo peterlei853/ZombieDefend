@@ -4,7 +4,7 @@
   "group": "lion-young",
   "title": "Leo / 雷歐 — Young",
   "titleZh": "雷歐·青年",
-  "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.",
+  "description": "Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
   "source": {
     "pixellabCharacterId": "ad17c12f-62e5-46d4-b2de-685a2b1e0af0",
     "sourceFolder": "pets/lion/young"
@@ -29,7 +29,10 @@
     "animate": [
       "pet-lion-young-idle",
       "pet-lion-young-move",
-      "pet-lion-young-skill"
+      "pet-lion-young-skill",
+      "pet-lion-young-claw",
+      "pet-lion-young-skill-aoe",
+      "pet-lion-young-evolve-from-baby"
     ],
     "thumb": "assets/library/previews/pets/lion-young.gif"
   },
@@ -100,6 +103,67 @@
         1.0
       ],
       "facing": "west"
+    },
+    {
+      "key": "pet-lion-young-appearance",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet."
+    },
+    {
+      "key": "pet-lion-young-claw",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-claw.png",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 young basic-attack claw strip ~0.3s (256×96). Gold slash LEFT."
+    },
+    {
+      "key": "pet-lion-young-skill-aoe",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-skill-aoe.png",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Lion Roar",
+      "skillZh": "雄獅咆哮",
+      "note": "v0.35 feet-centered ground AoE ring ~4 body-widths (gold). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged."
+    },
+    {
+      "key": "pet-lion-young-evolve-from-baby",
+      "path": "assets/library/pets/lion/young/strips/pet-lion-young-evolve-from-baby.png",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 5,
+      "frameRate": 5,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired."
     }
   ]
 }
