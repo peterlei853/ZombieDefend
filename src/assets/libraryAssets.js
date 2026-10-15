@@ -6,6 +6,7 @@
 
 import { stageLibraryFilter } from './petLineup.js';
 import { installUiKit } from '../ui/uiKit.js';
+import { demoEnemyId } from '../data/GameConfig.js';
 
 export const LIBRARY_INDEX_KEY = 'asset-library-index';
 const INDEX_URL = 'assets/library/asset-index.json';
@@ -33,13 +34,29 @@ export const STAGE_LIBRARY_CATEGORIES = [
  */
 export const UNWIRED_LIBRARY_CATEGORIES = ['bosses', 'pickups', 'concepts'];
 
+/** Boss sheets stay unloaded until `?enemy=` names one of these. */
+const BOSS_DEMO_IDS = new Set(['lava-balon', 'steel-balam']);
+
+/**
+ * Stage categories for this page load. Boss sheets join only when the
+ * solo-enemy query names a boss. A normal stage does not load them.
+ * @param {string} [search]
+ * @returns {string[]}
+ */
+export function stageLibraryCategories(search) {
+  const categories = STAGE_LIBRARY_CATEGORIES.slice();
+  const id = demoEnemyId(search);
+  if (id && BOSS_DEMO_IDS.has(id)) categories.push('bosses');
+  return categories;
+}
+
 /**
  * Call in preload(). Queues textures from the index.
  * Uses a same-origin read so every sheet is in the queue before preload ends.
  * @param {Phaser.Scene} scene
  * @param {{ categories?: string[], filter?: ((asset: object) => boolean)|null }} [opts]
  */
-export function preloadLibrary(scene, { categories = STAGE_LIBRARY_CATEGORIES, filter = stageLibraryFilter } = {}) {
+export function preloadLibrary(scene, { categories = stageLibraryCategories(), filter = stageLibraryFilter } = {}) {
   if (!scene?.load || !scene.textures) return;
   const cached = readCachedIndex(scene);
   if (cached) {

@@ -143,8 +143,14 @@ export const ZOMBIE_LIBRARY_SKINS = {
   }),
   sprinter: skin('sprinter', 'zombie-sprinter', { death: 'zombie-sprinter-die1' }),
   brute: skin('brute', 'zombie-brute', { death: 'zombie-brute-die1' }),
-  trashcan: skin('trashcan', 'zombie-trashcan', { death: 'zombie-trashcan-break' }),
-  riot: skin('riot', 'zombie-riot', { death: 'zombie-riot-armor_break' }),
+  trashcan: skin('trashcan', 'zombie-trashcan', {
+    death: 'zombie-trashcan-break',
+    hurt: 'zombie-trashcan-hurt_armor',
+  }),
+  riot: skin('riot', 'zombie-riot', {
+    death: 'zombie-riot-armor_break',
+    hurt: 'zombie-riot-hurt_armor',
+  }),
 };
 
 /**
@@ -159,6 +165,7 @@ export const ZOMBIE_BOSS_SKINS = {
       walk: 'zombie-boss-lava-walk',
       run: 'zombie-boss-lava-run',
       attack: 'zombie-boss-lava-attack',
+      hurt: 'zombie-boss-lava-hurt',
       death: 'zombie-boss-lava-die1',
     },
   },
@@ -169,6 +176,7 @@ export const ZOMBIE_BOSS_SKINS = {
       walk: 'zombie-boss-steel-walk',
       run: 'zombie-boss-steel-run',
       attack: 'zombie-boss-steel-attack',
+      hurt: 'zombie-boss-steel-hurt',
       death: 'zombie-boss-steel-die1',
     },
   },
@@ -196,7 +204,7 @@ const skinCursor = { walker: 0, runner: 0, tank: 0 };
 /**
  * @param {string} id
  * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
- * @param {{ attack?: string|null, death?: string, blast?: string, blastFx?: string }} [extra]
+ * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string }} [extra]
  */
 function skin(id, prefix, extra = {}) {
   return {
@@ -209,7 +217,7 @@ function skin(id, prefix, extra = {}) {
       run: `${prefix}-run`,
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
-      hurt: `${prefix}-hurt`,
+      hurt: extra.hurt || `${prefix}-hurt`,
       blast: extra.blast || null,
       attach: extra.attach || null,
     },
@@ -293,6 +301,15 @@ export function isRetiredOfficeKey(key) {
  * @param {string|null|undefined} skinId
  * @param {string} variant
  */
+/**
+ * Library skin or a boss skin. Waves only pass library ids.
+ * @param {string|null|undefined} id
+ */
+export function zombieSkinDef(id) {
+  if (!id) return null;
+  return ZOMBIE_LIBRARY_SKINS[id] || ZOMBIE_BOSS_SKINS[id] || null;
+}
+
 export function resolveSpawnSkin(scene, skinId, variant) {
   /** @type {string[]} */
   const chain = [];
@@ -301,10 +318,10 @@ export function resolveSpawnSkin(scene, skinId, variant) {
     chain.push(id);
   };
   push(skinId);
-  push(ZOMBIE_LIBRARY_SKINS[skinId]?.fallbackId);
+  push(zombieSkinDef(skinId)?.fallbackId);
   push(SPAWN_FALLBACK_SKIN);
   for (const id of chain) {
-    const def = ZOMBIE_LIBRARY_SKINS[id];
+    const def = zombieSkinDef(id);
     if (!def) continue;
     const walk = zombieActionKey(def, variant, 'walk');
     if (!walk || isRetiredOfficeKey(walk)) continue;

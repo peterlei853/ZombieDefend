@@ -101,6 +101,9 @@ export class Zombie {
     /** @type {'normal'|'overkill'|null} */
     this._deathMode = null;
     this._flashToken = 0;
+    /** Feel booth holds this body in front of the fence. Waves never set it. */
+    this.showcaseHold = false;
+    this._showcaseToken = 0;
 
     registerZombieAnims(scene);
     this.skin = cfg.skin
@@ -348,6 +351,7 @@ export class Zombie {
 
   update(deltaSec, contactX, pet = null) {
     if (!this.alive) return;
+    if (this.showcaseHold) return;
 
     if (this._petSlideMs > 0 && this.body) {
       const ms = Math.max(0, deltaSec * 1000);
@@ -709,17 +713,106 @@ export class Zombie {
     if (!this.alive) return false;
     this.hp -= amount;
     this._syncBars();
+    const scripted = hit?.feel === true;
+    const showcaseAudio = !!(
+      this.skin?.id &&
+      this.scene?.demoEnemyId &&
+      this.skin.id === this.scene.demoEnemyId
+    );
     if (this.hp <= 0) {
       this.hp = 0;
       this.alive = false;
       this._beginDeath(amount, hit);
-      this.scene.audio?.playZombieDeath();
-      this.scene.expOrbs?.onZombieDeath?.(this);
+      if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'die');
+      else this.scene.audio?.playZombieDeath();
+      if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
     }
     this._playHitFlash();
-    if (amount > 0) this.scene.audio?.playZombieHurt();
+    if (amount > 0) {
+      if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
+      else this.scene.audio?.playZombieHurt();
+      if (scripted) this._playHurtStrip();
+    }
     return false;
+  }
+
+  /**
+   * Play one library strip, then the walk loop. Looping strips hold for
+   * a single cycle. Missing strips return false.
+   * @param {string} key
+   * @returns {boolean}
+   */
+  playShowcaseStrip(key) {
+    if (!this.alive || !this._isSprite || !this.body || !this._animReady(key)) return false;
+    const token = (this._showcaseToken || 0) + 1;
+    this._showcaseToken = token;
+    try {
+      this.body.play(key);
+    } catch (_) {
+      return false;
+    }
+    const restore = () => {
+      if (this._showcaseToken !== token || !this.alive || !this.body) return;
+      const walk = this._animKey('walk');
+      if (!this._animReady(walk)) return;
+      try {
+        this.body.play(walk);
+      } catch (_) {
+        /* leave the last frame */
+      }
+    };
+    let holdMs = 0;
+    try {
+      const anim = this.scene?.anims?.get?.(key);
+      if (anim?.repeat === -1) {
+        const frames = anim.frames?.length || 1;
+        const rate = anim.frameRate > 0 ? anim.frameRate : 10;
+        holdMs = Math.round((frames / rate) * 1000);
+      }
+    } catch (_) {
+      holdMs = 0;
+    }
+    if (holdMs > 0) this.scene?.time?.delayedCall?.(holdMs, restore);
+    else this.body.once?.(`animationcomplete-${key}`, restore);
+    return true;
+  }
+
+  /**
+   * Key 2. Attack strip (not the nurse attach skill) plus the barricade lunge.
+   * @returns {boolean}
+   */
+  playShowcaseAttack() {
+    if (!this.alive || !this.body) return false;
+    const attackKey = this._animKey('attack');
+    const played = attackKey ? this.playShowcaseStrip(attackKey) : false;
+    const homeX = this.body.x;
+    const juice = GAME_CONFIG.JUICE;
+    const reach = homeX + juice.BARRICADE_LUNGE_PX * LAYOUT_SCALE;
+    this.scene?.tweens?.killTweensOf?.(this.body);
+    this.scene?.tweens?.add?.({
+      targets: this.body,
+      x: reach,
+      duration: juice.BARRICADE_LUNGE_MS,
+      yoyo: true,
+      ease: 'Quad.easeOut',
+      onUpdate: () => {
+        if (this.alive) this._syncBars();
+      },
+      onComplete: () => {
+        if (!this.alive || !this.body) return;
+        this.body.x = homeX;
+        this._syncBars();
+      },
+    });
+    return played;
+  }
+
+  /** Hurt strip after the white flash. No-op when that sheet is not loaded. */
+  _playHurtStrip() {
+    const hurt = this._animKey('hurt');
+    if (!hurt) return false;
+    return this.playShowcaseStrip(hurt);
   }
 
   /**

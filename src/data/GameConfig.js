@@ -95,10 +95,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * baby, young, and ancient cast. Normal cooldowns and damage stay put.
  * Gold, saves, barricade physics, BGM/SFX volumes, and the six-mount
  * fence stay put.
+ * v0.35 adds `?enemy=<id>` (one living enemy, no wave spam) and
+ * `?feel=1` (keys 1/2/3/R for hit, hurt, skill, and reset). Feel is a
+ * no-op without a known enemy id. Gold, saves, barricade physics,
+ * wave tables, BGM/SFX volumes, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.34.1';
+export const APP_VERSION = '0.35.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -173,6 +177,62 @@ export function demoWeaponId(search) {
     return id;
   } catch (_) {
     return null;
+  }
+}
+
+/**
+ * Catalog ids `?enemy=` will spawn alone. Unknown ids are ignored so a
+ * normal stage still runs. Order is the showcase list, not the roster.
+ * @type {string[]}
+ */
+export const DEMO_ENEMY_IDS = [
+  'office-worker-v2',
+  'delivery',
+  'chef',
+  'nurse',
+  'brute',
+  'riot',
+  'trashcan',
+  'sprinter',
+  'slime',
+  'slime-mini',
+  'exploder',
+  'cyborg',
+  'clown',
+  'lava-balon',
+  'steel-balam',
+];
+
+/**
+ * `?enemy=<id>` spawns only that catalog enemy. Missing or unknown ids
+ * return null so wave spawn stays on the stage roster. Does not write
+ * a save.
+ * @param {string} [search]
+ * @returns {string|null}
+ */
+export function demoEnemyId(search) {
+  try {
+    const raw = search ?? (globalThis.location?.search || '');
+    const id = (new URLSearchParams(raw || '').get('enemy') || '').trim().toLowerCase();
+    if (!DEMO_ENEMY_IDS.includes(id)) return null;
+    return id;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * `?feel=1` arms the hit / hurt / skill / reset keys. Without a known
+ * `?enemy=` id this is a no-op, including on the title auto-boot.
+ * @param {string} [search]
+ */
+export function enemyFeelEnabled(search) {
+  try {
+    const raw = search ?? (globalThis.location?.search || '');
+    if (!demoEnemyId(raw)) return false;
+    return new URLSearchParams(raw || '').get('feel') === '1';
+  } catch (_) {
+    return false;
   }
 }
 const KNOCKBACK_HANDGUN_PX = 10;

@@ -10,8 +10,10 @@ import {
   GAME_WIDTH,
   GAME_HEIGHT,
   STAGE_DURATION,
+  WAVE_DEFS,
 } from '../data/waves.js';
-import { APP_VERSION, debugPetSkillEnabled, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { enemySkillStrips, feelHitDamage } from '../data/enemyShowcase.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -49,6 +51,7 @@ import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
 import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
+import { libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
@@ -80,6 +83,11 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * memory for the page load, not a save write. `?weapon=water` and
  * `?weapon=sling` keep the single-gun fence immerse. Without that
  * query the stage places six mounts, one weapon each, top to bottom.
+ * `?enemy=<id>` spawns only that catalog enemy in front of the fence
+ * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/R
+ * (and the matching chips) for hit, hurt, skill, and reset. Feel
+ * without a known enemy does nothing. Gold, saves, barricade HP, and
+ * the wave tables stay put. The camera does not shake.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -103,6 +111,10 @@ export default class StageScene extends Phaser.Scene {
     // Stage 1 playtest deploys all six guns unless ?weapon=<id> is set.
     // That id is this run only. It is not written to MockDB or localStorage.
     this.weaponImmerse = demoWeaponId();
+    this.demoEnemyId = demoEnemyId();
+    this.enemyFeel = enemyFeelEnabled();
+    this._showcase = null;
+    this._feelSkillCursor = 0;
     this.ownedWeapons = resolveOwnedWeapons(this.stage, carried, this.weaponImmerse);
     this.weaponUpgrades = { ...(data?.upgrades || this.registry.get('weaponUpgrades') || {}) };
 
@@ -179,7 +191,10 @@ export default class StageScene extends Phaser.Scene {
     this.expOrbs = new ExpOrbManager(this, this.petEvolve);
     this.defenders.petCombat?.setEvolve?.(this.petEvolve);
 
-    this.waveManager = new WaveManager({ stage: this.stage });
+    // Solo arena keeps the wave tables on disk and simply does not queue them.
+    this.waveManager = this.demoEnemyId
+      ? new WaveManager({ stage: this.stage, waveDefs: [] })
+      : new WaveManager({ stage: this.stage });
 
     this._buildHud();
 
@@ -210,6 +225,12 @@ export default class StageScene extends Phaser.Scene {
     }
     if (debugPetSkillEnabled()) {
       this._installDebugPetSkill();
+    }
+    if (this.demoEnemyId) {
+      this._spawnShowcaseEnemy();
+    }
+    if (this.enemyFeel) {
+      this._installEnemyFeel();
     }
 
     this.touchControls = new VirtualControls(this, {
@@ -399,6 +420,237 @@ export default class StageScene extends Phaser.Scene {
         depth: depth + 1,
       });
     });
+  }
+
+  /**
+   * `?feel=1` with a known `?enemy=`. 1 hits the enemy, 2 plays their
+   * attack into the hero, 3 cycles skill strips, R respawns. Weapons
+   * stay quiet so the booth is the only thing that lands a blow.
+   */
+  _installEnemyFeel() {
+    const fire = (action) => {
+      if (this.ended || !this.enemyFeel) return;
+      if (action === 'hit') this._feelHit();
+      else if (action === 'hurt') this._feelHurt();
+      else if (action === 'skill') this._feelSkill();
+      else if (action === 'reset') this._feelReset();
+    };
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const codes = [
+        [Phaser.Input.Keyboard.KeyCodes.ONE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE, 'hit'],
+        [Phaser.Input.Keyboard.KeyCodes.TWO, Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO, 'hurt'],
+        [Phaser.Input.Keyboard.KeyCodes.THREE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE, 'skill'],
+        [Phaser.Input.Keyboard.KeyCodes.R, null, 'reset'],
+      ];
+      const bound = [];
+      for (const [code, pad, action] of codes) {
+        const onDown = () => fire(action);
+        const key = keyboard.addKey(code);
+        key.on('down', onDown);
+        bound.push([key, onDown]);
+        if (pad != null) {
+          const num = keyboard.addKey(pad);
+          num.on('down', onDown);
+          bound.push([num, onDown]);
+        }
+      }
+      this.events.once('shutdown', () => {
+        for (const [key, onDown] of bound) key.off('down', onDown);
+      });
+    }
+
+    const depth = HUD_DEPTH + 50;
+    const id = this.demoEnemyId || '';
+    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 72, `${id}  1 hit  2 hurt  3 skill  R reset`, {
+      system: true,
+      size: 14,
+      color: '#ffe7a0',
+      depth: depth + 1,
+    });
+    const labels = [
+      ['1 HIT', 'hit'],
+      ['2 HURT', 'hurt'],
+      ['3 SKILL', 'skill'],
+      ['R RESET', 'reset'],
+    ];
+    const gap = 150;
+    const origin = GAME_WIDTH / 2 - (gap * (labels.length - 1)) / 2;
+    const y = GAME_HEIGHT - 36;
+    labels.forEach(([label, action], index) => {
+      const x = origin + index * gap;
+      const hit = this.add
+        .rectangle(x, y, 132, 28, 0x1a1208, 0.82)
+        .setScrollFactor(0)
+        .setDepth(depth)
+        .setInteractive({ useHandCursor: true });
+      hit.on('pointerup', () => fire(action));
+      addKitText(this, x, y, label, {
+        system: true,
+        size: 13,
+        color: '#ffe7a0',
+        depth: depth + 1,
+      });
+    });
+  }
+
+  /** @param {string} note */
+  _setFeelHint(note) {
+    const id = this.demoEnemyId || '';
+    this._feelHint?.setText?.(`${id}  ${note}`);
+  }
+
+  _livingShowcase() {
+    const z = this._showcase;
+    if (!z?.alive) return null;
+    return z;
+  }
+
+  _feelHit() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    this._playHeroFeel('attack');
+    z.takeDamage(feelHitDamage(z.maxHp), { feel: true, kind: 'feel' });
+    this._setFeelHint(z.alive ? '1 hit' : '1 die — R reset');
+  }
+
+  _feelHurt() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    const played = z.playShowcaseAttack();
+    this._playHeroFeel('hurt');
+    this.audio?.playEnemyCue?.(this.demoEnemyId, 'hurt');
+    this._setFeelHint(played ? '2 hurt' : '2 hurt (no attack strip)');
+  }
+
+  _feelSkill() {
+    const z = this._livingShowcase();
+    const strips = enemySkillStrips(this.demoEnemyId);
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    if (!strips.length) {
+      this._setFeelHint('3 no skill');
+      return;
+    }
+    const row = strips[this._feelSkillCursor % strips.length];
+    this._feelSkillCursor += 1;
+    const played = z.playShowcaseStrip(row.anim);
+    this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
+    if (played) this._playSkillFx(z, row.anim);
+    this._setFeelHint(played ? `3 ${row.cue}` : `3 ${row.cue} (strip missing)`);
+  }
+
+  /**
+   * First attached FX sheet, at the body, when the catalog lists one.
+   * Timing anchors stay on the strip; this is the preview puff.
+   * @param {Zombie} z
+   * @param {string} animKey
+   */
+  _playSkillFx(z, animKey) {
+    const fx = libraryAsset(this, animKey)?.fx;
+    if (!Array.isArray(fx) || !fx.length || !z?.body) return;
+    const y = Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : z.y;
+    playLibraryFx(this, z.body.x, y, fx[0], {
+      depth: (z.body.depth || 0) + 2,
+      scale: Math.abs(z.body.scaleX || 1),
+    });
+  }
+
+  _feelReset() {
+    this._feelSkillCursor = 0;
+    this._spawnShowcaseEnemy();
+    this._setFeelHint('R reset');
+  }
+
+  /**
+   * @param {'attack'|'hurt'} kind
+   */
+  _playHeroFeel(kind) {
+    const player = this.defenders?.player;
+    if (!player) return;
+    if (kind === 'hurt') {
+      this._playHeroFeelAnim('player-girl-hurt', 0);
+      return;
+    }
+    if (this._playHeroFeelAnim('player-girl-tower-fire-strip', 500)) return;
+    this._playHeroFeelAnim('player-girl-deploy', 0);
+  }
+
+  /**
+   * @param {string} key
+   * @param {number} holdMs looping strips need a hold; 0 waits for complete
+   */
+  _playHeroFeelAnim(key, holdMs) {
+    const player = this.defenders?.player;
+    if (!player || typeof player.play !== 'function') return false;
+    if (!this.anims?.exists?.(key)) return false;
+    const token = (this._heroFeelToken || 0) + 1;
+    this._heroFeelToken = token;
+    try {
+      player.play(key);
+    } catch (_) {
+      return false;
+    }
+    const restore = () => {
+      if (this._heroFeelToken !== token || !player.active) return;
+      const idle = this.anims.exists('player-girl-idle') ? 'player-girl-idle' : 'player-idle';
+      if (!this.anims.exists(idle)) return;
+      try {
+        player.play(idle);
+      } catch (_) {
+        /* leave the pose */
+      }
+    };
+    if (holdMs > 0) this.time.delayedCall(holdMs, restore);
+    else player.once?.(`animationcomplete-${key}`, restore);
+    return true;
+  }
+
+  _clearShowcaseEnemy() {
+    const z = this._showcase;
+    this._showcase = null;
+    if (z) {
+      z.showcaseHold = false;
+      z.alive = false;
+      z.destroyVisuals();
+    }
+    this.zombies = this.zombies.filter((item) => item !== z && item.alive && item.body);
+  }
+
+  /**
+   * One body of the query id, just west of the fence, on the hero's lane.
+   * Stats are the wave-1 walker row so gold-by-HP does not gain a new band.
+   */
+  _spawnShowcaseEnemy() {
+    if (!this.demoEnemyId) return null;
+    this._clearShowcaseEnemy();
+    const row = WAVE_DEFS[0].archetypes[0];
+    const player = this.defenders?.player;
+    const y = player?.y ?? (grassYMin() + grassYMax()) / 2;
+    const z = new Zombie(this, {
+      x: 0,
+      y,
+      hp: row.hp,
+      speed: row.speed,
+      dps: row.dps,
+      wave: 1,
+      variant: row.variant,
+      skin: this.demoEnemyId,
+    });
+    const halt = this.barricade.contactXAt(y) - z.displayHalf;
+    z.placeAt(halt - layoutPx(72));
+    if (this.enemyFeel) z.showcaseHold = true;
+    this.zombies.push(z);
+    this._showcase = z;
+    return z;
   }
 
   _debugUlt() {
@@ -661,6 +913,11 @@ export default class StageScene extends Phaser.Scene {
     if (cam.scrollY !== 0) cam.setScroll(cam.scrollX, 0);
 
     const rawMs = Math.min(delta, 50);
+    if (this.enemyFeel) {
+      this._refreshHud();
+      this.petHud?.update(rawMs);
+      return;
+    }
     this.petEvolve?.notifyStageProgress(this.waveManager.getElapsed() / STAGE_DURATION);
     if (this.defenders.combatFrozen?.()) {
       const petGain = this.defenders.tickCombatFreeze(rawMs);
@@ -740,8 +997,8 @@ export default class StageScene extends Phaser.Scene {
     applyHpBarDensity(this.zombies);
     this._syncControlFade();
 
-    // Win check
-    if (this.waveManager.isTimeUp()) {
+    // Win check. The solo arena stays up so a tuning page is not sent to the shop.
+    if (!this.demoEnemyId && this.waveManager.isTimeUp()) {
       const anyAlive = this.zombies.some((z) => z.alive);
       const anyQueued = this.waveManager.getRemainingToSpawn() > 0;
       if (!anyAlive && !anyQueued) {
