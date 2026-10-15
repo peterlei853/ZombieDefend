@@ -19,7 +19,7 @@
  * and `sfx-slash-ninja` via `playFeelMeleeSlash`. Hitstop, flash, sparks,
  * and 2px knockback stay. Keys 5–9 preview catalog FX only
  * (`fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot`,
- * `fx-hit-fire`, `fx-hit-water` at 16px). No damage. Key 7 plays the
+ * `fx-hit-fire`, `fx-hit-water`, 4×24 @ 8 fps / 0.5s). No damage. Key 7 plays the
  * cataloged `sfx-slash-dot` default. The other four previews stay silent.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
@@ -307,6 +307,13 @@ for (const key of WAVE_KEYS) {
   const folder = key.startsWith('fx-hit-') ? 'bullet-hit' : 'melee';
   assert(existsSync(new URL(`../assets/library/fx/${folder}/${key}.png`, import.meta.url)), `${key} sheet is cataloged`);
 }
+const assetIndex = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+for (const key of ['fx-hit-fire', 'fx-hit-water']) {
+  const asset = assetIndex.assets.find((row) => row.key === key);
+  assert(asset?.frameWidth === 24 && asset?.frameHeight === 24 && asset?.frames === 4 && asset?.frameRate === 8, `${key} is 4×24 @ 8 fps (0.5s)`);
+  const png = readFileSync(new URL(`../assets/library/fx/bullet-hit/${key}.png`, import.meta.url));
+  assert(png.readUInt32BE(16) === 96 && png.readUInt32BE(20) === 24, `${key} sheet is a 96×24 strip`);
+}
 assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-fire-bullet24.png', import.meta.url)), '24px fire upscale is not cataloged');
 assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-water-bullet24.png', import.meta.url)), '24px water upscale is not cataloged');
 assert(GAME_AUDIO.some((clip) => clip.key === 'sfx-slash-dot' && clip.url === 'assets/audio/sfx-slash-dot.mp3'), 'sfx-slash-dot stays the cataloged default');
@@ -373,7 +380,7 @@ assert(waveSpawned.at(-1).scale === 0.5 && waveSpawned.at(-1).key === 'fx-slash-
 assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'dot'), 'a short unit previews the dot');
 assert(waveSpawned.at(-1).scale === 0.25, 'a 64px unit scales the dot to 0.25');
 assert(waveAudio.filter((cue) => cue === 'sfx-slash-dot').length === 2, 'a second dot preview plays the tick again');
-assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'fire'), 'a short unit previews fire at pellet size');
+assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'fire'), 'a short unit previews fire at scale 1');
 assert(waveSpawned.at(-1).scale === 1 && waveSpawned.at(-1).key === 'fx-hit-fire', 'fire stays scale 1');
 assert(waveAudio.filter((cue) => cue === 'sfx-slash-dot').length === 2 && !waveAudio.includes('slash'), 'fire and the slashes stay silent');
 assert(playFeelWaveFx(waveBooth, waveZombie, 'missing') == null, 'an unknown demo id spawns nothing');
