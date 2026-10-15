@@ -293,6 +293,14 @@ export class SoundManager {
     this._cue('sfx-slash-ninja', AUDIO_VOLUME.melee, AUDIO_COOLDOWN_MS.hit);
   }
 
+  /**
+   * Feel-booth DoT tick. Plays the default `sfx-slash-dot` (take A) already
+   * cataloged with the audio pack. Volume stays under melee. Not a combat hook.
+   */
+  playFeelDotTick() {
+    this._cue('sfx-slash-dot', 0.28);
+  }
+
   playZombieHurt() {
     this._cue('zombie-hurt', AUDIO_VOLUME.hurt, AUDIO_COOLDOWN_MS.hurt);
   }

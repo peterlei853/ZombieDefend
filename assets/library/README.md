@@ -161,7 +161,7 @@ Feel-booth close-range slash sheets live with the other hero weapon FX in `chara
 
 ### Shared melee (catalog only)
 
-Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10-15. They are **not** wired into live combat. `fx-slash-ninja` stays the feel-booth `4` primary. Feel-booth keys 5, 6, and 7 only preview the three slashes below. `fx-slash` and `fx-slash-overhead` stay as they are. `sfx-slash-dot` is a Sound Effect follow-up and is not in this catalog.
+Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10-15. They are **not** wired into live combat. `fx-slash-ninja` stays the feel-booth `4` primary. Feel-booth keys 5, 6, and 7 only preview the three slashes below. `fx-slash` and `fx-slash-overhead` stay as they are. `sfx-slash-dot` is already in the audio pack and is not added again here. Feel-booth key 7 plays that default with the dot preview.
 
 | Key | Display | Color | Direction | Frames | FPS | Fit | Sheet |
 |---|---|---|---|---|---|---|---|
@@ -185,7 +185,7 @@ Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays 
 
 **Sheet layout.** These are **not** horizontal strips. Faction sheets are 3 columns × 2 rows: frame *i* is column `i % 3`, row `floor(i / 3)`. Frame 4 is blank, and the bottom-right cell is unused. The DoT sheet is 2×2 of 30×30: frame *i* is column `i % 2`, row `floor(i / 2)`. Frame 3 is blank. `load.spritesheet` with `frameWidth` / `frameHeight` already walks that order.
 
-**Gameplay handoff (not wired into combat).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. The `sfx-slash-dot` pack stays with Sound Effect for a follow-up audio PR.
+**Gameplay handoff (not wired into combat).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. `sfx-slash-dot` (default take A) is already cataloged in the audio pack. Feel-booth key 7 plays it with the dot preview. This catalog does not add the clips again.
 
 ### Bullet hits (catalog + feel demo)
 
