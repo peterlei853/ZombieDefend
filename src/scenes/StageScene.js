@@ -13,7 +13,8 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
-import { enemySkillStrips, FEEL_HIT_BURST, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
+import { enemySkillStrips, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
+import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact } from '../systems/feelImpact.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -84,9 +85,11 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * `?weapon=sling` keep the single-gun fence immerse. Without that
  * query the stage places six mounts, one weapon each, top to bottom.
  * `?enemy=<id>` spawns only that catalog enemy in front of the fence
- * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/R
- * (and the matching chips) for hit, hurt, skill, and reset. Key 2
- * plays the attack strip, then `player-girl-hurt` and the hurt cue
+ * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
+ * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
+ * Key 1 and key 4 share a 40ms hitstop, white flash, impact sparks, and
+ * a 2px X knockback. Key 4 plays fx-slash-overhead above the enemy.
+ * Key 2 plays the attack strip, then `player-girl-hurt` and the hurt cue
  * on that strip's hit frame. Feel without a known enemy does nothing.
  * Gold, saves, barricade HP, and the wave tables stay put. The camera
  * does not shake.
@@ -425,10 +428,10 @@ export default class StageScene extends Phaser.Scene {
   }
 
   /**
-   * `?feel=1` with a known `?enemy=`. 1 hits the enemy, 2 plays their
+   * `?feel=1` with a known `?enemy=`. 1 is a ranged hit, 2 plays their
    * attack and the hero hurt on the attack hit frame, 3 cycles skill
-   * strips, R respawns. Weapons stay quiet so the booth is the only
-   * thing that lands a blow.
+   * strips, 4 is an overhead melee hit, R respawns. Weapons stay quiet
+   * so the booth is the only thing that lands a blow.
    */
   _installEnemyFeel() {
     const fire = (action) => {
@@ -436,6 +439,7 @@ export default class StageScene extends Phaser.Scene {
       if (action === 'hit') this._feelHit();
       else if (action === 'hurt') this._feelHurt();
       else if (action === 'skill') this._feelSkill();
+      else if (action === 'melee') this._feelMelee();
       else if (action === 'reset') this._feelReset();
     };
     const keyboard = this.input.keyboard;
@@ -444,6 +448,7 @@ export default class StageScene extends Phaser.Scene {
         [Phaser.Input.Keyboard.KeyCodes.ONE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE, 'hit'],
         [Phaser.Input.Keyboard.KeyCodes.TWO, Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO, 'hurt'],
         [Phaser.Input.Keyboard.KeyCodes.THREE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE, 'skill'],
+        [Phaser.Input.Keyboard.KeyCodes.FOUR, Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR, 'melee'],
         [Phaser.Input.Keyboard.KeyCodes.R, null, 'reset'],
       ];
       const bound = [];
@@ -465,7 +470,7 @@ export default class StageScene extends Phaser.Scene {
 
     const depth = HUD_DEPTH + 50;
     const id = this.demoEnemyId || '';
-    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 72, `${id}  1 hit  2 hurt  3 skill  R reset`, {
+    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 72, `${id}  1 hit  2 hurt  3 skill  4 melee  R reset`, {
       system: true,
       size: 14,
       color: '#ffe7a0',
@@ -475,15 +480,16 @@ export default class StageScene extends Phaser.Scene {
       ['1 HIT', 'hit'],
       ['2 HURT', 'hurt'],
       ['3 SKILL', 'skill'],
+      ['4 MELEE', 'melee'],
       ['R RESET', 'reset'],
     ];
-    const gap = 150;
+    const gap = 140;
     const origin = GAME_WIDTH / 2 - (gap * (labels.length - 1)) / 2;
     const y = GAME_HEIGHT - 36;
     labels.forEach(([label, action], index) => {
       const x = origin + index * gap;
       const hit = this.add
-        .rectangle(x, y, 132, 28, 0x1a1208, 0.82)
+        .rectangle(x, y, 124, 28, 0x1a1208, 0.82)
         .setScrollFactor(0)
         .setDepth(depth)
         .setInteractive({ useHandCursor: true });
@@ -510,15 +516,35 @@ export default class StageScene extends Phaser.Scene {
   }
 
   _feelHit() {
+    this._feelStrike(false);
+  }
+
+  _feelMelee() {
+    this._feelStrike(true);
+  }
+
+  /**
+   * Ranged (key 1) or overhead melee (key 4). Same hitstop, flash,
+   * sparks, and 2px X knockback. Melee also plays fx-slash-overhead.
+   * @param {boolean} melee
+   */
+  _feelStrike(melee) {
     const z = this._livingShowcase();
     if (!z) {
       this._setFeelHint('down — R reset');
       return;
     }
     this._playHeroFeel('attack');
-    this._playFeelHitBurst(z);
-    z.takeDamage(feelHitDamage(z.maxHp), { feel: true, kind: 'feel' });
-    this._setFeelHint(z.alive ? '1 hit' : '1 die — R reset');
+    const player = this.defenders?.player;
+    const dirX = feelImpactDirX(player?.x, z.body?.x ?? z.x);
+    playFeelImpact(this, z, { melee, dirX, playerX: player?.x });
+    z.takeDamage(feelHitDamage(z.maxHp), {
+      feel: true,
+      kind: 'feel',
+      flashMs: FEEL_HIT_FLASH_MS,
+    });
+    const tag = melee ? '4 melee' : '1 hit';
+    this._setFeelHint(z.alive ? tag : `${melee ? '4' : '1'} die — R reset`);
   }
 
   _feelHurt() {
@@ -530,20 +556,6 @@ export default class StageScene extends Phaser.Scene {
     const hitFrame = feelAttackHitFrame(this.demoEnemyId);
     const played = z.playShowcaseAttack(hitFrame, () => this._onFeelAttackHit());
     this._setFeelHint(played ? '2 hurt' : '2 hurt (no attack strip)');
-  }
-
-  /**
-   * Cyan burst on the body center, the same turn as the hit cue.
-   * Depth sits above the sprite: a chest-Y sort would hide the sheet.
-   * @param {Zombie} z
-   */
-  _playFeelHitBurst(z) {
-    if (!z?.body) return;
-    const y = Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : z.y;
-    playLibraryFx(this, z.x, y, FEEL_HIT_BURST, {
-      scale: Math.abs(z.body.scaleX || z.scale || 1) || 1,
-      depth: (z.body.depth || 0) + 5,
-    });
   }
 
   /**

@@ -9,7 +9,10 @@
  *
  * v0.35.1: key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt`
  * on the attack strip's hit frame (`animationupdate`), not on a timer.
- * Key 1 plays `fx-hit-water-burst` on the enemy body with the hit cue.
+ * v0.35.2: key 1 no longer plays `fx-hit-water-burst`. Key 1 (ranged) and
+ * key 4 (melee) share a 40ms hitstop, a 40ms white flash, 8–12 sparks,
+ * and a 2px X knockback. Melee spawns `fx-slash-overhead` above the enemy
+ * (ADD, no rotation). `fx-slash` is the side spare when that sheet is missing.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -23,7 +26,6 @@ import {
 import {
   ENEMY_ATTACK_HIT_FRAME,
   ENEMY_SFX_FILES,
-  FEEL_HIT_BURST,
   ENEMY_SKILL_STRIPS,
   enemySfxClips,
   enemySfxKey,
@@ -32,6 +34,21 @@ import {
   feelAttackHitFrame,
   feelHitDamage,
 } from '../src/data/enemyShowcase.js';
+import {
+  FEEL_HIT_FLASH_MS,
+  FEEL_HIT_KNOCK_PX,
+  FEEL_HIT_PARTICLE_MAX,
+  FEEL_HIT_PARTICLE_MIN,
+  FEEL_HIT_SHAKE_MS,
+  FEEL_MELEE_SECTOR,
+  FEEL_MELEE_SLASH,
+  FEEL_MELEE_SLASH_OVERHEAD,
+  feelImpactDirX,
+  feelKnockOffset,
+  feelMeleeSlashPose,
+  feelParticleCount,
+  planFeelParticles,
+} from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
 import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
@@ -71,8 +88,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.1' && APP_VERSION === '0.35.1', 'package and APP_VERSION are 0.35.1');
-assert(html.includes('v0.35.1'), 'document title is v0.35.1');
+assert(pkg.version === '0.35.2' && APP_VERSION === '0.35.2', 'package and APP_VERSION are 0.35.2');
+assert(html.includes('v0.35.2'), 'document title is v0.35.2');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -161,22 +178,46 @@ assert(Object.keys(HIT_FRAMES).length === IDS.length - 1, 'every attack id excep
 assert(feelAttackHitFrame('office-worker-v2') === 4, 'office-worker-v2 strike is attack frame 4');
 
 const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
-assert(FEEL_HIT_BURST === 'fx-hit-water-burst', 'feel hit overlay is the cyan burst');
-assert(hitFn.includes('_playFeelHitBurst'), 'key 1 plays the burst');
-assert(!hitFn.includes('playLibraryFx'), 'key 1 delegates the overlay to the burst helper');
-const burstFn = stageSrc.slice(stageSrc.indexOf('\n  _playFeelHitBurst(z) {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));
-assert(burstFn.includes('playLibraryFx') && burstFn.includes('FEEL_HIT_BURST'), 'burst uses playLibraryFx');
-assert(burstFn.includes('bodyCenterY'), 'burst is centered on the enemy body');
-assert(hitFn.indexOf('_playFeelHitBurst') < hitFn.indexOf('takeDamage'), 'burst plays before the HP tick');
-const burstPng = new URL('../assets/library/characters/hero/girl/fx/fx-hit-water-burst.png', import.meta.url);
-assert(existsSync(burstPng), 'fx-hit-water-burst.png is in the catalog');
+assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
+assert(hitFn.includes('_feelStrike(true)'), 'key 4 is the melee strike');
+assert(hitFn.includes('playFeelImpact'), 'strikes share the impact helper');
+assert(hitFn.includes('flashMs: FEEL_HIT_FLASH_MS'), 'feel flash is the 40ms override');
+assert(!hitFn.includes('fx-hit-water-burst') && !hitFn.includes('_playFeelHitBurst'), 'key 1 does not play the water burst');
+assert(!stageSrc.includes('fx-hit-water-burst') && !stageSrc.includes('FEEL_HIT_BURST'), 'stage does not reference the water burst');
+assert(stageSrc.includes('KeyCodes.FOUR'), 'key 4 is installed');
+assert(stageSrc.includes('4 MELEE'), 'melee chip is installed');
+assert(FEEL_HIT_FLASH_MS === 40 && FEEL_HIT_SHAKE_MS === 40, 'hitstop and flash are 40ms');
+assert(FEEL_HIT_KNOCK_PX === 2, 'knockback is 2px');
+assert(FEEL_HIT_PARTICLE_MIN === 8 && FEEL_HIT_PARTICLE_MAX === 12, 'spark count is 8–12');
+assert(feelParticleCount(0) === 8 && feelParticleCount(0.999) === 12, 'spark roll stays inside 8–12');
+assert(feelImpactDirX(800, 400) === -1, 'a shot from the east travels west');
+assert(feelImpactDirX(400, 800) === 1, 'a shot from the west travels east');
+assert(feelKnockOffset(-1).x === -2 && feelKnockOffset(-1).y === 0, 'west shot shoves 2px on X');
+assert(feelKnockOffset(1).x === 2 && feelKnockOffset(1).y === 0, 'east shot shoves 2px on X');
+const rangedDots = planFeelParticles({ melee: false, dirX: -1, x: 100, y: 200, rand: () => 0 });
+assert(rangedDots.length === 8 && rangedDots.every((dot) => dot.dx < 0), 'ranged sparks follow the bullet west');
+const meleeDots = planFeelParticles({ melee: true, dirX: -1, x: 100, y: 200, half: 20, rand: () => 0.5 });
+assert(meleeDots.length >= 8 && meleeDots.length <= 12, 'melee spark count is in range');
+assert(meleeDots.every((dot) => dot.dy > 0), 'melee sparks travel downward onto the target');
+assert(FEEL_MELEE_SECTOR === 'overhead', 'melee sector is the overhead fan');
+const overhead = feelMeleeSlashPose(() => true);
+assert(overhead.key === FEEL_MELEE_SLASH_OVERHEAD && overhead.rotation === 0, 'primary slash is overhead and not rotated');
+assert(overhead.nudgeY < 0, 'overhead slash is anchored above the crown');
+const spare = feelMeleeSlashPose(() => false);
+assert(spare.key === FEEL_MELEE_SLASH && spare.rotation === Math.PI / 2, 'fx-slash is the rotated side spare');
+assert(FEEL_MELEE_SLASH_OVERHEAD === 'fx-slash-overhead' && FEEL_MELEE_SLASH === 'fx-slash', 'slash keys match the catalog');
 const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
-const burst = index.assets.find((asset) => asset.key === 'fx-hit-water-burst');
-assert(burst?.category === 'hero' && burst?.frames === 8, 'burst is an 8-frame hero fx sheet');
-assert(burst?.frameWidth === 64 && burst?.frameHeight === 64 && burst?.frameRate === 14, 'burst is 64×64 @ 14fps');
-assert(burst?.origin?.[0] === 0.5 && burst?.origin?.[1] === 0.5 && burst?.loop === false, 'burst origin is center, once');
+const overheadSheet = index.assets.find((asset) => asset.key === 'fx-slash-overhead');
+assert(overheadSheet?.frames === 8 && overheadSheet?.frameWidth === 96 && overheadSheet?.frameHeight === 96, 'overhead slash is 8×96');
+assert(overheadSheet?.frameRate === 14 && overheadSheet?.loop === false, 'overhead slash plays once at 14fps');
+assert(overheadSheet?.origin?.[0] === 0.5 && overheadSheet?.origin?.[1] === 0.5, 'overhead slash origin is center');
+const overheadPng = new URL('../assets/library/characters/hero/girl/fx/fx-slash-overhead.png', import.meta.url);
+assert(existsSync(overheadPng), 'fx-slash-overhead.png is in the catalog');
+const sideSheet = index.assets.find((asset) => asset.key === 'fx-slash');
+assert(sideSheet?.frames === 8 && sideSheet?.frameWidth === 96, 'fx-slash stays loadable as the side spare');
+assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
 
-const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _playFeelHitBurst(z) {'));
+const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));
 const onHitFn = stageSrc.slice(stageSrc.indexOf('\n  _onFeelAttackHit() {'), stageSrc.indexOf('\n  _feelSkill() {'));
 assert(hurtFn.includes('feelAttackHitFrame'), 'key 2 reads the attack hit frame');
 assert(hurtFn.includes('playShowcaseAttack'), 'key 2 plays the attack strip');
