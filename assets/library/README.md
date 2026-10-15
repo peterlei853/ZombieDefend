@@ -149,10 +149,10 @@ The default stage draws six cradles on the same fence geometry as the water moun
 
 ## Melee v0.35
 
-Feel-booth close-range slash FX live with the other hero weapon FX in `characters/hero/girl/fx/`. Both strips are 8×96 @ 14 fps, once, origin (0.5, 0.5), blend `Phaser.BlendModes.ADD` (white/cream/amber).
+Feel-booth close-range slash sheets live with the other hero weapon FX in `characters/hero/girl/fx/`. Both strips are 8×96 @ 14 fps, once, origin (0.5, 0.5), blend `Phaser.BlendModes.ADD` (white/cream/amber). Neither sheet is the feel-booth `4` primary. Peter cancelled the overhead chop in favor of a coming Fruit-Ninja-style diagonal slash (`fx-slash-ninja` / `fx-slash-diagonal`, delivered later; not in this catalog yet).
 
-- `fx-slash-overhead` — **primary** overhead melee. Vertical C / top→bottom chop. Spawn above the enemy. Gameplay should hang the feel-booth 近身 hit on this key.
-- `fx-slash` — side crescent / rotatable spare. Spawn at the weapon tip and rotate to facing. Do not replace this sheet with the overhead strip.
+- `fx-slash-overhead` — **deprecated for feel melee primary**. Reserved/unused spare. The vertical C / top→bottom chop stays on disk at `characters/hero/girl/fx/fx-slash-overhead.png`. Do not hang the feel-booth 近身 hit on this key.
+- `fx-slash` — side crescent spare only, not the feel primary and not an overhead backup. Spawn at the weapon tip and rotate to facing.
 
 ## Front-float combat (v0.27)
 
