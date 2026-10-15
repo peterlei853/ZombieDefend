@@ -90,10 +90,13 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * flame. Stopping behind a mount holds tower-fire and fires only that
  * gun at the nearest living enemy. ?weapon= still immerses one gun.
  * Gold, saves, barricade physics, roster, and BGM stay put.
+ * v0.34 plays all twelve pet-form cast strips and their catalog FX.
+ * Gold, saves, barricade physics, BGM/SFX volumes, and the six-mount
+ * fence stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.33.0';
+export const APP_VERSION = '0.34.0';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -452,9 +455,9 @@ export const GAME_CONFIG = {
       MOUTH_Y: -22,
     },
     /**
-     * Form 2 / form 3. Cast logic is live; visuals are tinted circles until
-     * themed FX exist. Lengths are field px. Orbs 2–3 stay locked while
-     * UNLOCKED_ORBS is 1, so these do not fire in the current stage.
+     * Form 2 / form 3 damage. Lengths are field px. Visuals are the catalog
+     * cast strips and FX. Orbs 2–3 stay locked while UNLOCKED_ORBS is 1,
+     * so these do not fire until that pet evolves.
      */
     FORM2: {
       phoenix: { damage: 8, radius: 72, burn: 4, burnIntervalMs: 450, burnMs: 1350 },
