@@ -6,7 +6,7 @@
 | Category | Groups | Assets |
 |---|---:|---:|
 | [Hero](#hero) | 3 | 129 |
-| [Pets](#pets) | 17 | 108 |
+| [Pets](#pets) | 17 | 124 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **53** | **589** |
+| **Total** | **53** | **605** |
 
 <a id="hero"></a>
 ## Hero
@@ -243,9 +243,9 @@ Standalone skill FX for Green Dragon. Travel west. Evolve FX included.
 
 <img src="previews/pets/dragon-young.gif" alt="dragon-young preview" height="140">
 
-Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST.
+Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
 
-- group `dragon-young` · 4 assets · frame 64x64 · key prefix `pet-dragon-young-` · manifest [pets/dragon/young/manifest.json](pets/dragon/young/manifest.json)
+- group `dragon-young` · 8 assets · frame 64x64, 64x96, 85x160, 96x96 · key prefix `pet-dragon-young-` · manifest [pets/dragon/young/manifest.json](pets/dragon/young/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -253,6 +253,10 @@ Green Dragon. Young form (64px). Skill: Scorching Fireball / 灼熱火球. Faces
 | `pet-dragon-young-move` | 8 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `pet-dragon-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-dragon-fireball`, `fx-pet-dragon-fireball-impact` |
 | `pet-dragon-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+| `pet-dragon-young-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-dragon-young-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v0.35 young basic-attack claw strip ~0.3s (256×96). HAND claw (arm swipe). |
+| `pet-dragon-young-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v0.35 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged. |
+| `pet-dragon-young-evolve-from-baby` | 5 | 96x96 | 5 | once | (0.5, 1.0) | v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired. |
 
 ### Leo / 雷歐 — Ancient (雷歐·成年)
 
@@ -308,9 +312,9 @@ Standalone skill FX for Golden Lion 金獅. Travel west. Evolve FX included.
 
 <img src="previews/pets/lion-young.gif" alt="lion-young preview" height="140">
 
-Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST.
+Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
 
-- group `lion-young` · 4 assets · frame 64x64 · key prefix `pet-lion-young-` · manifest [pets/lion/young/manifest.json](pets/lion/young/manifest.json)
+- group `lion-young` · 8 assets · frame 64x64, 64x96, 85x160, 96x96 · key prefix `pet-lion-young-` · manifest [pets/lion/young/manifest.json](pets/lion/young/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -318,6 +322,10 @@ Golden Lion 金獅. Young form (64px). Skill: Lion Roar / 雄獅咆哮. Faces WE
 | `pet-lion-young-move` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `pet-lion-young-skill` | 8 | 64x64 | 12 | once | (0.5, 1.0) | fx: `fx-pet-lion-roar-wave` |
 | `pet-lion-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+| `pet-lion-young-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-lion-young-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v0.35 young basic-attack claw strip ~0.3s (256×96). Gold slash LEFT. |
+| `pet-lion-young-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v0.35 feet-centered ground AoE ring ~4 body-widths (gold). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged. |
+| `pet-lion-young-evolve-from-baby` | 5 | 96x96 | 5 | once | (0.5, 1.0) | v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired. |
 
 ### Momo / 墨墨 — Ancient (墨墨·成年)
 
@@ -374,9 +382,9 @@ Standalone skill FX for Black Panda 墨熊貓. Travel west. Evolve FX included.
 
 <img src="previews/pets/panda-young.gif" alt="panda-young preview" height="140">
 
-Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST.
+Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
 
-- group `panda-young` · 4 assets · frame 64x64 · key prefix `pet-panda-young-` · manifest [pets/panda/young/manifest.json](pets/panda/young/manifest.json)
+- group `panda-young` · 8 assets · frame 64x64, 64x96, 85x160, 96x96 · key prefix `pet-panda-young-` · manifest [pets/panda/young/manifest.json](pets/panda/young/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -384,6 +392,10 @@ Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Fa
 | `pet-panda-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `pet-panda-young-skill` | 8 | 64x64 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-bamboo-sweep` |
 | `pet-panda-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+| `pet-panda-young-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-panda-young-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging dark claw. |
+| `pet-panda-young-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v0.35 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged. |
+| `pet-panda-young-evolve-from-baby` | 5 | 96x96 | 5 | once | (0.5, 1.0) | v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired. |
 
 ### Azure / 藍羽 — Ancient (藍羽·成年)
 
@@ -441,9 +453,9 @@ Standalone skill FX for Blue Phoenix 藍焰鳳凰. Travel west. Evolve FX includ
 
 <img src="previews/pets/phoenix-young.gif" alt="phoenix-young preview" height="140">
 
-Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST.
+Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
 
-- group `phoenix-young` · 4 assets · frame 64x64 · key prefix `pet-phoenix-young-` · manifest [pets/phoenix/young/manifest.json](pets/phoenix/young/manifest.json)
+- group `phoenix-young` · 8 assets · frame 64x64, 64x96, 85x160, 96x96 · key prefix `pet-phoenix-young-` · manifest [pets/phoenix/young/manifest.json](pets/phoenix/young/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -451,6 +463,10 @@ Blue Phoenix 藍焰鳳凰. Young form (64px). Skill: Phoenix Rain / 鳳凰火雨
 | `pet-phoenix-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `pet-phoenix-young-skill` | 8 | 64x64 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-rain-bolt`, `fx-pet-phoenix-rain-impact` |
 | `pet-phoenix-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
+| `pet-phoenix-young-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-phoenix-young-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging cyan claw. |
+| `pet-phoenix-young-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v0.35 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas 255×160 (85×3). Additive; existing cast skill strip unchanged. |
+| `pet-phoenix-young-evolve-from-baby` | 5 | 96x96 | 5 | once | (0.5, 1.0) | v0.35 baby→young evolve morph ~1s in place (5f incl. start). Catalog only — not combat-wired. |
 
 ### Pet UI HUD — heads, bars, skill orbs (寵物 HUD（大頭／長條／寶珠）)
 
