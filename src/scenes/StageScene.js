@@ -88,7 +88,8 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
  * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
  * Key 1 and key 4 share a 40ms hitstop, white flash, impact sparks, and
- * a 2px X knockback. Key 4 does not spawn a slash strip.
+ * a 2px X knockback. Key 4 plays `fx-slash-ninja` at the body center
+ * and `sfx-slash-ninja`.
  * Key 2 plays the attack strip, then `player-girl-hurt` and the hurt cue
  * on that strip's hit frame. Feel without a known enemy does nothing.
  * Gold, saves, barricade HP, and the wave tables stay put. The camera
@@ -430,7 +431,7 @@ export default class StageScene extends Phaser.Scene {
   /**
    * `?feel=1` with a known `?enemy=`. 1 is a ranged hit, 2 plays their
    * attack and the hero hurt on the attack hit frame, 3 cycles skill
-   * strips, 4 is a melee hit with no slash strip, R respawns. Weapons stay quiet
+   * strips, 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns. Weapons stay quiet
    * so the booth is the only thing that lands a blow.
    */
   _installEnemyFeel() {
@@ -525,7 +526,7 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Ranged (key 1) or melee (key 4). Same hitstop, flash, sparks, and
-   * 2px X knockback. Melee does not spawn a slash strip.
+   * 2px X knockback. Melee plays `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
    * @param {boolean} melee
    */
   _feelStrike(melee) {
