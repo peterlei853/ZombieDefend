@@ -30,7 +30,9 @@
       "pet-panda-baby-idle",
       "pet-panda-baby-move",
       "pet-panda-baby-skill",
-      "pet-panda-baby-sleep"
+      "pet-panda-baby-sleep",
+      "pet-panda-baby-claw",
+      "pet-panda-baby-skill-aoe"
     ],
     "thumb": "assets/library/previews/pets/panda-baby.gif"
   },
@@ -135,6 +137,52 @@
       "facing": "west",
       "role": "settle (0-3) then sleep breathe loop (4-9); Gameplay: play once then loopFrom, or play sleep-start then this with startAt=loopFrom",
       "wake": "on resummon: leave sleep → idle/move (no teleport)"
+    },
+    {
+      "key": "pet-panda-baby-appearance",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet."
+    },
+    {
+      "key": "pet-panda-baby-claw",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-claw.png",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw."
+    },
+    {
+      "key": "pet-panda-baby-skill-aoe",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-skill-aoe.png",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "skill": "Bamboo Roll",
+      "skillZh": "竹旋",
+      "note": "v2 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged."
     }
   ]
 }

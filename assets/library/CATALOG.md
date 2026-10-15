@@ -6,7 +6,7 @@
 | Category | Groups | Assets |
 |---|---:|---:|
 | [Hero](#hero) | 3 | 129 |
-| [Pets](#pets) | 17 | 96 |
+| [Pets](#pets) | 17 | 108 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 179 |
 | [Bosses](#bosses) | 4 | 39 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **53** | **577** |
+| **Total** | **53** | **589** |
 
 <a id="hero"></a>
 ## Hero
@@ -209,7 +209,7 @@ Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Fac
 
 Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
 
-- group `dragon-baby` · 6 assets · frame 48x48 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
+- group `dragon-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -219,6 +219,9 @@ Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. 
 | `pet-dragon-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
 | `pet-dragon-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-dragon-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
+| `pet-dragon-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-dragon-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-dragon-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Jade / 翠火 — FX (翠火·特效)
 
@@ -272,7 +275,7 @@ Golden Lion 金獅. Ancient form (96px). Skill: Sunder Strike / 裂地猛擊. Fa
 
 Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
 
-- group `lion-baby` · 6 assets · frame 48x48 · key prefix `pet-lion-baby-` · manifest [pets/lion/baby/manifest.json](pets/lion/baby/manifest.json)
+- group `lion-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-lion-baby-` · manifest [pets/lion/baby/manifest.json](pets/lion/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -282,6 +285,9 @@ Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WE
 | `pet-lion-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
 | `pet-lion-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-lion-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
+| `pet-lion-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-lion-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-lion-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (gold). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Leo / 雷歐 — FX (雷歐·特效)
 
@@ -334,7 +340,7 @@ Black Panda 墨熊貓. Ancient form (96px). Skill: Chi Blast / 氣功波. Faces 
 
 Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
 
-- group `panda-baby` · 6 assets · frame 48x48 · key prefix `pet-panda-baby-` · manifest [pets/panda/baby/manifest.json](pets/panda/baby/manifest.json)
+- group `panda-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-panda-baby-` · manifest [pets/panda/baby/manifest.json](pets/panda/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -344,6 +350,9 @@ Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces 
 | `pet-panda-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
 | `pet-panda-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-panda-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
+| `pet-panda-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-panda-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-panda-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Momo / 墨墨 — FX (墨墨·特效)
 
@@ -397,7 +406,7 @@ Blue Phoenix 藍焰鳳凰. Ancient form (128px). Skill: Blazing Rebirth / 烈焰
 
 Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
 
-- group `phoenix-baby` · 6 assets · frame 48x48 · key prefix `pet-phoenix-baby-` · manifest [pets/phoenix/baby/manifest.json](pets/phoenix/baby/manifest.json)
+- group `phoenix-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-phoenix-baby-` · manifest [pets/phoenix/baby/manifest.json](pets/phoenix/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -407,6 +416,9 @@ Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落
 | `pet-phoenix-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
 | `pet-phoenix-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-phoenix-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
+| `pet-phoenix-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
+| `pet-phoenix-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-phoenix-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Azure / 藍羽 — FX (藍羽·特效)
 
