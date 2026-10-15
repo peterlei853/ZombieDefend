@@ -17,7 +17,9 @@
  * `FEEL_MELEE_SLASH` is null until `fx-slash-ninja` / `fx-slash-diagonal`.
  * v0.35.4: key 4 plays `fx-slash-ninja` at the body center, rotation 0,
  * and `sfx-slash-ninja` via `playFeelMeleeSlash`. Hitstop, flash, sparks,
- * and 2px knockback stay.
+ * and 2px knockback stay. Keys 5–9 preview catalog FX only
+ * (`fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot`,
+ * `fx-hit-fire`, `fx-hit-water` at 16px). No damage and no `sfx-slash-dot`.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -48,14 +50,18 @@ import {
   FEEL_MELEE_SECTOR,
   FEEL_MELEE_SLASH,
   FEEL_MELEE_SLASH_SFX,
+  FEEL_WAVE_DEMOS,
   feelImpactDirX,
   feelKnockOffset,
   feelMeleeSlashPose,
   feelParticleCount,
+  feelUnitDisplayHeight,
+  feelWaveScale,
   planFeelParticles,
   playFeelImpact,
+  playFeelWaveFx,
 } from '../src/systems/feelImpact.js';
-import { AUDIO_VOLUME } from '../src/systems/SoundManager.js';
+import { AUDIO_VOLUME, GAME_AUDIO } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
 import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
@@ -281,6 +287,90 @@ const ranged = playFeelImpact(booth, { body: rangedBody, displayHalf: 20, bodyCe
 assert(ranged === true && spawned.length === rangedSpawned, 'key 1 still spawns no slash strip');
 assert(slashCues.length === 2, 'key 1 does not play the slash cue');
 assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
+
+const WAVE_KEYS = [
+  'fx-slash-enemy-red',
+  'fx-slash-ally-white',
+  'fx-slash-dot',
+  'fx-hit-fire',
+  'fx-hit-water',
+];
+assert(FEEL_WAVE_DEMOS.map((row) => row.key).join() === WAVE_KEYS.join(), 'keys 5–9 preview the five catalog sheets');
+assert(FEEL_WAVE_DEMOS.map((row) => row.id).join() === 'enemy-red,ally-white,dot,fire,water', 'wave demo ids stay in booth order');
+assert(feelWaveScale('slash', 128) === 1 && feelWaveScale('dot', 128) === 0.5 && feelWaveScale('bullet', 128) === 1, '128px unit: slash 1, dot 0.5, bullet 1');
+assert(feelWaveScale('slash', 64) === 0.5 && feelWaveScale('dot', 64) === 0.25 && feelWaveScale('bullet', 64) === 1, '64px unit: slash 0.5, dot 0.25, bullet stays 1');
+assert(feelWaveScale('slash', 0) === 1 && feelWaveScale('dot', 0) === 0.5, 'unknown height falls back to a full slash and a half-size dot');
+assert(feelUnitDisplayHeight({ body: { displayHeight: 96 } }) === 96, 'display height is the slash measure');
+assert(feelUnitDisplayHeight({ body: { frame: { height: 84 }, scaleY: 1 } }) === 84, 'frame height times scale is the fallback');
+for (const key of WAVE_KEYS) {
+  const folder = key.startsWith('fx-hit-') ? 'bullet-hit' : 'melee';
+  assert(existsSync(new URL(`../assets/library/fx/${folder}/${key}.png`, import.meta.url)), `${key} sheet is cataloged`);
+}
+assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-fire-bullet24.png', import.meta.url)), '24px fire upscale is not cataloged');
+assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-water-bullet24.png', import.meta.url)), '24px water upscale is not cataloged');
+assert(!GAME_AUDIO.some((clip) => clip.key === 'sfx-slash-dot'), 'sfx-slash-dot is not a game audio key');
+assert(!soundSrc.includes('sfx-slash-dot'), 'SoundManager does not load sfx-slash-dot');
+assert(stageSrc.includes('5 RED') && stageSrc.includes('9 WATER'), 'feel booth chips list the five previews');
+assert(stageSrc.includes('wave:fire') && stageSrc.includes('wave:water'), 'keys 8 and 9 are the bullet hits');
+const waveFn = stageSrc.slice(stageSrc.indexOf('\n  _feelWave(id) {'), stageSrc.indexOf('\n  _playHeroFeel(kind) {'));
+assert(waveFn.includes('playFeelWaveFx') && !waveFn.includes('takeDamage'), 'keys 5–9 spawn a preview and do not deal damage');
+assert(!waveFn.includes('playFeelMeleeSlash') && !waveFn.includes('playEnemyCue'), 'wave previews do not play slash or enemy cues');
+const waveSpawned = [];
+const waveAudio = [];
+const waveBooth = {
+  textures: { exists: (key) => WAVE_KEYS.includes(key) },
+  anims: { exists: () => false },
+  add: {
+    sprite(x, y, key) {
+      const row = { key, x, y, scale: null, blend: null };
+      waveSpawned.push(row);
+      return {
+        setOrigin() {},
+        setScale(scale) { row.scale = scale; },
+        setDepth() {},
+        setBlendMode(mode) { row.blend = mode; },
+        once() {},
+        active: true,
+      };
+    },
+  },
+  time: { delayedCall() {} },
+  audio: {
+    playFeelMeleeSlash() { waveAudio.push('slash'); },
+    playEnemyCue() { waveAudio.push('enemy'); },
+  },
+};
+const waveBody = {
+  active: true,
+  x: 400,
+  y: 240,
+  depth: 3,
+  displayHeight: 128,
+  scaleX: 1,
+  anims: { timeScale: 1 },
+};
+const waveZombie = { body: waveBody, bodyCenterY: 210, _syncBars() {} };
+const prevPhaser = globalThis.Phaser;
+globalThis.Phaser = { BlendModes: { ADD: 'ADD' } };
+const waveShown = FEEL_WAVE_DEMOS.map((row) => playFeelWaveFx(waveBooth, waveZombie, row.id));
+if (prevPhaser === undefined) delete globalThis.Phaser;
+else globalThis.Phaser = prevPhaser;
+assert(waveShown.every(Boolean) && waveSpawned.map((row) => row.key).join() === WAVE_KEYS.join(), 'keys 5–9 spawn the five sheets');
+assert(waveSpawned.every((row) => row.x === 400 && row.y === 210), 'wave previews sit on the body center');
+assert(waveBody.x === 400 && waveBody.y === 240, 'wave previews do not move the body');
+assert(waveSpawned.map((row) => row.scale).join() === '1,1,0.5,1,1', '128px unit scales slash 1, dot 0.5, hits 1');
+assert(waveSpawned.every((row) => row.blend === 'ADD'), 'wave previews use ADD blend');
+assert(waveAudio.length === 0, 'wave previews play no audio');
+const shortBody = { active: true, x: 400, y: 240, depth: 3, displayHeight: 64, scaleX: 1 };
+assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'enemy-red')?.active !== false, 'a short unit still previews');
+assert(waveSpawned.at(-1).scale === 0.5 && waveSpawned.at(-1).key === 'fx-slash-enemy-red', 'a 64px unit scales the slash to 0.5');
+assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'dot'), 'a short unit previews the dot');
+assert(waveSpawned.at(-1).scale === 0.25, 'a 64px unit scales the dot to 0.25');
+assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'fire'), 'a short unit previews fire at pellet size');
+assert(waveSpawned.at(-1).scale === 1 && waveSpawned.at(-1).key === 'fx-hit-fire', 'fire stays scale 1');
+assert(playFeelWaveFx(waveBooth, waveZombie, 'missing') == null, 'an unknown demo id spawns nothing');
+const quietBooth = { ...waveBooth, textures: { exists: () => false } };
+assert(playFeelWaveFx(quietBooth, waveZombie, 'water') == null, 'a missing water sheet spawns nothing');
 
 const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));
 const onHitFn = stageSrc.slice(stageSrc.indexOf('\n  _onFeelAttackHit() {'), stageSrc.indexOf('\n  _feelSkill() {'));

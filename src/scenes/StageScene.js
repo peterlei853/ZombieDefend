@@ -14,7 +14,7 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import { enemySkillStrips, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
-import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact } from '../systems/feelImpact.js';
+import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact, playFeelWaveFx } from '../systems/feelImpact.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -90,6 +90,9 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * Key 1 and key 4 share a 40ms hitstop, white flash, impact sparks, and
  * a 2px X knockback. Key 4 plays `fx-slash-ninja` at the body center
  * and `sfx-slash-ninja`.
+ * Keys 5–9 only preview this wave's catalog sheets (`fx-slash-enemy-red`,
+ * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`).
+ * Those previews do not deal damage and do not play `sfx-slash-dot`.
  * Key 2 plays the attack strip, then `player-girl-hurt` and the hurt cue
  * on that strip's hit frame. Feel without a known enemy does nothing.
  * Gold, saves, barricade HP, and the wave tables stay put. The camera
@@ -431,7 +434,8 @@ export default class StageScene extends Phaser.Scene {
   /**
    * `?feel=1` with a known `?enemy=`. 1 is a ranged hit, 2 plays their
    * attack and the hero hurt on the attack hit frame, 3 cycles skill
-   * strips, 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns. Weapons stay quiet
+   * strips, 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns.
+   * Keys 5–9 preview catalog FX only (no damage, no `sfx-slash-dot`). Weapons stay quiet
    * so the booth is the only thing that lands a blow.
    */
   _installEnemyFeel() {
@@ -442,6 +446,7 @@ export default class StageScene extends Phaser.Scene {
       else if (action === 'skill') this._feelSkill();
       else if (action === 'melee') this._feelMelee();
       else if (action === 'reset') this._feelReset();
+      else if (action.startsWith('wave:')) this._feelWave(action.slice(5));
     };
     const keyboard = this.input.keyboard;
     if (keyboard) {
@@ -450,6 +455,11 @@ export default class StageScene extends Phaser.Scene {
         [Phaser.Input.Keyboard.KeyCodes.TWO, Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO, 'hurt'],
         [Phaser.Input.Keyboard.KeyCodes.THREE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE, 'skill'],
         [Phaser.Input.Keyboard.KeyCodes.FOUR, Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR, 'melee'],
+        [Phaser.Input.Keyboard.KeyCodes.FIVE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE, 'wave:enemy-red'],
+        [Phaser.Input.Keyboard.KeyCodes.SIX, Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX, 'wave:ally-white'],
+        [Phaser.Input.Keyboard.KeyCodes.SEVEN, Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN, 'wave:dot'],
+        [Phaser.Input.Keyboard.KeyCodes.EIGHT, Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT, 'wave:fire'],
+        [Phaser.Input.Keyboard.KeyCodes.NINE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE, 'wave:water'],
         [Phaser.Input.Keyboard.KeyCodes.R, null, 'reset'],
       ];
       const bound = [];
@@ -471,37 +481,56 @@ export default class StageScene extends Phaser.Scene {
 
     const depth = HUD_DEPTH + 50;
     const id = this.demoEnemyId || '';
-    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 72, `${id}  1 hit  2 hurt  3 skill  4 melee  R reset`, {
+    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 108, `${id}  1 hit  2 hurt  3 skill  4 melee  R reset    5 red  6 white  7 dot  8 fire  9 water`, {
       system: true,
       size: 14,
       color: '#ffe7a0',
       depth: depth + 1,
     });
-    const labels = [
-      ['1 HIT', 'hit'],
-      ['2 HURT', 'hurt'],
-      ['3 SKILL', 'skill'],
-      ['4 MELEE', 'melee'],
-      ['R RESET', 'reset'],
+    const rows = [
+      {
+        y: GAME_HEIGHT - 72,
+        gap: 118,
+        width: 108,
+        labels: [
+          ['5 RED', 'wave:enemy-red'],
+          ['6 WHITE', 'wave:ally-white'],
+          ['7 DOT', 'wave:dot'],
+          ['8 FIRE', 'wave:fire'],
+          ['9 WATER', 'wave:water'],
+        ],
+      },
+      {
+        y: GAME_HEIGHT - 36,
+        gap: 140,
+        width: 124,
+        labels: [
+          ['1 HIT', 'hit'],
+          ['2 HURT', 'hurt'],
+          ['3 SKILL', 'skill'],
+          ['4 MELEE', 'melee'],
+          ['R RESET', 'reset'],
+        ],
+      },
     ];
-    const gap = 140;
-    const origin = GAME_WIDTH / 2 - (gap * (labels.length - 1)) / 2;
-    const y = GAME_HEIGHT - 36;
-    labels.forEach(([label, action], index) => {
-      const x = origin + index * gap;
-      const hit = this.add
-        .rectangle(x, y, 124, 28, 0x1a1208, 0.82)
-        .setScrollFactor(0)
-        .setDepth(depth)
-        .setInteractive({ useHandCursor: true });
-      hit.on('pointerup', () => fire(action));
-      addKitText(this, x, y, label, {
-        system: true,
-        size: 13,
-        color: '#ffe7a0',
-        depth: depth + 1,
+    for (const row of rows) {
+      const origin = GAME_WIDTH / 2 - (row.gap * (row.labels.length - 1)) / 2;
+      row.labels.forEach(([label, action], index) => {
+        const x = origin + index * row.gap;
+        const hit = this.add
+          .rectangle(x, row.y, row.width, 28, 0x1a1208, 0.82)
+          .setScrollFactor(0)
+          .setDepth(depth)
+          .setInteractive({ useHandCursor: true });
+        hit.on('pointerup', () => fire(action));
+        addKitText(this, x, row.y, label, {
+          system: true,
+          size: 13,
+          color: '#ffe7a0',
+          depth: depth + 1,
+        });
       });
-    });
+    }
   }
 
   /** @param {string} note */
@@ -607,6 +636,20 @@ export default class StageScene extends Phaser.Scene {
     this._feelSkillCursor = 0;
     this._spawnShowcaseEnemy();
     this._setFeelHint('R reset');
+  }
+
+  /**
+   * Visual preview of one cataloged wave FX. No HP, gold, save, or barricade.
+   * @param {string} id
+   */
+  _feelWave(id) {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    const shown = playFeelWaveFx(this, z, id);
+    this._setFeelHint(shown ? `demo ${id}` : `demo ${id} (sheet missing)`);
   }
 
   /**

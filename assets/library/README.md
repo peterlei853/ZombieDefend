@@ -33,6 +33,8 @@ assets/library/
 │       └── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
+│   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
+│   ├── bullet-hit/           fx-hit-fire, fx-hit-water (5×16 @ 20 fps)
 │   └── v026/                 v0.26 overnight pack + INVENTORY.md
 │       ├── exp-orb/          exp-orb (32×32 pickup)
 │       ├── evolve-stars/     vfx-evolve-star + T1/T2/T3 head markers
@@ -63,6 +65,8 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Hero FX | `fx-<weapon>-<name>` | `fx-frost-beam`, `fx-sling-dizzy` |
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
+| Shared melee | `fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot` | combat FX in `fx/melee/` (not hero-only) |
+| Bullet hits | `fx-hit-fire`, `fx-hit-water` | 5×16 @ 20 fps. 24px upscales are not cataloged |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
 | Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
@@ -155,6 +159,45 @@ Feel-booth close-range slash sheets live with the other hero weapon FX in `chara
 - `fx-slash-overhead` — **deprecated for feel melee primary**. Reserved/unused spare. The vertical C / top→bottom chop stays on disk at `characters/hero/girl/fx/fx-slash-overhead.png`. Do not hang the feel-booth 近身 hit on this key.
 - `fx-slash` — side crescent spare only, not the feel primary and not an overhead backup. Spawn at the weapon tip and rotate to facing.
 
+### Shared melee (catalog only)
+
+Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10-15. They are **not** wired into live combat. `fx-slash-ninja` stays the feel-booth `4` primary. Feel-booth keys 5, 6, and 7 only preview the three slashes below. `fx-slash` and `fx-slash-overhead` stay as they are. `sfx-slash-dot` is a Sound Effect follow-up and is not in this catalog.
+
+| Key | Display | Color | Direction | Frames | FPS | Fit | Sheet |
+|---|---|---|---|---|---|---|---|
+| `fx-slash-enemy-red` | 敵紅小斬 | red | top-left → bottom-right | 5 | 30 | 72×72 | 216×144, grid 3×2 |
+| `fx-slash-ally-white` | 友白小斬 | white | top-right → bottom-left | 5 | 30 | 71×70 | 213×140, grid 3×2 |
+| `fx-slash-dot` | 持續傷害小斬 | white X + amber sparks | cross | 4 | 20 | 30×30 | 60×60, grid 2×2 |
+
+All three play **once**, origin **(0.5, 0.5)** on the body center, blend **`Phaser.BlendModes.ADD`** (same as `fx-slash-ninja`).
+
+**Scale rule.** The faction strips are authored for **128px-tall characters**. At play time:
+
+`slashScale = unitDisplayHeight / 128`
+
+A 64px unit is 0.5×. Smaller units get a proportionally smaller slash. Do **not** keep 128-scale on small units.
+
+`fx-slash-dot` is half of the ally white slash:
+
+`dotScale = 0.5 × slashScale`
+
+Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays per second.
+
+**Sheet layout.** These are **not** horizontal strips. Faction sheets are 3 columns × 2 rows: frame *i* is column `i % 3`, row `floor(i / 3)`. Frame 4 is blank, and the bottom-right cell is unused. The DoT sheet is 2×2 of 30×30: frame *i* is column `i % 2`, row `floor(i / 2)`. Frame 3 is blank. `load.spritesheet` with `frameWidth` / `frameHeight` already walks that order.
+
+**Gameplay handoff (not wired into combat).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. The `sfx-slash-dot` pack stays with Sound Effect for a follow-up audio PR.
+
+### Bullet hits (catalog + feel demo)
+
+`fx/bullet-hit/` holds the 16px pellet bursts. Both canonical keys are 5×16 @ 20 fps, once, origin (0.5, 0.5), about 0.25s. Blend `ADD` or `NORMAL`. The feel booth uses ADD and does not deal damage.
+
+| Key | Element | Frames | Fit | Sheet |
+|---|---|---|---|---|
+| `fx-hit-fire` | fire swirl-starburst | 5 @ 20 | 16×16 | 80×16 horizontal |
+| `fx-hit-water` | water splash-starburst | 5 @ 20 | 16×16 | 80×16 horizontal |
+
+**Scale rule.** Display size is the bullet / pellet (these frames are already 16px). Place them at the impact point. No extra scale multiplier unless Gameplay later wants a 1.25× punch. Feel-booth keys 8 and 9 preview `fx-hit-fire` and `fx-hit-water` at scale 1. 24px upscales are not cataloged. `fx-hit-electric` is not in this wave.
+
 ## Front-float combat (v0.27)
 
 Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.
@@ -171,7 +214,7 @@ Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle`
 
 ## Canvas, origin and facing conventions
 
-All strips are **horizontal**: frame *i* is at `x = i * frameWidth`, `y = 0`. Every PNG is exactly `frameWidth*frames × frameHeight`, and the build script checks this. The `origin` value is the Phaser `setOrigin(x, y)`.
+Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* is at `x = i * frameWidth`, `y = 0`, and the PNG is exactly `frameWidth*frames × frameHeight`. A grid sheet is `frameWidth*cols × frameHeight*rows`, and frame *i* is column `i % cols`, row `floor(i / cols)`. The build script checks either layout. `fx-slash-enemy-red` and `fx-slash-ally-white` are 3×2 grids. `fx-slash-dot` is a 2×2 grid. The `origin` value is the Phaser `setOrigin(x, y)`.
 
 | Category | Frame | Origin | Facing |
 |---|---|---|---|

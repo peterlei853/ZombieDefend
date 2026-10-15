@@ -236,3 +236,71 @@ function feelBodyY(zombie, body) {
   if (Number.isFinite(zombie?.bodyCenterY)) return zombie.bodyCenterY;
   return body?.y;
 }
+
+/**
+ * Feel-booth preview of this wave's cataloged FX. Visual only.
+ * Keys 5–9 call `playFeelWaveFx`. Key 4 stays `fx-slash-ninja`.
+ * No damage, gold, save, or barricade write. No `sfx-slash-dot`.
+ */
+export const FEEL_WAVE_DEMOS = [
+  { id: 'enemy-red', key: 'fx-slash-enemy-red', kind: 'slash' },
+  { id: 'ally-white', key: 'fx-slash-ally-white', kind: 'slash' },
+  { id: 'dot', key: 'fx-slash-dot', kind: 'dot' },
+  { id: 'fire', key: 'fx-hit-fire', kind: 'bullet' },
+  { id: 'water', key: 'fx-hit-water', kind: 'bullet' },
+];
+
+/**
+ * On-screen height of the unit the slash should match.
+ * Prefers the sprite's display height, then frame height × scale.
+ * @param {{ body?: { displayHeight?: number, frame?: { height?: number }, scaleX?: number, scaleY?: number }, scale?: number }} zombie
+ */
+export function feelUnitDisplayHeight(zombie) {
+  const body = zombie?.body;
+  const shown = Math.abs(Number(body?.displayHeight) || 0);
+  if (shown > 0) return shown;
+  const frameH = Math.abs(Number(body?.frame?.height) || 0);
+  const scale = Math.abs(Number(body?.scaleY) || Number(body?.scaleX) || Number(zombie?.scale) || 0);
+  if (frameH > 0 && scale > 0) return frameH * scale;
+  return 0;
+}
+
+/**
+ * Faction slashes: `unitDisplayHeight / 128`.
+ * DoT tick: half of that. Bullet hits stay at 1 (the 16px pellet).
+ * @param {'slash'|'dot'|'bullet'} kind
+ * @param {number} unitDisplayHeight
+ */
+export function feelWaveScale(kind, unitDisplayHeight) {
+  const height = Number(unitDisplayHeight);
+  const slash = height > 0 ? height / 128 : 1;
+  if (kind === 'dot') return slash * 0.5;
+  if (kind === 'bullet') return 1;
+  return slash;
+}
+
+/**
+ * Spawn one cataloged wave FX at the body center. Does not move the body,
+ * play audio, or apply damage.
+ * @param {Phaser.Scene} scene
+ * @param {import('../entities/Zombie.js').Zombie} zombie
+ * @param {string} id `enemy-red`, `ally-white`, `dot`, `fire`, or `water`
+ * @returns {Phaser.GameObjects.Sprite|null}
+ */
+export function playFeelWaveFx(scene, zombie, id) {
+  const spec = FEEL_WAVE_DEMOS.find((row) => row.id === id);
+  const body = zombie?.body;
+  if (!scene || !spec || !body?.active) return null;
+  const ready = !!(scene.textures?.exists?.(spec.key) || scene.anims?.exists?.(spec.key));
+  if (!ready) return null;
+  const scale = feelWaveScale(spec.kind, feelUnitDisplayHeight(zombie));
+  const sprite = playLibraryFx(scene, body.x, feelBodyY(zombie, body), spec.key, {
+    scale,
+    depth: (body.depth || 0) + 6,
+  });
+  const add = globalThis.Phaser?.BlendModes?.ADD;
+  if (sprite && add != null && typeof sprite.setBlendMode === 'function') {
+    sprite.setBlendMode(add);
+  }
+  return sprite;
+}
