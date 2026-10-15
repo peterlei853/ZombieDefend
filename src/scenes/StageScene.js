@@ -13,7 +13,7 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
-import { enemySkillStrips, feelHitDamage } from '../data/enemyShowcase.js';
+import { enemySkillStrips, FEEL_HIT_BURST, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
 import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
@@ -85,9 +85,11 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * query the stage places six mounts, one weapon each, top to bottom.
  * `?enemy=<id>` spawns only that catalog enemy in front of the fence
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/R
- * (and the matching chips) for hit, hurt, skill, and reset. Feel
- * without a known enemy does nothing. Gold, saves, barricade HP, and
- * the wave tables stay put. The camera does not shake.
+ * (and the matching chips) for hit, hurt, skill, and reset. Key 2
+ * plays the attack strip, then `player-girl-hurt` and the hurt cue
+ * on that strip's hit frame. Feel without a known enemy does nothing.
+ * Gold, saves, barricade HP, and the wave tables stay put. The camera
+ * does not shake.
  */
 
 export default class StageScene extends Phaser.Scene {
@@ -424,8 +426,9 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * `?feel=1` with a known `?enemy=`. 1 hits the enemy, 2 plays their
-   * attack into the hero, 3 cycles skill strips, R respawns. Weapons
-   * stay quiet so the booth is the only thing that lands a blow.
+   * attack and the hero hurt on the attack hit frame, 3 cycles skill
+   * strips, R respawns. Weapons stay quiet so the booth is the only
+   * thing that lands a blow.
    */
   _installEnemyFeel() {
     const fire = (action) => {
@@ -513,6 +516,7 @@ export default class StageScene extends Phaser.Scene {
       return;
     }
     this._playHeroFeel('attack');
+    this._playFeelHitBurst(z);
     z.takeDamage(feelHitDamage(z.maxHp), { feel: true, kind: 'feel' });
     this._setFeelHint(z.alive ? '1 hit' : '1 die — R reset');
   }
@@ -523,10 +527,32 @@ export default class StageScene extends Phaser.Scene {
       this._setFeelHint('down — R reset');
       return;
     }
-    const played = z.playShowcaseAttack();
+    const hitFrame = feelAttackHitFrame(this.demoEnemyId);
+    const played = z.playShowcaseAttack(hitFrame, () => this._onFeelAttackHit());
+    this._setFeelHint(played ? '2 hurt' : '2 hurt (no attack strip)');
+  }
+
+  /**
+   * Cyan burst on the body center, the same turn as the hit cue.
+   * Depth sits above the sprite: a chest-Y sort would hide the sheet.
+   * @param {Zombie} z
+   */
+  _playFeelHitBurst(z) {
+    if (!z?.body) return;
+    const y = Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : z.y;
+    playLibraryFx(this, z.x, y, FEEL_HIT_BURST, {
+      scale: Math.abs(z.body.scaleX || z.scale || 1) || 1,
+      depth: (z.body.depth || 0) + 5,
+    });
+  }
+
+  /**
+   * Hero flinch and the booth hurt cue. The attack contact calls this
+   * on the hit frame, so the pose starts with the strike.
+   */
+  _onFeelAttackHit() {
     this._playHeroFeel('hurt');
     this.audio?.playEnemyCue?.(this.demoEnemyId, 'hurt');
-    this._setFeelHint(played ? '2 hurt' : '2 hurt (no attack strip)');
   }
 
   _feelSkill() {

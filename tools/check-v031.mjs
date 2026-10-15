@@ -51,8 +51,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const mountSrc = readFileSync(new URL('../src/systems/WaterMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.0' && APP_VERSION === '0.35.0', 'package and APP_VERSION are 0.35.0');
-assert(html.includes('v0.35.0'), 'document title is v0.35.0');
+assert(pkg.version === '0.35.1' && APP_VERSION === '0.35.1', 'package and APP_VERSION are 0.35.1');
+assert(html.includes('v0.35.1'), 'document title is v0.35.1');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(HERO_UNARMED.command === 'player-girl-command', 'command pose stays the backup');
 assert(WATER_MOUNT_HI_VIS_KEY === 'prop-water-mount-hi-vis', 'hi-vis mount sprite key');

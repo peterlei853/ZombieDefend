@@ -53,8 +53,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const mountSrc = readFileSync(new URL('../src/systems/SlingMounts.js', import.meta.url), 'utf8');
 const slingAssetSrc = readFileSync(new URL('../src/assets/slingMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.0' && APP_VERSION === '0.35.0', 'package and APP_VERSION are 0.35.0');
-assert(html.includes('v0.35.0'), 'document title is v0.35.0');
+assert(pkg.version === '0.35.1' && APP_VERSION === '0.35.1', 'package and APP_VERSION are 0.35.1');
+assert(html.includes('v0.35.1'), 'document title is v0.35.1');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(SLING_MOUNT_HI_VIS_KEY === 'prop-sling-mount-hi-vis', 'sling hi-vis mount key');
 assert(SLING_MOUNT_KEY === 'prop-sling-mount', 'sling mount key');
