@@ -11,8 +11,10 @@
  * on the attack strip's hit frame (`animationupdate`), not on a timer.
  * v0.35.2: key 1 no longer plays `fx-hit-water-burst`. Key 1 (ranged) and
  * key 4 (melee) share a 40ms hitstop, a 40ms white flash, 8–12 sparks,
- * and a 2px X knockback. Melee spawns `fx-slash-overhead` above the enemy
- * (ADD, no rotation). `fx-slash` is the side spare when that sheet is missing.
+ * and a 2px X knockback.
+ * v0.35.3: key 4 stops spawning `fx-slash-overhead` and does not rotate
+ * `fx-slash` as a stand-in. Hitstop, flash, sparks, and knockback stay.
+ * `FEEL_MELEE_SLASH` is null until `fx-slash-ninja` / `fx-slash-diagonal`.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -42,12 +44,13 @@ import {
   FEEL_HIT_SHAKE_MS,
   FEEL_MELEE_SECTOR,
   FEEL_MELEE_SLASH,
-  FEEL_MELEE_SLASH_OVERHEAD,
+  FEEL_MELEE_SLASH_SFX,
   feelImpactDirX,
   feelKnockOffset,
   feelMeleeSlashPose,
   feelParticleCount,
   planFeelParticles,
+  playFeelImpact,
 } from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
@@ -88,8 +91,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.2' && APP_VERSION === '0.35.2', 'package and APP_VERSION are 0.35.2');
-assert(html.includes('v0.35.2'), 'document title is v0.35.2');
+assert(pkg.version === '0.35.3' && APP_VERSION === '0.35.3', 'package and APP_VERSION are 0.35.3');
+assert(html.includes('v0.35.3'), 'document title is v0.35.3');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -199,22 +202,48 @@ assert(rangedDots.length === 8 && rangedDots.every((dot) => dot.dx < 0), 'ranged
 const meleeDots = planFeelParticles({ melee: true, dirX: -1, x: 100, y: 200, half: 20, rand: () => 0.5 });
 assert(meleeDots.length >= 8 && meleeDots.length <= 12, 'melee spark count is in range');
 assert(meleeDots.every((dot) => dot.dy > 0), 'melee sparks travel downward onto the target');
-assert(FEEL_MELEE_SECTOR === 'overhead', 'melee sector is the overhead fan');
-const overhead = feelMeleeSlashPose(() => true);
-assert(overhead.key === FEEL_MELEE_SLASH_OVERHEAD && overhead.rotation === 0, 'primary slash is overhead and not rotated');
-assert(overhead.nudgeY < 0, 'overhead slash is anchored above the crown');
-const spare = feelMeleeSlashPose(() => false);
-assert(spare.key === FEEL_MELEE_SLASH && spare.rotation === Math.PI / 2, 'fx-slash is the rotated side spare');
-assert(FEEL_MELEE_SLASH_OVERHEAD === 'fx-slash-overhead' && FEEL_MELEE_SLASH === 'fx-slash', 'slash keys match the catalog');
-const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
-const overheadSheet = index.assets.find((asset) => asset.key === 'fx-slash-overhead');
-assert(overheadSheet?.frames === 8 && overheadSheet?.frameWidth === 96 && overheadSheet?.frameHeight === 96, 'overhead slash is 8×96');
-assert(overheadSheet?.frameRate === 14 && overheadSheet?.loop === false, 'overhead slash plays once at 14fps');
-assert(overheadSheet?.origin?.[0] === 0.5 && overheadSheet?.origin?.[1] === 0.5, 'overhead slash origin is center');
-const overheadPng = new URL('../assets/library/characters/hero/girl/fx/fx-slash-overhead.png', import.meta.url);
-assert(existsSync(overheadPng), 'fx-slash-overhead.png is in the catalog');
-const sideSheet = index.assets.find((asset) => asset.key === 'fx-slash');
-assert(sideSheet?.frames === 8 && sideSheet?.frameWidth === 96, 'fx-slash stays loadable as the side spare');
+assert(FEEL_MELEE_SECTOR === 'overhead', 'melee sparks still use the overhead fan');
+assert(FEEL_MELEE_SLASH == null, 'melee slash hook is null until fx-slash-ninja is cataloged');
+assert(FEEL_MELEE_SLASH_SFX == null, 'slash sfx hook is null until the clip is in the repo');
+assert(!existsSync(new URL('../assets/library/characters/hero/girl/fx/fx-slash-ninja.png', import.meta.url)), 'fx-slash-ninja png was not invented');
+assert(!existsSync(new URL('../assets/audio/sfx-slash-ninja.mp3', import.meta.url)), 'sfx-slash-ninja was not invented');
+assert(!existsSync(new URL('../assets/sfx/sfx-slash-ninja.mp3', import.meta.url)), 'assets/sfx slash clip was not invented');
+assert(feelMeleeSlashPose() == null, 'an empty hook poses no slash');
+assert(feelMeleeSlashPose(() => true) == null, 'a loaded overhead sheet is not a stand-in');
+const feelSrc = readFileSync(new URL('../src/systems/feelImpact.js', import.meta.url), 'utf8');
+assert(feelSrc.includes("FEEL_MELEE_SLASH = null"), 'the slash hook is the null constant');
+assert(feelSrc.includes('sfx-slash-ninja'), 'future slash cue is named');
+assert(feelSrc.includes('fx-slash-ninja') && feelSrc.includes('fx-slash-diagonal'), 'future diagonal keys are named');
+assert(!feelSrc.includes('FEEL_SLASH_SIDE_ROTATION'), 'fx-slash is not rotated into a melee pose');
+const spawnFn = feelSrc.slice(feelSrc.indexOf('function spawnFeelSlash'), feelSrc.indexOf('function crownY'));
+assert(!spawnFn.includes('fx-slash-overhead') && !spawnFn.includes("'fx-slash'"), 'spawn does not name the cancelled strips');
+const spawned = [];
+let sparks = 0;
+const booth = {
+  textures: { exists: (key) => key === 'fx-slash-overhead' || key === 'fx-slash' || key === 'fx-slash-ninja' },
+  anims: { exists: () => false },
+  add: {
+    rectangle() {
+      sparks += 1;
+      return { setDepth() {}, active: true, destroy() {} };
+    },
+    sprite(_x, _y, key) {
+      spawned.push(key);
+      return { setOrigin() {}, setScale() {}, setDepth() {}, setBlendMode() {}, setRotation() {}, once() {}, active: true };
+    },
+  },
+  tweens: { add() {} },
+  time: { delayedCall() {} },
+};
+const body = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const zombie = { body, displayHalf: 20, _crownY: () => 180, _syncBars() {} };
+assert(playFeelImpact(booth, zombie, { melee: true, dirX: -1 }) === true, 'key 4 still plays the hit reaction');
+assert(spawned.length === 0, 'key 4 spawns no slash strip');
+assert(!spawned.includes('fx-slash-overhead') && !spawned.includes('fx-slash'), 'cancelled strips are not spawned');
+assert(sparks >= 8 && sparks <= 12, 'key 4 still sprays 8–12 sparks');
+const rangedSpawned = spawned.length;
+const ranged = playFeelImpact(booth, { ...zombie, body: { ...body, x: 400, y: 240, anims: { timeScale: 1 } } }, { melee: false, dirX: -1 });
+assert(ranged === true && spawned.length === rangedSpawned, 'key 1 still spawns no slash strip');
 assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
 
 const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));

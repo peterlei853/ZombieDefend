@@ -1,6 +1,6 @@
 {
   "name": "zombie-defend",
-  "version": "0.35.2",
+  "version": "0.35.3",
   "private": true,
   "description": "ZombieDefend — Phaser 3 tower-defense shell",
   "scripts": {

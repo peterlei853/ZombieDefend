@@ -8,6 +8,8 @@ import { playLibraryFx } from '../assets/libraryAssets.js';
  * Key 1 and key 4 share a 40ms monster hitstop, a 40ms white flash
  * (applied by the caller via flashMs), 8–12 sparks, and a 2px X shove
  * along the shot (player → enemy, west by default).
+ * Key 4 does not spawn a slash strip. `fx-slash-overhead` is cancelled,
+ * and a rotated `fx-slash` is not a stand-in.
  */
 
 export const FEEL_HIT_FLASH_MS = 40;
@@ -26,22 +28,27 @@ export const FEEL_MELEE_SPREAD = 1.05;
 export const FEEL_MELEE_SECTOR = 'overhead';
 
 /**
- * Primary melee sheet. Authored top→bottom. Spawn above the enemy.
- * No rotation.
+ * Feel-booth melee slash sheet. Null: key 4 spawns no slash.
+ * Peter cancelled `fx-slash-overhead`. Do not assign that key, and do
+ * not rotate `fx-slash` in its place.
+ *
+ * Upcoming catalog keys (PNG not authored — do not invent the sheet):
+ *   fx-slash-ninja
+ *   fx-slash-diagonal
+ * Fruit Ninja–style diagonal slash across the body, not an overhead chop.
+ * Point this at one of those keys once the strip is in the catalog.
  */
-export const FEEL_MELEE_SLASH_OVERHEAD = 'fx-slash-overhead';
-/**
- * Side crescent. Used only when the overhead sheet is not loaded.
- * Rest motion is +X; FEEL_SLASH_SIDE_ROTATION turns that swing downward.
- */
-export const FEEL_MELEE_SLASH = 'fx-slash';
+export const FEEL_MELEE_SLASH = null;
+// export const FEEL_MELEE_SLASH = 'fx-slash-ninja';
+// export const FEEL_MELEE_SLASH = 'fx-slash-diagonal';
 
-export const FEEL_SLASH_SIDE_ROTATION = Math.PI / 2;
-/** Frame px before sprite scale. Negative Y is up the screen. */
-export const FEEL_SLASH_OVERHEAD_NUDGE_X = -20;
-export const FEEL_SLASH_OVERHEAD_NUDGE_Y = -8;
-export const FEEL_SLASH_SIDE_NUDGE_X = -8;
-export const FEEL_SLASH_SIDE_NUDGE_Y = -12;
+/**
+ * Feel-booth melee slash cue. Null until the file is in the repo.
+ * TODO: set this to 'sfx-slash-ninja' when that clip lands under
+ * assets/audio or assets/sfx. Do not invent the audio file.
+ */
+export const FEEL_MELEE_SLASH_SFX = null;
+// export const FEEL_MELEE_SLASH_SFX = 'sfx-slash-ninja';
 
 const SPARK_COLORS = [0xfff4d2, 0xffe08a, 0xffffff, 0xffc46b];
 
@@ -79,29 +86,15 @@ export function feelKnockOffset(dirX) {
 }
 
 /**
- * Overhead sheet when it is loaded; otherwise the side spare, rotated
- * so the crescent reads downward. `hasKey` defaults to "overhead is ready"
- * so a caller that already checked the catalog can pass a predicate.
- * @param {(key: string) => boolean} [hasKey]
+ * Pose for `FEEL_MELEE_SLASH`. Null while the hook is empty, so key 4
+ * spawns no strip. A loaded `fx-slash-overhead` or `fx-slash` is not
+ * substituted, rotated, or otherwise used as a stand-in.
+ * @returns {{ key: string, rotation: number } | null}
  */
-export function feelMeleeSlashPose(hasKey) {
-  const overhead = typeof hasKey === 'function' ? !!hasKey(FEEL_MELEE_SLASH_OVERHEAD) : true;
-  if (overhead) {
-    return {
-      key: FEEL_MELEE_SLASH_OVERHEAD,
-      rotation: 0,
-      nudgeX: FEEL_SLASH_OVERHEAD_NUDGE_X,
-      nudgeY: FEEL_SLASH_OVERHEAD_NUDGE_Y,
-      authoredOverhead: true,
-    };
-  }
-  return {
-    key: FEEL_MELEE_SLASH,
-    rotation: FEEL_SLASH_SIDE_ROTATION,
-    nudgeX: FEEL_SLASH_SIDE_NUDGE_X,
-    nudgeY: FEEL_SLASH_SIDE_NUDGE_Y,
-    authoredOverhead: false,
-  };
+export function feelMeleeSlashPose() {
+  if (!FEEL_MELEE_SLASH) return null;
+  if (FEEL_MELEE_SLASH === 'fx-slash-overhead' || FEEL_MELEE_SLASH === 'fx-slash') return null;
+  return { key: FEEL_MELEE_SLASH, rotation: 0 };
 }
 
 /**
@@ -222,20 +215,16 @@ function spawnDots(scene, body, dots) {
  * @param {Phaser.GameObjects.Sprite} body
  */
 function spawnFeelSlash(scene, zombie, body) {
-  const hasKey = (key) => !!(scene.textures?.exists?.(key) || scene.anims?.exists?.(key));
-  const pose = feelMeleeSlashPose(hasKey);
+  const pose = feelMeleeSlashPose();
+  if (!pose?.key) return null;
+  const ready = !!(scene.textures?.exists?.(pose.key) || scene.anims?.exists?.(pose.key));
+  if (!ready) return null;
   const scale = Math.abs(body.scaleX || zombie.scale || 1) || 1;
-  const anchor = {
-    x: body.x + pose.nudgeX * scale,
-    y: crownY(zombie) + pose.nudgeY * scale,
-  };
-  /** @type {{ scale: number, depth: number, rotation?: number }} */
-  const fxOpts = {
+  const anchor = { x: body.x, y: crownY(zombie) };
+  const sprite = playLibraryFx(scene, anchor.x, anchor.y, pose.key, {
     scale,
     depth: (body.depth || 0) + 6,
-  };
-  if (pose.rotation) fxOpts.rotation = pose.rotation;
-  const sprite = playLibraryFx(scene, anchor.x, anchor.y, pose.key, fxOpts);
+  });
   const add = globalThis.Phaser?.BlendModes?.ADD;
   if (sprite && add != null && typeof sprite.setBlendMode === 'function') {
     sprite.setBlendMode(add);
