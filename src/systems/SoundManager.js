@@ -69,6 +69,7 @@ export const GAME_AUDIO = [
   { key: 'shoot-handgun', url: 'assets/audio/shoot-handgun.mp3' },
   { key: 'shoot-shotgun', url: 'assets/audio/shoot-shotgun.mp3' },
   { key: 'hit-impact', url: 'assets/audio/hit-impact.mp3' },
+  { key: 'sfx-slash-ninja', url: 'assets/audio/sfx-slash-ninja.mp3' },
   { key: 'zombie-hurt', url: 'assets/audio/zombie-hurt.mp3' },
   { key: 'zombie-death', url: 'assets/audio/zombie-death.mp3' },
   { key: 'barricade-hit', url: 'assets/audio/barricade-hit.mp3' },
@@ -277,6 +278,14 @@ export class SoundManager {
 
   playHitImpact() {
     this._cue('hit-impact', AUDIO_VOLUME.hit, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  /**
+   * Feel-booth melee slash. Crisp whoosh + cut at the melee volume.
+   * Gameplay owns when booth key 4 calls this.
+   */
+  playFeelMeleeSlash() {
+    this._cue('sfx-slash-ninja', AUDIO_VOLUME.melee, AUDIO_COOLDOWN_MS.hit);
   }
 
   playZombieHurt() {
