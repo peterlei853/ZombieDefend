@@ -97,6 +97,47 @@ def common_prefix(keys):
     return p[:p.rfind('-') + 1] if '-' in p else ''
 
 
+def sheet_grid(a):
+    """(cols, rows) for a spritesheet. Horizontal strips are (frames, 1)."""
+    grid = a.get('grid')
+    n = a.get('frames') or 1
+    if grid and len(grid) == 2 and grid[0] and grid[1]:
+        return int(grid[0]), int(grid[1])
+    return n, 1
+
+
+def frame_box(a, idx):
+    """Pixel box of frame idx. Row-major when grid is set; otherwise a horizontal strip."""
+    fw, fh = a['frameWidth'], a['frameHeight']
+    cols, _rows = sheet_grid(a)
+    col, row = idx % cols, idx // cols
+    return (col * fw, row * fh, col * fw + fw, row * fh + fh)
+
+
+def preview_frame_index(a, t, tick_fps):
+    """Which source frame a card GIF shows at preview tick t.
+
+    Loops and sustained strips keep their real timing. A short one-shot
+    (the 30 fps faction slashes, the 20 fps DoT tick) would otherwise
+    finish inside a couple of 12 fps ticks and sit on its last frame —
+    often a blank exit — so the card steps one source frame per tick
+    and repeats.
+    """
+    n = a['frames']
+    fps = a.get('frameRate') or 8
+    step = int(t * fps / tick_fps)
+    if a.get('loop'):
+        return step % n
+    if a.get('loopFrom') is not None:
+        seq = (list(range(a['loopFrom']))
+               + list(range(a['loopFrom'], a['loopTo'] + 1)) * 3
+               + list(range(a['loopTo'] + 1, n)))
+        return seq[min(step, len(seq) - 1)]
+    if n / fps <= 0.25:
+        return t % n
+    return min(step, n - 1)
+
+
 def loop_text(a):
     n = a.get('frames') or 1
     if n <= 1:
@@ -363,17 +404,9 @@ def build_previews(groups, assets, force=False):
         for t in range(ticks):
             canvas = Image.new('RGBA', (W, H), (27, 31, 39, 255))
             for i, (a, im) in enumerate(strips):
-                n, fps = a['frames'], a.get('frameRate') or 8
-                step = int(t * fps / tick_fps)
-                if a.get('loop'):
-                    idx = step % n
-                elif a.get('loopFrom') is not None:
-                    seq = list(range(a['loopFrom'])) + list(range(a['loopFrom'], a['loopTo'] + 1)) * 3 + list(range(a['loopTo'] + 1, n))
-                    idx = seq[min(step, len(seq) - 1)]
-                else:
-                    idx = min(step, n - 1)
+                idx = preview_frame_index(a, t, tick_fps)
                 fw, fh = a['frameWidth'], a['frameHeight']
-                fr = im.crop((idx * fw, 0, idx * fw + fw, fh)).resize((fw * scale, fh * scale), Image.NEAREST)
+                fr = im.crop(frame_box(a, idx)).resize((fw * scale, fh * scale), Image.NEAREST)
                 c, r = i % cols, i // cols
                 x = pad + c * (cw * scale + pad) + (cw * scale - fw * scale) // 2
                 y = pad + r * (ch * scale + pad) + (ch * scale - fh * scale)  # bottom-aligned
@@ -515,6 +548,8 @@ def build_catalog_md(groups, assets, index):
                         extra.append('mouthAnchors per frame')
                     if isinstance(anc, dict) and anc.get('spawnOffsetsX'):
                         extra.append(f"spawnOffsetsX {anc['spawnOffsetsX']}")
+                    if a.get('grid'):
+                        extra.append(f"grid {a['grid'][0]}×{a['grid'][1]} row-major")
                     if a.get('note'):
                         extra.append(a['note'])
                     facing = a.get('facing')
@@ -706,7 +741,13 @@ footer{color:var(--muted);text-align:center;font-size:12px;padding:20px}
   }
 
   // ---- sprite player: honours loop / once (hold last frame) / loopFrom-loopTo sustained loops
+  // grid [cols, rows] walks row-major; a missing grid is a horizontal strip (cols = frames, rows = 1)
   let active = [];
+  function sheetGrid(a) {
+    const g = a.grid, frames = a.frames || 1;
+    if (Array.isArray(g) && g.length === 2 && g[0] > 0 && g[1] > 0) return { cols: g[0], rows: g[1] };
+    return { cols: frames, rows: 1 };
+  }
   function sequenceFor(a) {
     const n = a.frames || 1, seq = [];
     if (a.loop) { for (let i = 0; i < n; i++) seq.push(i); return seq; }
@@ -722,7 +763,11 @@ footer{color:var(--muted);text-align:center;font-size:12px;padding:20px}
   function tick(now) {
     for (const s of active) {
       const i = s.seq[Math.floor(now / 1000 * s.fps) % s.seq.length];
-      if (i !== s.last) { s.el.style.backgroundPosition = `${-i * s.w}px 0px`; s.last = i; }
+      if (i !== s.last) {
+        const col = i % s.cols, row = Math.floor(i / s.cols);
+        s.el.style.backgroundPosition = `${-col * s.w}px ${-row * s.h}px`;
+        s.last = i;
+      }
     }
     requestAnimationFrame(tick);
   }
@@ -733,7 +778,8 @@ footer{color:var(--muted);text-align:center;font-size:12px;padding:20px}
     const box = 128, m = Math.max(a.frameWidth, a.frameHeight);
     let s = box / m; s = s >= 1 ? Math.min(4, Math.floor(s)) : s;
     const w = a.frameWidth * s, h = a.frameHeight * s;
-    return `<div class="stage"><div class="spr" data-key="${esc(a.key)}" style="width:${w}px;height:${h}px;background-image:url('${esc(url(a.path))}');background-size:${w * a.frames}px ${h}px"></div></div>`;
+    const grid = sheetGrid(a);
+    return `<div class="stage"><div class="spr" data-key="${esc(a.key)}" style="width:${w}px;height:${h}px;background-image:url('${esc(url(a.path))}');background-size:${w * grid.cols}px ${h * grid.rows}px"></div></div>`;
   }
   function fmtOrigin(o) { return o ? `(${o.join(', ')})` : '–'; }
   function playback(a) {
@@ -765,6 +811,7 @@ footer{color:var(--muted);text-align:center;font-size:12px;padding:20px}
       if (anc && anc.mouthAnchors) bits.push('mouthAnchors per frame');
       if (anc && anc.depth != null) bits.push('depth ' + anc.depth);
       if (anc && anc.blendMode) bits.push('blend ' + anc.blendMode);
+      if (Array.isArray(a.grid) && a.grid.length === 2) bits.push('grid ' + a.grid[0] + '×' + a.grid[1]);
       const note = a.note || a.description || '';
       return `<div class="k${hitSet.has(a.key) ? ' hit' : ''}">${spriteHTML(a)}
         <div class="kinfo"><div class="kk"><code title="${esc(a.key)}">${esc(a.key)}</code><button class="copy" data-key="${esc(a.key)}">Copy</button></div>
@@ -778,7 +825,8 @@ footer{color:var(--muted);text-align:center;font-size:12px;padding:20px}
     const byKey = new Map(list.map((a) => [a.key, a]));
     active = [...$('#dkeys').querySelectorAll('.spr')].map((el) => {
       const a = byKey.get(el.dataset.key);
-      return { el, seq: sequenceFor(a), fps: a.frameRate || 8, w: parseFloat(el.style.width), last: -1 };
+      const grid = sheetGrid(a);
+      return { el, seq: sequenceFor(a), fps: a.frameRate || 8, w: parseFloat(el.style.width), h: parseFloat(el.style.height), cols: grid.cols, last: -1 };
     });
     history.replaceState(null, '', '#group=' + encodeURIComponent(g.id));
     const dlg = $('#dlg');

@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 572,
+    "total": 575,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -41,8 +41,8 @@
         "assets": 39
       },
       "fx": {
-        "groups": 6,
-        "assets": 17
+        "groups": 7,
+        "assets": 20
       },
       "pickups": {
         "groups": 1,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 75,
+      "fx": 78,
       "icon": 75,
       "image": 30,
       "spritesheet": 358
@@ -2038,6 +2038,43 @@
       ],
       "keys": [
         "zombie-exploder-blast"
+      ]
+    },
+    {
+      "id": "fx/melee-slash",
+      "category": "fx",
+      "group": "melee-slash",
+      "title": "Shared Melee Slash",
+      "titleZh": "近身斬擊",
+      "description": "Peter-approved melee slashes (2026-10-15). Catalog only. Enemy attacks use fx-slash-enemy-red (敵紅小斬, red, top-left → bottom-right). Ally / player melee uses fx-slash-ally-white (友白小斬, white, top-right → bottom-left). Both are 5 frames @ 30 fps, once, ADD blend, origin (0.5, 0.5) near the body center. Scale rule: authored for 128px-tall characters; slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units. DoT / AoE ticks use fx-slash-dot (持續傷害小斬, white X + amber sparks): 4×30 @ 20 fps (~0.2s, about 5/sec), ADD, body center, dotScale = 0.5 × slashScale (half of the ally white slash). Faction sheets are 3×2 grids; the DoT sheet is 2×2. The last listed frame of each sheet is blank. fx-slash-ninja stays the feel-booth 4 primary. fx-slash and fx-slash-overhead stay as they are. Fire/lightning/water hit FX are not in this catalog. Audio is not in this catalog.",
+      "manifest": "assets/library/fx/melee/manifest.json",
+      "dir": "assets/library/fx/melee",
+      "thumb": "assets/library/previews/fx/melee-slash/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "fx-slash-",
+      "mainKey": "fx-slash-enemy-red",
+      "count": 3,
+      "frameSizes": [
+        "30x30",
+        "71x70",
+        "72x72"
+      ],
+      "framesRange": [
+        4,
+        5
+      ],
+      "fpsRange": [
+        20,
+        30
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "fx-slash-enemy-red",
+        "fx-slash-ally-white",
+        "fx-slash-dot"
       ]
     },
     {
@@ -20589,6 +20626,255 @@
       ],
       "extra": null,
       "action": "zombie-exploder-blast"
+    },
+    {
+      "key": "fx-slash-enemy-red",
+      "category": "fx",
+      "group": "melee-slash",
+      "path": "assets/library/fx/melee/fx-slash-enemy-red.png",
+      "type": "fx",
+      "frameWidth": 72,
+      "frameHeight": 72,
+      "frames": 5,
+      "frameRate": 30,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": {
+        "blendMode": "ADD",
+        "spawn": "body-center",
+        "authoredForDisplayHeight": 128,
+        "scale": "unitDisplayHeight / 128"
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/melee-slash/preview.gif",
+      "description": "Shared Melee Slash: enemy-red — 5 frames 72x72 @ 30 fps, once.",
+      "note": "Scale rule: authored for 128px-tall characters. At play time slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash (a 64px unit is 0.5×). Anchor near the body center (origin 0.5, 0.5), same as fx-slash-ninja. Blend Phaser.BlendModes.ADD. Do not keep 128-scale on small units. 敵紅小斬 — red chibi slash, dark outline, direction top-left → bottom-right. 5×72 @ 30 fps, once. Sheet 216×144 is a 3×2 grid, not a horizontal strip: frame i is column i%3, row floor(i/3). Frame 4 is blank (the slash has exited); the bottom-right cell is unused padding. PixelLab effect d474da5f-03ce-453b-b371-db03d525f04c. Gameplay handoff: enemy attacks play fx-slash-enemy-red. Ally / player melee plays fx-slash-ally-white. Catalog only — fx-slash-ninja stays the feel-booth 4 primary; fx-slash and fx-slash-overhead are unchanged.",
+      "tags": [
+        "fx",
+        "melee-slash",
+        "once",
+        "additive",
+        "melee",
+        "slash",
+        "enemy",
+        "faction"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "faction": "enemy",
+          "displayZh": "敵紅小斬",
+          "color": "red",
+          "direction": "top-left-to-bottom-right",
+          "status": "catalog-only",
+          "feelBooth": false,
+          "spawn": "body-center",
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "authoredForDisplayHeight": 128,
+          "scale": "unitDisplayHeight / 128",
+          "scaleRule": "slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units.",
+          "anchor": "body-center",
+          "handoff": "Enemy attacks → fx-slash-enemy-red. Ally / player melee → fx-slash-ally-white."
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 2,
+          "order": "row-major",
+          "blankFrame": 4,
+          "unusedCell": "bottom-right"
+        },
+        "pixellabJobs": {
+          "effectId": "d474da5f-03ce-453b-b371-db03d525f04c"
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 2,
+          "y": 2,
+          "note": "PixelLab corner pivot on the sheet. Play anchor is the frame center (0.5, 0.5), near the body center — not this corner."
+        }
+      },
+      "grid": [
+        3,
+        2
+      ],
+      "action": "enemy-red"
+    },
+    {
+      "key": "fx-slash-ally-white",
+      "category": "fx",
+      "group": "melee-slash",
+      "path": "assets/library/fx/melee/fx-slash-ally-white.png",
+      "type": "fx",
+      "frameWidth": 71,
+      "frameHeight": 70,
+      "frames": 5,
+      "frameRate": 30,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": {
+        "blendMode": "ADD",
+        "spawn": "body-center",
+        "authoredForDisplayHeight": 128,
+        "scale": "unitDisplayHeight / 128"
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/melee-slash/preview.gif",
+      "description": "Shared Melee Slash: ally-white — 5 frames 71x70 @ 30 fps, once.",
+      "note": "Scale rule: authored for 128px-tall characters. At play time slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash (a 64px unit is 0.5×). Anchor near the body center (origin 0.5, 0.5), same as fx-slash-ninja. Blend Phaser.BlendModes.ADD. Do not keep 128-scale on small units. 友白小斬 — white chibi slash, dark outline, direction top-right → bottom-left. 5 frames @ 30 fps, once, fit 71×70. Sheet 213×140 is a 3×2 grid, not a horizontal strip: frame i is column i%3, row floor(i/3). Frame 4 is blank (the slash has exited); the bottom-right cell is unused padding. PixelLab effect 482771b1-f1d7-4e8c-9711-138eafb80a02. Gameplay handoff: ally / player melee plays fx-slash-ally-white. Enemy attacks play fx-slash-enemy-red. Catalog only — fx-slash-ninja stays the feel-booth 4 primary; fx-slash and fx-slash-overhead are unchanged.",
+      "tags": [
+        "fx",
+        "melee-slash",
+        "once",
+        "additive",
+        "melee",
+        "slash",
+        "ally",
+        "faction"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "meleeSlashVfx",
+          "faction": "ally",
+          "displayZh": "友白小斬",
+          "color": "white",
+          "direction": "top-right-to-bottom-left",
+          "status": "catalog-only",
+          "feelBooth": false,
+          "spawn": "body-center",
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "authoredForDisplayHeight": 128,
+          "scale": "unitDisplayHeight / 128",
+          "scaleRule": "slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units.",
+          "anchor": "body-center",
+          "handoff": "Enemy attacks → fx-slash-enemy-red. Ally / player melee → fx-slash-ally-white."
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 2,
+          "order": "row-major",
+          "blankFrame": 4,
+          "unusedCell": "bottom-right"
+        },
+        "pixellabJobs": {
+          "effectId": "482771b1-f1d7-4e8c-9711-138eafb80a02"
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 2,
+          "y": 0,
+          "note": "PixelLab corner pivot on the sheet. Play anchor is the frame center (0.5, 0.5), near the body center — not this corner."
+        }
+      },
+      "grid": [
+        3,
+        2
+      ],
+      "action": "ally-white"
+    },
+    {
+      "key": "fx-slash-dot",
+      "category": "fx",
+      "group": "melee-slash",
+      "path": "assets/library/fx/melee/fx-slash-dot.png",
+      "type": "fx",
+      "frameWidth": 30,
+      "frameHeight": 30,
+      "frames": 4,
+      "frameRate": 20,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": {
+        "blendMode": "ADD",
+        "spawn": "body-center",
+        "authoredForDisplayHeight": 128,
+        "scale": "0.5 * unitDisplayHeight / 128",
+        "slashScale": "unitDisplayHeight / 128"
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/melee-slash/preview.gif",
+      "description": "Shared Melee Slash: dot — 4 frames 30x30 @ 20 fps, once.",
+      "note": "Scale rule: dotScale = 0.5 × slashScale, where slashScale = unitDisplayHeight / 128. That is half of the ally white slash (fx-slash-ally-white). A 64px unit is slashScale 0.5 and dotScale 0.25. Anchor on the target body center (origin 0.5, 0.5). Blend Phaser.BlendModes.ADD. Do not keep 128-scale on small units. 持續傷害小斬 — white X + amber sparks, dark outline. 4×30 @ 20 fps, once (~0.2s, about 5 plays/sec). Use on every DoT / AoE hit target. Sheet 60×60 is a 2×2 grid, not a horizontal strip: frame i is column i%2, row floor(i/2). Frame 3 is blank (the slash has exited). PixelLab effect 9a1c5436-0335-484e-a767-cdb897dbdfca. Catalog only — no audio in this entry. SFX lives in a follow-up Sound PR (pack path /workspace/sfx-slash-dot/). fx-slash-ninja stays the feel-booth 4 primary.",
+      "tags": [
+        "fx",
+        "melee-slash",
+        "once",
+        "additive",
+        "melee",
+        "slash",
+        "dot",
+        "aoe"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "dotTickVfx",
+          "displayZh": "持續傷害小斬",
+          "color": "white-x-amber-sparks",
+          "use": "DoT / AoE ticks — play on every hit target",
+          "maxPlaysPerSecond": 5,
+          "durationSec": 0.2,
+          "status": "catalog-only",
+          "feelBooth": false,
+          "spawn": "target-body-center",
+          "blend": "ADD",
+          "blendMode": "Phaser.BlendModes.ADD",
+          "authoredForDisplayHeight": 128,
+          "slashScale": "unitDisplayHeight / 128",
+          "scale": "0.5 * unitDisplayHeight / 128",
+          "scaleRule": "dotScale = 0.5 × slashScale, where slashScale = unitDisplayHeight / 128 (half of fx-slash-ally-white). Do not keep 128-scale on small units.",
+          "relativeTo": "fx-slash-ally-white",
+          "anchor": "body-center",
+          "audio": "not-in-this-catalog"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 2,
+          "rows": 2,
+          "order": "row-major",
+          "blankFrame": 3
+        },
+        "pixellabJobs": {
+          "effectId": "9a1c5436-0335-484e-a767-cdb897dbdfca"
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 15,
+          "y": 15,
+          "note": "PixelLab pivot is the frame center, matching the play anchor (0.5, 0.5) on the target body center."
+        }
+      },
+      "grid": [
+        2,
+        2
+      ],
+      "action": "dot"
     },
     {
       "key": "vfx-aoe-fire",
