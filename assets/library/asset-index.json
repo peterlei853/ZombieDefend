@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 577,
+    "total": 589,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -26,7 +26,7 @@
       },
       "pets": {
         "groups": 17,
-        "assets": 96
+        "assets": 108
       },
       "ui": {
         "groups": 1,
@@ -66,8 +66,8 @@
       "concept": 21,
       "fx": 80,
       "icon": 75,
-      "image": 30,
-      "spritesheet": 358
+      "image": 34,
+      "spritesheet": 366
     }
   },
   "groups": [
@@ -379,19 +379,23 @@
       "extras": [],
       "keyPrefix": "pet-dragon-baby-",
       "mainKey": "pet-dragon-baby-idle",
-      "count": 6,
+      "count": 9,
       "frameSizes": [
-        "48x48"
+        "48x48",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         10
       ],
       "fpsRange": [
         6,
-        10
+        12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
@@ -400,7 +404,10 @@
         "pet-dragon-baby-skill",
         "pet-dragon-baby-hurt",
         "pet-dragon-baby-sleep-start",
-        "pet-dragon-baby-sleep"
+        "pet-dragon-baby-sleep",
+        "pet-dragon-baby-appearance",
+        "pet-dragon-baby-claw",
+        "pet-dragon-baby-skill-aoe"
       ]
     },
     {
@@ -530,12 +537,15 @@
       "extras": [],
       "keyPrefix": "pet-lion-baby-",
       "mainKey": "pet-lion-baby-idle",
-      "count": 6,
+      "count": 9,
       "frameSizes": [
-        "48x48"
+        "48x48",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         10
       ],
       "fpsRange": [
@@ -543,6 +553,7 @@
         12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
@@ -551,7 +562,10 @@
         "pet-lion-baby-skill",
         "pet-lion-baby-hurt",
         "pet-lion-baby-sleep-start",
-        "pet-lion-baby-sleep"
+        "pet-lion-baby-sleep",
+        "pet-lion-baby-appearance",
+        "pet-lion-baby-claw",
+        "pet-lion-baby-skill-aoe"
       ]
     },
     {
@@ -679,12 +693,15 @@
       "extras": [],
       "keyPrefix": "pet-panda-baby-",
       "mainKey": "pet-panda-baby-idle",
-      "count": 6,
+      "count": 9,
       "frameSizes": [
-        "48x48"
+        "48x48",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         10
       ],
       "fpsRange": [
@@ -692,6 +709,7 @@
         12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
@@ -700,7 +718,10 @@
         "pet-panda-baby-skill",
         "pet-panda-baby-hurt",
         "pet-panda-baby-sleep-start",
-        "pet-panda-baby-sleep"
+        "pet-panda-baby-sleep",
+        "pet-panda-baby-appearance",
+        "pet-panda-baby-claw",
+        "pet-panda-baby-skill-aoe"
       ]
     },
     {
@@ -830,19 +851,23 @@
       "extras": [],
       "keyPrefix": "pet-phoenix-baby-",
       "mainKey": "pet-phoenix-baby-idle",
-      "count": 6,
+      "count": 9,
       "frameSizes": [
-        "48x48"
+        "48x48",
+        "64x96",
+        "85x160",
+        "96x96"
       ],
       "framesRange": [
-        4,
+        1,
         10
       ],
       "fpsRange": [
         6,
-        10
+        12
       ],
       "types": [
+        "image",
         "spritesheet"
       ],
       "keys": [
@@ -851,7 +876,10 @@
         "pet-phoenix-baby-skill",
         "pet-phoenix-baby-hurt",
         "pet-phoenix-baby-sleep-start",
-        "pet-phoenix-baby-sleep"
+        "pet-phoenix-baby-sleep",
+        "pet-phoenix-baby-appearance",
+        "pet-phoenix-baby-claw",
+        "pet-phoenix-baby-skill-aoe"
       ]
     },
     {
@@ -7827,6 +7855,108 @@
       "action": "sleep"
     },
     {
+      "key": "pet-dragon-baby-appearance",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: appearance (96x96 image).",
+      "note": "v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-dragon-baby-claw",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw.",
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-dragon-baby-skill-aoe",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Poison Breath",
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Poison Breath.",
+      "note": "v2 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
       "key": "fx-pet-dragon-smoke-breath",
       "category": "pets",
       "group": "dragon-fx",
@@ -8495,6 +8625,108 @@
       "action": "sleep"
     },
     {
+      "key": "pet-lion-baby-appearance",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: appearance (96x96 image).",
+      "note": "v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "lion-baby",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-lion-baby-claw",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw.",
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-lion-baby-skill-aoe",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Sand Roar",
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Sand Roar.",
+      "note": "v2 feet-centered ground AoE ring ~4 body-widths (gold). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
+    },
+    {
       "key": "fx-pet-lion-pounce-slash",
       "category": "pets",
       "group": "lion-fx",
@@ -9121,6 +9353,108 @@
       ],
       "extra": null,
       "action": "sleep"
+    },
+    {
+      "key": "pet-panda-baby-appearance",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: appearance (96x96 image).",
+      "note": "v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "panda-baby",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-panda-baby-claw",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw.",
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-panda-baby-skill-aoe",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Bamboo Roll",
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Bamboo Roll.",
+      "note": "v2 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
     },
     {
       "key": "fx-pet-panda-roll-dust",
@@ -9785,6 +10119,108 @@
       ],
       "extra": null,
       "action": "sleep"
+    },
+    {
+      "key": "pet-phoenix-baby-appearance",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-appearance.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: appearance (96x96 image).",
+      "note": "v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet.",
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "image"
+      ],
+      "extra": null,
+      "action": "appearance"
+    },
+    {
+      "key": "pet-phoenix-baby-claw",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-claw.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 96,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: claw — 4 frames 64x96 @ 12 fps, once.",
+      "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw.",
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "once"
+      ],
+      "extra": null,
+      "action": "claw"
+    },
+    {
+      "key": "pet-phoenix-baby-skill-aoe",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-skill-aoe.png",
+      "type": "spritesheet",
+      "frameWidth": 85,
+      "frameHeight": 160,
+      "frames": 3,
+      "frameRate": 6,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": "Spark Feather",
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: skill-aoe — 3 frames 85x160 @ 6 fps, loop. Skill: Spark Feather.",
+      "note": "v2 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged.",
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "loop",
+        "skill"
+      ],
+      "extra": null,
+      "action": "skill-aoe"
     },
     {
       "key": "fx-pet-phoenix-spark-feather",
