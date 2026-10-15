@@ -898,6 +898,36 @@
       }
     },
     {
+      "key": "fx-hit-water-burst",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-burst.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "type": "fx",
+      "note": "v0.35.1 feel-booth normal hit overlay. Glowing cyan liquid splash + shockwave (Peter prompt). 8×64 @ 14 fps, once, origin center. Play on the zombie before the HP tick.",
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "feel-booth-normal",
+          "tint": "cyan",
+          "playBeforeHpTick": true,
+          "feelBooth": true
+        },
+        "pixellabJobs": {
+          "peakImage": "d123ca47-ab83-43ef-917f-ab644dd8c763",
+          "peakImageId": "d13db458-81c7-5777-a338-f96866487cfb",
+          "animate": "35fddf0b-61da-44cb-b578-5fc495d08da9",
+          "animateAssetId": "2b7ce619-c807-57bf-8895-80479c254a78"
+        }
+      }
+    },
+    {
       "key": "fx-hit-sling-office-v2",
       "path": "assets/library/characters/hero/girl/fx/fx-hit-sling-office-v2.png",
       "frameWidth": 64,

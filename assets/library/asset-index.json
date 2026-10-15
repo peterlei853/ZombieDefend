@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 568,
+    "total": 569,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 125
+        "assets": 126
       },
       "pets": {
         "groups": 17,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 71,
+      "fx": 72,
       "icon": 75,
       "image": 30,
       "spritesheet": 358
@@ -210,7 +210,7 @@
       ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 45,
+      "count": 46,
       "frameSizes": [
         "16x16",
         "24x24",
@@ -281,6 +281,7 @@
         "fx-hit-water-delivery",
         "fx-hit-water-chef",
         "fx-hit-water-nurse",
+        "fx-hit-water-burst",
         "fx-hit-sling-office-v2",
         "fx-hit-sling-delivery",
         "fx-hit-sling-chef",
@@ -6811,6 +6812,56 @@
         "pixellabEffectId": "ad6e8be0-e713-4c30-bcc3-bbfea49be6e4"
       },
       "action": "hit-water-nurse"
+    },
+    {
+      "key": "fx-hit-water-burst",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-hit-water-burst.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 14,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: hit-water-burst — 8 frames 64x64 @ 14 fps, once.",
+      "note": "v0.35.1 feel-booth normal hit overlay. Glowing cyan liquid splash + shockwave (Peter prompt). 8×64 @ 14 fps, once, origin center. Play on the zombie before the HP tick.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "water",
+        "once",
+        "overlay"
+      ],
+      "extra": {
+        "gameplayNotes": {
+          "role": "bodyHitOverlay",
+          "profession": "feel-booth-normal",
+          "tint": "cyan",
+          "playBeforeHpTick": true,
+          "feelBooth": true
+        },
+        "pixellabJobs": {
+          "peakImage": "d123ca47-ab83-43ef-917f-ab644dd8c763",
+          "peakImageId": "d13db458-81c7-5777-a338-f96866487cfb",
+          "animate": "35fddf0b-61da-44cb-b578-5fc495d08da9",
+          "animateAssetId": "2b7ce619-c807-57bf-8895-80479c254a78"
+        }
+      },
+      "action": "hit-water-burst"
     },
     {
       "key": "fx-hit-sling-office-v2",
