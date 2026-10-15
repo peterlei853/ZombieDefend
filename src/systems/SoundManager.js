@@ -70,6 +70,11 @@ export const GAME_AUDIO = [
   { key: 'shoot-shotgun', url: 'assets/audio/shoot-shotgun.mp3' },
   { key: 'hit-impact', url: 'assets/audio/hit-impact.mp3' },
   { key: 'sfx-slash-ninja', url: 'assets/audio/sfx-slash-ninja.mp3' },
+  // DoT / AoE tick scratches that pair with fx-slash-dot. Default equals take A.
+  // Catalog only — gameplay wires playback later. Callers set volume (under melee).
+  { key: 'sfx-slash-dot', url: 'assets/audio/sfx-slash-dot.mp3' },
+  { key: 'sfx-slash-dot-a', url: 'assets/audio/sfx-slash-dot-a.mp3' },
+  { key: 'sfx-slash-dot-b', url: 'assets/audio/sfx-slash-dot-b.mp3' },
   { key: 'zombie-hurt', url: 'assets/audio/zombie-hurt.mp3' },
   { key: 'zombie-death', url: 'assets/audio/zombie-death.mp3' },
   { key: 'barricade-hit', url: 'assets/audio/barricade-hit.mp3' },
