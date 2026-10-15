@@ -106,14 +106,20 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * the camera stay put.
  * v0.35.2 removes that water burst. Key 1 (ranged) and key 4 (melee)
  * play a 40ms monster hitstop and white flash, 8–12 impact sparks, and
- * a 2px X knockback along the shot. Melee spawns `fx-slash-overhead`
- * above the enemy with no rotation. `fx-slash` is the side spare only.
+ * a 2px X knockback along the shot. Melee spawned `fx-slash-overhead`
+ * above the enemy with no rotation. `fx-slash` was the side spare only.
  * Keys 2, 3, and R are unchanged. Gold, saves, barricade physics, wave
+ * tables, BGM/SFX volumes, and the camera stay put.
+ * v0.35.3 cancels that overhead slash. Key 4 keeps the hitstop, flash,
+ * sparks, and 2px X knockback and spawns no strip. A rotated `fx-slash`
+ * is not a stand-in. `FEEL_MELEE_SLASH` stays null until a diagonal
+ * sheet (`fx-slash-ninja` / `fx-slash-diagonal`) is cataloged. Keys 1,
+ * 2, 3, and R are unchanged. Gold, saves, barricade physics, wave
  * tables, BGM/SFX volumes, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.2';
+export const APP_VERSION = '0.35.3';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
