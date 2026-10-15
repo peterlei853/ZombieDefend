@@ -147,6 +147,13 @@ The default stage draws six cradles on the same fence geometry as the water moun
 
 `?weapon=water` and `?weapon=sling` keep the single-gun rows. Gold, saves, and barricade contact math stay as they are.
 
+## Melee v0.35
+
+Feel-booth close-range slash FX live with the other hero weapon FX in `characters/hero/girl/fx/`. Both strips are 8×96 @ 14 fps, once, origin (0.5, 0.5), blend `Phaser.BlendModes.ADD` (white/cream/amber).
+
+- `fx-slash-overhead` — **primary** overhead melee. Vertical C / top→bottom chop. Spawn above the enemy. Gameplay should hang the feel-booth 近身 hit on this key.
+- `fx-slash` — side crescent / rotatable spare. Spawn at the weapon tip and rotate to facing. Do not replace this sheet with the overhead strip.
+
 ## Front-float combat (v0.27)
 
 Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.
