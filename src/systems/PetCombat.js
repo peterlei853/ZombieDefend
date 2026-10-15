@@ -4,6 +4,7 @@ import { beginHitstop } from './combatJuice.js';
 import { pickPetCombatTarget } from './petTarget.js';
 import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
+import { petSkillKey, petSkillSpec } from '../assets/petSkills.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
 import {
   barricadeXAtY,
@@ -38,14 +39,6 @@ export const PET_AUDIO_KEYS = Object.freeze({
   sleep: 'pet-sleep',
 });
 
-/** Tinted circles stand in for form-2 / form-3 FX until themed art exists. */
-const PLACEHOLDER_TINT = {
-  phoenix: 0xff6d00,
-  panda: 0xb3e5fc,
-  lion: 0xffee58,
-  dragon: 0x76ff03,
-};
-
 /** PIXELLAB_HOOK: assets/library/fx/v026/aoe/vfx-aoe-*.png */
 const RESIDUE_KEY = {
   phoenix: 'vfx-aoe-fire',
@@ -62,8 +55,9 @@ const RESIDUE_KEY = {
  * There is no deploy cooldown and no on-field time limit.
  * Death (HP ≤ 0) greys the bar for REVIVE_CD_MS.
  * While out, the pet walks to the nearest fence threat. Each unlocked orb
- * fills, flashes, then auto-casts. Form 1 uses the v0.19 baby cast.
- * Forms 2 and 3 use placeholder circles and stay locked until evolution.
+ * fills, flashes, then auto-casts. Orb 0 / 1 / 2 play the baby / young /
+ * ancient cast strip and spawn that form's catalog FX on its castFrame.
+ * Forms 2 and 3 stay locked until evolution. Damage tables are unchanged.
  * A bite is three beats in order: solid white fill, solid red fill, then
  * the hurt strip played once. Bite DPS cannot restart a beat already
  * running. The camera does not shake.
@@ -82,6 +76,10 @@ export class PetCombat {
     this._zones = [];
     /** @type {FxBlob[]} */
     this._blobs = [];
+    /** @type {RainDrop[]} Falling phoenix-rain bolts. Visual; nova damage is separate. */
+    this._falls = [];
+    /** @type {ChannelBeam[]} Ancient dragon breath. Visual; rain damage is separate. */
+    this._channels = [];
     /** @type {{ id: string, orb: number }[]} */
     this.castLog = [];
     /** @type {string[]} */
@@ -444,6 +442,8 @@ export class PetCombat {
     if (this.ult?.playing) {
       this._loot = { gold: 0, kills: 0 };
       this.ult.update(dt);
+      this._stepFalls(dt);
+      this._stepChannels(dt);
       if (this.ult.playing) return this._takeLoot();
       this._attackHold = GAME_CONFIG.PETS.ULT_RESUME_MS;
       justEnded = true;
@@ -496,6 +496,8 @@ export class PetCombat {
     gold += zones.gold;
     kills += zones.kills;
     this._stepBlobs(dt);
+    this._stepFalls(dt);
+    this._stepChannels(dt);
     return { gold, kills };
   }
 
@@ -508,6 +510,10 @@ export class PetCombat {
     this._zones = [];
     for (const blob of this._blobs) destroySprite(blob?.node);
     this._blobs = [];
+    for (const drop of this._falls) destroySprite(drop?.sprite);
+    this._falls = [];
+    for (const beam of this._channels) destroySprite(beam?.sprite);
+    this._channels = [];
     this.ult?._clear?.();
     this.ult && (this.ult.playing = false);
       for (const actor of this._actors) {
@@ -1484,6 +1490,7 @@ export class PetCombat {
     let gain = EMPTY;
     try {
       if (actor.popLeft > 0) actor.popLeft = Math.max(0, actor.popLeft - dt);
+      this._stepLunge(actor, dt);
       this._place(actor);
 
       // Skills keep moving during a bite so the ground tell and the ult
@@ -2102,9 +2109,8 @@ export class PetCombat {
   }
 
   /**
-   * Form 1 plays the baby skill strip during the tell and releases on its
-   * hit frame only after TELEGRAPH_MS. Forms 2 and 3 release on that same
-   * tell; their hit FX are placeholders. The ground circle is already up.
+   * Every form plays its cast strip during the tell and releases on that
+   * strip's castFrame, only after TELEGRAPH_MS. The ground circle is already up.
    * @param {PetActor} actor
    */
   _beginAttack(actor) {
@@ -2114,8 +2120,9 @@ export class PetCombat {
     actor.hurtStrip = false;
     faceLeft(actor.sprite);
     const orb = actor.castQueue[0] ?? 0;
+    actor.castSkill = petSkillKey(actor.role.id, orb);
     this._showTelegraph(actor, orb);
-    if (orb <= 0) playOnce(actor.sprite, actor.role.skill);
+    playOnce(actor.sprite, actor.castSkill);
   }
 
   /**
@@ -2125,22 +2132,24 @@ export class PetCombat {
    */
   _advanceAttack(actor, zombies, threat) {
     const sprite = actor.sprite;
-    const skill = actor.role.skill;
+    const orb = actor.castQueue[0] ?? 0;
+    const skill = actor.castSkill || petSkillKey(actor.role.id, orb);
+    const spec = petSkillSpec(skill);
+    const castFrame = spec?.castFrame ?? GAME_CONFIG.PETS.RELEASE_FRAME;
+    const frames = spec?.frames > 0 ? spec.frames : 8;
     const anims = sprite?.anims;
     const frame = anims?.currentFrame?.index ?? 0;
     const progress = typeof anims?.getProgress === 'function' ? anims.getProgress() : 0;
     const playingSkill = !!(anims?.isPlaying && anims.currentAnim?.key === skill);
-    const orb = actor.castQueue[0] ?? 0;
-    const form1 = !(orb > 0);
+    const frameKnown = playingSkill && Number.isFinite(frame);
     const told = actor.attackElapsed >= GAME_CONFIG.PETS.TELEGRAPH_MS;
     const due = !told
       ? false
-      : form1
-        ? frame >= GAME_CONFIG.PETS.RELEASE_FRAME ||
-          (playingSkill && progress >= 0.34) ||
+      : frameKnown
+        ? frame >= castFrame || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
+        : (playingSkill && progress >= castFrame / frames) ||
           !playingSkill ||
-          actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-        : true;
+          actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS;
     let gold = 0;
     let kills = 0;
     if (!actor.released && due) {
@@ -2152,9 +2161,7 @@ export class PetCombat {
         kills += gain.kills;
       }
     }
-    const swingDone = form1
-      ? !playingSkill || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS
-      : actor.released;
+    const swingDone = !playingSkill || actor.attackElapsed >= GAME_CONFIG.PETS.ATTACK_MAX_MS;
     if (actor.released && swingDone) {
       if (actor.castQueue.length > 0) this._beginAttack(actor);
       else this._enterIdle(actor);
@@ -2169,6 +2176,7 @@ export class PetCombat {
     actor.state = 'idle';
     actor.released = false;
     actor.attackElapsed = 0;
+    actor.castSkill = '';
     faceLeft(actor.sprite);
     playLoop(actor.sprite, actor.role.key);
   }
@@ -2188,6 +2196,8 @@ export class PetCombat {
     }
     this.castLog.push({ id: actor.role.id, orb: orbIndex });
     if (orbIndex >= 2 && this._allowUlt(actor)) {
+      this._presentForm3(actor);
+      actor.form3Shown = true;
       this._startUlt(actor, zombies, threat);
       return EMPTY;
     }
@@ -2230,8 +2240,10 @@ export class PetCombat {
    */
   _castPhoenix(actor, threat) {
     const cfg = GAME_CONFIG.PETS.PHOENIX;
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 0));
     const sprite = actor.sprite;
-    const from = framePoint(sprite, cfg.MOUTH_X, cfg.MOUTH_Y);
+    const off = spec?.spawnOffset ?? [cfg.MOUTH_X, cfg.MOUTH_Y];
+    const from = framePoint(sprite, off[0], off[1]);
     const aim = threat
       ? { x: threat.x, y: chestY(threat) }
       : { x: from.x - layoutPx(80), y: from.y };
@@ -2239,22 +2251,33 @@ export class PetCombat {
     const limit = (cfg.AIM_LIMIT_DEG * Math.PI) / 180;
     const { vx, vy } = leftBoltVelocity(from.x, from.y, aim.x, aim.y, speed, limit);
     const scale = Math.abs(sprite.scaleY || 1);
-    const bolt = spawnProjectile(this.scene, from.x, from.y, actor.role.projectile, scale);
-    if (bolt) {
-      bolt.setRotation(aimRotation(vx, vy, 'west'));
-      bolt.setDepth(depthFromY(from.y, 3));
+    const key = spec?.fx?.[0] || actor.role.projectile;
+    const impact = spec?.fx?.[1] || actor.role.impact;
+    const fans = spec?.fanDeg?.length ? spec.fanDeg : [0];
+    const base = Math.atan2(vy, vx);
+    for (const deg of fans) {
+      const ang = base + (deg * Math.PI) / 180;
+      const fvx = Math.cos(ang) * speed;
+      const fvy = Math.sin(ang) * speed;
+      const bolt = spawnProjectile(this.scene, from.x, from.y, key, scale);
+      if (bolt) {
+        bolt.setRotation(aimRotation(fvx, fvy, 'west'));
+        bolt.setDepth(depthFromY(from.y, 3));
+      }
+      this.fxLog.push(key);
+      this._bolts.push({
+        sprite: bolt,
+        actor,
+        x: from.x,
+        y: from.y,
+        vx: fvx,
+        vy: fvy,
+        hitIds: new Set(),
+        impact,
+        scale,
+        decorative: deg !== 0,
+      });
     }
-    this._bolts.push({
-      sprite: bolt,
-      actor,
-      x: from.x,
-      y: from.y,
-      vx,
-      vy,
-      hitIds: new Set(),
-      impact: actor.role.impact,
-      scale,
-    });
     return EMPTY;
   }
 
@@ -2266,17 +2289,24 @@ export class PetCombat {
    */
   _castPanda(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.PANDA;
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 0));
     const sprite = actor.sprite;
     const scale = Math.abs(sprite.scaleY || 1);
-    playCastFx(this.scene, sprite.x, sprite.y, actor.role.windup, scale, sprite.y);
+    const dust = spec?.fx?.[0] || actor.role.windup;
+    const impact = spec?.fx?.[1] || actor.role.impact;
+    const off = spec?.spawnOffset ?? [-8, -8];
+    const puff = framePoint(sprite, off[0], off[1]);
+    this._fx(puff.x, puff.y, dust, scale, sprite.y);
     const range = cfg.RANGE * LAYOUT_SCALE;
     const yHalf = cfg.Y_HALF * LAYOUT_SCALE;
     const target = closestThreatWhere(zombies, (z) =>
       inForwardBox(sprite.x, sprite.y, z.x, z.y, range, yHalf)
     );
+    const travel = spec?.travelOffset?.[0] ?? off[0];
+    this._beginLunge(actor, travel * scale, dust, scale);
     if (!target) return EMPTY;
     const hy = chestY(target);
-    playCastFx(this.scene, target.x, hy, actor.role.impact, scale, hy);
+    this._fx(target.x, hy, impact, scale, hy);
     const gain = this._strike(actor, target, cfg.DAMAGE, DAMAGE_COLORS.panda);
     if (!gain.killed && typeof target.applySlow === 'function') {
       target.applySlow(cfg.SLOW_MULT, this._ccMs(actor, cfg.SLOW_MS));
@@ -2291,10 +2321,15 @@ export class PetCombat {
    */
   _castLion(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.LION;
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 0));
     const sprite = actor.sprite;
     const scale = Math.abs(sprite.scaleY || 1);
-    const from = framePoint(sprite, cfg.FORWARD_X, cfg.FORWARD_Y);
-    playCastFx(this.scene, from.x, from.y, actor.role.impact, scale, from.y);
+    const off = spec?.spawnOffset ?? [cfg.FORWARD_X, cfg.FORWARD_Y];
+    const from = framePoint(sprite, off[0], off[1]);
+    const slash = spec?.fx?.[0] || actor.role.impact;
+    this._fx(from.x, from.y, slash, scale, from.y);
+    const travel = spec?.travelOffset?.[0] ?? off[0];
+    this._beginLunge(actor, travel * scale);
     const range = cfg.RANGE * LAYOUT_SCALE;
     const half = (cfg.HALF_ANGLE_DEG * Math.PI) / 180;
     const hits = threatsInShape(zombies, (z) =>
@@ -2311,10 +2346,13 @@ export class PetCombat {
    */
   _castDragon(actor, zombies) {
     const cfg = GAME_CONFIG.PETS.DRAGON;
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 0));
     const sprite = actor.sprite;
     const scale = Math.abs(sprite.scaleY || 1);
-    const mouth = framePoint(sprite, cfg.MOUTH_X, cfg.MOUTH_Y);
-    playCastFx(this.scene, mouth.x, mouth.y, actor.role.breath, scale, mouth.y);
+    const off = spec?.spawnOffset ?? [cfg.MOUTH_X, cfg.MOUTH_Y];
+    const mouth = framePoint(sprite, off[0], off[1]);
+    const breath = spec?.fx?.[0] || actor.role.breath;
+    this._fx(mouth.x, mouth.y, breath, scale, mouth.y);
     const range = cfg.RANGE * LAYOUT_SCALE;
     const half = (cfg.HALF_ANGLE_DEG * Math.PI) / 180;
     const hits = threatsInShape(zombies, (z) =>
@@ -2353,6 +2391,8 @@ export class PetCombat {
    * @param {import('../entities/Zombie.js').Zombie|null} threat
    */
   _castForm3(actor, zombies, threat) {
+    if (!actor.form3Shown) this._presentForm3(actor);
+    actor.form3Shown = false;
     const id = actor.role.id;
     if (id === 'phoenix') return this._phoenixDive(actor);
     if (id === 'panda') return this._pandaBlizzard(actor, zombies, threat);
@@ -2371,7 +2411,8 @@ export class PetCombat {
     const cfg = GAME_CONFIG.PETS.FORM2.phoenix;
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.phoenix, 420, 'phoenix-nova');
+    this._spawnRain(actor, focus);
+    this.fxLog.push('phoenix-nova');
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -2398,13 +2439,9 @@ export class PetCombat {
     const length = cfg.length * LAYOUT_SCALE;
     const halfW = cfg.halfWidth * LAYOUT_SCALE;
     const speed = 480 * LAYOUT_SCALE;
-    for (let i = 1; i <= 4; i++) {
-      this._spawnBlob(x - (length * i) / 5, y, layoutPx(8), PLACEHOLDER_TINT.phoenix, 320, 'phoenix-dive');
-    }
-    const node = this.scene?.add?.rectangle?.(x, y, layoutPx(18), Math.max(layoutPx(8), halfW * 2), PLACEHOLDER_TINT.phoenix, 0.4) ?? null;
-    node?.setDepth?.(depthFromY(y, 5));
+    this.fxLog.push('phoenix-dive');
     this._charges.push({
-      node,
+      node: null,
       actor,
       x,
       y,
@@ -2432,8 +2469,12 @@ export class PetCombat {
       zombies,
       (z) => Math.hypot((sprite?.x ?? actor.x) - z.x, (sprite?.y ?? actor.y) - z.y) <= range
     );
-    if (!target) return EMPTY;
-    this._spawnBlob(target.x, chestY(target), layoutPx(16), PLACEHOLDER_TINT.panda, 520, 'panda-freeze');
+    if (!target) {
+      this._fxAtOffset(actor, petSkillSpec(petSkillKey(actor.role.id, 1)));
+      return EMPTY;
+    }
+    this._fxAtOffset(actor, petSkillSpec(petSkillKey(actor.role.id, 1)));
+    this.fxLog.push('panda-freeze');
     const gain = this._strike(actor, target, cfg.damage, DAMAGE_COLORS.panda);
     if (!gain.killed && typeof target.applyRoot === 'function') target.applyRoot(this._ccMs(actor, cfg.rootMs));
     return gain;
@@ -2449,7 +2490,7 @@ export class PetCombat {
     const cfg = GAME_CONFIG.PETS.FORM3.panda;
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.panda, 640, 'panda-blizzard');
+    this.fxLog.push('panda-blizzard');
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - focus.x, z.y - focus.y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -2482,16 +2523,18 @@ export class PetCombat {
     );
     let gold = 0;
     let kills = 0;
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 1));
+    this._fxAtOffset(actor, spec);
+    this.fxLog.push('lion-chain');
     hits.forEach((z, i) => {
-      this._spawnBlob(z.x, chestY(z), layoutPx(10), PLACEHOLDER_TINT.lion, 280, 'lion-chain');
       const dmg = cfg.damages[Math.min(i, cfg.damages.length - 1)];
       const gain = this._strike(actor, z, dmg, DAMAGE_COLORS.lion);
       gold += gain.gold;
       kills += gain.kills;
+      if (!gain.killed && spec?.cone && typeof z.applyRoot === 'function') {
+        z.applyRoot(spec.cone.stunMs);
+      }
     });
-    if (!hits.length) {
-      this._spawnBlob(from.x - layoutPx(24), from.y, layoutPx(8), PLACEHOLDER_TINT.lion, 220, 'lion-chain');
-    }
     return { gold, kills };
   }
 
@@ -2506,7 +2549,7 @@ export class PetCombat {
     const x = sprite?.x ?? actor.x;
     const y = sprite?.y ?? actor.y;
     const radius = cfg.radius * LAYOUT_SCALE;
-    this._spawnBlob(x, y, radius, PLACEHOLDER_TINT.lion, 420, 'lion-stomp');
+    this.fxLog.push('lion-stomp');
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= radius);
     let gold = 0;
     let kills = 0;
@@ -2528,7 +2571,9 @@ export class PetCombat {
     const cfg = GAME_CONFIG.PETS.FORM2.dragon;
     const focus = focusPoint(actor, threat);
     const radius = cfg.radius * LAYOUT_SCALE;
-    const node = this._spawnBlob(focus.x, focus.y, radius, PLACEHOLDER_TINT.dragon, cfg.durationMs, 'dragon-cloud');
+    this._spawnFireball(actor, threat);
+    this.fxLog.push('dragon-cloud');
+    const node = null;
     if (threat) this.applyKnockback(threat);
     this._zones.push({
       node,
@@ -2557,14 +2602,11 @@ export class PetCombat {
     const y = sprite?.y ?? actor.y;
     const range = cfg.range * LAYOUT_SCALE;
     const hits = threatsInShape(zombies, (z) => Math.hypot(z.x - x, z.y - y) <= range).slice(0, cfg.targets);
-    if (!hits.length) {
-      this._spawnBlob(x - layoutPx(40), y, layoutPx(8), PLACEHOLDER_TINT.dragon, 300, 'dragon-rain');
-      return EMPTY;
-    }
+    this.fxLog.push('dragon-rain');
+    if (!hits.length) return EMPTY;
     let gold = 0;
     let kills = 0;
     for (const z of hits) {
-      this._spawnBlob(z.x, chestY(z) - layoutPx(18), layoutPx(8), PLACEHOLDER_TINT.dragon, 360, 'dragon-rain');
       const gain = this._strike(actor, z, cfg.chip, DAMAGE_COLORS.dragon);
       gold += gain.gold;
       kills += gain.kills;
@@ -2578,25 +2620,282 @@ export class PetCombat {
   /**
    * @param {number} x
    * @param {number} y
-   * @param {number} radius
-   * @param {number} color
-   * @param {number} lifeMs
-   * @param {string} tag
+   * @param {string|undefined} key
+   * @param {number} scale
+   * @param {number} depthY
    */
-  _spawnBlob(x, y, radius, color, lifeMs, tag) {
-    const scene = this.scene;
-    const r = Math.max(layoutPx(4), radius);
-    /** @type {Phaser.GameObjects.Arc|Phaser.GameObjects.Rectangle|null} */
-    let node = null;
-    if (scene?.add?.circle) node = scene.add.circle(x, y, r, color, 0.45);
-    else if (scene?.add?.rectangle) node = scene.add.rectangle(x, y, r * 2, r * 2, color, 0.45);
-    if (node) {
-      node.setDepth?.(depthFromY(y, 6));
-      node.setData?.('petFx', tag);
+  _fx(x, y, key, scale, depthY) {
+    if (!key || !Number.isFinite(x) || !Number.isFinite(y)) return null;
+    this.fxLog.push(key);
+    return playCastFx(this.scene, x, y, key, scale, depthY);
+  }
+
+  /**
+   * Attach the first FX key at the skill's spawnOffset.
+   * @param {PetActor} actor
+   * @param {import('../assets/petSkills.js').PetSkillSpec|null} spec
+   */
+  _fxAtOffset(actor, spec) {
+    if (!spec?.fx?.[0]) return null;
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const off = spec.spawnOffset || [0, 0];
+    const at = sprite ? framePoint(sprite, off[0], off[1]) : { x: actor.x, y: actor.y };
+    return this._fx(at.x, at.y, spec.fx[0], scale, at.y);
+  }
+
+  /**
+   * Ancient catalog FX at cast time. Ground rings keep their origin on the
+   * feet (x may shift by spawnOffset). The beam attaches at the mouth.
+   * @param {PetActor} actor
+   */
+  _presentForm3(actor) {
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 2));
+    if (!spec?.fx?.[0]) return;
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const x = sprite?.x ?? actor.x;
+    const y = sprite?.y ?? actor.y;
+    if (spec.channel) {
+      const off = spec.spawnOffset || [0, 0];
+      const at = sprite ? framePoint(sprite, off[0], off[1]) : { x, y };
+      this._spawnChannel(actor, at.x, at.y, spec.fx[0], scale, spec);
+      return;
     }
-    this.fxLog.push(tag);
-    this._blobs.push({ node, life: lifeMs });
-    return node;
+    const shift = (spec.spawnOffset?.[0] || 0) * scale;
+    this._fx(x + shift, y, spec.fx[0], scale, y);
+  }
+
+  /**
+   * Body travel during Roll Raid / Cub Pounce. Dust, when set, is left
+   * behind along the roll and does not follow. The offset is the manifest
+   * travelOffset in frame px, so the body stays on the safe side of the fence.
+   * @param {PetActor} actor
+   * @param {number} dx canvas px, west negative
+   * @param {string} [dustKey]
+   * @param {number} [scale]
+   */
+  _beginLunge(actor, dx, dustKey, scale) {
+    const sprite = actor.sprite;
+    if (!sprite || !Number.isFinite(dx) || dx === 0) return;
+    actor.lunge = {
+      x0: sprite.x,
+      y0: sprite.y,
+      x1: sprite.x + dx,
+      y1: sprite.y,
+      left: 220,
+      dur: 220,
+      dustKey: dustKey || '',
+      scale: scale || Math.abs(sprite.scaleY || 1),
+      mid: false,
+    };
+  }
+
+  /** @param {PetActor} actor @param {number} dt */
+  _stepLunge(actor, dt) {
+    const lung = actor.lunge;
+    const sprite = actor.sprite;
+    if (!lung || !sprite) return;
+    lung.left = Math.max(0, lung.left - Math.max(0, dt));
+    const t = lung.dur > 0 ? 1 - lung.left / lung.dur : 1;
+    sprite.x = lung.x0 + (lung.x1 - lung.x0) * t;
+    sprite.y = lung.y0 + (lung.y1 - lung.y0) * t;
+    if (lung.dustKey && !lung.mid && t >= 0.45) {
+      lung.mid = true;
+      const mx = lung.x0 + (lung.x1 - lung.x0) * 0.45;
+      this._fx(mx, lung.y0, lung.dustKey, lung.scale, lung.y0);
+    }
+    if (lung.left <= 0) actor.lunge = null;
+  }
+
+  /**
+   * Phoenix Rain. 7 bolts across the manifest's 40–140 west / 60–90 up band.
+   * Nova damage is applied by the caller, not per bolt.
+   * @param {PetActor} actor
+   * @param {{ x: number, y: number }} focus
+   */
+  _spawnRain(actor, focus) {
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 1));
+    const rain = spec?.rain;
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const boltKey = spec?.fx?.[0] || 'fx-pet-phoenix-rain-bolt';
+    const impact = spec?.fx?.[1] || 'fx-pet-phoenix-rain-impact';
+    const count = rain?.count || 7;
+    const westMin = rain?.westMin ?? 40;
+    const westMax = rain?.westMax ?? 140;
+    const upMin = rain?.upMin ?? 60;
+    const upMax = rain?.upMax ?? 90;
+    const vx = (rain?.vxFrame ?? -2) * 60 * LAYOUT_SCALE;
+    const vy = (rain?.vyFrame ?? 6) * 60 * LAYOUT_SCALE;
+    const originX = sprite?.x ?? actor.x;
+    const groundY = Number.isFinite(focus?.y) ? focus.y : (sprite?.y ?? actor.y);
+    for (let i = 0; i < count; i++) {
+      const u = count === 1 ? 0 : i / (count - 1);
+      const west = layoutPx(westMin + (westMax - westMin) * u);
+      const up = layoutPx(upMin + ((upMax - upMin) * ((i * 3) % count)) / Math.max(1, count - 1));
+      const x = originX - west;
+      const y = groundY - up;
+      const node = spawnProjectile(this.scene, x, y, boltKey, scale);
+      node?.setDepth?.(depthFromY(groundY, 8));
+      this.fxLog.push(boltKey);
+      this._falls.push({ sprite: node, x, y, groundY, vx, vy, impact, scale });
+    }
+  }
+
+  /** @param {number} dt */
+  _stepFalls(dt) {
+    const sec = (Number.isFinite(dt) ? dt : 0) / 1000;
+    const keep = [];
+    for (const drop of this._falls) {
+      drop.x += drop.vx * sec;
+      drop.y += drop.vy * sec;
+      if (drop.sprite) {
+        drop.sprite.x = drop.x;
+        drop.sprite.y = drop.y;
+      }
+      if (drop.y >= drop.groundY) {
+        this._fx(drop.x, drop.groundY, drop.impact, drop.scale, drop.groundY);
+        destroySprite(drop.sprite);
+        continue;
+      }
+      if (drop.y > WORLD_HEIGHT + layoutPx(40)) {
+        destroySprite(drop.sprite);
+        continue;
+      }
+      keep.push(drop);
+    }
+    this._falls = keep;
+  }
+
+  /**
+   * Scorching Fireball. Splash art on arrival. Cloud ticks keep the old damage.
+   * @param {PetActor} actor
+   * @param {import('../entities/Zombie.js').Zombie|null} threat
+   */
+  _spawnFireball(actor, threat) {
+    const spec = petSkillSpec(petSkillKey(actor.role.id, 1));
+    const sprite = actor.sprite;
+    const scale = Math.abs(sprite?.scaleY || 1);
+    const off = spec?.spawnOffset ?? [-22, -28];
+    const from = sprite ? framePoint(sprite, off[0], off[1]) : { x: actor.x, y: actor.y };
+    const aim = threat
+      ? { x: threat.x, y: chestY(threat) }
+      : { x: from.x - layoutPx(120), y: from.y };
+    const speed = (spec?.projectile?.pxPerFrame ?? 5) * 60 * LAYOUT_SCALE;
+    const limit = (42 * Math.PI) / 180;
+    const { vx, vy } = leftBoltVelocity(from.x, from.y, aim.x, aim.y, speed, limit);
+    const key = spec?.fx?.[0] || 'fx-pet-dragon-fireball';
+    const impact = spec?.fx?.[1] || 'fx-pet-dragon-fireball-impact';
+    const node = spawnProjectile(this.scene, from.x, from.y, key, scale);
+    if (node) {
+      node.setRotation?.(aimRotation(vx, vy, 'west'));
+      node.setDepth?.(depthFromY(from.y, 3));
+    }
+    this.fxLog.push(key);
+    this._bolts.push({
+      sprite: node,
+      actor,
+      x: from.x,
+      y: from.y,
+      vx,
+      vy,
+      hitIds: new Set(),
+      impact,
+      scale,
+      kind: 'fireball',
+      aimX: aim.x,
+    });
+  }
+
+  /**
+   * Apocalyptic Flame. Start, then loop frames 4–9, then the burnout.
+   * @param {PetActor} actor
+   * @param {number} x
+   * @param {number} y
+   * @param {string} key
+   * @param {number} scale
+   * @param {import('../assets/petSkills.js').PetSkillSpec} spec
+   */
+  _spawnChannel(actor, x, y, key, scale, spec) {
+    const scene = this.scene;
+    const channel = spec.channel;
+    /** @type {Phaser.GameObjects.Sprite|null} */
+    let sprite = null;
+    if (scene?.add?.sprite && scene.textures?.exists?.(key)) {
+      sprite = scene.add.sprite(x, y, key);
+      const asset = libraryAsset(scene, key);
+      const origin = asset?.origin ?? [0.9844, 0.5];
+      sprite.setOrigin?.(origin[0], origin[1]);
+      sprite.setScale?.(scale);
+      sprite.setDepth?.(depthFromY(y, 6));
+      try {
+        sprite.play?.(key);
+      } catch (_) {
+        /* phase sync plays the loop next */
+      }
+    }
+    this.fxLog.push(key);
+    const rate = channel?.frameRate > 0 ? channel.frameRate : 12;
+    const ms = (frames) => (Math.max(0, frames) / rate) * 1000;
+    const loopFrom = channel?.loopFrom ?? 4;
+    const loopTo = channel?.loopTo ?? 9;
+    const total = channel?.frames ?? 14;
+    this._channels.push({
+      sprite,
+      actor,
+      key,
+      ox: spec.spawnOffset?.[0] ?? 0,
+      oy: spec.spawnOffset?.[1] ?? 0,
+      elapsed: 0,
+      phase: '',
+      startMs: ms(loopFrom),
+      loopMs: ms(loopTo - loopFrom + 1) * 2,
+      endMs: ms(Math.max(1, total - loopTo - 1)),
+    });
+    this._syncChannel(this._channels[this._channels.length - 1]);
+  }
+
+  /** @param {ChannelBeam} beam */
+  _syncChannel(beam) {
+    if (!beam?.sprite) return;
+    let phase = 'start';
+    if (beam.elapsed >= beam.startMs + beam.loopMs) phase = 'end';
+    else if (beam.elapsed >= beam.startMs) phase = 'loop';
+    if (beam.phase === phase) return;
+    beam.phase = phase;
+    const anim = `${beam.key}:${phase}`;
+    const scene = beam.sprite.scene;
+    const key = scene?.anims?.exists?.(anim) ? anim : beam.key;
+    try {
+      beam.sprite.play?.(key);
+    } catch (_) {
+      /* hold the sheet */
+    }
+  }
+
+  /** @param {number} dt */
+  _stepChannels(dt) {
+    const step = Number.isFinite(dt) ? dt : 0;
+    const keep = [];
+    for (const beam of this._channels) {
+      beam.elapsed += step;
+      const sprite = beam.actor?.sprite;
+      if (sprite && beam.sprite && beam.actor.state === 'attack') {
+        const at = framePoint(sprite, beam.ox, beam.oy);
+        beam.sprite.x = at.x;
+        beam.sprite.y = at.y;
+        beam.sprite.setDepth?.(depthFromY(sprite.y, 6));
+      }
+      this._syncChannel(beam);
+      const done = beam.elapsed >= beam.startMs + beam.loopMs + beam.endMs;
+      if (done || (beam.sprite && beam.sprite.active === false)) {
+        destroySprite(beam.sprite);
+        continue;
+      }
+      keep.push(beam);
+    }
+    this._channels = keep;
   }
 
   /** @param {number} dt */
@@ -2711,6 +3010,27 @@ export class PetCombat {
         destroySprite(bolt.sprite);
         continue;
       }
+      if (bolt.kind === 'fireball') {
+        const reached = Number.isFinite(bolt.aimX) && bolt.x <= bolt.aimX;
+        const hit = zombies.some((z) => z?.alive && z.body && boltOverlaps(z, bolt.x, bolt.y));
+        if (reached || hit) {
+          this._fx(bolt.x, bolt.y, bolt.impact, bolt.scale, bolt.y);
+          destroySprite(bolt.sprite);
+          continue;
+        }
+        keep.push(bolt);
+        continue;
+      }
+      if (bolt.decorative) {
+        const hit = zombies.some((z) => z?.alive && z.body && boltOverlaps(z, bolt.x, bolt.y));
+        if (hit) {
+          this._fx(bolt.x, bolt.y, bolt.impact, bolt.scale, bolt.y);
+          destroySprite(bolt.sprite);
+          continue;
+        }
+        keep.push(bolt);
+        continue;
+      }
       let spent = false;
       for (const z of zombies) {
         if (!z?.alive || !z.body) continue;
@@ -2719,7 +3039,7 @@ export class PetCombat {
         bolt.hitIds.add(z.id);
         const damage = bolt.hitIds.size === 1 ? cfg.DAMAGE : cfg.PIERCE_DAMAGE;
         const hy = chestY(z);
-        playCastFx(this.scene, bolt.x, hy, bolt.impact, bolt.scale, hy);
+        this._fx(bolt.x, hy, bolt.impact, bolt.scale, hy);
         const gain = this._strike(bolt.actor, z, damage, DAMAGE_COLORS.phoenix);
         gold += gain.gold;
         kills += gain.kills;

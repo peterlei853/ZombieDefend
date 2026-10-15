@@ -6,11 +6,13 @@ import {
   grassYMin,
   layoutPx,
 } from '../systems/DepthView.js';
+import { PET_SKILL_LOAD_KEYS } from './petSkills.js';
 
 /**
- * First form only. Baby idle / move / skill / hurt / sleep strips (48×48,
- * feet origin, face west) and the baby skill FX. Young / ancient forms stay
- * on disk. Sleep is the recall bed: sleep-start once, then the sleep loop.
+ * Baby bodies on the field. Idle / move / skill / hurt / sleep strips
+ * (48×48, feet origin, face west). Sleep is the recall bed: sleep-start
+ * once, then the sleep loop. Young and ancient idle strips stay on disk.
+ * All twelve cast strips and their skill FX load with the stage.
  * Order is party order: far → near, and the HUD column top → bottom.
  * Pets are not spawned with the stage. The bar summons and recalls them.
  * `hudBar` is the 64×32 bar (head already composited on the left).
@@ -98,9 +100,12 @@ export const PET_ELEMENT_TINT = {
   poison: 0x9ccc65,
 };
 
-/** Baby strips, the form-1 FX they cast, and the v0.21 bar / head / orb HUD icons. */
-export const PET_STAGE_KEYS = new Set(
-  PET_LINEUP.flatMap((pet) =>
+/**
+ * Baby body strips, the v0.21 bar / head / orb HUD icons, and every
+ * form's cast strip plus skill FX (`PET_SKILL_LOAD_KEYS`).
+ */
+export const PET_STAGE_KEYS = new Set([
+  ...PET_LINEUP.flatMap((pet) =>
     [
       pet.key,
       pet.move,
@@ -118,8 +123,9 @@ export const PET_STAGE_KEYS = new Set(
       pet.orbLit,
       pet.orbFlash,
     ].filter(Boolean)
-  )
-);
+  ),
+  ...PET_SKILL_LOAD_KEYS,
+]);
 
 /**
  * Canvas px to the right of the grass edge (the fence's safe-side face).
@@ -131,9 +137,9 @@ export const PET_STAGE_KEYS = new Set(
 export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
- * Stage load filter. Non-pet categories pass through. From `pets`, only
- * the four baby idle/move/skill/hurt/sleep strips, their form-1 FX, and the HUD
- * bar / head / orb icons are queued.
+ * Stage load filter. Non-pet categories pass through. From `pets`, the
+ * baby body strips, HUD icons, and all twelve cast strips plus skill FX
+ * are queued. Young / ancient idle, move, and hurt stay unloaded.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {
