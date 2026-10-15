@@ -1,4 +1,4 @@
-import { APP_VERSION, debugPetSkillEnabled, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
 import {
@@ -86,7 +86,7 @@ export default class TitleScene extends Phaser.Scene {
 
     this.input.keyboard?.once('keydown-ENTER', startStage);
     this.input.keyboard?.once('keydown-SPACE', startStage);
-    if (petHurtDebugRequested() || petLowHpDebugRequested() || demoWeaponId() || debugPetSkillEnabled()) {
+    if (petHurtDebugRequested() || petLowHpDebugRequested() || demoWeaponId() || debugPetSkillEnabled() || demoEnemyId()) {
       this.time.delayedCall(0, startStage);
     }
 

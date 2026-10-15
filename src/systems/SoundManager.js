@@ -1,3 +1,5 @@
+import { enemySfxClips, enemySfxKey } from '../data/enemyShowcase.js';
+
 /**
  * BGM + SFX for ZombieDefend.
  * Phaser 3 `scene.sound` only — no second audio engine.
@@ -89,6 +91,29 @@ export const GAME_AUDIO = [
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
 
 /**
+ * Volume for a showcase cue. Uses the existing table. Hit / hurt / die
+ * match those rows. Skills use the melee row. Enrage uses the ult row.
+ * @param {string} cue
+ */
+function enemyCueVolume(cue) {
+  if (cue === 'hit') return AUDIO_VOLUME.hit;
+  if (cue === 'hurt') return AUDIO_VOLUME.hurt;
+  if (cue === 'die') return AUDIO_VOLUME.death;
+  if (cue === 'enrage') return AUDIO_VOLUME.ult;
+  return AUDIO_VOLUME.melee;
+}
+
+/**
+ * @param {string} cue
+ */
+function enemyCueCooldown(cue) {
+  if (cue === 'hit') return AUDIO_COOLDOWN_MS.hit;
+  if (cue === 'hurt') return AUDIO_COOLDOWN_MS.hurt;
+  if (cue === 'die') return AUDIO_COOLDOWN_MS.death;
+  return 0;
+}
+
+/**
  * Library skin id (`sling`, `bubble`, …) or the handgun/shotgun profile fallback.
  * @param {{ id?: string }|null|undefined} skin
  * @param {string} [profile]
@@ -109,7 +134,8 @@ export function preloadGameAudio(scene) {
   const loader = scene?.load;
   if (typeof loader?.audio !== 'function') return;
   const cache = scene.cache?.audio;
-  for (const clip of GAME_AUDIO) {
+  const clips = GAME_AUDIO.concat(enemySfxClips());
+  for (const clip of clips) {
     if (typeof cache?.exists === 'function' && cache.exists(clip.key)) continue;
     loader.audio(clip.key, clip.url);
   }
@@ -136,6 +162,8 @@ export class SoundManager {
     this._unlockFlush = null;
     /** @type {Phaser.Sound.BaseSound|null} */
     this._fireVoice = null;
+    /** @type {Phaser.Sound.BaseSound|null} */
+    this._enemyVoice = null;
     this._fading = false;
     this._disposed = false;
   }
@@ -259,6 +287,23 @@ export class SoundManager {
     this._cue('zombie-death', AUDIO_VOLUME.death, AUDIO_COOLDOWN_MS.death);
   }
 
+  /**
+   * Per-enemy showcase cue. `cue` is `hit`, `hurt`, `die`, `enrage`, or
+   * `skill-<name>`. Missing clips stay silent. Does not change BGM or
+   * the shared volume table. Normal waves keep playZombieHurt / playZombieDeath.
+   * @param {string} id
+   * @param {string} cue
+   */
+  playEnemyCue(id, cue) {
+    if (this._disposed || !id || !cue) return null;
+    const key = enemySfxKey(id, cue);
+    if (!this._passCooldown(key, enemyCueCooldown(cue))) return null;
+    this._stopEnemyVoice();
+    const node = this._playNowOrPending(key, enemyCueVolume(cue));
+    if (node) this._enemyVoice = node;
+    return node;
+  }
+
   playBarricadeHit() {
     this._cue('barricade-hit', AUDIO_VOLUME.barricade, AUDIO_COOLDOWN_MS.barricade);
   }
@@ -369,6 +414,7 @@ export class SoundManager {
     this._disposed = true;
     this.stopBgm();
     this._stopFireVoice();
+    this._stopEnemyVoice();
   }
 
   /**
@@ -508,6 +554,22 @@ export class SoundManager {
     }
     try {
       bgm.destroy?.();
+    } catch (_) {
+      /* already destroyed */
+    }
+  }
+
+  _stopEnemyVoice() {
+    const node = this._enemyVoice;
+    this._enemyVoice = null;
+    if (!node) return;
+    try {
+      node.stop?.();
+    } catch (_) {
+      /* already stopped */
+    }
+    try {
+      node.destroy?.();
     } catch (_) {
       /* already destroyed */
     }
