@@ -4,9 +4,9 @@
   "group": "bullet-hit",
   "title": "Bullet Hit FX",
   "titleZh": "子彈命中",
-  "description": "Peter-approved splash remake (2026-10-15). Feel-booth preview only — not wired into live combat. fx-hit-fire and fx-hit-water are 4×24 @ 8 fps (0.5s, 125ms per frame), once, origin (0.5, 0.5) at the impact point. Same motion as the splash strip (burst → droplets → fade); fire is the recolor. Sheets are 96×24 horizontal strips with transparent alpha. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD. Feel-booth key 8 is fire and key 9 is water. fx-hit-electric is not in this wave.",
+  "description": "Peter-approved bullet hits (2026-10-15). Feel-booth preview only — not wired into live combat. fx-hit-fire and fx-hit-water are 4×24 @ 8 fps (0.5s), once, origin (0.5, 0.5) at the impact point. The burst is drawn left → right on the sheet (bullets travel left; the spray faces travel). Feel-booth playback uses the sheet as drawn. Water uses the fx-water-proj cyan palette. Fire uses the flame orange/yellow palette. Display size is the authored 24px frame at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Feel-booth key 8 is fire and key 9 is water. fx-hit-electric is not in this wave.",
   "source": {
-    "tool": "Peter splash remake",
+    "tool": "PixelLab VFX Creator",
     "sourceFolder": "fx/bullet-hit",
     "approvedBy": "Peter",
     "approvedOn": "2026-10-15"
@@ -40,11 +40,12 @@
       "origin": [0.5, 0.5],
       "type": "fx",
       "tags": ["hit", "fire", "bullet"],
-      "note": "Canonical fire bullet hit. Splash remake, fire recolor of the water motion (burst → droplets → fade). 4×24 @ 8 fps, once (0.5s, 125ms per frame). Sheet 96×24 is a transparent horizontal strip. Origin (0.5, 0.5) at the impact point. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Feel-booth key 8. Demo only — not wired into live combat. fx-hit-electric is not in this wave.",
+      "note": "Canonical fire bullet hit. Burst travels left → right, flame orange/yellow palette. 4×24 @ 8 fps, once (0.5s). Sheet 96×24 is a horizontal strip. Origin (0.5, 0.5) at the impact point. Display size is the authored 24px frame. Feel-booth key 8 plays this sheet as drawn at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Demo only — not wired into live combat. fx-hit-electric is not in this wave.",
       "anchors": {
         "blendMode": "ADD",
         "spawn": "impact-point",
-        "displaySize": "bullet-adjacent",
+        "displaySize": "24px-frame",
+        "direction": "left-to-right",
         "scale": 1
       },
       "extra": {
@@ -55,13 +56,14 @@
           "feelBooth": true,
           "feelKey": "8",
           "combatWired": false,
+          "direction": "left-to-right",
           "blend": "ADD",
           "blendMode": "Phaser.BlendModes.ADD",
           "alternateBlend": "NORMAL",
           "scale": 1,
-          "durationSec": 0.5,
-          "scaleRule": "Display size is the 24×24 frame at scale 1 (bullet-adjacent).",
-          "spawn": "impact-point"
+          "scaleRule": "Display size is the authored 24×24 frame. Scale stays 1. The sheet is already left → right.",
+          "spawn": "impact-point",
+          "durationSec": 0.5
         }
       }
     },
@@ -76,11 +78,12 @@
       "origin": [0.5, 0.5],
       "type": "fx",
       "tags": ["hit", "water", "bullet"],
-      "note": "Canonical water bullet hit. Splash remake (burst → droplets → fade). 4×24 @ 8 fps, once (0.5s, 125ms per frame). Sheet 96×24 is a transparent horizontal strip. Origin (0.5, 0.5) at the impact point. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Feel-booth key 9. Demo only — not wired into live combat.",
+      "note": "Canonical water bullet hit. Burst travels left → right, fx-water-proj cyan palette. 4×24 @ 8 fps, once (0.5s). Sheet 96×24 is a horizontal strip. Origin (0.5, 0.5) at the impact point. Display size is the authored 24px frame. Feel-booth key 9 plays this sheet as drawn at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Demo only — not wired into live combat.",
       "anchors": {
         "blendMode": "ADD",
         "spawn": "impact-point",
-        "displaySize": "bullet-adjacent",
+        "displaySize": "24px-frame",
+        "direction": "left-to-right",
         "scale": 1
       },
       "extra": {
@@ -91,13 +94,14 @@
           "feelBooth": true,
           "feelKey": "9",
           "combatWired": false,
+          "direction": "left-to-right",
           "blend": "ADD",
           "blendMode": "Phaser.BlendModes.ADD",
           "alternateBlend": "NORMAL",
           "scale": 1,
-          "durationSec": 0.5,
-          "scaleRule": "Display size is the 24×24 frame at scale 1 (bullet-adjacent).",
-          "spawn": "impact-point"
+          "scaleRule": "Display size is the authored 24×24 frame. Scale stays 1. The sheet is already left → right.",
+          "spawn": "impact-point",
+          "durationSec": 0.5
         }
       }
     }

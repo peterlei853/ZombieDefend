@@ -1033,14 +1033,14 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 
 <img src="previews/fx/bullet-hit/preview.gif" alt="bullet-hit preview" height="140">
 
-Peter-approved splash remake (2026-10-15). Feel-booth preview only — not wired into live combat. fx-hit-fire and fx-hit-water are 4×24 @ 8 fps (0.5s, 125ms per frame), once, origin (0.5, 0.5) at the impact point. Same motion as the splash strip (burst → droplets → fade); fire is the recolor. Sheets are 96×24 horizontal strips with transparent alpha. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD. Feel-booth key 8 is fire and key 9 is water. fx-hit-electric is not in this wave.
+Peter-approved bullet hits (2026-10-15). Feel-booth preview only — not wired into live combat. fx-hit-fire and fx-hit-water are 4×24 @ 8 fps (0.5s), once, origin (0.5, 0.5) at the impact point. The burst is drawn left → right on the sheet (bullets travel left; the spray faces travel). Feel-booth playback uses the sheet as drawn. Water uses the fx-water-proj cyan palette. Fire uses the flame orange/yellow palette. Display size is the authored 24px frame at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Feel-booth key 8 is fire and key 9 is water. fx-hit-electric is not in this wave.
 
 - group `bullet-hit` · 2 assets · frame 24x24 · key prefix `fx-hit-` · manifest [fx/bullet-hit/manifest.json](fx/bullet-hit/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `fx-hit-fire` | 4 | 24x24 | 8 | once | (0.5, 0.5) | Canonical fire bullet hit. Splash remake, fire recolor of the water motion (burst → droplets → fade). 4×24 @ 8 fps, once (0.5s, 125ms per frame). Sheet 96×24 is a transparent horizontal strip. Origin (0.5, 0.5) at the impact point. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Feel-booth key 8. Demo only — not wired into live combat. fx-hit-electric is not in this wave. |
-| `fx-hit-water` | 4 | 24x24 | 8 | once | (0.5, 0.5) | Canonical water bullet hit. Splash remake (burst → droplets → fade). 4×24 @ 8 fps, once (0.5s, 125ms per frame). Sheet 96×24 is a transparent horizontal strip. Origin (0.5, 0.5) at the impact point. Scale 1 (24px is bullet-adjacent). Blend ADD or NORMAL; the feel booth uses ADD at scale 1. Feel-booth key 9. Demo only — not wired into live combat. |
+| `fx-hit-fire` | 4 | 24x24 | 8 | once | (0.5, 0.5) | Canonical fire bullet hit. Burst travels left → right, flame orange/yellow palette. 4×24 @ 8 fps, once (0.5s). Sheet 96×24 is a horizontal strip. Origin (0.5, 0.5) at the impact point. Display size is the authored 24px frame. Feel-booth key 8 plays this sheet as drawn at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Demo only — not wired into live combat. fx-hit-electric is not in this wave. |
+| `fx-hit-water` | 4 | 24x24 | 8 | once | (0.5, 0.5) | Canonical water bullet hit. Burst travels left → right, fx-water-proj cyan palette. 4×24 @ 8 fps, once (0.5s). Sheet 96×24 is a horizontal strip. Origin (0.5, 0.5) at the impact point. Display size is the authored 24px frame. Feel-booth key 9 plays this sheet as drawn at scale 1. Blend ADD or NORMAL; the feel booth uses ADD. Demo only — not wired into live combat. |
 
 ### Shared Melee Slash (近身斬擊)
 
