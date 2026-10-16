@@ -88,9 +88,10 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
  * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
  * Key 1 and key 4 share a 40ms hitstop, white flash, and a 2px X
- * knockback. Key 4 also sprays impact sparks and plays `fx-slash-ninja`
- * at the body center and `sfx-slash-ninja`. Key 1 does not spray the
- * ranged spark cone.
+ * knockback. Key 4 also sprays impact sparks, plays the hurt sheet, and
+ * plays `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
+ * Key 1 does not spray sparks and does not play the hurt sheet (its
+ * first frame bakes a yellow crescent on the right of the body).
  * Keys 5–9 only preview this wave's catalog sheets (`fx-slash-enemy-red`,
  * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`)
  * at the chest. Ally-white and the DoT use NORMAL blend.
@@ -560,8 +561,9 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Ranged (key 1) or melee (key 4). Same hitstop, flash, and 2px X
-   * knockback. Melee also sprays sparks and plays `fx-slash-ninja` at
-   * the body center and `sfx-slash-ninja`. Key 1 does not spray sparks.
+   * knockback. Melee also sprays sparks, plays the hurt sheet, and plays
+   * `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
+   * Key 1 does not spray sparks and does not play the hurt sheet.
    * @param {boolean} melee
    */
   _feelStrike(melee) {
@@ -578,6 +580,7 @@ export default class StageScene extends Phaser.Scene {
       feel: true,
       kind: 'feel',
       flashMs: FEEL_HIT_FLASH_MS,
+      hurtStrip: melee === true,
     });
     const tag = melee ? '4 melee' : '1 hit';
     this._setFeelHint(z.alive ? tag : `${melee ? '4' : '1'} die — R reset`);

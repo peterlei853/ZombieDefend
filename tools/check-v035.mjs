@@ -26,6 +26,10 @@
  * is one frame earlier. Peter’s hub stays `/sandbox/`.
  * Key 5's `fx-slash-enemy-red` is the chest-centered 4×72 strip
  * (288×72, atlas pivot 0.5/0.5). Keys 1 and 6–9 stay put.
+ * v0.35.7: key 1 also skips the hurt sheet. Frame 0 of that sheet bakes
+ * a yellow crescent on the right of the body, which still showed after
+ * the rectangle cone was removed. Hitstop, white flash, and 2px knock
+ * stay. Key 4 still sprays sparks and still plays the hurt sheet.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -109,8 +113,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.6' && APP_VERSION === '0.35.6', 'package and APP_VERSION are 0.35.6');
-assert(html.includes('v0.35.6'), 'document title is v0.35.6');
+assert(pkg.version === '0.35.7' && APP_VERSION === '0.35.7', 'package and APP_VERSION are 0.35.7');
+assert(html.includes('v0.35.7'), 'document title is v0.35.7');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -203,6 +207,8 @@ assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
 assert(hitFn.includes('_feelStrike(true)'), 'key 4 is the melee strike');
 assert(hitFn.includes('playFeelImpact'), 'strikes share the impact helper');
 assert(hitFn.includes('flashMs: FEEL_HIT_FLASH_MS'), 'feel flash is the 40ms override');
+assert(hitFn.includes('hurtStrip: melee === true'), 'only melee opts into the hurt sheet');
+assert(!hitFn.includes('_playHurtStrip'), 'the strike does not play the hurt sheet itself');
 assert(!hitFn.includes('fx-hit-water-burst') && !hitFn.includes('_playFeelHitBurst'), 'key 1 does not play the water burst');
 assert(!stageSrc.includes('fx-hit-water-burst') && !stageSrc.includes('FEEL_HIT_BURST'), 'stage does not reference the water burst');
 assert(stageSrc.includes('KeyCodes.FOUR'), 'key 4 is installed');
@@ -299,6 +305,9 @@ assert(ranged === true && spawned.length === rangedSpawned, 'key 1 still spawns 
 assert(sparks === sparksBeforeRanged, 'key 1 does not spray the yellow spark cone');
 assert(slashCues.length === 2, 'key 1 does not play the slash cue');
 assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
+const damageFn = zombieSrc.slice(zombieSrc.indexOf('takeDamage(amount'), zombieSrc.indexOf('\n  playShowcaseStrip'));
+assert(damageFn.includes('hit.hurtStrip === true'), 'the hurt sheet plays only when melee opts in');
+assert(!damageFn.includes('if (scripted) this._playHurtStrip()'), 'ranged feel does not always play the hurt sheet');
 
 const WAVE_KEYS = [
   'fx-slash-enemy-red',
