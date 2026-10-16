@@ -60,6 +60,9 @@ export const GAME_AUDIO = [
   { key: 'bgm-stage', url: 'assets/audio/bgm-stage.mp3' },
   { key: 'bgm-shop', url: 'assets/audio/bgm-shop.mp3' },
   { key: 'bgm-victory', url: 'assets/audio/bgm-victory.mp3' },
+  // Peter-locked chiptune candidates. Catalog only — they do not replace bgm-stage.
+  { key: 'bgm-stage-chiptune-G', url: 'assets/audio/bgm-stage-chiptune-G.mp3' },
+  { key: 'bgm-boss-chiptune-H', url: 'assets/audio/bgm-boss-chiptune-H.mp3' },
   { key: 'shoot-sling', url: 'assets/audio/shoot-sling.mp3' },
   { key: 'shoot-bubble', url: 'assets/audio/shoot-bubble.mp3' },
   { key: 'shoot-lightning', url: 'assets/audio/shoot-lightning.mp3' },
@@ -92,6 +95,80 @@ export const GAME_AUDIO = [
   { key: 'exp-orb-pickup', url: 'assets/audio/exp-orb-pickup.mp3' },
   { key: 'pet-evolve', url: 'assets/audio/pet-evolve.mp3' },
   { key: 'skill-telegraph', url: 'assets/audio/skill-telegraph.mp3' },
+  // Enemy showcase copies. Same keys as enemySfxClips(). Catalog only —
+  // feel-booth playback still loads assets/sfx/enemies.
+  { key: 'sfx-enemy-office-worker-v2-hit', url: 'assets/audio/sfx-enemy-office-worker-v2-hit.mp3' },
+  { key: 'sfx-enemy-office-worker-v2-hurt', url: 'assets/audio/sfx-enemy-office-worker-v2-hurt.mp3' },
+  { key: 'sfx-enemy-office-worker-v2-die', url: 'assets/audio/sfx-enemy-office-worker-v2-die.mp3' },
+  { key: 'sfx-enemy-delivery-hit', url: 'assets/audio/sfx-enemy-delivery-hit.mp3' },
+  { key: 'sfx-enemy-delivery-hurt', url: 'assets/audio/sfx-enemy-delivery-hurt.mp3' },
+  { key: 'sfx-enemy-delivery-die', url: 'assets/audio/sfx-enemy-delivery-die.mp3' },
+  { key: 'sfx-enemy-chef-hit', url: 'assets/audio/sfx-enemy-chef-hit.mp3' },
+  { key: 'sfx-enemy-chef-hurt', url: 'assets/audio/sfx-enemy-chef-hurt.mp3' },
+  { key: 'sfx-enemy-chef-die', url: 'assets/audio/sfx-enemy-chef-die.mp3' },
+  { key: 'sfx-enemy-nurse-hit', url: 'assets/audio/sfx-enemy-nurse-hit.mp3' },
+  { key: 'sfx-enemy-nurse-hurt', url: 'assets/audio/sfx-enemy-nurse-hurt.mp3' },
+  { key: 'sfx-enemy-nurse-die', url: 'assets/audio/sfx-enemy-nurse-die.mp3' },
+  { key: 'sfx-enemy-nurse-skill-attach', url: 'assets/audio/sfx-enemy-nurse-skill-attach.mp3' },
+  { key: 'sfx-enemy-brute-hit', url: 'assets/audio/sfx-enemy-brute-hit.mp3' },
+  { key: 'sfx-enemy-brute-hurt', url: 'assets/audio/sfx-enemy-brute-hurt.mp3' },
+  { key: 'sfx-enemy-brute-die', url: 'assets/audio/sfx-enemy-brute-die.mp3' },
+  { key: 'sfx-enemy-brute-skill-hurt_heavy', url: 'assets/audio/sfx-enemy-brute-skill-hurt_heavy.mp3' },
+  { key: 'sfx-enemy-brute-skill-part_break', url: 'assets/audio/sfx-enemy-brute-skill-part_break.mp3' },
+  { key: 'sfx-enemy-brute-skill-blasted_back', url: 'assets/audio/sfx-enemy-brute-skill-blasted_back.mp3' },
+  { key: 'sfx-enemy-brute-skill-defeated', url: 'assets/audio/sfx-enemy-brute-skill-defeated.mp3' },
+  { key: 'sfx-enemy-riot-hit', url: 'assets/audio/sfx-enemy-riot-hit.mp3' },
+  { key: 'sfx-enemy-riot-hurt', url: 'assets/audio/sfx-enemy-riot-hurt.mp3' },
+  { key: 'sfx-enemy-riot-die', url: 'assets/audio/sfx-enemy-riot-die.mp3' },
+  { key: 'sfx-enemy-riot-skill-armor_break', url: 'assets/audio/sfx-enemy-riot-skill-armor_break.mp3' },
+  { key: 'sfx-enemy-trashcan-hit', url: 'assets/audio/sfx-enemy-trashcan-hit.mp3' },
+  { key: 'sfx-enemy-trashcan-hurt', url: 'assets/audio/sfx-enemy-trashcan-hurt.mp3' },
+  { key: 'sfx-enemy-trashcan-die', url: 'assets/audio/sfx-enemy-trashcan-die.mp3' },
+  { key: 'sfx-enemy-trashcan-skill-break', url: 'assets/audio/sfx-enemy-trashcan-skill-break.mp3' },
+  { key: 'sfx-enemy-trashcan-skill-panic', url: 'assets/audio/sfx-enemy-trashcan-skill-panic.mp3' },
+  { key: 'sfx-enemy-sprinter-hit', url: 'assets/audio/sfx-enemy-sprinter-hit.mp3' },
+  { key: 'sfx-enemy-sprinter-hurt', url: 'assets/audio/sfx-enemy-sprinter-hurt.mp3' },
+  { key: 'sfx-enemy-sprinter-die', url: 'assets/audio/sfx-enemy-sprinter-die.mp3' },
+  { key: 'sfx-enemy-sprinter-skill-blasted_back', url: 'assets/audio/sfx-enemy-sprinter-skill-blasted_back.mp3' },
+  { key: 'sfx-enemy-sprinter-skill-tumble', url: 'assets/audio/sfx-enemy-sprinter-skill-tumble.mp3' },
+  { key: 'sfx-enemy-sprinter-skill-comedic_ko', url: 'assets/audio/sfx-enemy-sprinter-skill-comedic_ko.mp3' },
+  { key: 'sfx-enemy-slime-hit', url: 'assets/audio/sfx-enemy-slime-hit.mp3' },
+  { key: 'sfx-enemy-slime-hurt', url: 'assets/audio/sfx-enemy-slime-hurt.mp3' },
+  { key: 'sfx-enemy-slime-die', url: 'assets/audio/sfx-enemy-slime-die.mp3' },
+  { key: 'sfx-enemy-slime-skill-split', url: 'assets/audio/sfx-enemy-slime-skill-split.mp3' },
+  { key: 'sfx-enemy-slime-mini-hit', url: 'assets/audio/sfx-enemy-slime-mini-hit.mp3' },
+  { key: 'sfx-enemy-slime-mini-hurt', url: 'assets/audio/sfx-enemy-slime-mini-hurt.mp3' },
+  { key: 'sfx-enemy-slime-mini-die', url: 'assets/audio/sfx-enemy-slime-mini-die.mp3' },
+  { key: 'sfx-enemy-slime-mini-skill-splatter', url: 'assets/audio/sfx-enemy-slime-mini-skill-splatter.mp3' },
+  { key: 'sfx-enemy-exploder-hit', url: 'assets/audio/sfx-enemy-exploder-hit.mp3' },
+  { key: 'sfx-enemy-exploder-hurt', url: 'assets/audio/sfx-enemy-exploder-hurt.mp3' },
+  { key: 'sfx-enemy-exploder-die', url: 'assets/audio/sfx-enemy-exploder-die.mp3' },
+  { key: 'sfx-enemy-exploder-skill-explode', url: 'assets/audio/sfx-enemy-exploder-skill-explode.mp3' },
+  { key: 'sfx-enemy-cyborg-hit', url: 'assets/audio/sfx-enemy-cyborg-hit.mp3' },
+  { key: 'sfx-enemy-cyborg-hurt', url: 'assets/audio/sfx-enemy-cyborg-hurt.mp3' },
+  { key: 'sfx-enemy-cyborg-die', url: 'assets/audio/sfx-enemy-cyborg-die.mp3' },
+  { key: 'sfx-enemy-cyborg-skill-hurt_spark', url: 'assets/audio/sfx-enemy-cyborg-skill-hurt_spark.mp3' },
+  { key: 'sfx-enemy-cyborg-skill-fall', url: 'assets/audio/sfx-enemy-cyborg-skill-fall.mp3' },
+  { key: 'sfx-enemy-cyborg-skill-explode', url: 'assets/audio/sfx-enemy-cyborg-skill-explode.mp3' },
+  { key: 'sfx-enemy-clown-hit', url: 'assets/audio/sfx-enemy-clown-hit.mp3' },
+  { key: 'sfx-enemy-clown-hurt', url: 'assets/audio/sfx-enemy-clown-hurt.mp3' },
+  { key: 'sfx-enemy-clown-die', url: 'assets/audio/sfx-enemy-clown-die.mp3' },
+  { key: 'sfx-enemy-clown-skill-hurt_loot', url: 'assets/audio/sfx-enemy-clown-skill-hurt_loot.mp3' },
+  { key: 'sfx-enemy-clown-skill-loot_explode', url: 'assets/audio/sfx-enemy-clown-skill-loot_explode.mp3' },
+  { key: 'sfx-enemy-lava-balon-hit', url: 'assets/audio/sfx-enemy-lava-balon-hit.mp3' },
+  { key: 'sfx-enemy-lava-balon-hurt', url: 'assets/audio/sfx-enemy-lava-balon-hurt.mp3' },
+  { key: 'sfx-enemy-lava-balon-die', url: 'assets/audio/sfx-enemy-lava-balon-die.mp3' },
+  { key: 'sfx-enemy-lava-balon-skill-lava_slam', url: 'assets/audio/sfx-enemy-lava-balon-skill-lava_slam.mp3' },
+  { key: 'sfx-enemy-lava-balon-skill-volcanic_breath', url: 'assets/audio/sfx-enemy-lava-balon-skill-volcanic_breath.mp3' },
+  { key: 'sfx-enemy-lava-balon-skill-meteor_storm', url: 'assets/audio/sfx-enemy-lava-balon-skill-meteor_storm.mp3' },
+  { key: 'sfx-enemy-lava-balon-enrage', url: 'assets/audio/sfx-enemy-lava-balon-enrage.mp3' },
+  { key: 'sfx-enemy-steel-balam-hit', url: 'assets/audio/sfx-enemy-steel-balam-hit.mp3' },
+  { key: 'sfx-enemy-steel-balam-hurt', url: 'assets/audio/sfx-enemy-steel-balam-hurt.mp3' },
+  { key: 'sfx-enemy-steel-balam-die', url: 'assets/audio/sfx-enemy-steel-balam-die.mp3' },
+  { key: 'sfx-enemy-steel-balam-skill-ground_smash', url: 'assets/audio/sfx-enemy-steel-balam-skill-ground_smash.mp3' },
+  { key: 'sfx-enemy-steel-balam-skill-bio_acid_spit', url: 'assets/audio/sfx-enemy-steel-balam-skill-bio_acid_spit.mp3' },
+  { key: 'sfx-enemy-steel-balam-skill-steel_whirlwind', url: 'assets/audio/sfx-enemy-steel-balam-skill-steel_whirlwind.mp3' },
+  { key: 'sfx-enemy-steel-balam-enrage', url: 'assets/audio/sfx-enemy-steel-balam-enrage.mp3' },
 ];
 
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
@@ -140,7 +217,17 @@ export function preloadGameAudio(scene) {
   const loader = scene?.load;
   if (typeof loader?.audio !== 'function') return;
   const cache = scene.cache?.audio;
-  const clips = GAME_AUDIO.concat(enemySfxClips());
+  // Showcase keys are listed twice: GAME_AUDIO (assets/audio) and
+  // enemySfxClips() (assets/sfx/enemies). Queue the live URL once so the
+  // catalog copy does not race the feel-booth cue.
+  const liveByKey = new Map(enemySfxClips().map((clip) => [clip.key, clip]));
+  const seen = new Set();
+  const clips = [];
+  for (const clip of GAME_AUDIO.concat(enemySfxClips())) {
+    if (seen.has(clip.key)) continue;
+    seen.add(clip.key);
+    clips.push(liveByKey.get(clip.key) || clip);
+  }
   for (const clip of clips) {
     if (typeof cache?.exists === 'function' && cache.exists(clip.key)) continue;
     loader.audio(clip.key, clip.url);

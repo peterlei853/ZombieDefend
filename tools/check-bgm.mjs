@@ -6,7 +6,7 @@
  * game-over sting and before the victory bed. Main's ult / exp / melee
  * preload stays; this pass does not add wave, shout, or shop cues.
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { debugBgmEnabled } from '../src/debugBgm.js';
 import {
   AUDIO_VOLUME,
@@ -36,8 +36,30 @@ for (const key of BEDS) {
   assert(row?.url === `assets/audio/${key}.mp3`, `${key} preloads from its filename`);
 }
 
+const audioNames = readdirSync(new URL('../assets/audio/', import.meta.url))
+  .filter((name) => name.endsWith('.mp3'))
+  .sort();
+const audioKeys = GAME_AUDIO.map((clip) => clip.key);
+assert(new Set(audioKeys).size === audioKeys.length, 'GAME_AUDIO keys are unique');
+assert(audioNames.length === GAME_AUDIO.length, `assets/audio (${audioNames.length}) matches GAME_AUDIO (${GAME_AUDIO.length})`);
+for (const name of audioNames) {
+  const key = name.slice(0, -4);
+  const row = GAME_AUDIO.find((clip) => clip.key === key);
+  assert(row?.url === `assets/audio/${name}`, `${name} is registered at its basename`);
+}
+for (const clip of GAME_AUDIO) {
+  assert(audioNames.includes(`${clip.key}.mp3`), `${clip.key} file is in assets/audio`);
+  assert(clip.url === `assets/audio/${clip.key}.mp3`, `${clip.key} url is assets/audio/<key>.mp3`);
+}
+assert(
+  GAME_AUDIO.some((clip) => clip.key === 'bgm-stage-chiptune-G')
+    && GAME_AUDIO.some((clip) => clip.key === 'bgm-boss-chiptune-H'),
+  'chiptune candidates are cataloged beside the live beds'
+);
+
 assert(AUDIO_VOLUME.bgm === 0.28, 'BGM volume is 0.28');
 assert(BGM_TITLE_KEY === 'bgm-title' && BGM_KEY === 'bgm-stage', 'title and stage keys');
+assert(BGM_KEY !== 'bgm-stage-chiptune-G' && BGM_KEY !== 'bgm-boss-chiptune-H', 'chiptune candidates are not the live stage bed');
 assert(BGM_SHOP_KEY === 'bgm-shop' && BGM_VICTORY_KEY === 'bgm-victory', 'shop and victory keys');
 
 const NOT_THIS_PASS = [
