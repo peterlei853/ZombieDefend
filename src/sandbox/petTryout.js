@@ -93,6 +93,73 @@ function bodyScale(scene, key, form) {
 }
 
 /**
+ * Ground-ring width tracks the form body. The old 360/frameWidth sheet
+ * stood on the pet as a poster.
+ * @param {string} form
+ * @param {number} frameWidth
+ */
+export function groundRingScale(form, frameWidth) {
+  const body = BODY_PX[form] || BODY_PX.baby;
+  const width = frameWidth > 0 ? frameWidth : 85;
+  return (body * 1.5) / width;
+}
+
+/** @type {Map<string, number>} */
+const paintedBottomCache = new Map();
+
+/**
+ * Lowest opaque row as a fraction of frame height. Appearance and
+ * skill-aoe sheets pad under the painted feet, so catalog origin y = 1
+ * plants the empty margin on the lane.
+ * @param {Phaser.Scene} scene
+ * @param {string} key
+ */
+function paintedBottom(scene, key) {
+  if (paintedBottomCache.has(key)) return paintedBottomCache.get(key);
+  let fraction = 1;
+  try {
+    const texture = scene.textures.get(key);
+    const source = texture?.getSourceImage?.();
+    const names = texture?.getFrameNames?.() || [];
+    const frames = names.length ? names.map((name) => texture.get(name)) : [texture.get()];
+    let lowest = 0;
+    let height = 1;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    for (const frame of frames) {
+      const fw = frame?.width || 0;
+      const fh = frame?.height || 0;
+      if (!fw || !fh || !ctx || !source) continue;
+      height = fh;
+      canvas.width = fw;
+      canvas.height = fh;
+      ctx.clearRect(0, 0, fw, fh);
+      ctx.drawImage(source, frame.cutX || 0, frame.cutY || 0, fw, fh, 0, 0, fw, fh);
+      const data = ctx.getImageData(0, 0, fw, fh).data;
+      for (let y = fh - 1; y >= 0; y -= 1) {
+        let hit = false;
+        const row = y * fw * 4;
+        for (let x = 0; x < fw; x += 1) {
+          if (data[row + x * 4 + 3] > 16) {
+            hit = true;
+            break;
+          }
+        }
+        if (hit) {
+          if (y + 1 > lowest) lowest = y + 1;
+          break;
+        }
+      }
+    }
+    if (height > 0 && lowest > 0) fraction = lowest / height;
+  } catch (_) {
+    fraction = 1;
+  }
+  paintedBottomCache.set(key, fraction);
+  return fraction;
+}
+
+/**
  * @param {{ x: number, y: number, scaleY?: number, scaleX?: number }} sprite
  * @param {number} frameX
  * @param {number} frameY
@@ -240,7 +307,7 @@ export default class PetTryoutScene extends Phaser.Scene {
     this.pet.setPosition(PET_X, GROUND_Y);
     const appearance = tryoutStrip(this.petId, this.form, 'appearance');
     if (this.textures.exists(appearance)) {
-      this._pose(appearance);
+      this._pose(appearance, this.form, { matchIdle: true });
       this.time.delayedCall(560, () => {
         if (token !== this.token || !this.out) return;
         this._poseIdle();
@@ -452,9 +519,10 @@ export default class PetTryoutScene extends Phaser.Scene {
   /**
    * @param {string} key
    * @param {string} [form]
+   * @param {{ matchIdle?: boolean }} [opts]
    */
-  _pose(key, form = this.form) {
-    return this._playKey(key, (libraryAsset(this, key)?.frames || 1) > 1 ? key : '', form);
+  _pose(key, form = this.form, opts = {}) {
+    return this._playKey(key, (libraryAsset(this, key)?.frames || 1) > 1 ? key : '', form, opts);
   }
 
   _poseIdle() {
@@ -469,15 +537,19 @@ export default class PetTryoutScene extends Phaser.Scene {
    * @param {string} textureKey
    * @param {string} animKey
    * @param {string} form
+   * @param {{ matchIdle?: boolean }} [opts]
    */
-  _playKey(textureKey, animKey, form) {
+  _playKey(textureKey, animKey, form, opts = {}) {
     const asset = libraryAsset(this, textureKey);
     if (!this.textures.exists(textureKey)) return false;
+    const idleKey = tryoutStrip(this.petId, form, 'idle');
+    const scaleKey = opts.matchIdle && this.textures.exists(idleKey) ? idleKey : textureKey;
     this.pet.setVisible(true);
     this.pet.setTexture(textureKey);
     const origin = asset?.origin || [0.5, 1];
-    this.pet.setOrigin(origin[0], origin[1]);
-    this.pet.setScale(bodyScale(this, textureKey, form));
+    const feet = opts.matchIdle ? paintedBottom(this, textureKey) : origin[1];
+    this.pet.setOrigin(origin[0], feet);
+    this.pet.setScale(bodyScale(this, scaleKey, form));
     this.pet.setFlipX(false);
     this.pet.setY(GROUND_Y);
     if (animKey && this.anims.exists(animKey)) playLibraryAnim(this.pet, animKey, this);
@@ -545,10 +617,9 @@ export default class PetTryoutScene extends Phaser.Scene {
     const key = tryoutStrip(this.petId, this.form, 'skill-aoe');
     if (!this.textures.exists(key)) return;
     const asset = libraryAsset(this, key);
-    const sprite = this.add.sprite(this.pet.x, this.pet.y, key);
-    const origin = asset?.origin || [0.5, 1];
-    sprite.setOrigin(origin[0], origin[1]);
-    sprite.setScale(360 / (asset?.frameWidth || 85));
+    const sprite = this.add.sprite(this.pet.x, GROUND_Y, key);
+    sprite.setOrigin(0.5, paintedBottom(this, key));
+    sprite.setScale(groundRingScale(this.form, asset?.frameWidth || 85));
     sprite.setBlendMode(Phaser.BlendModes.ADD);
     sprite.setDepth(9);
     playLibraryAnim(sprite, key, this);
@@ -783,7 +854,8 @@ export default class PetTryoutScene extends Phaser.Scene {
     const origin = asset?.origin || [0.5, 0.92];
     sprite.setOrigin(origin[0], origin[1]);
     sprite.setScale(320 / (asset?.frameHeight || 128));
-    sprite.setDepth(30);
+    sprite.setAlpha(0.72);
+    sprite.setDepth(11);
     this.live.push(sprite);
     playLibraryAnim(sprite, key, this);
     let flashed = !onFlash;
