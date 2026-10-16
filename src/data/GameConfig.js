@@ -129,10 +129,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * white stroke reads on the bright lane. Nurse and lava-balon attack
  * contact is one frame earlier. Peter’s element hub is `/sandbox/`.
  * Gold, saves, barricade physics, wave tables, and the camera stay put.
+ * v0.35.7 keeps those freezes. Key 1 also skips the hurt sheet. That
+ * sheet's first frame bakes a yellow crescent on the right of the body,
+ * which still flashed after the rectangle cone was removed. Hitstop,
+ * white flash, and the 2px knock stay. Key 4 still sprays sparks and
+ * still plays the hurt sheet. Gold, saves, barricade physics, wave
+ * tables, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.6';
+export const APP_VERSION = '0.35.7';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

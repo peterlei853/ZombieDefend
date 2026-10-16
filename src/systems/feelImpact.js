@@ -8,7 +8,8 @@ import { playLibraryFx } from '../assets/libraryAssets.js';
  * Key 1 and key 4 share a 40ms monster hitstop, a 40ms white flash
  * (applied by the caller via flashMs), and a 2px X shove along the shot
  * (player → enemy, west by default). Key 4 also sprays 8–12 sparks.
- * Key 1 does not: the ranged yellow cone is cancelled.
+ * Key 1 does not plan or spawn a spark, cone, crescent, or hurt sheet.
+ * The hurt sheet is melee-only (`hurtStrip: true` on takeDamage).
  * Key 4 plays `fx-slash-ninja` at the body center, rotation 0, and
  * `sfx-slash-ninja` through `SoundManager.playFeelMeleeSlash`.
  * `fx-slash-overhead` stays cancelled, and a rotated `fx-slash` is not

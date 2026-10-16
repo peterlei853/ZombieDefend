@@ -706,7 +706,9 @@ export class Zombie {
 
   /**
    * @param {number} amount
-   * @param {{ kind?: string, feel?: boolean, flashMs?: number }} [hit]
+   * @param {{ kind?: string, feel?: boolean, flashMs?: number, hurtStrip?: boolean }} [hit]
+   * `hurtStrip` must be exactly true. Ranged feel hits leave it off so the
+   * hurt sheet's baked yellow crescent never plays. Melee opts in.
    * @returns {boolean} true if killed
    */
   takeDamage(amount, hit = {}) {
@@ -732,7 +734,7 @@ export class Zombie {
     if (amount > 0) {
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
       else this.scene.audio?.playZombieHurt();
-      if (scripted) this._playHurtStrip();
+      if (scripted && hit.hurtStrip === true) this._playHurtStrip();
     }
     return false;
   }
