@@ -20,7 +20,9 @@
  * and 2px knockback stay. Keys 5–9 preview catalog FX only
  * (`fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot`,
  * `fx-hit-fire`, `fx-hit-water`, 4×24 @ 8 fps, drawn left → right). No damage. Key 7 plays the
- * cataloged `sfx-slash-dot` default. The other four previews stay silent.
+ * cataloged `sfx-slash-dot` default. Keys 5, 6, 8, and 9 play booth preview
+ * cues (`sfx-slash-enemy`, `sfx-slash-ally`, `sfx-hit-fire`, `sfx-hit-water`).
+ * Combat does not.
  * v0.35.6: key 1 drops the ranged spark cone. Keys 5–9 stay on the chest.
  * Ally-white and the DoT use NORMAL blend. Nurse and lava-balon contact
  * is one frame earlier. Peter’s hub stays `/sandbox/`.
@@ -411,10 +413,33 @@ assert(redIndexed?.frames === 4 && redIndexed.frameWidth === 72 && redIndexed.fr
 assert(!weaponSrc.includes("'fx-slash-enemy-red'") && !weaponSrc.includes('"fx-slash-enemy-red"'), 'live combat does not spawn the enemy red slash');
 assert(GAME_AUDIO.some((clip) => clip.key === 'sfx-slash-dot' && clip.url === 'assets/audio/sfx-slash-dot.mp3'), 'sfx-slash-dot stays the cataloged default');
 assert(existsSync(new URL('../assets/audio/sfx-slash-dot.mp3', import.meta.url)), 'sfx-slash-dot default is the audio-pack file');
-const dotFn = soundSrc.slice(soundSrc.indexOf('playFeelDotTick()'), soundSrc.indexOf('playZombieHurt()'));
+const dotFn = soundSrc.slice(soundSrc.indexOf('playFeelDotTick()'), soundSrc.indexOf('playFeelEnemySlash()'));
 assert(dotFn.includes("this._cue('sfx-slash-dot', 0.28)"), 'dot tick plays the default under the melee volume');
 assert(!dotFn.includes('sfx-slash-dot-a') && !dotFn.includes('sfx-slash-dot-b'), 'the booth tick uses the default take');
+assert(!dotFn.includes('AUDIO_COOLDOWN_MS'), 'the booth tick stays on the default take without a new cooldown');
 assert(feelSrc.includes('playFeelDotTick'), 'the dot preview asks SoundManager for the cataloged tick');
+const BOOTH_CUES = [
+  ['playFeelEnemySlash()', 'sfx-slash-enemy', '0.3'],
+  ['playFeelAllySlash()', 'sfx-slash-ally', '0.3'],
+  ['playFeelFireHit()', 'sfx-hit-fire', '0.28'],
+  ['playFeelWaterHit()', 'sfx-hit-water', '0.28'],
+];
+for (const [fn, cue, volume] of BOOTH_CUES) {
+  assert(GAME_AUDIO.some((clip) => clip.key === cue && clip.url === `assets/audio/${cue}.mp3`), `${cue} is cataloged in GAME_AUDIO`);
+  assert(existsSync(new URL(`../assets/audio/${cue}.mp3`, import.meta.url)), `${cue} file is in assets/audio`);
+  const start = soundSrc.indexOf(fn);
+  const body = soundSrc.slice(start, soundSrc.indexOf('\n  }', start));
+  assert(start > soundSrc.indexOf('playFeelDotTick()') && body.includes(`this._cue('${cue}', ${volume}, AUDIO_COOLDOWN_MS.hit)`), `${fn} cues ${cue} at ${volume} on the hit cooldown`);
+  assert(feelSrc.includes(fn.slice(0, -2)), `the ${cue} preview asks SoundManager for ${fn}`);
+}
+assert(!weaponSrc.includes('playFeelEnemySlash') && !weaponSrc.includes('playFeelAllySlash'), 'live combat does not play the booth slashes');
+assert(!weaponSrc.includes('playFeelFireHit') && !weaponSrc.includes('playFeelWaterHit'), 'live combat does not play the booth hits');
+assert(!weaponSrc.includes('sfx-slash-enemy') && !weaponSrc.includes('sfx-slash-ally'), 'live combat does not name the booth slash cues');
+assert(!weaponSrc.includes('sfx-hit-fire') && !weaponSrc.includes('sfx-hit-water'), 'live combat does not name the booth hit cues');
+assert(!feelSrc.includes('The other four previews stay silent'), 'wave previews are no longer documented as silent');
+assert(!stageSrc.includes('Keys 5, 6, 8, and 9 stay silent'), 'stage comments no longer call keys 5, 6, 8, and 9 silent');
+assert(stageSrc.includes('sfx-slash-enemy') && stageSrc.includes('sfx-slash-ally'), 'stage comments name the slash previews');
+assert(stageSrc.includes('sfx-hit-fire') && stageSrc.includes('sfx-hit-water'), 'stage comments name the hit previews');
 assert(stageSrc.includes('5 RED') && stageSrc.includes('9 WATER'), 'feel booth chips list the five previews');
 assert(stageSrc.includes('wave:fire') && stageSrc.includes('wave:water'), 'keys 8 and 9 are the bullet hits');
 const waveFn = stageSrc.slice(stageSrc.indexOf('\n  _feelWave(id) {'), stageSrc.indexOf('\n  _playHeroFeel(kind) {'));
@@ -444,6 +469,10 @@ const waveBooth = {
   audio: {
     playFeelMeleeSlash() { waveAudio.push('slash'); },
     playFeelDotTick() { waveAudio.push('sfx-slash-dot'); },
+    playFeelEnemySlash() { waveAudio.push('sfx-slash-enemy'); },
+    playFeelAllySlash() { waveAudio.push('sfx-slash-ally'); },
+    playFeelFireHit() { waveAudio.push('sfx-hit-fire'); },
+    playFeelWaterHit() { waveAudio.push('sfx-hit-water'); },
     playEnemyCue() { waveAudio.push('enemy'); },
   },
 };
@@ -470,7 +499,7 @@ assert(waveSpawned.map((row) => row.blend).join() === 'ADD,NORMAL,NORMAL,ADD,ADD
 assert(waveSpawned.every((row) => row.depth === 3 + FEEL_WAVE_DEPTH_BIAS), 'wave previews draw above the body');
 assert(feelWaveBlendName('ally-white') === 'NORMAL' && feelWaveBlendName('dot') === 'NORMAL', 'thin white names NORMAL');
 assert(feelWaveBlendName('enemy-red') === 'ADD' && feelWaveBlendName('fire') === 'ADD', 'colored hits stay ADD');
-assert(waveAudio.join() === 'sfx-slash-dot', 'only the dot preview plays sfx-slash-dot');
+assert(waveAudio.join() === 'sfx-slash-enemy,sfx-slash-ally,sfx-slash-dot,sfx-hit-fire,sfx-hit-water', 'keys 5–9 play their booth preview cues');
 const shortBody = { active: true, x: 400, y: 240, depth: 3, displayHeight: 64, scaleX: 1 };
 assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'enemy-red')?.active !== false, 'a short unit still previews');
 assert(waveSpawned.at(-1).scale === 0.5 && waveSpawned.at(-1).key === 'fx-slash-enemy-red', 'a 64px unit scales the slash to 0.5');
@@ -479,10 +508,14 @@ assert(waveSpawned.at(-1).scale === 0.25, 'a 64px unit scales the dot to 0.25');
 assert(waveAudio.filter((cue) => cue === 'sfx-slash-dot').length === 2, 'a second dot preview plays the tick again');
 assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'fire'), 'a short unit previews fire at scale 1');
 assert(waveSpawned.at(-1).scale === 1 && waveSpawned.at(-1).key === 'fx-hit-fire', 'fire stays scale 1');
-assert(waveAudio.filter((cue) => cue === 'sfx-slash-dot').length === 2 && !waveAudio.includes('slash'), 'fire and the slashes stay silent');
+assert(waveAudio.filter((cue) => cue === 'sfx-slash-enemy').length === 2, 'a second enemy-red preview plays the slash again');
+assert(waveAudio.filter((cue) => cue === 'sfx-hit-fire').length === 2, 'a second fire preview plays the hit again');
+assert(waveAudio.filter((cue) => cue === 'sfx-slash-ally').length === 1 && waveAudio.filter((cue) => cue === 'sfx-hit-water').length === 1, 'ally and water play once with the first pass');
+assert(!waveAudio.includes('slash') && !waveAudio.includes('enemy'), 'wave previews do not play the ninja slash or enemy showcase cues');
 assert(playFeelWaveFx(waveBooth, waveZombie, 'missing') == null, 'an unknown demo id spawns nothing');
 const quietBooth = { ...waveBooth, textures: { exists: () => false } };
 assert(playFeelWaveFx(quietBooth, waveZombie, 'water') == null, 'a missing water sheet spawns nothing');
+assert(waveAudio.filter((cue) => cue === 'sfx-hit-water').length === 1, 'a missing water sheet does not play the hit');
 
 const hurtFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHurt() {'), stageSrc.indexOf('\n  _onFeelAttackHit() {'));
 const onHitFn = stageSrc.slice(stageSrc.indexOf('\n  _onFeelAttackHit() {'), stageSrc.indexOf('\n  _feelSkill() {'));

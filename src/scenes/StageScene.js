@@ -96,8 +96,10 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`)
  * at the chest. Ally-white and the DoT use NORMAL blend.
  * Keys 8 and 9 play the 4×24 bullet hits as drawn (left → right, 8 fps).
- * Those previews do not deal damage. Key 7 also plays the cataloged
- * `sfx-slash-dot` default. Keys 5, 6, 8, and 9 stay silent.
+ * Those previews do not deal damage. Key 5 plays `sfx-slash-enemy`,
+ * key 6 plays `sfx-slash-ally`, key 7 plays the cataloged `sfx-slash-dot`
+ * default, key 8 plays `sfx-hit-fire`, and key 9 plays `sfx-hit-water`.
+ * Those cues are feel-booth previews only.
  * Key 2 plays the attack strip, then `player-girl-hurt` and the hurt cue
  * on that strip's hit frame. Feel without a known enemy does nothing.
  * Gold, saves, barricade HP, and the wave tables stay put. The camera
@@ -440,8 +442,10 @@ export default class StageScene extends Phaser.Scene {
    * `?feel=1` with a known `?enemy=`. 1 is a ranged hit, 2 plays their
    * attack and the hero hurt on the attack hit frame, 3 cycles skill
    * strips, 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns.
-   * Keys 5–9 preview catalog FX only (no damage). Key 7 plays `sfx-slash-dot`.
-   * Weapons stay quiet
+   * Keys 5–9 preview catalog FX only (no damage). Key 5 plays
+   * `sfx-slash-enemy`, key 6 plays `sfx-slash-ally`, key 7 plays
+   * `sfx-slash-dot`, key 8 plays `sfx-hit-fire`, and key 9 plays
+   * `sfx-hit-water`. Weapons stay quiet
    * so the booth is the only thing that lands a blow.
    */
   _installEnemyFeel() {
