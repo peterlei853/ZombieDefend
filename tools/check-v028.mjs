@@ -35,7 +35,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.35.7', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.35.9', `APP_VERSION ${APP_VERSION}`);
 assert(getGoldByHP(40) === 10 && getGoldByHP(105) === 15 && getGoldByHP(165) === 20, 'gold-by-HP unchanged');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP unchanged');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'wave counts unchanged');
@@ -52,7 +52,9 @@ assert(!STAGE_ROSTER.includes('office-worker'), 'old office skin is not in the r
 assert(rosterForStage(99).length === STAGE_ROSTER.length, 'later stages stay a mix, capped by the catalog list');
 
 const defs1 = waveDefsForStage(1);
-assert(defs1[0].archetypes[0].hp === 40 && defs1[0].archetypes[0].speed === 32 && defs1[0].archetypes[0].dps === 4, 'stamped row keeps wave 1 numbers');
+assert(defs1[0].archetypes[0].hp === 40 && defs1[0].archetypes[0].speed === 32 && defs1[0].archetypes[0].dps === 3, 'stamped row keeps wave 1 numbers');
+assert(WAVE_DEFS.slice(0, 3).map((wave) => wave.archetypes[0].dps).join() === '3,5,8', 'waves 1–3 contact DPS is 3/5/8');
+assert(WAVE_DEFS[3].archetypes.map((row) => row.dps).join() === '11,16,20', 'wave 4 DPS mix is unchanged');
 assert(defs1[0].archetypes[0].skins.join() === stage1.join(), 'stage 1 waves carry the three skins');
 assert(waveDefsForStage(2)[0].archetypes[0].skins.join() === stage2.join(), 'stage 2 waves carry four skins');
 

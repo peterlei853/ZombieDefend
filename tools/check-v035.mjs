@@ -32,6 +32,8 @@
  * a yellow crescent on the right of the body, which still showed after
  * the rectangle cone was removed. Hitstop, white flash, and 2px knock
  * stay. Key 4 still sprays sparks and still plays the hurt sheet.
+ * v0.35.9: feel booth unchanged. Stage 1 waves 1–3 contact DPS is 3/5/8.
+ * Wave totals, HP, barricade, gold, and loudness stay put.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -115,8 +117,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.7' && APP_VERSION === '0.35.7', 'package and APP_VERSION are 0.35.7');
-assert(html.includes('v0.35.7'), 'document title is v0.35.7');
+assert(pkg.version === '0.35.9' && APP_VERSION === '0.35.9', 'package and APP_VERSION are 0.35.9');
+assert(html.includes('v0.35.9'), 'document title is v0.35.9');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
