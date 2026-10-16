@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZombieDefend · Pet try-out</title>
+<!--
+  Repo-root base so catalog paths (assets/…) resolve on /sandbox/pet.html,
+  including GitHub Pages. Script and hub links are written against that root.
+-->
+<base href="../">
+<style>
+:root{--bg:#0f1218;--panel:#171b23;--panel2:#1e2430;--line:#2a3140;--text:#e6ebf2;--muted:#8d99ab;--accent:#7bd88f;--accent2:#ffb454}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+a{color:var(--accent)}
+header{border-bottom:1px solid var(--line);padding:16px 20px 12px}
+main{max-width:1100px;margin:0 auto;padding:8px 20px 32px}
+h1{font-size:22px;margin:0 0 6px}
+h1 span{color:var(--accent)}
+p{margin:0 0 10px}
+.lede,.note{color:var(--muted)}
+#pet-status{min-height:1.5em;margin:0 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+button{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;cursor:pointer}
+button:hover,button.on{border-color:var(--accent);color:var(--accent)}
+#game-host{height:min(560px,62vh);min-height:320px;background:#101610;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.keys{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px}
+.keys th,.keys td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.keys tr:last-child th,.keys tr:last-child td{border-bottom:0}
+.keys th{width:4.5rem;color:var(--accent2);font-weight:650}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+footer{color:var(--muted);font-size:12px;padding:8px 0}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>ZombieDefend <span>pet try-out</span></h1>
+  <p class="lede">Sandbox only. Send out, recall, claw, skill, and evolve. Stage combat is unchanged. Default pet is dragon. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
+</header>
+<main>
+  <p id="pet-status">Loading pet strips…</p>
+  <div class="row" id="pet-row">
+    <button type="button" data-pet="dragon" class="on">Dragon</button>
+    <button type="button" data-pet="phoenix">Phoenix</button>
+    <button type="button" data-pet="panda">Panda</button>
+    <button type="button" data-pet="lion">Lion</button>
+  </div>
+  <div class="row">
+    <button type="button" data-act="send">1 Send / recall</button>
+    <button type="button" data-act="attack">2 Attack</button>
+    <button type="button" data-act="skill">3 Skill</button>
+    <button type="button" data-act="evolve">4 Evolve</button>
+    <button type="button" data-act="reset">R Reset</button>
+  </div>
+  <div id="game-host"></div>
+  <table class="keys">
+    <tbody>
+      <tr><th>1</th><td>Send out or recall. Send-out shows <code>appearance</code>, then idle. Recall plays <code>sleep-start</code> and the sleep loop when that form has them.</td></tr>
+      <tr><th>2</th><td>Attack. Plays the form <code>claw</code> strip and <code>pet-melee-hit</code> plus <code>pet-knockback</code>. Ancient has no claw strip, so the melee cue still plays.</td></tr>
+      <tr><th>3</th><td>Skill. Plays that form’s cast strip and the FX named in <code>PET_SKILL_SPECS</code>. Baby and young also show <code>skill-aoe</code> when the sheet exists.</td></tr>
+      <tr><th>4</th><td>Evolve. Baby plays <code>evolve-from-baby</code>, <code>fx-pet-*-evolve</code>, and <code>pet-evolve</code>, then stands as young. Young plays the evolve FX and stands as ancient.</td></tr>
+      <tr><th>R</th><td>Reset this pet to baby, recalled.</td></tr>
+      <tr><th>[ ]</th><td>Previous or next pet. Dragon, phoenix, panda, lion.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Open <code>?pet=phoenix</code> (or panda, lion) to start on that line. Dummy numbers are a timing cue only.</p>
+  <footer>Does not write gold, saves, or barricade HP.</footer>
+</main>
+<script>
+window.__ZD_PET_PAINT = function (detail) {
+  var status = document.getElementById('pet-status');
+  if (status && detail && detail.text) status.textContent = detail.text;
+  document.querySelectorAll('[data-pet]').forEach(function (btn) {
+    btn.classList.toggle('on', btn.getAttribute('data-pet') === (detail && detail.id));
+  });
+};
+document.body.addEventListener('click', function (event) {
+  var pet = event.target.closest('[data-pet]');
+  var act = event.target.closest('[data-act]');
+  if (pet && window.__ZD_PET) window.__ZD_PET.pick(pet.getAttribute('data-pet'));
+  if (act && window.__ZD_PET) {
+    var name = act.getAttribute('data-act');
+    if (window.__ZD_PET[name]) window.__ZD_PET[name]();
+  }
+});
+window.addEventListener('keydown', function (event) {
+  if (event.repeat || !window.__ZD_PET) return;
+  var map = { '1': 'send', '2': 'attack', '3': 'skill', '4': 'evolve', r: 'reset', R: 'reset', '[': 'prev', ']': 'next' };
+  var name = map[event.key];
+  if (!name) return;
+  event.preventDefault();
+  window.__ZD_PET[name]();
+});
+</script>
+<script type="module" src="src/sandbox/petTryout.js"></script>
+</body>
+</html>

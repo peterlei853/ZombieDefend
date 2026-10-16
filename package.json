@@ -8,6 +8,7 @@
     "start": "npm run serve",
     "check:readout": "node tools/check-damage-readout.mjs",
     "check:pets": "node tools/check-pet-combat.mjs",
+    "check:pet-tryout": "node tools/check-pet-tryout.mjs",
     "check:bgm": "node tools/check-bgm.mjs",
     "check:v026": "node tools/check-v026.mjs",
     "check:hero": "node tools/check-hero-deploy.mjs",

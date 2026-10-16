@@ -35,7 +35,7 @@ footer{color:var(--muted);font-size:12px;padding:4px 0 8px}
 <body>
 <header>
   <h1>ZombieDefend <span>Peter sandbox</span></h1>
-  <p class="lede">Independent entry for feel and enemy try-outs. After Pages, this page is <code>/sandbox/</code>. The Tester booth stays the root query <code>/?enemy=…&amp;feel=1</code>. This page only links there. Gold, saves, and barricade physics are unchanged.</p>
+  <p class="lede">Independent entry for feel, enemy, and pet try-outs. After Pages, this page is <code>/sandbox/</code>. The Tester booth stays the root query <code>/?enemy=…&amp;feel=1</code>. The pet try-out is <code>/sandbox/pet.html</code>. Gold, saves, and barricade physics are unchanged.</p>
 </header>
 <main>
   <h2>Feel booth</h2>
@@ -79,14 +79,23 @@ footer{color:var(--muted);font-size:12px;padding:4px 0 8px}
     </a>
   </div>
 
-  <h2>Catalog only — not wired yet</h2>
+  <h2>Pet try-out</h2>
+  <p class="lede">Send out, recall, claw, skill, and evolve on a dummy lane. Stage pet combat stays off.</p>
+  <div class="cards">
+    <a class="card" href="pet.html">
+      <strong>Pet try-out <span class="badge">dragon</span></strong>
+      <span><code>/sandbox/pet.html</code> — 1 send/recall, 2 claw, 3 skill, 4 evolve, R reset. Phoenix, panda, and lion are on the page.</span>
+    </a>
+  </div>
+
+  <h2>Still off the stage</h2>
   <ul>
-    <li><strong>Pet wire.</strong> Baby v2 and young v0.35 <code>appearance</code>, <code>claw</code>, <code>skill-aoe</code>, and young <code>evolve-from-baby</code> stay in the catalog. Field pets still use the existing baby idle, move, skill, hurt, and sleep strips. Those new keys are not loaded into stage combat.</li>
+    <li><strong>Stage pet combat.</strong> Baby v2 and young <code>appearance</code>, <code>claw</code>, <code>skill-aoe</code>, and young <code>evolve-from-baby</code> stay out of stage combat. Field pets still use baby idle, move, skill, hurt, and sleep. The try-out above plays those strips and does not enable them on stage.</li>
     <li><strong>Combat feel map.</strong> Keys 5–9 only preview the catalog sheets. <code>fx-slash-enemy-red</code>, <code>fx-slash-ally-white</code>, <code>fx-slash-dot</code>, <code>fx-hit-fire</code>, and <code>fx-hit-water</code> are not wired into live combat. Key 4 stays the booth’s <code>fx-slash-ninja</code>.</li>
   </ul>
 
   <p class="note">Also: <a href="../">stage</a> · <a href="../assets/library/catalog.html">asset catalog</a></p>
-  <footer>Static hub. No gameplay, gold, save, or barricade change.</footer>
+  <footer>Hub only. The pet try-out is a separate page. Gold, saves, and barricade physics are unchanged.</footer>
 </main>
 </body>
 </html>
