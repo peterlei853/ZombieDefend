@@ -1,0 +1,119 @@
+{
+ "frames": [
+  {
+   "filename": "fx-slash-enemy 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 72,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 33
+  },
+  {
+   "filename": "fx-slash-enemy 1.png",
+   "frame": {
+    "x": 72,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 72,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 33
+  },
+  {
+   "filename": "fx-slash-enemy 2.png",
+   "frame": {
+    "x": 144,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 72,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 33
+  },
+  {
+   "filename": "fx-slash-enemy 3.png",
+   "frame": {
+    "x": 216,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 72,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 72,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 33
+  }
+ ],
+ "meta": {
+  "app": "2-PixelLab Bot chest-recenter",
+  "version": "1.1",
+  "image": "fx-slash-enemy-red.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 288,
+   "h": 72
+  },
+  "scale": "1"
+ }
+}

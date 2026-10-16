@@ -165,7 +165,7 @@ Shared combat FX, not hero-only, in `fx/melee/`. Peter approved these on 2026-10
 
 | Key | Display | Color | Direction | Frames | FPS | Fit | Sheet |
 |---|---|---|---|---|---|---|---|
-| `fx-slash-enemy-red` | 敵紅小斬 | red | top-left → bottom-right | 5 | 30 | 72×72 | 216×144, grid 3×2 |
+| `fx-slash-enemy-red` | 敵紅小斬 | red | top-left → bottom-right | 4 | 30 | 72×72 | 288×72 horizontal, pivot 0.5/0.5 |
 | `fx-slash-ally-white` | 友白小斬 | white | top-right → bottom-left | 5 | 30 | 71×70 | 213×140, grid 3×2 |
 | `fx-slash-dot` | 持續傷害小斬 | white X + amber sparks | cross | 4 | 20 | 30×30 | 60×60, grid 2×2 |
 
@@ -183,7 +183,7 @@ A 64px unit is 0.5×. Smaller units get a proportionally smaller slash. Do **not
 
 Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays per second.
 
-**Sheet layout.** These are **not** horizontal strips. Faction sheets are 3 columns × 2 rows: frame *i* is column `i % 3`, row `floor(i / 3)`. Frame 4 is blank, and the bottom-right cell is unused. The DoT sheet is 2×2 of 30×30: frame *i* is column `i % 2`, row `floor(i / 2)`. Frame 3 is blank. `load.spritesheet` with `frameWidth` / `frameHeight` already walks that order.
+**Sheet layout.** `fx-slash-enemy-red` is a horizontal strip: 4×72, sheet 288×72, frame *i* at `x = i * 72`. Atlas pivot and Phaser origin are **(0.5, 0.5)** (`fx/melee/fx-slash-enemy-red.json`). Each frame's stroke mass sits on that center, so feel-booth key 5 stays on the chest. `fx-slash-ally-white` is still a 3×2 grid: frame *i* is column `i % 3`, row `floor(i / 3)`. Frame 4 is blank, and the bottom-right cell is unused. The DoT sheet is 2×2 of 30×30: frame *i* is column `i % 2`, row `floor(i / 2)`. Frame 3 is blank. `load.spritesheet` with `frameWidth` / `frameHeight` walks both layouts.
 
 **Gameplay handoff (not wired into combat).** Enemy attacks play `fx-slash-enemy-red`. Ally / player melee plays `fx-slash-ally-white`. DoT / AoE ticks play `fx-slash-dot` on each hit target. Optional: reuse the existing SlashVFX + sector-hit scaffold with ADD blend. `sfx-slash-dot` (default take A) is already cataloged in the audio pack. Feel-booth key 7 plays it with the dot preview. This catalog does not add the clips again.
 
@@ -214,7 +214,7 @@ Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle`
 
 ## Canvas, origin and facing conventions
 
-Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* is at `x = i * frameWidth`, `y = 0`, and the PNG is exactly `frameWidth*frames × frameHeight`. A grid sheet is `frameWidth*cols × frameHeight*rows`, and frame *i* is column `i % cols`, row `floor(i / cols)`. The build script checks either layout. `fx-slash-enemy-red` and `fx-slash-ally-white` are 3×2 grids. `fx-slash-dot` is a 2×2 grid. The `origin` value is the Phaser `setOrigin(x, y)`.
+Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* is at `x = i * frameWidth`, `y = 0`, and the PNG is exactly `frameWidth*frames × frameHeight`. A grid sheet is `frameWidth*cols × frameHeight*rows`, and frame *i* is column `i % cols`, row `floor(i / cols)`. The build script checks either layout. `fx-slash-enemy-red` is a 4×72 horizontal strip. `fx-slash-ally-white` is a 3×2 grid. `fx-slash-dot` is a 2×2 grid. The `origin` value is the Phaser `setOrigin(x, y)`.
 
 | Category | Frame | Origin | Facing |
 |---|---|---|---|
