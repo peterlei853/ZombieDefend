@@ -139,8 +139,8 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * DPS is 3/5/8. Counts, speeds, windows, HP, wave 4, barricade max HP,
  * gold-by-HP, saves, and halt math stay put.
  * v0.36.2 removes the barricade bite's forward body lunge. Attack strips
- * play in place. Feel-booth hurt and the live wall flash land on frame 4
- * of each 8-frame attack sheet, the frame that starts at half the strip.
+ * play in place. Feel-booth hurt and the live wall flash land on Phaser
+ * frame 5 of each 8-frame attack sheet (texture cell 4, halfway through).
  * Gold, saves, barricade HP, wave DPS, and the camera stay put.
  */
 

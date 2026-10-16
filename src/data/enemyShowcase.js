@@ -115,46 +115,49 @@ export function enemySfxClips() {
 }
 
 /**
- * 0-based contact frame. Every catalog attack sheet is 8 frames at 10 fps
- * with no `timing.impactFrame` marker. Contact is the frame that starts at
- * half the strip: index `floor(8 / 2) === 4` (400 ms). Key 2 starts
- * `player-girl-hurt` and `sfx-enemy-<id>-hurt` on that frame. The live
- * barricade flash uses the same index. slime-mini has no attack strip, so
- * it is absent and key 2 reacts at once.
+ * Contact frame, using Phaser's `AnimationFrame.index`.
+ * Every catalog attack sheet is 8 cells at 10 fps and has no
+ * `timing.impactFrame` marker. That index is 1-based: the first cell
+ * reports 1 and the last cell reports 8 (texture frames 0–7). The frame
+ * that starts at half the strip is index 5 (texture cell 4, 400 ms).
+ * Key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt` on that
+ * frame. The live barricade flash uses the same index. slime-mini has no
+ * attack strip, so it is absent and key 2 reacts at once.
  *
- * Earlier indexes followed the furthest east reach, which sat in the windup
- * or the follow-through. Those are the values this table replaced:
- * office-worker-v2 4→4, delivery 5→4, chef 5→4, nurse 5→4, brute 4→4,
- * riot 4→4, trashcan 3→4, sprinter 4→4, slime 4→4, exploder 4→4,
- * cyborg 5→4, clown 4→4, lava-balon 3→4, steel-balam 4→4.
+ * Earlier indexes followed the furthest east reach and were compared to
+ * this same 1-based index, so several landed in the windup. Those values:
+ * office-worker-v2 4→5, delivery 5→5, chef 5→5, nurse 5→5, brute 4→5,
+ * riot 4→5, trashcan 3→5, sprinter 4→5, slime 4→5, exploder 4→5,
+ * cyborg 5→5, clown 4→5, lava-balon 3→5, steel-balam 4→5.
  *
  * @type {Record<string, number>}
  */
 export const ENEMY_ATTACK_HIT_FRAME = {
-  'office-worker-v2': 4,
-  delivery: 4,
-  chef: 4,
-  nurse: 4,
-  brute: 4,
-  riot: 4,
-  trashcan: 4,
-  sprinter: 4,
-  slime: 4,
-  exploder: 4,
-  cyborg: 4,
-  clown: 4,
-  'lava-balon': 4,
-  'steel-balam': 4,
+  'office-worker-v2': 5,
+  delivery: 5,
+  chef: 5,
+  nurse: 5,
+  brute: 5,
+  riot: 5,
+  trashcan: 5,
+  sprinter: 5,
+  slime: 5,
+  exploder: 5,
+  cyborg: 5,
+  clown: 5,
+  'lava-balon': 5,
+  'steel-balam': 5,
 };
 
 /**
- * Frame index that starts at half the strip. 8 frames → 4. 4 frames → 2.
+ * 1-based Phaser frame that starts at half the strip.
+ * 8 frames → 5 (texture cell 4). 4 frames → 3. 1 frame → 1.
  * @param {number} frameCount
  */
 export function midAttackFrame(frameCount) {
   const n = Number(frameCount);
-  if (!Number.isInteger(n) || n <= 0) return 0;
-  return Math.floor(n / 2);
+  if (!Number.isInteger(n) || n <= 0) return 1;
+  return Math.floor(n / 2) + 1;
 }
 
 /**
@@ -170,7 +173,7 @@ export function attackContactFrame(id, frameCount) {
   const total = Number(frameCount);
   const hasStrip = Number.isInteger(total) && total > 0;
   const listed = feelAttackHitFrame(id);
-  if (listed != null && hasStrip && listed < total) return listed;
+  if (listed != null && hasStrip && listed >= 1 && listed <= total) return listed;
   if (hasStrip) return midAttackFrame(total);
   return null;
 }

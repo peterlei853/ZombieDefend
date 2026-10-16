@@ -246,19 +246,19 @@ for (const id of IDS) {
     const frames = framesForAnimKey(attack);
     const mid = midAttackFrame(frames);
     assert(frames === 8, `${id} attack strip is 8 frames`);
-    assert(mid === 4, `${id} midpoint of an 8-frame strip is frame 4`);
+    assert(mid === 5, `${id} midpoint of an 8-frame strip is Phaser frame 5`);
     assert(feelAttackHitFrame(id) === mid, `${id} attack hit frame is the midpoint ${mid}`);
     assert(ENEMY_ATTACK_HIT_FRAME[id] === mid, `${id} table matches the strip midpoint`);
     assert(attackContactFrame(id, frames) === mid, `${id} live contact uses the midpoint`);
   }
 }
 assert(Object.keys(ENEMY_ATTACK_HIT_FRAME).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
-assert(feelAttackHitFrame('office-worker-v2') === 4, 'office-worker-v2 strike is attack frame 4');
-assert(framesForAnimKey('zombie-nurse-attach') === 8, 'nurse attach is 8 frames, so live frame 4 is mid-strip');
-assert(attackContactFrame('riot-bare', framesForAnimKey('zombie-riot-bare-attack')) === 4, 'bare riot contact is mid-strip');
-assert(attackContactFrame('trashcan-bare', framesForAnimKey('zombie-trashcan-bare-attack')) === 4, 'bare trashcan contact is mid-strip');
-assert(midAttackFrame(4) === 2 && midAttackFrame(1) === 0, 'shorter strips still contact at half their length');
-assert(attackContactFrame(null, 4) === 2, 'a legacy 4-frame sheet contacts on frame 2');
+assert(feelAttackHitFrame('office-worker-v2') === 5, 'office-worker-v2 strike is Phaser attack frame 5');
+assert(framesForAnimKey('zombie-nurse-attach') === 8, 'nurse attach is 8 frames, so live frame 5 is mid-strip');
+assert(attackContactFrame('riot-bare', framesForAnimKey('zombie-riot-bare-attack')) === 5, 'bare riot contact is mid-strip');
+assert(attackContactFrame('trashcan-bare', framesForAnimKey('zombie-trashcan-bare-attack')) === 5, 'bare trashcan contact is mid-strip');
+assert(midAttackFrame(4) === 3 && midAttackFrame(1) === 1, 'shorter strips still contact at half their length');
+assert(attackContactFrame(null, 4) === 3, 'a legacy 4-frame sheet contacts on Phaser frame 3');
 
 const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
 assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
@@ -670,10 +670,10 @@ assert(wall.body.x === 120 && wall.scene.tweens.added === 0, 'live punch stays o
 assert(wall._attackBeat === false, 'trashcan wall flash waits for the contact frame');
 const liveHandler = wall.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
 assert(typeof liveHandler === 'function', 'live punch listens for the attack frame');
-liveHandler({ key: 'zombie-trashcan-attack' }, { index: 3 });
-assert(wall._attackBeat === false, 'frame 3 is still before the midpoint');
 liveHandler({ key: 'zombie-trashcan-attack' }, { index: 4 });
-assert(wall._attackBeat === true, 'frame 4 marks the barricade beat');
+assert(wall._attackBeat === false, 'Phaser frame 4 is still the cell before the midpoint');
+liveHandler({ key: 'zombie-trashcan-attack' }, { index: 5 });
+assert(wall._attackBeat === true, 'Phaser frame 5 marks the barricade beat');
 assert(wall.body._ons.length === 0, 'the contact listener drops after the hit');
 
 const feelHost = attackHost({
@@ -686,10 +686,10 @@ assert(feelHost.playShowcaseAttack(feelAttackHitFrame('chef'), () => { hurt = tr
 assert(feelHost.body.x === 120 && feelHost.scene.tweens.added === 0, 'key 2 does not jolt X');
 assert(hurt === false, 'chef hurt waits for the midpoint');
 const feelHandler = feelHost.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
-feelHandler({ key: 'zombie-chef-attack' }, { index: 3 });
-assert(hurt === false, 'chef frame 3 does not flinch the hero');
 feelHandler({ key: 'zombie-chef-attack' }, { index: 4 });
-assert(hurt === true, 'chef frame 4 flinches the hero');
+assert(hurt === false, 'chef frame 4 does not flinch the hero');
+feelHandler({ key: 'zombie-chef-attack' }, { index: 5 });
+assert(hurt === true, 'chef frame 5 flinches the hero');
 
 const nurse = attackHost({
   skin: { id: 'nurse' },
@@ -703,7 +703,9 @@ nurse._playAttackPunch();
 assert(nurse.body.anims.currentAnim.key === 'zombie-nurse-attach', 'nurse bite plays attach in place');
 assert(nurse.body.x === 120 && nurse._attackBeat === false, 'nurse wall flash waits on attach');
 nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 4 });
-assert(nurse._attackBeat === true, 'nurse contact is frame 4 of the 8-frame attach strip');
+assert(nurse._attackBeat === false, 'nurse frame 4 is still before the attach midpoint');
+nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 5 });
+assert(nurse._attackBeat === true, 'nurse contact is frame 5 of the 8-frame attach strip');
 
 const plain = attackHost({ _isSprite: false, _animReady: () => false, skin: null });
 plain._playAttackPunch();
@@ -717,7 +719,7 @@ const cut = attackHost();
 cut._playAttackPunch();
 const late = cut.body._ons[0].fn;
 cut._clearAttackContact();
-late({ key: 'zombie-trashcan-attack' }, { index: 4 });
+late({ key: 'zombie-trashcan-attack' }, { index: 5 });
 assert(cut._attackBeat === false, 'knockback clears a bite that has not reached the midpoint');
 
 if (failed) {

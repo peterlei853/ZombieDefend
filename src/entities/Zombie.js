@@ -844,7 +844,8 @@ export class Zombie {
       return;
     }
     const total = this.scene?.anims?.get?.(attackKey)?.frames?.length || 0;
-    if (total > 0 && hitFrame >= total) {
+    // AnimationFrame.index is 1-based, so the last cell is `total`, not `total - 1`.
+    if (total > 0 && hitFrame > total) {
       fire();
       return;
     }
