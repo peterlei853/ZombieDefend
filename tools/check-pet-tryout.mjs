@@ -24,6 +24,11 @@ assert(page.includes('data-act="send"') && page.includes('data-act="attack"'), '
 assert(page.includes('data-act="skill"') && page.includes('data-act="evolve"'), 'pet page has skill and evolve buttons');
 assert(page.includes('data-pet="dragon"') && page.includes('data-pet="lion"'), 'pet page lists the four pets');
 assert(demo.includes('appearance') && demo.includes('sleep-start'), 'try-out plays send-out and sleep');
+assert(demo.includes('matchIdle'), 'send-out appearance uses the idle body scale');
+assert(demo.includes('paintedBottom'), 'padded appearance and skill-aoe anchor on painted feet');
+assert(demo.includes('groundRingScale'), 'skill-aoe scale tracks the pet body');
+assert(!demo.includes('360 /'), 'skill-aoe is not a 360px world sheet');
+assert(/setDepth\(11\)/.test(demo) && /setAlpha\(0\.72\)/.test(demo), 'evolve pillar sits behind the body');
 assert(demo.includes("tryoutStrip(this.petId, this.form, 'claw')"), 'try-out plays the claw strip');
 assert(demo.includes('playPetMeleeHit') && demo.includes('playPetKnockback'), 'try-out plays melee and knockback cues');
 assert(demo.includes('petSkillKey') && demo.includes('petSkillSpec'), 'try-out uses the skill manifest');
