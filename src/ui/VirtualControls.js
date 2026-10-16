@@ -389,6 +389,8 @@ export class VirtualControls {
 
   _pointerDown(pointer) {
     if (this._destroyed || !pointer) return;
+    // Banner dismiss and ground clicks must not start a stick or a move.
+    if (this.scene?.movementLocked?.()) return;
     const x = pointer.x;
     const y = pointer.y;
     if (this._weaponPointerId == null && this._hitButton(x, y)) {
@@ -406,6 +408,12 @@ export class VirtualControls {
 
   _pointerMove(pointer) {
     if (this._destroyed || !pointer) return;
+    if (this.scene?.movementLocked?.()) {
+      if (this._joyPointerId != null) this._resetStick();
+      this._weaponPointerId = null;
+      this._weaponArmed = false;
+      return;
+    }
     if (pointer.id === this._joyPointerId) {
       this._applyStick(pointer);
       return;

@@ -634,10 +634,74 @@ export class KitHpBar {
 }
 
 /**
+ * Safe inner width of `ui-toast-panel` at scale 1.
+ * The texture is 512×192, but the body parchment is only x=147..364
+ * (218px). 216 leaves the glyph off the inner stone edge.
+ */
+export const TOAST_BODY_W = 216;
+/** Extra parchment past the icon+label row so the last glyph is not in the pillar. */
+export const TOAST_BODY_PAD = 24;
+
+/**
+ * Icon and label side by side, matching `showKitBanner`'s pair gap.
+ * @param {number} iconW
+ * @param {number} textW
+ */
+export function toastRowWidth(iconW, textW) {
+  const iw = Number(iconW) || 0;
+  const tw = Number(textW) || 0;
+  if (iw > 0 && tw > 0) return iw + 6 + tw;
+  return Math.max(iw, tw);
+}
+
+/**
+ * Panel scale so a row fits in the toast parchment. 1 when it already fits.
+ * @param {number} contentWidth
+ */
+export function toastFitScale(contentWidth) {
+  const width = Number(contentWidth) || 0;
+  const need = width + TOAST_BODY_PAD;
+  if (!(width > 0) || need <= TOAST_BODY_W) return 1;
+  return need / TOAST_BODY_W;
+}
+
+/**
+ * Grow the toast from its center when the body row is wider than the parchment,
+ * and keep title / sub / zh on the same bands of the art.
+ * Glyphs stay at native size. Short rows (wave callouts) stay at scale 1.
+ * @param {Phaser.GameObjects.Image|null|undefined} panel
+ * @param {Phaser.GameObjects.GameObject|null|undefined} title
+ * @param {Phaser.GameObjects.Image|null|undefined} icon
+ * @param {Phaser.GameObjects.GameObject|null|undefined} sub
+ * @param {Phaser.GameObjects.GameObject|null|undefined} zh
+ * @param {{ x: number, y: number, sub?: string }} opts
+ */
+function fitToastPanel(panel, title, icon, sub, zh, opts) {
+  const body = sub || zh;
+  const paired = toastRowWidth(icon?.displayWidth || 0, body?.width || 0);
+  const plain = Math.max(sub?.width || 0, zh?.width || 0, title?.width || 0);
+  const fit = toastFitScale(Math.max(paired, plain));
+  if (!(fit > 1)) return;
+  panel?.setScale?.(fit);
+  const placeY = (go) => {
+    if (!go?.setPosition) return;
+    const dy = (go.y ?? opts.y) - opts.y;
+    go.setPosition(go.x, opts.y + dy * fit);
+  };
+  placeY(title);
+  placeY(sub);
+  placeY(zh);
+  placeY(icon);
+}
+
+/**
  * Toast or dialog panel with a bitmap title, optional icon, and a system-font
  * Chinese line. The caller owns the lifetime.
+ * Toast body copy stays inside the parchment hole. A row wider than that hole
+ * (icon + `STAND BEHIND A GUN`) scales the panel up from center; glyphs stay
+ * at their native size. `onDismiss` adds a hit target that swallows the pointer.
  * @param {Phaser.Scene} scene
- * @param {{ x: number, y: number, panel?: string, icon?: string, title?: string, sub?: string, zh?: string, depth?: number, titleSize?: number, titleFont?: string, onParchment?: boolean }} opts
+ * @param {{ x: number, y: number, panel?: string, icon?: string, title?: string, sub?: string, zh?: string, depth?: number, titleSize?: number, titleFont?: string, onParchment?: boolean, titleOnDark?: boolean, onDismiss?: () => void }} opts
  */
 export function showKitBanner(scene, opts) {
   const depth = opts.depth ?? HUD_DEPTH + 40;
@@ -668,7 +732,7 @@ export function showKitBanner(scene, opts) {
     label.setPosition(x - total / 2 + iw + gap + tw / 2, y);
   };
 
-  pin(addKitImage(scene, opts.x, opts.y, panelKey, { depth, scrollFactor: 0 }));
+  const panel = pin(addKitImage(scene, opts.x, opts.y, panelKey, { depth, scrollFactor: 0 }));
   const titleY = opts.y + (toast ? -42 : opts.sub || opts.zh ? -18 : 0);
   const title = pin(
     addKitText(scene, opts.x, titleY, opts.title || '', {
@@ -686,8 +750,12 @@ export function showKitBanner(scene, opts) {
 
   const subY = toast ? opts.y - 4 : (title?.y || opts.y) + ((title?.height || 16) / 2) + 8;
   let zhY = subY;
+  /** @type {Phaser.GameObjects.GameObject|null} */
+  let sub = null;
+  /** @type {Phaser.GameObjects.GameObject|null} */
+  let zh = null;
   if (opts.sub) {
-    const sub = pin(
+    sub = pin(
       addKitText(scene, opts.x, subY, opts.sub, {
         font: bodyInk ? FONT_INK : FONT_HUD,
         size: 16,
@@ -705,7 +773,7 @@ export function showKitBanner(scene, opts) {
     zhY = opts.y + 6;
   }
   if (opts.zh) {
-    const zh = pin(
+    zh = pin(
       addKitText(scene, opts.x, zhY, opts.zh, {
         system: true,
         size: 16,
@@ -715,6 +783,20 @@ export function showKitBanner(scene, opts) {
       })
     );
     if (toast && !opts.sub) pair(icon, zh, opts.x, zhY);
+  }
+  if (toast) fitToastPanel(panel, title, icon, sub, zh, opts);
+  if (typeof opts.onDismiss === 'function' && scene.add?.zone) {
+    const s = panel?.scaleX || 1;
+    const zone = pin(scene.add.zone(opts.x, opts.y, Math.round(512 * s), Math.round(192 * s)));
+    if (zone?.setInteractive) {
+      zone.setInteractive();
+      const stop = (pointer) => pointer?.event?.stopPropagation?.();
+      zone.on('pointerdown', stop);
+      zone.on('pointerup', (pointer) => {
+        stop(pointer);
+        opts.onDismiss();
+      });
+    }
   }
   return {
     objects,

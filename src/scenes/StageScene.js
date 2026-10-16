@@ -141,6 +141,9 @@ export default class StageScene extends Phaser.Scene {
     this.registry.set('weaponUpgrades', this.weaponUpgrades);
 
     this.ended = false;
+    /** Opening tip swallows pathing until it is dismissed or the hold ends. */
+    this._tipLocksMove = false;
+    this._moveSuppressUntil = 0;
     /** @type {Zombie[]} */
     this.zombies = [];
     /** Shuffled lane cycle so spawns spread across every guide before repeating. */
@@ -903,6 +906,7 @@ export default class StageScene extends Phaser.Scene {
             zh: '停在炮台後，只開那一把',
             hold: 6500,
             y: 230,
+            lockMove: true,
           }
         : {
             icon: UI.ready,
@@ -911,6 +915,7 @@ export default class StageScene extends Phaser.Scene {
             zh: '停步展開射擊 · 換道 · 換武器',
             hold: 6500,
             y: 230,
+            lockMove: true,
           }
     );
     this.events.once('shutdown', () => this._clearBanner());
@@ -931,15 +936,33 @@ export default class StageScene extends Phaser.Scene {
   }
 
   /**
-   * @param {{ icon?: string, title?: string, sub?: string, zh?: string, hold?: number, y?: number, panel?: string, onParchment?: boolean, titleSize?: number }} opts
+   * True while the opening tip is up, and for a short beat after a click
+   * dismisses it, so that pointer cannot also path the hero.
+   */
+  movementLocked() {
+    if (this._tipLocksMove && this._banner && !this._banner.dead) return true;
+    return this.time.now < (this._moveSuppressUntil || 0);
+  }
+
+  /** Click / tap on the opening tip. The pointer must not become a move order. */
+  _dismissTip() {
+    this._moveSuppressUntil = this.time.now + 150;
+    this._clearBanner();
+  }
+
+  /**
+   * @param {{ icon?: string, title?: string, sub?: string, zh?: string, hold?: number, y?: number, panel?: string, onParchment?: boolean, titleSize?: number, lockMove?: boolean }} opts
    */
   _showBanner(opts) {
     this._clearBanner();
+    const lockMove = !!opts.lockMove;
+    this._tipLocksMove = lockMove;
     this._banner = showKitBanner(this, {
       x: GAME_WIDTH / 2,
       y: opts.y ?? 230,
       depth: HUD_DEPTH + 40,
       ...opts,
+      onDismiss: lockMove ? () => this._dismissTip() : undefined,
     });
     if (opts.hold > 0) {
       this._bannerTimer = this.time.delayedCall(opts.hold, () => {
@@ -963,6 +986,7 @@ export default class StageScene extends Phaser.Scene {
     this._bannerTimer = null;
     this._banner?.destroy?.();
     this._banner = null;
+    this._tipLocksMove = false;
   }
 
   _refreshHud() {

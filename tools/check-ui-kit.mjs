@@ -8,9 +8,12 @@ import {
   HP_FRAMES,
   KIT_GLYPHS,
   TITLE_BG_ALIAS,
+  TOAST_BODY_W,
   UI,
   hpFillKey,
   supportsKitGlyphs,
+  toastFitScale,
+  toastRowWidth,
 } from '../src/ui/uiKit.js';
 
 let failed = 0;
@@ -64,6 +67,22 @@ assert(titleSrc.includes('TITLE_BG_ALIAS'), 'title scene names the alias');
 const controlsSrc = readFileSync(new URL('../src/ui/VirtualControls.js', import.meta.url), 'utf8');
 assert(controlsSrc.includes('UI.joystickBase'), 'stick uses the kit base');
 assert(controlsSrc.includes('UI.joystickKnobPressed'), 'stick swaps the pressed knob');
+
+// Native toast parchment is 218px. Icon (32) + gap + "STAND BEHIND A GUN" (210)
+// is wider, which is why the last N sat in the right pillar.
+const tipRow = toastRowWidth(32, 210);
+assert(tipRow === 248, `tip row width ${tipRow}`);
+assert(TOAST_BODY_W < tipRow, 'native hole is narrower than the tip row');
+const tipScale = toastFitScale(tipRow);
+assert(tipScale > 1, 'long tip widens the toast');
+assert(TOAST_BODY_W * tipScale >= tipRow, 'scaled hole covers the tip row');
+assert(218 * tipScale >= tipRow + 8, 'scaled parchment keeps a margin past the glyphs');
+assert(toastFitScale(80) === 1, 'short wave line does not scale the toast');
+const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
+assert(stageSrc.includes('lockMove: true'), 'opening tip locks pathing');
+assert(stageSrc.includes('movementLocked'), 'stage exposes the move lock');
+const defenderSrc = readFileSync(new URL('../src/entities/Defender.js', import.meta.url), 'utf8');
+assert(defenderSrc.includes('movementLocked'), 'defender rests axes while the tip is up');
 
 if (failed) {
   console.error(`${failed} failed`);

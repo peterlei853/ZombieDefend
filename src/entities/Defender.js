@@ -376,6 +376,8 @@ export class DefenderGroup {
    * @returns {{ dx: number, dy: number }}
    */
   _inputAxes() {
+    // Opening tip holds the lane. Keyboard and the stick both stay at rest.
+    if (this.scene?.movementLocked?.()) return { dx: 0, dy: 0 };
     let dy = 0;
     let dx = 0;
     if (this.cursors?.up?.isDown || this.keys?.W?.isDown) dy -= 1;
