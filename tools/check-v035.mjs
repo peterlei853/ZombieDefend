@@ -24,6 +24,8 @@
  * v0.35.6: key 1 drops the ranged spark cone. Keys 5–9 stay on the chest.
  * Ally-white and the DoT use NORMAL blend. Nurse and lava-balon contact
  * is one frame earlier. Peter’s hub stays `/sandbox/`.
+ * Key 5's `fx-slash-enemy-red` is the chest-centered 4×72 strip
+ * (288×72, atlas pivot 0.5/0.5). Keys 1 and 6–9 stay put.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -345,6 +347,29 @@ assert(!waveFxFn.includes('flipX') && !waveFxFn.includes('setFlipX'), 'keys 8 an
 const weaponSrc = readFileSync(new URL('../src/systems/WeaponSystem.js', import.meta.url), 'utf8');
 assert(!weaponSrc.includes("'fx-hit-fire'") && !weaponSrc.includes("'fx-hit-water'"), 'live combat does not spawn the bullet-hit sheets');
 assert(!weaponSrc.includes('"fx-hit-fire"') && !weaponSrc.includes('"fx-hit-water"'), 'live combat does not quote the bullet-hit keys');
+const RED_SHA256 = '126d927bdd7a8005f27ca9e7bdb3e78799794a0101639faff65f4545c1c56089';
+const meleeManifest = JSON.parse(readFileSync(new URL('../assets/library/fx/melee/manifest.json', import.meta.url), 'utf8'));
+const redRow = meleeManifest.assets.find((asset) => asset.key === 'fx-slash-enemy-red');
+assert(redRow?.frames === 4 && redRow.frameWidth === 72 && redRow.frameHeight === 72 && redRow.frameRate === 30 && redRow.loop === false, 'fx-slash-enemy-red is 4×72 @ 30 fps, once');
+assert(redRow.grid == null && redRow.origin?.[0] === 0.5 && redRow.origin?.[1] === 0.5, 'fx-slash-enemy-red is a centered horizontal strip');
+assert(redRow.extra?.sheet?.layout === 'horizontal' && redRow.extra?.pixellabAnchor?.x === 0.5 && redRow.extra?.pixellabAnchor?.y === 0.5, 'enemy red pivot stays 0.5/0.5');
+const redPng = readFileSync(new URL('../assets/library/fx/melee/fx-slash-enemy-red.png', import.meta.url));
+assert(redPng.readUInt32BE(16) === 288 && redPng.readUInt32BE(20) === 72, 'fx-slash-enemy-red sheet is 288×72');
+assert(createHash('sha256').update(redPng).digest('hex') === RED_SHA256, 'fx-slash-enemy-red is the chest-centered remake');
+const redAtlas = JSON.parse(readFileSync(new URL('../assets/library/fx/melee/fx-slash-enemy-red.json', import.meta.url), 'utf8'));
+assert(redAtlas.meta?.image === 'fx-slash-enemy-red.png' && redAtlas.meta?.size?.w === 288 && redAtlas.meta?.size?.h === 72, 'enemy red atlas matches the strip');
+assert(Array.isArray(redAtlas.frames) && redAtlas.frames.length === 4 && redAtlas.frames.every((frame) => frame.pivot?.x === 0.5 && frame.pivot?.y === 0.5 && frame.frame?.w === 72 && frame.frame?.h === 72), 'enemy red atlas pivot is 0.5/0.5 on every frame');
+const allyRow = meleeManifest.assets.find((asset) => asset.key === 'fx-slash-ally-white');
+const allyPng = readFileSync(new URL('../assets/library/fx/melee/fx-slash-ally-white.png', import.meta.url));
+assert(allyRow?.frames === 5 && allyRow.grid?.[0] === 3 && allyRow.grid?.[1] === 2, 'ally white stays the 5-frame 3×2 grid');
+assert(allyPng.readUInt32BE(16) === 213 && allyPng.readUInt32BE(20) === 140, 'ally white sheet stays 213×140');
+const dotRow = meleeManifest.assets.find((asset) => asset.key === 'fx-slash-dot');
+const dotPng = readFileSync(new URL('../assets/library/fx/melee/fx-slash-dot.png', import.meta.url));
+assert(dotRow?.frames === 4 && dotRow.frameRate === 20 && dotRow.grid?.[0] === 2 && dotRow.grid?.[1] === 2, 'dot slash stays the 4-frame 2×2 grid');
+assert(dotPng.readUInt32BE(16) === 60 && dotPng.readUInt32BE(20) === 60, 'dot sheet stays 60×60');
+const redIndexed = bulletIndex.assets.find((asset) => asset.key === 'fx-slash-enemy-red');
+assert(redIndexed?.frames === 4 && redIndexed.frameWidth === 72 && redIndexed.frameHeight === 72 && redIndexed.grid == null && redIndexed.origin?.[0] === 0.5 && redIndexed.origin?.[1] === 0.5, 'catalog index loads the chest-centered enemy red strip');
+assert(!weaponSrc.includes("'fx-slash-enemy-red'") && !weaponSrc.includes('"fx-slash-enemy-red"'), 'live combat does not spawn the enemy red slash');
 assert(GAME_AUDIO.some((clip) => clip.key === 'sfx-slash-dot' && clip.url === 'assets/audio/sfx-slash-dot.mp3'), 'sfx-slash-dot stays the cataloged default');
 assert(existsSync(new URL('../assets/audio/sfx-slash-dot.mp3', import.meta.url)), 'sfx-slash-dot default is the audio-pack file');
 const dotFn = soundSrc.slice(soundSrc.indexOf('playFeelDotTick()'), soundSrc.indexOf('playZombieHurt()'));

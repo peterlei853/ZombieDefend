@@ -2140,7 +2140,7 @@
       "group": "melee-slash",
       "title": "Shared Melee Slash",
       "titleZh": "近身斬擊",
-      "description": "Peter-approved melee slashes (2026-10-15). Catalog only. Enemy attacks use fx-slash-enemy-red (敵紅小斬, red, top-left → bottom-right). Ally / player melee uses fx-slash-ally-white (友白小斬, white, top-right → bottom-left). Both are 5 frames @ 30 fps, once, ADD blend, origin (0.5, 0.5) near the body center. Scale rule: authored for 128px-tall characters; slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units. DoT / AoE ticks use fx-slash-dot (持續傷害小斬, white X + amber sparks): 4×30 @ 20 fps (~0.2s, about 5/sec), ADD, body center, dotScale = 0.5 × slashScale (half of the ally white slash). Faction sheets are 3×2 grids; the DoT sheet is 2×2. The last listed frame of each sheet is blank. fx-slash-ninja stays the feel-booth 4 primary. Keys 5–7 of the feel booth only preview these three slashes. fx-slash and fx-slash-overhead stay as they are. fx-hit-fire and fx-hit-water live in fx/bullet-hit. fx-hit-electric is not in this wave. sfx-slash-dot is already in the audio pack (#97) and is not added again here. Feel-booth key 7 plays that default with the dot preview.",
+      "description": "Peter-approved melee slashes (2026-10-15). Catalog only. Enemy attacks use fx-slash-enemy-red (敵紅小斬, red, top-left → bottom-right). The enemy sheet is the chest-centered remake: 4×72 horizontal strip (288×72) @ 30 fps, once, ADD blend, origin (0.5, 0.5), stroke mass at the frame center. Feel-booth key 5 previews it on the chest. Ally / player melee uses fx-slash-ally-white (友白小斬, white, top-right → bottom-left): 5 frames @ 30 fps, once, origin (0.5, 0.5), 3×2 grid. Scale rule: authored for 128px-tall characters; slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units. DoT / AoE ticks use fx-slash-dot (持續傷害小斬, white X + amber sparks): 4×30 @ 20 fps (~0.2s, about 5/sec), ADD, body center, dotScale = 0.5 × slashScale (half of the ally white slash). The ally sheet is a 3×2 grid and the DoT sheet is a 2×2 grid. The last listed frame of each of those sheets is blank. The enemy red strip has no blank frame. fx-slash-ninja stays the feel-booth 4 primary. Keys 5–7 of the feel booth only preview these three slashes. fx-slash and fx-slash-overhead stay as they are. fx-hit-fire and fx-hit-water live in fx/bullet-hit. fx-hit-electric is not in this wave. sfx-slash-dot is already in the audio pack (#97) and is not added again here. Feel-booth key 7 plays that default with the dot preview.",
       "manifest": "assets/library/fx/melee/manifest.json",
       "dir": "assets/library/fx/melee",
       "thumb": "assets/library/previews/fx/melee-slash/preview.gif",
@@ -21801,7 +21801,7 @@
       "type": "fx",
       "frameWidth": 72,
       "frameHeight": 72,
-      "frames": 5,
+      "frames": 4,
       "frameRate": 30,
       "loop": false,
       "loopFrom": null,
@@ -21821,8 +21821,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/fx/melee-slash/preview.gif",
-      "description": "Shared Melee Slash: enemy-red — 5 frames 72x72 @ 30 fps, once.",
-      "note": "Scale rule: authored for 128px-tall characters. At play time slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash (a 64px unit is 0.5×). Anchor near the body center (origin 0.5, 0.5), same as fx-slash-ninja. Blend Phaser.BlendModes.ADD. Do not keep 128-scale on small units. 敵紅小斬 — red chibi slash, dark outline, direction top-left → bottom-right. 5×72 @ 30 fps, once. Sheet 216×144 is a 3×2 grid, not a horizontal strip: frame i is column i%3, row floor(i/3). Frame 4 is blank (the slash has exited); the bottom-right cell is unused padding. PixelLab effect d474da5f-03ce-453b-b371-db03d525f04c. Gameplay handoff: enemy attacks play fx-slash-enemy-red. Ally / player melee plays fx-slash-ally-white. Catalog only — fx-slash-ninja stays the feel-booth 4 primary; fx-slash and fx-slash-overhead are unchanged.",
+      "description": "Shared Melee Slash: enemy-red — 4 frames 72x72 @ 30 fps, once.",
+      "note": "Scale rule: authored for 128px-tall characters. At play time slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash (a 64px unit is 0.5×). Anchor at the frame center (origin 0.5, 0.5) so the stroke sits on the chest, same as fx-slash-ninja. Blend Phaser.BlendModes.ADD. Do not keep 128-scale on small units. 敵紅小斬 — red chibi slash, dark outline, direction top-left → bottom-right. Chest-centered remake: 4×72 @ 30 fps (33ms), once. Sheet 288×72 is a horizontal strip: frame i is at x = i*72, y = 0. Each frame's stroke mass is at the frame center (atlas pivot 0.5, 0.5; see fx-slash-enemy-red.json). Feel-booth key 5 previews this sheet at the chest. Gameplay handoff: enemy attacks play fx-slash-enemy-red. Ally / player melee plays fx-slash-ally-white. Catalog only — fx-slash-ninja stays the feel-booth 4 primary; fx-slash and fx-slash-overhead are unchanged. Live combat is unchanged.",
       "tags": [
         "fx",
         "melee-slash",
@@ -21849,30 +21849,28 @@
           "scale": "unitDisplayHeight / 128",
           "scaleRule": "slashScale = unitDisplayHeight / 128. Smaller units get a proportionally smaller slash. Do not keep 128-scale on small units.",
           "anchor": "body-center",
+          "feelKey": "5",
+          "atlas": "assets/library/fx/melee/fx-slash-enemy-red.json",
           "handoff": "Enemy attacks → fx-slash-enemy-red. Ally / player melee → fx-slash-ally-white."
         },
         "sheet": {
-          "layout": "grid",
-          "columns": 3,
-          "rows": 2,
-          "order": "row-major",
-          "blankFrame": 4,
-          "unusedCell": "bottom-right"
+          "layout": "horizontal",
+          "columns": 4,
+          "rows": 1,
+          "order": "left-to-right",
+          "width": 288,
+          "height": 72
         },
         "pixellabJobs": {
           "effectId": "d474da5f-03ce-453b-b371-db03d525f04c"
         },
         "pixellabAnchor": {
-          "kind": "origin",
-          "x": 2,
-          "y": 2,
-          "note": "PixelLab corner pivot on the sheet. Play anchor is the frame center (0.5, 0.5), near the body center — not this corner."
+          "kind": "pivot",
+          "x": 0.5,
+          "y": 0.5,
+          "note": "Atlas pivot is the frame center (0.5, 0.5). Stroke mass sits on that point, so a chest spawn stays on the chest."
         }
       },
-      "grid": [
-        3,
-        2
-      ],
       "action": "enemy-red"
     },
     {
