@@ -135,10 +135,13 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * white flash, and the 2px knock stay. Key 4 still sprays sparks and
  * still plays the hurt sheet. Gold, saves, barricade physics, wave
  * tables, and the camera stay put.
+ * v0.35.9 keeps those feel-booth freezes. Stage 1 waves 1–3 contact
+ * DPS is 3/5/8. Counts, speeds, windows, HP, wave 4, barricade max HP,
+ * gold-by-HP, saves, and halt math stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.7';
+export const APP_VERSION = '0.35.9';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

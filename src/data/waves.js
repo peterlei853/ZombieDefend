@@ -10,9 +10,12 @@ import { rosterForStage } from './stageRoster.js';
  * v0.26.2 slows the opening bites and adds one more soft walker so a
  * summoned pet can bank tier 2 before the wall breaks. HP on each row is
  * unchanged, so gold-by-HP does not move. Halt math is unchanged.
- *   Wave 1: count 5, DPS 4, speed 32
- *   Wave 2: count 6, DPS 6
- *   Wave 3: count 10, DPS 10
+ * v0.35.9 lowers waves 1–3 contact DPS (4/6/10 → 3/5/8) so the wall keeps
+ * a little more HP into wave 4. Counts, speeds, windows, HP rows, wave 4,
+ * barricade max HP, and gold-by-HP stay put.
+ *   Wave 1: count 5, DPS 3, speed 32
+ *   Wave 2: count 6, DPS 5, speed 36
+ *   Wave 3: count 10, DPS 8, speed 42
  *   Wave 4: count 48 (HP mix unchanged)
  *
  * Stage 1 HP table (initial max HP → gold via getGoldByHP):
@@ -35,21 +38,21 @@ export const WAVE_DEFS = [
     startSec: 0,
     endSec: 20,
     total: 5,
-    archetypes: [{ hp: 40, speed: 32, dps: 4, weight: 1, variant: 'walker' }],
+    archetypes: [{ hp: 40, speed: 32, dps: 3, weight: 1, variant: 'walker' }],
   },
   {
     wave: 2,
     startSec: 21,
     endSec: 40,
     total: 6,
-    archetypes: [{ hp: 70, speed: 36, dps: 6, weight: 1, variant: 'walker' }],
+    archetypes: [{ hp: 70, speed: 36, dps: 5, weight: 1, variant: 'walker' }],
   },
   {
     wave: 3,
     startSec: 41,
     endSec: 60,
     total: 10,
-    archetypes: [{ hp: 105, speed: 42, dps: 10, weight: 1, variant: 'walker' }],
+    archetypes: [{ hp: 105, speed: 42, dps: 8, weight: 1, variant: 'walker' }],
   },
   {
     wave: 4,
