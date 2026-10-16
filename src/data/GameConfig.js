@@ -122,10 +122,17 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * and 2px X knockback stay. `fx-slash-overhead` and a rotated `fx-slash`
  * stay unwired. Keys 1, 2, 3, and R are unchanged. Gold, saves, barricade
  * physics, wave tables, BGM/SFX volumes, and the camera stay put.
+ * v0.35.6 keeps those freezes. Key 1 drops the ranged yellow spark cone
+ * and keeps the hitstop, flash, and 2px knock. Key 4 still sprays sparks.
+ * Keys 5–9 stay on the chest (`feelBodyY`), the same anchor as fire and
+ * water. Ally-white and the DoT preview use NORMAL blend so the thin
+ * white stroke reads on the bright lane. Nurse and lava-balon attack
+ * contact is one frame earlier. Peter’s element hub is `/sandbox/`.
+ * Gold, saves, barricade physics, wave tables, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.4';
+export const APP_VERSION = '0.35.6';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

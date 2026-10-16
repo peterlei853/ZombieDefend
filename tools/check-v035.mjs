@@ -21,6 +21,9 @@
  * (`fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot`,
  * `fx-hit-fire`, `fx-hit-water`, 4×24 @ 8 fps, drawn left → right). No damage. Key 7 plays the
  * cataloged `sfx-slash-dot` default. The other four previews stay silent.
+ * v0.35.6: key 1 drops the ranged spark cone. Keys 5–9 stay on the chest.
+ * Ally-white and the DoT use NORMAL blend. Nurse and lava-balon contact
+ * is one frame earlier. Peter’s hub stays `/sandbox/`.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -53,11 +56,13 @@ import {
   FEEL_MELEE_SLASH,
   FEEL_MELEE_SLASH_SFX,
   FEEL_WAVE_DEMOS,
+  FEEL_WAVE_DEPTH_BIAS,
   feelImpactDirX,
   feelKnockOffset,
   feelMeleeSlashPose,
   feelParticleCount,
   feelUnitDisplayHeight,
+  feelWaveBlendName,
   feelWaveScale,
   planFeelParticles,
   playFeelImpact,
@@ -102,8 +107,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.4' && APP_VERSION === '0.35.4', 'package and APP_VERSION are 0.35.4');
-assert(html.includes('v0.35.4'), 'document title is v0.35.4');
+assert(pkg.version === '0.35.6' && APP_VERSION === '0.35.6', 'package and APP_VERSION are 0.35.6');
+assert(html.includes('v0.35.6'), 'document title is v0.35.6');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -165,7 +170,7 @@ const HIT_FRAMES = {
   'office-worker-v2': 4,
   delivery: 5,
   chef: 5,
-  nurse: 6,
+  nurse: 5,
   brute: 4,
   riot: 4,
   trashcan: 3,
@@ -174,7 +179,7 @@ const HIT_FRAMES = {
   exploder: 4,
   cyborg: 5,
   clown: 4,
-  'lava-balon': 4,
+  'lava-balon': 3,
   'steel-balam': 4,
 };
 for (const id of IDS) {
@@ -209,7 +214,7 @@ assert(feelImpactDirX(400, 800) === 1, 'a shot from the west travels east');
 assert(feelKnockOffset(-1).x === -2 && feelKnockOffset(-1).y === 0, 'west shot shoves 2px on X');
 assert(feelKnockOffset(1).x === 2 && feelKnockOffset(1).y === 0, 'east shot shoves 2px on X');
 const rangedDots = planFeelParticles({ melee: false, dirX: -1, x: 100, y: 200, rand: () => 0 });
-assert(rangedDots.length === 8 && rangedDots.every((dot) => dot.dx < 0), 'ranged sparks follow the bullet west');
+assert(rangedDots.length === 0, 'key 1 plans no yellow spark cone');
 const meleeDots = planFeelParticles({ melee: true, dirX: -1, x: 100, y: 200, half: 20, rand: () => 0.5 });
 assert(meleeDots.length >= 8 && meleeDots.length <= 12, 'melee spark count is in range');
 assert(meleeDots.every((dot) => dot.dy > 0), 'melee sparks travel downward across the body');
@@ -230,7 +235,8 @@ assert(soundSrc.includes("{ key: 'sfx-slash-ninja', url: 'assets/audio/sfx-slash
 assert(soundSrc.includes("this._cue('sfx-slash-ninja', AUDIO_VOLUME.melee, AUDIO_COOLDOWN_MS.hit)"), 'slash cue uses melee volume and the hit cooldown');
 assert(!feelSrc.includes('FEEL_SLASH_SIDE_ROTATION'), 'fx-slash is not rotated into a melee pose');
 assert(!feelSrc.includes('crownY') && !feelSrc.includes('_crownY'), 'melee no longer anchors on the crown');
-assert(feelSrc.includes('BlendModes?.ADD') && feelSrc.includes('setBlendMode'), 'ninja slash uses ADD blend');
+assert(feelSrc.includes("applyFeelBlend(sprite, 'ADD')") && feelSrc.includes('setBlendMode'), 'ninja slash uses ADD blend');
+assert(feelSrc.includes('feelWaveBlendName'), 'wave previews pick a blend by sheet');
 const spawnFn = feelSrc.slice(feelSrc.indexOf('function spawnFeelSlash'), feelSrc.indexOf('function feelBodyY'));
 assert(!spawnFn.includes('fx-slash-overhead') && !spawnFn.includes("'fx-slash'"), 'spawn does not name the cancelled strips');
 assert(spawnFn.includes('feelBodyY') && spawnFn.includes('pose.rotation'), 'spawn uses the body anchor and the unrotated pose');
@@ -284,9 +290,11 @@ assert(spawned.at(-1).key === 'fx-slash-ninja' && spawned.at(-1).y === 210 && sp
 assert(spawned.at(-1).y !== 180, 'slash does not use the crown');
 assert(slashCues.length === 2, 'a second melee plays the slash cue again');
 const rangedSpawned = spawned.length;
+const sparksBeforeRanged = sparks;
 const rangedBody = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
 const ranged = playFeelImpact(booth, { body: rangedBody, displayHalf: 20, bodyCenterY: 210, _syncBars() {} }, { melee: false, dirX: -1 });
 assert(ranged === true && spawned.length === rangedSpawned, 'key 1 still spawns no slash strip');
+assert(sparks === sparksBeforeRanged, 'key 1 does not spray the yellow spark cone');
 assert(slashCues.length === 2, 'key 1 does not play the slash cue');
 assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
 
@@ -355,12 +363,13 @@ const waveBooth = {
   anims: { exists: () => false },
   add: {
     sprite(x, y, key) {
-      const row = { key, x, y, scale: null, blend: null };
+      const row = { key, x, y, scale: null, blend: null, depth: null };
       waveSpawned.push(row);
       return {
         setOrigin() {},
         setScale(scale) { row.scale = scale; },
-        setDepth() {},
+        setDepth(depth) { row.depth = depth; },
+        setAlpha() {},
         setBlendMode(mode) { row.blend = mode; },
         once() {},
         active: true,
@@ -385,7 +394,7 @@ const waveBody = {
 };
 const waveZombie = { body: waveBody, bodyCenterY: 210, _syncBars() {} };
 const prevPhaser = globalThis.Phaser;
-globalThis.Phaser = { BlendModes: { ADD: 'ADD' } };
+globalThis.Phaser = { BlendModes: { ADD: 'ADD', NORMAL: 'NORMAL' } };
 const waveShown = FEEL_WAVE_DEMOS.map((row) => playFeelWaveFx(waveBooth, waveZombie, row.id));
 if (prevPhaser === undefined) delete globalThis.Phaser;
 else globalThis.Phaser = prevPhaser;
@@ -393,7 +402,10 @@ assert(waveShown.every(Boolean) && waveSpawned.map((row) => row.key).join() === 
 assert(waveSpawned.every((row) => row.x === 400 && row.y === 210), 'wave previews sit on the body center');
 assert(waveBody.x === 400 && waveBody.y === 240, 'wave previews do not move the body');
 assert(waveSpawned.map((row) => row.scale).join() === '1,1,0.5,1,1', '128px unit scales slash 1, dot 0.5, hits 1');
-assert(waveSpawned.every((row) => row.blend === 'ADD'), 'wave previews use ADD blend');
+assert(waveSpawned.map((row) => row.blend).join() === 'ADD,NORMAL,NORMAL,ADD,ADD', 'white previews use NORMAL; red, fire, and water stay ADD');
+assert(waveSpawned.every((row) => row.depth === 3 + FEEL_WAVE_DEPTH_BIAS), 'wave previews draw above the body');
+assert(feelWaveBlendName('ally-white') === 'NORMAL' && feelWaveBlendName('dot') === 'NORMAL', 'thin white names NORMAL');
+assert(feelWaveBlendName('enemy-red') === 'ADD' && feelWaveBlendName('fire') === 'ADD', 'colored hits stay ADD');
 assert(waveAudio.join() === 'sfx-slash-dot', 'only the dot preview plays sfx-slash-dot');
 const shortBody = { active: true, x: 400, y: 240, depth: 3, displayHeight: 64, scaleX: 1 };
 assert(playFeelWaveFx(waveBooth, { body: shortBody }, 'enemy-red')?.active !== false, 'a short unit still previews');

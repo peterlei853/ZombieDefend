@@ -6,12 +6,16 @@ import { playLibraryFx } from '../assets/libraryAssets.js';
  * are not touched. The camera does not shake.
  *
  * Key 1 and key 4 share a 40ms monster hitstop, a 40ms white flash
- * (applied by the caller via flashMs), 8–12 sparks, and a 2px X shove
- * along the shot (player → enemy, west by default).
+ * (applied by the caller via flashMs), and a 2px X shove along the shot
+ * (player → enemy, west by default). Key 4 also sprays 8–12 sparks.
+ * Key 1 does not: the ranged yellow cone is cancelled.
  * Key 4 plays `fx-slash-ninja` at the body center, rotation 0, and
  * `sfx-slash-ninja` through `SoundManager.playFeelMeleeSlash`.
  * `fx-slash-overhead` stays cancelled, and a rotated `fx-slash` is not
  * a stand-in.
+ * Keys 5–9 preview catalog FX at the chest (`feelBodyY`). Ally-white and
+ * the DoT use NORMAL blend so the thin white stroke stays readable.
+ * Red, fire, and water stay ADD.
  */
 
 export const FEEL_HIT_FLASH_MS = 40;
@@ -20,7 +24,10 @@ export const FEEL_HIT_KNOCK_PX = 2;
 export const FEEL_HIT_PARTICLE_MIN = 8;
 export const FEEL_HIT_PARTICLE_MAX = 12;
 
-/** Half-angle of the bullet spark cone, radians. */
+/**
+ * Half-angle of the old bullet spark cone, radians.
+ * Key 1 does not plan or spawn it. Kept so the cancelled fan has a name.
+ */
 export const FEEL_RANGED_SPREAD = 0.38;
 /**
  * Body-centered fan. Wider than the bullet cone so sparks cover the
@@ -90,26 +97,25 @@ export function feelMeleeSlashPose() {
 }
 
 /**
+ * Melee body fan only. Key 1 (ranged) returns an empty list: the yellow
+ * semicircle is cancelled. Hitstop, flash, and the 2px knock stay on the caller.
  * @param {{ melee?: boolean, dirX?: number, x: number, y: number, half?: number, rand?: () => number }} opts
  */
 export function planFeelParticles(opts) {
-  const melee = !!opts.melee;
+  if (!opts?.melee) return [];
   const rand = typeof opts.rand === 'function' ? opts.rand : Math.random;
   const count = feelParticleCount(rand);
-  const dirX = opts.dirX >= 0 ? 1 : -1;
-  const spread = melee ? FEEL_MELEE_SPREAD : FEEL_RANGED_SPREAD;
-  const base = melee ? Math.PI / 2 : dirX < 0 ? Math.PI : 0;
   const half = Number(opts.half) > 0 ? Number(opts.half) : 18;
   /** @type {{ x: number, y: number, dx: number, dy: number, size: number, color: number, life: number }[]} */
   const dots = [];
   for (let i = 0; i < count; i++) {
     const across = rand() - 0.5;
     const along = rand();
-    const ang = base + across * 2 * spread;
+    const ang = Math.PI / 2 + across * 2 * FEEL_MELEE_SPREAD;
     const dist = 14 + along * 26;
     dots.push({
-      x: melee ? opts.x + across * 2 * half : opts.x,
-      y: melee ? opts.y - 4 : opts.y,
+      x: opts.x + across * 2 * half,
+      y: opts.y - 4,
       dx: Math.cos(ang) * dist,
       dy: Math.sin(ang) * dist,
       size: 2 + (i % 2),
@@ -138,9 +144,9 @@ export function playFeelImpact(scene, zombie, opts = {}) {
   zombie._lastX = body.x;
   zombie._lastY = body.y;
   zombie._syncBars?.();
-  const half = Number(zombie.displayHalf) > 0 ? zombie.displayHalf : 18;
-  spawnDots(scene, body, planFeelParticles({ melee, dirX: shot, x: hitX, y: hitY, half }));
   if (melee) {
+    const half = Number(zombie.displayHalf) > 0 ? zombie.displayHalf : 18;
+    spawnDots(scene, body, planFeelParticles({ melee: true, dirX: shot, x: hitX, y: hitY, half }));
     spawnFeelSlash(scene, zombie, body);
     if (FEEL_MELEE_SLASH_SFX) scene.audio?.playFeelMeleeSlash?.();
   }
@@ -220,10 +226,7 @@ function spawnFeelSlash(scene, zombie, body) {
     depth: (body.depth || 0) + 6,
     rotation: pose.rotation,
   });
-  const add = globalThis.Phaser?.BlendModes?.ADD;
-  if (sprite && add != null && typeof sprite.setBlendMode === 'function') {
-    sprite.setBlendMode(add);
-  }
+  applyFeelBlend(sprite, 'ADD');
   return sprite;
 }
 
@@ -242,6 +245,8 @@ function feelBodyY(zombie, body) {
  * Keys 5–9 call `playFeelWaveFx`. Key 4 stays `fx-slash-ninja`.
  * No damage, gold, save, or barricade write. The dot preview plays the
  * cataloged `sfx-slash-dot` default. The other four previews stay silent.
+ * Every preview, including the red slash, is anchored on `feelBodyY`
+ * (the chest), the same point as fire and water.
  */
 export const FEEL_WAVE_DEMOS = [
   { id: 'enemy-red', key: 'fx-slash-enemy-red', kind: 'slash' },
@@ -264,6 +269,33 @@ export function feelUnitDisplayHeight(zombie) {
   const scale = Math.abs(Number(body?.scaleY) || Number(body?.scaleX) || Number(zombie?.scale) || 0);
   if (frameH > 0 && scale > 0) return frameH * scale;
   return 0;
+}
+
+/** Drawn above the body and the HP bar (depth bias 2). */
+export const FEEL_WAVE_DEPTH_BIAS = 8;
+
+/**
+ * Ally-white and the DoT are thin white. ADD drops the near-black outline
+ * and blows the stroke out on the bright lane, so those two use NORMAL.
+ * The red slash, fire, and water stay ADD.
+ * @param {string} id
+ * @returns {'NORMAL'|'ADD'}
+ */
+export function feelWaveBlendName(id) {
+  if (id === 'ally-white' || id === 'dot') return 'NORMAL';
+  return 'ADD';
+}
+
+/**
+ * @param {Phaser.GameObjects.Sprite|null|undefined} sprite
+ * @param {'NORMAL'|'ADD'} name
+ */
+function applyFeelBlend(sprite, name) {
+  const modes = globalThis.Phaser?.BlendModes;
+  if (!sprite || !modes || typeof sprite.setBlendMode !== 'function') return;
+  const mode = name === 'NORMAL' ? modes.NORMAL : modes.ADD;
+  if (mode == null) return;
+  sprite.setBlendMode(mode);
 }
 
 /**
@@ -297,12 +329,10 @@ export function playFeelWaveFx(scene, zombie, id) {
   const scale = feelWaveScale(spec.kind, feelUnitDisplayHeight(zombie));
   const sprite = playLibraryFx(scene, body.x, feelBodyY(zombie, body), spec.key, {
     scale,
-    depth: (body.depth || 0) + 6,
+    depth: (body.depth || 0) + FEEL_WAVE_DEPTH_BIAS,
   });
-  const add = globalThis.Phaser?.BlendModes?.ADD;
-  if (sprite && add != null && typeof sprite.setBlendMode === 'function') {
-    sprite.setBlendMode(add);
-  }
+  applyFeelBlend(sprite, feelWaveBlendName(spec.id));
+  if (sprite && typeof sprite.setAlpha === 'function') sprite.setAlpha(1);
   if (sprite && spec.kind === 'dot') scene.audio?.playFeelDotTick?.();
   return sprite;
 }
