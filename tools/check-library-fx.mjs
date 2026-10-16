@@ -5,11 +5,13 @@
 import { readFileSync } from 'node:fs';
 import {
   LIBRARY_FX_FALLBACK_MS,
+  LIBRARY_INDEX_KEY,
   createLibraryAnims,
   libraryAnimReady,
   libraryFxDuration,
   playLibraryAnim,
   playLibraryFx,
+  preloadLibrary,
 } from '../src/assets/libraryAssets.js';
 
 let failed = 0;
@@ -227,6 +229,52 @@ assert(!weapon.includes('.play('), 'WeaponSystem plays library strips through pl
 assert(weapon.includes('playLibraryAnim'), 'WeaponSystem imports the guard');
 assert(!floats.includes('.play('), 'front-float bob uses the guard');
 assert(floats.includes('playLibraryAnim'), 'HeroFloats imports the guard');
+
+// Baby idle strips must queue `asset.path` from the catalog. Phaser turns a
+// missing url into `<key>.png` at the site root, which is the bare-filename 503.
+const libraryIndex = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+const BABY_IDLE_KEYS = [
+  'pet-dragon-baby-idle',
+  'pet-phoenix-baby-idle',
+  'pet-panda-baby-idle',
+  'pet-lion-baby-idle',
+];
+const queued = [];
+preloadLibrary({
+  textures: { exists: () => false },
+  cache: {
+    json: {
+      exists: (key) => key === LIBRARY_INDEX_KEY,
+      get: (key) => (key === LIBRARY_INDEX_KEY ? libraryIndex : null),
+    },
+  },
+  load: {
+    spritesheet(key, url) {
+      queued.push({ key, url });
+    },
+    image(key, url) {
+      queued.push({ key, url });
+    },
+  },
+});
+const loaderSrc = readFileSync(new URL('../src/assets/libraryAssets.js', import.meta.url), 'utf8');
+assert(loaderSrc.includes('scene.load.spritesheet(asset.key, asset.path,'), 'spritesheet load passes asset.path');
+assert(loaderSrc.includes('scene.load.image(asset.key, asset.path)'), 'image load passes asset.path');
+assert(!loaderSrc.includes('asset.key + \'.png\'') && !loaderSrc.includes('${asset.key}.png'), 'loader does not build a bare filename');
+for (const key of BABY_IDLE_KEYS) {
+  const catalog = libraryIndex.assets.find((asset) => asset.key === key);
+  const species = key.split('-')[1];
+  const expected = `assets/library/pets/${species}/baby/strips/${key}.png`;
+  assert(catalog?.path === expected, `${key} catalog path is ${expected}`);
+  const hits = queued.filter((row) => row.key === key);
+  assert(hits.length === 1, `${key} is queued once`);
+  assert(hits[0]?.url === catalog.path, `${key} Phaser url is the catalog path`);
+  assert(hits[0]?.url !== `${key}.png`, `${key} is not requested as a bare filename`);
+}
+for (const row of queued) {
+  assert(typeof row.url === 'string' && row.url.includes('/'), `${row.key} url keeps a directory`);
+  assert(row.url !== `${row.key}.png` && row.url !== row.key, `${row.key} url is not the bare key`);
+}
 
 if (failed) {
   console.error(`${failed} failed`);
