@@ -78,6 +78,11 @@ export const GAME_AUDIO = [
   { key: 'sfx-slash-dot', url: 'assets/audio/sfx-slash-dot.mp3' },
   { key: 'sfx-slash-dot-a', url: 'assets/audio/sfx-slash-dot-a.mp3' },
   { key: 'sfx-slash-dot-b', url: 'assets/audio/sfx-slash-dot-b.mp3' },
+  // Feel-booth preview cues. Key 7 stays sfx-slash-dot. Combat does not call these.
+  { key: 'sfx-slash-enemy', url: 'assets/audio/sfx-slash-enemy.mp3' },
+  { key: 'sfx-slash-ally', url: 'assets/audio/sfx-slash-ally.mp3' },
+  { key: 'sfx-hit-fire', url: 'assets/audio/sfx-hit-fire.mp3' },
+  { key: 'sfx-hit-water', url: 'assets/audio/sfx-hit-water.mp3' },
   { key: 'zombie-hurt', url: 'assets/audio/zombie-hurt.mp3' },
   { key: 'zombie-death', url: 'assets/audio/zombie-death.mp3' },
   { key: 'barricade-hit', url: 'assets/audio/barricade-hit.mp3' },
@@ -386,6 +391,38 @@ export class SoundManager {
    */
   playFeelDotTick() {
     this._cue('sfx-slash-dot', 0.28);
+  }
+
+  /**
+   * Feel-booth enemy slash for key 5. Pairs `fx-slash-enemy-red` with
+   * `sfx-slash-enemy`. Preview only. Not a combat hook.
+   */
+  playFeelEnemySlash() {
+    this._cue('sfx-slash-enemy', 0.3, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  /**
+   * Feel-booth ally slash for key 6. Pairs `fx-slash-ally-white` with
+   * `sfx-slash-ally`. Preview only. Not a combat hook.
+   */
+  playFeelAllySlash() {
+    this._cue('sfx-slash-ally', 0.3, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  /**
+   * Feel-booth fire hit for key 8. Pairs `fx-hit-fire` with `sfx-hit-fire`.
+   * Preview only. Not a combat hook.
+   */
+  playFeelFireHit() {
+    this._cue('sfx-hit-fire', 0.28, AUDIO_COOLDOWN_MS.hit);
+  }
+
+  /**
+   * Feel-booth water hit for key 9. Pairs `fx-hit-water` with `sfx-hit-water`.
+   * Preview only. Not a combat hook.
+   */
+  playFeelWaterHit() {
+    this._cue('sfx-hit-water', 0.28, AUDIO_COOLDOWN_MS.hit);
   }
 
   playZombieHurt() {

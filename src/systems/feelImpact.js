@@ -16,7 +16,9 @@ import { playLibraryFx } from '../assets/libraryAssets.js';
  * a stand-in.
  * Keys 5–9 preview catalog FX at the chest (`feelBodyY`). Ally-white and
  * the DoT use NORMAL blend so the thin white stroke stays readable.
- * Red, fire, and water stay ADD.
+ * Red, fire, and water stay ADD. Keys 5, 6, 8, and 9 also play booth
+ * preview cues (`sfx-slash-enemy`, `sfx-slash-ally`, `sfx-hit-fire`,
+ * `sfx-hit-water`). Key 7 still plays `sfx-slash-dot`. Combat stays quiet.
  */
 
 export const FEEL_HIT_FLASH_MS = 40;
@@ -242,10 +244,12 @@ function feelBodyY(zombie, body) {
 }
 
 /**
- * Feel-booth preview of this wave's cataloged FX. Visual only.
+ * Feel-booth preview of this wave's cataloged FX.
  * Keys 5–9 call `playFeelWaveFx`. Key 4 stays `fx-slash-ninja`.
- * No damage, gold, save, or barricade write. The dot preview plays the
- * cataloged `sfx-slash-dot` default. The other four previews stay silent.
+ * No damage, gold, save, or barricade write. After the sprite spawns,
+ * each preview plays its booth cue: key 5 `sfx-slash-enemy`, key 6
+ * `sfx-slash-ally`, key 7 the cataloged `sfx-slash-dot` default, key 8
+ * `sfx-hit-fire`, and key 9 `sfx-hit-water`. Combat does not call these.
  * Every preview, including the red slash, is anchored on `feelBodyY`
  * (the chest), the same point as fire and water.
  */
@@ -315,7 +319,10 @@ export function feelWaveScale(kind, unitDisplayHeight) {
 
 /**
  * Spawn one cataloged wave FX at the body center. Does not move the body
- * or apply damage. The dot preview plays the cataloged `sfx-slash-dot`.
+ * or apply damage. After the sprite spawns, play the booth cue for that
+ * id: `enemy-red` → `playFeelEnemySlash`, `ally-white` → `playFeelAllySlash`,
+ * `dot` → `playFeelDotTick` (`sfx-slash-dot`), `fire` → `playFeelFireHit`,
+ * `water` → `playFeelWaterHit`.
  * @param {Phaser.Scene} scene
  * @param {import('../entities/Zombie.js').Zombie} zombie
  * @param {string} id `enemy-red`, `ally-white`, `dot`, `fire`, or `water`
@@ -334,6 +341,10 @@ export function playFeelWaveFx(scene, zombie, id) {
   });
   applyFeelBlend(sprite, feelWaveBlendName(spec.id));
   if (sprite && typeof sprite.setAlpha === 'function') sprite.setAlpha(1);
+  if (sprite && spec.id === 'enemy-red') scene.audio?.playFeelEnemySlash?.();
+  if (sprite && spec.id === 'ally-white') scene.audio?.playFeelAllySlash?.();
   if (sprite && spec.kind === 'dot') scene.audio?.playFeelDotTick?.();
+  if (sprite && spec.id === 'fire') scene.audio?.playFeelFireHit?.();
+  if (sprite && spec.id === 'water') scene.audio?.playFeelWaterHit?.();
   return sprite;
 }
