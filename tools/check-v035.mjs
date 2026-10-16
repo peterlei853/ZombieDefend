@@ -34,11 +34,16 @@
  * stay. Key 4 still sprays sparks and still plays the hurt sheet.
  * v0.35.9: feel booth unchanged. Stage 1 waves 1–3 contact DPS is 3/5/8.
  * Wave totals, HP, barricade, gold, and loudness stay put.
+ * v0.36.2: attack strips play in place (no barricade X lunge). Key 2 hurt
+ * and the live wall beat land on the midpoint frame of each attack strip
+ * (8 frames → frame 4). DPS, gold, barricade HP, and the camera stay put.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   APP_VERSION,
   DEMO_ENEMY_IDS,
@@ -49,13 +54,16 @@ import {
   ENEMY_ATTACK_HIT_FRAME,
   ENEMY_SFX_FILES,
   ENEMY_SKILL_STRIPS,
+  attackContactFrame,
   enemySfxClips,
   enemySfxKey,
   enemySfxUrl,
   enemySkillStrips,
   feelAttackHitFrame,
   feelHitDamage,
+  midAttackFrame,
 } from '../src/data/enemyShowcase.js';
+import { Zombie } from '../src/entities/Zombie.js';
 import {
   FEEL_HIT_FLASH_MS,
   FEEL_HIT_KNOCK_PX,
@@ -117,8 +125,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.9' && APP_VERSION === '0.35.9', 'package and APP_VERSION are 0.35.9');
-assert(html.includes('v0.35.9'), 'document title is v0.35.9');
+assert(pkg.version === '0.36.2' && APP_VERSION === '0.36.2', 'package and APP_VERSION are 0.36.2');
+assert(html.includes('v0.36.2'), 'document title is v0.36.2');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -206,35 +214,51 @@ assert(stageSrc.includes('if (this.enemyFeel)'), 'feel mode holds the combat loo
 assert(stageSrc.includes('playEnemyCue'), 'stage plays the per-enemy cues');
 assert(zombieSrc.includes('playEnemyCue'), 'zombie hits use the showcase cue when that enemy is selected');
 
-const HIT_FRAMES = {
-  'office-worker-v2': 4,
-  delivery: 5,
-  chef: 5,
-  nurse: 5,
-  brute: 4,
-  riot: 4,
-  trashcan: 3,
-  sprinter: 4,
-  slime: 4,
-  exploder: 4,
-  cyborg: 5,
-  clown: 4,
-  'lava-balon': 3,
-  'steel-balam': 4,
-};
+const enemiesRoot = fileURLToPath(new URL('../assets/library/enemies', import.meta.url));
+
+function framesForAnimKey(key) {
+  const stack = [enemiesRoot];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const name of readdirSync(dir)) {
+      const path = join(dir, name);
+      if (statSync(path).isDirectory()) {
+        stack.push(path);
+        continue;
+      }
+      if (name !== 'manifest.json') continue;
+      const data = JSON.parse(readFileSync(path, 'utf8'));
+      const row = (data.assets || []).find((asset) => asset.key === key);
+      if (row) return row.frames;
+    }
+  }
+  return null;
+}
+
 for (const id of IDS) {
   const skin = ZOMBIE_LIBRARY_SKINS[id] || ZOMBIE_BOSS_SKINS[id];
   const attack = skin?.actions?.attack;
   if (!attack) {
     assert(feelAttackHitFrame(id) == null, `${id} without an attack strip has no hit frame`);
     assert(!(id in ENEMY_ATTACK_HIT_FRAME), `${id} is not in the hit-frame table`);
+    assert(attackContactFrame(id, 0) == null, `${id} has no live contact frame`);
   } else {
-    assert(feelAttackHitFrame(id) === HIT_FRAMES[id], `${id} attack hit frame is ${HIT_FRAMES[id]}`);
-    assert(ENEMY_ATTACK_HIT_FRAME[id] === HIT_FRAMES[id], `${id} table matches feelAttackHitFrame`);
+    const frames = framesForAnimKey(attack);
+    const mid = midAttackFrame(frames);
+    assert(frames === 8, `${id} attack strip is 8 frames`);
+    assert(mid === 5, `${id} midpoint of an 8-frame strip is Phaser frame 5`);
+    assert(feelAttackHitFrame(id) === mid, `${id} attack hit frame is the midpoint ${mid}`);
+    assert(ENEMY_ATTACK_HIT_FRAME[id] === mid, `${id} table matches the strip midpoint`);
+    assert(attackContactFrame(id, frames) === mid, `${id} live contact uses the midpoint`);
   }
 }
-assert(Object.keys(HIT_FRAMES).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
-assert(feelAttackHitFrame('office-worker-v2') === 4, 'office-worker-v2 strike is attack frame 4');
+assert(Object.keys(ENEMY_ATTACK_HIT_FRAME).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
+assert(feelAttackHitFrame('office-worker-v2') === 5, 'office-worker-v2 strike is Phaser attack frame 5');
+assert(framesForAnimKey('zombie-nurse-attach') === 8, 'nurse attach is 8 frames, so live frame 5 is mid-strip');
+assert(attackContactFrame('riot-bare', framesForAnimKey('zombie-riot-bare-attack')) === 5, 'bare riot contact is mid-strip');
+assert(attackContactFrame('trashcan-bare', framesForAnimKey('zombie-trashcan-bare-attack')) === 5, 'bare trashcan contact is mid-strip');
+assert(midAttackFrame(4) === 3 && midAttackFrame(1) === 1, 'shorter strips still contact at half their length');
+assert(attackContactFrame(null, 4) === 3, 'a legacy 4-frame sheet contacts on Phaser frame 3');
 
 const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
 assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
@@ -531,7 +555,33 @@ assert(onHitFn.includes('playEnemyCue') && onHitFn.includes("'hurt'"), 'hurt sfx
 assert(stageSrc.includes('player-girl-hurt'), 'the hurt pose is player-girl-hurt');
 assert(zombieSrc.includes("on('animationupdate'"), 'contact listens to the attack frame');
 assert(zombieSrc.includes('animFrame.index'), 'contact reads the shown frame index');
-assert(!zombieSrc.slice(zombieSrc.indexOf('_armAttackContact'), zombieSrc.indexOf('_playHurtStrip')).includes('delayedCall'), 'attack contact is not a delayed timer');
+const contactFn = zombieSrc.slice(
+  zombieSrc.indexOf('_armAttackContact(attackKey, hitFrame, onContact)'),
+  zombieSrc.indexOf('_playHurtStrip')
+);
+assert(!contactFn.includes('delayedCall'), 'attack contact is not a delayed timer');
+assert(!zombieSrc.includes('BARRICADE_LUNGE'), 'zombies do not read a lunge distance');
+const configSrc = readFileSync(new URL('../src/data/GameConfig.js', import.meta.url), 'utf8');
+assert(!configSrc.includes('BARRICADE_LUNGE'), 'lunge juice constants are gone');
+const showcaseFn = zombieSrc.slice(
+  zombieSrc.indexOf('playShowcaseAttack(hitFrame, onContact)'),
+  zombieSrc.indexOf('/** Drop a pending key-2 contact')
+);
+assert(!showcaseFn.includes('tweens') && !showcaseFn.includes('body.x'), 'feel-booth attack does not move the body');
+const punchFn = zombieSrc.slice(zombieSrc.indexOf('_playAttackPunch()'), zombieSrc.indexOf('_armBarricadeBeat(attackKey)'));
+assert(!punchFn.includes('tweens.add') && !punchFn.includes('BARRICADE_LUNGE'), 'live attack does not tween forward');
+assert(punchFn.includes('this.body.x = homeX'), 'live attack plants the feet on the halt');
+const marchFn = zombieSrc.slice(
+  zombieSrc.indexOf('update(deltaSec, contactX, pet = null)'),
+  zombieSrc.indexOf('_petToChase(pet, contactX)')
+);
+assert(!marchFn.includes('_attackBeat = true'), 'the march does not mark the bite on the windup frame');
+const chaseFn = zombieSrc.slice(
+  zombieSrc.indexOf('_chasePet(deltaSec, pet, contactX)'),
+  zombieSrc.indexOf('petContactDamage(deltaSec)')
+);
+assert(!chaseFn.includes('_attackBeat = true'), 'a pet bite does not mark the wall beat on the windup frame');
+assert(zombieSrc.includes('attackContactFrame'), 'live contact uses the midpoint helper');
 assert(zombieSrc.includes("playZombieHurt"), 'normal hits still use the shared hurt cue');
 assert(soundSrc.includes('enemySfxClips()'), 'SoundManager preloads the enemy pack');
 assert(soundSrc.includes('playEnemyCue'), 'SoundManager exposes playEnemyCue');
@@ -554,6 +604,123 @@ assert(AUDIO_VOLUME.hit === 0.3 && AUDIO_VOLUME.hurt === 0.3 && AUDIO_VOLUME.dea
 assert(AUDIO_VOLUME.fire === 0.35 && AUDIO_VOLUME.ult === 0.4 && AUDIO_VOLUME.melee === 0.35, 'fire ult melee volumes stay put');
 assert(!stageSrc.includes('camera.shake') && !stageSrc.includes('.shake('), 'the camera does not shake');
 assert(!stageSrc.includes('localStorage.setItem'), 'stage does not write a save');
+
+function fakeAttackBody(x = 120) {
+  return {
+    x,
+    y: 40,
+    active: true,
+    _ons: [],
+    anims: { currentAnim: null, currentFrame: null, isPlaying: false },
+    on(ev, fn) { this._ons.push({ ev, fn }); },
+    off(_ev, fn) { this._ons = this._ons.filter((row) => row.fn !== fn); },
+    play(key) {
+      this.anims.currentAnim = { key };
+      this.anims.currentFrame = { index: 0 };
+      this.anims.isPlaying = true;
+    },
+  };
+}
+
+function attackHost(partial = {}) {
+  const host = {
+    alive: true,
+    atBarricade: true,
+    petBiteTarget: null,
+    _isSprite: true,
+    _attackBeat: false,
+    _attackContactToken: 0,
+    _attackContactHandler: null,
+    _haltX: 120,
+    skin: { id: 'trashcan' },
+    scene: {
+      tweens: {
+        added: 0,
+        killTweensOf() {},
+        add() { this.added += 1; },
+      },
+      anims: {
+        exists: () => true,
+        get: () => ({ frames: new Array(8) }),
+      },
+    },
+    body: fakeAttackBody(),
+    _animKey(action) {
+      if (action === 'attach') return null;
+      if (action === 'attack') return 'zombie-trashcan-attack';
+      return null;
+    },
+    _animReady(key) { return !!key; },
+    _stopWalkAnim() {},
+    _syncBars() {},
+    ...partial,
+  };
+  host._clearAttackContact = Zombie.prototype._clearAttackContact;
+  host._armAttackContact = Zombie.prototype._armAttackContact;
+  host._armBarricadeBeat = Zombie.prototype._armBarricadeBeat;
+  host._playAttackPunch = Zombie.prototype._playAttackPunch;
+  host.playShowcaseAttack = Zombie.prototype.playShowcaseAttack;
+  if (!host.playShowcaseStrip) host.playShowcaseStrip = () => true;
+  return host;
+}
+
+const wall = attackHost();
+wall._playAttackPunch();
+assert(wall.body.x === 120 && wall.scene.tweens.added === 0, 'live punch stays on the halt and adds no tween');
+assert(wall._attackBeat === false, 'trashcan wall flash waits for the contact frame');
+const liveHandler = wall.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+assert(typeof liveHandler === 'function', 'live punch listens for the attack frame');
+liveHandler({ key: 'zombie-trashcan-attack' }, { index: 4 });
+assert(wall._attackBeat === false, 'Phaser frame 4 is still the cell before the midpoint');
+liveHandler({ key: 'zombie-trashcan-attack' }, { index: 5 });
+assert(wall._attackBeat === true, 'Phaser frame 5 marks the barricade beat');
+assert(wall.body._ons.length === 0, 'the contact listener drops after the hit');
+
+const feelHost = attackHost({
+  atBarricade: false,
+  skin: { id: 'chef' },
+  _animKey: () => 'zombie-chef-attack',
+});
+let hurt = false;
+assert(feelHost.playShowcaseAttack(feelAttackHitFrame('chef'), () => { hurt = true; }) === true, 'key 2 plays the chef attack');
+assert(feelHost.body.x === 120 && feelHost.scene.tweens.added === 0, 'key 2 does not jolt X');
+assert(hurt === false, 'chef hurt waits for the midpoint');
+const feelHandler = feelHost.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+feelHandler({ key: 'zombie-chef-attack' }, { index: 4 });
+assert(hurt === false, 'chef frame 4 does not flinch the hero');
+feelHandler({ key: 'zombie-chef-attack' }, { index: 5 });
+assert(hurt === true, 'chef frame 5 flinches the hero');
+
+const nurse = attackHost({
+  skin: { id: 'nurse' },
+  _animKey(action) {
+    if (action === 'attach') return 'zombie-nurse-attach';
+    if (action === 'attack') return 'zombie-nurse-attack';
+    return null;
+  },
+});
+nurse._playAttackPunch();
+assert(nurse.body.anims.currentAnim.key === 'zombie-nurse-attach', 'nurse bite plays attach in place');
+assert(nurse.body.x === 120 && nurse._attackBeat === false, 'nurse wall flash waits on attach');
+nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 4 });
+assert(nurse._attackBeat === false, 'nurse frame 4 is still before the attach midpoint');
+nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 5 });
+assert(nurse._attackBeat === true, 'nurse contact is frame 5 of the 8-frame attach strip');
+
+const plain = attackHost({ _isSprite: false, _animReady: () => false, skin: null });
+plain._playAttackPunch();
+assert(plain._attackBeat === true && plain.body.x === 120, 'a placeholder with no strip marks the beat without moving');
+
+const petBite = attackHost({ atBarricade: false, petBiteTarget: { x: 1 } });
+petBite._playAttackPunch();
+assert(petBite._attackBeat === false && petBite.body._ons.length === 0, 'a pet bite does not arm a wall flash');
+
+const cut = attackHost();
+cut._playAttackPunch();
+const late = cut.body._ons[0].fn;
+cut._clearAttackContact();
+late({ key: 'zombie-trashcan-attack' }, { index: 5 });
+assert(cut._attackBeat === false, 'knockback clears a bite that has not reached the midpoint');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

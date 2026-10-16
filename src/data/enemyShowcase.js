@@ -115,48 +115,68 @@ export function enemySfxClips() {
 }
 
 /**
- * 0-based frame of the attack strip where the east strike first reaches
- * the target. These attack sheets have no `timing.impactFrame` marker.
- * Most indexes are the first frame whose striking limb is within 2px of its
- * furthest east reach (the arms; riot’s low bat/shield). Nurse and
- * lava-balon are one frame earlier: the booth flinch was landing about
- * one 10fps frame after the stab. Key 2 starts
- * `player-girl-hurt` and `sfx-enemy-<id>-hurt` when that frame is shown.
- * slime-mini has no attack strip, so it is absent and key 2 reacts at once.
+ * Contact frame, using Phaser's `AnimationFrame.index`.
+ * Every catalog attack sheet is 8 cells at 10 fps and has no
+ * `timing.impactFrame` marker. That index is 1-based: the first cell
+ * reports 1 and the last cell reports 8 (texture frames 0–7). The frame
+ * that starts at half the strip is index 5 (texture cell 4, 400 ms).
+ * Key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt` on that
+ * frame. The live barricade flash uses the same index. slime-mini has no
+ * attack strip, so it is absent and key 2 reacts at once.
  *
- * office-worker-v2 4 — arms jump to full extension and hold through 7
- * delivery 5 — arm arrives; frame 6 is 1px of follow-through
- * chef 5 — cleaver at full reach
- * nurse 5 — one frame before full reach (frame 6) so the hero flinch meets the stab
- * brute 4 — fist at full reach
- * riot 4 — low weapon/shield at full reach
- * trashcan 3 — arms at full reach
- * sprinter 4 — lunge arrives; frame 5 is 2px of follow-through
- * slime 4 — body at the strike; frame 5 is 2px of follow-through
- * exploder 4 — arms at full reach
- * cyborg 5 — arm at full reach
- * clown 4 — arms at full reach
- * lava-balon 3 — one frame before full reach (frame 4) so the hero flinch meets the strike
- * steel-balam 4 — arm at full reach
+ * Earlier indexes followed the furthest east reach and were compared to
+ * this same 1-based index, so several landed in the windup. Those values:
+ * office-worker-v2 4→5, delivery 5→5, chef 5→5, nurse 5→5, brute 4→5,
+ * riot 4→5, trashcan 3→5, sprinter 4→5, slime 4→5, exploder 4→5,
+ * cyborg 5→5, clown 4→5, lava-balon 3→5, steel-balam 4→5.
  *
  * @type {Record<string, number>}
  */
 export const ENEMY_ATTACK_HIT_FRAME = {
-  'office-worker-v2': 4,
+  'office-worker-v2': 5,
   delivery: 5,
   chef: 5,
   nurse: 5,
-  brute: 4,
-  riot: 4,
-  trashcan: 3,
-  sprinter: 4,
-  slime: 4,
-  exploder: 4,
+  brute: 5,
+  riot: 5,
+  trashcan: 5,
+  sprinter: 5,
+  slime: 5,
+  exploder: 5,
   cyborg: 5,
-  clown: 4,
-  'lava-balon': 3,
-  'steel-balam': 4,
+  clown: 5,
+  'lava-balon': 5,
+  'steel-balam': 5,
 };
+
+/**
+ * 1-based Phaser frame that starts at half the strip.
+ * 8 frames → 5 (texture cell 4). 4 frames → 3. 1 frame → 1.
+ * @param {number} frameCount
+ */
+export function midAttackFrame(frameCount) {
+  const n = Number(frameCount);
+  if (!Number.isInteger(n) || n <= 0) return 1;
+  return Math.floor(n / 2) + 1;
+}
+
+/**
+ * Contact frame for the strip that is actually playing.
+ * A catalog id uses {@link ENEMY_ATTACK_HIT_FRAME} when that index fits.
+ * Bare and legacy strips, which are not in the table, use the midpoint.
+ * Null when there is no strip to wait for.
+ * @param {string|null|undefined} id
+ * @param {number} frameCount
+ * @returns {number|null}
+ */
+export function attackContactFrame(id, frameCount) {
+  const total = Number(frameCount);
+  const hasStrip = Number.isInteger(total) && total > 0;
+  const listed = feelAttackHitFrame(id);
+  if (listed != null && hasStrip && listed >= 1 && listed <= total) return listed;
+  if (hasStrip) return midAttackFrame(total);
+  return null;
+}
 
 /**
  * Attack contact frame for the feel booth, or null when that id has no strike.

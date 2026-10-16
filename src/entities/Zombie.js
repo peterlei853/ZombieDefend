@@ -20,6 +20,7 @@ import {
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
+import { attackContactFrame } from '../data/enemyShowcase.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
@@ -82,7 +83,7 @@ export class Zombie {
     /** Seconds until the next barricade bite (punch + hit VFX). */
     this._attackCooldown = 1;
     this._attackBeat = false;
-    /** Halt X while chewing, so the lunge tween can return here. */
+    /** Halt X while biting. The attack strip plays on this X. */
     this._haltX = null;
     /**
      * Fractional contact DPS waiting for the next integer floater.
@@ -298,6 +299,7 @@ export class Zombie {
       this._haltX = null;
       this._attackCooldown = 1;
       this._attackBeat = false;
+      this._clearAttackContact();
       if (shown >= 1) {
         showDamageText(this.scene, wallX, wallY - layoutPx(18), shown, DAMAGE_COLORS.barricade);
       }
@@ -339,6 +341,7 @@ export class Zombie {
       this._haltX = null;
       this._attackCooldown = 1;
       this._attackBeat = false;
+      this._clearAttackContact();
       if (shown >= 1) {
         showDamageText(this.scene, wallX, wallY - layoutPx(18), shown, DAMAGE_COLORS.barricade);
       }
@@ -396,7 +399,6 @@ export class Zombie {
           this._attackCooldown += 1;
           if (this._attackCooldown < 0) this._attackCooldown = 0;
           this._playAttackPunch();
-          this._attackBeat = true;
         }
       } else {
         this._syncLocomotion();
@@ -443,6 +445,8 @@ export class Zombie {
     if (this.atBarricade) {
       this.atBarricade = false;
       this._haltX = null;
+      this._attackBeat = false;
+      this._clearAttackContact();
       this.scene?.tweens?.killTweensOf?.(this.body);
     }
     if (dist <= reach) {
@@ -453,7 +457,6 @@ export class Zombie {
         this._attackCooldown += 1;
         if (this._attackCooldown < 0) this._attackCooldown = 0;
         this._playAttackPunch();
-        this._attackBeat = true;
       } else {
         this._stopWalkAnim();
       }
@@ -581,8 +584,10 @@ export class Zombie {
   }
 
   /**
-   * True once on each ~1s bite while this zombie is dealing contact DPS.
-   * StageScene uses the beat for flash / claw / damage text; DPS math stays per-frame.
+   * True once, on the attack strip's contact frame, while this zombie is
+   * biting the barricade. StageScene uses the beat for flash / claw / damage
+   * text; DPS math stays per-frame. A body with no attack strip reports the
+   * beat on the same update that starts the bite.
    */
   consumeAttackBeat() {
     const beat = this._attackBeat;
@@ -620,7 +625,7 @@ export class Zombie {
     return shown;
   }
 
-  /** Stop the walk or run while the body leans into the barricade. */
+  /** Stop the walk or run while the attack strip plays in place. */
   _stopWalkAnim() {
     if (!this._isSprite || !this.body?.anims) return;
     const key = this.body.anims.currentAnim?.key || '';
@@ -661,36 +666,41 @@ export class Zombie {
   }
 
   /**
-   * ~10 field px lean into the barricade, then return.
-   * Plays `{prefix}-attack` when that strip registered.
+   * Play the bite strip without stepping forward. Feet stay on the halt X.
+   * Nurse uses the attach strip when it is loaded; everyone else uses attack.
+   * The wall flash waits for that strip's contact frame.
    */
   _playAttackPunch() {
     if (!this.alive || !this.body) return;
     const homeX = this._haltX ?? this.body.x;
-    this.scene.tweens.killTweensOf(this.body);
+    this.scene?.tweens?.killTweensOf?.(this.body);
     this.body.x = homeX;
     this._stopWalkAnim();
     const attachKey = this._animKey('attach');
     const attackKey = this._animReady(attachKey) ? attachKey : this._animKey('attack');
-    if (this._isSprite && this._animReady(attackKey)) {
-      this.body.play(attackKey);
+    const played = !!(this._isSprite && this._animReady(attackKey));
+    if (played) this.body.play(attackKey);
+    this._armBarricadeBeat(played ? attackKey : null);
+  }
+
+  /**
+   * Mark the barricade beat when the playing strip reaches its contact frame.
+   * No strip, or a bite that is not on the wall, does not wait.
+   * @param {string|null} attackKey
+   */
+  _armBarricadeBeat(attackKey) {
+    this._clearAttackContact();
+    if (!this.alive || !this.atBarricade || this.petBiteTarget) return;
+    const total = attackKey ? (this.scene?.anims?.get?.(attackKey)?.frames?.length || 0) : 0;
+    const hitFrame = attackContactFrame(this.skin?.id, total);
+    const ready = !!(attackKey && this._animReady(attackKey) && Number.isInteger(hitFrame));
+    if (!ready) {
+      this._attackBeat = true;
+      return;
     }
-    const juice = GAME_CONFIG.JUICE;
-    const reach = homeX + juice.BARRICADE_LUNGE_PX * LAYOUT_SCALE;
-    this.scene.tweens.add({
-      targets: this.body,
-      x: reach,
-      duration: juice.BARRICADE_LUNGE_MS,
-      yoyo: true,
-      ease: 'Quad.easeOut',
-      onUpdate: () => {
-        if (this.alive) this._syncBars();
-      },
-      onComplete: () => {
-        if (!this.alive || !this.body || !this.atBarricade) return;
-        this.body.x = homeX;
-        this._syncBars();
-      },
+    this._armAttackContact(attackKey, hitFrame, () => {
+      if (!this.alive || !this.atBarricade || this.petBiteTarget) return;
+      this._attackBeat = true;
     });
   }
 
@@ -781,10 +791,10 @@ export class Zombie {
   }
 
   /**
-   * Key 2. Attack strip (not the nurse attach skill) plus the barricade lunge.
-   * `onContact` runs when `hitFrame` is the frame on screen. A missing
-   * strip, or no hit frame, runs it immediately — there is no strike to wait for.
-   * The contact is the anim update, not a timer.
+   * Key 2. Attack strip in place (not the nurse attach skill, and not a
+   * step toward the barricade). `onContact` runs when `hitFrame` is the
+   * frame on screen. A missing strip, or no hit frame, runs it immediately —
+   * there is no strike to wait for. The contact is the anim update, not a timer.
    * @param {number|null|undefined} hitFrame
    * @param {(() => void)|undefined} onContact
    * @returns {boolean}
@@ -794,25 +804,6 @@ export class Zombie {
     this._clearAttackContact();
     const attackKey = this._animKey('attack');
     const played = attackKey ? this.playShowcaseStrip(attackKey) : false;
-    const homeX = this.body.x;
-    const juice = GAME_CONFIG.JUICE;
-    const reach = homeX + juice.BARRICADE_LUNGE_PX * LAYOUT_SCALE;
-    this.scene?.tweens?.killTweensOf?.(this.body);
-    this.scene?.tweens?.add?.({
-      targets: this.body,
-      x: reach,
-      duration: juice.BARRICADE_LUNGE_MS,
-      yoyo: true,
-      ease: 'Quad.easeOut',
-      onUpdate: () => {
-        if (this.alive) this._syncBars();
-      },
-      onComplete: () => {
-        if (!this.alive || !this.body) return;
-        this.body.x = homeX;
-        this._syncBars();
-      },
-    });
     this._armAttackContact(played ? attackKey : null, hitFrame, onContact);
     return played;
   }
@@ -853,7 +844,8 @@ export class Zombie {
       return;
     }
     const total = this.scene?.anims?.get?.(attackKey)?.frames?.length || 0;
-    if (total > 0 && hitFrame >= total) {
+    // AnimationFrame.index is 1-based, so the last cell is `total`, not `total - 1`.
+    if (total > 0 && hitFrame > total) {
       fire();
       return;
     }
@@ -927,6 +919,7 @@ export class Zombie {
     this._lastY = body.y;
     this.atBarricade = false;
     this._attackBeat = false;
+    this._clearAttackContact();
     this._releaseBars();
     if (this.scene?.tweens?.killTweensOf) this.scene.tweens.killTweensOf(body);
 

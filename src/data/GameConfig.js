@@ -138,10 +138,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * v0.35.9 keeps those feel-booth freezes. Stage 1 waves 1–3 contact
  * DPS is 3/5/8. Counts, speeds, windows, HP, wave 4, barricade max HP,
  * gold-by-HP, saves, and halt math stay put.
+ * v0.36.2 removes the barricade bite's forward body lunge. Attack strips
+ * play in place. Feel-booth hurt and the live wall flash land on Phaser
+ * frame 5 of each 8-frame attack sheet (texture cell 4, halfway through).
+ * Gold, saves, barricade HP, wave DPS, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.35.9';
+export const APP_VERSION = '0.36.2';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -619,11 +623,6 @@ export const GAME_CONFIG = {
      */
     HIT_FLASH_MS: 50,
     HIT_FLASH_COLOR: 0xffffff,
-
-    /** Field px lean into the barricade (+X) on each bite, then back. */
-    BARRICADE_LUNGE_PX: 10,
-    /** Outward half of the yoyo. Return takes the same time. */
-    BARRICADE_LUNGE_MS: 100,
 
     /** Stumble / slow when remaining HP is at or below this fraction of max. */
     CRIT_HP_RATIO: 0.3,
