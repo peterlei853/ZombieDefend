@@ -117,15 +117,17 @@ export function enemySfxClips() {
 /**
  * 0-based frame of the attack strip where the east strike first reaches
  * the target. These attack sheets have no `timing.impactFrame` marker.
- * The index is the first frame whose striking limb is within 2px of its
- * furthest east reach (the arms; riot’s low bat/shield). Key 2 starts
+ * Most indexes are the first frame whose striking limb is within 2px of its
+ * furthest east reach (the arms; riot’s low bat/shield). Nurse and
+ * lava-balon are one frame earlier: the booth flinch was landing about
+ * one 10fps frame after the stab. Key 2 starts
  * `player-girl-hurt` and `sfx-enemy-<id>-hurt` when that frame is shown.
  * slime-mini has no attack strip, so it is absent and key 2 reacts at once.
  *
  * office-worker-v2 4 — arms jump to full extension and hold through 7
  * delivery 5 — arm arrives; frame 6 is 1px of follow-through
  * chef 5 — cleaver at full reach
- * nurse 6 — arm jumps to full reach (frames 0–1 are a held weapon, not the strike)
+ * nurse 5 — one frame before full reach (frame 6) so the hero flinch meets the stab
  * brute 4 — fist at full reach
  * riot 4 — low weapon/shield at full reach
  * trashcan 3 — arms at full reach
@@ -134,7 +136,7 @@ export function enemySfxClips() {
  * exploder 4 — arms at full reach
  * cyborg 5 — arm at full reach
  * clown 4 — arms at full reach
- * lava-balon 4 — arm at full reach
+ * lava-balon 3 — one frame before full reach (frame 4) so the hero flinch meets the strike
  * steel-balam 4 — arm at full reach
  *
  * @type {Record<string, number>}
@@ -143,7 +145,7 @@ export const ENEMY_ATTACK_HIT_FRAME = {
   'office-worker-v2': 4,
   delivery: 5,
   chef: 5,
-  nurse: 6,
+  nurse: 5,
   brute: 4,
   riot: 4,
   trashcan: 3,
@@ -152,7 +154,7 @@ export const ENEMY_ATTACK_HIT_FRAME = {
   exploder: 4,
   cyborg: 5,
   clown: 4,
-  'lava-balon': 4,
+  'lava-balon': 3,
   'steel-balam': 4,
 };
 

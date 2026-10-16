@@ -46,8 +46,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const fenceAssetSrc = readFileSync(new URL('../src/assets/fenceMounts.js', import.meta.url), 'utf8');
 const fenceSysSrc = readFileSync(new URL('../src/systems/FenceMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.35.4' && APP_VERSION === '0.35.4', 'package and APP_VERSION are 0.35.4');
-assert(html.includes('v0.35.4'), 'document title is v0.35.4');
+assert(pkg.version === '0.35.6' && APP_VERSION === '0.35.6', 'package and APP_VERSION are 0.35.6');
+assert(html.includes('v0.35.6'), 'document title is v0.35.6');
 assert(FENCE_MOUNT_COUNT === 6, 'six fence mounts');
 assert(FENCE_WEAPON_ORDER.join() === OWNED_WEAPON_ORDER.join(), 'mount order is OWNED_WEAPON_ORDER');
 assert(

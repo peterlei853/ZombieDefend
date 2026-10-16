@@ -87,11 +87,13 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * `?enemy=<id>` spawns only that catalog enemy in front of the fence
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
  * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
- * Key 1 and key 4 share a 40ms hitstop, white flash, impact sparks, and
- * a 2px X knockback. Key 4 plays `fx-slash-ninja` at the body center
- * and `sfx-slash-ninja`.
+ * Key 1 and key 4 share a 40ms hitstop, white flash, and a 2px X
+ * knockback. Key 4 also sprays impact sparks and plays `fx-slash-ninja`
+ * at the body center and `sfx-slash-ninja`. Key 1 does not spray the
+ * ranged spark cone.
  * Keys 5–9 only preview this wave's catalog sheets (`fx-slash-enemy-red`,
- * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`).
+ * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`)
+ * at the chest. Ally-white and the DoT use NORMAL blend.
  * Keys 8 and 9 play the 4×24 bullet hits as drawn (left → right, 8 fps).
  * Those previews do not deal damage. Key 7 also plays the cataloged
  * `sfx-slash-dot` default. Keys 5, 6, 8, and 9 stay silent.
@@ -557,8 +559,9 @@ export default class StageScene extends Phaser.Scene {
   }
 
   /**
-   * Ranged (key 1) or melee (key 4). Same hitstop, flash, sparks, and
-   * 2px X knockback. Melee plays `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
+   * Ranged (key 1) or melee (key 4). Same hitstop, flash, and 2px X
+   * knockback. Melee also sprays sparks and plays `fx-slash-ninja` at
+   * the body center and `sfx-slash-ninja`. Key 1 does not spray sparks.
    * @param {boolean} melee
    */
   _feelStrike(melee) {
