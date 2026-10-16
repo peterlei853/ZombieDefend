@@ -19,11 +19,12 @@
  * and `sfx-slash-ninja` via `playFeelMeleeSlash`. Hitstop, flash, sparks,
  * and 2px knockback stay. Keys 5–9 preview catalog FX only
  * (`fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot`,
- * `fx-hit-fire`, `fx-hit-water`, 4×24 @ 8 fps / 0.5s). No damage. Key 7 plays the
+ * `fx-hit-fire`, `fx-hit-water`, 4×24 @ 8 fps, drawn left → right). No damage. Key 7 plays the
  * cataloged `sfx-slash-dot` default. The other four previews stay silent.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import {
   APP_VERSION,
@@ -307,15 +308,35 @@ for (const key of WAVE_KEYS) {
   const folder = key.startsWith('fx-hit-') ? 'bullet-hit' : 'melee';
   assert(existsSync(new URL(`../assets/library/fx/${folder}/${key}.png`, import.meta.url)), `${key} sheet is cataloged`);
 }
-const assetIndex = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
-for (const key of ['fx-hit-fire', 'fx-hit-water']) {
-  const asset = assetIndex.assets.find((row) => row.key === key);
-  assert(asset?.frameWidth === 24 && asset?.frameHeight === 24 && asset?.frames === 4 && asset?.frameRate === 8, `${key} is 4×24 @ 8 fps (0.5s)`);
-  const png = readFileSync(new URL(`../assets/library/fx/bullet-hit/${key}.png`, import.meta.url));
-  assert(png.readUInt32BE(16) === 96 && png.readUInt32BE(20) === 24, `${key} sheet is a 96×24 strip`);
+assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-fire-bullet24.png', import.meta.url)), 'a separate fire upscale file is not cataloged');
+assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-water-bullet24.png', import.meta.url)), 'a separate water upscale file is not cataloged');
+const HIT_SHEETS = {
+  'fx-hit-fire': {
+    sha256: 'ea386cee539fda562b43c4d7a75532ec5280ca2b0fff09cd6f175609f594d6ea',
+    feelKey: '8',
+  },
+  'fx-hit-water': {
+    sha256: 'bf8b737766980bdc75cfc898bcf0a20d945d148933d93a68711b97f8a2876cd9',
+    feelKey: '9',
+  },
+};
+const bulletManifest = JSON.parse(readFileSync(new URL('../assets/library/fx/bullet-hit/manifest.json', import.meta.url), 'utf8'));
+const bulletIndex = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+for (const [key, spec] of Object.entries(HIT_SHEETS)) {
+  const buf = readFileSync(new URL(`../assets/library/fx/bullet-hit/${key}.png`, import.meta.url));
+  assert(buf.readUInt32BE(16) === 96 && buf.readUInt32BE(20) === 24, `${key} sheet is 96×24`);
+  assert(createHash('sha256').update(buf).digest('hex') === spec.sha256, `${key} is the approved left-to-right sheet`);
+  const row = bulletManifest.assets.find((asset) => asset.key === key);
+  assert(row?.frames === 4 && row.frameWidth === 24 && row.frameHeight === 24 && row.frameRate === 8 && row.loop === false, `${key} is 4×24 @ 8 fps, once`);
+  assert(row.extra?.gameplayNotes?.combatWired === false && row.extra?.gameplayNotes?.direction === 'left-to-right' && row.extra?.gameplayNotes?.feelKey === spec.feelKey && row.extra?.gameplayNotes?.scale === 1, `${key} stays a scale-1 feel preview`);
+  const indexed = bulletIndex.assets.find((asset) => asset.key === key);
+  assert(indexed?.frames === 4 && indexed.frameWidth === 24 && indexed.frameHeight === 24 && indexed.frameRate === 8, `${key} catalog index matches the sheet`);
 }
-assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-fire-bullet24.png', import.meta.url)), '24px fire upscale is not cataloged');
-assert(!existsSync(new URL('../assets/library/fx/bullet-hit/fx-hit-water-bullet24.png', import.meta.url)), '24px water upscale is not cataloged');
+const waveFxFn = feelSrc.slice(feelSrc.indexOf('export function playFeelWaveFx'));
+assert(!waveFxFn.includes('flipX') && !waveFxFn.includes('setFlipX'), 'keys 8 and 9 play the bullet sheets as drawn');
+const weaponSrc = readFileSync(new URL('../src/systems/WeaponSystem.js', import.meta.url), 'utf8');
+assert(!weaponSrc.includes("'fx-hit-fire'") && !weaponSrc.includes("'fx-hit-water'"), 'live combat does not spawn the bullet-hit sheets');
+assert(!weaponSrc.includes('"fx-hit-fire"') && !weaponSrc.includes('"fx-hit-water"'), 'live combat does not quote the bullet-hit keys');
 assert(GAME_AUDIO.some((clip) => clip.key === 'sfx-slash-dot' && clip.url === 'assets/audio/sfx-slash-dot.mp3'), 'sfx-slash-dot stays the cataloged default');
 assert(existsSync(new URL('../assets/audio/sfx-slash-dot.mp3', import.meta.url)), 'sfx-slash-dot default is the audio-pack file');
 const dotFn = soundSrc.slice(soundSrc.indexOf('playFeelDotTick()'), soundSrc.indexOf('playZombieHurt()'));

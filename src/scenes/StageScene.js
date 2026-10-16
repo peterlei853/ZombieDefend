@@ -92,6 +92,7 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * and `sfx-slash-ninja`.
  * Keys 5–9 only preview this wave's catalog sheets (`fx-slash-enemy-red`,
  * `fx-slash-ally-white`, `fx-slash-dot`, `fx-hit-fire`, `fx-hit-water`).
+ * Keys 8 and 9 play the 4×24 bullet hits as drawn (left → right, 8 fps).
  * Those previews do not deal damage. Key 7 also plays the cataloged
  * `sfx-slash-dot` default. Keys 5, 6, 8, and 9 stay silent.
  * Key 2 plays the attack strip, then `player-girl-hurt` and the hurt cue

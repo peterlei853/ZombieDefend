@@ -34,7 +34,7 @@ assets/library/
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
 │   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
-│   ├── bullet-hit/           fx-hit-fire, fx-hit-water (4×24 @ 8 fps)
+│   ├── bullet-hit/           fx-hit-fire, fx-hit-water (4×24 @ 8 fps, L→R)
 │   └── v026/                 v0.26 overnight pack + INVENTORY.md
 │       ├── exp-orb/          exp-orb (32×32 pickup)
 │       ├── evolve-stars/     vfx-evolve-star + T1/T2/T3 head markers
@@ -66,7 +66,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast` |
 | Shared melee | `fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot` | combat FX in `fx/melee/` (not hero-only) |
-| Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps (0.5s). Transparent splash remake |
+| Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps, burst left → right |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
 | Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
@@ -189,14 +189,14 @@ Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays 
 
 ### Bullet hits (catalog + feel demo)
 
-`fx/bullet-hit/` holds the splash remakes. Both canonical keys are 4×24 @ 8 fps, once, origin (0.5, 0.5), 0.5s (125ms per frame). Same motion (burst → droplets → fade); fire is the recolor. Sheets are transparent. Blend `ADD` or `NORMAL`. The feel booth uses ADD and does not deal damage.
+`fx/bullet-hit/` holds the bullet-hit bursts. Both canonical keys are 4×24 @ 8 fps, once, origin (0.5, 0.5), 0.5s. The burst is drawn **left → right** on the sheet. Feel-booth keys 8 and 9 play those sheets as drawn. Blend `ADD` or `NORMAL`. The feel booth uses ADD and does not deal damage.
 
-| Key | Element | Frames | Fit | Sheet |
-|---|---|---|---|---|
-| `fx-hit-fire` | fire recolor of the splash | 4 @ 8 | 24×24 | 96×24 horizontal |
-| `fx-hit-water` | water splash | 4 @ 8 | 24×24 | 96×24 horizontal |
+| Key | Feel key | Element | Frames | Fit | Sheet |
+|---|---|---|---|---|---|
+| `fx-hit-fire` | 8 | flame orange/yellow burst, left → right | 4 @ 8 | 24×24 | 96×24 horizontal |
+| `fx-hit-water` | 9 | fx-water-proj cyan burst, left → right | 4 @ 8 | 24×24 | 96×24 horizontal |
 
-**Scale rule.** Display size is the 24×24 frame at scale 1 (bullet-adjacent). Place them at the impact point. Feel-booth key 8 previews `fx-hit-fire` and key 9 previews `fx-hit-water`. `fx-hit-electric` is not in this wave.
+**Scale rule.** Display size is the authored 24×24 frame. Place them at the impact point at scale 1. `fx-hit-electric` is not in this wave.
 
 ## Front-float combat (v0.27)
 

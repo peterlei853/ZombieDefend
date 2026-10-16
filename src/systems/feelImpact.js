@@ -268,7 +268,7 @@ export function feelUnitDisplayHeight(zombie) {
 
 /**
  * Faction slashes: `unitDisplayHeight / 128`.
- * DoT tick: half of that. Bullet hits stay at 1 (the 24×24 frames, 0.5s).
+ * DoT tick: half of that. Bullet hits stay at 1 (the authored 24×24 sheet, already drawn left → right).
  * @param {'slash'|'dot'|'bullet'} kind
  * @param {number} unitDisplayHeight
  */
