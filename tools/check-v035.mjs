@@ -68,7 +68,7 @@ import {
   playFeelImpact,
   playFeelWaveFx,
 } from '../src/systems/feelImpact.js';
-import { AUDIO_VOLUME, GAME_AUDIO } from '../src/systems/SoundManager.js';
+import { AUDIO_VOLUME, GAME_AUDIO, preloadGameAudio } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
 import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
@@ -148,6 +148,36 @@ assert(enemySkillStrips('lava-balon').some((row) => row.cue === 'enrage'), 'lava
 assert(enemySkillStrips('steel-balam').some((row) => row.cue === 'skill-ground_smash'), 'steel smash is in the skill cycle');
 assert(enemySfxClips().some((clip) => clip.key === 'sfx-enemy-office-worker-v2-hit'), 'office hit clip is preloaded by key');
 assert(enemySfxClips().length === 72, 'pack is 72 clips');
+for (const clip of enemySfxClips()) {
+  const row = GAME_AUDIO.find((item) => item.key === clip.key);
+  assert(row?.url === `assets/audio/${clip.key}.mp3`, `${clip.key} is cataloged in GAME_AUDIO`);
+  assert(existsSync(new URL(`../assets/audio/${clip.key}.mp3`, import.meta.url)), `${clip.key} catalog file`);
+  assert(clip.url.startsWith('assets/sfx/enemies/'), `${clip.key} playback path stays assets/sfx/enemies`);
+}
+assert(GAME_AUDIO.filter((clip) => clip.key.startsWith('sfx-enemy-')).length === 72, 'catalog adds the 72 showcase keys once');
+const catalogQueued = [];
+preloadGameAudio({
+  load: { audio(key, url) { catalogQueued.push({ key, url }); } },
+  cache: { audio: { exists: () => false } },
+});
+for (const clip of enemySfxClips()) {
+  const hits = catalogQueued.filter((row) => row.key === clip.key);
+  assert(hits.length === 1 && hits[0].url === clip.url, `${clip.key} preloads the live showcase URL once`);
+}
+assert(catalogQueued.find((row) => row.key === 'bgm-stage')?.url === 'assets/audio/bgm-stage.mp3', 'live stage bed url is unchanged');
+assert(
+  catalogQueued.some((row) => row.key === 'bgm-stage-chiptune-G' && row.url === 'assets/audio/bgm-stage-chiptune-G.mp3'),
+  'stage chiptune candidate preloads beside the live bed'
+);
+assert(
+  catalogQueued.some((row) => row.key === 'bgm-boss-chiptune-H' && row.url === 'assets/audio/bgm-boss-chiptune-H.mp3'),
+  'boss chiptune candidate preloads beside the live beds'
+);
+assert(!stageSrc.includes('bgm-stage-chiptune-G') && !stageSrc.includes('bgm-boss-chiptune-H'), 'stage does not start the chiptune candidates');
+assert(
+  !soundSrc.includes("startBgm('bgm-stage-chiptune-G'") && !soundSrc.includes("startBgm('bgm-boss-chiptune-H'"),
+  'SoundManager does not start the chiptune candidates'
+);
 
 assert(feelHitDamage(40) === 14, 'three feel hits cross the wave-1 40 HP row');
 assert(14 * 2 < 40 && 14 * 3 >= 40, 'the third feel hit is the one that kills');
