@@ -467,8 +467,11 @@ export class WeaponSystem {
 
   /**
    * True when a bullet should be removed without a hit:
-   * shotgun pellets past maxDistance, anything that left the playable view,
+   * shotgun pellets past maxDistance, anything that has left the camera,
    * or a graphic that is already gone.
+   * A missing guide does not retire a shot. The stage spawn gutter is
+   * not the sandbox view — that line sits on the try-out target and was
+   * deleting water shots that were still on screen.
    * @param {object} b
    */
   shouldRetireBullet(b) {
@@ -483,10 +486,47 @@ export class WeaponSystem {
     const x = b.gfx.x;
     const y = b.gfx.y;
     if (!Number.isFinite(x) || !Number.isFinite(y)) return true;
-    const leftCull = spawnWorldX() - 50 * LAYOUT_SCALE;
+    const padX = 50 * LAYOUT_SCALE;
+    const padY = 30 * LAYOUT_SCALE;
+    const view = this._bulletView();
+    if (view) {
+      if (x < view.left - padX || x > view.right + 40 * LAYOUT_SCALE) return true;
+      if (y < view.top - padY || y > view.bottom + padY) return true;
+      return false;
+    }
+    const leftCull = spawnWorldX() - padX;
     if (x < leftCull || x > WORLD_WIDTH + 40 * LAYOUT_SCALE) return true;
-    if (y < -30 * LAYOUT_SCALE || y > WORLD_HEIGHT + 30 * LAYOUT_SCALE) return true;
+    if (y < -padY || y > WORLD_HEIGHT + padY) return true;
     return false;
+  }
+
+  /**
+   * Camera rectangle the player can see, or null when the scene has
+   * no camera (headless checks). Cull against this, not the stage
+   * spawn line, so a sandbox shot can reach the dummy.
+   * @returns {{ left: number, right: number, top: number, bottom: number }|null}
+   */
+  _bulletView() {
+    const cam = this.scene?.cameras?.main;
+    const world = cam?.worldView;
+    if (world && Number.isFinite(world.x) && Number.isFinite(world.width) && world.width > 0) {
+      const top = Number.isFinite(world.y) ? world.y : 0;
+      const height = Number.isFinite(world.height) && world.height > 0 ? world.height : WORLD_HEIGHT;
+      const right = Number.isFinite(world.right) ? world.right : world.x + world.width;
+      const bottom = Number.isFinite(world.bottom) ? world.bottom : top + height;
+      return { left: world.x, right, top, bottom };
+    }
+    if (cam && Number.isFinite(cam.scrollX) && Number.isFinite(cam.width) && cam.width > 0) {
+      const top = Number.isFinite(cam.scrollY) ? cam.scrollY : 0;
+      const height = Number.isFinite(cam.height) && cam.height > 0 ? cam.height : WORLD_HEIGHT;
+      return {
+        left: cam.scrollX,
+        right: cam.scrollX + cam.width,
+        top,
+        bottom: top + height,
+      };
+    }
+    return null;
   }
 
   /**
