@@ -5,7 +5,7 @@
 
 | Category | Groups | Assets |
 |---|---:|---:|
-| [Hero](#hero) | 3 | 129 |
+| [Hero](#hero) | 3 | 137 |
 | [Pets](#pets) | 17 | 124 |
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 180 |
@@ -15,7 +15,7 @@
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **607** |
+| **Total** | **54** | **615** |
 
 <a id="hero"></a>
 ## Hero
@@ -110,9 +110,9 @@ Chibi girl hero with red cap and backpack. Combat uses the unarmed idle/walk bod
 
 <img src="previews/hero/girl-fx/preview.gif" alt="girl-fx preview" height="140">
 
-Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay.
+Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. Those sheets are row-major grids. Catalog only — not wired into Stage. fx-water-proj (L1) stays.
 
-- group `girl-fx` · 49 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x64, 96x96, 128x48 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
+- group `girl-fx` · 57 assets · frame 16x16, 24x24, 24x32, 28x24, 32x28, 32x32, 40x18, 40x40, 48x24, 48x32, 48x48, 64x16, 64x24, 64x32, 64x64, 96x96, 128x48, 128x64 · key prefix `fx-` · manifest [characters/hero/girl/fx/manifest.json](characters/hero/girl/fx/manifest.json)
 - previews: [fx-sheet.png](previews/hero/girl-fx/fx-sheet.png), [sling-pellet-v0162.png](characters/hero/girl/preview/sling-pellet-v0162.png), [weapon-fx-v022.png](characters/hero/girl/preview/weapon-fx-v022.png)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
@@ -152,6 +152,14 @@ Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the 
 | `fx-frost-freeze` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `fx-sling-knockback` | 4 | 64x24 | 14 | once | (0.0, 0.5) |  |
 | `fx-water-proj` | 4 | 32x32 | 10 | loop | (0.5, 0.5) |  |
+| `fx-water-proj-t2` | 4 | 64x32 | 12 | loop | (0.5, 0.5) | grid 2×2 row-major · v1.0 water Mega Man charge L2 projectile. 4 frames, cell 64×32 @ 12 fps, loop, origin center. Sheet 128×64 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays. |
+| `fx-water-proj-t3` | 4 | 128x64 | 12 | loop | (0.5, 0.5) | grid 2×2 row-major · v1.0 water Mega Man charge L3 projectile. 4 frames, cell 128×64 @ 12 fps, loop, origin center. Sheet 256×128 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays. |
+| `fx-water-charge-aura` | 8 | 48x48 | 10 | loop | (0.5, 0.5) | grid 3×3 row-major · v1.0 water Mega Man charge cue. 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Catalog only — not wired into Stage. |
+| `fx-water-t2-impact` | 6 | 32x32 | 14 | once | (0.5, 0.5) | grid 3×2 row-major · v1.0 water Mega Man charge L2 hit splash. 6 frames, cell 32×32 @ 14 fps, once, origin center. Sheet 96×64 is a 3×2 row-major grid. Catalog only — not wired into Stage. |
+| `fx-water-t2-dot` | 10 | 48x48 | 11 | loop | (0.5, 1.0) | grid 4×3 row-major · v1.0 water Mega Man charge L2 wet DoT overlay. 10 frames, cell 48×48 @ 11 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage. |
+| `fx-water-t3-impact` | 6 | 40x40 | 14 | once | (0.5, 0.5) | grid 3×2 row-major · v1.0 water Mega Man charge L3 hit flash. 6 frames, cell 40×40 @ 14 fps, once, origin center. Sheet 120×80 is a 3×2 row-major grid. Catalog only — not wired into Stage. |
+| `fx-water-t3-path-burn` | 8 | 64x32 | 10 | loop | (0.5, 0.5) | grid 3×3 row-major · v1.0 water Mega Man charge L3 path fire. 8 frames, cell 64×32 @ 10 fps, loop, origin center — same center as fx-water-proj and fx-water-stream so a trail on the projectile path lines up with the bolt. Sheet 192×96 is a 3×3 row-major grid; cell 8 (bottom-right) is empty. Catalog only — not wired into Stage. |
+| `fx-water-t3-inbullet-dot` | 10 | 48x48 | 12 | loop | (0.5, 1.0) | grid 4×3 row-major · v1.0 water Mega Man charge L3 in-bullet DoT overlay. 10 frames, cell 48×48 @ 12 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage. |
 | `fx-water-splash-big` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 clearer AoE splash (8×64 @ 12 fps, once, origin center). Use for damage-after-FX: play this, then apply damage. Supersedes fx-water-impact on that path; the legacy impact stays. Untinted master (fx-hit-water-shared is the same image and is not a separate key). |
 | `fx-water-wet-ground` | 6 | 64x64 | 8 | loop | (0.5, 0.75) | v0.31 clearer wet-ground puddle (6×64 @ 8 fps, loop). Origin (0.5, 0.75) is puddle pixel (32, 48). Supersedes fx-water-wet on the v0.31 sync path; the legacy puddle stays. |
 | `fx-hit-water-office-v2` | 8 | 64x64 | 12 | once | (0.5, 0.5) | v0.31 office body-hit overlay. Same splash as fx-water-splash-big with a light gray sparkle. 8×64 @ 12 fps, once, origin center. Play on the zombie before the HP tick. |
