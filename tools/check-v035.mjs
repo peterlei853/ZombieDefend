@@ -46,6 +46,9 @@
  * frame 8 (Phaser index 9) at the feet. Hero AoE hurt is catalog frame
  * 13 (Phaser index 14). Normal attack contact is Phaser index 6 on an
  * 8-frame strip (Tester Fail #117: index 7 was the end pose).
+ * v0.36.6: feel key 2 for office-worker-v2 is Phaser index 5 and for
+ * nurse is index 7. delivery and the live wall flash stay on index 6.
+ * A smash frame skip that jumps past catalog cell 13 still flinches.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -137,8 +140,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.5' && APP_VERSION === '0.36.5', 'package and APP_VERSION are 0.36.5');
-assert(html.includes('v0.36.5'), 'document title is v0.36.5');
+assert(pkg.version === '0.36.6' && APP_VERSION === '0.36.6', 'package and APP_VERSION are 0.36.6');
+assert(html.includes('v0.36.6'), 'document title is v0.36.6');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -263,13 +266,18 @@ for (const id of IDS) {
     const strike = lateAttackFrame(frames);
     assert(frames === 8, `${id} attack strip is 8 frames`);
     assert(strike === 6, `${id} contact is Phaser frame 6, before the end pose`);
-    assert(feelAttackHitFrame(id) === strike, `${id} attack hit frame is the late strike ${strike}`);
-    assert(ENEMY_ATTACK_HIT_FRAME[id] === strike, `${id} table matches the ~80% strike`);
+    const feelStrike = id === 'office-worker-v2' ? 5 : id === 'nurse' ? 7 : strike;
+    assert(feelAttackHitFrame(id) === feelStrike, `${id} feel key 2 strike is ${feelStrike}`);
+    assert(ENEMY_ATTACK_HIT_FRAME[id] === strike, `${id} live table stays on the shared strike ${strike}`);
     assert(attackContactFrame(id, frames) === strike, `${id} live contact uses the ~80% strike`);
   }
 }
 assert(Object.keys(ENEMY_ATTACK_HIT_FRAME).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
-assert(feelAttackHitFrame('office-worker-v2') === 6, 'office-worker-v2 strike is Phaser attack frame 6');
+assert(feelAttackHitFrame('office-worker-v2') === 5, 'office feel key 2 is the briefcase arc, Phaser index 5');
+assert(feelAttackHitFrame('nurse') === 7, 'nurse feel key 2 is the white arc, Phaser index 7');
+assert(feelAttackHitFrame('delivery') === 6, 'delivery feel key 2 stays on the leaning box, Phaser index 6');
+assert(attackContactFrame('office-worker-v2', 8) === 6, 'office live wall flash stays on index 6');
+assert(attackContactFrame('nurse', 8) === 6, 'nurse live attach contact stays on index 6');
 assert(lateAttackFrame(8) === 6, '8 frames contact on Phaser index 6');
 assert(6 / 7 >= 0.8 && 5 / 7 < 0.8, 'index 6 is the first 1-based index at or after 80% of (n-1)');
 assert(lateAttackFrame(8) !== 7, 'index 7 stays the end pose and is not the contact');
@@ -283,6 +291,7 @@ assert(phaserIndexForCatalogFrame(13) === 14, 'catalog gameplay cell 13 is Phase
 assert(13 / 16 >= 0.8 && 12 / 16 < 0.8, 'catalog cell 13 is the first 0-based cell at or after 80% of a 17-frame strip');
 const smashRadius = bruteSmashAoeRadius(1.6);
 assert(smashRadius === Math.round(280 * 1.6), 'smash AoE is 280 field px');
+assert(bruteSmashContains(0, 0, 282, 0, 1.6) === true, 'default booth gap (~281 canvas px, same Y) is inside the smash');
 assert(bruteSmashContains(0, 0, 330, 0, 1.6) === true, 'smash reaches the feel-booth hero gap');
 assert(bruteSmashContains(0, 0, smashRadius + 8, 0, 1.6) === false, 'smash does not cover a march-length gap');
 
@@ -805,6 +814,34 @@ assert(hurt === false, 'chef frame 7 is the end pose and does not flinch');
 feelHandler({ key: 'zombie-chef-attack' }, { index: 6 });
 assert(hurt === true, 'chef frame 6 flinches the hero');
 
+const officeFeel = attackHost({
+  atBarricade: false,
+  skin: { id: 'office-worker-v2' },
+  _animKey: () => 'zombie-office-worker-v2-attack',
+});
+let officeHurt = false;
+officeFeel.playShowcaseAttack(feelAttackHitFrame('office-worker-v2'), () => { officeHurt = true; });
+const officeHandler = officeFeel.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+officeHandler({ key: 'zombie-office-worker-v2-attack' }, { index: 4 });
+assert(officeHurt === false, 'office frame 4 is still the windup');
+officeHandler({ key: 'zombie-office-worker-v2-attack' }, { index: 6 });
+assert(officeHurt === false, 'office frame 6 is the held briefcase and does not flinch');
+officeHandler({ key: 'zombie-office-worker-v2-attack' }, { index: 5 });
+assert(officeHurt === true, 'office frame 5 is the white arc and flinches the hero');
+
+const nurseFeel = attackHost({
+  atBarricade: false,
+  skin: { id: 'nurse' },
+  _animKey: () => 'zombie-nurse-attack',
+});
+let nurseHurt = false;
+nurseFeel.playShowcaseAttack(feelAttackHitFrame('nurse'), () => { nurseHurt = true; });
+const nurseFeelHandler = nurseFeel.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+nurseFeelHandler({ key: 'zombie-nurse-attack' }, { index: 6 });
+assert(nurseHurt === false, 'nurse attack frame 6 is the cocked arm');
+nurseFeelHandler({ key: 'zombie-nurse-attack' }, { index: 7 });
+assert(nurseHurt === true, 'nurse attack frame 7 is the white arc and flinches the hero');
+
 const nurse = attackHost({
   skin: { id: 'nurse' },
   _animKey(action) {
@@ -859,6 +896,23 @@ smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 13 });
 assert(aoe === false, 'Phaser index 13 is catalog cell 12, before the AoE');
 smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 14 });
 assert(aoe === true, 'Phaser index 14 is catalog frame 13, the AoE');
+
+const skipped = attackHost({
+  skin: { id: 'brute' },
+  _animKey: () => 'zombie-brute-skill_ground_smash',
+});
+skipped.armShowcaseMarks = Zombie.prototype.armShowcaseMarks;
+let skippedShock = false;
+let skippedAoe = false;
+skipped.armShowcaseMarks('zombie-brute-skill_ground_smash', [
+  { index: phaserIndexForCatalogFrame(8), fn: () => { skippedShock = true; } },
+  { index: phaserIndexForCatalogFrame(13), fn: () => { skippedAoe = true; } },
+]);
+const skipHandler = skipped.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 9 });
+assert(skippedShock === true && skippedAoe === false, 'a hitch still shocks on catalog frame 8');
+skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 15 });
+assert(skippedAoe === true, 'skipping catalog cell 13 still flinches once the strip is past it');
 assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock is spawned on the feet');
 assert(stageSrc.includes('z.body.y'), 'feet shock uses the sole, not only the chest');
 assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');

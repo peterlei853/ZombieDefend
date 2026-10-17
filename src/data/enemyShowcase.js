@@ -126,8 +126,9 @@ export function enemySfxClips() {
  * Every catalog attack sheet is 8 cells at 10 fps and has no
  * `timing.impactFrame` marker. Key 2 starts `player-girl-hurt` and
  * `sfx-enemy-<id>-hurt` on the contact index. The live barricade flash
- * uses the same index. slime-mini has no attack strip, so it is absent
- * and key 2 reacts at once.
+ * uses this table. Feel key 2 uses it too, except the two overrides
+ * below. slime-mini has no attack strip, so it is absent and key 2
+ * reacts at once.
  *
  * v0.36.2 used index 5 (texture cell 4, halfway). v0.36.3 moved to index 7
  * (texture cell 6). On office / delivery / nurse that cell is the fully
@@ -136,6 +137,15 @@ export function enemySfxClips() {
  * already the end of the bite. Contact is now the first 1-based index
  * where `index / (N - 1) >= 0.8`. On 8 frames that is index 6 (texture
  * cell 5): after the midpoint, before the end pose.
+ *
+ * v0.36.6 keeps that shared index for the live barricade flash and for
+ * every feel key 2 whose weapon actually extends there. Delivery's box
+ * does: cell 5 is the first lean, and cells 6–7 hold it. Office's
+ * briefcase and white arc extend on cell 4 (index 5); cells 5–7 are the
+ * held end pose, so index 6 flinches after the swing. Nurse's arm stays
+ * cocked through cell 5 (index 6); the white arc is cell 6 (index 7).
+ * Feel key 2 uses {@link FEEL_ATTACK_HIT_OVERRIDE} for those two ids.
+ * Delivery stays on index 6.
  *
  * Catalog skill timing (`impactFrame`, `gameplayHitFrame`) is 0-based.
  * Add 1 before comparing with `AnimationFrame.index`.
@@ -157,6 +167,18 @@ export const ENEMY_ATTACK_HIT_FRAME = {
   clown: 6,
   'lava-balon': 6,
   'steel-balam': 6,
+};
+
+/**
+ * Feel key 2 only. The live wall flash stays on {@link ENEMY_ATTACK_HIT_FRAME}.
+ * Values are 1-based Phaser indexes of the attack strip (not the nurse attach).
+ * office-worker-v2 is the first extended briefcase / white arc.
+ * nurse is the white-arc strike. The shared index 6 is still the cocked arm.
+ * @type {Record<string, number>}
+ */
+export const FEEL_ATTACK_HIT_OVERRIDE = {
+  'office-worker-v2': 5,
+  nurse: 7,
 };
 
 /**
@@ -187,11 +209,12 @@ export function phaserIndexForCatalogFrame(catalogFrame) {
 }
 
 /**
- * Wide ground circle for the brute smash, in field px. The feel booth
- * stands the brute `72` field px west of the post and the hero `32` field
- * px east of the barricade line, so the gap is about 200 field px once
- * the post and the 132px smash half-width are included. 280 reaches that
- * hero and stays well inside a march-length hit.
+ * Wide ground circle for the brute smash, in field px. On the default
+ * feel booth (hero snapped to the middle fence slot, brute `72` field px
+ * west of the post) the hero origin is about 281 canvas px east of the
+ * brute's feet and on the same Y. 280 field px is 448 canvas px at
+ * LAYOUT_SCALE 1.6, so that hero is inside the circle. A march-length
+ * gap is not.
  */
 export const BRUTE_SMASH_AOE_FIELD = 280;
 
@@ -229,24 +252,34 @@ export function bruteSmashContains(feetX, feetY, x, y, layoutScale) {
  * @param {number} frameCount
  * @returns {number|null}
  */
+function listedAttackHitFrame(id) {
+  if (!id || !Object.prototype.hasOwnProperty.call(ENEMY_ATTACK_HIT_FRAME, id)) return null;
+  const frame = ENEMY_ATTACK_HIT_FRAME[id];
+  return Number.isInteger(frame) ? frame : null;
+}
+
 export function attackContactFrame(id, frameCount) {
   const total = Number(frameCount);
   const hasStrip = Number.isInteger(total) && total > 0;
-  const listed = feelAttackHitFrame(id);
+  const listed = listedAttackHitFrame(id);
   if (listed != null && hasStrip && listed >= 1 && listed <= total) return listed;
   if (hasStrip) return lateAttackFrame(total);
   return null;
 }
 
 /**
- * Attack contact frame for the feel booth, or null when that id has no strike.
+ * Attack contact frame for feel key 2, or null when that id has no strike.
+ * Office and nurse use {@link FEEL_ATTACK_HIT_OVERRIDE}. Everyone else uses
+ * the live table. Delivery is not overridden.
  * @param {string|null|undefined} id
  * @returns {number|null}
  */
 export function feelAttackHitFrame(id) {
-  if (!id || !Object.prototype.hasOwnProperty.call(ENEMY_ATTACK_HIT_FRAME, id)) return null;
-  const frame = ENEMY_ATTACK_HIT_FRAME[id];
-  return Number.isInteger(frame) ? frame : null;
+  if (id && Object.prototype.hasOwnProperty.call(FEEL_ATTACK_HIT_OVERRIDE, id)) {
+    const frame = FEEL_ATTACK_HIT_OVERRIDE[id];
+    if (Number.isInteger(frame)) return frame;
+  }
+  return listedAttackHitFrame(id);
 }
 
 /**
