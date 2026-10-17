@@ -13,14 +13,24 @@ import {
   hasZombieAnim,
   registerZombieAnims,
   resolveSpawnSkin,
+  skipsHurtKnockback,
   takeZombieSkin,
   zombieActionKey,
   zombieSheetKey,
+  zombieSkinDef,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 import { attackContactFrame } from '../data/enemyShowcase.js';
+import {
+  BRUTE_GROUND_SMASH_COOLDOWN,
+  BRUTE_SKILL_ANIM,
+  BRUTE_SKILL_FX_CELL,
+  BRUTE_SKILL_HIT_CELL,
+  bruteSkillPhaserIndex,
+  pointInBruteSmash,
+} from '../data/bruteSkill.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
@@ -83,6 +93,12 @@ export class Zombie {
     /** Seconds until the next barricade bite (punch + hit VFX). */
     this._attackCooldown = 1;
     this._attackBeat = false;
+    /** Ground smash plant. The booth key does not use the cooldown. */
+    this._smashing = false;
+    this._smashCd = 0;
+    this._smashToken = 0;
+    this._animMarkHandler = null;
+    this._animMarkToken = 0;
     /** Halt X while biting. The attack strip plays on this X. */
     this._haltX = null;
     /**
@@ -107,9 +123,13 @@ export class Zombie {
     this._showcaseToken = 0;
 
     registerZombieAnims(scene);
+    const catalogSkin = zombieSkinDef(typeof cfg.skin === 'string' ? cfg.skin : null);
     this.skin = cfg.skin
       ? resolveSpawnSkin(scene, cfg.skin, this.variant)
       : takeZombieSkin(this.variant);
+    // Copied before a missing walk sheet clears `skin`, so a brute
+    // placeholder still refuses the hurt shove.
+    this.noHurtKnockback = !!(catalogSkin?.noHurtKnockback || this.skin?.noHurtKnockback);
     const libraryWalk = zombieActionKey(this.skin, this.variant, 'walk');
     const legacyWalk = zombieSheetKey(this.variant, 'walk');
     const libraryReady = !!(
@@ -273,11 +293,13 @@ export class Zombie {
    * Shove the zombie left along its lane. Y stays on laneY.
    * Releases barricade lock and any bite tween so the shove is not snapped back.
    * Tanks apply knockbackMult (still the handgun / pellet distances from GameConfig).
+   * Brute (`noHurtKnockback`) stays planted. Pet slides use beginPetSlide.
    * No-op if already dead or the body is gone.
    * @param {number} pixels
    */
   applyKnockback(pixels) {
     if (!this.alive || !this.body) return;
+    if (skipsHurtKnockback(this)) return;
     const amount = Number(pixels) * (this.knockbackMult ?? 1);
     if (!(amount > 0) || !Number.isFinite(amount)) return;
     const atWall = this.atBarricade;
@@ -300,6 +322,7 @@ export class Zombie {
       this._attackCooldown = 1;
       this._attackBeat = false;
       this._clearAttackContact();
+      this._clearAnimMarks();
       if (shown >= 1) {
         showDamageText(this.scene, wallX, wallY - layoutPx(18), shown, DAMAGE_COLORS.barricade);
       }
@@ -316,11 +339,6 @@ export class Zombie {
     if (this.hpBarFg) this.hpBarFg.setDepth(d + 2);
   }
 
-  /**
-   * @param {number} deltaSec
-   * @param {number} contactX barricade face. The halt math is unchanged.
-   * @param {{ x: number, y: number, hp?: number, alive?: boolean, radius?: number }|null} [pet]
-   */
   /**
    * Pet hit shove, left along the lane over `ms`. Separate from the short
    * weapon applyKnockback. Halt math is unchanged; a zombie on the posts
@@ -352,9 +370,16 @@ export class Zombie {
     this._petSlideMs = dur;
   }
 
-  update(deltaSec, contactX, pet = null) {
+  /**
+   * @param {number} deltaSec
+   * @param {number} contactX barricade face. The halt math is unchanged.
+   * @param {{ x: number, y: number, hp?: number, alive?: boolean, radius?: number }|null} [pet]
+   * @param {{ x: number, y: number, active?: boolean }|null} [hero]
+   */
+  update(deltaSec, contactX, pet = null, hero = null) {
     if (!this.alive) return;
     if (this.showcaseHold) return;
+    if (this._smashCd > 0) this._smashCd -= deltaSec;
 
     if (this._petSlideMs > 0 && this.body) {
       const ms = Math.max(0, deltaSec * 1000);
@@ -367,6 +392,18 @@ export class Zombie {
       this._lastX = this.body.x;
       this._lastY = this.body.y;
       this._syncLocomotion();
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
+
+    if (this._smashing) {
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
+
+    if (this._tryBruteSmash(contactX, hero)) {
       this._applyDepth();
       this._syncBars();
       return;
@@ -864,6 +901,123 @@ export class Zombie {
     if (showing === hitFrame) fire();
   }
 
+  /**
+   * Live brute cast. Plays the ground-smash strip when the posts or the
+   * hero are inside the radius, then plants until the strip ends.
+   * Contact DPS is unchanged. The booth calls `playBruteGroundSmash` itself.
+   * @param {number} contactX
+   * @param {{ x: number, y: number, active?: boolean }|null} hero
+   */
+  _tryBruteSmash(contactX, hero) {
+    if (this.skin?.id !== 'brute' || this._smashing || this._smashCd > 0) return false;
+    if (!this._bruteSmashInRange(contactX, hero)) return false;
+    const scene = this.scene;
+    const played = this.playBruteGroundSmash({
+      onShock: () => scene?._spawnBruteSkillShock?.(this),
+      onHit: () => scene?._resolveBruteSkillHit?.(this),
+    });
+    if (!played) return false;
+    this._smashCd = BRUTE_GROUND_SMASH_COOLDOWN;
+    scene?.audio?.playEnemyCue?.('brute', 'skill-hurt_heavy');
+    return true;
+  }
+
+  /**
+   * @param {number} contactX
+   * @param {{ x: number, y: number, active?: boolean }|null} hero
+   */
+  _bruteSmashInRange(contactX, hero) {
+    const x = this.body?.x;
+    const y = this.body?.y;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    if (pointInBruteSmash(x, y, contactX, y)) return true;
+    if (!hero || hero.active === false) return false;
+    return pointInBruteSmash(x, y, hero.x, hero.y);
+  }
+
+  /**
+   * Key 3 and the live cast. Shock and damage wait on the shown frame
+   * (`animationupdate`), not a timer. The safety timer only ends the plant.
+   * PIXELLAB_HOOK: zombie-brute-skill_ground_smash — 17×132, feet origin.
+   * @param {{ onShock?: () => void, onHit?: () => void }} [hooks]
+   * @returns {boolean}
+   */
+  playBruteGroundSmash(hooks = {}) {
+    if (!this.alive || !this.body || this.skin?.id !== 'brute') return false;
+    const key = this._animKey('skill') || BRUTE_SKILL_ANIM;
+    if (!this._animReady(key)) return false;
+    this._clearAttackContact();
+    this._clearAnimMarks();
+    const played = this.playShowcaseStrip(key);
+    if (!played) return false;
+    const token = (this._smashToken || 0) + 1;
+    this._smashToken = token;
+    this._smashing = true;
+    const finish = () => {
+      if (this._smashToken !== token) return;
+      this._smashToken = token + 1;
+      this._smashing = false;
+      this._clearAnimMarks();
+    };
+    this.body.once?.(`animationcomplete-${key}`, finish);
+    const anim = this.scene?.anims?.get?.(key);
+    const frames = anim?.frames?.length || 17;
+    const rate = anim?.frameRate > 0 ? anim.frameRate : 10;
+    this.scene?.time?.delayedCall?.(Math.round((frames / rate) * 1000) + 80, finish);
+    const live = () => this._smashToken === token;
+    this._watchAnimFrames(key, [
+      {
+        index: bruteSkillPhaserIndex(BRUTE_SKILL_FX_CELL),
+        fn: () => { if (live()) hooks.onShock?.(); },
+      },
+      {
+        index: bruteSkillPhaserIndex(BRUTE_SKILL_HIT_CELL),
+        fn: () => { if (live()) hooks.onHit?.(); },
+      },
+    ]);
+    return true;
+  }
+
+  /** Drop smash frame listeners so a replay or a death cannot strike late. */
+  _clearAnimMarks() {
+    const handler = this._animMarkHandler;
+    this._animMarkHandler = null;
+    if (handler && this.body?.off) this.body.off('animationupdate', handler);
+    this._animMarkToken = (this._animMarkToken || 0) + 1;
+  }
+
+  /**
+   * Fire each mark once, when that Phaser frame index is showing.
+   * @param {string} animKey
+   * @param {{ index: number, fn: () => void }[]} marks
+   */
+  _watchAnimFrames(animKey, marks) {
+    this._clearAnimMarks();
+    const pending = (marks || []).filter((mark) => Number.isInteger(mark.index) && typeof mark.fn === 'function');
+    if (!pending.length || !this.body?.on) {
+      return;
+    }
+    const token = this._animMarkToken;
+    const fired = new Set();
+    const onUpdate = (anim, animFrame) => {
+      if (this._animMarkToken !== token) return;
+      if (anim?.key !== animKey) return;
+      const index = Number.isFinite(animFrame?.index) ? animFrame.index : Number(animFrame?.textureFrame);
+      for (const mark of pending) {
+        if (fired.has(mark.index) || index !== mark.index) continue;
+        fired.add(mark.index);
+        mark.fn();
+      }
+      if (fired.size >= pending.length) this._clearAnimMarks();
+    };
+    this._animMarkHandler = onUpdate;
+    this.body.on('animationupdate', onUpdate);
+    const showing = this.body.anims?.currentAnim?.key === animKey
+      ? this.body.anims.currentFrame?.index
+      : undefined;
+    if (Number.isInteger(showing)) onUpdate({ key: animKey }, { index: showing });
+  }
+
   /** Hurt strip after the white flash. No-op when that sheet is not loaded. */
   _playHurtStrip() {
     const hurt = this._animKey('hurt');
@@ -919,7 +1073,9 @@ export class Zombie {
     this._lastY = body.y;
     this.atBarricade = false;
     this._attackBeat = false;
+    this._smashing = false;
     this._clearAttackContact();
+    this._clearAnimMarks();
     this._releaseBars();
     if (this.scene?.tweens?.killTweensOf) this.scene.tweens.killTweensOf(body);
 

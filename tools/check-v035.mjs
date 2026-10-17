@@ -40,6 +40,10 @@
  * v0.36.3: that beat moves to about 80% of the strip (8 frames → Phaser
  * frame 7, texture cell 6, midpoint ~81%). Bare and short strips use the
  * same fraction. slime-mini still reacts at once. No body X lunge.
+ * v0.36.5: brute key 3 plays zombie-brute-skill_ground_smash. Shock FX
+ * on catalog frame 8 (Phaser index 9) at the feet. Hit on catalog frame
+ * 13 (Phaser index 14). Live radius is 320 canvas px. Brute stays
+ * planted on hurt (`noHurtKnockback`). Attack frame 7 stays.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -66,6 +70,17 @@ import {
   feelHitDamage,
   lateAttackFrame,
 } from '../src/data/enemyShowcase.js';
+import {
+  BRUTE_GROUND_SMASH_COOLDOWN,
+  BRUTE_GROUND_SMASH_DAMAGE,
+  BRUTE_GROUND_SMASH_RADIUS,
+  BRUTE_SKILL_ANIM,
+  BRUTE_SKILL_FX,
+  BRUTE_SKILL_FX_CELL,
+  BRUTE_SKILL_HIT_CELL,
+  bruteSkillPhaserIndex,
+  pointInBruteSmash,
+} from '../src/data/bruteSkill.js';
 import { Zombie } from '../src/entities/Zombie.js';
 import {
   FEEL_HIT_FLASH_MS,
@@ -91,7 +106,8 @@ import {
 } from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME, GAME_AUDIO, preloadGameAudio } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
-import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
+import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS, skipsHurtKnockback } from '../src/assets/zombieSprites.js';
+import { LAYOUT_SCALE, SCALE_NEAR, layoutPx } from '../src/systems/DepthView.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 
@@ -128,8 +144,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.3' && APP_VERSION === '0.36.3', 'package and APP_VERSION are 0.36.3');
-assert(html.includes('v0.36.3'), 'document title is v0.36.3');
+assert(pkg.version === '0.36.5' && APP_VERSION === '0.36.5', 'package and APP_VERSION are 0.36.5');
+assert(html.includes('v0.36.5'), 'document title is v0.36.5');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -336,6 +352,7 @@ const booth = {
         setBlendMode(mode) { row.blend = mode; },
         setRotation(rotation) { row.rotation = rotation; },
         once() {},
+        destroy() { this.active = false; },
         active: true,
       };
     },
@@ -604,6 +621,7 @@ assert(ZOMBIE_LIBRARY_SKINS['slime-mini'].actions.attack === null, 'slime-mini h
 assert(BARRICADE_MAX_HP === 720, 'barricade HP stays 720');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP stays put');
 assert(WAVE_DEFS.map((def) => def.total).join() === '5,6,10,48', 'wave totals stay put');
+assert(WAVE_DEFS.slice(0, 3).map((def) => def.archetypes[0].dps).join() === '3,5,8', 'waves 1–3 contact DPS stays 3/5/8');
 assert(AUDIO_VOLUME.bgm === 0.28, 'BGM volume stays 0.28');
 assert(AUDIO_VOLUME.hit === 0.3 && AUDIO_VOLUME.hurt === 0.3 && AUDIO_VOLUME.death === 0.3, 'hit hurt death volumes stay put');
 assert(AUDIO_VOLUME.fire === 0.35 && AUDIO_VOLUME.ult === 0.4 && AUDIO_VOLUME.melee === 0.35, 'fire ult melee volumes stay put');
@@ -730,6 +748,183 @@ const late = cut.body._ons[0].fn;
 cut._clearAttackContact();
 late({ key: 'zombie-trashcan-attack' }, { index: 7 });
 assert(cut._attackBeat === false, 'knockback clears a bite that has not reached the strike');
+
+assert(enemySkillStrips('brute').length === 1, 'brute key 3 has one skill strip');
+assert(enemySkillStrips('brute')[0].anim === BRUTE_SKILL_ANIM, 'brute key 3 plays the ground smash');
+assert(
+  !enemySkillStrips('brute').some((row) => /hurt_heavy|part_break|blasted_back|defeated/.test(row.anim)),
+  'brute key 3 does not cycle the old stand-in strips',
+);
+assert(framesForAnimKey(BRUTE_SKILL_ANIM) === 17, 'ground smash is 17 frames');
+assert(BRUTE_SKILL_FX_CELL === 8 && bruteSkillPhaserIndex(BRUTE_SKILL_FX_CELL) === 9, 'shock is catalog frame 8 / Phaser index 9');
+assert(BRUTE_SKILL_HIT_CELL === 13 && bruteSkillPhaserIndex(BRUTE_SKILL_HIT_CELL) === 14, 'hit is catalog frame 13 / Phaser index 14');
+assert(bruteSkillPhaserIndex(BRUTE_SKILL_HIT_CELL) === lateAttackFrame(17), 'smash hit uses the same ~80% rule as attack strips');
+assert(ENEMY_ATTACK_HIT_FRAME.brute === 7, 'brute attack hit stays Phaser frame 7');
+assert(BRUTE_GROUND_SMASH_DAMAGE === 36, 'smash burst is 36 HP and is not a wave-table edit');
+assert(BRUTE_GROUND_SMASH_COOLDOWN === 5, 'live smash cooldown is 5s');
+const meleeTouchCeiling = (96 * SCALE_NEAR * LAYOUT_SCALE) / 2;
+assert(meleeTouchCeiling < 88, 'near-lane brute half-width stays under 88px');
+assert(BRUTE_GROUND_SMASH_RADIUS > meleeTouchCeiling * 3, 'smash radius is wider than a melee touch');
+const postW = 28 * LAYOUT_SCALE * (0.85 + 0.2 * SCALE_NEAR);
+const boothWall = meleeTouchCeiling + layoutPx(72);
+const boothHero = boothWall + postW + layoutPx(32);
+assert(pointInBruteSmash(0, 0, boothWall, 0), 'booth hold reaches the posts');
+assert(pointInBruteSmash(0, 0, boothHero, 0), 'booth hold reaches the hero');
+assert(!pointInBruteSmash(0, 0, BRUTE_GROUND_SMASH_RADIUS + 1, 0), 'just outside the radius misses');
+const smashPng = readFileSync(new URL('../assets/library/enemies/zombies/brute/strips/zombie-brute-skill_ground_smash.png', import.meta.url));
+assert(smashPng.readUInt32BE(16) === 2244 && smashPng.readUInt32BE(20) === 132, 'smash strip stays 17×132');
+const shockPng = readFileSync(new URL('../assets/library/fx/brute-skill/fx-brute-skill-shock.png', import.meta.url));
+assert(shockPng.readUInt32BE(16) === 464 && shockPng.readUInt32BE(20) === 231, 'shock sheet stays the 4×3 grid');
+const smashRow = JSON.parse(readFileSync(new URL('../assets/library/enemies/zombies/brute/manifest.json', import.meta.url), 'utf8'))
+  .assets.find((asset) => asset.key === BRUTE_SKILL_ANIM);
+assert(smashRow?.timing?.impactFrame === 8 && smashRow?.timing?.gameplayHitFrame === 13, 'manifest timing stays frame 8 and frame 13');
+assert(smashRow?.fx?.[0] === BRUTE_SKILL_FX, 'smash strip names the shock FX');
+assert(ZOMBIE_LIBRARY_SKINS.brute.actions.skill === BRUTE_SKILL_ANIM, 'brute skin plays the catalog smash');
+assert(ZOMBIE_LIBRARY_SKINS.brute.noHurtKnockback === true, 'brute catalog sets noHurtKnockback');
+for (const [id, def] of Object.entries(ZOMBIE_LIBRARY_SKINS)) {
+  if (id === 'brute') continue;
+  assert(def.noHurtKnockback !== true, `${id} still takes hurt knockback`);
+}
+for (const [id, def] of Object.entries(ZOMBIE_BOSS_SKINS)) {
+  assert(def.noHurtKnockback !== true, `${id} still takes hurt knockback`);
+}
+assert(skipsHurtKnockback({ skin: ZOMBIE_LIBRARY_SKINS.brute }) === true, 'catalog brute skips the hurt shove');
+assert(skipsHurtKnockback({ skin: ZOMBIE_LIBRARY_SKINS.nurse }) === false, 'catalog nurse still knocks back');
+assert(skipsHurtKnockback({ noHurtKnockback: true }) === true, 'the instance flag skips the hurt shove');
+
+/**
+ * The hitstop kicks the body, then the last timer puts it back on the
+ * post-knock home. Brute never takes the 2px shove, so that home is the
+ * start X.
+ * @param {typeof booth} scene
+ * @param {object} target
+ * @param {{ melee?: boolean, dirX?: number }} opts
+ */
+function playSettled(scene, target, opts) {
+  /** @type {Function[]} */
+  const later = [];
+  const clocked = {
+    ...scene,
+    time: { delayedCall(_ms, fn) { later.push(fn); } },
+  };
+  const played = playFeelImpact(clocked, target, opts);
+  for (const fn of later) fn();
+  return played;
+}
+const plantedBody = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const sparksBeforePlant = sparks;
+const spawnedBeforePlant = spawned.length;
+assert(
+  playSettled(booth, { body: plantedBody, displayHalf: 20, bodyCenterY: 210, noHurtKnockback: true, _syncBars() {} }, { melee: false, dirX: -1 }) === true,
+  'brute key 1 still plays the hit',
+);
+assert(plantedBody.x === 400 && plantedBody.y === 240, 'brute key 1 stays planted');
+assert(spawned.length === spawnedBeforePlant && sparks === sparksBeforePlant, 'brute key 1 still spawns no slash and no sparks');
+const plantedMelee = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const meleeBeforePlant = spawned.length;
+assert(
+  playSettled(
+    booth,
+    { body: plantedMelee, displayHalf: 20, bodyCenterY: 210, skin: ZOMBIE_LIBRARY_SKINS.brute, _syncBars() {} },
+    { melee: true, dirX: -1 },
+  ) === true,
+  'brute key 4 still plays the hit',
+);
+assert(plantedMelee.x === 400 && plantedMelee.y === 240, 'brute key 4 stays planted');
+assert(spawned.at(-1).key === 'fx-slash-ninja' && spawned.at(-1).x === 400, 'brute slash stays on the planted body');
+
+function knockStub(flag) {
+  const z = Object.create(Zombie.prototype);
+  z.alive = true;
+  z.noHurtKnockback = flag;
+  z.body = { x: 200, y: 100, setDepth() {} };
+  z.knockbackMult = 1;
+  z.laneY = 100;
+  z.atBarricade = false;
+  z.scene = { tweens: { killTweensOf() {} } };
+  z._syncBars = () => {};
+  z._applyDepth = () => {};
+  return z;
+}
+const bruteStage = knockStub(true);
+bruteStage.applyKnockback(12);
+assert(bruteStage.body.x === 200 && bruteStage.body.y === 100, 'stage hurt knockback skips brute');
+const nurseStage = knockStub(false);
+nurseStage.skin = ZOMBIE_LIBRARY_SKINS.nurse;
+nurseStage.applyKnockback(12);
+assert(nurseStage.body.x === 188 && nurseStage.body.y === 100, 'stage hurt knockback still shoves other enemies');
+const petFn = zombieSrc.slice(zombieSrc.indexOf('beginPetSlide(pixels'), zombieSrc.indexOf('\n  update('));
+assert(!petFn.includes('skipsHurtKnockback') && !petFn.includes('noHurtKnockback'), 'pet slide is not gated by the brute flag');
+assert(feelSrc.includes('skipsHurtKnockback'), 'feel booth reads the hurt-knockback flag');
+assert(zombieSrc.includes('if (skipsHurtKnockback(this)) return;'), 'stage applyKnockback reads the hurt-knockback flag');
+
+const shockFn = stageSrc.slice(stageSrc.indexOf('_spawnBruteSkillShock(z)'), stageSrc.indexOf('_resolveBruteSkillHit(z, opts'));
+assert(shockFn.includes(BRUTE_SKILL_FX) && shockFn.includes('z.body.y'), 'shock FX anchors on the feet');
+assert(!shockFn.includes('bodyCenterY'), 'shock FX does not use the chest');
+const smashHitFn = stageSrc.slice(stageSrc.indexOf('_resolveBruteSkillHit(z, opts'), stageSrc.indexOf('_playSkillFx(z, animKey)'));
+assert(smashHitFn.includes('pointInBruteSmash') && smashHitFn.includes('applyDamage(BRUTE_GROUND_SMASH_DAMAGE)'), 'stage burst uses the radius and the constant');
+assert(smashHitFn.includes("_playHeroFeel('hurt')"), 'the hit frame flinches the hero');
+assert(smashHitFn.includes('opts.feel !== true'), 'feel booth does not drain barricade HP');
+assert(stageSrc.includes('playBruteGroundSmash') && stageSrc.includes("'3 ground smash'"), 'key 3 hint is the ground smash');
+assert(stageSrc.includes('this.defenders?.player'), 'stage passes the hero into the live cast');
+assert(!stageSrc.includes('camera.shake') && !stageSrc.includes('.shake('), 'the camera still does not shake');
+
+function smashHost() {
+  const host = attackHost({
+    atBarricade: false,
+    skin: { id: 'brute', actions: { skill: BRUTE_SKILL_ANIM } },
+    _smashToken: 0,
+    _animMarkToken: 0,
+    _animMarkHandler: null,
+    _showcaseToken: 0,
+    _smashing: false,
+    _smashCd: 0,
+    scene: {
+      tweens: { added: 0, killTweensOf() {}, add() { this.added += 1; } },
+      anims: {
+        exists: () => true,
+        get: () => ({ frames: new Array(17), repeat: 0, frameRate: 10 }),
+      },
+      time: { delayedCall() {} },
+    },
+    _animKey(action) {
+      if (action === 'skill') return BRUTE_SKILL_ANIM;
+      if (action === 'attack') return 'zombie-brute-attack';
+      return null;
+    },
+  });
+  host.playShowcaseStrip = Zombie.prototype.playShowcaseStrip;
+  host._clearAnimMarks = Zombie.prototype._clearAnimMarks;
+  host._watchAnimFrames = Zombie.prototype._watchAnimFrames;
+  host.playBruteGroundSmash = Zombie.prototype.playBruteGroundSmash;
+  return host;
+}
+const smash = smashHost();
+let shockFrames = 0;
+let hitFrames = 0;
+assert(
+  smash.playBruteGroundSmash({
+    onShock: () => { shockFrames += 1; },
+    onHit: () => { hitFrames += 1; },
+  }) === true,
+  'key 3 starts the ground smash strip',
+);
+assert(smash.body.anims.currentAnim.key === BRUTE_SKILL_ANIM, 'the playing strip is the ground smash');
+assert(smash.body.x === 120, 'the smash does not step the body');
+const smashHandler = smash.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+assert(typeof smashHandler === 'function', 'smash listens for the shown frame');
+smashHandler({ key: BRUTE_SKILL_ANIM }, { index: 8 });
+assert(shockFrames === 0 && hitFrames === 0, 'Phaser index 8 is still the windup');
+smashHandler({ key: BRUTE_SKILL_ANIM }, { index: 9 });
+smashHandler({ key: BRUTE_SKILL_ANIM }, { index: 9 });
+assert(shockFrames === 1 && hitFrames === 0, 'shock FX fires once on Phaser index 9');
+smashHandler({ key: BRUTE_SKILL_ANIM }, { index: 13 });
+assert(hitFrames === 0, 'Phaser index 13 is the cell before the hit');
+smashHandler({ key: BRUTE_SKILL_ANIM }, { index: 14 });
+assert(hitFrames === 1 && shockFrames === 1, 'damage fires once on Phaser index 14');
+const attackOnly = smashHost();
+assert(attackOnly.playShowcaseAttack(7, () => {}) === true, 'brute attack strip is still the bite');
+assert(attackOnly.body.anims.currentAnim.key === 'zombie-brute-attack', 'normal attack does not play the smash');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

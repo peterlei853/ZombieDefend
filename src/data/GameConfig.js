@@ -147,10 +147,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * attack sheet. Bare and short strips use that same fraction. slime-mini
  * still reacts at once. Gold, saves, barricade HP, wave DPS, and the
  * camera stay put.
+ * v0.36.5 plays brute's ground smash on feel-booth key 3 and when a
+ * live brute is inside the smash radius. Shock FX lands on catalog
+ * frame 8 (Phaser index 9) at the feet. Damage lands on catalog frame
+ * 13 (Phaser index 14, the same ~80% rule as the attack strips). The
+ * radius is 320 canvas px, wider than a body-edge melee touch, with a
+ * 36 HP barricade burst that does not edit the wave DPS table. Brute
+ * (`noHurtKnockback`) stays planted when hurt. Attack hit frames, gold,
+ * saves, barricade HP, wave DPS, pets, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.3';
+export const APP_VERSION = '0.36.5';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

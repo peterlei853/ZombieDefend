@@ -1,3 +1,5 @@
+import { BRUTE_SKILL_ANIM } from '../data/bruteSkill.js';
+
 /**
  * Zombie sheets.
  *
@@ -142,7 +144,11 @@ export const ZOMBIE_LIBRARY_SKINS = {
     death: 'zombie-trashcan-bare-die1',
   }),
   sprinter: skin('sprinter', 'zombie-sprinter', { death: 'zombie-sprinter-die1' }),
-  brute: skin('brute', 'zombie-brute', { death: 'zombie-brute-die1' }),
+  brute: skin('brute', 'zombie-brute', {
+    death: 'zombie-brute-die1',
+    noHurtKnockback: true,
+    skill: BRUTE_SKILL_ANIM,
+  }),
   trashcan: skin('trashcan', 'zombie-trashcan', {
     death: 'zombie-trashcan-break',
     hurt: 'zombie-trashcan-hurt_armor',
@@ -204,7 +210,7 @@ const skinCursor = { walker: 0, runner: 0, tank: 0 };
 /**
  * @param {string} id
  * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
- * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string }} [extra]
+ * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string, skill?: string|null, noHurtKnockback?: boolean }} [extra]
  */
 function skin(id, prefix, extra = {}) {
   return {
@@ -212,6 +218,8 @@ function skin(id, prefix, extra = {}) {
     facing: /** @type {'east'} */ ('east'),
     blastFx: extra.blastFx || null,
     fallbackId: extra.fallbackId || null,
+    /** Big body stays planted on a hurt shove. Brute only. */
+    noHurtKnockback: extra.noHurtKnockback === true,
     actions: {
       walk: `${prefix}-walk`,
       run: `${prefix}-run`,
@@ -220,6 +228,7 @@ function skin(id, prefix, extra = {}) {
       hurt: extra.hurt || `${prefix}-hurt`,
       blast: extra.blast || null,
       attach: extra.attach || null,
+      skill: extra.skill || null,
     },
   };
 }
@@ -310,6 +319,21 @@ export function zombieSkinDef(id) {
   return ZOMBIE_LIBRARY_SKINS[id] || ZOMBIE_BOSS_SKINS[id] || null;
 }
 
+/**
+ * Hurt shove is skipped for a big body. Only the brute catalog sets
+ * `noHurtKnockback`. Stage `applyKnockback` and the feel-booth 2px X
+ * shove both read this. Pet slides do not.
+ * @param {{ noHurtKnockback?: boolean, skin?: { id?: string, noHurtKnockback?: boolean }|null, skinId?: string }|null|undefined} zombie
+ */
+export function skipsHurtKnockback(zombie) {
+  if (!zombie) return false;
+  if (zombie.noHurtKnockback === true) return true;
+  const skin = zombie.skin;
+  if (skin && typeof skin === 'object' && skin.noHurtKnockback === true) return true;
+  const id = (skin && typeof skin === 'object' && skin.id) || zombie.skinId;
+  return zombieSkinDef(id)?.noHurtKnockback === true;
+}
+
 export function resolveSpawnSkin(scene, skinId, variant) {
   /** @type {string[]} */
   const chain = [];
@@ -348,7 +372,7 @@ export function takeZombieSkin(variant) {
  * Runners play `run` for the walk slot. Legacy fallback is `zombie-${variant}-${action}`.
  * @param {{ actions?: Record<string, string|null> }|null|undefined} skinDef
  * @param {string} variant
- * @param {'walk'|'attack'|'stumble'|'death'|'hurt'|'blast'} action
+ * @param {'walk'|'attack'|'stumble'|'death'|'hurt'|'blast'|'skill'} action
  * @returns {string|null}
  */
 export function zombieActionKey(skinDef, variant, action) {
@@ -359,6 +383,6 @@ export function zombieActionKey(skinDef, variant, action) {
     if (action === 'stumble') return skinDef.actions.stumble || null;
     return skinDef.actions[action] || null;
   }
-  if (action === 'blast' || action === 'hurt') return null;
+  if (action === 'blast' || action === 'hurt' || action === 'skill') return null;
   return zombieSheetKey(variant, action);
 }

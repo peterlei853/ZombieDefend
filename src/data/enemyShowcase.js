@@ -1,4 +1,5 @@
 import { DEMO_ENEMY_IDS } from './GameConfig.js';
+import { BRUTE_SKILL_ANIM } from './bruteSkill.js';
 
 /**
  * Solo-enemy feel booth (`?enemy=<id>` / `?feel=1`).
@@ -15,12 +16,10 @@ export const ENEMY_SKILL_STRIPS = {
   delivery: [],
   chef: [],
   nurse: [{ anim: 'zombie-nurse-attach', cue: 'skill-attach' }],
-  brute: [
-    { anim: 'zombie-brute-hurt_heavy', cue: 'skill-hurt_heavy' },
-    { anim: 'zombie-brute-part_break', cue: 'skill-part_break' },
-    { anim: 'zombie-brute-blasted_back', cue: 'skill-blasted_back' },
-    { anim: 'zombie-brute-defeated', cue: 'skill-defeated' },
-  ],
+  // Ground smash only. The older hurt_heavy / part_break / blasted_back /
+  // defeated rows stay packed as cues; they are not the key-3 cycle.
+  // The cast sting reuses skill-hurt_heavy — no smash mp3 is cataloged.
+  brute: [{ anim: BRUTE_SKILL_ANIM, cue: 'skill-hurt_heavy' }],
   riot: [{ anim: 'zombie-riot-armor_break', cue: 'skill-armor_break' }],
   trashcan: [{ anim: 'zombie-trashcan-break', cue: 'skill-break' }],
   sprinter: [

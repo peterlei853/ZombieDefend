@@ -14,6 +14,12 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import { enemySkillStrips, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
+import {
+  BRUTE_GROUND_SMASH_DAMAGE,
+  BRUTE_SKILL_ANIM,
+  BRUTE_SKILL_FX,
+  pointInBruteSmash,
+} from '../data/bruteSkill.js';
 import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact, playFeelWaveFx } from '../systems/feelImpact.js';
 import {
   WORLD_WIDTH,
@@ -88,7 +94,10 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
  * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
  * Key 1 and key 4 share a 40ms hitstop, white flash, and a 2px X
- * knockback. Key 4 also sprays impact sparks, plays the hurt sheet, and
+ * knockback. Brute (`noHurtKnockback`) skips that shove and stays planted.
+ * Key 3 on brute plays `zombie-brute-skill_ground_smash`: shock FX on
+ * catalog frame 8 at the feet, hero flinch on catalog frame 13.
+ * Key 4 also sprays impact sparks, plays the hurt sheet, and
  * plays `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
  * Key 1 does not spray sparks and does not play the hurt sheet (its
  * first frame bakes a yellow crescent on the right of the body).
@@ -568,7 +577,8 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Ranged (key 1) or melee (key 4). Same hitstop, flash, and 2px X
-   * knockback. Melee also sprays sparks, plays the hurt sheet, and plays
+   * knockback. Brute (`noHurtKnockback`) skips that shove. Melee also
+   * sprays sparks, plays the hurt sheet, and plays
    * `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
    * Key 1 does not spray sparks and does not play the hurt sheet.
    * @param {boolean} melee
@@ -626,10 +636,73 @@ export default class StageScene extends Phaser.Scene {
     }
     const row = strips[this._feelSkillCursor % strips.length];
     this._feelSkillCursor += 1;
+    if (row.anim === BRUTE_SKILL_ANIM) {
+      const played = z.playBruteGroundSmash({
+        onShock: () => this._spawnBruteSkillShock(z),
+        onHit: () => this._resolveBruteSkillHit(z, { feel: true }),
+      });
+      this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
+      this._setFeelHint(played ? '3 ground smash' : '3 ground smash (strip missing)');
+      return;
+    }
     const played = z.playShowcaseStrip(row.anim);
     this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
     if (played) this._playSkillFx(z, row.anim);
     this._setFeelHint(played ? `3 ${row.cue}` : `3 ${row.cue} (strip missing)`);
+  }
+
+  /**
+   * Foot shock for the ground smash. Catalog anchor (58, 32) sits on the
+   * brute's feet. PIXELLAB_HOOK: fx-brute-skill-shock at skill cell 8.
+   * @param {Zombie} z
+   */
+  _spawnBruteSkillShock(z) {
+    if (!z?.body) return null;
+    const feetY = z.body.y;
+    return playLibraryFx(this, z.body.x, feetY, BRUTE_SKILL_FX, {
+      depth: (z.body.depth || 0) - 1,
+      scale: Math.abs(z.body.scaleX || 1),
+    });
+  }
+
+  /**
+   * Hit frame of the ground smash. The posts take a burst when the lane
+   * face is inside the radius. The hero flinches when they are inside it.
+   * Feel booth always flinches the hero so key 3 reads on the hold.
+   * Wave contact DPS is not rewritten.
+   * @param {Zombie} z
+   * @param {{ feel?: boolean }} [opts]
+   */
+  _resolveBruteSkillHit(z, opts = {}) {
+    if (this.ended || !z?.alive || !z.body) return;
+    const x = z.body.x;
+    const y = z.body.y;
+    const contactX = this.barricade?.contactXAt?.(y);
+    const player = this.defenders?.player;
+    const wallHit = pointInBruteSmash(x, y, contactX, y);
+    const heroHit = !!(player && player.active !== false && pointInBruteSmash(x, y, player.x, player.y));
+    if (wallHit && this.barricade) {
+      if (opts.feel !== true) {
+        const destroyed = this.barricade.applyDamage(BRUTE_GROUND_SMASH_DAMAGE);
+        if (destroyed) this._onLose();
+      }
+      this.barricade.flashAtY?.(y);
+      this.barricade.spawnImpact?.(contactX, y);
+      showDamageText(
+        this,
+        contactX - layoutPx(10),
+        y - layoutPx(18),
+        BRUTE_GROUND_SMASH_DAMAGE,
+        DAMAGE_COLORS.barricade,
+      );
+      this.audio?.playBarricadeHit?.();
+    }
+    if (heroHit || opts.feel === true) {
+      this._playHeroFeel('hurt');
+      const hx = Number.isFinite(player?.x) ? player.x : x;
+      const hy = (Number.isFinite(player?.y) ? player.y : y) - layoutPx(28);
+      showDamageText(this, hx, hy, BRUTE_GROUND_SMASH_DAMAGE, DAMAGE_COLORS.barricade);
+    }
   }
 
   /**
@@ -1070,7 +1143,7 @@ export default class StageScene extends Phaser.Scene {
     for (const z of this.zombies) {
       if (!z.alive) continue;
       const pet = pickPetTarget(z, fieldPets);
-      z.update(deltaSec, this.barricade.contactXAt(z.y), pet);
+      z.update(deltaSec, this.barricade.contactXAt(z.y), pet, this.defenders?.player);
       const status = z.tickStatus(deltaMs);
       statusGold += status?.gold || 0;
       const petDmg = z.petContactDamage(deltaSec);
