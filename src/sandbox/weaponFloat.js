@@ -74,5 +74,6 @@ export function sandboxWeaponLabel(id) {
   if (trait.continuous) {
     return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.cone} · burn ${trait.burnFx}`;
   }
-  return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.projectile} · hit ${trait.impact}`;
+  const hit = id === 'water' ? 'fx-lightning-impact' : trait.impact;
+  return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.projectile} · hit ${hit}`;
 }

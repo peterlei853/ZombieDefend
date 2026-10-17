@@ -208,10 +208,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * projectile and hit FX at a held target. No cradle is drawn there.
  * Stage fence mounts, gold-by-HP, saves, barricade max HP, the five
  * single-type roster, and feel-booth keys 6–9 stay put.
+ * v0.36.13: water hits in that booth, and the same water hit path on
+ * stage `?weapon=water`, drop the splash, wet-ground, and body-hit
+ * sheets. When the projectile's opaque pixels touch the enemy,
+ * `fx-lightning-impact` plays once at that point. No chain. The water
+ * projectile, gold-by-HP, saves, barricade max HP, the five-stage
+ * roster, the other five weapons, and feel-booth keys 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.12';
+export const APP_VERSION = '0.36.13';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

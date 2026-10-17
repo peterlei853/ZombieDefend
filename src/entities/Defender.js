@@ -773,6 +773,7 @@ export class DefenderGroup {
           by + half >= bounds.top &&
           by - half <= bounds.bottom
         ) {
+          if (this.weapons.confirmOpaqueHit?.(b, z) === false) continue;
           hitZombie = z;
           break;
         }

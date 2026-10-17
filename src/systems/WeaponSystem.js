@@ -25,7 +25,6 @@ import {
   waterImpactBeatMs,
   waterSheetFallback,
   waterSplashKey,
-  waterWetKey,
 } from '../assets/waterMounts.js';
 import {
   slingAimVelocity,
@@ -33,7 +32,8 @@ import {
   slingImpactKey,
   slingSheetFallback,
 } from '../assets/slingMounts.js';
-import { slingBodyHitKey, waterBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
+import { slingBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
+import { spritesTouchPoint } from './pixelTouch.js';
 import { upgradedDamage } from '../data/shopList.js';
 
 /**
@@ -44,6 +44,13 @@ import { upgradedDamage } from '../data/shopList.js';
  */
 export const SLING_OVERLAY_DEPTH_BIAS = 6;
 export const SLING_OVERLAY_SCALE = 1.75;
+
+/**
+ * Water on-hit burst. Same sheet as the lightning gun's impact
+ * (sandbox key 4). Played once at the opaque-pixel contact.
+ * No chain arc. Water splash, wet ground, and body-hit sheets stay off.
+ */
+export const WATER_HIT_FX = 'fx-lightning-impact';
 
 /** @typedef {'Handgun'|'Shotgun'} WeaponId */
 
@@ -486,6 +493,23 @@ export class WeaponSystem {
    * @returns {{ gold: number, kills: number }}
    */
   /**
+   * Water hits only when the projectile's opaque pixels overlap the
+   * enemy's. The contact is stored on the bullet for the lightning burst.
+   * Other weapons keep the caller's box test.
+   * @param {object} bullet
+   * @param {{ body?: object }} zombie
+   * @returns {boolean}
+   */
+  confirmOpaqueHit(bullet, zombie) {
+    if (bullet?.weaponId !== 'water') return true;
+    const point = spritesTouchPoint(bullet.gfx, zombie?.body);
+    if (!point) return false;
+    bullet.touchX = point.x;
+    bullet.touchY = point.y;
+    return true;
+  }
+
+  /**
    * Living zombies and the bullet list for splash, split, and chain.
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {object[]} bullets
@@ -820,8 +844,10 @@ export class WeaponSystem {
   }
 
   /**
-   * Splash ring and wet ground play on contact. HP for the primary and
-   * every neighbor in the splash waits for the same impact beat.
+   * Opaque contact plays fx-lightning-impact at the pixel point.
+   * Water splash, wet ground, and body-hit sheets stay off. No chain.
+   * HP for the primary and every neighbor in the splash still waits
+   * for the same beat.
    * @param {import('../entities/Zombie.js').Zombie} primary
    * @param {object} bullet
    */
@@ -829,10 +855,11 @@ export class WeaponSystem {
     const trait = WEAPON_TRAITS.water;
     const px = primary.x;
     const py = primary.y;
-    const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : py;
-    const exists = (key) => !!this.scene?.textures?.exists?.(key);
-    this._spawnImpactKey(waterSplashKey(exists), px, hy, primary);
-    this._spawnGround(waterWetKey(exists), px, py);
+    const tx = Number(bullet?.touchX);
+    const ty = Number(bullet?.touchY);
+    if (Number.isFinite(tx) && Number.isFinite(ty)) {
+      this._spawnPointFx(WATER_HIT_FX, tx, ty, primary);
+    }
     const radius = layoutPx(trait.splashRadius || 56);
     /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
     const hits = [{ zombie: primary, damage: bullet.damage, knock: true }];
@@ -1191,8 +1218,8 @@ export class WeaponSystem {
 
   /**
    * Body-center puff on the takeDamage frame.
-   * Water prefers fx-hit-water-{office-v2,delivery,chef,nurse}, then
-   * fx-water-impact, then fx-water-splash-big.
+   * Water does not play a body sheet here. Its hit is fx-lightning-impact
+   * at the opaque contact, spawned when the projectile touches.
    * Sling prefers fx-hit-sling-<skin> (office-worker-v2 → office-v2),
    * then fx-sling-impact, then fx-sling-pellet.
    * PIXELLAB_HOOK: fx-hit-sling-<skinId> for each monster skin.
@@ -1201,13 +1228,10 @@ export class WeaponSystem {
    * @param {string} [weaponId]
    */
   _spawnSkinHit(zombie, weaponId) {
+    if (weaponId === 'water') return;
     const exists = (key) => !!this.scene?.textures?.exists?.(key);
     let key = null;
-    if (weaponId === 'water') {
-      const mapped = waterBodyHitKey(zombie?.skin?.id);
-      const order = [mapped, 'fx-water-impact', 'fx-water-splash-big'].filter(Boolean);
-      key = order.find((name) => exists(name)) || null;
-    } else if (weaponId === 'sling') {
+    if (weaponId === 'sling') {
       const mapped = slingBodyHitKey(zombie?.skin?.id);
       const order = [mapped, 'fx-sling-impact', 'fx-sling-pellet'].filter(Boolean);
       key = order.find((name) => exists(name)) || null;
@@ -1249,6 +1273,24 @@ export class WeaponSystem {
    */
   _isSlingImpactKey(key) {
     return key === 'fx-sling-impact' || key === 'fx-sling-pellet';
+  }
+
+  /**
+   * One-shot sheet at an exact world point. Used for the water hit so
+   * the burst stays on the opaque contact instead of the body center.
+   * Depth follows the feet so the burst paints in front of the sprite.
+   * @param {string} key
+   * @param {number} x
+   * @param {number} y
+   * @param {{ y?: number, scale?: number }} [zombie]
+   */
+  _spawnPointFx(key, x, y, zombie) {
+    if (!key || !Number.isFinite(x) || !Number.isFinite(y)) return;
+    const feet = Number.isFinite(zombie?.y) ? zombie.y : y;
+    playLibraryFx(this.scene, x, y, key, {
+      scale: this._visualScale || Math.abs(zombie?.scale || 1) || 1,
+      depth: depthFromY(feet, 4),
+    });
   }
 
   /**
