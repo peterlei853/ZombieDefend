@@ -52,6 +52,9 @@
  * v0.36.7: brute key 3 plays only the ground smash. Shock still spawns
  * on the feet at catalog frame 8. Catalog frame 13 hurts when the shock
  * shares an opaque pixel with the hero, a pet, or a barricade post.
+ * v0.36.8: that shock anchor moves to the smash hand (+46 forward, 8 up,
+ * X mirrored when flipped). Origin is pixel (62, 80) on the 181×131 cell.
+ * No 1.5× scale. Hurt stays opaque-pixel overlap.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -74,6 +77,15 @@ import {
   enemySfxKey,
   enemySfxUrl,
   BRUTE_SMASH_ANIM,
+  BRUTE_SHOCK_ANCHOR_X,
+  BRUTE_SHOCK_ANCHOR_Y,
+  BRUTE_SHOCK_FRAME_H,
+  BRUTE_SHOCK_FRAME_W,
+  BRUTE_SHOCK_HAND_FORWARD,
+  BRUTE_SHOCK_HAND_UP,
+  BRUTE_SHOCK_KEY,
+  bruteShockHandPoint,
+  bruteShockOrigin,
   enemySkillStrips,
   feelAttackHitFrame,
   feelSkillSelection,
@@ -144,8 +156,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.7' && APP_VERSION === '0.36.7', 'package and APP_VERSION are 0.36.7');
-assert(html.includes('v0.36.7'), 'document title is v0.36.7');
+assert(pkg.version === '0.36.8' && APP_VERSION === '0.36.8', 'package and APP_VERSION are 0.36.8');
+assert(html.includes('v0.36.8'), 'document title is v0.36.8');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -946,7 +958,7 @@ assert(typeof smashHandler === 'function', 'smash arms both the shock and the Ao
 smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 8 });
 assert(shock === false && aoe === false, 'Phaser index 8 is catalog cell 7, before the shock');
 smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 9 });
-assert(shock === true && aoe === false, 'Phaser index 9 is catalog frame 8, the feet shock');
+assert(shock === true && aoe === false, 'Phaser index 9 is catalog frame 8, the hand shock');
 smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 13 });
 assert(aoe === false, 'Phaser index 13 is catalog cell 12, before the AoE');
 smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 14 });
@@ -968,8 +980,10 @@ skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 9 });
 assert(skippedShock === true && skippedAoe === false, 'a hitch still shocks on catalog frame 8');
 skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 15 });
 assert(skippedAoe === true, 'skipping catalog cell 13 still flinches once the strip is past it');
-assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock is spawned on the feet');
-assert(stageSrc.includes('z.body.y + oy * scale'), 'feet shock uses the sole plus the catalog anchor');
+assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock still spawns from the impact hook');
+assert(stageSrc.includes('bruteShockHandPoint'), 'smash shock is placed on the hand');
+assert(stageSrc.includes('bruteShockOrigin'), 'smash shock uses the 181×131 burst anchor');
+assert(stageSrc.includes('z.body.y + oy * scale'), 'non-shock skills still use the catalog impact point');
 assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');
 assert(stageSrc.includes('spritesTouch'), 'AoE hurt uses shock pixel contact');
 assert(stageSrc.includes('fx-brute-skill-shock'), 'the kept sprite is the brute shock');
@@ -978,7 +992,9 @@ assert(stageSrc.includes('barricade?.posts'), 'barricade posts are shock targets
 assert(!stageSrc.includes('bruteSmashContains') && !stageSrc.includes('BRUTE_SMASH'), 'AoE does not use a feet circle');
 assert(!stageSrc.includes('camera.shake'), 'the smash does not shake the camera');
 const feetFn = stageSrc.slice(stageSrc.indexOf('_playSkillFxAtFeet'), stageSrc.indexOf('_keepBruteShock'));
-assert(!/body\.y\s*-\s*\d+/.test(feetFn), 'feet spawn does not invent a Y offset');
+assert(feetFn.includes('BRUTE_SHOCK_KEY') && feetFn.includes('bruteShockHandPoint'), 'the shock key uses the hand point');
+assert(feetFn.includes('offsetFromCharacterOrigin'), 'hand offset is the catalog attach point');
+assert(!/1\.5/.test(feetFn), 'the shock spawn does not multiply scale');
 const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
 const smashAsset = (index.assets || []).find((asset) => asset.key === 'zombie-brute-skill_ground_smash');
 const shockAsset = (index.assets || []).find((asset) => asset.key === 'fx-brute-skill-shock');
@@ -986,8 +1002,24 @@ assert(smashAsset?.path === 'assets/library/enemies/zombies/brute/strips/zombie-
 assert(smashAsset?.frames === 17 && smashAsset?.frameWidth === 132 && smashAsset?.frameHeight === 132, 'smash stays 17×132');
 assert(smashAsset?.origin?.[0] === 0.5 && smashAsset?.origin?.[1] === 1, 'smash origin stays (0.5, 1)');
 assert(smashAsset?.timing?.impactFrame === 8 && smashAsset?.timing?.gameplayHitFrame === 13, 'smash timing stays impact 8 / hit 13');
-assert(shockAsset?.frames === 10 && shockAsset?.frameWidth === 116 && shockAsset?.frameHeight === 77, 'shock stays 10×116×77');
-assert(shockAsset?.anchors?.pixelAnchor?.[0] === 58 && shockAsset?.anchors?.pixelAnchor?.[1] === 32, 'shock anchor stays (58, 32)');
+assert(shockAsset?.path === 'assets/library/fx/brute-skill/fx-brute-skill-shock.png', 'shock path stays the catalog file');
+assert(shockAsset?.key === BRUTE_SHOCK_KEY && shockAsset?.frames === 10 && shockAsset?.frameRate === 12, 'shock stays 10 frames at 12 fps');
+assert(shockAsset?.frameWidth === 181 && shockAsset?.frameHeight === 131, 'shock cell is 181×131');
+assert(shockAsset?.anchors?.pixelAnchor?.[0] === 62 && shockAsset?.anchors?.pixelAnchor?.[1] === 80, 'shock pixel anchor is (62, 80)');
+const catalogOffset = shockAsset?.anchors?.attach?.offsetFromCharacterOrigin;
+assert(catalogOffset?.[0] === 46 && catalogOffset?.[1] === -8, 'catalog hand offset is east +46 / 8 up');
+assert(Math.abs(shockAsset.origin[0] - 62 / 181) < 1e-12 && Math.abs(shockAsset.origin[1] - 80 / 131) < 1e-12, 'catalog origin is (62/181, 80/131)');
+assert(BRUTE_SHOCK_FRAME_W === 181 && BRUTE_SHOCK_FRAME_H === 131, 'live cell is 181×131');
+assert(BRUTE_SHOCK_ANCHOR_X === 62 && BRUTE_SHOCK_ANCHOR_Y === 80, 'live anchor pixel is (62, 80)');
+assert(BRUTE_SHOCK_HAND_FORWARD === 46 && BRUTE_SHOCK_HAND_UP === 8, 'hand offset is +46 forward and 8 up');
+const origin = bruteShockOrigin();
+assert(origin[0] === 62 / 181 && origin[1] === 80 / 131, 'Phaser origin is (62/181, 80/131)');
+const east = bruteShockHandPoint(100, 200, 1, false);
+assert(east.x === 146 && east.y === 192, 'east hand is +46 x and 8 px up');
+const west = bruteShockHandPoint(100, 200, 1, true);
+assert(west.x === 54 && west.y === 192, 'flipX mirrors the forward offset');
+const scaled = bruteShockHandPoint(10, 40, 2, false);
+assert(scaled.x === 102 && scaled.y === 24, 'hand offset scales with the body and not by 1.5');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

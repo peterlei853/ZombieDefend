@@ -206,6 +206,59 @@ export function phaserIndexForCatalogFrame(catalogFrame) {
 /** Feel key 3 / skill 1 on the brute. The only strip that key plays. */
 export const BRUTE_SMASH_ANIM = 'zombie-brute-skill_ground_smash';
 
+/** Ground shock key. The catalog path stays this file; the v3 cell is 181×131. */
+export const BRUTE_SHOCK_KEY = 'fx-brute-skill-shock';
+
+/**
+ * 2PL handoff cell. Pixel (62, 80) is the burst center.
+ * Phaser origin is that point as a fraction of the cell.
+ */
+export const BRUTE_SHOCK_FRAME_W = 181;
+export const BRUTE_SHOCK_FRAME_H = 131;
+export const BRUTE_SHOCK_ANCHOR_X = 62;
+export const BRUTE_SHOCK_ANCHOR_Y = 80;
+
+/**
+ * Smash impact frame 8, east, measured from the feet origin (0.5, 1).
+ * Forward is +X before flip. Up is 8px toward the head.
+ */
+export const BRUTE_SHOCK_HAND_FORWARD = 46;
+export const BRUTE_SHOCK_HAND_UP = 8;
+
+/** @returns {[number, number]} */
+export function bruteShockOrigin() {
+  return [
+    BRUTE_SHOCK_ANCHOR_X / BRUTE_SHOCK_FRAME_W,
+    BRUTE_SHOCK_ANCHOR_Y / BRUTE_SHOCK_FRAME_H,
+  ];
+}
+
+/**
+ * World point where the shock anchor sits: the smash hand, not the feet.
+ * `offset` is catalog `offsetFromCharacterOrigin` in frame px, Phaser y-down
+ * (east `[46, -8]`). `flipX` mirrors X only. Scale is the body display scale.
+ * There is no extra range multiplier; the 181×131 cell is the +50% sheet.
+ * @param {number} feetX
+ * @param {number} feetY
+ * @param {number} scale
+ * @param {boolean} flipX
+ * @param {[number, number]|null|undefined} [offset]
+ */
+export function bruteShockHandPoint(feetX, feetY, scale, flipX, offset) {
+  const s = Math.abs(Number(scale)) || 1;
+  const dir = flipX ? -1 : 1;
+  const ox = Array.isArray(offset) && Number.isFinite(Number(offset[0]))
+    ? Number(offset[0])
+    : BRUTE_SHOCK_HAND_FORWARD;
+  const oy = Array.isArray(offset) && Number.isFinite(Number(offset[1]))
+    ? Number(offset[1])
+    : -BRUTE_SHOCK_HAND_UP;
+  return {
+    x: Number(feetX) + ox * s * dir,
+    y: Number(feetY) + oy * s,
+  };
+}
+
 /**
  * Key 3 row. Brute skill 1 is always {@link BRUTE_SMASH_ANIM}. Extra
  * hurt / break / blast / defeat rows are ignored and the cursor stays.

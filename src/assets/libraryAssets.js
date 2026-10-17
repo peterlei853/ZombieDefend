@@ -196,7 +196,7 @@ export function libraryAsset(scene, key) {
  * @param {number} x
  * @param {number} y
  * @param {string} key
- * @param {{ scale?: number, depth?: number, rotation?: number, flipX?: boolean }} [opts]
+ * @param {{ scale?: number, depth?: number, rotation?: number, flipX?: boolean, origin?: [number, number] }} [opts]
  * @returns {Phaser.GameObjects.Sprite|null}
  */
 export function playLibraryFx(scene, x, y, key, opts = {}) {
@@ -205,9 +205,13 @@ export function playLibraryFx(scene, x, y, key, opts = {}) {
   try {
     const asset = libraryAsset(scene, key);
     sprite = scene.add.sprite(x, y, key);
-    const origin = asset?.origin ?? [0.5, 0.5];
-    const ox = opts.flipX ? 1 - origin[0] : origin[0];
-    sprite.setOrigin(ox, origin[1]);
+    const catalogOrigin = asset?.origin ?? [0.5, 0.5];
+    const override = opts.origin;
+    const origin = Array.isArray(override) && override.length >= 2 ? override : catalogOrigin;
+    const originX = Number.isFinite(Number(origin[0])) ? Number(origin[0]) : 0.5;
+    const originY = Number.isFinite(Number(origin[1])) ? Number(origin[1]) : 0.5;
+    const ox = opts.flipX ? 1 - originX : originX;
+    sprite.setOrigin(ox, originY);
     if (opts.flipX) sprite.setFlipX(true);
     if (opts.scale) sprite.setScale(opts.scale);
     if (opts.rotation) sprite.setRotation(opts.rotation);
