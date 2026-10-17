@@ -119,6 +119,8 @@ export class Zombie {
     this._flashToken = 0;
     /** Feel booth holds this body in front of the fence. Waves never set it. */
     this.showcaseHold = false;
+    /** Eastward march used to lead a water shot. 0 while held or stopped. */
+    this._marchVx = 0;
     this._showcaseToken = 0;
 
     registerZombieAnims(scene);
@@ -239,6 +241,16 @@ export class Zombie {
 
   get y() {
     return this.body ? this.body.y : this._lastY;
+  }
+
+  /**
+   * World px/s along X (east positive). 0 while the booth holds the
+   * body, it is biting, rooted, or sliding. Water uses this to aim
+   * at the intercept. Y stays on the lane.
+   * @returns {number}
+   */
+  marchVx() {
+    return Number.isFinite(this._marchVx) ? this._marchVx : 0;
   }
 
   /** Screen Y of the HP tick (on the crown). */
@@ -374,6 +386,7 @@ export class Zombie {
   }
 
   update(deltaSec, contactX, pet = null) {
+    this._marchVx = 0;
     if (!this.alive) return;
     if (this.showcaseHold) return;
 
@@ -402,7 +415,8 @@ export class Zombie {
         // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
         // Critical HP uses CRIT_SPEED_MULT (stumble sheet or not).
         const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
-        const nextX = this.body.x + speed * LAYOUT_SCALE * deltaSec;
+        const march = speed * LAYOUT_SCALE;
+        const nextX = this.body.x + march * deltaSec;
         const halt = contactX - this.displayHalf;
         if (nextX >= halt) {
           this.body.x = halt;
@@ -411,6 +425,7 @@ export class Zombie {
           this._stopWalkAnim();
         } else {
           this.body.x = nextX;
+          this._marchVx = march;
         }
       }
 
@@ -491,6 +506,7 @@ export class Zombie {
     if (dist > 0.001) {
       this.body.x += (dx / dist) * step;
       this.body.y += (dy / dist) * step;
+      this._marchVx = (dx / dist) * speed * LAYOUT_SCALE;
     }
     const halt = contactX - this.displayHalf;
     if (this.body.x > halt) this.body.x = halt;

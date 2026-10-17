@@ -214,10 +214,22 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * `fx-lightning-impact` plays once at that point. No chain. The water
  * projectile, gold-by-HP, saves, barricade max HP, the five-stage
  * roster, the other five weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.14: water aims at where a marching body will be, and keeps
+ * guiding onto a living body still ahead so the opaque cores meet
+ * instead of skimming an empty intercept. `fx-lightning-impact`
+ * still plays at the opaque contact. The projectile sheet is
+ * unchanged. Gold-by-HP, saves, barricade max HP, the roster, the
+ * other five weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.15: a shot with no living body still ahead keeps its heading
+ * and flies until it hits or leaves the camera. The old left cull
+ * used the stage spawn gutter, which sits on the sandbox target, so
+ * some water shots vanished on screen just short of the body.
+ * Gold-by-HP, saves, barricade max HP, the roster, the other five
+ * weapons, and feel-booth keys 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.13';
+export const APP_VERSION = '0.36.15';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
