@@ -11,5 +11,7 @@
     1.0
   ],
   "characterId": "c13bb0f5-984d-4b35-9b37-742df531789a",
-  "animationGroup": "zombie-brute-skill_ground_smash"
+  "animationGroup": "zombie-brute-skill_ground_smash",
+  "yfix": "v1-feet-to-bottom",
+  "note": "Per-frame vertical shift so content feet sit on canvas bottom (padB=0), matching body 96 strips. Art pixels unchanged, only Y placement."
 }

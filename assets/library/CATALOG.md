@@ -573,7 +573,7 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 
 <img src="previews/zombies/brute/preview.gif" alt="brute preview" height="140">
 
-Large mini-boss. Body strips stay 96×96. Brute skill v2 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.
+Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.
 
 - group `brute` · 16 assets · frame 96x96, 132x132 · key prefix `zombie-brute-` · manifest [enemies/zombies/brute/manifest.json](enemies/zombies/brute/manifest.json)
 - previews: [all-actions-sheet.png](previews/zombies/brute/all-actions-sheet.png), [unique-actions-sheet.png](previews/zombies/brute/unique-actions-sheet.png), [special-sheet.png](previews/zombies/brute/special-sheet.png), [elemental-hits-sheet.png](previews/zombies/brute/elemental-hits-sheet.png), [special-sequence.gif](previews/zombies/brute/special-sequence.gif), [skill-ground_smash.gif](previews/zombies/brute/skill-ground_smash.gif)
@@ -595,7 +595,7 @@ Large mini-boss. Body strips stay 96×96. Brute skill v2 ground smash 132: prima
 | `zombie-brute-part_break` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-blasted_back` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-defeated` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
-| `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2 ground smash 132. Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
+| `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
 
 ### Chef Zombie (大廚丧尸)
 
