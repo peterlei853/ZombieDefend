@@ -214,10 +214,30 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * `fx-lightning-impact` plays once at that point. No chain. The water
  * projectile, gold-by-HP, saves, barricade max HP, the five-stage
  * roster, the other five weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.14: water aims at where a marching body will be, and keeps
+ * guiding onto a living body still ahead so the opaque cores meet
+ * instead of skimming an empty intercept. `fx-lightning-impact`
+ * still plays at the opaque contact. The projectile sheet is
+ * unchanged. Gold-by-HP, saves, barricade max HP, the roster, the
+ * other five weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.15: a shot with no living body still ahead keeps its heading
+ * and flies until it hits or leaves the camera. The old left cull
+ * used the stage spawn gutter, which sits on the sandbox target, so
+ * some water shots vanished on screen just short of the body.
+ * Gold-by-HP, saves, barricade max HP, the roster, the other five
+ * weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.16: sandbox water (and stage `?weapon=water`) cancels auto-fire.
+ * SPACE holds a charge and releases it: under 2.5s the old bullet and
+ * lightning impact, from 2.5s a 2× shot that pierces 5 and leaves a 5s
+ * wet DoT, from 5s a 4× shot that crosses the field with a path burn
+ * and an in-bullet DoT. Homing stays inside ±10° of horizontal.
+ * The 16-bit pack plays charge L2 from the hold, charge L3 after 2.5s,
+ * a release by tier, and an impact by projectile tier. Gold-by-HP,
+ * saves, barricade max HP, the roster, and the other five weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.13';
+export const APP_VERSION = '0.36.16';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

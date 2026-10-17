@@ -193,3 +193,181 @@ export function waterAimVelocity(fromX, fromY, target, speed) {
   if (!(len > 0) || !Number.isFinite(len)) return west;
   return { vx: (dx / len) * s, vy: (dy / len) * s };
 }
+
+/** Hold this long for a level-2 charge. Under it, the shot stays L1. */
+export const WATER_CHARGE_L2_MS = 2500;
+/** Hold this long for a level-3 charge. */
+export const WATER_CHARGE_L3_MS = 5000;
+/** L2 shots pass through this many bodies, then stop. */
+export const WATER_L2_PIERCE = 5;
+/** L2 wet damage keeps ticking for this long after the hit. */
+export const WATER_L2_DOT_MS = 5000;
+export const WATER_L2_DOT_DMG = 4;
+export const WATER_L2_DOT_EVERY = 500;
+/** L3 damage while a body is inside the projectile. */
+export const WATER_L3_DOT_DMG = 6;
+export const WATER_L3_DOT_EVERY = 350;
+/** L3 crumbs left behind the projectile. */
+export const WATER_PATH_DMG = 2;
+export const WATER_PATH_EVERY = 450;
+export const WATER_PATH_LIFE = 1000;
+export const WATER_PATH_GAP = 48;
+/** Steering never leaves this many degrees off horizontal. */
+export const WATER_HOMING_DEG = 10;
+
+export const WATER_CHARGE_FX = {
+  aura: 'fx-water-charge-aura',
+  proj: { 2: 'fx-water-proj-t2', 3: 'fx-water-proj-t3' },
+  impact: { 2: 'fx-water-t2-impact', 3: 'fx-water-t3-impact' },
+  dot: { 2: 'fx-water-t2-dot', 3: 'fx-water-t3-inbullet-dot' },
+  path: 'fx-water-t3-path-burn',
+};
+
+/**
+ * 1 under 2.5s, 2 from 2.5s, 3 from 5s. A tap is still level 1.
+ * @param {number} ms
+ */
+export function waterChargeTier(ms) {
+  const t = Number(ms) || 0;
+  if (t >= WATER_CHARGE_L3_MS) return 3;
+  if (t >= WATER_CHARGE_L2_MS) return 2;
+  return 1;
+}
+
+/**
+ * Bodies a charge shot may hit before it is spent.
+ * Level 3 keeps going across the field.
+ * @param {number} tier
+ */
+export function waterPierceFor(tier) {
+  if (tier >= 3) return Infinity;
+  if (tier === 2) return WATER_L2_PIERCE;
+  return 1;
+}
+
+/**
+ * Authored hit box. The L2 / L3 sheets are already 2× and 4× the L1 frame.
+ * @param {number} tier
+ */
+export function waterHitSizeFor(tier) {
+  if (tier >= 3) return 64;
+  if (tier === 2) return 32;
+  return 16;
+}
+
+/**
+ * West heading, steered toward `target`, clamped to ±10° off horizontal.
+ * A body outside that cone is held on the cone edge. No body, or a body
+ * that is not west of the muzzle, stays flat west.
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {{ x: number, y: number }|null|undefined} target
+ * @param {number} speed
+ * @returns {{ vx: number, vy: number }}
+ */
+export function waterConeVelocity(fromX, fromY, target, speed) {
+  const s = Math.abs(Number(speed) || 0);
+  const west = { vx: -s, vy: 0 };
+  if (!target || !Number.isFinite(target.x) || !Number.isFinite(target.y)) return west;
+  const dx = target.x - fromX;
+  const dy = target.y - fromY;
+  if (!(dx < -0.5)) return west;
+  const ang = Math.atan2(dy, dx);
+  let pitch = ang > 0 ? ang - Math.PI : ang + Math.PI;
+  const max = (WATER_HOMING_DEG * Math.PI) / 180;
+  if (pitch > max) pitch = max;
+  if (pitch < -max) pitch = -max;
+  const aim = pitch >= 0 ? -Math.PI + pitch : Math.PI + pitch;
+  return { vx: Math.cos(aim) * s, vy: Math.sin(aim) * s };
+}
+
+/**
+ * Where to aim so a shot at `bulletSpeed` meets a body moving at
+ * `targetVx` (world px/s, east positive). A held or stopped body
+ * (`targetVx` near 0) stays on its current point. Y is not led:
+ * marchers keep their lane.
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {number} targetX
+ * @param {number} targetY
+ * @param {number} targetVx
+ * @param {number} bulletSpeed
+ * @returns {{ x: number, y: number }}
+ */
+export function waterLeadAim(fromX, fromY, targetX, targetY, targetVx, bulletSpeed) {
+  const here = { x: targetX, y: targetY };
+  const s = Math.abs(Number(bulletSpeed) || 0);
+  const vz = Number(targetVx) || 0;
+  if (!(s > 0) || Math.abs(vz) < 1) return here;
+  if (!Number.isFinite(fromX) || !Number.isFinite(fromY)) return here;
+  if (!Number.isFinite(targetX) || !Number.isFinite(targetY)) return here;
+  const dx = targetX - fromX;
+  const dy = targetY - fromY;
+  const a = vz * vz - s * s;
+  const b = 2 * dx * vz;
+  const c = dx * dx + dy * dy;
+  /** @type {number[]} */
+  const times = [];
+  if (Math.abs(a) < 1e-4) {
+    if (Math.abs(b) > 1e-4) times.push(-c / b);
+  } else {
+    const disc = b * b - 4 * a * c;
+    if (disc < 0) return here;
+    const root = Math.sqrt(disc);
+    times.push((-b - root) / (2 * a), (-b + root) / (2 * a));
+  }
+  let t = 0;
+  for (const candidate of times) {
+    if (candidate > 0.02 && candidate < 5 && (t === 0 || candidate < t)) t = candidate;
+  }
+  if (!(t > 0)) return here;
+  return { x: targetX + vz * t, y: targetY };
+}
+
+/**
+ * Chest Y when the body has one, otherwise `y`.
+ * @param {{ y?: number, bodyCenterY?: number }} z
+ */
+function waterAimY(z) {
+  return Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : (Number.isFinite(z.y) ? z.y : 0);
+}
+
+/**
+ * Living body a water shot should fly toward. Sticks to `guideId`
+ * while that body is still west of the shot. A new pick stays on the
+ * shot's lane (closest chest Y) and, on that lane, takes the nearest
+ * walker. A steep shot at a closer body on another lane is what lets
+ * the core skim past.
+ * @param {{ id?: number, x: number, y?: number, bodyCenterY?: number, alive?: boolean }[]} zombies
+ * @param {number} x
+ * @param {number} y
+ * @param {number|null|undefined} guideId
+ */
+export function pickWaterGuide(zombies, x, y, guideId) {
+  /** @type {{ id?: number, x: number, y?: number, bodyCenterY?: number }[]} */
+  const ahead = [];
+  for (const z of zombies || []) {
+    if (!z || z.alive === false) continue;
+    if (!Number.isFinite(z.x) || !(z.x < x - 4)) continue;
+    ahead.push(z);
+  }
+  if (guideId != null) {
+    const stuck = ahead.find((z) => z.id === guideId);
+    if (stuck) return stuck;
+  }
+  let best = null;
+  let bestDy = Infinity;
+  let bestDx = Infinity;
+  for (const z of ahead) {
+    const dy = Math.abs(waterAimY(z) - y);
+    const dx = x - z.x;
+    const closerLane = dy < bestDy - 12;
+    const sameLane = Math.abs(dy - bestDy) <= 12 && dx < bestDx;
+    if (!best || closerLane || sameLane) {
+      best = z;
+      bestDy = dy;
+      bestDx = dx;
+    }
+  }
+  return best;
+}
