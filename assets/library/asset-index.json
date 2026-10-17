@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 607,
+    "total": 608,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -41,8 +41,8 @@
         "assets": 39
       },
       "fx": {
-        "groups": 9,
-        "assets": 23
+        "groups": 10,
+        "assets": 24
       },
       "pickups": {
         "groups": 1,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 81,
+      "fx": 82,
       "icon": 75,
       "image": 38,
       "spritesheet": 379
@@ -2101,6 +2101,39 @@
       ],
       "keys": [
         "zombie-exploder-blast"
+      ]
+    },
+    {
+      "id": "fx/aoe-lightning",
+      "category": "fx",
+      "group": "aoe-lightning",
+      "title": "AOE Lightning Explosion",
+      "titleZh": "範圍閃電爆炸",
+      "description": "fx-aoe-lightning v1.0 explosion pack. Effect-only, no character. 30 frames @ 10 fps (100 ms), once, 3.0s. Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid. Origin (0.5, 0.75) is pixel anchor (135, 150), the ground center of the magic circle. Story: START glowing yellow concentric magic circle → BLAST lightning bolts and flash → FADE scorched ground and blue embers. Tag AOE, lightning, normal×1.2, multi-tick. The cell is already normal×1.2 versus the 225px dust baseline (270 = 225 × 1.2); play at scale 1. Visual duration is 3.0s. Multi-tick damage timing is Gameplay's call. Catalog only. Separate from the v0.26 residue puff vfx-aoe-lightning (96×96, origin centre).",
+      "manifest": "assets/library/fx/aoe/manifest.json",
+      "dir": "assets/library/fx/aoe",
+      "thumb": "assets/library/previews/fx/aoe-lightning/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "",
+      "mainKey": "fx-aoe-lightning",
+      "count": 1,
+      "frameSizes": [
+        "270x200"
+      ],
+      "framesRange": [
+        30,
+        30
+      ],
+      "fpsRange": [
+        10,
+        10
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "fx-aoe-lightning"
       ]
     },
     {
@@ -21766,6 +21799,154 @@
       ],
       "extra": null,
       "action": "zombie-exploder-blast"
+    },
+    {
+      "key": "fx-aoe-lightning",
+      "category": "fx",
+      "group": "aoe-lightning",
+      "path": "assets/library/fx/aoe/fx-aoe-lightning.png",
+      "type": "fx",
+      "frameWidth": 270,
+      "frameHeight": 200,
+      "frames": 30,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": {
+        "pixelAnchor": [
+          135,
+          150
+        ],
+        "spawn": "ground-center",
+        "scale": 1
+      },
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/aoe-lightning/preview.gif",
+      "description": "AOE Lightning Explosion: fx-aoe-lightning — 30 frames 270x200 @ 10 fps, once.",
+      "note": "AOE lightning explosion v1.0. Effect-only (no character, no body ghost). 30 frames @ 10 fps, once (100 ms/frame, 3.0s). Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid: frame i is column i%6, row floor(i/6). Anchor (135, 150) = origin (0.5, 0.75), the ground center of the magic circle. START f0–f7 glowing yellow concentric magic circle and blue/yellow sparks. BLAST f8–f16 jagged yellow lightning bolts, white/yellow impact flash, and shockwave arcs (peak f16). FADE f17–f29 charred ground scorch, grey smoke, and lingering blue electric embers. Tag AOE, lightning, normal×1.2, multi-tick. Cell width is already normal×1.2 versus the 225px dust baseline; play at scale 1. Spawn so the anchor sits on the ground center. The visual is a 3.0s one-shot. Multi-tick damage is Gameplay's call; the sheet does not encode hit timing. Atlas: fx-aoe-lightning.json. Catalog only — Gameplay owns the Stage wire. Separate from vfx-aoe-lightning under fx/v026.",
+      "tags": [
+        "fx",
+        "aoe-lightning",
+        "once",
+        "aoe",
+        "lightning",
+        "normal-x1.2",
+        "multi-tick"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pack": "explosion",
+        "durationSec": 3.0,
+        "frameDurationMs": 100,
+        "scaleTag": "normal×1.2",
+        "scaleBaseline": {
+          "dustCell": [
+            225,
+            131
+          ],
+          "note": "270 = 225 × 1.2. The cell is already normal×1.2. Play at scale 1."
+        },
+        "phases": {
+          "start": {
+            "frames": [
+              0,
+              7
+            ],
+            "seconds": [
+              0.0,
+              0.8
+            ],
+            "story": "glowing yellow concentric magic circle plus blue/yellow sparks, flat on the ground"
+          },
+          "blast": {
+            "frames": [
+              8,
+              16
+            ],
+            "seconds": [
+              0.8,
+              1.7
+            ],
+            "story": "two or three jagged yellow lightning bolts strike down, white/yellow impact flash, shockwave arcs",
+            "peakFrame": 16
+          },
+          "fade": {
+            "frames": [
+              17,
+              29
+            ],
+            "seconds": [
+              1.7,
+              3.0
+            ],
+            "story": "charred ground scorch, grey smoke, and lingering blue electric embers"
+          }
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 6,
+          "rows": 5,
+          "order": "row-major",
+          "width": 1620,
+          "height": 1000,
+          "usedFrames": 30
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 135,
+          "y": 150,
+          "pivot": [
+            0.5,
+            0.75
+          ],
+          "note": "Ground center of the magic circle. Phaser origin is (135/270, 150/200) = (0.5, 0.75)."
+        },
+        "pixellabJobs": {
+          "effectId": "1e53c7d9-9ac8-4114-b7f0-2db2e96339ec",
+          "jobId": "d131e967-be1e-4a3e-9c0b-a5528f3043b3",
+          "imageId": "0a1da1f8-5f73-4ca9-8d11-f2b7b3cb1fdf"
+        },
+        "atlas": "assets/library/fx/aoe/fx-aoe-lightning.json",
+        "gameplayNotes": {
+          "role": "aoeLightningVfx",
+          "status": "catalog-only",
+          "combatWired": false,
+          "spawn": "ground-center",
+          "anchor": [
+            135,
+            150
+          ],
+          "origin": [
+            0.5,
+            0.75
+          ],
+          "durationSec": 3.0,
+          "loop": false,
+          "scale": 1,
+          "scaleTag": "normal×1.2",
+          "tags": [
+            "AOE",
+            "lightning",
+            "normal×1.2",
+            "multi-tick"
+          ],
+          "multiTick": "Gameplay owns hit count and timing. Art does not encode ticks.",
+          "handoff": "Spawn at the ground-center anchor (135, 150). Visual plays 3.0s once. Multi-tick damage is Gameplay's call."
+        }
+      },
+      "grid": [
+        6,
+        5
+      ],
+      "action": "fx-aoe-lightning"
     },
     {
       "key": "fx-brute-skill-shock",
