@@ -74,14 +74,13 @@ const NOT_THIS_PASS = [
   'shop-buy',
   'heal',
   'pearl-pickup',
-  'pet-summon',
+  // pet-summon and pet-recall are sandbox try-out clips. check-pet-tryout owns them.
   'pet-death',
   'pet-sleep',
   'pet-bark',
   'pet-attack',
   'pet-orb-ready',
   'pet-orb-cast',
-  'pet-recall',
   'pet-revive-ready',
 ];
 const extra = GAME_AUDIO.filter((clip) => NOT_THIS_PASS.includes(clip.key));

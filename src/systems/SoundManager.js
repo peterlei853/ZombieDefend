@@ -99,6 +99,8 @@ export const GAME_AUDIO = [
   { key: 'exp-orb-drop', url: 'assets/audio/exp-orb-drop.mp3' },
   { key: 'exp-orb-pickup', url: 'assets/audio/exp-orb-pickup.mp3' },
   { key: 'pet-evolve', url: 'assets/audio/pet-evolve.mp3' },
+  { key: 'pet-summon', url: 'assets/audio/pet-summon.mp3' },
+  { key: 'pet-recall', url: 'assets/audio/pet-recall.mp3' },
   { key: 'skill-telegraph', url: 'assets/audio/skill-telegraph.mp3' },
   // Enemy showcase copies. Same keys as enemySfxClips(). Catalog only —
   // feel-booth playback still loads assets/sfx/enemies.
@@ -214,6 +216,13 @@ export function weaponShotKey(skin, profile) {
 }
 
 /**
+ * Sandbox pet try-out loads these itself. Stage summon already calls
+ * `playPetSummon`, so leaving them out of the Boot/Stage queue keeps that
+ * hook silent.
+ */
+const SANDBOX_PET_PREVIEW_AUDIO = new Set(['pet-summon', 'pet-recall']);
+
+/**
  * Queue every clip that is not already in the audio cache.
  * Safe to call from Boot and again from Stage (retry / direct start).
  * @param {Phaser.Scene} scene
@@ -234,6 +243,7 @@ export function preloadGameAudio(scene) {
     clips.push(liveByKey.get(clip.key) || clip);
   }
   for (const clip of clips) {
+    if (SANDBOX_PET_PREVIEW_AUDIO.has(clip.key)) continue;
     if (typeof cache?.exists === 'function' && cache.exists(clip.key)) continue;
     loader.audio(clip.key, clip.url);
   }
@@ -467,11 +477,16 @@ export class SoundManager {
   }
 
   /**
-   * Portrait summon pop. No clip is packed yet — the scale punch carries it.
-   * Drop `pet-summon` into the audio cache later and this starts playing.
+   * Sandbox try-out send. Plays only when the scene cached `pet-summon`.
+   * Stage does not preload that clip, so the portrait summon hook stays silent.
    */
   playPetSummon() {
     this._cueOptional('pet-summon', AUDIO_VOLUME.ui);
+  }
+
+  /** Sandbox try-out recall. Same cache rule and ui volume as summon. */
+  playPetRecall() {
+    this._cueOptional('pet-recall', AUDIO_VOLUME.ui);
   }
 
   /** Pet HP hit zero and the portrait went grey. */
