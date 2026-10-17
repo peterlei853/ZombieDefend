@@ -442,7 +442,7 @@ def build_index(groups, assets):
     idx['conventions'] = OrderedDict([
         ('strips', 'horizontal; frame i at x = i*frameWidth, y = 0 (unless "grid" is given)'),
         ('origin', 'Phaser setOrigin(x, y) fractions of one frame'),
-        ('zombies', '64x64 (brute 96x96, office-worker-v2/delivery/chef/nurse 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east'),
+        ('zombies', '64x64 (brute body 96x96, brute skill ground smash 132x132, office-worker-v2/delivery/chef/nurse 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east'),
         ('bosses', '128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative'),
         ('pets', 'Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX'),
         ('hero', '92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south'),

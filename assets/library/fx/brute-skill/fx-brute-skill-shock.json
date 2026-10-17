@@ -1,0 +1,287 @@
+{
+ "frames": [
+  {
+   "filename": "fx-brute-skill-shock 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 1.png",
+   "frame": {
+    "x": 116,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 2.png",
+   "frame": {
+    "x": 232,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 3.png",
+   "frame": {
+    "x": 348,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 4.png",
+   "frame": {
+    "x": 0,
+    "y": 77,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 5.png",
+   "frame": {
+    "x": 116,
+    "y": 77,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 6.png",
+   "frame": {
+    "x": 232,
+    "y": 77,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 7.png",
+   "frame": {
+    "x": 348,
+    "y": 77,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 8.png",
+   "frame": {
+    "x": 0,
+    "y": 154,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  },
+  {
+   "filename": "fx-brute-skill-shock 9.png",
+   "frame": {
+    "x": 116,
+    "y": 154,
+    "w": 116,
+    "h": 77
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 116,
+    "h": 77
+   },
+   "sourceSize": {
+    "w": 116,
+    "h": 77
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.4155844155844156
+   },
+   "duration": 83
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "fx-brute-skill-shock.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 464,
+   "h": 231
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 58,
+   "y": 32
+  },
+  "frameTags": [
+   {
+    "name": "fx-brute-skill-shock",
+    "from": 0,
+    "to": 9,
+    "direction": "forward"
+   }
+  ]
+ }
+}

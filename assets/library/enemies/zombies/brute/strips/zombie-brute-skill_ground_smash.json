@@ -1,0 +1,15 @@
+{
+  "key": "zombie-brute-skill_ground_smash",
+  "frameWidth": 132,
+  "frameHeight": 132,
+  "frames": 17,
+  "frameRate": 10,
+  "loop": false,
+  "facing": "east",
+  "origin": [
+    0.5,
+    1.0
+  ],
+  "characterId": "c13bb0f5-984d-4b35-9b37-742df531789a",
+  "animationGroup": "zombie-brute-skill_ground_smash"
+}
