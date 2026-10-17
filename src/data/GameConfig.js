@@ -142,10 +142,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * play in place. Feel-booth hurt and the live wall flash land on Phaser
  * frame 5 of each 8-frame attack sheet (texture cell 4, halfway through).
  * Gold, saves, barricade HP, wave DPS, and the camera stay put.
+ * v0.36.3 keeps the in-place bite. The same hurt and wall flash now land
+ * on Phaser frame 7 (texture cell 6), about 80% through each 8-frame
+ * attack sheet. Bare and short strips use that same fraction. slime-mini
+ * still reacts at once. Gold, saves, barricade HP, wave DPS, and the
+ * camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.2';
+export const APP_VERSION = '0.36.3';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
