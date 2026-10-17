@@ -1,12 +1,13 @@
 import { DEMO_ENEMY_IDS } from './GameConfig.js';
+import { LAYOUT_SCALE } from '../systems/DepthView.js';
 
 /**
  * Solo-enemy feel booth (`?enemy=<id>` / `?feel=1`).
  *
- * Skill rows are the special strips that have a packed cue. Basic
- * walk / attack / hurt / die stay on keys 1 and 2. Elemental hurt_*
- * sheets are weapon reactions and are not in this cycle.
- * `cue` matches the mp3 stem under assets/sfx/enemies/<id>/.
+ * Skill rows are the special strips. Basic walk / attack / hurt / die
+ * stay on keys 1 and 2. Elemental hurt_* sheets are weapon reactions
+ * and are not in this cycle. `cue` matches the mp3 stem under
+ * assets/sfx/enemies/<id>/. An empty cue stays silent (no invented file).
  *
  * @type {Record<string, { anim: string, cue: string }[]>}
  */
@@ -16,6 +17,7 @@ export const ENEMY_SKILL_STRIPS = {
   chef: [],
   nurse: [{ anim: 'zombie-nurse-attach', cue: 'skill-attach' }],
   brute: [
+    { anim: 'zombie-brute-skill_ground_smash', cue: '' },
     { anim: 'zombie-brute-hurt_heavy', cue: 'skill-hurt_heavy' },
     { anim: 'zombie-brute-part_break', cue: 'skill-part_break' },
     { anim: 'zombie-brute-blasted_back', cue: 'skill-blasted_back' },
@@ -115,56 +117,107 @@ export function enemySfxClips() {
 }
 
 /**
- * Contact frame, using Phaser's `AnimationFrame.index`.
- * Every catalog attack sheet is 8 cells at 10 fps and has no
- * `timing.impactFrame` marker. That index is 1-based: the first cell
- * reports 1 and the last cell reports 8 (texture frames 0–7). The strike
- * is the frame nearest 80% of the strip: index 7 (texture cell 6). On an
- * 800 ms sheet it starts at 600 ms (75%) and its midpoint is about 81%.
- * The last cell reads as recovery, so the beat does not wait for index 8.
- * Key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt` on that
- * frame. The live barricade flash uses the same index. slime-mini has no
- * attack strip, so it is absent and key 2 reacts at once.
+ * Contact frame, using Phaser 3.80's `AnimationFrame.index`.
+ * `Animation.updateFrameSequence` sets `frame.index = i + 1`, so the
+ * first cell is 1 and the last cell of an N-frame strip is N.
+ * `textureFrame` is the sheet cell (0 … N-1). `AnimationFrame.progress`
+ * is `(index - 1) / (N - 1)`.
  *
- * v0.36.2 used index 5 (texture cell 4, halfway, 400 ms). Earlier indexes
- * followed the furthest east reach and several landed in the windup:
- * office-worker-v2 4, delivery 5, chef 5, nurse 5, brute 4, riot 4,
- * trashcan 3, sprinter 4, slime 4, exploder 4, cyborg 5, clown 4,
- * lava-balon 3, steel-balam 4.
+ * Every catalog attack sheet is 8 cells at 10 fps and has no
+ * `timing.impactFrame` marker. Key 2 starts `player-girl-hurt` and
+ * `sfx-enemy-<id>-hurt` on the contact index. The live barricade flash
+ * uses the same index. slime-mini has no attack strip, so it is absent
+ * and key 2 reacts at once.
+ *
+ * v0.36.2 used index 5 (texture cell 4, halfway). v0.36.3 moved to index 7
+ * (texture cell 6). On office / delivery / nurse that cell is the fully
+ * extended end pose, so the hero hurt read as ~90–100% (Tester Fail #117).
+ * Index 7 is not the last cell — the last cell is index 8 — but it is
+ * already the end of the bite. Contact is now the first 1-based index
+ * where `index / (N - 1) >= 0.8`. On 8 frames that is index 6 (texture
+ * cell 5): after the midpoint, before the end pose.
+ *
+ * Catalog skill timing (`impactFrame`, `gameplayHitFrame`) is 0-based.
+ * Add 1 before comparing with `AnimationFrame.index`.
  *
  * @type {Record<string, number>}
  */
 export const ENEMY_ATTACK_HIT_FRAME = {
-  'office-worker-v2': 7,
-  delivery: 7,
-  chef: 7,
-  nurse: 7,
-  brute: 7,
-  riot: 7,
-  trashcan: 7,
-  sprinter: 7,
-  slime: 7,
-  exploder: 7,
-  cyborg: 7,
-  clown: 7,
-  'lava-balon': 7,
-  'steel-balam': 7,
+  'office-worker-v2': 6,
+  delivery: 6,
+  chef: 6,
+  nurse: 6,
+  brute: 6,
+  riot: 6,
+  trashcan: 6,
+  sprinter: 6,
+  slime: 6,
+  exploder: 6,
+  cyborg: 6,
+  clown: 6,
+  'lava-balon': 6,
+  'steel-balam': 6,
 };
 
 /**
- * 1-based Phaser frame nearest 80% of an N-frame strip.
- * `floor(N * 0.8) + 1`, clamped to `[1, N]`. That index starts at
- * `floor(N * 0.8) / N` of the duration. For 8 frames it is 7 (cell 6:
- * start 75%, midpoint ~81%). 4 frames → 4. 1 frame → 1.
+ * First 1-based Phaser index whose `index / (N - 1)` is at least 0.8.
+ * One frame returns 1. This is not `AnimationFrame.progress`, which uses
+ * `(index - 1) / (N - 1)` and selected the end pose (index 7) on 8 frames.
  * @param {number} frameCount
  */
 export function lateAttackFrame(frameCount) {
   const n = Number(frameCount);
-  if (!Number.isInteger(n) || n <= 0) return 1;
-  const index = Math.floor(n * 0.8) + 1;
-  if (index < 1) return 1;
-  if (index > n) return n;
-  return index;
+  if (!Number.isInteger(n) || n <= 1) return 1;
+  const denom = n - 1;
+  for (let index = 1; index <= n; index += 1) {
+    if (index / denom >= 0.8) return index;
+  }
+  return n;
+}
+
+/**
+ * Catalog timing frames are 0-based sheet cells. Phaser's index is 1-based.
+ * @param {number} catalogFrame
+ * @returns {number|null}
+ */
+export function phaserIndexForCatalogFrame(catalogFrame) {
+  const cell = Number(catalogFrame);
+  if (!Number.isInteger(cell) || cell < 0) return null;
+  return cell + 1;
+}
+
+/**
+ * Wide ground circle for the brute smash, in field px. The feel booth
+ * stands the brute `72` field px west of the post and the hero `32` field
+ * px east of the barricade line, so the gap is about 200 field px once
+ * the post and the 132px smash half-width are included. 280 reaches that
+ * hero and stays well inside a march-length hit.
+ */
+export const BRUTE_SMASH_AOE_FIELD = 280;
+
+/**
+ * Canvas px radius of {@link BRUTE_SMASH_AOE_FIELD}.
+ * @param {number} [layoutScale] defaults to the stage's LAYOUT_SCALE
+ */
+export function bruteSmashAoeRadius(layoutScale = LAYOUT_SCALE) {
+  const scale = Number(layoutScale) > 0 ? Number(layoutScale) : 1;
+  return Math.round(BRUTE_SMASH_AOE_FIELD * scale);
+}
+
+/**
+ * True when (x, y) sits inside the smash circle around the brute's feet.
+ * @param {number} feetX
+ * @param {number} feetY
+ * @param {number} x
+ * @param {number} y
+ * @param {number} [layoutScale]
+ */
+export function bruteSmashContains(feetX, feetY, x, y, layoutScale) {
+  const radius = bruteSmashAoeRadius(layoutScale);
+  const dx = Number(x) - Number(feetX);
+  const dy = Number(y) - Number(feetY);
+  if (!Number.isFinite(dx) || !Number.isFinite(dy)) return false;
+  return dx * dx + dy * dy <= radius * radius;
 }
 
 /**

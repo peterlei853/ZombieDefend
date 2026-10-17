@@ -42,6 +42,10 @@
  * same fraction. slime-mini still reacts at once. No body X lunge.
  * v0.36.4: brute (`noHurtKnockback`) stays planted on key 1, key 4, and
  * the stage weapon shove. Other enemies still take the 2px X knock.
+ * v0.36.5: brute key 3 leads with the ground smash. Shock is catalog
+ * frame 8 (Phaser index 9) at the feet. Hero AoE hurt is catalog frame
+ * 13 (Phaser index 14). Normal attack contact is Phaser index 6 on an
+ * 8-frame strip (Tester Fail #117: index 7 was the end pose).
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -64,9 +68,12 @@ import {
   enemySfxKey,
   enemySfxUrl,
   enemySkillStrips,
+  bruteSmashAoeRadius,
+  bruteSmashContains,
   feelAttackHitFrame,
   feelHitDamage,
   lateAttackFrame,
+  phaserIndexForCatalogFrame,
 } from '../src/data/enemyShowcase.js';
 import { Zombie } from '../src/entities/Zombie.js';
 import {
@@ -130,8 +137,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.4' && APP_VERSION === '0.36.4', 'package and APP_VERSION are 0.36.4');
-assert(html.includes('v0.36.4'), 'document title is v0.36.4');
+assert(pkg.version === '0.36.5' && APP_VERSION === '0.36.5', 'package and APP_VERSION are 0.36.5');
+assert(html.includes('v0.36.5'), 'document title is v0.36.5');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -149,6 +156,7 @@ for (const id of IDS) {
     assert(existsSync(new URL(`../${url}`, import.meta.url)), `${url} exists`);
   }
   for (const row of enemySkillStrips(id)) {
+    if (!row.cue) continue;
     assert(ENEMY_SFX_FILES[id].includes(row.cue), `${id} skill cue ${row.cue} is packed`);
     assert(existsSync(new URL(`../${enemySfxUrl(id, row.cue)}`, import.meta.url)), `${id} ${row.cue} file`);
   }
@@ -167,6 +175,9 @@ assert(enemyFeelEnabled('?enemy=office-worker-v2&feel=0') === false, 'feel=0 sta
 assert(enemySkillStrips('office-worker-v2').length === 0, 'office-worker-v2 has no skill strips');
 assert(enemySkillStrips('delivery').length === 0 && enemySkillStrips('chef').length === 0, 'delivery and chef have no skill strips');
 assert(ENEMY_SKILL_STRIPS.nurse[0]?.cue === 'skill-attach', 'nurse skill is attach');
+assert(ENEMY_SKILL_STRIPS.brute[0]?.anim === 'zombie-brute-skill_ground_smash', 'brute key 3 leads with the ground smash');
+assert(!ENEMY_SKILL_STRIPS.brute[0]?.cue, 'ground smash has no packed cue');
+assert(ENEMY_SKILL_STRIPS.brute[1]?.cue === 'skill-hurt_heavy', 'brute hurt_heavy stays after the smash');
 assert(enemySkillStrips('lava-balon').some((row) => row.cue === 'enrage'), 'lava enrage is in the skill cycle');
 assert(enemySkillStrips('steel-balam').some((row) => row.cue === 'skill-ground_smash'), 'steel smash is in the skill cycle');
 assert(enemySfxClips().some((clip) => clip.key === 'sfx-enemy-office-worker-v2-hit'), 'office hit clip is preloaded by key');
@@ -251,21 +262,29 @@ for (const id of IDS) {
     const frames = framesForAnimKey(attack);
     const strike = lateAttackFrame(frames);
     assert(frames === 8, `${id} attack strip is 8 frames`);
-    assert(strike === 7, `${id} ~80% of an 8-frame strip is Phaser frame 7`);
+    assert(strike === 6, `${id} contact is Phaser frame 6, before the end pose`);
     assert(feelAttackHitFrame(id) === strike, `${id} attack hit frame is the late strike ${strike}`);
     assert(ENEMY_ATTACK_HIT_FRAME[id] === strike, `${id} table matches the ~80% strike`);
     assert(attackContactFrame(id, frames) === strike, `${id} live contact uses the ~80% strike`);
   }
 }
 assert(Object.keys(ENEMY_ATTACK_HIT_FRAME).length === IDS.length - 1, 'every attack id except slime-mini has a hit frame');
-assert(feelAttackHitFrame('office-worker-v2') === 7, 'office-worker-v2 strike is Phaser attack frame 7');
-assert(lateAttackFrame(8) === 7, '8 frames strike on the frame whose midpoint is ~81%');
-assert(((7 - 0.5) / 8) > 0.8 && ((7 - 1) / 8) < 0.8, 'frame 7 starts before 80% and its midpoint is after');
-assert(framesForAnimKey('zombie-nurse-attach') === 8, 'nurse attach is 8 frames, so live frame 7 is the late strike');
-assert(attackContactFrame('riot-bare', framesForAnimKey('zombie-riot-bare-attack')) === 7, 'bare riot contact is ~80% of the strip');
-assert(attackContactFrame('trashcan-bare', framesForAnimKey('zombie-trashcan-bare-attack')) === 7, 'bare trashcan contact is ~80% of the strip');
-assert(lateAttackFrame(4) === 4 && lateAttackFrame(1) === 1 && lateAttackFrame(6) === 5, 'shorter strips contact near 80% and never past the end');
-assert(attackContactFrame(null, 4) === 4, 'a legacy 4-frame sheet contacts on Phaser frame 4');
+assert(feelAttackHitFrame('office-worker-v2') === 6, 'office-worker-v2 strike is Phaser attack frame 6');
+assert(lateAttackFrame(8) === 6, '8 frames contact on Phaser index 6');
+assert(6 / 7 >= 0.8 && 5 / 7 < 0.8, 'index 6 is the first 1-based index at or after 80% of (n-1)');
+assert(lateAttackFrame(8) !== 7, 'index 7 stays the end pose and is not the contact');
+assert(framesForAnimKey('zombie-nurse-attach') === 8, 'nurse attach is 8 frames, so live frame 6 is the contact');
+assert(attackContactFrame('riot-bare', framesForAnimKey('zombie-riot-bare-attack')) === 6, 'bare riot contact is the same fraction');
+assert(attackContactFrame('trashcan-bare', framesForAnimKey('zombie-trashcan-bare-attack')) === 6, 'bare trashcan contact is the same fraction');
+assert(lateAttackFrame(4) === 3 && lateAttackFrame(1) === 1 && lateAttackFrame(6) === 4, 'shorter strips contact on index/(n-1) >= 0.8');
+assert(attackContactFrame(null, 4) === 3, 'a legacy 4-frame sheet contacts on Phaser frame 3');
+assert(phaserIndexForCatalogFrame(8) === 9, 'catalog shock cell 8 is Phaser index 9');
+assert(phaserIndexForCatalogFrame(13) === 14, 'catalog gameplay cell 13 is Phaser index 14');
+assert(13 / 16 >= 0.8 && 12 / 16 < 0.8, 'catalog cell 13 is the first 0-based cell at or after 80% of a 17-frame strip');
+const smashRadius = bruteSmashAoeRadius(1.6);
+assert(smashRadius === Math.round(280 * 1.6), 'smash AoE is 280 field px');
+assert(bruteSmashContains(0, 0, 330, 0, 1.6) === true, 'smash reaches the feel-booth hero gap');
+assert(bruteSmashContains(0, 0, smashRadius + 8, 0, 1.6) === false, 'smash does not cover a march-length gap');
 
 const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
 assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
@@ -763,10 +782,10 @@ const liveHandler = wall.body._ons.find((row) => row.ev === 'animationupdate')?.
 assert(typeof liveHandler === 'function', 'live punch listens for the attack frame');
 liveHandler({ key: 'zombie-trashcan-attack' }, { index: 5 });
 assert(wall._attackBeat === false, 'Phaser frame 5 is the old midpoint and does not beat');
-liveHandler({ key: 'zombie-trashcan-attack' }, { index: 6 });
-assert(wall._attackBeat === false, 'Phaser frame 6 is still before the late strike');
 liveHandler({ key: 'zombie-trashcan-attack' }, { index: 7 });
-assert(wall._attackBeat === true, 'Phaser frame 7 marks the barricade beat');
+assert(wall._attackBeat === false, 'Phaser frame 7 is the end pose and does not beat');
+liveHandler({ key: 'zombie-trashcan-attack' }, { index: 6 });
+assert(wall._attackBeat === true, 'Phaser frame 6 marks the barricade beat');
 assert(wall.body._ons.length === 0, 'the contact listener drops after the hit');
 
 const feelHost = attackHost({
@@ -781,10 +800,10 @@ assert(hurt === false, 'chef hurt waits for the late strike');
 const feelHandler = feelHost.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
 feelHandler({ key: 'zombie-chef-attack' }, { index: 5 });
 assert(hurt === false, 'chef frame 5 does not flinch the hero');
-feelHandler({ key: 'zombie-chef-attack' }, { index: 6 });
-assert(hurt === false, 'chef frame 6 does not flinch the hero');
 feelHandler({ key: 'zombie-chef-attack' }, { index: 7 });
-assert(hurt === true, 'chef frame 7 flinches the hero');
+assert(hurt === false, 'chef frame 7 is the end pose and does not flinch');
+feelHandler({ key: 'zombie-chef-attack' }, { index: 6 });
+assert(hurt === true, 'chef frame 6 flinches the hero');
 
 const nurse = attackHost({
   skin: { id: 'nurse' },
@@ -797,10 +816,12 @@ const nurse = attackHost({
 nurse._playAttackPunch();
 assert(nurse.body.anims.currentAnim.key === 'zombie-nurse-attach', 'nurse bite plays attach in place');
 assert(nurse.body.x === 120 && nurse._attackBeat === false, 'nurse wall flash waits on attach');
-nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 6 });
-assert(nurse._attackBeat === false, 'nurse frame 6 is still before the attach strike');
+nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 5 });
+assert(nurse._attackBeat === false, 'nurse frame 5 is still before the attach strike');
 nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 7 });
-assert(nurse._attackBeat === true, 'nurse contact is frame 7 of the 8-frame attach strip');
+assert(nurse._attackBeat === false, 'nurse frame 7 is the end pose and does not strike');
+nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 6 });
+assert(nurse._attackBeat === true, 'nurse contact is frame 6 of the 8-frame attach strip');
 
 const plain = attackHost({ _isSprite: false, _animReady: () => false, skin: null });
 plain._playAttackPunch();
@@ -814,8 +835,35 @@ const cut = attackHost();
 cut._playAttackPunch();
 const late = cut.body._ons[0].fn;
 cut._clearAttackContact();
-late({ key: 'zombie-trashcan-attack' }, { index: 7 });
+late({ key: 'zombie-trashcan-attack' }, { index: 6 });
 assert(cut._attackBeat === false, 'knockback clears a bite that has not reached the strike');
+
+const smash = attackHost({
+  skin: { id: 'brute' },
+  _animKey: () => 'zombie-brute-skill_ground_smash',
+});
+smash.armShowcaseMarks = Zombie.prototype.armShowcaseMarks;
+let shock = false;
+let aoe = false;
+smash.armShowcaseMarks('zombie-brute-skill_ground_smash', [
+  { index: phaserIndexForCatalogFrame(8), fn: () => { shock = true; } },
+  { index: phaserIndexForCatalogFrame(13), fn: () => { aoe = true; } },
+]);
+const smashHandler = smash.body._ons.find((row) => row.ev === 'animationupdate')?.fn;
+assert(typeof smashHandler === 'function', 'smash arms both the shock and the AoE');
+smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 8 });
+assert(shock === false && aoe === false, 'Phaser index 8 is catalog cell 7, before the shock');
+smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 9 });
+assert(shock === true && aoe === false, 'Phaser index 9 is catalog frame 8, the feet shock');
+smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 13 });
+assert(aoe === false, 'Phaser index 13 is catalog cell 12, before the AoE');
+smashHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 14 });
+assert(aoe === true, 'Phaser index 14 is catalog frame 13, the AoE');
+assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock is spawned on the feet');
+assert(stageSrc.includes('z.body.y'), 'feet shock uses the sole, not only the chest');
+assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');
+assert(stageSrc.includes('bruteSmashContains'), 'AoE uses the wide feet circle');
+assert(!stageSrc.includes('camera.shake'), 'the smash does not shake the camera');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

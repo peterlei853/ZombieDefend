@@ -13,7 +13,13 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
-import { enemySkillStrips, feelAttackHitFrame, feelHitDamage } from '../data/enemyShowcase.js';
+import {
+  bruteSmashContains,
+  enemySkillStrips,
+  feelAttackHitFrame,
+  feelHitDamage,
+  phaserIndexForCatalogFrame,
+} from '../data/enemyShowcase.js';
 import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact, playFeelWaveFx } from '../systems/feelImpact.js';
 import {
   WORLD_WIDTH,
@@ -629,14 +635,65 @@ export default class StageScene extends Phaser.Scene {
     const row = strips[this._feelSkillCursor % strips.length];
     this._feelSkillCursor += 1;
     const played = z.playShowcaseStrip(row.anim);
-    this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
-    if (played) this._playSkillFx(z, row.anim);
-    this._setFeelHint(played ? `3 ${row.cue}` : `3 ${row.cue} (strip missing)`);
+    if (row.cue) this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
+    if (played) this._presentSkill(z, row.anim);
+    const label = row.cue || 'skill-ground_smash';
+    this._setFeelHint(played ? `3 ${label}` : `3 ${label} (strip missing)`);
   }
 
   /**
-   * First attached FX sheet, at the body, when the catalog lists one.
-   * Timing anchors stay on the strip; this is the preview puff.
+   * Skills with a catalog `gameplayHitFrame` wait for that cell.
+   * The brute smash spawns its shock on the feet at `impactFrame` and
+   * hurts the hero with a wide AoE on the gameplay frame. Other strips
+   * keep the immediate chest puff. Wave combat has no skill-cast AI.
+   * @param {Zombie} z
+   * @param {string} animKey
+   */
+  _presentSkill(z, animKey) {
+    const timing = libraryAsset(this, animKey)?.timing;
+    const hitCell = timing?.gameplayHitFrame;
+    if (!Number.isInteger(hitCell)) {
+      this._playSkillFx(z, animKey);
+      return;
+    }
+    /** @type {{ index: number, fn: () => void }[]} */
+    const marks = [];
+    if (Number.isInteger(timing.impactFrame)) {
+      const impact = phaserIndexForCatalogFrame(timing.impactFrame);
+      if (impact != null) {
+        marks.push({
+          index: impact,
+          fn: () => this._playSkillFxAtFeet(z, animKey),
+        });
+      }
+    }
+    const hit = phaserIndexForCatalogFrame(hitCell);
+    if (hit != null) {
+      marks.push({
+        index: hit,
+        fn: () => this._onFeelSmashAoe(z),
+      });
+    }
+    z.armShowcaseMarks(animKey, marks);
+  }
+
+  /**
+   * Hero hurt pose and the booth hurt cue when the hero stands inside
+   * the smash circle around the brute's feet. No barricade HP, gold, or save.
+   * @param {Zombie} z
+   */
+  _onFeelSmashAoe(z) {
+    const player = this.defenders?.player;
+    const feetX = z?.body?.x;
+    const feetY = z?.body?.y;
+    if (!player || !Number.isFinite(feetX) || !Number.isFinite(feetY)) return;
+    if (!bruteSmashContains(feetX, feetY, player.x, player.y)) return;
+    this._onFeelAttackHit();
+  }
+
+  /**
+   * First attached FX sheet, at the body center, when the catalog lists one
+   * and the strip has no gameplay hit frame. Timing anchors stay on the strip.
    * @param {Zombie} z
    * @param {string} animKey
    */
@@ -647,6 +704,27 @@ export default class StageScene extends Phaser.Scene {
     playLibraryFx(this, z.body.x, y, fx[0], {
       depth: (z.body.depth || 0) + 2,
       scale: Math.abs(z.body.scaleX || 1),
+    });
+  }
+
+  /**
+   * Shock (or the strip's first FX) on the sole. Catalog origin places the
+   * anchor; `anchors.impactPoint` is frame px from that sole, scaled with
+   * the body. Depth sits above the sprite.
+   * @param {Zombie} z
+   * @param {string} animKey
+   */
+  _playSkillFxAtFeet(z, animKey) {
+    const asset = libraryAsset(this, animKey);
+    const fx = asset?.fx;
+    if (!Array.isArray(fx) || !fx.length || !z?.body) return;
+    const anchor = asset?.anchors?.impactPoint;
+    const scale = Math.abs(z.body.scaleX || 1);
+    const ox = Array.isArray(anchor) ? Number(anchor[0]) || 0 : 0;
+    const oy = Array.isArray(anchor) ? Number(anchor[1]) || 0 : 0;
+    playLibraryFx(this, z.body.x + ox * scale, z.body.y + oy * scale, fx[0], {
+      depth: (z.body.depth || 0) + 2,
+      scale,
     });
   }
 
