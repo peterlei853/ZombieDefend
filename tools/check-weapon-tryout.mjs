@@ -9,7 +9,8 @@ import { MUZZLE_WEST_FRAC, WEAPON_TRAITS } from '../src/assets/heroDeploy.js';
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { WATER_HIT_FX, WeaponSystem } from '../src/systems/WeaponSystem.js';
-import { pixelBodiesTouchPoint } from '../src/systems/pixelTouch.js';
+import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
+import { pickWaterGuide, waterLeadAim } from '../src/assets/waterMounts.js';
 import {
   SANDBOX_FLOAT_FRAME,
   SANDBOX_FLOAT_OFFSET,
@@ -34,9 +35,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.13', 'APP_VERSION is 0.36.13');
-assert(pkg.version === '0.36.13', 'package.json tracks 0.36.13');
-assert(html.includes('ZombieDefend v0.36.13'), 'title tracks 0.36.13');
+assert(APP_VERSION === '0.36.14', 'APP_VERSION is 0.36.14');
+assert(pkg.version === '0.36.14', 'package.json tracks 0.36.14');
+assert(html.includes('ZombieDefend v0.36.14'), 'title tracks 0.36.14');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -193,5 +194,54 @@ const waterKeys = spawned.map((s) => s.key);
 assert(waterKeys.length === 1 && waterKeys[0] === 'fx-lightning-impact', 'the only water hit sheet is fx-lightning-impact');
 assert(spawned[0].x === bullet.touchX && spawned[0].y === bullet.touchY, 'the burst is placed on the contact, not the body center');
 assert(spawned[0].y !== primary.bodyCenterY, 'the contact is not rewritten to the chest');
+
+const held = waterLeadAim(100, 0, 0, 0, 0, 100);
+assert(held.x === 0 && held.y === 0, 'a stopped body is aimed where it stands');
+const led = waterLeadAim(100, 0, 0, 0, 50, 100);
+assert(led.y === 0 && led.x > 30 && led.x < 36, 'a marching body is aimed at the intercept');
+
+const crowd = [
+  { id: 1, x: 10, y: 0, alive: true },
+  { id: 2, x: 40, y: 30, alive: true },
+  { id: 3, x: 200, y: 0, alive: false },
+];
+assert(pickWaterGuide(crowd, 100, 0, 2).id === 2, 'a water shot sticks to the body it is already guiding');
+assert(pickWaterGuide(crowd, 100, 0, 3).id === 1, 'a dead guide is replaced by the body on the shot lane');
+assert(pickWaterGuide(crowd, 0, 0, null) === null, 'nobody west of the shot is not a guide');
+const otherLane = [
+  { id: 1, x: 40, y: 0, alive: true },
+  { id: 2, x: 80, y: 200, alive: true },
+];
+assert(pickWaterGuide(otherLane, 100, 0, null).id === 1, 'water prefers the lane it is fired on over a closer other lane');
+
+function box(x, y, w, h) {
+  return {
+    fillColor: 1,
+    active: true,
+    x,
+    y,
+    originX: 0.5,
+    originY: 0.5,
+    displayWidth: w,
+    displayHeight: h,
+  };
+}
+const enemy = box(0, 0, 20, 40);
+assert(spriteSweepContact(box(0, -30, 4, 4), enemy) === null, 'a skim that has not entered the body is not a hit');
+const swept = spriteSweepContact(box(0, 0, 4, 4), enemy, { x: 0, y: -100 });
+assert(swept && Math.abs(swept.x) <= 10 && Math.abs(swept.y) <= 20, 'a step that crosses the opaque box connects');
+
+const near = {
+  weaponId: 'water',
+  gfx: box(40, 66, 4, 4),
+};
+assert(guns.confirmOpaqueHit(near, primary) === false, 'a water shot still outside the body does not hit');
+
+const spawnAt = weaponSystem.indexOf('_spawnWaterShot(bullets, slot, zombies, trait) {');
+const spawnFn = weaponSystem.slice(spawnAt, weaponSystem.indexOf('_nearestLiving(zombies, x, y)', spawnAt));
+assert(spawnFn.includes('waterLeadAim') && spawnFn.includes('marchVx'), 'water leads the marching body');
+assert(weaponSystem.includes('_guideWater'), 'water keeps guiding onto a living body ahead');
+assert(weaponSystem.includes('spriteSweepContact'), 'water hits on opaque contact, including the step that crosses');
+assert(!spawnFn.includes('_chainLightning'), 'the water spawn path does not chain');
 
 console.log('weapon try-out ok');
