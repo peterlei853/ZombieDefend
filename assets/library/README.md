@@ -108,6 +108,25 @@ Merged v0.31 still times the HP drop to `fx-water-impact` (6×64 @ 12 fps, once;
 
 Profession body-hit overlays (same splash, light tint, origin center, once @ 12 fps): `fx-hit-water-office-v2` (gray), `fx-hit-water-delivery` (yellow), `fx-hit-water-chef` (white), `fx-hit-water-nurse` (pink). The merged hook looks up `fx-hit-<skinId>` (`fx-hit-office-worker-v2`, `fx-hit-delivery`, `fx-hit-chef`, `fx-hit-nurse`) and skips the puff when that texture is missing. These water keys are the catalog names; pointing the hook at them is a later code change.
 
+## Water Mega Man charge (v1.0, catalog only)
+
+Eight charge sheets sit with the other girl weapon FX in `characters/hero/girl/fx/`. Each key is **v1.0** (`extra.version`). `fx-water-proj` (L1, 32×32 @ 10 fps, loop, origin center) is unchanged. This catalog does not wire Stage, combat, gold, saves, or barricade. Sandbox Gameplay wires the keys later. Hold GitHub Pages until the sandbox demo Passes and Peter OKs.
+
+Sheets are row-major grids (`grid: [cols, rows]`). Frame *i* is column `i % cols`, row `floor(i / cols)`. Use the listed frame count even when the grid has empty trailing cells.
+
+| Key | Cell | Frames | FPS | Playback | Origin | Grid | Role |
+|---|---|---:|---:|---|---|---|---|
+| `fx-water-proj-t2` | 64×32 | 4 | 12 | loop | (0.5, 0.5) center | 2×2, 128×64 | L2 projectile, faces west |
+| `fx-water-proj-t3` | 128×64 | 4 | 12 | loop | (0.5, 0.5) center | 2×2, 256×128 | L3 projectile, faces west |
+| `fx-water-charge-aura` | 48×48 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 144×144 (cell 8 empty) | charge cue |
+| `fx-water-t2-impact` | 32×32 | 6 | 14 | once | (0.5, 0.5) center | 3×2, 96×64 | L2 hit |
+| `fx-water-t2-dot` | 48×48 | 10 | 11 | loop | (0.5, 1.0) feet | 4×3, 192×144 (cells 10–11 empty) | L2 DoT overlay |
+| `fx-water-t3-impact` | 40×40 | 6 | 14 | once | (0.5, 0.5) center | 3×2, 120×80 | L3 hit |
+| `fx-water-t3-path-burn` | 64×32 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 192×96 (cell 8 empty) | L3 path fire |
+| `fx-water-t3-inbullet-dot` | 48×48 | 10 | 12 | loop | (0.5, 1.0) feet | 4×3, 192×144 (cells 10–11 empty) | L3 in-bullet DoT |
+
+DoT overlays use feet `(0.5, 1.0)`, the same origin as `fx-frost-freeze` and `fx-water-wet`. Path fire uses center `(0.5, 0.5)`, the same origin as `fx-water-proj` and `fx-water-stream`, so a trail spawned on the projectile path lines up with the bolt.
+
 `prop-water-mount` (`environment/props/`) is the empty steel/gunmetal Y-fork with bright cyan cradle tips, 64×64, facing west-ish. It replaces the wooden cradle, which disappeared against the wooden barricade (0 cyan pixels). This primary has about 20 cyan pixels and no brown. Origin is the feet at (32, 60) ≈ (0.5, 0.94), stored as (0.5, 0.9375). Attach `player-girl-front-water-still` at cradle pixel (32, 12), 48px above the feet (`anchors.offsetFromOrigin` `[0, -48]`, y negative = up). The gun is not baked into the mount.
 
 `prop-water-mount-hi-vis` is the same empty Y-fork with more cyan (about 67 pixels) on the cradle and bands. v0.31.2 draws the six fence slots from this sheet because the primary still reads faint on the barricade, and falls back to `prop-water-mount` when the hi-vis texture is missing. The cradle is drawn at 0.85 of the post height and lifted 4 source pixels so the fork stays inside the stake. `prop-water-mount-front-alt` is the dual-post steel post with a cyan U-cradle, also empty, and still marks the slot she is stopped behind. The gun still is `player-girl-front-water-still`. When neither mount sheet is loaded, that still is the placeholder.

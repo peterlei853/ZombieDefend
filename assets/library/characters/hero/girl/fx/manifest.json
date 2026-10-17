@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. Those sheets are row-major grids. Catalog only — not wired into Stage. fx-water-proj (L1) stays.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -23,6 +23,14 @@
       "fx-frost-shatter",
       "fx-flame-cone",
       "fx-water-proj",
+      "fx-water-proj-t2",
+      "fx-water-proj-t3",
+      "fx-water-charge-aura",
+      "fx-water-t2-impact",
+      "fx-water-t2-dot",
+      "fx-water-t3-impact",
+      "fx-water-t3-path-burn",
+      "fx-water-t3-inbullet-dot",
       "fx-frost-freeze",
       "fx-flame-burn"
     ],
@@ -750,6 +758,272 @@
           "groundFx": "fx-water-wet"
         },
         "note": "v0.22 primary water projectile (3× size, 0.5× speed). Prefer over fx-water-stream."
+      }
+    },
+    {
+      "key": "fx-water-proj-t2",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-proj-t2.png",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "grid": [2, 2],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "facing": "west",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L2 projectile. 4 frames, cell 64×32 @ 12 fps, loop, origin center. Sheet 128×64 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "chargeProjectile",
+          "tier": "L2",
+          "status": "catalog-only",
+          "keeps": "fx-water-proj"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 2,
+          "rows": 2,
+          "order": "row-major",
+          "width": 128,
+          "height": 64,
+          "usedFrames": 4
+        },
+        "pixellabEffectId": "b2feafff-1d07-4ef2-885f-19bfa088e184"
+      }
+    },
+    {
+      "key": "fx-water-proj-t3",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-proj-t3.png",
+      "frameWidth": 128,
+      "frameHeight": 64,
+      "frames": 4,
+      "frameRate": 12,
+      "loop": true,
+      "grid": [2, 2],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "facing": "west",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L3 projectile. 4 frames, cell 128×64 @ 12 fps, loop, origin center. Sheet 256×128 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "chargeProjectile",
+          "tier": "L3",
+          "status": "catalog-only",
+          "keeps": "fx-water-proj"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 2,
+          "rows": 2,
+          "order": "row-major",
+          "width": 256,
+          "height": 128,
+          "usedFrames": 4
+        },
+        "pixellabEffectId": "4070adfc-a8d9-4fb8-80a6-b9531d348916"
+      }
+    },
+    {
+      "key": "fx-water-charge-aura",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-charge-aura.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge cue. 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "chargeCue",
+          "status": "catalog-only"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 3,
+          "order": "row-major",
+          "width": 144,
+          "height": 144,
+          "usedFrames": 8,
+          "emptyCells": [8]
+        },
+        "pixellabEffectId": "7b3832f9-2a85-4a23-bba8-75037f158c48"
+      }
+    },
+    {
+      "key": "fx-water-t2-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t2-impact.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "grid": [3, 2],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L2 hit splash. 6 frames, cell 32×32 @ 14 fps, once, origin center. Sheet 96×64 is a 3×2 row-major grid. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "chargeHit",
+          "tier": "L2",
+          "status": "catalog-only"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 2,
+          "order": "row-major",
+          "width": 96,
+          "height": 64,
+          "usedFrames": 6
+        },
+        "pixellabEffectId": "8703bbf0-9b5b-4b24-8f87-d2233a239177"
+      }
+    },
+    {
+      "key": "fx-water-t2-dot",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t2-dot.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 11,
+      "loop": true,
+      "grid": [4, 3],
+      "origin": [0.5, 1.0],
+      "type": "fx",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L2 wet DoT overlay. 10 frames, cell 48×48 @ 11 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "dotOverlay",
+          "tier": "L2",
+          "status": "catalog-only",
+          "loopOnEnemy": true
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 4,
+          "rows": 3,
+          "order": "row-major",
+          "width": 192,
+          "height": 144,
+          "usedFrames": 10,
+          "emptyCells": [10, 11]
+        },
+        "pixellabEffectId": "6eba01c6-221e-4405-8467-0128e14b1c5e"
+      }
+    },
+    {
+      "key": "fx-water-t3-impact",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t3-impact.png",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "frames": 6,
+      "frameRate": 14,
+      "loop": false,
+      "grid": [3, 2],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L3 hit flash. 6 frames, cell 40×40 @ 14 fps, once, origin center. Sheet 120×80 is a 3×2 row-major grid. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "chargeHit",
+          "tier": "L3",
+          "status": "catalog-only"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 2,
+          "order": "row-major",
+          "width": 120,
+          "height": 80,
+          "usedFrames": 6
+        },
+        "pixellabEffectId": "90276f31-2297-43b3-ae9c-cad1fd37f48f"
+      }
+    },
+    {
+      "key": "fx-water-t3-path-burn",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t3-path-burn.png",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
+      "type": "fx",
+      "facing": "west",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L3 path fire. 8 frames, cell 64×32 @ 10 fps, loop, origin center — same center as fx-water-proj and fx-water-stream so a trail on the projectile path lines up with the bolt. Sheet 192×96 is a 3×3 row-major grid; cell 8 (bottom-right) is empty. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "pathFire",
+          "tier": "L3",
+          "status": "catalog-only"
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 3,
+          "rows": 3,
+          "order": "row-major",
+          "width": 192,
+          "height": 96,
+          "usedFrames": 8,
+          "emptyCells": [8]
+        },
+        "pixellabEffectId": "759c3197-baf1-439a-8d13-154b1dcad2f2"
+      }
+    },
+    {
+      "key": "fx-water-t3-inbullet-dot",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t3-inbullet-dot.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": true,
+      "grid": [4, 3],
+      "origin": [0.5, 1.0],
+      "type": "fx",
+      "tags": ["v1.0", "catalog-only", "charge"],
+      "note": "v1.0 water Mega Man charge L3 in-bullet DoT overlay. 10 frames, cell 48×48 @ 12 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage.",
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "inBulletDot",
+          "tier": "L3",
+          "status": "catalog-only",
+          "loopOnEnemy": true
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 4,
+          "rows": 3,
+          "order": "row-major",
+          "width": 192,
+          "height": 144,
+          "usedFrames": 10,
+          "emptyCells": [10, 11]
+        },
+        "pixellabEffectId": "d84720fc-fd42-40fc-8e86-72ffc6ad8dc1"
       }
     },
     {
