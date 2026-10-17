@@ -231,9 +231,9 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * lightning impact, from 2.5s a 2× shot that pierces 5 and leaves a 5s
  * wet DoT, from 5s a 4× shot that crosses the field with a path burn
  * and an in-bullet DoT. Homing stays inside ±10° of horizontal.
- * Charge, release, and impact audio stay silent until the 16-bit pack
- * lands. Gold-by-HP, saves, barricade max HP, the roster, and the other
- * five weapons stay put.
+ * The 16-bit pack plays charge L2 from the hold, charge L3 after 2.5s,
+ * a release by tier, and an impact by projectile tier. Gold-by-HP,
+ * saves, barricade max HP, the roster, and the other five weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */

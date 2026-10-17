@@ -1036,7 +1036,7 @@ export class WeaponSystem {
     if (Number.isFinite(tx) && Number.isFinite(ty)) {
       this._spawnPointFx(WATER_HIT_FX, tx, ty, primary);
     }
-    // PIXELLAB_HOOK: impact L1. Silent until the 16-bit pack lands.
+    // PIXELLAB_HOOK: impact L1. Lightning VFX stays; the 16-bit impact cue still plays.
     this.scene?.audio?.playWaterImpact?.(1);
     const radius = layoutPx(trait.splashRadius || 56);
     /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
@@ -1100,7 +1100,7 @@ export class WeaponSystem {
       this._charge.ms += Math.max(0, dt);
       const tierHeld = waterChargeTier(this._charge.ms);
       this._syncChargeAura(slot, tierHeld);
-      // PIXELLAB_HOOK: charge L2 / L3 beds. Silent until the 16-bit pack lands.
+      // PIXELLAB_HOOK: charge-l2 from the hold, charge-l3 once the tier passes 2.5s.
       this.scene?.audio?.syncWaterCharge?.(tierHeld);
       return false;
     }
@@ -1157,7 +1157,7 @@ export class WeaponSystem {
     const tx = Number(bullet.touchX);
     const ty = Number(bullet.touchY);
     if (Number.isFinite(tx) && Number.isFinite(ty)) this._spawnPointFx(key, tx, ty, zombie);
-    // PIXELLAB_HOOK: impact L2 / L3. Silent until the 16-bit pack lands.
+    // PIXELLAB_HOOK: impact L2 / L3 from the 16-bit pack.
     this.scene?.audio?.playWaterImpact?.(tier);
     const gain = this._hurtZombie(zombie, bullet.damage, bullet, { impact: false, knock: false });
     this._pending.gold += gain.gold;
