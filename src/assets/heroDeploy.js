@@ -158,6 +158,8 @@ export const WEAPON_TRAITS = {
     projectile: 'fx-bubble-proj-l',
     childProjectile: { l: 'fx-bubble-proj-m', m: 'fx-bubble-proj-s' },
     childTier: { l: 'm', m: 's' },
+    // TODO(follow-up): sandbox bubble shows the -12 flash, but fx-bubble-pop
+    // is hard to see. Left alone here so the water hit-rate fix stays the change.
     impact: 'fx-bubble-pop',
     rotate: false,
     hitSize: 22,

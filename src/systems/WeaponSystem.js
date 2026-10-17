@@ -23,8 +23,10 @@ import { aimRotation, libraryAsset, libraryFxDuration, playLibraryAnim, playLibr
 import {
   waterAimVelocity,
   waterImpactBeatMs,
+  waterLeadAim,
   waterSheetFallback,
   waterSplashKey,
+  pickWaterGuide,
 } from '../assets/waterMounts.js';
 import {
   slingAimVelocity,
@@ -33,7 +35,7 @@ import {
   slingSheetFallback,
 } from '../assets/slingMounts.js';
 import { slingBodyHitKey, zombieHitFxKey } from '../assets/zombieSprites.js';
-import { spritesTouchPoint } from './pixelTouch.js';
+import { pixelBodyFromSprite, spriteSweepContact } from './pixelTouch.js';
 import { upgradedDamage } from '../data/shopList.js';
 
 /**
@@ -401,6 +403,9 @@ export class WeaponSystem {
     const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
     for (const b of bullets) {
       if (!b?.gfx || b.gfx.active === false) continue;
+      b.prevX = b.gfx.x;
+      b.prevY = b.gfx.y;
+      if (b.weaponId === 'water') this._guideWater(b);
       const dx = (Number.isFinite(b.vx) ? b.vx : 0) * dt;
       const dy = (Number.isFinite(b.vy) ? b.vy : 0) * dt;
       b.gfx.x += dx;
@@ -493,20 +498,63 @@ export class WeaponSystem {
    * @returns {{ gold: number, kills: number }}
    */
   /**
-   * Water hits only when the projectile's opaque pixels overlap the
-   * enemy's. The contact is stored on the bullet for the lightning burst.
-   * Other weapons keep the caller's box test.
+   * Water hits when the projectile's opaque pixels meet the enemy's,
+   * or when this step's opaque core crosses that box. `_guideWater`
+   * keeps the shot on a living body so the cores actually meet.
+   * The contact stays the pixel point for the lightning burst.
+   * Other weapons keep the box test.
    * @param {object} bullet
    * @param {{ body?: object }} zombie
    * @returns {boolean}
    */
   confirmOpaqueHit(bullet, zombie) {
     if (bullet?.weaponId !== 'water') return true;
-    const point = spritesTouchPoint(bullet.gfx, zombie?.body);
-    if (!point) return false;
-    bullet.touchX = point.x;
-    bullet.touchY = point.y;
-    return true;
+    const gfx = bullet.gfx;
+    const enemy = zombie?.body;
+    const from = Number.isFinite(bullet.prevX) && Number.isFinite(bullet.prevY)
+      ? { x: bullet.prevX, y: bullet.prevY }
+      : null;
+    const point = spriteSweepContact(gfx, enemy, from);
+    if (point) {
+      bullet.touchX = point.x;
+      bullet.touchY = point.y;
+      return true;
+    }
+    // A failed texture read must not turn every overlapping shot into a miss.
+    // The caller already required the sprite boxes to overlap.
+    if (!pixelBodyFromSprite(gfx) || !pixelBodyFromSprite(enemy)) {
+      if (Number.isFinite(gfx?.x) && Number.isFinite(gfx?.y)) {
+        bullet.touchX = gfx.x;
+        bullet.touchY = gfx.y;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Keep a water shot pointed at a living body that is still west of it.
+   * The same body is kept until it dies or the shot passes it; the next
+   * one ahead is then used. Lead is refreshed every step so the opaque
+   * core meets the chest instead of skimming past an empty intercept.
+   * @param {object} bullet
+   */
+  _guideWater(bullet) {
+    const gfx = bullet?.gfx;
+    if (!gfx) return;
+    const speed = Math.hypot(Number(bullet.vx) || 0, Number(bullet.vy) || 0);
+    if (!(speed > 1)) return;
+    const x = gfx.x;
+    const y = gfx.y;
+    const guide = pickWaterGuide(this._liveZombies, x, y, bullet.guideId);
+    bullet.guideId = guide ? guide.id : null;
+    if (!guide) return;
+    const zy = Number.isFinite(guide.bodyCenterY) ? guide.bodyCenterY : guide.y;
+    const vz = typeof guide.marchVx === 'function' ? guide.marchVx() : 0;
+    const aim = waterLeadAim(x, y, guide.x, zy, vz, speed);
+    const next = waterAimVelocity(x, y, aim, speed);
+    bullet.vx = next.vx;
+    bullet.vy = next.vy;
   }
 
   /**
@@ -910,13 +958,14 @@ export class WeaponSystem {
    */
   _spawnWaterShot(bullets, slot, zombies, trait) {
     const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
-    const target = this._nearestLiving(zombies, slot.muzzleX, slot.muzzleY);
-    const aim = target
-      ? {
-          x: target.x,
-          y: Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y,
-        }
-      : null;
+    const target = pickWaterGuide(zombies, slot.muzzleX, slot.muzzleY, null);
+    let aim = null;
+    if (target) {
+      const tx = target.x;
+      const ty = Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y;
+      const vz = typeof target.marchVx === 'function' ? target.marchVx() : 0;
+      aim = waterLeadAim(slot.muzzleX, slot.muzzleY, tx, ty, vz, speed);
+    }
     const { vx, vy } = waterAimVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait);
   }
