@@ -44,7 +44,11 @@ const DUMMY_X = 700;
 const DRIFT_LIMIT = 240;
 const REVIVE_MS = 700;
 /** Five bodies on the lane so L2 pierce (5) and L3 (the whole line) can be seen. */
-const WATER_LINE_X = [900, 680, 460, 240, 40];
+// Feet X, nearest first. The water muzzle sits near x=961, so a body at
+// 900 meets the shot inside the gun and the L1 projectile never reads.
+// This line leaves about half a second of open air, and five bodies
+// still fit on the sandbox view for L2/L3 pierce.
+const WATER_LINE_X = [740, 575, 410, 245, 80];
 
 export default class WeaponTryoutScene extends Phaser.Scene {
   constructor() {

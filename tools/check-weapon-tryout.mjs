@@ -319,6 +319,9 @@ assert(weaponSystem.includes('playWaterRelease'), 'release notifies the charge a
 assert(weaponSystem.includes('playWaterImpact'), 'a water hit notifies the impact audio hook');
 assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
 assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
+const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
+assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
+assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits far enough west for an L1 to read, and the last stays on screen');
 assert(stage.includes("weaponImmerse !== 'water'"), 'water immerse does not cycle on SPACE');
 assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
 const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
