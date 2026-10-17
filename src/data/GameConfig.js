@@ -171,10 +171,17 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * strip has reached that index. The default booth gap is inside the
  * 280-field smash radius. Gold, saves, barricade HP, wave DPS,
  * noHurtKnockback, and combat FX stay put.
+ * v0.36.7: brute key 3 plays only `zombie-brute-skill_ground_smash`.
+ * `fx-brute-skill-shock` still spawns on the feet at catalog frame 8.
+ * Catalog frame 13 hurts the hero, a field pet, or a barricade post
+ * when that shock's opaque pixels overlap the target. Feet origin stays
+ * (0.5, 1). The smash sheet path and 17×132 frame size stay for the
+ * padB=0 catalog. Gold, saves, barricade max HP, wave DPS, and combat
+ * FX 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.6';
+export const APP_VERSION = '0.36.7';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

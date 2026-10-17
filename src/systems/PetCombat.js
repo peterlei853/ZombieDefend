@@ -423,6 +423,22 @@ export class PetCombat {
     return { ok: true, reason: 'ok', id: actor.role.id };
   }
 
+  /**
+   * Advance an in-progress flinch. The feel booth skips the field tick,
+   * so a shock hit would otherwise stay on the white fill.
+   * @param {number} deltaMs
+   */
+  tickContactHurts(deltaMs) {
+    const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
+    for (const actor of this._actors) {
+      if (!actor.hitPhase || actor.phase !== 'field') continue;
+      if (actor.invulnLeft > 0) actor.invulnLeft = Math.max(0, actor.invulnLeft - dt);
+      this._tickHitLook(actor, dt);
+      this._presentHurt(actor);
+      this._applyHitLook(actor);
+    }
+  }
+
   /** Living pets currently out. Positions track the sprite. */
   fieldPets() {
     const radius = layoutPx(GAME_CONFIG.PETS.BITE_RADIUS);
@@ -438,6 +454,9 @@ export class PetCombat {
         },
         get y() {
           return actor.sprite?.y ?? actor.y;
+        },
+        get sprite() {
+          return actor.sprite?.active ? actor.sprite : null;
         },
         get hp() {
           return actor.hp;
@@ -3846,6 +3865,7 @@ function wrapPi(rad) {
  * @property {number} hp
  * @property {boolean} alive
  * @property {number} radius
+ * @property {Phaser.GameObjects.Sprite|null} sprite
  * @property {(amount: number) => boolean} takeDamage
  */
 

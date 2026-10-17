@@ -14,10 +14,10 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import {
-  bruteSmashContains,
   enemySkillStrips,
   feelAttackHitFrame,
   feelHitDamage,
+  feelSkillSelection,
   phaserIndexForCatalogFrame,
 } from '../data/enemyShowcase.js';
 import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact, playFeelWaveFx } from '../systems/feelImpact.js';
@@ -59,6 +59,7 @@ import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 import { libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
+import { spritesTouch } from '../systems/pixelTouch.js';
 import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
@@ -450,8 +451,8 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * `?feel=1` with a known `?enemy=`. 1 is a ranged hit, 2 plays their
-   * attack and the hero hurt on the attack hit frame, 3 cycles skill
-   * strips, 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns.
+   * attack and the hero hurt on the attack hit frame, 3 plays the skill
+   * strip (brute skill 1 is only the ground smash), 4 is a melee hit that plays `fx-slash-ninja` at the body center with `sfx-slash-ninja`, R respawns.
    * Keys 5–9 preview catalog FX only (no damage). Key 5 plays
    * `sfx-slash-enemy`, key 6 plays `sfx-slash-ally`, key 7 plays
    * `sfx-slash-dot`, key 8 plays `sfx-hit-fire`, and key 9 plays
@@ -628,12 +629,13 @@ export default class StageScene extends Phaser.Scene {
       this._setFeelHint('down — R reset');
       return;
     }
-    if (!strips.length) {
+    const pick = feelSkillSelection(this.demoEnemyId, strips, this._feelSkillCursor);
+    this._feelSkillCursor = pick.cursor;
+    const row = pick.row;
+    if (!row) {
       this._setFeelHint('3 no skill');
       return;
     }
-    const row = strips[this._feelSkillCursor % strips.length];
-    this._feelSkillCursor += 1;
     const played = z.playShowcaseStrip(row.anim);
     if (row.cue) this.audio?.playEnemyCue?.(this.demoEnemyId, row.cue);
     if (played) this._presentSkill(z, row.anim);
@@ -643,9 +645,10 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Skills with a catalog `gameplayHitFrame` wait for that cell.
-   * The brute smash spawns its shock on the feet at `impactFrame` and
-   * hurts the hero with a wide AoE on the gameplay frame. Other strips
-   * keep the immediate chest puff. Wave combat has no skill-cast AI.
+   * The brute smash spawns `fx-brute-skill-shock` on the feet at
+   * `impactFrame` and, on the gameplay frame, hurts a hero, pet, or
+   * barricade post whose pixels overlap that shock. Other strips keep
+   * the immediate chest puff. Wave combat has no skill-cast AI.
    * @param {Zombie} z
    * @param {string} animKey
    */
@@ -678,17 +681,31 @@ export default class StageScene extends Phaser.Scene {
   }
 
   /**
-   * Hero hurt pose and the booth hurt cue when the hero stands inside
-   * the smash circle around the brute's feet. No barricade HP, gold, or save.
+   * Catalog gameplay frame. Hero flinch, one contact-DPS hit on each
+   * overlapping pet, and one contact-DPS hit on the barricade when a
+   * post overlaps the shock. Gold and the save stay put. The shock
+   * sprite is the one spawned at impact frame 8.
    * @param {Zombie} z
    */
   _onFeelSmashAoe(z) {
+    const shock = this._bruteShock;
+    if (!shock?.active) return;
     const player = this.defenders?.player;
-    const feetX = z?.body?.x;
-    const feetY = z?.body?.y;
-    if (!player || !Number.isFinite(feetX) || !Number.isFinite(feetY)) return;
-    if (!bruteSmashContains(feetX, feetY, player.x, player.y)) return;
-    this._onFeelAttackHit();
+    if (player?.active && spritesTouch(shock, player)) this._onFeelAttackHit();
+    const amount = Number(z?.dps) > 0 ? z.dps : 0;
+    for (const pet of this.defenders?.fieldPets?.() || []) {
+      const sprite = pet?.sprite;
+      if (!sprite?.active || !spritesTouch(shock, sprite)) continue;
+      if (amount > 0 && typeof pet.takeDamage === 'function') pet.takeDamage(amount);
+    }
+    const posts = this.barricade?.posts || [];
+    let fence = false;
+    for (const post of posts) {
+      if (!post?.active || !spritesTouch(shock, post)) continue;
+      fence = true;
+      this.barricade?._flashPost?.(post);
+    }
+    if (fence && amount > 0) this.barricade.applyDamage(amount);
   }
 
   /**
@@ -722,14 +739,27 @@ export default class StageScene extends Phaser.Scene {
     const scale = Math.abs(z.body.scaleX || 1);
     const ox = Array.isArray(anchor) ? Number(anchor[0]) || 0 : 0;
     const oy = Array.isArray(anchor) ? Number(anchor[1]) || 0 : 0;
-    playLibraryFx(this, z.body.x + ox * scale, z.body.y + oy * scale, fx[0], {
+    const sprite = playLibraryFx(this, z.body.x + ox * scale, z.body.y + oy * scale, fx[0], {
       depth: (z.body.depth || 0) + 2,
       scale,
     });
+    if (fx[0] === 'fx-brute-skill-shock') this._keepBruteShock(sprite);
+    return sprite;
+  }
+
+  /**
+   * The smash hit frame reads this sprite. A new smash replaces the previous one.
+   * @param {Phaser.GameObjects.Sprite|null} sprite
+   */
+  _keepBruteShock(sprite) {
+    const prev = this._bruteShock;
+    this._bruteShock = sprite || null;
+    if (prev && prev !== sprite && prev.active) prev.destroy();
   }
 
   _feelReset() {
     this._feelSkillCursor = 0;
+    this._keepBruteShock(null);
     this._spawnShowcaseEnemy();
     this._setFeelHint('R reset');
   }
@@ -1115,6 +1145,7 @@ export default class StageScene extends Phaser.Scene {
     if (this.enemyFeel) {
       this._refreshHud();
       this.petHud?.update(rawMs);
+      this.defenders?.petCombat?.tickContactHurts?.(rawMs);
       return;
     }
     this.petEvolve?.notifyStageProgress(this.waveManager.getElapsed() / STAGE_DURATION);
