@@ -179,6 +179,9 @@ export default class PetTryoutScene extends Phaser.Scene {
     this.load.audio('pet-melee-hit', 'assets/audio/pet-melee-hit.mp3');
     this.load.audio('pet-knockback', 'assets/audio/pet-knockback.mp3');
     this.load.audio('pet-evolve', 'assets/audio/pet-evolve.mp3');
+    this.load.audio('pet-summon', 'assets/audio/pet-summon.mp3');
+    this.load.audio('pet-recall', 'assets/audio/pet-recall.mp3');
+    this.load.audio('skill-telegraph', 'assets/audio/skill-telegraph.mp3');
   }
 
   create() {
@@ -302,6 +305,7 @@ export default class PetTryoutScene extends Phaser.Scene {
     }
     const token = this._begin();
     this.out = true;
+    this.audio?.playPetSummon();
     this._zzz(false);
     this.pet.setAlpha(1);
     this.pet.setPosition(PET_X, GROUND_Y);
@@ -322,6 +326,7 @@ export default class PetTryoutScene extends Phaser.Scene {
     this._unlock();
     const token = this._begin();
     this.out = false;
+    this.audio?.playPetRecall();
     this._status(`${this._name()} recalled.`);
     this._showSleep(token);
   }
@@ -381,6 +386,7 @@ export default class PetTryoutScene extends Phaser.Scene {
       return;
     }
     const token = this._begin();
+    this.audio?.playSkillTelegraph();
     this.pet.setPosition(PET_X, GROUND_Y);
     this.pet.setAlpha(1);
     this._pose(key);
