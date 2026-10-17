@@ -307,6 +307,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
           by + half >= bounds.top &&
           by - half <= bounds.bottom
         ) {
+          if (this.weapons.confirmOpaqueHit?.(bullet, zombie) === false) continue;
           hits.push({ index: i, bullet, zombie });
           break;
         }

@@ -49,14 +49,16 @@ function alphaWorld(body, wx, wy) {
 }
 
 /**
- * True when any sampled world pixel is opaque on both bodies.
- * `alphaAt(frameX, frameY)` returns 0–255. Alpha above `minAlpha` counts
- * (default 0, so a single painted texel is enough).
+ * Walk world samples where the two boxes overlap.
+ * `visit(x, y)` runs on each sample that is opaque on both bodies.
+ * Return true from `visit` to stop. The function itself returns true
+ * when a visit asked to stop.
  * @param {object} a
  * @param {object} b
  * @param {{ minAlpha?: number }} [opts]
+ * @param {(x: number, y: number) => boolean|void} visit
  */
-export function pixelBodiesTouch(a, b, opts = {}) {
+function eachOpaqueOverlap(a, b, opts, visit) {
   if (!a || !b || typeof a.alphaAt !== 'function' || typeof b.alphaAt !== 'function') return false;
   if (!(a.frameWidth > 0) || !(a.frameHeight > 0) || !(b.frameWidth > 0) || !(b.frameHeight > 0)) return false;
   const leftBox = displayBounds(a);
@@ -69,13 +71,50 @@ export function pixelBodiesTouch(a, b, opts = {}) {
   const texel = Math.min(worldTexel(a), worldTexel(b));
   const step = Math.min(1, texel);
   if (!(step > 0)) return false;
-  const minAlpha = Number.isFinite(opts.minAlpha) ? opts.minAlpha : 0;
+  const minAlpha = Number.isFinite(opts?.minAlpha) ? opts.minAlpha : 0;
   for (let y = top + step * 0.5; y < bottom; y += step) {
     for (let x = left + step * 0.5; x < right; x += step) {
-      if (alphaWorld(a, x, y) > minAlpha && alphaWorld(b, x, y) > minAlpha) return true;
+      if (alphaWorld(a, x, y) > minAlpha && alphaWorld(b, x, y) > minAlpha) {
+        if (visit(x, y) === true) return true;
+      }
     }
   }
   return false;
+}
+
+/**
+ * True when any sampled world pixel is opaque on both bodies.
+ * `alphaAt(frameX, frameY)` returns 0–255. Alpha above `minAlpha` counts
+ * (default 0, so a single painted texel is enough).
+ * @param {object} a
+ * @param {object} b
+ * @param {{ minAlpha?: number }} [opts]
+ */
+export function pixelBodiesTouch(a, b, opts = {}) {
+  return eachOpaqueOverlap(a, b, opts, () => true);
+}
+
+/**
+ * World point of the opaque overlap, or null when the bodies miss.
+ * The point is the centroid of the shared samples, which on the first
+ * touching frame is the contact sliver.
+ * @param {object} a
+ * @param {object} b
+ * @param {{ minAlpha?: number }} [opts]
+ * @returns {{ x: number, y: number }|null}
+ */
+export function pixelBodiesTouchPoint(a, b, opts = {}) {
+  let sx = 0;
+  let sy = 0;
+  let n = 0;
+  eachOpaqueOverlap(a, b, opts, (x, y) => {
+    sx += x;
+    sy += y;
+    n += 1;
+    return false;
+  });
+  if (!n) return null;
+  return { x: sx / n, y: sy / n };
 }
 
 /** @type {WeakMap<object, ImageData|null>} */
@@ -198,6 +237,20 @@ export function spritesTouch(a, b) {
   const right = pixelBodyFromSprite(b);
   if (!left || !right) return false;
   return pixelBodiesTouch(left, right);
+}
+
+/**
+ * World point where the current frames share opaque pixels, or null.
+ * Uses the pose on screen (origin, scale, flip, current frame).
+ * @param {Phaser.GameObjects.GameObject|null|undefined} a
+ * @param {Phaser.GameObjects.GameObject|null|undefined} b
+ * @returns {{ x: number, y: number }|null}
+ */
+export function spritesTouchPoint(a, b) {
+  const left = pixelBodyFromSprite(a);
+  const right = pixelBodyFromSprite(b);
+  if (!left || !right) return null;
+  return pixelBodiesTouchPoint(left, right);
 }
 
 /**
