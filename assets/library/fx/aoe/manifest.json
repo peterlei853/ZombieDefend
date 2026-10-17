@@ -1,0 +1,104 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "aoe-fire",
+  "title": "AOE Fire Explosion",
+  "titleZh": "範圍火焰爆炸",
+  "description": "fx-aoe-fire v1.0 explosion pack. Effect-only, no character. 30 frames @ 10 fps (100 ms), once, 3.0s. Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid. Origin (0.5, 0.75) is pixel anchor (135, 150), the ground center of the magic circle. Story: START glowing concentric magic circle → BLAST wide radial fireball → FADE charcoal smoke and embers. Tag AOE, fire, normal×1.2, multi-tick. The cell is already normal×1.2 versus the 225px dust baseline (270 = 225 × 1.2); play at scale 1. Visual duration is 3.0s. Multi-tick damage timing is Gameplay's call. Catalog only.",
+  "source": {
+    "tool": "PixelLab VFX Creator",
+    "sourceFolder": "fx/aoe",
+    "version": "v1.0",
+    "approvedBy": "Peter",
+    "pack": "explosion",
+    "pixellabEffectId": "9b6d26ce-7298-4512-9b75-067883f42e3f",
+    "pixellabJobId": "96747197-22a7-46af-9a65-fbe2ab805030",
+    "pixellabImageId": "f636e6be-eb18-4758-8566-9144212aa019"
+  },
+  "defaults": {
+    "type": "fx",
+    "facing": null
+  },
+  "preview": {
+    "animate": [
+      "fx-aoe-fire"
+    ],
+    "thumb": "assets/library/previews/fx/aoe-fire/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "fx-aoe-fire",
+      "path": "assets/library/fx/aoe/fx-aoe-fire.png",
+      "frameWidth": 270,
+      "frameHeight": 200,
+      "frames": 30,
+      "frameRate": 10,
+      "loop": false,
+      "grid": [6, 5],
+      "origin": [0.5, 0.75],
+      "type": "fx",
+      "tags": ["aoe", "fire", "normal-x1.2", "multi-tick"],
+      "note": "AOE fire explosion v1.0. Effect-only (no character, no body ghost). 30 frames @ 10 fps, once (100 ms/frame, 3.0s). Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid: frame i is column i%6, row floor(i/6). Anchor (135, 150) = origin (0.5, 0.75), the ground center of the magic circle. START f0–f7 glowing concentric magic circle. BLAST f8–f16 wide spherical radial fireball (peak ~f14). FADE f17–f29 charcoal smoke and embers. Tag AOE, fire, normal×1.2, multi-tick. Cell width is already normal×1.2 versus the 225px dust baseline; play at scale 1. Spawn so the anchor sits on the ground center. The visual is a 3.0s one-shot. Multi-tick damage is Gameplay's call; the sheet does not encode hit timing. Atlas: fx-aoe-fire.json. Catalog only — Gameplay owns the Stage wire.",
+      "anchors": {
+        "pixelAnchor": [135, 150],
+        "spawn": "ground-center",
+        "scale": 1
+      },
+      "extra": {
+        "version": "v1.0",
+        "pack": "explosion",
+        "durationSec": 3.0,
+        "frameDurationMs": 100,
+        "scaleTag": "normal×1.2",
+        "scaleBaseline": {
+          "dustCell": [225, 131],
+          "note": "270 = 225 × 1.2. The cell is already normal×1.2. Play at scale 1."
+        },
+        "phases": {
+          "start": { "frames": [0, 7], "seconds": [0.0, 0.8], "story": "glowing concentric magic circle, yellow/orange rune rings flat on the ground" },
+          "blast": { "frames": [8, 16], "seconds": [0.8, 1.6], "story": "wide spherical radial fireball from the circle centre, orange-yellow-white, flying embers", "peakFrame": 14 },
+          "fade": { "frames": [17, 29], "seconds": [1.6, 3.0], "story": "burst collapses into rising charcoal smoke and embers; ground fades out" }
+        },
+        "sheet": {
+          "layout": "grid",
+          "columns": 6,
+          "rows": 5,
+          "order": "row-major",
+          "width": 1620,
+          "height": 1000,
+          "usedFrames": 30
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 135,
+          "y": 150,
+          "pivot": [0.5, 0.75],
+          "note": "Ground center of the magic circle. Phaser origin is (135/270, 150/200) = (0.5, 0.75)."
+        },
+        "pixellabJobs": {
+          "effectId": "9b6d26ce-7298-4512-9b75-067883f42e3f",
+          "jobId": "96747197-22a7-46af-9a65-fbe2ab805030",
+          "imageId": "f636e6be-eb18-4758-8566-9144212aa019"
+        },
+        "atlas": "assets/library/fx/aoe/fx-aoe-fire.json",
+        "gameplayNotes": {
+          "role": "aoeFireVfx",
+          "status": "catalog-only",
+          "combatWired": false,
+          "spawn": "ground-center",
+          "anchor": [135, 150],
+          "origin": [0.5, 0.75],
+          "durationSec": 3.0,
+          "loop": false,
+          "scale": 1,
+          "scaleTag": "normal×1.2",
+          "tags": ["AOE", "fire", "normal×1.2", "multi-tick"],
+          "multiTick": "Gameplay owns hit count and timing. Art does not encode ticks.",
+          "handoff": "Spawn at the ground-center anchor (135, 150). Visual plays 3.0s once. Multi-tick damage is Gameplay's call."
+        }
+      }
+    }
+  ]
+}

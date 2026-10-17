@@ -10,12 +10,12 @@
 | [UI](#ui) | 1 | 51 |
 | [Zombies](#zombies) | 15 | 180 |
 | [Bosses](#bosses) | 4 | 39 |
-| [Shared FX](#fx) | 9 | 23 |
+| [Shared FX](#fx) | 10 | 24 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **607** |
+| **Total** | **55** | **608** |
 
 <a id="hero"></a>
 ## Hero
@@ -1029,6 +1029,18 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `zombie-exploder-blast` | 10 | 160x160 | 12 | once | (0.5, 0.5) |  |
+
+### AOE Fire Explosion (範圍火焰爆炸)
+
+<img src="previews/fx/aoe-fire/preview.gif" alt="aoe-fire preview" height="140">
+
+fx-aoe-fire v1.0 explosion pack. Effect-only, no character. 30 frames @ 10 fps (100 ms), once, 3.0s. Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid. Origin (0.5, 0.75) is pixel anchor (135, 150), the ground center of the magic circle. Story: START glowing concentric magic circle → BLAST wide radial fireball → FADE charcoal smoke and embers. Tag AOE, fire, normal×1.2, multi-tick. The cell is already normal×1.2 versus the 225px dust baseline (270 = 225 × 1.2); play at scale 1. Visual duration is 3.0s. Multi-tick damage timing is Gameplay's call. Catalog only.
+
+- group `aoe-fire` · 1 assets · frame 270x200 · manifest [fx/aoe/manifest.json](fx/aoe/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-aoe-fire` | 30 | 270x200 | 10 | once | (0.5, 0.75) | grid 6×5 row-major · AOE fire explosion v1.0. Effect-only (no character, no body ghost). 30 frames @ 10 fps, once (100 ms/frame, 3.0s). Cell 270×200. Sheet 1620×1000 is a 6×5 row-major grid: frame i is column i%6, row floor(i/6). Anchor (135, 150) = origin (0.5, 0.75), the ground center of the magic circle. START f0–f7 glowing concentric magic circle. BLAST f8–f16 wide spherical radial fireball (peak ~f14). FADE f17–f29 charcoal smoke and embers. Tag AOE, fire, normal×1.2, multi-tick. Cell width is already normal×1.2 versus the 225px dust baseline; play at scale 1. Spawn so the anchor sits on the ground center. The visual is a 3.0s one-shot. Multi-tick damage is Gameplay's call; the sheet does not encode hit timing. Atlas: fx-aoe-fire.json. Catalog only — Gameplay owns the Stage wire. |
 
 ### Brute Ground Shock (暴君震地衝擊)
 
