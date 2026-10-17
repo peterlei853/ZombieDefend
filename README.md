@@ -6,6 +6,7 @@ Phaser 3 horizontal tower-defense demo.
 
 - **Demo (GitHub Pages):** https://peterlei853.github.io/ZombieDefend/
 - Local: `npm start` then open http://localhost:5173
+- **Sandbox weapons (v0.36.12):** `/sandbox/weapons.html?weapon=water` (also `sling`, `bubble`, `lightning`, `frost`, `flame`) floats that gun in front of the girl at its 56×56 catalog size and fires its projectile into a living target. Keys 1–6 switch guns. The page does not draw a tower or fence cradle. Stage mounts, gold, saves, barricade HP, and the five-stage roster stay as they are.
 
 ## Controls (demo slice)
 

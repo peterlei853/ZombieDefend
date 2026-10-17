@@ -35,9 +35,38 @@ footer{color:var(--muted);font-size:12px;padding:4px 0 8px}
 <body>
 <header>
   <h1>ZombieDefend <span>Peter sandbox</span></h1>
-  <p class="lede">Independent entry for feel, enemy, and pet try-outs. After Pages, this page is <code>/sandbox/</code>. The Tester booth stays the root query <code>/?enemy=…&amp;feel=1</code>. The pet try-out is <code>/sandbox/pet.html</code>. Gold, saves, and barricade physics are unchanged.</p>
+  <p class="lede">The sandbox goal is the six stage weapons. Each gun floats in front of the girl at its 56×56 catalog size, with that gun’s projectile and hit effect on a living target. No tower, cradle, or fence mount is used. After Pages, this page is <code>/sandbox/</code>. Gold, saves, barricade HP, and the main stage stay unchanged.</p>
 </header>
 <main>
+  <h2>Weapon try-out</h2>
+  <p class="lede">Keys <strong>1–6</strong> on the try-out match these guns. <strong>[ ]</strong> cycles. <strong>R</strong> puts the target back. <code>?weapon=</code> opens one gun.</p>
+  <div class="cards">
+    <a class="card" href="weapons.html?weapon=water#water">
+      <strong>Water <span class="badge">1</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=water</code> — <code>fx-water-proj</code> and the splash on the target.</span>
+    </a>
+    <a class="card" href="weapons.html?weapon=sling#sling">
+      <strong>Sling <span class="badge">2</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=sling</code> — <code>fx-sling-pellet</code> and <code>fx-sling-impact</code>.</span>
+    </a>
+    <a class="card" href="weapons.html?weapon=bubble#bubble">
+      <strong>Bubble <span class="badge">3</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=bubble</code> — <code>fx-bubble-proj-l</code> and <code>fx-bubble-pop</code>.</span>
+    </a>
+    <a class="card" href="weapons.html?weapon=lightning#lightning">
+      <strong>Lightning <span class="badge">4</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=lightning</code> — <code>fx-lightning-bolt</code> and <code>fx-lightning-impact</code>.</span>
+    </a>
+    <a class="card" href="weapons.html?weapon=frost#frost">
+      <strong>Frost <span class="badge">5</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=frost</code> — <code>fx-frost-pellet</code> and <code>fx-frost-impact</code>.</span>
+    </a>
+    <a class="card" href="weapons.html?weapon=flame#flame">
+      <strong>Flame <span class="badge">6</span></strong>
+      <span><code>/sandbox/weapons.html?weapon=flame</code> — <code>fx-flame-cone</code> and <code>fx-flame-burn</code>.</span>
+    </a>
+  </div>
+
   <h2>Feel booth</h2>
   <p class="lede">Each link opens one living enemy and arms keys <strong>1–9</strong> and <strong>R</strong>. Chips on the booth match those keys.</p>
   <table class="keys">
@@ -94,8 +123,8 @@ footer{color:var(--muted);font-size:12px;padding:4px 0 8px}
     <li><strong>Combat feel map.</strong> Keys 5–9 only preview the catalog sheets. <code>fx-slash-enemy-red</code>, <code>fx-slash-ally-white</code>, <code>fx-slash-dot</code>, <code>fx-hit-fire</code>, and <code>fx-hit-water</code> are not wired into live combat. Key 4 stays the booth’s <code>fx-slash-ninja</code>.</li>
   </ul>
 
-  <p class="note">Also: <a href="../">stage</a> · <a href="../assets/library/catalog.html">asset catalog</a></p>
-  <footer>Hub only. The pet try-out is a separate page. Gold, saves, and barricade physics are unchanged.</footer>
+  <p class="note">Also: <a href="weapons.html">weapon try-out</a> · <a href="../">stage</a> · <a href="../assets/library/catalog.html">asset catalog</a></p>
+  <footer>Hub only. The weapon try-out and the pet try-out are separate pages. Gold, saves, and barricade physics are unchanged. Feel-booth keys 6–9 stay previews.</footer>
 </main>
 </body>
 </html>

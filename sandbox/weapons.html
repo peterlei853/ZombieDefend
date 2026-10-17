@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZombieDefend · Weapon try-out</title>
+<!--
+  Repo-root base so catalog paths (assets/…) resolve on /sandbox/weapons.html,
+  including GitHub Pages. Script and hub links are written against that root.
+-->
+<base href="../">
+<style>
+:root{--bg:#0f1218;--panel:#171b23;--panel2:#1e2430;--line:#2a3140;--text:#e6ebf2;--muted:#8d99ab;--accent:#7bd88f;--accent2:#ffb454}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+a{color:var(--accent)}
+header{border-bottom:1px solid var(--line);padding:16px 20px 12px}
+main{max-width:1100px;margin:0 auto;padding:8px 20px 32px}
+h1{font-size:22px;margin:0 0 6px}
+h1 span{color:var(--accent)}
+p{margin:0 0 10px}
+.lede,.note{color:var(--muted)}
+#weapon-status{min-height:1.5em;margin:0 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+button{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;cursor:pointer}
+button:hover,button.on{border-color:var(--accent);color:var(--accent)}
+#game-host{height:min(640px,72vh);min-height:360px;background:#121814;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.keys{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px}
+.keys th,.keys td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.keys tr:last-child th,.keys tr:last-child td{border-bottom:0}
+.keys th{width:4.5rem;color:var(--accent2);font-weight:650}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+footer{color:var(--muted);font-size:12px;padding:8px 0}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>ZombieDefend <span>weapon try-out</span></h1>
+  <p class="lede">Sandbox only. Each gun floats in front of the girl at its 56×56 catalog size and fires its own projectile into a living target. No gun tower, fence cradle, or mount is drawn. Stage combat is unchanged. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
+</header>
+<main>
+  <p id="weapon-status">Loading weapon sheets…</p>
+  <div class="row" id="weapon-row">
+    <button type="button" data-weapon="water">1 Water</button>
+    <button type="button" data-weapon="sling">2 Sling</button>
+    <button type="button" data-weapon="bubble">3 Bubble</button>
+    <button type="button" data-weapon="lightning">4 Lightning</button>
+    <button type="button" data-weapon="frost">5 Frost</button>
+    <button type="button" data-weapon="flame">6 Flame</button>
+    <button type="button" data-act="reset">R Reset target</button>
+  </div>
+  <div id="game-host"></div>
+  <table class="keys">
+    <tbody>
+      <tr><th>1</th><td>Water. <code>fx-water-proj</code> travels to the target. The splash and wet ground play on contact; HP lands on that beat.</td></tr>
+      <tr><th>2</th><td>Sling. <code>fx-sling-pellet</code> travels to the target. <code>fx-sling-impact</code> plays on the body; HP and knockback land on that beat.</td></tr>
+      <tr><th>3</th><td>Bubble. <code>fx-bubble-proj-l</code> travels west. <code>fx-bubble-pop</code> plays on the body, then the bubble splits.</td></tr>
+      <tr><th>4</th><td>Lightning. <code>fx-lightning-bolt</code> travels west. <code>fx-lightning-impact</code> plays on the body.</td></tr>
+      <tr><th>5</th><td>Frost. <code>fx-frost-pellet</code> travels west. <code>fx-frost-impact</code> plays on the body, then the freeze coat.</td></tr>
+      <tr><th>6</th><td>Flame. The <code>fx-flame-cone</code> reaches west from the float and chips the target. <code>fx-flame-burn</code> stays on the body.</td></tr>
+      <tr><th>[ ]</th><td>Previous or next weapon. Water, sling, bubble, lightning, frost, flame.</td></tr>
+      <tr><th>R</th><td>Reset the target back in front of the gun.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Open <code>?weapon=sling</code> (or bubble, lightning, frost, flame) to start on that gun. The default is water. Hit numbers are a timing cue. Gold, saves, and barricade HP are not written.</p>
+  <footer>Does not place weapons on a tower. Stage fence mounts stay on the main stage.</footer>
+</main>
+<script>
+window.__ZD_WEAPON_PAINT = function (detail) {
+  var status = document.getElementById('weapon-status');
+  if (status && detail && detail.text) status.textContent = detail.text;
+  document.querySelectorAll('[data-weapon]').forEach(function (btn) {
+    btn.classList.toggle('on', btn.getAttribute('data-weapon') === (detail && detail.id));
+  });
+};
+document.body.addEventListener('click', function (event) {
+  var weapon = event.target.closest('[data-weapon]');
+  var act = event.target.closest('[data-act]');
+  if (weapon && window.__ZD_WEAPON) window.__ZD_WEAPON.pick(weapon.getAttribute('data-weapon'));
+  if (act && window.__ZD_WEAPON) {
+    var name = act.getAttribute('data-act');
+    if (window.__ZD_WEAPON[name]) window.__ZD_WEAPON[name]();
+  }
+});
+window.addEventListener('keydown', function (event) {
+  if (event.repeat || !window.__ZD_WEAPON) return;
+  var map = {
+    '1': 'water',
+    '2': 'sling',
+    '3': 'bubble',
+    '4': 'lightning',
+    '5': 'frost',
+    '6': 'flame'
+  };
+  if (map[event.key]) {
+    event.preventDefault();
+    window.__ZD_WEAPON.pick(map[event.key]);
+    return;
+  }
+  var named = { r: 'reset', R: 'reset', '[': 'prev', ']': 'next' };
+  var name = named[event.key];
+  if (!name) return;
+  event.preventDefault();
+  window.__ZD_WEAPON[name]();
+});
+</script>
+<script type="module" src="src/sandbox/weaponTryout.js"></script>
+</body>
+</html>

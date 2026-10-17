@@ -203,10 +203,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * title picks any of the five. Shop Next advances until stage 5, then
  * returns to the title. Gold, saves, barricade max HP, wave HP / speed /
  * DPS / counts, and combat FX 6–9 stay put.
+ * v0.36.12: `/sandbox/weapons.html?weapon=` floats one of the six guns
+ * in front of the girl at the 56×56 catalog size and fires that gun’s
+ * projectile and hit FX at a held target. No cradle is drawn there.
+ * Stage fence mounts, gold-by-HP, saves, barricade max HP, the five
+ * single-type roster, and feel-booth keys 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.11';
+export const APP_VERSION = '0.36.12';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
