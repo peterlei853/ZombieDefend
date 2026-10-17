@@ -101,7 +101,7 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * default, key 8 plays `sfx-hit-fire`, and key 9 plays `sfx-hit-water`.
  * Those cues are feel-booth previews only.
  * Key 2 plays the attack strip in place, then `player-girl-hurt` and the
- * hurt cue on that strip's midpoint frame. Feel without a known enemy does nothing.
+ * hurt cue about 80% through that strip. Feel without a known enemy does nothing.
  * Gold, saves, barricade HP, and the wave tables stay put. The camera
  * does not shake.
  */

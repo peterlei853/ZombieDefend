@@ -118,53 +118,60 @@ export function enemySfxClips() {
  * Contact frame, using Phaser's `AnimationFrame.index`.
  * Every catalog attack sheet is 8 cells at 10 fps and has no
  * `timing.impactFrame` marker. That index is 1-based: the first cell
- * reports 1 and the last cell reports 8 (texture frames 0–7). The frame
- * that starts at half the strip is index 5 (texture cell 4, 400 ms).
+ * reports 1 and the last cell reports 8 (texture frames 0–7). The strike
+ * is the frame nearest 80% of the strip: index 7 (texture cell 6). On an
+ * 800 ms sheet it starts at 600 ms (75%) and its midpoint is about 81%.
+ * The last cell reads as recovery, so the beat does not wait for index 8.
  * Key 2 starts `player-girl-hurt` and `sfx-enemy-<id>-hurt` on that
  * frame. The live barricade flash uses the same index. slime-mini has no
  * attack strip, so it is absent and key 2 reacts at once.
  *
- * Earlier indexes followed the furthest east reach and were compared to
- * this same 1-based index, so several landed in the windup. Those values:
- * office-worker-v2 4→5, delivery 5→5, chef 5→5, nurse 5→5, brute 4→5,
- * riot 4→5, trashcan 3→5, sprinter 4→5, slime 4→5, exploder 4→5,
- * cyborg 5→5, clown 4→5, lava-balon 3→5, steel-balam 4→5.
+ * v0.36.2 used index 5 (texture cell 4, halfway, 400 ms). Earlier indexes
+ * followed the furthest east reach and several landed in the windup:
+ * office-worker-v2 4, delivery 5, chef 5, nurse 5, brute 4, riot 4,
+ * trashcan 3, sprinter 4, slime 4, exploder 4, cyborg 5, clown 4,
+ * lava-balon 3, steel-balam 4.
  *
  * @type {Record<string, number>}
  */
 export const ENEMY_ATTACK_HIT_FRAME = {
-  'office-worker-v2': 5,
-  delivery: 5,
-  chef: 5,
-  nurse: 5,
-  brute: 5,
-  riot: 5,
-  trashcan: 5,
-  sprinter: 5,
-  slime: 5,
-  exploder: 5,
-  cyborg: 5,
-  clown: 5,
-  'lava-balon': 5,
-  'steel-balam': 5,
+  'office-worker-v2': 7,
+  delivery: 7,
+  chef: 7,
+  nurse: 7,
+  brute: 7,
+  riot: 7,
+  trashcan: 7,
+  sprinter: 7,
+  slime: 7,
+  exploder: 7,
+  cyborg: 7,
+  clown: 7,
+  'lava-balon': 7,
+  'steel-balam': 7,
 };
 
 /**
- * 1-based Phaser frame that starts at half the strip.
- * 8 frames → 5 (texture cell 4). 4 frames → 3. 1 frame → 1.
+ * 1-based Phaser frame nearest 80% of an N-frame strip.
+ * `floor(N * 0.8) + 1`, clamped to `[1, N]`. That index starts at
+ * `floor(N * 0.8) / N` of the duration. For 8 frames it is 7 (cell 6:
+ * start 75%, midpoint ~81%). 4 frames → 4. 1 frame → 1.
  * @param {number} frameCount
  */
-export function midAttackFrame(frameCount) {
+export function lateAttackFrame(frameCount) {
   const n = Number(frameCount);
   if (!Number.isInteger(n) || n <= 0) return 1;
-  return Math.floor(n / 2) + 1;
+  const index = Math.floor(n * 0.8) + 1;
+  if (index < 1) return 1;
+  if (index > n) return n;
+  return index;
 }
 
 /**
  * Contact frame for the strip that is actually playing.
  * A catalog id uses {@link ENEMY_ATTACK_HIT_FRAME} when that index fits.
- * Bare and legacy strips, which are not in the table, use the midpoint.
- * Null when there is no strip to wait for.
+ * Bare and legacy strips, which are not in the table, use the same ~80%
+ * rule. Null when there is no strip to wait for.
  * @param {string|null|undefined} id
  * @param {number} frameCount
  * @returns {number|null}
@@ -174,7 +181,7 @@ export function attackContactFrame(id, frameCount) {
   const hasStrip = Number.isInteger(total) && total > 0;
   const listed = feelAttackHitFrame(id);
   if (listed != null && hasStrip && listed >= 1 && listed <= total) return listed;
-  if (hasStrip) return midAttackFrame(total);
+  if (hasStrip) return lateAttackFrame(total);
   return null;
 }
 
