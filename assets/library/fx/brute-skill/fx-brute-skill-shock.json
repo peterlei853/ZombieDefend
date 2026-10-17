@@ -271,7 +271,7 @@
   },
   "scale": "1",
   "anchor": {
-   "kind": "feet",
+   "kind": "hand",
    "x": 62,
    "y": 80
   },
@@ -283,7 +283,7 @@
     "direction": "forward"
    }
   ],
-  "version": "3.1",
-  "notes": "east-lobe extend +44px pad-right; reach>=151 from anchor (62,80); path key unchanged"
+  "version": "3.3",
+  "notes": "v3.3 no-ghost PixelLab regen; dust-only PixelLab remake job 1b93b8df; NO character/ghost; cell 225x131; hand anchor (62,80); east opaque reach max 157px (f7); path key fx-brute-skill-shock unchanged; greenish body count 0"
  }
 }
