@@ -14,6 +14,7 @@ import {
   SHOP_WEAPON_COST,
   tryShopAction,
 } from '../data/shopList.js';
+import { STAGE_COUNT, clampStage } from '../data/stageRoster.js';
 
 export { SHOP_UPGRADE_COST, SHOP_WEAPON_COST };
 
@@ -23,7 +24,7 @@ export default class ShopScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.stage = data?.stage ?? this.registry.get('stage') ?? 1;
+    this.stage = clampStage(data?.stage ?? this.registry.get('stage') ?? 1);
     this.gold = data?.gold ?? this.registry.get('gold') ?? 0;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
     this.ownedWeapons = Array.isArray(data?.ownedWeapons)
@@ -60,8 +61,16 @@ export default class ShopScene extends Phaser.Scene {
     return this._act('upgrade', id);
   }
 
-  /** Next stage. Keeps the purse, owned weapons, and upgrade ranks. */
+  /**
+   * Next stage, through stage 5. Keeps the purse, owned weapons, and
+   * upgrade ranks. After stage 5, return to the title picker.
+   */
   continue() {
+    if (this.stage >= STAGE_COUNT) {
+      this.registry.set('stage', 1);
+      this.scene.start('TitleScene');
+      return;
+    }
     const nextStage = this.stage + 1;
     this.registry.set('stage', nextStage);
     this.scene.start('StageScene', {
@@ -213,7 +222,7 @@ export default class ShopScene extends Phaser.Scene {
     });
     this._refreshRows();
 
-    addParchmentButton(this, width / 2, 672, 'NEXT', () => {
+    addParchmentButton(this, width / 2, 672, this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
       this.audio?.playUiClick();
       this.continue();
     }, { scale: 2, depth: 5 });

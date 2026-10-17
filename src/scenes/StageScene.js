@@ -13,6 +13,7 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { clampStage } from '../data/stageRoster.js';
 import {
   BRUTE_SHOCK_KEY,
   bruteShockHandPoint,
@@ -123,7 +124,7 @@ export default class StageScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.stage = data?.stage ?? this.registry.get('stage') ?? 1;
+    this.stage = clampStage(data?.stage ?? this.registry.get('stage') ?? 1);
     // Purse for this attempt. Boot and Shop pass the gold the run starts
     // with. Kills add on top. Retry restores this value so a failed attempt
     // cannot farm gold. There is no separate SaveManager write during Stage;

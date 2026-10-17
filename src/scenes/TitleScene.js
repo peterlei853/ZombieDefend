@@ -1,4 +1,5 @@
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { STAGE_COUNT, stageFromQuery } from '../data/stageRoster.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
 import {
@@ -17,7 +18,8 @@ import {
  * Title / start screen.
  * Backdrop is `ui-title-bg-clean` (688×384): hero, pets, and the logo, with
  * no baked NEW/LOAD/SCOREBOARD and no v0.21 footer. `ui-title-bg-clean-hd`
- * is the 1280×720 fallback. START stays a separate parchment button.
+ * is the 1280×720 fallback. Stages 1–5 are parchment buttons. START
+ * launches stage 1, or `?stage=N` when that query is a real stage.
  * TITLE_BG_ALIAS (`bg-title-zombie-vs-buddy`) is only the older fallback.
  */
 export default class TitleScene extends Phaser.Scene {
@@ -54,7 +56,7 @@ export default class TitleScene extends Phaser.Scene {
       size: 16,
       depth: 4,
     });
-    addKitText(this, width / 2, cardY + 16, 'STAGE 1', {
+    addKitText(this, width / 2, cardY - 4, 'STAGE', {
       font: FONT_INK,
       size: 16,
       tint: INK_TINT,
@@ -62,17 +64,38 @@ export default class TitleScene extends Phaser.Scene {
       depth: 4,
     });
 
-    const startStage = () => {
+    const defaultStage = stageFromQuery() || 1;
+    let left = false;
+    const startStage = (stage) => {
+      if (left) return;
+      left = true;
+      const n = Math.min(STAGE_COUNT, Math.max(1, Math.floor(Number(stage) || defaultStage)));
       this.audio?.playUiClick();
+      this.registry.set('stage', n);
       this.scene.start('StageScene', {
-        stage: this.registry.get('stage') || 1,
+        stage: n,
         gold: this.registry.get('gold') || 0,
         characterId: this.registry.get('characterId') || 'default',
       });
     };
 
-    addKitImage(this, width / 2 - 100, cardY + 72, UI.ready, { depth: 4 });
-    const btn = addParchmentButton(this, width / 2, cardY + 72, 'START', startStage, {
+    // One button per stage. Scale 1 keeps five 73px parchments inside the dialog.
+    const btnW = 73;
+    const gap = 12;
+    const rowY = cardY + 32;
+    const total = STAGE_COUNT * btnW + (STAGE_COUNT - 1) * gap;
+    let x = width / 2 - total / 2 + btnW / 2;
+    for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
+      addParchmentButton(this, x, rowY, String(stage), () => startStage(stage), {
+        scale: 1,
+        depth: 4,
+      });
+      x += btnW + gap;
+    }
+
+    const startY = cardY + 96;
+    addKitImage(this, width / 2 - 100, startY, UI.ready, { depth: 4 });
+    const btn = addParchmentButton(this, width / 2, startY, 'START', () => startStage(defaultStage), {
       scale: 2,
       depth: 4,
     });
@@ -84,10 +107,14 @@ export default class TitleScene extends Phaser.Scene {
     });
     this.audio.startTitleBgm();
 
-    this.input.keyboard?.once('keydown-ENTER', startStage);
-    this.input.keyboard?.once('keydown-SPACE', startStage);
+    this.input.keyboard?.once('keydown-ENTER', () => startStage(defaultStage));
+    this.input.keyboard?.once('keydown-SPACE', () => startStage(defaultStage));
+    const digitCodes = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'];
+    digitCodes.forEach((code, index) => {
+      this.input.keyboard?.once(`keydown-${code}`, () => startStage(index + 1));
+    });
     if (petHurtDebugRequested() || petLowHpDebugRequested() || demoWeaponId() || debugPetSkillEnabled() || demoEnemyId()) {
-      this.time.delayedCall(0, startStage);
+      this.time.delayedCall(0, () => startStage(defaultStage));
     }
 
     void btn;

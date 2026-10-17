@@ -2,16 +2,23 @@
  * v0.28 roster + shopping list (no Phaser, no browser).
  * Run: node tools/check-v028.mjs
  *
- * Stage 1 spawns three profession skins. Each later stage adds one.
- * A missing strip falls back to office-worker-v2. Retired zombie-office-*
- * keys are not a skin and are not required.
+ * Each main stage spawns one skin: office-worker-v2, delivery, chef,
+ * nurse, then brute. A missing strip falls back to office-worker-v2.
+ * Retired zombie-office-* keys are not a skin and are not required.
  * Shop buys and upgrades spend only through the spendGold callback.
  * Wave HP, gold-by-HP, and barricade HP stay on the v0.27 table.
  */
 import { readFileSync } from 'node:fs';
-import { APP_VERSION } from '../src/data/GameConfig.js';
+import { APP_VERSION, DEMO_ENEMY_IDS } from '../src/data/GameConfig.js';
 import { getGoldByHP } from '../src/data/economy.js';
-import { rosterForStage, STAGE_ROSTER } from '../src/data/stageRoster.js';
+import {
+  clampStage,
+  rosterForStage,
+  STAGE_COUNT,
+  STAGE_ROSTER,
+  skinForStage,
+  stageFromQuery,
+} from '../src/data/stageRoster.js';
 import {
   SHOP_UPGRADE_COST,
   SHOP_WEAPON_COST,
@@ -35,28 +42,33 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.36.10', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.36.11', `APP_VERSION ${APP_VERSION}`);
 assert(getGoldByHP(40) === 10 && getGoldByHP(105) === 15 && getGoldByHP(165) === 20, 'gold-by-HP unchanged');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP unchanged');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'wave counts unchanged');
 assert(WAVE_DEFS[0].archetypes[0].hp === 40 && WAVE_DEFS[3].archetypes.map((row) => row.hp).join() === '50,115,165', 'wave HP rows unchanged');
 assert(!WAVE_DEFS[0].archetypes[0].skins, 'combat table itself has no skin list');
 
-const stage1 = rosterForStage(1);
-const stage2 = rosterForStage(2);
-const stage3 = rosterForStage(3);
-assert(stage1.join() === 'office-worker-v2,delivery,chef', `stage 1 roster ${stage1}`);
-assert(stage2.join() === 'office-worker-v2,delivery,chef,nurse', `stage 2 adds nurse ${stage2}`);
-assert(stage3.length === 5 && stage3[4] === 'clown', 'stage 3 adds one more type');
+const expected = ['office-worker-v2', 'delivery', 'chef', 'nurse', 'brute'];
+assert(STAGE_COUNT === 5 && STAGE_ROSTER.join() === expected.join(), `roster ${STAGE_ROSTER}`);
+assert(STAGE_ROSTER.join() === DEMO_ENEMY_IDS.slice(0, 5).join(), 'roster is the first five feel-booth ids');
 assert(!STAGE_ROSTER.includes('office-worker'), 'old office skin is not in the roster');
-assert(rosterForStage(99).length === STAGE_ROSTER.length, 'later stages stay a mix, capped by the catalog list');
+assert(!STAGE_ROSTER.includes('clown') && !STAGE_ROSTER.includes('cyborg') && !STAGE_ROSTER.includes('slime'), 'old progressive mix is gone');
+for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
+  const skins = rosterForStage(stage);
+  assert(skins.length === 1 && skins[0] === expected[stage - 1], `stage ${stage} skin ${skins}`);
+  assert(skinForStage(stage) === expected[stage - 1], `skinForStage ${stage}`);
+}
+assert(clampStage(0) === 1 && clampStage(99) === 5 && rosterForStage(99).join() === 'brute', 'stages outside 1–5 clamp');
+assert(stageFromQuery('?stage=4') === 4 && stageFromQuery('?stage=6') === null && stageFromQuery('') === null, 'stage query stays on 1–5');
 
 const defs1 = waveDefsForStage(1);
 assert(defs1[0].archetypes[0].hp === 40 && defs1[0].archetypes[0].speed === 32 && defs1[0].archetypes[0].dps === 3, 'stamped row keeps wave 1 numbers');
 assert(WAVE_DEFS.slice(0, 3).map((wave) => wave.archetypes[0].dps).join() === '3,5,8', 'waves 1–3 contact DPS is 3/5/8');
 assert(WAVE_DEFS[3].archetypes.map((row) => row.dps).join() === '11,16,20', 'wave 4 DPS mix is unchanged');
-assert(defs1[0].archetypes[0].skins.join() === stage1.join(), 'stage 1 waves carry the three skins');
-assert(waveDefsForStage(2)[0].archetypes[0].skins.join() === stage2.join(), 'stage 2 waves carry four skins');
+assert(defs1[0].archetypes[0].skins.join() === 'office-worker-v2', 'stage 1 waves carry only office-worker-v2');
+assert(waveDefsForStage(2)[0].archetypes[0].skins.join() === 'delivery', 'stage 2 waves carry only delivery');
+assert(waveDefsForStage(5)[3].archetypes.every((row) => row.skins.join() === 'brute'), 'stage 5 wave 4 is only brute');
 
 function skinCounts(stage) {
   const wm = new WaveManager({ stage });
@@ -69,11 +81,12 @@ function skinCounts(stage) {
 }
 
 const mix1 = skinCounts(1);
-assert(Object.keys(mix1).sort().join() === 'chef,delivery,office-worker-v2', `stage 1 spawn mix ${Object.keys(mix1)}`);
-assert(Object.values(mix1).every((n) => n === 23), `stage 1 skins are spread, not one type ${JSON.stringify(mix1)}`);
-const mix2 = skinCounts(2);
-assert(Object.keys(mix2).sort().join() === 'chef,delivery,nurse,office-worker-v2', `stage 2 spawn mix ${Object.keys(mix2)}`);
-assert(Object.values(mix2).every((n) => n > 0), 'stage 2 uses every roster skin');
+assert(Object.keys(mix1).join() === 'office-worker-v2' && mix1['office-worker-v2'] === 69, `stage 1 is only office-worker-v2 ${JSON.stringify(mix1)}`);
+for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
+  const mix = skinCounts(stage);
+  const id = expected[stage - 1];
+  assert(Object.keys(mix).join() === id && mix[id] === 69, `stage ${stage} spawns only ${id} ${JSON.stringify(mix)}`);
+}
 
 const v2 = ZOMBIE_LIBRARY_SKINS['office-worker-v2'];
 const nurse = ZOMBIE_LIBRARY_SKINS.nurse;
@@ -144,6 +157,9 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 assert(shopSrc.includes('spendGold') && shopSrc.includes('startShopBgm()'), 'shop still spends through spendGold and starts bgm-shop');
 assert(shopSrc.includes('buyWeapon') && shopSrc.includes('upgradeWeapon') && shopSrc.includes("continue("), 'shop actions stay');
+assert(shopSrc.includes('STAGE_COUNT') && shopSrc.includes('TitleScene'), 'shop stops after the fifth stage');
+const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
+assert(titleSrc.includes('STAGE_COUNT') && titleSrc.includes('startStage(stage)'), 'title can start each stage');
 assert(!/localStorage\.(get|set|remove|clear|key)/.test(shopSrc), 'shop does not touch localStorage');
 assert(stageSrc.includes('new WaveManager({ stage: this.stage })'), 'stage passes its number into the spawner');
 assert(stageSrc.includes('skin: arch.skin'), 'spawn intent carries the roster skin');

@@ -10,7 +10,7 @@
 import { readFileSync } from 'node:fs';
 import { APP_VERSION } from '../src/data/GameConfig.js';
 import { getGoldByHP } from '../src/data/economy.js';
-import { STAGE1_TYPE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
+import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { BULLET_SPEED } from '../src/data/waves.js';
 import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../src/assets/heroDeploy.js';
 import { WATER_MOUNT_ALT_KEY, WATER_MOUNT_FRAME, WATER_MOUNT_HI_VIS_KEY, WATER_MOUNT_LIFT, WATER_MOUNT_SCALE } from '../src/assets/waterMounts.js';
@@ -46,8 +46,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const fenceAssetSrc = readFileSync(new URL('../src/assets/fenceMounts.js', import.meta.url), 'utf8');
 const fenceSysSrc = readFileSync(new URL('../src/systems/FenceMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.10' && APP_VERSION === '0.36.10', 'package and APP_VERSION are 0.36.10');
-assert(html.includes('v0.36.10'), 'document title is v0.36.10');
+assert(pkg.version === '0.36.11' && APP_VERSION === '0.36.11', 'package and APP_VERSION are 0.36.11');
+assert(html.includes('v0.36.11'), 'document title is v0.36.11');
 assert(FENCE_MOUNT_COUNT === 6, 'six fence mounts');
 assert(FENCE_WEAPON_ORDER.join() === OWNED_WEAPON_ORDER.join(), 'mount order is OWNED_WEAPON_ORDER');
 assert(
@@ -117,7 +117,7 @@ assert(weaponSrc.includes('_updateFenceFire') && weaponSrc.includes('_spawnWater
 assert(barricadeSrc.includes('return barricadeXAtY(y, postW / 2) - postW / 2'), 'contact face is unchanged');
 assert(!barricadeSrc.includes('localStorage') && !fenceAssetSrc.includes('localStorage') && !fenceSysSrc.includes('spendGold'), 'mounts do not touch saves or gold');
 assert(getGoldByHP(90) === 10 && getGoldByHP(300) === 50, 'gold-by-HP table is unchanged');
-assert(STAGE1_TYPE_COUNT === 3 && STAGE_ROSTER[0] === 'office-worker-v2', 'stage roster is unchanged');
+assert(STAGE_COUNT === 5 && STAGE_ROSTER[0] === 'office-worker-v2' && STAGE_ROSTER[4] === 'brute', 'five single-type stages');
 assert(AUDIO_VOLUME.bgm === 0.28 && AUDIO_VOLUME.fire === 0.35, 'BGM and fire volumes are unchanged');
 assert(WEAPON_TRAITS.water.damage === 18 && WEAPON_TRAITS.water.fireMs === 680, 'water damage table unchanged');
 assert(WEAPON_TRAITS.sling.damage === 16 && WEAPON_TRAITS.sling.knockbackBodies === 2, 'sling damage table unchanged');

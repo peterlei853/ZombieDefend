@@ -29,6 +29,7 @@ import { rosterForStage } from './stageRoster.js';
  * HP, speed, DPS, weight, gold, barricade HP, or stage length.
  * v0.28 stamps a visual `skins` list in waveDefsForStage. Those ids do not
  * change the numbers on these rows.
+ * v0.36.11 puts one roster id in that list: stage N spawns only monster N.
  */
 export const STAGE_DURATION = 90;
 
@@ -68,7 +69,7 @@ export const WAVE_DEFS = [
 ];
 
 /**
- * Same HP / speed / DPS / weight / variant rows, plus the stage roster.
+ * Same HP / speed / DPS / weight / variant rows, plus this stage's one skin.
  * The copy is what WaveManager spawns. WAVE_DEFS itself stays the combat table.
  * @param {number} stage
  */
