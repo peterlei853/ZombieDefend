@@ -320,6 +320,8 @@ export class DefenderGroup {
           canFire: this._deploy.canFire,
           muzzles: this.fenceMounts ? [] : this.floats?.muzzles() || [],
           waterMount: waterSlot,
+          waterCharge: !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water',
+          waterHeld: !!this.waterHeld,
           slingFromMount: !!this.slingMounts,
           slingMount: slingSlot,
           fenceOnly: !!this.fenceMounts,
@@ -348,8 +350,12 @@ export class DefenderGroup {
     }
     // One fire SFX per volley. Front-float passes the weapon id that actually shot.
     if (fired) {
-      const cue = this._frontFloat ? { id: fired } : this.weapons.getSkin?.();
-      this.scene.audio?.playWeaponShot(cue, fired);
+      const ids = this.weapons.ownedIds?.() || [];
+      const chargeWater = !this.fenceMounts && ids.length === 1 && ids[0] === 'water' && fired === 'water';
+      if (!chargeWater) {
+        const cue = this._frontFloat ? { id: fired } : this.weapons.getSkin?.();
+        this.scene.audio?.playWeaponShot(cue, fired);
+      }
     }
     if (!this._frontFloat && fired === 'shotgun') this._onShotgunVolley();
     else if (!this._frontFloat && fired === 'handgun' && dy === 0 && dx === 0) this._playWeaponFire();
@@ -765,6 +771,10 @@ export class DefenderGroup {
         ) {
           continue;
         }
+        if (b.weaponId === 'water' && b.hitIds?.includes(z.id)) {
+          if (b.charge === 3) this.weapons.touchWaterOverlap(b, z);
+          continue;
+        }
         const bounds = z.getBounds();
         if (!bounds) continue;
         if (
@@ -775,18 +785,19 @@ export class DefenderGroup {
         ) {
           if (this.weapons.confirmOpaqueHit?.(b, z) === false) continue;
           hitZombie = z;
-          break;
+          hits.push({ index: i, bullet: b, zombie: z, bx, by });
+          this.weapons.markWaterPierce(b, z);
+          if (!this.weapons.waterKeepsFlying(b)) break;
         }
       }
 
       if (!hitZombie) continue;
-      hits.push({ index: i, bullet: b, zombie: hitZombie, bx, by });
     }
 
     // Pass 2 — damage / knockback. Later pellets no-op if an earlier
     // one already destroyed that zombie.
     for (const hit of hits) {
-      remove.add(hit.index);
+      if (!this.weapons.waterKeepsFlying(hit.bullet)) remove.add(hit.index);
       const gain = this.weapons.applyDirectHit(hit.zombie, hit.bullet);
       gold += gain.gold;
       kills += gain.kills;
