@@ -43,6 +43,8 @@ const HERO_X = 1060;
 const DUMMY_X = 700;
 const DRIFT_LIMIT = 240;
 const REVIVE_MS = 700;
+/** Five bodies on the lane so L2 pierce (5) and L3 (the whole line) can be seen. */
+const WATER_LINE_X = [900, 680, 460, 240, 40];
 
 export default class WeaponTryoutScene extends Phaser.Scene {
   constructor() {
@@ -86,6 +88,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       fontSize: '15px',
       color: '#8d99ab',
     }).setDepth(20000).setScrollFactor(0);
+    this._space = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
     this._bindApi();
     this._publish();
   }
@@ -102,15 +105,18 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     const frame = libraryAsset(this, frontKey(this.weaponId))?.frameWidth || SANDBOX_FLOAT_FRAME;
     const muzzle = sandboxMuzzle(origin, frame);
     const slot = { muzzleX: muzzle.x, muzzleY: muzzle.y, weaponId: this.weaponId };
-    const living = this.target?.alive ? [this.target] : [];
+    const living = (this.targets || []).filter((z) => z?.alive && z.body);
     const scale = Math.abs(this.hero.scaleX || 1);
+    const water = this.weaponId === 'water';
     const fired = this.weapons.updatePlayerFire(dt, this.hero.x, this.hero.y, living, this.bullets, {
       frontFloat: true,
-      canFire: living.length > 0,
+      canFire: water ? true : living.length > 0,
       muzzles: [{ id: this.weaponId, x: muzzle.x, y: muzzle.y }],
       // Coordinates only. Water and sling already aim from a muzzle slot;
       // nothing here instantiates a cradle sprite.
-      waterMount: this.weaponId === 'water' ? slot : null,
+      waterMount: water ? slot : null,
+      waterCharge: water,
+      waterHeld: water && !!this._space?.isDown,
       slingFromMount: this.weaponId === 'sling',
       slingMount: this.weaponId === 'sling' ? slot : null,
       fenceOnly: false,
@@ -118,7 +124,14 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       scaleX: this.hero.scaleX,
       scaleY: this.hero.scaleY,
     });
-    if (fired) this.audio?.playWeaponShot({ id: fired }, fired);
+    if (fired && !(water && fired === 'water')) this.audio?.playWeaponShot({ id: fired }, fired);
+    if (water && this.hint) {
+      const tier = this.weapons.chargeTier();
+      const held = tier
+        ? `charging L${tier} ${(this.weapons.chargeMs() / 1000).toFixed(1)}s`
+        : 'SPACE hold';
+      this.hint.setText(`${held} · release L1 / 2.5s L2 / 5s L3 · 1–6 switch · R reset`);
+    }
     this.weapons.stepBullets(this.bullets, dt / 1000);
     this.weapons.stepCasings?.(dt);
     this.weapons.stepOverlays?.(dt);
@@ -237,45 +250,56 @@ export default class WeaponTryoutScene extends Phaser.Scene {
   }
 
   _spawnTarget() {
-    if (this.target) {
-      this.target.showcaseHold = false;
-      this.target.alive = false;
-      this.target.destroyVisuals();
-      this.target = null;
+    for (const zombie of this.targets || []) {
+      zombie.showcaseHold = false;
+      zombie.alive = false;
+      zombie.destroyVisuals();
     }
+    const xs = this.weaponId === 'water' ? WATER_LINE_X : [this.dummyX];
     const row = WAVE_DEFS[0].archetypes[0];
-    const zombie = new Zombie(this, {
-      x: this.dummyX,
-      y: this.laneY,
-      hp: SANDBOX_TARGET_HP,
-      speed: row.speed,
-      dps: row.dps,
-      wave: 1,
-      variant: row.variant,
-      skin: 'office-worker-v2',
+    this.targets = xs.map((x) => {
+      const zombie = new Zombie(this, {
+        x,
+        y: this.laneY,
+        hp: SANDBOX_TARGET_HP,
+        speed: row.speed,
+        dps: row.dps,
+        wave: 1,
+        variant: row.variant,
+        skin: 'office-worker-v2',
+      });
+      zombie.showcaseHold = true;
+      zombie.placeAt(x);
+      zombie.homeX = x;
+      zombie.setHpBarShown?.(true);
+      return zombie;
     });
-    zombie.showcaseHold = true;
-    zombie.placeAt(this.dummyX);
-    zombie.setHpBarShown?.(true);
-    this.target = zombie;
+    this.target = this.targets[0] || null;
     this._reviveAt = 0;
   }
 
   /** @param {number} dt */
   _holdTarget(dt) {
-    const zombie = this.target;
-    if (!zombie) return;
-    if (!zombie.alive || !zombie.body) {
-      if (!this._reviveAt) this._reviveAt = this.time.now + REVIVE_MS;
-      if (this.time.now >= this._reviveAt) this._spawnTarget();
+    const list = this.targets || [];
+    if (!list.length) return;
+    let living = 0;
+    for (const zombie of list) {
+      if (!zombie?.alive || !zombie.body) continue;
+      living += 1;
+      zombie.tickStatus(dt);
+      const home = Number.isFinite(zombie.homeX) ? zombie.homeX : this.dummyX;
+      if (zombie.x < home - DRIFT_LIMIT) zombie.placeAt(home);
+    }
+    if (living > 0) {
+      this._reviveAt = 0;
       return;
     }
-    zombie.tickStatus(dt);
-    if (zombie.x < this.dummyX - DRIFT_LIMIT) zombie.placeAt(this.dummyX);
+    if (!this._reviveAt) this._reviveAt = this.time.now + REVIVE_MS;
+    if (this.time.now >= this._reviveAt) this._spawnTarget();
   }
 
   _resolveHits() {
-    const list = this.target ? [this.target] : [];
+    const list = this.targets || [];
     this.weapons.armHits(list, this.bullets);
     /** @type {Set<number>} */
     const remove = new Set();
@@ -299,6 +323,10 @@ export default class WeaponTryoutScene extends Phaser.Scene {
         ) {
           continue;
         }
+        if (bullet.weaponId === 'water' && bullet.hitIds?.includes(zombie.id)) {
+          if (bullet.charge === 3) this.weapons.touchWaterOverlap(bullet, zombie);
+          continue;
+        }
         const bounds = zombie.getBounds();
         if (!bounds) continue;
         if (
@@ -309,12 +337,13 @@ export default class WeaponTryoutScene extends Phaser.Scene {
         ) {
           if (this.weapons.confirmOpaqueHit?.(bullet, zombie) === false) continue;
           hits.push({ index: i, bullet, zombie });
-          break;
+          this.weapons.markWaterPierce(bullet, zombie);
+          if (!this.weapons.waterKeepsFlying(bullet)) break;
         }
       }
     }
     for (const hit of hits) {
-      remove.add(hit.index);
+      if (!this.weapons.waterKeepsFlying(hit.bullet)) remove.add(hit.index);
       this.weapons.applyDirectHit(hit.zombie, hit.bullet);
     }
     for (let i = 0; i < this.bullets.length; i++) {

@@ -229,12 +229,17 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE cycles the highlighted gun. All owned guns fire after deploy.
-    // The touch SWAP button uses the same toggle.
+    // SPACE cycles the highlighted gun, except water immerse: there SPACE
+    // holds a charge and releases the shot. Q and the touch SWAP button
+    // keep the cycle for every loadout.
     const keyboard = this.input.keyboard;
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-      this._spaceKey.on('down', () => this._toggleWeapon());
+      if (this.weaponImmerse !== 'water') {
+        this._spaceKey.on('down', () => this._toggleWeapon());
+      }
+      this._cycleKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+      this._cycleKey.on('down', () => this._toggleWeapon());
       // One flinch: white fill, red fill, hurt strip. Does not restart mid-sequence.
       this._hurtKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
       this._hurtKey.on('down', () => this._debugPetHurt());
@@ -1250,6 +1255,9 @@ export default class StageScene extends Phaser.Scene {
     }
 
     // Defenders fire + hits. Pet gold includes baby-pet kills; burn gold is statusGold.
+    if (this.defenders) {
+      this.defenders.waterHeld = !!(this.weaponImmerse === 'water' && this._spaceKey?.isDown);
+    }
     const petGain = this.defenders.update(deltaMs, this.zombies);
     const hitGain = this.defenders.resolveHits(this.zombies);
     const gold = statusGold + (petGain?.gold || 0) + (hitGain?.gold || 0);

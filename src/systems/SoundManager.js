@@ -383,6 +383,29 @@ export class SoundManager {
     this._fireVoice = node;
   }
 
+  /**
+   * PIXELLAB_HOOK: 16-bit water Mega Man cues are not in the library yet.
+   * Expected: charge L2, charge L3, release L1–L3, impact L1–L3.
+   * Silent until that pack is wired. Do not load the retired preview beds.
+   * @param {number} _tier
+   */
+  syncWaterCharge(_tier) {}
+
+  /** Drop a charge bed when the hold is cancelled. No-op until the pack lands. */
+  stopWaterChargeLoop() {}
+
+  /**
+   * @param {number} _tier
+   */
+  playWaterRelease(_tier) {
+    this.stopWaterChargeLoop();
+  }
+
+  /**
+   * @param {number} _tier
+   */
+  playWaterImpact(_tier) {}
+
   playHitImpact() {
     this._cue('hit-impact', AUDIO_VOLUME.hit, AUDIO_COOLDOWN_MS.hit);
   }
@@ -573,6 +596,7 @@ export class SoundManager {
   /** Stop the bed and drop unlock hooks. One-shots already queued still flush. */
   dispose() {
     this._disposed = true;
+    this.stopWaterChargeLoop();
     this.stopBgm();
     this._stopFireVoice();
     this._stopEnemyVoice();

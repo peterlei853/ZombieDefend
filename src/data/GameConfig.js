@@ -226,10 +226,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * some water shots vanished on screen just short of the body.
  * Gold-by-HP, saves, barricade max HP, the roster, the other five
  * weapons, and feel-booth keys 6–9 stay put.
+ * v0.36.16: sandbox water (and stage `?weapon=water`) cancels auto-fire.
+ * SPACE holds a charge and releases it: under 2.5s the old bullet and
+ * lightning impact, from 2.5s a 2× shot that pierces 5 and leaves a 5s
+ * wet DoT, from 5s a 4× shot that crosses the field with a path burn
+ * and an in-bullet DoT. Homing stays inside ±10° of horizontal.
+ * Charge, release, and impact audio stay silent until the 16-bit pack
+ * lands. Gold-by-HP, saves, barricade max HP, the roster, and the other
+ * five weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.15';
+export const APP_VERSION = '0.36.16';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

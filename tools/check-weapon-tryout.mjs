@@ -10,7 +10,13 @@ import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { WATER_HIT_FX, WeaponSystem } from '../src/systems/WeaponSystem.js';
 import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
-import { pickWaterGuide, waterLeadAim } from '../src/assets/waterMounts.js';
+import {
+  pickWaterGuide,
+  waterChargeTier,
+  waterConeVelocity,
+  waterLeadAim,
+  waterPierceFor,
+} from '../src/assets/waterMounts.js';
 import {
   SANDBOX_FLOAT_FRAME,
   SANDBOX_FLOAT_OFFSET,
@@ -35,9 +41,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.15', 'APP_VERSION is 0.36.15');
-assert(pkg.version === '0.36.15', 'package.json tracks 0.36.15');
-assert(html.includes('ZombieDefend v0.36.15'), 'title tracks 0.36.15');
+assert(APP_VERSION === '0.36.16', 'APP_VERSION is 0.36.16');
+assert(pkg.version === '0.36.16', 'package.json tracks 0.36.16');
+assert(html.includes('ZombieDefend v0.36.16'), 'title tracks 0.36.16');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -237,7 +243,7 @@ const near = {
 };
 assert(guns.confirmOpaqueHit(near, primary) === false, 'a water shot still outside the body does not hit');
 
-const spawnAt = weaponSystem.indexOf('_spawnWaterShot(bullets, slot, zombies, trait) {');
+const spawnAt = weaponSystem.indexOf('_spawnWaterShot(bullets, slot, zombies, trait, tier = 1) {');
 const spawnFn = weaponSystem.slice(spawnAt, weaponSystem.indexOf('_nearestLiving(zombies, x, y)', spawnAt));
 assert(spawnFn.includes('waterLeadAim') && spawnFn.includes('marchVx'), 'water leads the marching body');
 assert(weaponSystem.includes('_guideWater'), 'water keeps guiding onto a living body ahead');
@@ -288,5 +294,34 @@ assert(guns.shouldRetireBullet(stageLive) === false, 'a shot still inside the st
 delete scene.cameras;
 const headless = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water' };
 assert(guns.shouldRetireBullet(headless) === true, 'without a camera the stage gutter cull still applies');
+
+assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.5s is L1');
+assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
+assert(waterChargeTier(5000) === 3, '5s is L3');
+assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 5 && waterPierceFor(3) === Infinity, 'pierce is 1, then 5, then the field');
+const steep = waterConeVelocity(500, 400, { x: 200, y: 40 }, 100);
+const steepPitch = Math.atan2(steep.vy, steep.vx);
+const steepDelta = steepPitch > 0 ? steepPitch - Math.PI : steepPitch + Math.PI;
+assert(steep.vx < 0, 'a steep guide still flies west');
+assert(Math.abs(steepDelta) <= (10 * Math.PI) / 180 + 1e-6, 'homing stays inside ±10 degrees');
+const flat = waterConeVelocity(500, 400, { x: 200, y: 400 }, 100);
+assert(flat.vx < 0 && Math.abs(flat.vy) < 1e-6, 'a body on the lane is a flat shot');
+const piercing = { weaponId: 'water', pierce: 5, hitIds: [] };
+for (const id of [1, 2, 3, 4]) guns.markWaterPierce(piercing, { id });
+assert(guns.waterKeepsFlying(piercing) === true, 'L2 keeps flying before the fifth body');
+guns.markWaterPierce(piercing, { id: 5 });
+assert(guns.waterKeepsFlying(piercing) === false, 'L2 stops after five bodies');
+assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: Infinity, hitIds: [1, 2, 3, 4, 5, 6] }) === true, 'L3 keeps flying across the field');
+assert(weaponSystem.includes('if (opts.waterCharge) continue'), 'charged water does not auto-fire');
+assert(weaponSystem.includes('syncWaterCharge'), 'holding SPACE notifies the charge audio hook');
+assert(weaponSystem.includes('playWaterRelease'), 'release notifies the charge audio hook');
+assert(weaponSystem.includes('playWaterImpact'), 'a water hit notifies the impact audio hook');
+assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
+assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
+assert(stage.includes("weaponImmerse !== 'water'"), 'water immerse does not cycle on SPACE');
+assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
+const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
+assert(audio.includes('syncWaterCharge') && audio.includes('playWaterRelease') && audio.includes('playWaterImpact'), 'charge SFX hooks stay stubbed');
+assert(!audio.includes('sfx-water-charge-loop.mp3') && !audio.includes('sfx-water-release-l1.mp3'), 'the retired charge preview pack is not preloaded');
 
 console.log('weapon try-out ok');
