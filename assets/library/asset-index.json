@@ -7,7 +7,7 @@
   "conventions": {
     "strips": "horizontal; frame i at x = i*frameWidth, y = 0 (unless \"grid\" is given)",
     "origin": "Phaser setOrigin(x, y) fractions of one frame",
-    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132, office-worker-v2/delivery/chef/nurse 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
+    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
     "bosses": "128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative",
     "pets": "Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX",
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
@@ -1170,7 +1170,7 @@
       "group": "brute",
       "title": "Giant Mutant Brute",
       "titleZh": "巨型突變暴君",
-      "description": "Large mini-boss. Body strips stay 96×96. Brute skill v2 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.",
+      "description": "Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.",
       "manifest": "assets/library/enemies/zombies/brute/manifest.json",
       "dir": "assets/library/enemies/zombies/brute",
       "thumb": "assets/library/previews/zombies/brute/preview.gif",
@@ -14355,7 +14355,7 @@
       "skill": "地面重砸",
       "preview": "assets/library/previews/zombies/brute/preview.gif",
       "description": "Giant Mutant Brute: skill_ground_smash — 17 frames 132x132 @ 10 fps, once. Skill: 地面重砸.",
-      "note": "Brute skill v2 ground smash 132. Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged.",
+      "note": "Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged.",
       "tags": [
         "zombies",
         "brute",
@@ -14363,10 +14363,12 @@
         "once",
         "skill",
         "ground-smash",
-        "v2"
+        "v2.1",
+        "yfix"
       ],
       "extra": {
-        "version": "v2",
+        "version": "v2.1",
+        "yfix": "v1-feet-to-bottom",
         "alias": "zombie-brute-skill",
         "atlas": "assets/library/enemies/zombies/brute/strips/zombie-brute-skill_ground_smash.json"
       },
