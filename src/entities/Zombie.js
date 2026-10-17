@@ -919,25 +919,26 @@ export class Zombie {
       mark.fn();
       finishIfDone();
     };
+    // `>=` so a hitch that skips the exact cell still fires once the
+    // strip has reached it. Shock (index 9) and the AoE (index 14) stay
+    // ordered: an earlier mark cannot wait for a later one.
+    const due = (index) => {
+      if (!Number.isInteger(index)) return;
+      for (const mark of pending) {
+        if (!mark.fired && index >= mark.index) fireOne(mark);
+      }
+    };
     const onUpdate = (anim, animFrame) => {
       if (this._attackContactToken !== token) return;
       if (anim?.key !== attackKey) return;
-      const index = shownPhaserIndex(animFrame);
-      if (!Number.isInteger(index)) return;
-      for (const mark of pending) {
-        if (!mark.fired && mark.index === index) fireOne(mark);
-      }
+      due(shownPhaserIndex(animFrame));
     };
     this._attackContactHandler = onUpdate;
     this.body.on('animationupdate', onUpdate);
     const showing = this.body.anims?.currentAnim?.key === attackKey
       ? shownPhaserIndex(this.body.anims.currentFrame)
       : undefined;
-    if (Number.isInteger(showing)) {
-      for (const mark of pending) {
-        if (!mark.fired && mark.index === showing) fireOne(mark);
-      }
-    }
+    due(showing);
   }
 
   /** Hurt strip after the white flash. No-op when that sheet is not loaded. */

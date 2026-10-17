@@ -162,10 +162,19 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * index/(N-1) >= 0.8. Eight-frame bites use index 6 (texture cell 5).
  * Brute noHurtKnockback stays. Gold, saves, barricade HP, wave DPS,
  * pets, and the camera stay put.
+ * v0.36.6: feel key 2 follows the drawn strike. office-worker-v2
+ * flinches on Phaser index 5 (briefcase and white arc). nurse flinches
+ * on Phaser index 7 (white arc; index 6 is still the cocked arm).
+ * delivery stays on index 6. The live barricade flash stays on index 6.
+ * Brute key 3 still shocks the feet at catalog frame 8 and flinches the
+ * hero at catalog frame 13. A skipped anim frame still counts once the
+ * strip has reached that index. The default booth gap is inside the
+ * 280-field smash radius. Gold, saves, barricade HP, wave DPS,
+ * noHurtKnockback, and combat FX stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.5';
+export const APP_VERSION = '0.36.6';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
