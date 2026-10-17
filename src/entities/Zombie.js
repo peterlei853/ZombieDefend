@@ -26,6 +26,19 @@ import { attackContactFrame } from '../data/enemyShowcase.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
+/**
+ * Phaser 3.80 `AnimationFrame.index` is 1-based. `textureFrame` is the
+ * 0-based sheet cell when the index is missing.
+ * @param {{ index?: number, textureFrame?: number|string }|null|undefined} animFrame
+ * @returns {number|null}
+ */
+function shownPhaserIndex(animFrame) {
+  if (Number.isFinite(animFrame?.index)) return animFrame.index;
+  const cell = Number(animFrame?.textureFrame);
+  if (!Number.isInteger(cell) || cell < 0) return null;
+  return cell + 1;
+}
+
 /** Near-black track. The old 0x1a1a1a tick disappeared into green slime shading. */
 const HP_BAR_TRACK = 0x050308;
 /** High-luminance fill. 0xff5252 sat in the slime's green midtones at this size. */
@@ -852,7 +865,8 @@ export class Zombie {
       return;
     }
     const total = this.scene?.anims?.get?.(attackKey)?.frames?.length || 0;
-    // AnimationFrame.index is 1-based, so the last cell is `total`, not `total - 1`.
+    // Phaser 3.80 sets AnimationFrame.index = i + 1. The last cell is `total`.
+    // An 8-frame bite contacts on index 6; index 7 is the end pose (Fail #117).
     if (total > 0 && hitFrame > total) {
       fire();
       return;
@@ -860,16 +874,70 @@ export class Zombie {
     const onUpdate = (anim, animFrame) => {
       if (this._attackContactToken !== token) return;
       if (anim?.key !== attackKey) return;
-      const index = Number.isFinite(animFrame?.index) ? animFrame.index : Number(animFrame?.textureFrame);
+      const index = shownPhaserIndex(animFrame);
       if (index !== hitFrame) return;
       fire();
     };
     this._attackContactHandler = onUpdate;
     this.body.on('animationupdate', onUpdate);
     const showing = this.body.anims?.currentAnim?.key === attackKey
-      ? this.body.anims.currentFrame?.index
+      ? shownPhaserIndex(this.body.anims.currentFrame)
       : undefined;
     if (showing === hitFrame) fire();
+  }
+
+  /**
+   * Fire each mark once, when that 1-based Phaser index is showing.
+   * Used by the feel-booth smash: shock and the AoE are different frames.
+   * A missing strip does not fire — there is no pose to sync to.
+   * @param {string|null} attackKey
+   * @param {{ index: number, fn: () => void }[]} marks
+   */
+  armShowcaseMarks(attackKey, marks) {
+    this._clearAttackContact();
+    const pending = [];
+    for (const mark of marks || []) {
+      if (!mark || typeof mark.fn !== 'function') continue;
+      if (!Number.isInteger(mark.index) || mark.index < 1) continue;
+      pending.push({ index: mark.index, fn: mark.fn, fired: false });
+    }
+    if (!pending.length) return;
+    const token = this._attackContactToken;
+    const ready = !!(attackKey && this._animReady(attackKey));
+    if (!ready || !this.body?.on) return;
+    const finishIfDone = () => {
+      if (!pending.every((item) => item.fired)) return;
+      if (this._attackContactToken !== token) return;
+      const handler = this._attackContactHandler;
+      this._attackContactHandler = null;
+      if (handler && this.body?.off) this.body.off('animationupdate', handler);
+      this._attackContactToken = token + 1;
+    };
+    const fireOne = (mark) => {
+      if (this._attackContactToken !== token || mark.fired) return;
+      mark.fired = true;
+      mark.fn();
+      finishIfDone();
+    };
+    const onUpdate = (anim, animFrame) => {
+      if (this._attackContactToken !== token) return;
+      if (anim?.key !== attackKey) return;
+      const index = shownPhaserIndex(animFrame);
+      if (!Number.isInteger(index)) return;
+      for (const mark of pending) {
+        if (!mark.fired && mark.index === index) fireOne(mark);
+      }
+    };
+    this._attackContactHandler = onUpdate;
+    this.body.on('animationupdate', onUpdate);
+    const showing = this.body.anims?.currentAnim?.key === attackKey
+      ? shownPhaserIndex(this.body.anims.currentFrame)
+      : undefined;
+    if (Number.isInteger(showing)) {
+      for (const mark of pending) {
+        if (!mark.fired && mark.index === showing) fireOne(mark);
+      }
+    }
   }
 
   /** Hurt strip after the white flash. No-op when that sheet is not loaded. */

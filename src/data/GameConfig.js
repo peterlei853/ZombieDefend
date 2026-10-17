@@ -151,10 +151,21 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * when hurt. Stage weapon shove and the feel-booth 2px X knock both
  * skip that body. Other enemies still knock back. Attack hit frame,
  * gold, saves, barricade HP, wave DPS, pets, and the camera stay put.
+ * v0.36.5: feel key 3 on brute leads with `zombie-brute-skill_ground_smash`.
+ * `fx-brute-skill-shock` spawns on the feet at catalog frame 8 (Phaser
+ * index 9). The hero hurt is a wide AoE on catalog frame 13 (Phaser
+ * index 14, ~80% of the 17-frame strip). No smash clip is packed, so
+ * the windup stays silent and the booth hurt cue plays on that hit.
+ * Wave combat has no enemy skill-cast AI, so the smash is feel-only.
+ * Normal attack contact leaves Phaser index 7 (texture cell 6, the end
+ * pose — Tester Fail #117) for the first 1-based index where
+ * index/(N-1) >= 0.8. Eight-frame bites use index 6 (texture cell 5).
+ * Brute noHurtKnockback stays. Gold, saves, barricade HP, wave DPS,
+ * pets, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.4';
+export const APP_VERSION = '0.36.5';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
