@@ -1,0 +1,70 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "fx",
+  "group": "brute-skill",
+  "title": "Brute Ground Shock",
+  "titleZh": "暴君震地衝擊",
+  "description": "Brute skill v2 ground shock for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Sheet 464×231 is a 4×3 row-major grid of 116×77 cells (frames 0–9; the last two cells are empty). Origin (0.5, 32/77) is pixel anchor (58, 32) on the dust/crack ring. Place that anchor on the brute's feet when the skill reaches impact frame 8.",
+  "source": {
+    "tool": "PixelLab VFX Creator",
+    "sourceFolder": "fx/brute-skill",
+    "version": "v2",
+    "pairsWith": "zombie-brute-skill_ground_smash"
+  },
+  "defaults": {
+    "type": "fx",
+    "facing": null
+  },
+  "preview": {
+    "animate": [
+      "fx-brute-skill-shock"
+    ],
+    "thumb": "assets/library/previews/fx/brute-skill/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "fx-brute-skill-shock",
+      "path": "assets/library/fx/brute-skill/fx-brute-skill-shock.png",
+      "frameWidth": 116,
+      "frameHeight": 77,
+      "frames": 10,
+      "frameRate": 12,
+      "loop": false,
+      "grid": [4, 3],
+      "origin": [0.5, 0.4155844155844156],
+      "type": "fx",
+      "tags": ["ground-smash", "v2"],
+      "anchors": {
+        "pixelAnchor": [58, 32],
+        "attach": {
+          "animation": "zombie-brute-skill_ground_smash",
+          "startOnCharacterFrame": 8,
+          "offsetFromCharacterOrigin": [0, 0]
+        }
+      },
+      "note": "Brute skill v2. 10f @ 12 fps, once. 4×3 grid 464×231, row-major, frames 0–9; cells 10–11 empty. Anchor (58, 32) = origin (0.5, 32/77 ≈ 0.4156) on the dust/crack ring. Spawn with that point on the brute feet (offset 0, 0) at skill frame 8. Atlas: fx-brute-skill-shock.json.",
+      "extra": {
+        "version": "v2",
+        "sheet": {
+          "layout": "grid",
+          "columns": 4,
+          "rows": 3,
+          "order": "row-major",
+          "width": 464,
+          "height": 231,
+          "usedFrames": 10,
+          "emptyCells": [10, 11]
+        },
+        "pixellabAnchor": {
+          "kind": "origin",
+          "x": 58,
+          "y": 32,
+          "note": "Pixel anchor on the 116×77 cell. Play origin is (0.5, 32/77)."
+        },
+        "atlas": "assets/library/fx/brute-skill/fx-brute-skill-shock.json"
+      }
+    }
+  ]
+}

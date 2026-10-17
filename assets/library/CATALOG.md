@@ -8,14 +8,14 @@
 | [Hero](#hero) | 3 | 129 |
 | [Pets](#pets) | 17 | 124 |
 | [UI](#ui) | 1 | 51 |
-| [Zombies](#zombies) | 15 | 179 |
+| [Zombies](#zombies) | 15 | 180 |
 | [Bosses](#bosses) | 4 | 39 |
-| [Shared FX](#fx) | 8 | 22 |
+| [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **53** | **605** |
+| **Total** | **54** | **607** |
 
 <a id="hero"></a>
 ## Hero
@@ -573,10 +573,10 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 
 <img src="previews/zombies/brute/preview.gif" alt="brute preview" height="140">
 
-Large 96x96 mini-boss zombie with heavy hurt, part break, blast-back and defeat strips.
+Large mini-boss. Body strips stay 96×96. Brute skill v2 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.
 
-- group `brute` · 15 assets · frame 96x96 · key prefix `zombie-brute-` · manifest [enemies/zombies/brute/manifest.json](enemies/zombies/brute/manifest.json)
-- previews: [all-actions-sheet.png](previews/zombies/brute/all-actions-sheet.png), [unique-actions-sheet.png](previews/zombies/brute/unique-actions-sheet.png), [special-sheet.png](previews/zombies/brute/special-sheet.png), [elemental-hits-sheet.png](previews/zombies/brute/elemental-hits-sheet.png), [special-sequence.gif](previews/zombies/brute/special-sequence.gif)
+- group `brute` · 16 assets · frame 96x96, 132x132 · key prefix `zombie-brute-` · manifest [enemies/zombies/brute/manifest.json](enemies/zombies/brute/manifest.json)
+- previews: [all-actions-sheet.png](previews/zombies/brute/all-actions-sheet.png), [unique-actions-sheet.png](previews/zombies/brute/unique-actions-sheet.png), [special-sheet.png](previews/zombies/brute/special-sheet.png), [elemental-hits-sheet.png](previews/zombies/brute/elemental-hits-sheet.png), [special-sequence.gif](previews/zombies/brute/special-sequence.gif), [skill-ground_smash.gif](previews/zombies/brute/skill-ground_smash.gif)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -595,6 +595,7 @@ Large 96x96 mini-boss zombie with heavy hurt, part break, blast-back and defeat 
 | `zombie-brute-part_break` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-blasted_back` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-defeated` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
+| `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2 ground smash 132. Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
 
 ### Chef Zombie (大廚丧尸)
 
@@ -1028,6 +1029,18 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `zombie-exploder-blast` | 10 | 160x160 | 12 | once | (0.5, 0.5) |  |
+
+### Brute Ground Shock (暴君震地衝擊)
+
+<img src="previews/fx/brute-skill/preview.gif" alt="brute-skill preview" height="140">
+
+Brute skill v2 ground shock for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Sheet 464×231 is a 4×3 row-major grid of 116×77 cells (frames 0–9; the last two cells are empty). Origin (0.5, 32/77) is pixel anchor (58, 32) on the dust/crack ring. Place that anchor on the brute's feet when the skill reaches impact frame 8.
+
+- group `brute-skill` · 1 assets · frame 116x77 · manifest [fx/brute-skill/manifest.json](fx/brute-skill/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `fx-brute-skill-shock` | 10 | 116x77 | 12 | once | (0.5, 0.4155844155844156) | attach to `zombie-brute-skill_ground_smash` frame 8 offset [0, 0] · grid 4×3 row-major · Brute skill v2. 10f @ 12 fps, once. 4×3 grid 464×231, row-major, frames 0–9; cells 10–11 empty. Anchor (58, 32) = origin (0.5, 32/77 ≈ 0.4156) on the dust/crack ring. Spawn with that point on the brute feet (offset 0, 0) at skill frame 8. Atlas: fx-brute-skill-shock.json. |
 
 ### Bullet Hit FX (子彈命中)
 
