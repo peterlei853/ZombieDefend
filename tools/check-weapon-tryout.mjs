@@ -9,6 +9,7 @@ import { MUZZLE_WEST_FRAC, WEAPON_TRAITS } from '../src/assets/heroDeploy.js';
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { WATER_HIT_FX, WeaponSystem } from '../src/systems/WeaponSystem.js';
+import { SoundManager } from '../src/systems/SoundManager.js';
 import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
 import {
   pickWaterGuide,
@@ -321,7 +322,58 @@ assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox 
 assert(stage.includes("weaponImmerse !== 'water'"), 'water immerse does not cycle on SPACE');
 assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
 const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
-assert(audio.includes('syncWaterCharge') && audio.includes('playWaterRelease') && audio.includes('playWaterImpact'), 'charge SFX hooks stay stubbed');
-assert(!audio.includes('sfx-water-charge-loop.mp3') && !audio.includes('sfx-water-release-l1.mp3'), 'the retired charge preview pack is not preloaded');
+const waterSfx = [
+  'sfx-water-charge-l2',
+  'sfx-water-charge-l3',
+  'sfx-water-charge-loop',
+  'sfx-water-release-l1',
+  'sfx-water-release-l2',
+  'sfx-water-release-l3',
+  'sfx-water-impact-l1',
+  'sfx-water-impact-l2',
+  'sfx-water-impact-l3',
+];
+for (const key of waterSfx) {
+  assert(audio.includes(`assets/audio/${key}.mp3`), `${key} is preloaded with the other game cues`);
+}
+const played = [];
+const nodes = [];
+const fake = {
+  sound: {
+    mute: false,
+    locked: false,
+    add(key, cfg) {
+      const node = {
+        key,
+        volume: cfg.volume,
+        loop: !!cfg.loop,
+        playing: false,
+        play() { this.playing = true; played.push(key); },
+        stop() { this.playing = false; },
+        destroy() { this.playing = false; },
+      };
+      nodes.push(node);
+      return node;
+    },
+  },
+  cache: { audio: { exists: () => true } },
+};
+const beds = new SoundManager(fake);
+beds.syncWaterCharge(1);
+beds.syncWaterCharge(1);
+assert(played.filter((key) => key === 'sfx-water-charge-l2').length === 1, 'SPACE down starts one charge-l2');
+assert(played.filter((key) => key === 'sfx-water-charge-loop').length === 1, 'the charge loop does not stack');
+assert(!played.includes('sfx-water-charge-l3'), 'charge-l3 waits until the hold passes 2.5s');
+beds.syncWaterCharge(2);
+assert(played.filter((key) => key === 'sfx-water-charge-l3').length === 1, 'past 2.5s the L2 rise stops and charge-l3 plays');
+assert(nodes.filter((node) => node.key === 'sfx-water-charge-l2' && node.playing).length === 0, 'charge-l2 is stopped once charge-l3 starts');
+beds.syncWaterCharge(3);
+assert(played.filter((key) => key === 'sfx-water-charge-l3').length === 1, 'L3 does not start a second climax');
+beds.playWaterRelease(2);
+assert(played.includes('sfx-water-release-l2'), 'a 2.5s release plays release-l2');
+assert(nodes.filter((node) => node.key.startsWith('sfx-water-charge') && node.playing).length === 0, 'release stops the charge beds');
+beds.playWaterImpact(1);
+beds.playWaterImpact(3);
+assert(played.includes('sfx-water-impact-l1') && played.includes('sfx-water-impact-l3'), 'hits play the impact for the projectile tier');
 
 console.log('weapon try-out ok');

@@ -68,6 +68,16 @@ export const GAME_AUDIO = [
   { key: 'shoot-lightning', url: 'assets/audio/shoot-lightning.mp3' },
   { key: 'shoot-flame', url: 'assets/audio/shoot-flame.mp3' },
   { key: 'shoot-water', url: 'assets/audio/shoot-water.mp3' },
+  // v2 16-bit water Mega Man charge. Sandbox water and stage ?weapon=water.
+  { key: 'sfx-water-charge-l2', url: 'assets/audio/sfx-water-charge-l2.mp3' },
+  { key: 'sfx-water-charge-l3', url: 'assets/audio/sfx-water-charge-l3.mp3' },
+  { key: 'sfx-water-charge-loop', url: 'assets/audio/sfx-water-charge-loop.mp3' },
+  { key: 'sfx-water-release-l1', url: 'assets/audio/sfx-water-release-l1.mp3' },
+  { key: 'sfx-water-release-l2', url: 'assets/audio/sfx-water-release-l2.mp3' },
+  { key: 'sfx-water-release-l3', url: 'assets/audio/sfx-water-release-l3.mp3' },
+  { key: 'sfx-water-impact-l1', url: 'assets/audio/sfx-water-impact-l1.mp3' },
+  { key: 'sfx-water-impact-l2', url: 'assets/audio/sfx-water-impact-l2.mp3' },
+  { key: 'sfx-water-impact-l3', url: 'assets/audio/sfx-water-impact-l3.mp3' },
   { key: 'shoot-frost', url: 'assets/audio/shoot-frost.mp3' },
   { key: 'shoot-handgun', url: 'assets/audio/shoot-handgun.mp3' },
   { key: 'shoot-shotgun', url: 'assets/audio/shoot-shotgun.mp3' },
@@ -384,27 +394,108 @@ export class SoundManager {
   }
 
   /**
-   * PIXELLAB_HOOK: 16-bit water Mega Man cues are not in the library yet.
-   * Expected: charge L2, charge L3, release L1–L3, impact L1–L3.
-   * Silent until that pack is wired. Do not load the retired preview beds.
-   * @param {number} _tier
+   * PIXELLAB_HOOK: 16-bit water charge beds.
+   * SPACE down starts the L2 rise plus one loop underlay.
+   * Past 2.5s the rise stops and the L3 climax replaces it.
+   * One rise and one loop. A second hold does not stack either.
+   * @param {number} tier
    */
-  syncWaterCharge(_tier) {}
+  syncWaterCharge(tier) {
+    if (this._disposed) return;
+    this._startWaterChargeUnderlay();
+    const climax = tier >= 2;
+    const key = climax ? 'sfx-water-charge-l3' : 'sfx-water-charge-l2';
+    const volume = climax ? 0.32 : 0.3;
+    if (this._waterRiseKey === key) return;
+    this._stopWaterRise();
+    this._waterRiseKey = key;
+    this._waterRise = this._addWaterNode(key, volume, false);
+    if (!this._waterRise) this._waterRiseKey = null;
+  }
 
-  /** Drop a charge bed when the hold is cancelled. No-op until the pack lands. */
-  stopWaterChargeLoop() {}
-
-  /**
-   * @param {number} _tier
-   */
-  playWaterRelease(_tier) {
-    this.stopWaterChargeLoop();
+  /** Fade is a hard cut so the release cue is the sound that plays. */
+  stopWaterChargeLoop() {
+    this._stopWaterNode(this._waterLoop);
+    this._waterLoop = null;
+    this._stopWaterRise();
   }
 
   /**
-   * @param {number} _tier
+   * Stop the charge beds and play the release for this tier.
+   * @param {number} tier
    */
-  playWaterImpact(_tier) {}
+  playWaterRelease(tier) {
+    const level = tier >= 3 ? 3 : tier >= 2 ? 2 : 1;
+    this.stopWaterChargeLoop();
+    const volume = level === 3 ? 0.36 : level === 2 ? 0.32 : 0.28;
+    this._cue(`sfx-water-release-l${level}`, volume);
+  }
+
+  /**
+   * Hit cue for the projectile tier. L1 still shows lightning VFX.
+   * @param {number} tier
+   */
+  playWaterImpact(tier) {
+    const level = tier >= 3 ? 3 : tier >= 2 ? 2 : 1;
+    const volume = level === 3 ? 0.36 : level === 2 ? 0.32 : 0.28;
+    this._cue(`sfx-water-impact-l${level}`, volume);
+  }
+
+  _startWaterChargeUnderlay() {
+    if (this._waterLoop) return;
+    this._waterLoop = this._addWaterNode('sfx-water-charge-loop', 0.28, true);
+  }
+
+  _stopWaterRise() {
+    this._stopWaterNode(this._waterRise);
+    this._waterRise = null;
+    this._waterRiseKey = null;
+  }
+
+  /**
+   * @param {string} key
+   * @param {number} volume
+   * @param {boolean} loop
+   */
+  _addWaterNode(key, volume, loop) {
+    const sound = this._sound();
+    if (!sound || !this._cached(key) || sound.locked) return null;
+    try {
+      if (typeof sound.add === 'function') {
+        const node = sound.add(key, { volume, loop: !!loop });
+        if (!node) return null;
+        node.play?.();
+        return node;
+      }
+      sound.play(key, { volume, loop: !!loop });
+      return { loose: true, key };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /** @param {Phaser.Sound.BaseSound|{ loose?: boolean, key?: string }|null|undefined} node */
+  _stopWaterNode(node) {
+    if (!node) return;
+    if (node.loose) {
+      try {
+        this.scene?.sound?.stopByKey?.(node.key);
+      } catch (_) {
+        /* already stopped */
+      }
+      return;
+    }
+    try {
+      node.stop?.();
+    } catch (_) {
+      /* already stopped */
+    }
+    try {
+      node.destroy?.();
+    } catch (_) {
+      /* already destroyed */
+    }
+  }
 
   playHitImpact() {
     this._cue('hit-impact', AUDIO_VOLUME.hit, AUDIO_COOLDOWN_MS.hit);
