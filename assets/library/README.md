@@ -66,7 +66,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Hero FX | `fx-<weapon>-<name>` | `fx-frost-beam`, `fx-sling-dizzy` |
 | Icons | `icon-<weapon>` | `icon-flame` |
 | Shared FX | original key kept | `zombie-exploder-blast`, `fx-brute-skill-shock` |
-| Brute skill | `zombie-brute-skill_ground_smash` | alias `zombie-brute-skill`; 17×132 @ 10 fps, once |
+| Brute skill | `zombie-brute-skill_ground_smash` | alias `zombie-brute-skill`; 17×132 @ 10 fps, once; **v2.1** feet on canvas bottom (`padB=0`) |
 | Shared melee | `fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot` | combat FX in `fx/melee/` (not hero-only) |
 | Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps, burst left → right |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
@@ -220,7 +220,7 @@ Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* 
 
 | Category | Frame | Origin | Facing |
 |---|---|---|---|
-| Zombies | **64×64**. Exceptions: brute body **96×96**, brute skill v2 ground smash **132×132**, profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
+| Zombies | **64×64**. Exceptions: brute body **96×96**, brute skill v2.1 ground smash **132×132** (feet on the canvas bottom, `padB=0`), profession groups `office-worker-v2` / `delivery` / `chef` / `nurse` **84×84**, `zombie-slime-split` 96×64, `zombie-sprinter-blasted_back` / `-tumble` 96×64 | **(0.5, 1.0)**: feet / ground point | **east** (walking right, toward the barricade) |
 | Bosses | **128×128** | **(0.5, 1.0)** | **east** |
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
 | Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76. `player-girl-command` uses the same foot line (shoes end at y=77) | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
@@ -274,15 +274,16 @@ Linked FX keys are listed on each skill in the index (`fx: [...]`). Other in-str
 - `player-girl-lightning-fire`: spawn the bolt on frame 4.
 - `zombie-exploder-explode`: spawn the shared `zombie-exploder-blast` FX at the body.
 
-## Brute skill v2 (ground smash 132)
+## Brute skill v2.1 (ground smash 132, Y-fix)
 
-Enemy #5 (`brute`, PixelLab `c13bb0f5-984d-4b35-9b37-742df531789a`). Body strips stay **96×96**. This is the offensive skill only. Walk, attack, and hurt are unchanged. The parallel slam sheet is not cataloged.
+Enemy #5 (`brute`, PixelLab `c13bb0f5-984d-4b35-9b37-742df531789a`). Body strips stay **96×96**. This is the offensive skill only. Walk, attack, and hurt are unchanged. The parallel slam sheet is not cataloged. The shock FX stays **v2**.
 
-The library has no per-asset version field. **Brute skill v2** is the group description on `enemies/zombies/brute` and on `fx/brute-skill`: ground smash **132×132**.
+**v2.1** is `extra.version` on `zombie-brute-skill_ground_smash` (`yfix: v1-feet-to-bottom`). It is the v2 132×132 art, shifted down per frame so content feet sit on the canvas bottom (`padB=0`), the same foot line as the 96×96 body strips. Origin stays **(0.5, 1)**. Measured shift vs the v2 sheet: frames 0–6 and 14–16 by 20px, frame 13 by 18px, impact frames 7–12 by 11, 8, 7, 5, 5, and 5px. Art pixels are unchanged.
 
 | | Spec |
 |---|---|
 | Primary key | `zombie-brute-skill_ground_smash` (file name). Alias `zombie-brute-skill` → that key (`extra.aliases`; not a second texture). |
+| Version | **v2.1** · `yfix: v1-feet-to-bottom` · `padB=0` on every frame |
 | Skill body | 17 frames · **132×132** · horizontal strip 2244×132 · east · origin **(0.5, 1)** · 10 fps · once |
 | Preview | `previews/zombies/brute/skill-ground_smash.gif` |
 | Ground FX | `fx-brute-skill-shock` · 10 frames @ 12 fps · once · cell **116×77** · sheet **464×231** is a **4×3** row-major grid (frames 0–9; cells 10–11 empty) |
