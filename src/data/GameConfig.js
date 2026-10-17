@@ -192,10 +192,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * (115px forward of the anchor); reaching her there is a longer strip,
  * not a nudge off the fist. Gold, saves, barricade max HP, and combat
  * FX 6–9 stay put.
+ * v0.36.10: Pipeline's east lobe is the same path, cell 225×131 (44px
+ * of right pad on the 181 cell). Anchor pixel (62, 80) is unchanged, so
+ * the origin is (62/225, 80/131). Max east opaque is 157px forward of
+ * that anchor. Spawn stays +46 forward / 8 up. No scale, no nudge.
+ * Pixel overlap, smash-only skill 1, gold, saves, barricade max HP, and
+ * combat FX 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.9';
+export const APP_VERSION = '0.36.10';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

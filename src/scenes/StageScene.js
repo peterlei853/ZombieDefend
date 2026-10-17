@@ -691,10 +691,9 @@ export default class StageScene extends Phaser.Scene {
    * often before the widest lobe. Gold and the save stay put. The
    * shock sprite is the one spawned at impact frame 8.
    *
-   * The 181×131 lobe's furthest opaque pixel is 115px forward of the
-   * anchor. On the default booth lane that covers the post and stops
-   * short of the girl's opaque body. A longer east lobe is Pipeline
-   * art; the anchor stays on the fist.
+   * The 225×131 lobe's furthest opaque pixel is 157px forward of the
+   * anchor (44px of east pad on the old 181 cell). That reaches the
+   * default booth girl. The anchor stays on the fist; spawn is not nudged.
    * @param {Zombie} z
    */
   _onFeelSmashAoe(z) {
@@ -747,10 +746,11 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Shock on the smash hand. The burst anchor is pixel (62, 80) of the
-   * 181×131 cell, placed +46px forward and 8px up from the feet (east),
+   * 225×131 cell, placed +46px forward and 8px up from the feet (east),
    * with X mirrored when the body is flipped. Other strips still use
    * `anchors.impactPoint` from the sole. Depth sits above the sprite.
-   * The sheet is not scaled: the larger cell is the range.
+   * The sheet is not scaled and the spawn is not nudged: the wider cell
+   * is the longer east lobe.
    * @param {Zombie} z
    * @param {string} animKey
    */

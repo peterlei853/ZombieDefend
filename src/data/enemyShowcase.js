@@ -206,14 +206,15 @@ export function phaserIndexForCatalogFrame(catalogFrame) {
 /** Feel key 3 / skill 1 on the brute. The only strip that key plays. */
 export const BRUTE_SMASH_ANIM = 'zombie-brute-skill_ground_smash';
 
-/** Ground shock key. The catalog path stays this file; the v3 cell is 181×131. */
+/** Ground shock key. The catalog path stays this file; the v3.1 cell is 225×131. */
 export const BRUTE_SHOCK_KEY = 'fx-brute-skill-shock';
 
 /**
  * 2PL handoff cell. Pixel (62, 80) is the burst center.
  * Phaser origin is that point as a fraction of the cell.
+ * v3.1 adds 44px of east pad (181 → 225). The anchor pixel does not move.
  */
-export const BRUTE_SHOCK_FRAME_W = 181;
+export const BRUTE_SHOCK_FRAME_W = 225;
 export const BRUTE_SHOCK_FRAME_H = 131;
 export const BRUTE_SHOCK_ANCHOR_X = 62;
 export const BRUTE_SHOCK_ANCHOR_Y = 80;
@@ -237,7 +238,8 @@ export function bruteShockOrigin() {
  * World point where the shock anchor sits: the smash hand, not the feet.
  * `offset` is catalog `offsetFromCharacterOrigin` in frame px, Phaser y-down
  * (east `[46, -8]`). `flipX` mirrors X only. Scale is the body display scale.
- * There is no extra range multiplier; the 181×131 cell is the +50% sheet.
+ * There is no extra range multiplier and no spawn nudge. The 225×131
+ * cell is the longer east lobe; the hand offset stays +46 / 8 up.
  * @param {number} feetX
  * @param {number} feetY
  * @param {number} scale

@@ -57,6 +57,8 @@
  * No 1.5× scale. Hurt stays opaque-pixel overlap.
  * v0.36.9: the hurt test includes every shock cell at that pose, and a
  * post overlap pops the barricade damage number. Anchor stays on the fist.
+ * v0.36.10: the shock cell is 225×131. Origin is (62/225, 80/131).
+ * Hand offset stays +46 / 8 up. No scale and no spawn nudge.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -158,8 +160,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.9' && APP_VERSION === '0.36.9', 'package and APP_VERSION are 0.36.9');
-assert(html.includes('v0.36.9'), 'document title is v0.36.9');
+assert(pkg.version === '0.36.10' && APP_VERSION === '0.36.10', 'package and APP_VERSION are 0.36.10');
+assert(html.includes('v0.36.10'), 'document title is v0.36.10');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -984,7 +986,7 @@ skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 15 });
 assert(skippedAoe === true, 'skipping catalog cell 13 still flinches once the strip is past it');
 assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock still spawns from the impact hook');
 assert(stageSrc.includes('bruteShockHandPoint'), 'smash shock is placed on the hand');
-assert(stageSrc.includes('bruteShockOrigin'), 'smash shock uses the 181×131 burst anchor');
+assert(stageSrc.includes('bruteShockOrigin'), 'smash shock uses the 225×131 burst anchor');
 assert(stageSrc.includes('z.body.y + oy * scale'), 'non-shock skills still use the catalog impact point');
 assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');
 const aoeAt = stageSrc.indexOf('_onFeelSmashAoe');
@@ -1011,16 +1013,16 @@ assert(smashAsset?.origin?.[0] === 0.5 && smashAsset?.origin?.[1] === 1, 'smash 
 assert(smashAsset?.timing?.impactFrame === 8 && smashAsset?.timing?.gameplayHitFrame === 13, 'smash timing stays impact 8 / hit 13');
 assert(shockAsset?.path === 'assets/library/fx/brute-skill/fx-brute-skill-shock.png', 'shock path stays the catalog file');
 assert(shockAsset?.key === BRUTE_SHOCK_KEY && shockAsset?.frames === 10 && shockAsset?.frameRate === 12, 'shock stays 10 frames at 12 fps');
-assert(shockAsset?.frameWidth === 181 && shockAsset?.frameHeight === 131, 'shock cell is 181×131');
+assert(shockAsset?.frameWidth === 225 && shockAsset?.frameHeight === 131, 'shock cell is 225×131');
 assert(shockAsset?.anchors?.pixelAnchor?.[0] === 62 && shockAsset?.anchors?.pixelAnchor?.[1] === 80, 'shock pixel anchor is (62, 80)');
 const catalogOffset = shockAsset?.anchors?.attach?.offsetFromCharacterOrigin;
 assert(catalogOffset?.[0] === 46 && catalogOffset?.[1] === -8, 'catalog hand offset is east +46 / 8 up');
-assert(Math.abs(shockAsset.origin[0] - 62 / 181) < 1e-12 && Math.abs(shockAsset.origin[1] - 80 / 131) < 1e-12, 'catalog origin is (62/181, 80/131)');
-assert(BRUTE_SHOCK_FRAME_W === 181 && BRUTE_SHOCK_FRAME_H === 131, 'live cell is 181×131');
+assert(Math.abs(shockAsset.origin[0] - 62 / 225) < 1e-12 && Math.abs(shockAsset.origin[1] - 80 / 131) < 1e-12, 'catalog origin is (62/225, 80/131)');
+assert(BRUTE_SHOCK_FRAME_W === 225 && BRUTE_SHOCK_FRAME_H === 131, 'live cell is 225×131');
 assert(BRUTE_SHOCK_ANCHOR_X === 62 && BRUTE_SHOCK_ANCHOR_Y === 80, 'live anchor pixel is (62, 80)');
 assert(BRUTE_SHOCK_HAND_FORWARD === 46 && BRUTE_SHOCK_HAND_UP === 8, 'hand offset is +46 forward and 8 up');
 const origin = bruteShockOrigin();
-assert(origin[0] === 62 / 181 && origin[1] === 80 / 131, 'Phaser origin is (62/181, 80/131)');
+assert(origin[0] === 62 / 225 && origin[1] === 80 / 131, 'Phaser origin is (62/225, 80/131)');
 const east = bruteShockHandPoint(100, 200, 1, false);
 assert(east.x === 146 && east.y === 192, 'east hand is +46 x and 8 px up');
 const west = bruteShockHandPoint(100, 200, 1, true);
