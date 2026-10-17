@@ -31,8 +31,10 @@ function check(name, ok) {
 
 check('shop order is six', OWNED_WEAPON_ORDER.join(',') === 'water,sling,bubble,lightning,frost,flame');
 check('stage 1 grants all six', grantStageWeapons(1, []).join(',') === OWNED_WEAPON_ORDER.join(','));
+check('stage 1 ignores a short list', grantStageWeapons(1, ['sling']).join(',') === OWNED_WEAPON_ORDER.join(','));
 check('stage 2 keeps owned order', orderWeapons(['flame', 'water']).join(',') === 'water,flame');
 check('stage 2 drops unknown', grantStageWeapons(2, ['nope', 'sling']).join(',') === 'sling');
+check('empty later stage still fields six', grantStageWeapons(5, []).join(',') === OWNED_WEAPON_ORDER.join(','));
 
 for (let n = 1; n <= 6; n++) {
   check(`arc ${n}`, frontArcFor(n).length === n && FRONT_ARC[n].length === n && BACK_Y[n].length === n);

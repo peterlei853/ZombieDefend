@@ -234,14 +234,17 @@ export function orderWeapons(ids) {
 }
 
 /**
- * Stage 1 playtest always deploys all six. Later stages keep the owned list
- * in shop order. Unknown ids are dropped.
+ * Stage 1 playtest always deploys all six. Later stages keep a non-empty
+ * owned list in shop order. Unknown ids are dropped. An empty list (a
+ * title pick of stage 2–5 before any shop purchase) fields the same six
+ * so that stage can be played.
  * @param {number} stage
  * @param {string[]|null|undefined} owned
  */
 export function grantStageWeapons(stage, owned) {
-  if (stage === 1) return OWNED_WEAPON_ORDER.slice();
-  return orderWeapons(owned);
+  const ordered = orderWeapons(owned);
+  if (stage === 1 || ordered.length === 0) return OWNED_WEAPON_ORDER.slice();
+  return ordered;
 }
 
 /**

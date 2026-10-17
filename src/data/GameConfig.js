@@ -198,10 +198,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * that anchor. Spawn stays +46 forward / 8 up. No scale, no nudge.
  * Pixel overlap, smash-only skill 1, gold, saves, barricade max HP, and
  * combat FX 6–9 stay put.
+ * v0.36.11: main Stage is five single-type stages. Stage N spawns only
+ * roster id N (office-worker-v2, delivery, chef, nurse, brute). The
+ * title picks any of the five. Shop Next advances until stage 5, then
+ * returns to the title. Gold, saves, barricade max HP, wave HP / speed /
+ * DPS / counts, and combat FX 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.10';
+export const APP_VERSION = '0.36.11';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
