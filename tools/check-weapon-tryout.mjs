@@ -35,9 +35,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.14', 'APP_VERSION is 0.36.14');
-assert(pkg.version === '0.36.14', 'package.json tracks 0.36.14');
-assert(html.includes('ZombieDefend v0.36.14'), 'title tracks 0.36.14');
+assert(APP_VERSION === '0.36.15', 'APP_VERSION is 0.36.15');
+assert(pkg.version === '0.36.15', 'package.json tracks 0.36.15');
+assert(html.includes('ZombieDefend v0.36.15'), 'title tracks 0.36.15');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -243,5 +243,50 @@ assert(spawnFn.includes('waterLeadAim') && spawnFn.includes('marchVx'), 'water l
 assert(weaponSystem.includes('_guideWater'), 'water keeps guiding onto a living body ahead');
 assert(weaponSystem.includes('spriteSweepContact'), 'water hits on opaque contact, including the step that crosses');
 assert(!spawnFn.includes('_chainLightning'), 'the water spawn path does not chain');
+
+const flying = {
+  weaponId: 'water',
+  guideId: 9,
+  vx: -376,
+  vy: 0,
+  gfx: { x: 900, y: 400, active: true },
+};
+guns.armHits([{ id: 9, x: 1000, y: 400, alive: false, bodyCenterY: 400 }], []);
+guns._guideWater(flying);
+assert(flying.vx === -376 && flying.vy === 0, 'a dead guide keeps the last heading');
+assert(flying.gfx.active === true && flying.guideId == null, 'a dead guide does not destroy the shot');
+
+const steered = {
+  weaponId: 'water',
+  guideId: null,
+  vx: -100,
+  vy: 200,
+  gfx: { x: 900, y: 400, active: true },
+};
+guns.armHits([{
+  id: 1,
+  x: 700,
+  y: 400,
+  alive: true,
+  bodyCenterY: 400,
+  marchVx() { return 0; },
+}], []);
+guns._guideWater(steered);
+assert(steered.guideId === 1, 'a living body ahead is still the guide');
+assert(steered.vx < 0 && Math.abs(steered.vy) < 1, 'the shot still turns onto that body');
+
+scene.cameras = { main: { scrollX: 0, scrollY: 0, width: 1280, height: 720 } };
+const onTarget = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water', traveled: 226 };
+assert(guns.shouldRetireBullet(onTarget) === false, 'a shot still on the sandbox view is not culled at the stage gutter');
+const offLeft = { gfx: { x: -90, y: 369, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(offLeft) === true, 'a shot past the left of the view is retired');
+scene.cameras = { main: { scrollX: 832, scrollY: 0, width: 1280, height: 720 } };
+const stageGutter = { gfx: { x: 700, y: 400, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(stageGutter) === true, 'a shot left of the stage camera is retired off screen');
+const stageLive = { gfx: { x: 900, y: 400, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(stageLive) === false, 'a shot still inside the stage view keeps flying');
+delete scene.cameras;
+const headless = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(headless) === true, 'without a camera the stage gutter cull still applies');
 
 console.log('weapon try-out ok');

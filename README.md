@@ -6,7 +6,7 @@ Phaser 3 horizontal tower-defense demo.
 
 - **Demo (GitHub Pages):** https://peterlei853.github.io/ZombieDefend/
 - Local: `npm start` then open http://localhost:5173
-- **Sandbox weapons (v0.36.14):** `/sandbox/weapons.html?weapon=water` (also `sling`, `bubble`, `lightning`, `frost`, `flame`) floats that gun in front of the girl at its 56×56 catalog size and fires its projectile into a living target. Keys 1–6 switch guns. Water keeps `fx-water-proj`. It aims ahead of a marching body and keeps guiding onto a living body still ahead, so the opaque cores meet. On that contact it plays `fx-lightning-impact` at the point and does not play splash, wet-ground, or other water hit sheets, and it does not chain. The page does not draw a tower or fence cradle. Stage mounts, gold, saves, barricade HP, and the five-stage roster stay as they are.
+- **Sandbox weapons (v0.36.15):** `/sandbox/weapons.html?weapon=water` (also `sling`, `bubble`, `lightning`, `frost`, `flame`) floats that gun in front of the girl at its 56×56 catalog size and fires its projectile into a living target. Keys 1–6 switch guns. Water keeps `fx-water-proj`. It aims ahead of a marching body and keeps guiding onto a living body still ahead, so the opaque cores meet. A shot whose guide is gone keeps that heading until it hits or leaves the camera — it is not dropped on the stage spawn line while it is still on screen. On contact it plays `fx-lightning-impact` at the point and does not play splash, wet-ground, or other water hit sheets, and it does not chain. The page does not draw a tower or fence cradle. Stage mounts, gold, saves, barricade HP, and the five-stage roster stay as they are.
 
 ## Controls (demo slice)
 
