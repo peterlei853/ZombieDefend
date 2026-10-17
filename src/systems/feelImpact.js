@@ -1,4 +1,5 @@
 import { playLibraryFx } from '../assets/libraryAssets.js';
+import { skipsHurtKnockback } from '../assets/zombieSprites.js';
 
 /**
  * Feel-booth bullet and melee impact.
@@ -7,7 +8,8 @@ import { playLibraryFx } from '../assets/libraryAssets.js';
  *
  * Key 1 and key 4 share a 40ms monster hitstop, a 40ms white flash
  * (applied by the caller via flashMs), and a 2px X shove along the shot
- * (player → enemy, west by default). Key 4 also sprays 8–12 sparks.
+ * (player → enemy, west by default). Brute (`noHurtKnockback`) skips that
+ * shove and stays planted. Key 4 also sprays 8–12 sparks.
  * Key 1 does not plan or spawn a spark, cone, crescent, or hurt sheet.
  * The hurt sheet is melee-only (`hurtStrip: true` on takeDamage).
  * Key 4 plays `fx-slash-ninja` at the body center, rotation 0, and
@@ -141,9 +143,11 @@ export function playFeelImpact(scene, zombie, opts = {}) {
   const shot = Number.isFinite(opts.dirX) ? (opts.dirX >= 0 ? 1 : -1) : feelImpactDirX(opts.playerX, body.x);
   const hitX = body.x;
   const hitY = feelBodyY(zombie, body);
-  const knock = feelKnockOffset(shot);
-  body.x += knock.x;
-  body.y += knock.y;
+  if (!skipsHurtKnockback(zombie)) {
+    const knock = feelKnockOffset(shot);
+    body.x += knock.x;
+    body.y += knock.y;
+  }
   zombie._lastX = body.x;
   zombie._lastY = body.y;
   zombie._syncBars?.();

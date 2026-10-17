@@ -88,7 +88,8 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * and skips the wave queue. `?feel=1` with that id arms keys 1/2/3/4/R
  * (and the matching chips) for ranged hit, hurt, skill, melee, and reset.
  * Key 1 and key 4 share a 40ms hitstop, white flash, and a 2px X
- * knockback. Key 4 also sprays impact sparks, plays the hurt sheet, and
+ * knockback. Brute (`noHurtKnockback`) skips that shove and stays planted.
+ * Key 4 also sprays impact sparks, plays the hurt sheet, and
  * plays `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
  * Key 1 does not spray sparks and does not play the hurt sheet (its
  * first frame bakes a yellow crescent on the right of the body).
@@ -568,7 +569,8 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Ranged (key 1) or melee (key 4). Same hitstop, flash, and 2px X
-   * knockback. Melee also sprays sparks, plays the hurt sheet, and plays
+   * knockback. Brute (`noHurtKnockback`) skips that shove. Melee also
+   * sprays sparks, plays the hurt sheet, and plays
    * `fx-slash-ninja` at the body center and `sfx-slash-ninja`.
    * Key 1 does not spray sparks and does not play the hurt sheet.
    * @param {boolean} melee

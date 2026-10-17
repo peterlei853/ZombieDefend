@@ -40,6 +40,8 @@
  * v0.36.3: that beat moves to about 80% of the strip (8 frames → Phaser
  * frame 7, texture cell 6, midpoint ~81%). Bare and short strips use the
  * same fraction. slime-mini still reacts at once. No body X lunge.
+ * v0.36.4: brute (`noHurtKnockback`) stays planted on key 1, key 4, and
+ * the stage weapon shove. Other enemies still take the 2px X knock.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -91,7 +93,7 @@ import {
 } from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME, GAME_AUDIO, preloadGameAudio } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
-import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS } from '../src/assets/zombieSprites.js';
+import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS, skipsHurtKnockback } from '../src/assets/zombieSprites.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 
@@ -128,8 +130,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.3' && APP_VERSION === '0.36.3', 'package and APP_VERSION are 0.36.3');
-assert(html.includes('v0.36.3'), 'document title is v0.36.3');
+assert(pkg.version === '0.36.4' && APP_VERSION === '0.36.4', 'package and APP_VERSION are 0.36.4');
+assert(html.includes('v0.36.4'), 'document title is v0.36.4');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -336,6 +338,7 @@ const booth = {
         setBlendMode(mode) { row.blend = mode; },
         setRotation(rotation) { row.rotation = rotation; },
         once() {},
+        destroy() { this.active = false; },
         active: true,
       };
     },
@@ -367,6 +370,89 @@ const ranged = playFeelImpact(booth, { body: rangedBody, displayHalf: 20, bodyCe
 assert(ranged === true && spawned.length === rangedSpawned, 'key 1 still spawns no slash strip');
 assert(sparks === sparksBeforeRanged, 'key 1 does not spray the yellow spark cone');
 assert(slashCues.length === 2, 'key 1 does not play the slash cue');
+/**
+ * The 40ms hitstop kicks the body immediately, then returns it to the
+ * post-knock home. Flush those timers so the assertion sees the planted X.
+ * @param {typeof booth} scene
+ * @param {{ x: number, y: number }} target
+ * @param {{ melee?: boolean, dirX?: number }} opts
+ */
+function playSettled(scene, target, opts) {
+  /** @type {Function[]} */
+  const later = [];
+  const clocked = {
+    ...scene,
+    time: { delayedCall(_ms, fn) { later.push(fn); } },
+  };
+  const played = playFeelImpact(clocked, target, opts);
+  for (const fn of later) fn();
+  return played;
+}
+const settledBody = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const settled = playSettled(
+  booth,
+  { body: settledBody, displayHalf: 20, bodyCenterY: 210, _syncBars() {} },
+  { melee: false, dirX: -1 },
+);
+assert(settled === true && settledBody.x === 398 && settledBody.y === 240, 'key 1 still shoves a normal enemy 2px west');
+assert(ZOMBIE_LIBRARY_SKINS.brute.noHurtKnockback === true, 'brute catalog sets noHurtKnockback');
+for (const [id, def] of Object.entries(ZOMBIE_LIBRARY_SKINS)) {
+  if (id === 'brute') continue;
+  assert(def.noHurtKnockback !== true, `${id} still takes hurt knockback`);
+}
+for (const [id, def] of Object.entries(ZOMBIE_BOSS_SKINS)) {
+  assert(def.noHurtKnockback !== true, `${id} still takes hurt knockback`);
+}
+assert(skipsHurtKnockback({ skin: ZOMBIE_LIBRARY_SKINS.brute }) === true, 'catalog brute skips the hurt shove');
+assert(skipsHurtKnockback({ skin: ZOMBIE_LIBRARY_SKINS.nurse }) === false, 'catalog nurse still knocks back');
+assert(skipsHurtKnockback({ skinId: 'brute' }) === true, 'a brute id skips the hurt shove');
+assert(skipsHurtKnockback({ noHurtKnockback: true }) === true, 'the instance flag skips the hurt shove');
+const plantedBody = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const sparksBeforePlant = sparks;
+const spawnedBeforePlant = spawned.length;
+const planted = playSettled(
+  booth,
+  { body: plantedBody, displayHalf: 20, bodyCenterY: 210, noHurtKnockback: true, _syncBars() {} },
+  { melee: false, dirX: -1 },
+);
+assert(planted === true && plantedBody.x === 400 && plantedBody.y === 240, 'brute key 1 stays planted');
+assert(spawned.length === spawnedBeforePlant && sparks === sparksBeforePlant, 'brute key 1 still spawns no slash and no sparks');
+const plantedMelee = { active: true, x: 400, y: 240, depth: 3, scaleX: 1, anims: { timeScale: 1 } };
+const meleeBeforePlant = spawned.length;
+assert(
+  playSettled(
+    booth,
+    { body: plantedMelee, displayHalf: 20, bodyCenterY: 210, skin: ZOMBIE_LIBRARY_SKINS.brute, _syncBars() {} },
+    { melee: true, dirX: -1 },
+  ) === true,
+  'brute key 4 still plays the hit',
+);
+assert(plantedMelee.x === 400 && plantedMelee.y === 240, 'brute key 4 stays planted');
+assert(spawned.length === meleeBeforePlant + 1 && spawned.at(-1).key === 'fx-slash-ninja' && spawned.at(-1).x === 400, 'brute slash stays on the planted body');
+function knockStub(flag) {
+  const z = Object.create(Zombie.prototype);
+  z.alive = true;
+  z.noHurtKnockback = flag;
+  z.body = { x: 200, y: 100, setDepth() {} };
+  z.knockbackMult = 1;
+  z.laneY = 100;
+  z.atBarricade = false;
+  z.scene = { tweens: { killTweensOf() {} } };
+  z._syncBars = () => {};
+  z._applyDepth = () => {};
+  return z;
+}
+const bruteStage = knockStub(true);
+bruteStage.applyKnockback(12);
+assert(bruteStage.body.x === 200 && bruteStage.body.y === 100, 'stage hurt knockback skips brute');
+const nurseStage = knockStub(false);
+nurseStage.skin = ZOMBIE_LIBRARY_SKINS.nurse;
+nurseStage.applyKnockback(12);
+assert(nurseStage.body.x === 188 && nurseStage.body.y === 100, 'stage hurt knockback still shoves other enemies');
+const petFn = zombieSrc.slice(zombieSrc.indexOf('beginPetSlide(pixels'), zombieSrc.indexOf('\n  update('));
+assert(!petFn.includes('skipsHurtKnockback') && !petFn.includes('noHurtKnockback'), 'pet slide is not gated by the brute flag');
+assert(feelSrc.includes('skipsHurtKnockback'), 'feel booth reads the hurt-knockback flag');
+assert(zombieSrc.includes('if (skipsHurtKnockback(this)) return;'), 'stage applyKnockback reads the hurt-knockback flag');
 assert(zombieSrc.includes('flashMs'), 'feel hits can flash for 40ms without moving JUICE.HIT_FLASH_MS');
 const damageFn = zombieSrc.slice(zombieSrc.indexOf('takeDamage(amount'), zombieSrc.indexOf('\n  playShowcaseStrip'));
 assert(damageFn.includes('hit.hurtStrip === true'), 'the hurt sheet plays only when melee opts in');
