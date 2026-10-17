@@ -4,11 +4,12 @@
   "group": "brute-skill",
   "title": "Brute Ground Shock",
   "titleZh": "暴君震地衝擊",
-  "description": "Brute skill v2 ground shock for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Sheet 464×231 is a 4×3 row-major grid of 116×77 cells (frames 0–9; the last two cells are empty). Origin (0.5, 32/77) is pixel anchor (58, 32) on the dust/crack ring. Place that anchor on the brute's feet when the skill reaches impact frame 8.",
+  "description": "Brute skill shock v3 for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Cell 181×131. Sheet 724×393 is a 4×3 row-major grid (frames 0–9; cells 10–11 empty). Origin (62/181, 80/131) is pixel anchor (62, 80) on the burst. Place that anchor on the fist at impact frame 8: east +46 forward / 8 up from the feet (Phaser y-down −8). flipX mirrors X.",
   "source": {
     "tool": "PixelLab VFX Creator",
     "sourceFolder": "fx/brute-skill",
-    "version": "v2",
+    "version": "v3",
+    "pixellabEffectId": "b41a094a-9f87-4f6c-9c43-761fd0be9e45",
     "pairsWith": "zombie-brute-skill_ground_smash"
   },
   "defaults": {
@@ -27,41 +28,46 @@
     {
       "key": "fx-brute-skill-shock",
       "path": "assets/library/fx/brute-skill/fx-brute-skill-shock.png",
-      "frameWidth": 116,
-      "frameHeight": 77,
+      "frameWidth": 181,
+      "frameHeight": 131,
       "frames": 10,
       "frameRate": 12,
       "loop": false,
       "grid": [4, 3],
-      "origin": [0.5, 0.4155844155844156],
+      "origin": [0.3425414364640884, 0.6106870229007634],
       "type": "fx",
-      "tags": ["ground-smash", "v2"],
+      "tags": ["ground-smash", "v3"],
       "anchors": {
-        "pixelAnchor": [58, 32],
+        "pixelAnchor": [62, 80],
         "attach": {
           "animation": "zombie-brute-skill_ground_smash",
           "startOnCharacterFrame": 8,
-          "offsetFromCharacterOrigin": [0, 0]
+          "offsetFromCharacterOrigin": [46, -8]
         }
       },
-      "note": "Brute skill v2. 10f @ 12 fps, once. 4×3 grid 464×231, row-major, frames 0–9; cells 10–11 empty. Anchor (58, 32) = origin (0.5, 32/77 ≈ 0.4156) on the dust/crack ring. Spawn with that point on the brute feet (offset 0, 0) at skill frame 8. Atlas: fx-brute-skill-shock.json.",
+      "note": "Brute skill shock v3. 10f @ 12 fps, once. Cell 181×131. 4×3 grid 724×393, row-major, frames 0–9; cells 10–11 empty. Anchor (62, 80) = origin (62/181, 80/131 ≈ 0.3425, 0.6107) on the burst. Spawn at impact frame 8 so that anchor sits on the fist: east +46 forward / 8 up from the feet (offset [46, -8], Phaser y-down). flipX mirrors X (west [-46, -8]) and mirrors this asymmetric origin x. Path key unchanged. Atlas: fx-brute-skill-shock.json. Spawn wire stays with Gameplay.",
       "extra": {
-        "version": "v2",
+        "version": "v3",
         "sheet": {
           "layout": "grid",
           "columns": 4,
           "rows": 3,
           "order": "row-major",
-          "width": 464,
-          "height": 231,
+          "width": 724,
+          "height": 393,
           "usedFrames": 10,
           "emptyCells": [10, 11]
         },
         "pixellabAnchor": {
-          "kind": "origin",
-          "x": 58,
-          "y": 32,
-          "note": "Pixel anchor on the 116×77 cell. Play origin is (0.5, 32/77)."
+          "kind": "feet",
+          "x": 62,
+          "y": 80,
+          "note": "PixelLab labels the anchor feet. Treat it as the impact origin on the 181×131 cell. Play origin is (62/181, 80/131). Place it on the fist, not the character feet."
+        },
+        "handSpawn": {
+          "from": "feet",
+          "east": [46, -8],
+          "note": "46px forward, 8px up (Phaser y-down). flipX mirrors X."
         },
         "atlas": "assets/library/fx/brute-skill/fx-brute-skill-shock.json"
       }
