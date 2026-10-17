@@ -55,6 +55,8 @@
  * v0.36.8: that shock anchor moves to the smash hand (+46 forward, 8 up,
  * X mirrored when flipped). Origin is pixel (62, 80) on the 181×131 cell.
  * No 1.5× scale. Hurt stays opaque-pixel overlap.
+ * v0.36.9: the hurt test includes every shock cell at that pose, and a
+ * post overlap pops the barricade damage number. Anchor stays on the fist.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -156,8 +158,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.8' && APP_VERSION === '0.36.8', 'package and APP_VERSION are 0.36.8');
-assert(html.includes('v0.36.8'), 'document title is v0.36.8');
+assert(pkg.version === '0.36.9' && APP_VERSION === '0.36.9', 'package and APP_VERSION are 0.36.9');
+assert(html.includes('v0.36.9'), 'document title is v0.36.9');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -985,7 +987,12 @@ assert(stageSrc.includes('bruteShockHandPoint'), 'smash shock is placed on the h
 assert(stageSrc.includes('bruteShockOrigin'), 'smash shock uses the 181×131 burst anchor');
 assert(stageSrc.includes('z.body.y + oy * scale'), 'non-shock skills still use the catalog impact point');
 assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');
-assert(stageSrc.includes('spritesTouch'), 'AoE hurt uses shock pixel contact');
+const aoeAt = stageSrc.indexOf('_onFeelSmashAoe');
+const aoeFn = stageSrc.slice(aoeAt, stageSrc.indexOf('_playSkillFx(', aoeAt));
+assert(aoeFn.includes('spritesTouchAnyFrame'), 'AoE hurt uses every shock cell, not a circle');
+assert(aoeFn.includes('showDamageText') && aoeFn.includes('DAMAGE_COLORS.barricade'), 'a post overlap pops the barricade number');
+assert(aoeFn.includes('applyDamage'), 'a post overlap deducts barricade HP');
+assert(!aoeFn.includes('BARRICADE_MAX_HP'), 'the smash does not rewrite max HP');
 assert(stageSrc.includes('fx-brute-skill-shock'), 'the kept sprite is the brute shock');
 assert(stageSrc.includes('fieldPets'), 'field pets are shock targets');
 assert(stageSrc.includes('barricade?.posts'), 'barricade posts are shock targets');

@@ -109,17 +109,18 @@ function textureImageData(texture) {
 }
 
 /**
- * Alpha reader for the sprite's current frame, or null when the texture
- * cannot be sampled. A filled shape with no frame is opaque across its box.
+ * Alpha reader for one texture frame at the sprite's current pose, or null
+ * when that frame cannot be sampled. A filled shape with no frame is opaque
+ * across its box.
  * @param {Phaser.GameObjects.Sprite|Phaser.GameObjects.Image|Phaser.GameObjects.Rectangle|null|undefined} sprite
+ * @param {Phaser.Textures.Frame|null|undefined} [frame]
  */
-export function pixelBodyFromSprite(sprite) {
+function pixelBodyFromFrame(sprite, frame) {
   if (!sprite || sprite.active === false) return null;
   const displayWidth = Math.abs(Number(sprite.displayWidth) || Number(sprite.width) || 0);
   const displayHeight = Math.abs(Number(sprite.displayHeight) || Number(sprite.height) || 0);
   if (!(displayWidth > 0) || !(displayHeight > 0)) return null;
   if (!Number.isFinite(sprite.x) || !Number.isFinite(sprite.y)) return null;
-  const frame = sprite.frame;
   const frameWidth = frame?.realWidth || frame?.width || frame?.cutWidth;
   const frameHeight = frame?.realHeight || frame?.height || frame?.cutHeight;
   /** @type {((fx: number, fy: number) => number)|null} */
@@ -140,7 +141,7 @@ export function pixelBodyFromSprite(sprite) {
       if (sx < 0 || sy < 0 || sx >= fullW || sy >= data.height) return 0;
       return bytes[(sy * fullW + sx) * 4 + 3] || 0;
     };
-  } else if (typeof sprite.setFillStyle === 'function' || typeof sprite.fillColor === 'number') {
+  } else if (!frame && (typeof sprite.setFillStyle === 'function' || typeof sprite.fillColor === 'number')) {
     fw = Math.max(1, Math.round(displayWidth));
     fh = Math.max(1, Math.round(displayHeight));
     alphaAt = () => 255;
@@ -162,6 +163,32 @@ export function pixelBodyFromSprite(sprite) {
 }
 
 /**
+ * Alpha reader for the sprite's current frame, or null when the texture
+ * cannot be sampled. A filled shape with no frame is opaque across its box.
+ * @param {Phaser.GameObjects.Sprite|Phaser.GameObjects.Image|Phaser.GameObjects.Rectangle|null|undefined} sprite
+ */
+export function pixelBodyFromSprite(sprite) {
+  return pixelBodyFromFrame(sprite, sprite?.frame);
+}
+
+/**
+ * Cells of the playing strip. The base texture is not a cell.
+ * @param {Phaser.GameObjects.Sprite|null|undefined} sprite
+ * @returns {Phaser.Textures.Frame[]}
+ */
+function animFramesOf(sprite) {
+  const list = sprite?.anims?.currentAnim?.frames;
+  if (Array.isArray(list) && list.length) {
+    const frames = [];
+    for (const item of list) {
+      if (item?.frame) frames.push(item.frame);
+    }
+    if (frames.length) return frames;
+  }
+  return sprite?.frame ? [sprite.frame] : [];
+}
+
+/**
  * True when the current frames share an opaque world pixel.
  * @param {Phaser.GameObjects.GameObject|null|undefined} a
  * @param {Phaser.GameObjects.GameObject|null|undefined} b
@@ -171,4 +198,22 @@ export function spritesTouch(a, b) {
   const right = pixelBodyFromSprite(b);
   if (!left || !right) return false;
   return pixelBodiesTouch(left, right);
+}
+
+/**
+ * True when any cell of `a`'s playing strip shares an opaque world pixel
+ * with `b`'s current frame. The pose is `a`'s current origin, scale, and
+ * flip. Used by the brute shock: catalog frame 13 often shows a cell
+ * before the lobe's widest cells, and those wider cells sit on the same anchor.
+ * @param {Phaser.GameObjects.GameObject|null|undefined} a
+ * @param {Phaser.GameObjects.GameObject|null|undefined} b
+ */
+export function spritesTouchAnyFrame(a, b) {
+  const right = pixelBodyFromSprite(b);
+  if (!right) return false;
+  for (const frame of animFramesOf(a)) {
+    const left = pixelBodyFromFrame(a, frame);
+    if (left && pixelBodiesTouch(left, right)) return true;
+  }
+  return false;
 }
