@@ -13,9 +13,11 @@ import {
   hasZombieAnim,
   registerZombieAnims,
   resolveSpawnSkin,
+  skipsHurtKnockback,
   takeZombieSkin,
   zombieActionKey,
   zombieSheetKey,
+  zombieSkinDef,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
@@ -107,9 +109,13 @@ export class Zombie {
     this._showcaseToken = 0;
 
     registerZombieAnims(scene);
+    const catalogSkin = zombieSkinDef(cfg.skin);
     this.skin = cfg.skin
       ? resolveSpawnSkin(scene, cfg.skin, this.variant)
       : takeZombieSkin(this.variant);
+    // Copied before a missing walk sheet clears `skin`, so a brute
+    // placeholder still refuses the hurt shove.
+    this.noHurtKnockback = !!(catalogSkin?.noHurtKnockback || this.skin?.noHurtKnockback);
     const libraryWalk = zombieActionKey(this.skin, this.variant, 'walk');
     const legacyWalk = zombieSheetKey(this.variant, 'walk');
     const libraryReady = !!(
@@ -273,11 +279,13 @@ export class Zombie {
    * Shove the zombie left along its lane. Y stays on laneY.
    * Releases barricade lock and any bite tween so the shove is not snapped back.
    * Tanks apply knockbackMult (still the handgun / pellet distances from GameConfig).
+   * Brute (`noHurtKnockback`) stays planted. Pet slides use beginPetSlide.
    * No-op if already dead or the body is gone.
    * @param {number} pixels
    */
   applyKnockback(pixels) {
     if (!this.alive || !this.body) return;
+    if (skipsHurtKnockback(this)) return;
     const amount = Number(pixels) * (this.knockbackMult ?? 1);
     if (!(amount > 0) || !Number.isFinite(amount)) return;
     const atWall = this.atBarricade;

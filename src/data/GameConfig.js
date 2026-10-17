@@ -147,10 +147,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * attack sheet. Bare and short strips use that same fraction. slime-mini
  * still reacts at once. Gold, saves, barricade HP, wave DPS, and the
  * camera stay put.
+ * v0.36.4: brute (`noHurtKnockback` on its catalog skin) stays planted
+ * when hurt. Stage weapon shove and the feel-booth 2px X knock both
+ * skip that body. Other enemies still knock back. Attack hit frame,
+ * gold, saves, barricade HP, wave DPS, pets, and the camera stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.3';
+export const APP_VERSION = '0.36.4';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

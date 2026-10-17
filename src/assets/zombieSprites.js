@@ -142,7 +142,7 @@ export const ZOMBIE_LIBRARY_SKINS = {
     death: 'zombie-trashcan-bare-die1',
   }),
   sprinter: skin('sprinter', 'zombie-sprinter', { death: 'zombie-sprinter-die1' }),
-  brute: skin('brute', 'zombie-brute', { death: 'zombie-brute-die1' }),
+  brute: skin('brute', 'zombie-brute', { death: 'zombie-brute-die1', noHurtKnockback: true }),
   trashcan: skin('trashcan', 'zombie-trashcan', {
     death: 'zombie-trashcan-break',
     hurt: 'zombie-trashcan-hurt_armor',
@@ -212,6 +212,8 @@ function skin(id, prefix, extra = {}) {
     facing: /** @type {'east'} */ ('east'),
     blastFx: extra.blastFx || null,
     fallbackId: extra.fallbackId || null,
+    /** Big body stays planted on a hurt shove. Brute only. */
+    noHurtKnockback: extra.noHurtKnockback === true,
     actions: {
       walk: `${prefix}-walk`,
       run: `${prefix}-run`,
@@ -308,6 +310,21 @@ export function isRetiredOfficeKey(key) {
 export function zombieSkinDef(id) {
   if (!id) return null;
   return ZOMBIE_LIBRARY_SKINS[id] || ZOMBIE_BOSS_SKINS[id] || null;
+}
+
+/**
+ * Hurt shove is skipped for a big body. Only the brute catalog sets
+ * `noHurtKnockback`. Stage `applyKnockback` and the feel-booth 2px X
+ * shove both read this. Pet slides do not.
+ * @param {{ noHurtKnockback?: boolean, skin?: { id?: string, noHurtKnockback?: boolean }|null, skinId?: string }|null|undefined} zombie
+ */
+export function skipsHurtKnockback(zombie) {
+  if (!zombie) return false;
+  if (zombie.noHurtKnockback === true) return true;
+  const skin = zombie.skin;
+  if (skin && typeof skin === 'object' && skin.noHurtKnockback === true) return true;
+  const id = (skin && typeof skin === 'object' && skin.id) || zombie.skinId;
+  return zombieSkinDef(id)?.noHurtKnockback === true;
 }
 
 export function resolveSpawnSkin(scene, skinId, variant) {
