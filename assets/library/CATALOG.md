@@ -573,7 +573,7 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 
 <img src="previews/zombies/brute/preview.gif" alt="brute preview" height="140">
 
-Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` at the feet on impact frame 8 (0-based). Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.
+Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` v3 at the fist on impact frame 8 (0-based): east +46 forward / 8 up from the feet (flipX mirrors X) so anchor (62, 80) sits on the fist. Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.
 
 - group `brute` · 16 assets · frame 96x96, 132x132 · key prefix `zombie-brute-` · manifest [enemies/zombies/brute/manifest.json](enemies/zombies/brute/manifest.json)
 - previews: [all-actions-sheet.png](previews/zombies/brute/all-actions-sheet.png), [unique-actions-sheet.png](previews/zombies/brute/unique-actions-sheet.png), [special-sheet.png](previews/zombies/brute/special-sheet.png), [elemental-hits-sheet.png](previews/zombies/brute/elemental-hits-sheet.png), [special-sequence.gif](previews/zombies/brute/special-sequence.gif), [skill-ground_smash.gif](previews/zombies/brute/skill-ground_smash.gif)
@@ -595,7 +595,7 @@ Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: pri
 | `zombie-brute-part_break` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-blasted_back` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-defeated` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
-| `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock at impactFrame 8 with anchor (58, 32) on the character origin. Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
+| `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock v3 at impactFrame 8 so anchor (62, 80) sits on the fist (east +46 forward / 8 up from the feet; flipX mirrors X). Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
 
 ### Chef Zombie (大廚丧尸)
 
@@ -1034,13 +1034,13 @@ Standalone 160x160 toxic explosion, origin centre (0.5,0.5). Spawn where zombie-
 
 <img src="previews/fx/brute-skill/preview.gif" alt="brute-skill preview" height="140">
 
-Brute skill v2 ground shock for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Sheet 464×231 is a 4×3 row-major grid of 116×77 cells (frames 0–9; the last two cells are empty). Origin (0.5, 32/77) is pixel anchor (58, 32) on the dust/crack ring. Place that anchor on the brute's feet when the skill reaches impact frame 8.
+Brute skill shock v3 for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Cell 181×131. Sheet 724×393 is a 4×3 row-major grid (frames 0–9; cells 10–11 empty). Origin (62/181, 80/131) is pixel anchor (62, 80) on the burst. Place that anchor on the fist at impact frame 8: east +46 forward / 8 up from the feet (Phaser y-down −8). flipX mirrors X.
 
-- group `brute-skill` · 1 assets · frame 116x77 · manifest [fx/brute-skill/manifest.json](fx/brute-skill/manifest.json)
+- group `brute-skill` · 1 assets · frame 181x131 · manifest [fx/brute-skill/manifest.json](fx/brute-skill/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `fx-brute-skill-shock` | 10 | 116x77 | 12 | once | (0.5, 0.4155844155844156) | attach to `zombie-brute-skill_ground_smash` frame 8 offset [0, 0] · grid 4×3 row-major · Brute skill v2. 10f @ 12 fps, once. 4×3 grid 464×231, row-major, frames 0–9; cells 10–11 empty. Anchor (58, 32) = origin (0.5, 32/77 ≈ 0.4156) on the dust/crack ring. Spawn with that point on the brute feet (offset 0, 0) at skill frame 8. Atlas: fx-brute-skill-shock.json. |
+| `fx-brute-skill-shock` | 10 | 181x131 | 12 | once | (0.3425414364640884, 0.6106870229007634) | attach to `zombie-brute-skill_ground_smash` frame 8 offset [46, -8] · grid 4×3 row-major · Brute skill shock v3. 10f @ 12 fps, once. Cell 181×131. 4×3 grid 724×393, row-major, frames 0–9; cells 10–11 empty. Anchor (62, 80) = origin (62/181, 80/131 ≈ 0.3425, 0.6107) on the burst. Spawn at impact frame 8 so that anchor sits on the fist: east +46 forward / 8 up from the feet (offset [46, -8], Phaser y-down). flipX mirrors X (west [-46, -8]) and mirrors this asymmetric origin x. Path key unchanged. Atlas: fx-brute-skill-shock.json. Spawn wire stays with Gameplay. |
 
 ### Bullet Hit FX (子彈命中)
 
