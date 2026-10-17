@@ -49,6 +49,9 @@
  * v0.36.6: feel key 2 for office-worker-v2 is Phaser index 5 and for
  * nurse is index 7. delivery and the live wall flash stay on index 6.
  * A smash frame skip that jumps past catalog cell 13 still flinches.
+ * v0.36.7: brute key 3 plays only the ground smash. Shock still spawns
+ * on the feet at catalog frame 8. Catalog frame 13 hurts when the shock
+ * shares an opaque pixel with the hero, a pet, or a barricade post.
  *
  *   https://peterlei853.github.io/ZombieDefend/?enemy=office-worker-v2&feel=1
  */
@@ -70,10 +73,10 @@ import {
   enemySfxClips,
   enemySfxKey,
   enemySfxUrl,
+  BRUTE_SMASH_ANIM,
   enemySkillStrips,
-  bruteSmashAoeRadius,
-  bruteSmashContains,
   feelAttackHitFrame,
+  feelSkillSelection,
   feelHitDamage,
   lateAttackFrame,
   phaserIndexForCatalogFrame,
@@ -103,9 +106,10 @@ import {
 } from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME, GAME_AUDIO, preloadGameAudio } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
-import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS, skipsHurtKnockback } from '../src/assets/zombieSprites.js';
+import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS, ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y, skipsHurtKnockback } from '../src/assets/zombieSprites.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
+import { pixelBodiesTouch } from '../src/systems/pixelTouch.js';
 
 const IDS = [
   'office-worker-v2',
@@ -140,8 +144,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.6' && APP_VERSION === '0.36.6', 'package and APP_VERSION are 0.36.6');
-assert(html.includes('v0.36.6'), 'document title is v0.36.6');
+assert(pkg.version === '0.36.7' && APP_VERSION === '0.36.7', 'package and APP_VERSION are 0.36.7');
+assert(html.includes('v0.36.7'), 'document title is v0.36.7');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -178,9 +182,21 @@ assert(enemyFeelEnabled('?enemy=office-worker-v2&feel=0') === false, 'feel=0 sta
 assert(enemySkillStrips('office-worker-v2').length === 0, 'office-worker-v2 has no skill strips');
 assert(enemySkillStrips('delivery').length === 0 && enemySkillStrips('chef').length === 0, 'delivery and chef have no skill strips');
 assert(ENEMY_SKILL_STRIPS.nurse[0]?.cue === 'skill-attach', 'nurse skill is attach');
-assert(ENEMY_SKILL_STRIPS.brute[0]?.anim === 'zombie-brute-skill_ground_smash', 'brute key 3 leads with the ground smash');
+assert(ENEMY_SKILL_STRIPS.brute.length === 1, 'brute key 3 has a single skill strip');
+assert(ENEMY_SKILL_STRIPS.brute[0]?.anim === BRUTE_SMASH_ANIM, 'brute key 3 is the ground smash');
 assert(!ENEMY_SKILL_STRIPS.brute[0]?.cue, 'ground smash has no packed cue');
-assert(ENEMY_SKILL_STRIPS.brute[1]?.cue === 'skill-hurt_heavy', 'brute hurt_heavy stays after the smash');
+assert(!ENEMY_SKILL_STRIPS.brute.some((row) => /hurt_heavy|part_break|blasted_back|defeated/.test(row.anim)), 'brute key 3 does not list hurt, break, blast, or defeat');
+const bruteCycle = [
+  { anim: BRUTE_SMASH_ANIM, cue: '' },
+  { anim: 'zombie-brute-hurt_heavy', cue: 'skill-hurt_heavy' },
+  { anim: 'zombie-brute-part_break', cue: 'skill-part_break' },
+  { anim: 'zombie-brute-blasted_back', cue: 'skill-blasted_back' },
+  { anim: 'zombie-brute-defeated', cue: 'skill-defeated' },
+];
+const brutePick = feelSkillSelection('brute', bruteCycle, 4);
+assert(brutePick.row?.anim === BRUTE_SMASH_ANIM && brutePick.cursor === 4, 'brute key 3 stays on the smash and does not advance the cursor');
+const nursePick = feelSkillSelection('nurse', enemySkillStrips('nurse'), 0);
+assert(nursePick.row?.cue === 'skill-attach' && nursePick.cursor === 1, 'other key 3 lists still advance');
 assert(enemySkillStrips('lava-balon').some((row) => row.cue === 'enrage'), 'lava enrage is in the skill cycle');
 assert(enemySkillStrips('steel-balam').some((row) => row.cue === 'skill-ground_smash'), 'steel smash is in the skill cycle');
 assert(enemySfxClips().some((clip) => clip.key === 'sfx-enemy-office-worker-v2-hit'), 'office hit clip is preloaded by key');
@@ -289,11 +305,50 @@ assert(attackContactFrame(null, 4) === 3, 'a legacy 4-frame sheet contacts on Ph
 assert(phaserIndexForCatalogFrame(8) === 9, 'catalog shock cell 8 is Phaser index 9');
 assert(phaserIndexForCatalogFrame(13) === 14, 'catalog gameplay cell 13 is Phaser index 14');
 assert(13 / 16 >= 0.8 && 12 / 16 < 0.8, 'catalog cell 13 is the first 0-based cell at or after 80% of a 17-frame strip');
-const smashRadius = bruteSmashAoeRadius(1.6);
-assert(smashRadius === Math.round(280 * 1.6), 'smash AoE is 280 field px');
-assert(bruteSmashContains(0, 0, 282, 0, 1.6) === true, 'default booth gap (~281 canvas px, same Y) is inside the smash');
-assert(bruteSmashContains(0, 0, 330, 0, 1.6) === true, 'smash reaches the feel-booth hero gap');
-assert(bruteSmashContains(0, 0, smashRadius + 8, 0, 1.6) === false, 'smash does not cover a march-length gap');
+function solidBody(x, y, w, h, originX, originY, paint) {
+  const fw = paint[0].length;
+  const fh = paint.length;
+  return {
+    x,
+    y,
+    originX,
+    originY,
+    displayWidth: w,
+    displayHeight: h,
+    frameWidth: fw,
+    frameHeight: fh,
+    alphaAt: (fx, fy) => (paint[fy] && paint[fy][fx] ? 255 : 0),
+  };
+}
+const shockPaint = [
+  [0, 0, 0, 0],
+  [0, 1, 1, 0],
+  [0, 1, 1, 0],
+  [0, 0, 0, 0],
+];
+const heroPaint = [
+  [1, 1],
+  [1, 1],
+];
+const dust = solidBody(0, 0, 4, 4, 0.5, 0.5, shockPaint);
+const onDust = solidBody(1, 0, 2, 2, 0.5, 0.5, heroPaint);
+const onPad = solidBody(0, -1.5, 2, 1, 0.5, 0.5, [[1, 1]]);
+const boothGap = solidBody(281, 0, 92, 92, 0.5, 1, [
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+]);
+const wideShock = solidBody(0, 0, 116, 77, 0.5, 32 / 77, [
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+]);
+assert(pixelBodiesTouch(dust, onDust) === true, 'opaque shock pixels hurt a body standing on the dust');
+assert(pixelBodiesTouch(dust, onPad) === false, 'overlapping the transparent pad does not hurt');
+assert(pixelBodiesTouch(wideShock, boothGap) === false, 'the default booth gap is outside the shock pixels');
+assert(ZOMBIE_ORIGIN_X === 0.5 && ZOMBIE_ORIGIN_Y === 1, 'zombie feet origin stays (0.5, 1)');
 
 const hitFn = stageSrc.slice(stageSrc.indexOf('\n  _feelHit() {'), stageSrc.indexOf('\n  _feelHurt() {'));
 assert(hitFn.includes('_feelStrike(false)'), 'key 1 is the ranged strike');
@@ -914,10 +969,25 @@ assert(skippedShock === true && skippedAoe === false, 'a hitch still shocks on c
 skipHandler({ key: 'zombie-brute-skill_ground_smash' }, { index: 15 });
 assert(skippedAoe === true, 'skipping catalog cell 13 still flinches once the strip is past it');
 assert(stageSrc.includes('_playSkillFxAtFeet'), 'smash shock is spawned on the feet');
-assert(stageSrc.includes('z.body.y'), 'feet shock uses the sole, not only the chest');
+assert(stageSrc.includes('z.body.y + oy * scale'), 'feet shock uses the sole plus the catalog anchor');
 assert(stageSrc.includes('_onFeelSmashAoe'), 'smash gameplay frame applies the feel AoE');
-assert(stageSrc.includes('bruteSmashContains'), 'AoE uses the wide feet circle');
+assert(stageSrc.includes('spritesTouch'), 'AoE hurt uses shock pixel contact');
+assert(stageSrc.includes('fx-brute-skill-shock'), 'the kept sprite is the brute shock');
+assert(stageSrc.includes('fieldPets'), 'field pets are shock targets');
+assert(stageSrc.includes('barricade?.posts'), 'barricade posts are shock targets');
+assert(!stageSrc.includes('bruteSmashContains') && !stageSrc.includes('BRUTE_SMASH'), 'AoE does not use a feet circle');
 assert(!stageSrc.includes('camera.shake'), 'the smash does not shake the camera');
+const feetFn = stageSrc.slice(stageSrc.indexOf('_playSkillFxAtFeet'), stageSrc.indexOf('_keepBruteShock'));
+assert(!/body\.y\s*-\s*\d+/.test(feetFn), 'feet spawn does not invent a Y offset');
+const index = JSON.parse(readFileSync(new URL('../assets/library/asset-index.json', import.meta.url), 'utf8'));
+const smashAsset = (index.assets || []).find((asset) => asset.key === 'zombie-brute-skill_ground_smash');
+const shockAsset = (index.assets || []).find((asset) => asset.key === 'fx-brute-skill-shock');
+assert(smashAsset?.path === 'assets/library/enemies/zombies/brute/strips/zombie-brute-skill_ground_smash.png', 'smash path stays the catalog file');
+assert(smashAsset?.frames === 17 && smashAsset?.frameWidth === 132 && smashAsset?.frameHeight === 132, 'smash stays 17×132');
+assert(smashAsset?.origin?.[0] === 0.5 && smashAsset?.origin?.[1] === 1, 'smash origin stays (0.5, 1)');
+assert(smashAsset?.timing?.impactFrame === 8 && smashAsset?.timing?.gameplayHitFrame === 13, 'smash timing stays impact 8 / hit 13');
+assert(shockAsset?.frames === 10 && shockAsset?.frameWidth === 116 && shockAsset?.frameHeight === 77, 'shock stays 10×116×77');
+assert(shockAsset?.anchors?.pixelAnchor?.[0] === 58 && shockAsset?.anchors?.pixelAnchor?.[1] === 32, 'shock anchor stays (58, 32)');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

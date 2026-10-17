@@ -888,7 +888,7 @@ export class Zombie {
 
   /**
    * Fire each mark once, when that 1-based Phaser index is showing.
-   * Used by the feel-booth smash: shock and the AoE are different frames.
+   * Used by the feel-booth smash: shock and the pixel-contact check are different frames.
    * A missing strip does not fire — there is no pose to sync to.
    * @param {string|null} attackKey
    * @param {{ index: number, fn: () => void }[]} marks

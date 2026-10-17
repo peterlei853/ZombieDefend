@@ -1,5 +1,4 @@
 import { DEMO_ENEMY_IDS } from './GameConfig.js';
-import { LAYOUT_SCALE } from '../systems/DepthView.js';
 
 /**
  * Solo-enemy feel booth (`?enemy=<id>` / `?feel=1`).
@@ -18,10 +17,6 @@ export const ENEMY_SKILL_STRIPS = {
   nurse: [{ anim: 'zombie-nurse-attach', cue: 'skill-attach' }],
   brute: [
     { anim: 'zombie-brute-skill_ground_smash', cue: '' },
-    { anim: 'zombie-brute-hurt_heavy', cue: 'skill-hurt_heavy' },
-    { anim: 'zombie-brute-part_break', cue: 'skill-part_break' },
-    { anim: 'zombie-brute-blasted_back', cue: 'skill-blasted_back' },
-    { anim: 'zombie-brute-defeated', cue: 'skill-defeated' },
   ],
   riot: [{ anim: 'zombie-riot-armor_break', cue: 'skill-armor_break' }],
   trashcan: [{ anim: 'zombie-trashcan-break', cue: 'skill-break' }],
@@ -208,39 +203,28 @@ export function phaserIndexForCatalogFrame(catalogFrame) {
   return cell + 1;
 }
 
-/**
- * Wide ground circle for the brute smash, in field px. On the default
- * feel booth (hero snapped to the middle fence slot, brute `72` field px
- * west of the post) the hero origin is about 281 canvas px east of the
- * brute's feet and on the same Y. 280 field px is 448 canvas px at
- * LAYOUT_SCALE 1.6, so that hero is inside the circle. A march-length
- * gap is not.
- */
-export const BRUTE_SMASH_AOE_FIELD = 280;
+/** Feel key 3 / skill 1 on the brute. The only strip that key plays. */
+export const BRUTE_SMASH_ANIM = 'zombie-brute-skill_ground_smash';
 
 /**
- * Canvas px radius of {@link BRUTE_SMASH_AOE_FIELD}.
- * @param {number} [layoutScale] defaults to the stage's LAYOUT_SCALE
+ * Key 3 row. Brute skill 1 is always {@link BRUTE_SMASH_ANIM}. Extra
+ * hurt / break / blast / defeat rows are ignored and the cursor stays.
+ * Every other id keeps walking the skill list.
+ * @param {string|null|undefined} id
+ * @param {{ anim: string, cue: string }[]|null|undefined} strips
+ * @param {number} cursor
+ * @returns {{ row: { anim: string, cue: string }|null, cursor: number }}
  */
-export function bruteSmashAoeRadius(layoutScale = LAYOUT_SCALE) {
-  const scale = Number(layoutScale) > 0 ? Number(layoutScale) : 1;
-  return Math.round(BRUTE_SMASH_AOE_FIELD * scale);
-}
-
-/**
- * True when (x, y) sits inside the smash circle around the brute's feet.
- * @param {number} feetX
- * @param {number} feetY
- * @param {number} x
- * @param {number} y
- * @param {number} [layoutScale]
- */
-export function bruteSmashContains(feetX, feetY, x, y, layoutScale) {
-  const radius = bruteSmashAoeRadius(layoutScale);
-  const dx = Number(x) - Number(feetX);
-  const dy = Number(y) - Number(feetY);
-  if (!Number.isFinite(dx) || !Number.isFinite(dy)) return false;
-  return dx * dx + dy * dy <= radius * radius;
+export function feelSkillSelection(id, strips, cursor) {
+  const list = Array.isArray(strips) ? strips : [];
+  const current = Number.isInteger(cursor) && cursor >= 0 ? cursor : 0;
+  if (id === 'brute') {
+    const row = list.find((item) => item && item.anim === BRUTE_SMASH_ANIM) || null;
+    return { row, cursor: current };
+  }
+  if (!list.length) return { row: null, cursor: current };
+  const index = current % list.length;
+  return { row: list[index], cursor: current + 1 };
 }
 
 /**
