@@ -193,3 +193,94 @@ export function waterAimVelocity(fromX, fromY, target, speed) {
   if (!(len > 0) || !Number.isFinite(len)) return west;
   return { vx: (dx / len) * s, vy: (dy / len) * s };
 }
+
+/**
+ * Where to aim so a shot at `bulletSpeed` meets a body moving at
+ * `targetVx` (world px/s, east positive). A held or stopped body
+ * (`targetVx` near 0) stays on its current point. Y is not led:
+ * marchers keep their lane.
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {number} targetX
+ * @param {number} targetY
+ * @param {number} targetVx
+ * @param {number} bulletSpeed
+ * @returns {{ x: number, y: number }}
+ */
+export function waterLeadAim(fromX, fromY, targetX, targetY, targetVx, bulletSpeed) {
+  const here = { x: targetX, y: targetY };
+  const s = Math.abs(Number(bulletSpeed) || 0);
+  const vz = Number(targetVx) || 0;
+  if (!(s > 0) || Math.abs(vz) < 1) return here;
+  if (!Number.isFinite(fromX) || !Number.isFinite(fromY)) return here;
+  if (!Number.isFinite(targetX) || !Number.isFinite(targetY)) return here;
+  const dx = targetX - fromX;
+  const dy = targetY - fromY;
+  const a = vz * vz - s * s;
+  const b = 2 * dx * vz;
+  const c = dx * dx + dy * dy;
+  /** @type {number[]} */
+  const times = [];
+  if (Math.abs(a) < 1e-4) {
+    if (Math.abs(b) > 1e-4) times.push(-c / b);
+  } else {
+    const disc = b * b - 4 * a * c;
+    if (disc < 0) return here;
+    const root = Math.sqrt(disc);
+    times.push((-b - root) / (2 * a), (-b + root) / (2 * a));
+  }
+  let t = 0;
+  for (const candidate of times) {
+    if (candidate > 0.02 && candidate < 5 && (t === 0 || candidate < t)) t = candidate;
+  }
+  if (!(t > 0)) return here;
+  return { x: targetX + vz * t, y: targetY };
+}
+
+/**
+ * Chest Y when the body has one, otherwise `y`.
+ * @param {{ y?: number, bodyCenterY?: number }} z
+ */
+function waterAimY(z) {
+  return Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : (Number.isFinite(z.y) ? z.y : 0);
+}
+
+/**
+ * Living body a water shot should fly toward. Sticks to `guideId`
+ * while that body is still west of the shot. A new pick stays on the
+ * shot's lane (closest chest Y) and, on that lane, takes the nearest
+ * walker. A steep shot at a closer body on another lane is what lets
+ * the core skim past.
+ * @param {{ id?: number, x: number, y?: number, bodyCenterY?: number, alive?: boolean }[]} zombies
+ * @param {number} x
+ * @param {number} y
+ * @param {number|null|undefined} guideId
+ */
+export function pickWaterGuide(zombies, x, y, guideId) {
+  /** @type {{ id?: number, x: number, y?: number, bodyCenterY?: number }[]} */
+  const ahead = [];
+  for (const z of zombies || []) {
+    if (!z || z.alive === false) continue;
+    if (!Number.isFinite(z.x) || !(z.x < x - 4)) continue;
+    ahead.push(z);
+  }
+  if (guideId != null) {
+    const stuck = ahead.find((z) => z.id === guideId);
+    if (stuck) return stuck;
+  }
+  let best = null;
+  let bestDy = Infinity;
+  let bestDx = Infinity;
+  for (const z of ahead) {
+    const dy = Math.abs(waterAimY(z) - y);
+    const dx = x - z.x;
+    const closerLane = dy < bestDy - 12;
+    const sameLane = Math.abs(dy - bestDy) <= 12 && dx < bestDx;
+    if (!best || closerLane || sameLane) {
+      best = z;
+      bestDy = dy;
+      bestDx = dx;
+    }
+  }
+  return best;
+}
