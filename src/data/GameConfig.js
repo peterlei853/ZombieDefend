@@ -184,10 +184,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * The key and path stay `fx-brute-skill-shock`. No display-scale multiplier.
  * Pixel overlap, smash-only skill 1, gold, saves, barricade max HP, and
  * combat FX 6–9 stay put.
+ * v0.36.9: that overlap test reads every cell of the shock strip at the
+ * fist pose, not only the cell showing at catalog frame 13. A post
+ * overlap still deducts one contact DPS and now pops the barricade
+ * number. The anchor stays (62, 80) on the fist. No display-scale
+ * multiplier. The default booth girl is outside this sheet's east lobe
+ * (115px forward of the anchor); reaching her there is a longer strip,
+ * not a nudge off the fist. Gold, saves, barricade max HP, and combat
+ * FX 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.8';
+export const APP_VERSION = '0.36.9';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

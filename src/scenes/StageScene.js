@@ -62,7 +62,7 @@ import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 import { libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
-import { spritesTouch } from '../systems/pixelTouch.js';
+import { spritesTouchAnyFrame } from '../systems/pixelTouch.js';
 import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
@@ -686,29 +686,47 @@ export default class StageScene extends Phaser.Scene {
   /**
    * Catalog gameplay frame. Hero flinch, one contact-DPS hit on each
    * overlapping pet, and one contact-DPS hit on the barricade when a
-   * post overlaps the shock. Gold and the save stay put. The shock
-   * sprite is the one spawned at impact frame 8.
+   * post overlaps the shock. The test uses every cell of the shock
+   * strip at this pose: the cell on screen at catalog frame 13 is
+   * often before the widest lobe. Gold and the save stay put. The
+   * shock sprite is the one spawned at impact frame 8.
+   *
+   * The 181×131 lobe's furthest opaque pixel is 115px forward of the
+   * anchor. On the default booth lane that covers the post and stops
+   * short of the girl's opaque body. A longer east lobe is Pipeline
+   * art; the anchor stays on the fist.
    * @param {Zombie} z
    */
   _onFeelSmashAoe(z) {
     const shock = this._bruteShock;
-    if (!shock?.active) return;
+    if (!shock?.active || shock.getData('shockResolved')) return;
+    shock.setData('shockResolved', true);
     const player = this.defenders?.player;
-    if (player?.active && spritesTouch(shock, player)) this._onFeelAttackHit();
+    if (player?.active && spritesTouchAnyFrame(shock, player)) this._onFeelAttackHit();
     const amount = Number(z?.dps) > 0 ? z.dps : 0;
     for (const pet of this.defenders?.fieldPets?.() || []) {
       const sprite = pet?.sprite;
-      if (!sprite?.active || !spritesTouch(shock, sprite)) continue;
+      if (!sprite?.active || !spritesTouchAnyFrame(shock, sprite)) continue;
       if (amount > 0 && typeof pet.takeDamage === 'function') pet.takeDamage(amount);
     }
     const posts = this.barricade?.posts || [];
-    let fence = false;
+    /** @type {Phaser.GameObjects.Image|null} */
+    let fencePost = null;
     for (const post of posts) {
-      if (!post?.active || !spritesTouch(shock, post)) continue;
-      fence = true;
+      if (!post?.active || !spritesTouchAnyFrame(shock, post)) continue;
+      if (!fencePost) fencePost = post;
       this.barricade?._flashPost?.(post);
     }
-    if (fence && amount > 0) this.barricade.applyDamage(amount);
+    if (fencePost && amount > 0) {
+      this.barricade.applyDamage(amount);
+      showDamageText(
+        this,
+        fencePost.x,
+        fencePost.y - layoutPx(18),
+        amount,
+        DAMAGE_COLORS.barricade,
+      );
+    }
   }
 
   /**
