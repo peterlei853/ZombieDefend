@@ -33,6 +33,7 @@ assets/library/
 │       └── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
+│   ├── aoe/                  fx-aoe-lightning v1.0 explosion (6×5 grid, 270×200, 30f @ 10 fps)
 │   ├── brute-skill/          fx-brute-skill-shock (brute skill shock v3.3, dust/crack only, 4×3 grid, 225×131)
 │   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
 │   ├── bullet-hit/           fx-hit-fire, fx-hit-water (4×24 @ 8 fps, L→R)
@@ -68,6 +69,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Shared FX | original key kept | `zombie-exploder-blast`, `fx-brute-skill-shock` |
 | Brute skill | `zombie-brute-skill_ground_smash` | alias `zombie-brute-skill`; 17×132 @ 10 fps, once; **v2.1** feet on canvas bottom (`padB=0`) |
 | Shared melee | `fx-slash-enemy-red`, `fx-slash-ally-white`, `fx-slash-dot` | combat FX in `fx/melee/` (not hero-only) |
+| AOE lightning | `fx-aoe-lightning` | 30×270×200 @ 10 fps, once, origin (0.5, 0.75) ground center |
 | Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps, burst left → right |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
@@ -200,6 +202,26 @@ Play it on every DoT / AoE hit target. One play is about 0.2s, so about 5 plays 
 
 **Scale rule.** Display size is the authored 24×24 frame. Place them at the impact point at scale 1. `fx-hit-electric` is not in this wave.
 
+## AOE lightning explosion (v1.0)
+
+`fx/aoe/` holds the ground AOE lightning explosion. Peter asked for the explosion pack: a glowing magic-circle START, a lightning BLAST, then a scorched-ground FADE. This key is separate from the v0.26 residue puff `vfx-aoe-lightning` (96×96, origin centre).
+
+| | Spec |
+|---|---|
+| Key | `fx-aoe-lightning` |
+| Version | **v1.0** |
+| Cell | **270×200** |
+| Frames | **30** @ **10 fps** · once · **3.0s** (100 ms/frame) |
+| Sheet | **1620×1000** · **6×5** row-major grid · frame *i* is column `i % 6`, row `floor(i / 6)` |
+| Anchor | pixel **(135, 150)** = origin **(0.5, 0.75)** · ground center of the magic circle |
+| Story | START yellow magic circle (f0–f7, 0.0–0.8s) → BLAST lightning bolts + flash (f8–f16, 0.8–1.7s, peak f16) → FADE scorched ground + blue embers (f17–f29, 1.7–3.0s) |
+| Ghost | effect-only |
+| Tag | AOE, lightning, normal×1.2, multi-tick |
+| Atlas | `fx/aoe/fx-aoe-lightning.json` |
+| Preview | `previews/fx/aoe-lightning/preview.gif` |
+
+Spawn the sprite so origin **(135, 150)** sits on the ground center. The visual is a **3.0s** one-shot. Multi-tick damage (how many hits, and when) is Gameplay's call; the sheet does not encode hit timing. Cell width is already **normal×1.2** versus the 225px dust baseline (270 = 225 × 1.2). Play at scale 1. Catalog only — Gameplay owns the Stage wire.
+
 ## Front-float combat (v0.27)
 
 Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle` / walk). `player-girl-deploy` is a one-shot hand-sweep. Front bobs are `player-girl-front-{water,sling,bubble,lightning,frost,flame}` (56×56, origin 0.5, 0.5). Each bob has a static sibling `player-girl-front-*-still` (56×56 image, origin 0.5, 0.5, facing west). Back bobs (`player-girl-back-*`, 32×32) are an optional MOVE fallback; gameplay hides guns while walking. Layout notes: [`characters/hero/girl/README.md`](characters/hero/girl/README.md). Up/down dash uses `player-girl-run-north` and `player-girl-run-south` (92×92 × 8 frames, 12 fps, loop). Walk strips stay for slower move.
@@ -216,7 +238,7 @@ Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle`
 
 ## Canvas, origin and facing conventions
 
-Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* is at `x = i * frameWidth`, `y = 0`, and the PNG is exactly `frameWidth*frames × frameHeight`. A grid sheet is `frameWidth*cols × frameHeight*rows`, and frame *i* is column `i % cols`, row `floor(i / cols)`. The build script checks either layout. `fx-slash-enemy-red` is a 4×72 horizontal strip. `fx-slash-ally-white` is a 3×2 grid. `fx-slash-dot` is a 2×2 grid. The `origin` value is the Phaser `setOrigin(x, y)`.
+Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* is at `x = i * frameWidth`, `y = 0`, and the PNG is exactly `frameWidth*frames × frameHeight`. A grid sheet is `frameWidth*cols × frameHeight*rows`, and frame *i* is column `i % cols`, row `floor(i / cols)`. The build script checks either layout. `fx-slash-enemy-red` is a 4×72 horizontal strip. `fx-slash-ally-white` is a 3×2 grid. `fx-slash-dot` is a 2×2 grid. `fx-aoe-lightning` is a 6×5 grid of 270×200. The `origin` value is the Phaser `setOrigin(x, y)`.
 
 | Category | Frame | Origin | Facing |
 |---|---|---|---|
@@ -225,7 +247,7 @@ Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* 
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
 | Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76. `player-girl-command` uses the same foot line (shoes end at y=77) | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
-| Shared FX | 160×160 blast; brute skill shock v3.3 225×131 on a 4×3 grid (900×393), dust/crack only | blast (0.5, 0.5); shock anchor (62, 80) = (62/225, 80/131) | – |
+| Shared FX | 160×160 blast; brute skill shock v3.3 225×131 on a 4×3 grid (900×393), dust/crack only; AOE lightning v1.0 270×200 on a 6×5 grid (1620×1000) | blast (0.5, 0.5); shock anchor (62, 80) = (62/225, 80/131); AOE lightning anchor (135, 150) = (0.5, 0.75) | – |
 | v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |
 | Pickups | coin/gems 16×16, pile 64×32 | coin/gems (0.5, 0.5); pile (0.5, 1.0) | – |
 | Backgrounds | 1280×720 (bleed 1360×768) | (0, 0) | – |
