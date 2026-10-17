@@ -34,7 +34,7 @@ assets/library/
 │         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
 │   ├── aoe/                  fx-aoe-lightning v1.0 explosion (6×5 grid, 270×200, 30f @ 10 fps)
-│   ├── brute-skill/          fx-brute-skill-shock (brute skill shock v3.1, 4×3 grid, 225×131)
+│   ├── brute-skill/          fx-brute-skill-shock (brute skill shock v3.3, dust/crack only, 4×3 grid, 225×131)
 │   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
 │   ├── bullet-hit/           fx-hit-fire, fx-hit-water (4×24 @ 8 fps, L→R)
 │   └── v026/                 v0.26 overnight pack + INVENTORY.md
@@ -247,7 +247,7 @@ Strips are **horizontal** unless the asset sets `grid: [cols, rows]`: frame *i* 
 | Boss FX | per key (256×128, 256×96, 160×160, …) | **per key**, from the index (e.g. breath/acid `(0, 0.5)` = the mouth, slam/smash `(0.5, 1)` = the impact point) | east |
 | Hero | **92×92** | **(0.5, 76/92 ≈ 0.8261)**: feet at y = 76. `player-girl-command` uses the same foot line (shoes end at y=77) | **west** (toward the zombies), except keys ending in `-walk-east`, `-walk-north`, `-walk-south`, `-run-north`, or `-run-south` |
 | Hero FX | per key | per key (muzzles `(1, 0.5)` = nozzle; status overlays `(0.5, 1)` = the zombie's feet) | west (beams and cones extend to the left) |
-| Shared FX | 160×160 blast; brute skill shock v3.1 225×131 on a 4×3 grid (900×393); AOE lightning v1.0 270×200 on a 6×5 grid (1620×1000) | blast (0.5, 0.5); shock anchor (62, 80) = (62/225, 80/131); AOE lightning anchor (135, 150) = (0.5, 0.75) | – |
+| Shared FX | 160×160 blast; brute skill shock v3.3 225×131 on a 4×3 grid (900×393), dust/crack only; AOE lightning v1.0 270×200 on a 6×5 grid (1620×1000) | blast (0.5, 0.5); shock anchor (62, 80) = (62/225, 80/131); AOE lightning anchor (135, 150) = (0.5, 0.75) | – |
 | v0.26 VFX | per key: orb/star 32×32, star rows 12×12 / 25×12 / 38×12, rings 64×64 and 128×128, half wash 192×108, residue 96×96, ults 384×216 | centre (0.5, 0.5), except star markers (0.5, 1.0) and half-left wash (0, 0.5) | – |
 | Pickups | coin/gems 16×16, pile 64×32 | coin/gems (0.5, 0.5); pile (0.5, 1.0) | – |
 | Backgrounds | 1280×720 (bleed 1360×768) | (0, 0) | – |
@@ -298,7 +298,7 @@ Linked FX keys are listed on each skill in the index (`fx: [...]`). Other in-str
 
 ## Brute skill v2.1 (ground smash 132, Y-fix)
 
-Enemy #5 (`brute`, PixelLab `c13bb0f5-984d-4b35-9b37-742df531789a`). Body strips stay **96×96**. This is the offensive skill only. Walk, attack, and hurt are unchanged. The parallel slam sheet is not cataloged. The shock FX is **v3.1** (225×131, hand spawn). The body strip is still v2.1.
+Enemy #5 (`brute`, PixelLab `c13bb0f5-984d-4b35-9b37-742df531789a`). Body strips stay **96×96**. This is the offensive skill only. Walk, attack, and hurt are unchanged. The parallel slam sheet is not cataloged. The shock FX is **v3.3** (225×131, dust/crack only, no baked character, hand spawn). The body strip is still v2.1.
 
 **v2.1** is `extra.version` on `zombie-brute-skill_ground_smash` (`yfix: v1-feet-to-bottom`). It is the v2 132×132 art, shifted down per frame so content feet sit on the canvas bottom (`padB=0`), the same foot line as the 96×96 body strips. Origin stays **(0.5, 1)**. Measured shift vs the v2 sheet: frames 0–6 and 14–16 by 20px, frame 13 by 18px, impact frames 7–12 by 11, 8, 7, 5, 5, and 5px. Art pixels are unchanged.
 
@@ -308,9 +308,9 @@ Enemy #5 (`brute`, PixelLab `c13bb0f5-984d-4b35-9b37-742df531789a`). Body strips
 | Version | **v2.1** · `yfix: v1-feet-to-bottom` · `padB=0` on every frame |
 | Skill body | 17 frames · **132×132** · horizontal strip 2244×132 · east · origin **(0.5, 1)** · 10 fps · once |
 | Preview | `previews/zombies/brute/skill-ground_smash.gif` |
-| Ground FX | `fx-brute-skill-shock` **v3.1** · same path key · 10 frames @ 12 fps · once · cell **225×131** · sheet **900×393** is a **4×3** row-major grid (frames 0–9; cells 10–11 empty) |
+| Ground FX | `fx-brute-skill-shock` **v3.3** · same path key · dust/crack only, no baked character · 10 frames @ 12 fps · once · cell **225×131** · sheet **900×393** is a **4×3** row-major grid (frames 0–9; cells 10–11 empty) |
 | FX anchor | pixel **(62, 80)** unchanged = origin **(62/225, 80/131)** on the burst. Place that point on the fist, not the feet. |
-| FX start | `timing.impactFrame` **8** (0-based). East offset from the feet stays **+46 forward / 8 up** (`offsetFromCharacterOrigin` **[46, −8]**, Phaser y-down). `flipX` mirrors X (west **[−46, −8]**) and mirrors this asymmetric origin x. v3.1 only lengthens the east lobe (+44px pad-right; reach 157px from the anchor). Drawn fists are on the ground on frames **7–12**, densest on **8–9**. `anchors.impactPoint` stays **(0, 0)** (the feet). Gameplay must not move the spawn. |
+| FX start | `timing.impactFrame` **8** (0-based). East offset from the feet stays **+46 forward / 8 up** (`offsetFromCharacterOrigin` **[46, −8]**, Phaser y-down). `flipX` mirrors X (west **[−46, −8]**) and mirrors this asymmetric origin x. v3.3 is a no-ghost PixelLab regen (dust/crack only). East opaque reach is 157px from the anchor (peak frame 7). Drawn fists are on the ground on frames **7–12**, densest on **8–9**. `anchors.impactPoint` stays **(0, 0)** (the feet). Gameplay must not move the spawn. |
 | Damage hit | Handoff asks Gameplay for a hit at **~80%** of the strip: 0-based frame **13** (`timing.gameplayHitFrame`). That frame is already the recover. |
 
 Stage already loads every non-pet library texture, so these two keys arrive with the index. Playing the skill, spawning the shock, and applying the AoE are a Gameplay wire. Hurt stays no-knockback.

@@ -1170,7 +1170,7 @@
       "group": "brute",
       "title": "Giant Mutant Brute",
       "titleZh": "巨型突變暴君",
-      "description": "Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` v3.1 (225×131) at the fist on impact frame 8 (0-based): east +46 forward / 8 up from the feet (flipX mirrors X) so anchor (62, 80) sits on the fist. Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.",
+      "description": "Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: primary key `zombie-brute-skill_ground_smash` (alias `zombie-brute-skill`), 17×132 @ 10 fps, once, east, origin (0.5, 1), feet on the canvas bottom (padB=0, yfix v1-feet-to-bottom). Spawn `fx-brute-skill-shock` v3.3 (225×131, dust/crack only, no baked character) at the fist on impact frame 8 (0-based): east +46 forward / 8 up from the feet (flipX mirrors X) so anchor (62, 80) sits on the fist. Drawn fist contact is frames 7–12, densest on 8–9. Handoff damage hit is ~80% of the strip (0-based frame 13). Walk, attack, and hurt strips are unchanged. The parallel slam sheet is not cataloged.",
       "manifest": "assets/library/enemies/zombies/brute/manifest.json",
       "dir": "assets/library/enemies/zombies/brute",
       "thumb": "assets/library/previews/zombies/brute/preview.gif",
@@ -2142,7 +2142,7 @@
       "group": "brute-skill",
       "title": "Brute Ground Shock",
       "titleZh": "暴君震地衝擊",
-      "description": "Brute skill shock v3.1 for `zombie-brute-skill_ground_smash`. 10 frames @ 12 fps, once. Cell 225×131. Sheet 900×393 is a 4×3 row-major grid (frames 0–9; cells 10–11 empty). Origin (62/225, 80/131) is pixel anchor (62, 80) on the burst. Place that anchor on the fist at impact frame 8: east +46 forward / 8 up from the feet (Phaser y-down −8). flipX mirrors X.",
+      "description": "Brute skill shock v3.3 for `zombie-brute-skill_ground_smash`. No-ghost PixelLab regen: dust/crack only, no baked character. 10 frames @ 12 fps, once. Cell 225×131. Sheet 900×393 is a 4×3 row-major grid (frames 0–9; cells 10–11 empty). Origin (62/225, 80/131) is pixel anchor (62, 80) on the burst. Place that anchor on the fist at impact frame 8: east +46 forward / 8 up from the feet (Phaser y-down −8). flipX mirrors X.",
       "manifest": "assets/library/fx/brute-skill/manifest.json",
       "dir": "assets/library/fx/brute-skill",
       "thumb": "assets/library/previews/fx/brute-skill/preview.gif",
@@ -14388,7 +14388,7 @@
       "skill": "地面重砸",
       "preview": "assets/library/previews/zombies/brute/preview.gif",
       "description": "Giant Mutant Brute: skill_ground_smash — 17 frames 132x132 @ 10 fps, once. Skill: 地面重砸.",
-      "note": "Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock v3.1 (225×131) at impactFrame 8 so anchor (62, 80) sits on the fist (east +46 forward / 8 up from the feet; flipX mirrors X). Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged.",
+      "note": "Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock v3.3 (225×131, dust/crack only, no baked character) at impactFrame 8 so anchor (62, 80) sits on the fist (east +46 forward / 8 up from the feet; flipX mirrors X). Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged.",
       "tags": [
         "zombies",
         "brute",
@@ -21985,7 +21985,7 @@
       "skill": null,
       "preview": "assets/library/previews/fx/brute-skill/preview.gif",
       "description": "Brute Ground Shock: fx-brute-skill-shock — 10 frames 225x131 @ 12 fps, once.",
-      "note": "Brute skill shock v3.1. 10f @ 12 fps, once. Cell 225×131 (+44px pad-right). 4×3 grid 900×393, row-major, frames 0–9; cells 10–11 empty. Anchor (62, 80) unchanged = origin (62/225, 80/131 ≈ 0.2756, 0.6107) on the burst. East lobe reaches 157px from the anchor (α≥32). Spawn stays on the fist at impact frame 8: east +46 forward / 8 up from the feet (offset [46, -8], Phaser y-down). flipX mirrors X (west [-46, -8]) and mirrors this asymmetric origin x. Path key unchanged. Atlas: fx-brute-skill-shock.json. Gameplay must not move the spawn.",
+      "note": "Brute skill shock v3.3. No-ghost PixelLab regen: dust/crack only, no baked character. 10f @ 12 fps, once. Cell 225×131. 4×3 grid 900×393, row-major, frames 0–9; cells 10–11 empty. Anchor (62, 80) unchanged = origin (62/225, 80/131 ≈ 0.2756, 0.6107) on the burst. East lobe reaches 157px from the anchor (α≥32, peak frame 7). Spawn stays on the fist at impact frame 8: east +46 forward / 8 up from the feet (offset [46, -8], Phaser y-down). flipX mirrors X (west [-46, -8]) and mirrors this asymmetric origin x. Path key unchanged. Atlas: fx-brute-skill-shock.json. Gameplay must not move the spawn.",
       "tags": [
         "fx",
         "brute-skill",
@@ -21994,10 +21994,11 @@
         "once",
         "attached-fx",
         "ground-smash",
-        "v3.1"
+        "v3.3",
+        "no-ghost"
       ],
       "extra": {
-        "version": "v3.1",
+        "version": "v3.3",
         "sheet": {
           "layout": "grid",
           "columns": 4,
@@ -22012,10 +22013,10 @@
           ]
         },
         "pixellabAnchor": {
-          "kind": "feet",
+          "kind": "hand",
           "x": 62,
           "y": 80,
-          "note": "PixelLab labels the anchor feet. Treat it as the impact origin on the 225×131 cell. Play origin is (62/225, 80/131). Place it on the fist, not the character feet."
+          "note": "PixelLab labels the anchor hand. It is the impact origin on the 225×131 cell. Play origin is (62/225, 80/131). Place it on the fist, not the character feet."
         },
         "handSpawn": {
           "from": "feet",
