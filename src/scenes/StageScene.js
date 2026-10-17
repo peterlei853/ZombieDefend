@@ -14,6 +14,9 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import {
+  BRUTE_SHOCK_KEY,
+  bruteShockHandPoint,
+  bruteShockOrigin,
   enemySkillStrips,
   feelAttackHitFrame,
   feelHitDamage,
@@ -645,7 +648,7 @@ export default class StageScene extends Phaser.Scene {
 
   /**
    * Skills with a catalog `gameplayHitFrame` wait for that cell.
-   * The brute smash spawns `fx-brute-skill-shock` on the feet at
+   * The brute smash spawns `fx-brute-skill-shock` on the smash hand at
    * `impactFrame` and, on the gameplay frame, hurts a hero, pet, or
    * barricade post whose pixels overlap that shock. Other strips keep
    * the immediate chest puff. Wave combat has no skill-cast AI.
@@ -725,9 +728,11 @@ export default class StageScene extends Phaser.Scene {
   }
 
   /**
-   * Shock (or the strip's first FX) on the sole. Catalog origin places the
-   * anchor; `anchors.impactPoint` is frame px from that sole, scaled with
-   * the body. Depth sits above the sprite.
+   * Shock on the smash hand. The burst anchor is pixel (62, 80) of the
+   * 181×131 cell, placed +46px forward and 8px up from the feet (east),
+   * with X mirrored when the body is flipped. Other strips still use
+   * `anchors.impactPoint` from the sole. Depth sits above the sprite.
+   * The sheet is not scaled: the larger cell is the range.
    * @param {Zombie} z
    * @param {string} animKey
    */
@@ -735,15 +740,34 @@ export default class StageScene extends Phaser.Scene {
     const asset = libraryAsset(this, animKey);
     const fx = asset?.fx;
     if (!Array.isArray(fx) || !fx.length || !z?.body) return;
-    const anchor = asset?.anchors?.impactPoint;
     const scale = Math.abs(z.body.scaleX || 1);
-    const ox = Array.isArray(anchor) ? Number(anchor[0]) || 0 : 0;
-    const oy = Array.isArray(anchor) ? Number(anchor[1]) || 0 : 0;
-    const sprite = playLibraryFx(this, z.body.x + ox * scale, z.body.y + oy * scale, fx[0], {
+    const shock = fx[0] === BRUTE_SHOCK_KEY;
+    const flipX = !!z.body.flipX;
+    let x = z.body.x;
+    let y = z.body.y;
+    /** @type {[number, number]|undefined} */
+    let origin;
+    if (shock) {
+      const fxAsset = libraryAsset(this, fx[0]);
+      const attach = fxAsset?.anchors?.attach?.offsetFromCharacterOrigin;
+      const hand = bruteShockHandPoint(z.body.x, z.body.y, scale, flipX, attach);
+      x = hand.x;
+      y = hand.y;
+      origin = Array.isArray(fxAsset?.origin) ? fxAsset.origin : bruteShockOrigin();
+    } else {
+      const anchor = asset?.anchors?.impactPoint;
+      const ox = Array.isArray(anchor) ? Number(anchor[0]) || 0 : 0;
+      const oy = Array.isArray(anchor) ? Number(anchor[1]) || 0 : 0;
+      x = z.body.x + ox * scale;
+      y = z.body.y + oy * scale;
+    }
+    const sprite = playLibraryFx(this, x, y, fx[0], {
       depth: (z.body.depth || 0) + 2,
       scale,
+      flipX: shock ? flipX : false,
+      origin,
     });
-    if (fx[0] === 'fx-brute-skill-shock') this._keepBruteShock(sprite);
+    if (shock) this._keepBruteShock(sprite);
     return sprite;
   }
 

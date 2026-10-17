@@ -178,10 +178,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * (0.5, 1). The smash sheet path and 17×132 frame size stay for the
  * padB=0 catalog. Gold, saves, barricade max HP, wave DPS, and combat
  * FX 6–9 stay put.
+ * v0.36.8: the same shock's anchor is the hand, not the feet. East smash
+ * frame 8 is +46px forward and 8px up from the sole; flipX mirrors X.
+ * The burst origin is pixel (62, 80) on the 181×131 cell (62/181, 80/131).
+ * The key and path stay `fx-brute-skill-shock`. No display-scale multiplier.
+ * Pixel overlap, smash-only skill 1, gold, saves, barricade max HP, and
+ * combat FX 6–9 stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.7';
+export const APP_VERSION = '0.36.8';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
