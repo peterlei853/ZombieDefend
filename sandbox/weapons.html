@@ -84,7 +84,6 @@ document.body.addEventListener('click', function (event) {
   }
 });
 window.addEventListener('keydown', function (event) {
-  if (event.code === 'Space' || event.key === ' ') event.preventDefault();
   if (event.repeat || !window.__ZD_WEAPON) return;
   var map = {
     '1': 'water',
