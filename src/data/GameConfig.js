@@ -256,10 +256,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * The highlighted gun floats in front of the girl. SPACE and SWAP shoot.
  * Shots go west with ±10° homing. Gold-by-HP, saves, barricade max HP,
  * and the roster stay put.
+ * v0.36.21: the L3 sheet stays 512×256 and is drawn at 2× the 32px L1
+ * projectile (128×64 at visualScale 1). The hit box matches that body.
+ * The L2 explosion stays 256×212 and is drawn so its height is 4× an
+ * 84px profession mob. The white X stays the 32px sheet, drawn at 2×,
+ * on every 0.2s overlap tick. Gold, saves, barricade HP, and the roster
+ * stay put. No GitHub Pages publish.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.20';
+export const APP_VERSION = '0.36.21';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
