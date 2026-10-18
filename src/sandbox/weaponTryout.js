@@ -134,8 +134,8 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // nothing here instantiates a cradle sprite.
       // PIXELLAB_HOOK: charge sheets — see SANDBOX_WATER_CHARGE_SHEETS.
       // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16, drawn at 2×).
-      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 2× the 32px L1 shot.
-      // L2 AOE fx-water-t2-aoe is 256×212, drawn about 4× a normal mob.
+      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 0.5 × _visualScale (4× the 32px L1 height).
+      // L2 AOE fx-water-t2-aoe is 256×212, drawn at 2× a normal mob (half of the v0.36.21 4×).
       // Auras: blue fx-water-charge-aura, yellow fx-water-charge-aura-l2, red fx-water-charge-aura-l3.
       waterMount: water ? slot : null,
       waterCharge: water,
