@@ -14,6 +14,7 @@ import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelT
 import {
   pickWaterGuide,
   WATER_AOE_TICK_MS,
+  WATER_CHARGE_RELEASE_MS,
   WATER_L2_AOE_MS,
   WATER_L3_ENTER_SLOW,
   WATER_L3_NUDGE_PX,
@@ -50,9 +51,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.18', 'APP_VERSION is 0.36.18');
-assert(pkg.version === '0.36.18', 'package.json tracks 0.36.18');
-assert(html.includes('ZombieDefend v0.36.18'), 'title tracks 0.36.18');
+assert(APP_VERSION === '0.36.19', 'APP_VERSION is 0.36.19');
+assert(pkg.version === '0.36.19', 'package.json tracks 0.36.19');
+assert(html.includes('ZombieDefend v0.36.19'), 'title tracks 0.36.19');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -178,11 +179,34 @@ const scene = {
     ].includes(key),
   },
   anims: { exists: () => false },
-  add: { sprite: fxSprite },
+  add: {
+    sprite: fxSprite,
+    rectangle(x, y, w, h) {
+      return { x, y, w, h, active: true, setDepth() {} };
+    },
+  },
   time: { now: 0 },
 };
 const guns = new WeaponSystem(scene);
 guns.setOwnedWeapons(['water']);
+const chargeSlot = { muzzleX: 900, muzzleY: 400 };
+const chargeBullets = [];
+const chargeTrait = WEAPON_TRAITS.water;
+assert(guns._stepWaterCharge(1000, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'holding does not fire');
+assert(guns._stepWaterCharge(16, chargeBullets, chargeSlot, [], chargeTrait, false, true) === false, 'a 16ms SPACE gap does not fire');
+assert(chargeBullets.length === 0 && guns.chargeMs() === 1000, 'the gap keeps the same charge');
+assert(guns._stepWaterCharge(1600, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'the hold continues after the gap');
+assert(guns.chargeTier() === 2, '2.6s of hold with a short slip is L2');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, chargeBullets, chargeSlot, [], chargeTrait, false, true) === true, 'SPACE staying up releases the shot');
+assert(chargeBullets.length === 1 && chargeBullets[0].charge === 2, 'the released shot is L2');
+assert(guns.chargeMs() === 0, 'release clears the charge');
+const l3Bullets = [];
+assert(guns._stepWaterCharge(5000, l3Bullets, chargeSlot, [], chargeTrait, true, true) === false, 'a 5s hold is still charging');
+assert(guns._stepWaterCharge(16, l3Bullets, chargeSlot, [], chargeTrait, false, true) === false, 'a slip at 5s does not fire early');
+assert(guns.chargeTier() === 3, 'the slip leaves the charge on L3');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l3Bullets, chargeSlot, [], chargeTrait, false, true) === true, 'the 5s hold releases');
+assert(l3Bullets[0]?.charge === 3, 'the released shot is L3');
+assert(WATER_CHARGE_RELEASE_MS === 120, 'the release gap is 120ms');
 const primary = {
   id: 1,
   x: 40,

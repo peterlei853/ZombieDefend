@@ -95,6 +95,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       color: '#8d99ab',
     }).setDepth(20000).setScrollFactor(0);
     this._space = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
+    this.input.keyboard?.addCapture?.(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this._bindApi();
     this._publish();
   }
@@ -141,7 +142,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       const held = tier
         ? `charging L${tier} ${(this.weapons.chargeMs() / 1000).toFixed(1)}s`
         : 'SPACE hold';
-      this.hint.setText(`${held} · release L1 / 2.5s L2 / 5s L3 · 1–6 switch · R reset`);
+      this.hint.setText(`${held} · release L1 / 2.5s L2 / 5s L3 · a short slip keeps the charge · 1–6 switch · R reset`);
     }
     this.weapons.stepBullets(this.bullets, dt / 1000);
     this.weapons.stepCasings?.(dt);

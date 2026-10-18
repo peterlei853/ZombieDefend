@@ -24,6 +24,7 @@ import {
   WATER_AOE_TICK_DMG,
   WATER_AOE_TICK_MS,
   WATER_CHARGE_FX,
+  WATER_CHARGE_RELEASE_MS,
   WATER_L2_AOE_MS,
   WATER_L3_ENTER_SLOW,
   WATER_L3_NUDGE_PX,
@@ -1095,19 +1096,39 @@ export class WeaponSystem {
    */
   _stepWaterCharge(dt, bullets, slot, zombies, trait, held, canFire) {
     const gate = !!(canFire && slot && Number.isFinite(slot.muzzleX) && Number.isFinite(slot.muzzleY));
+    const step = Math.max(0, dt);
     if (held && gate) {
-      if (!this._charge) this._charge = { ms: 0, ready: true };
+      if (!this._charge) this._charge = { ms: 0, up: 0, ready: true };
       this._charge.ready = true;
-      this._charge.ms += Math.max(0, dt);
+      this._charge.up = 0;
+      this._charge.ms += step;
       const tierHeld = waterChargeTier(this._charge.ms);
       this._syncChargeAura(slot, tierHeld);
       // PIXELLAB_HOOK: charge-l2 from the hold, charge-l3 once the tier passes 2.5s.
       this.scene?.audio?.syncWaterCharge?.(tierHeld);
       return false;
     }
+    if (!this._charge) {
+      this.scene?.audio?.stopWaterChargeLoop?.();
+      return false;
+    }
+    // Still holding, but the mount is not ready. Walking off drops it.
+    if (held && !gate) {
+      this._clearWaterCharge();
+      this.scene?.audio?.stopWaterChargeLoop?.();
+      return false;
+    }
+    // A bounced SPACE key goes up for a frame or two. That used to fire
+    // whatever tier had accumulated (usually L1) and start a new charge,
+    // so a long hold could show red and still release an L1 shot.
+    this._charge.up = (this._charge.up || 0) + step;
+    if (this._charge.up < WATER_CHARGE_RELEASE_MS) {
+      if (gate) this._syncChargeAura(slot, waterChargeTier(this._charge.ms));
+      return false;
+    }
     let fired = false;
     let tier = 1;
-    if (this._charge?.ready && gate) {
+    if (this._charge.ready && gate) {
       tier = waterChargeTier(this._charge.ms);
       this._spawnWaterShot(bullets, slot, zombies, trait, tier);
       fired = true;

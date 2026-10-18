@@ -198,6 +198,11 @@ export function waterAimVelocity(fromX, fromY, target, speed) {
 export const WATER_CHARGE_L2_MS = 2500;
 /** Hold this long for a level-3 charge. */
 export const WATER_CHARGE_L3_MS = 5000;
+/**
+ * SPACE must stay up this long before the shot leaves. A shorter gap
+ * is key bounce: the same charge keeps counting instead of firing L1.
+ */
+export const WATER_CHARGE_RELEASE_MS = 120;
 /** L2 explosion stays on the contact pixel this long, then leaves. */
 export const WATER_L2_AOE_MS = 4000;
 /** Shared AOE contact tick while opaque pixels still overlap. */

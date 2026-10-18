@@ -247,10 +247,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * size, slows 20% for each new body, flashes the white X on every
  * damage tick, and nudges that body 2px east. Gold-by-HP, saves,
  * barricade max HP, the roster, and the other five weapons stay put.
+ * v0.36.19: a SPACE gap shorter than 120ms keeps the same charge. A
+ * bounced key no longer fires L1 and restarts the timer, so a hold
+ * that reaches 2.5s releases L2 and one that reaches 5s releases L3.
+ * Gold-by-HP, saves, barricade max HP, the roster, and the other five
+ * weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.18';
+export const APP_VERSION = '0.36.19';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

@@ -235,6 +235,7 @@ export default class StageScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      keyboard.addCapture(Phaser.Input.Keyboard.KeyCodes.SPACE);
       if (this.weaponImmerse !== 'water') {
         this._spaceKey.on('down', () => this._toggleWeapon());
       }
