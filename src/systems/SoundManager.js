@@ -464,7 +464,7 @@ export class SoundManager {
 
   /**
    * PIXELLAB_HOOK: 1-weapon ear preview while SPACE is held.
-   * L1 blue under 2.5s, L2 yellow from 2.5s, L3 red from 5s.
+   * L1 blue under 1.8s, L2 yellow from 1.8s, L3 red from 4s.
    * One voice. Entering the next tier stops the previous charge.
    * The clips are rises, not loops, so a held tier does not restart.
    * @param {number} tier

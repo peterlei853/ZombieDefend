@@ -214,7 +214,7 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE and SWAP shoot. A tap fires one L1 shot. Holding charges L2 at 2.5s and L3 at 5s.
+    // SPACE and SWAP shoot. A tap fires one L1 shot. Holding charges L2 at 1.8s and L3 at 4s.
     // Q still cycles the highlighted gun when the stage is not locked to water.
     const keyboard = this.input.keyboard;
     if (keyboard) {

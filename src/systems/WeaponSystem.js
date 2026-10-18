@@ -26,12 +26,13 @@ import {
   WATER_CHARGE_FX,
   WATER_CHARGE_RELEASE_MS,
   WATER_L2_AOE_MS,
-  WATER_L3_ENTER_SLOW,
   WATER_L3_NUDGE_PX,
+  WATER_L3_OVERLAP_MUL,
   WATER_TOUCH_X_SCALE,
   waterAimVelocity,
   waterAoeSpriteScale,
   waterAuraKey,
+  waterChargeSpeedMul,
   waterChargeTier,
   waterConeVelocity,
   waterHitSizeFor,
@@ -167,6 +168,8 @@ export class WeaponSystem {
     this._waterBeats = [];
     /** Manual water charge. Null when SPACE is up. */
     this._charge = null;
+    /** Last finite water muzzle. A lane step can hide the sprite for a frame. */
+    this._chargeMuzzle = null;
     /** @type {Phaser.GameObjects.Sprite|null} */
     this._aura = null;
     /**
@@ -437,7 +440,7 @@ export class WeaponSystem {
       if (!b?.gfx || b.gfx.active === false) continue;
       b.prevX = b.gfx.x;
       b.prevY = b.gfx.y;
-      if (b.weaponId === 'water') this._guideWater(b);
+      if (b.weaponId === 'water') this._lockWaterHeading(b);
       const dx = (Number.isFinite(b.vx) ? b.vx : 0) * dt;
       const dy = (Number.isFinite(b.vy) ? b.vy : 0) * dt;
       b.gfx.x += dx;
@@ -573,8 +576,8 @@ export class WeaponSystem {
    */
   /**
    * Water hits when the projectile's opaque pixels meet the enemy's,
-   * or when this step's opaque core crosses that box. `_guideWater`
-   * keeps the shot on a living body so the cores actually meet.
+   * or when this step's opaque core crosses that box. Heading is
+   * locked at spawn, so the core meets a body that stays on that line.
    * The contact stays the pixel point for the lightning burst.
    * Other weapons keep the box test.
    * @param {object} bullet
@@ -607,29 +610,21 @@ export class WeaponSystem {
   }
 
   /**
-   * Keep a water shot pointed at a living body that is still west of it.
-   * The same body is kept until it dies or the shot passes it; the next
-   * one ahead is then used. Lead is refreshed every step. The heading
-   * stays inside ±10° of horizontal so a far lane cannot yank the shot
-   * off the field.
+   * Flight direction is fixed when the shot leaves the muzzle. Homing
+   * and the ±10° cone run once, inside the spawn. Later frames may
+   * change speed (L3 overlap) and must keep this unit vector.
    * @param {object} bullet
    */
-  _guideWater(bullet) {
-    const gfx = bullet?.gfx;
-    if (!gfx) return;
+  _lockWaterHeading(bullet) {
+    const bvx = Number(bullet?.baseVx);
+    const bvy = Number(bullet?.baseVy);
+    if (!Number.isFinite(bvx) || !Number.isFinite(bvy)) return;
+    const base = Math.hypot(bvx, bvy);
+    if (!(base > 0)) return;
     const speed = Math.hypot(Number(bullet.vx) || 0, Number(bullet.vy) || 0);
-    if (!(speed > 1)) return;
-    const x = gfx.x;
-    const y = gfx.y;
-    const guide = pickWaterGuide(this._liveZombies, x, y, bullet.guideId);
-    bullet.guideId = guide ? guide.id : null;
-    if (!guide) return;
-    const zy = Number.isFinite(guide.bodyCenterY) ? guide.bodyCenterY : guide.y;
-    const vz = typeof guide.marchVx === 'function' ? guide.marchVx() : 0;
-    const aim = waterLeadAim(x, y, guide.x, zy, vz, speed);
-    const next = waterConeVelocity(x, y, aim, speed);
-    bullet.vx = next.vx;
-    bullet.vy = next.vy;
+    const use = speed > 1 ? speed : base;
+    bullet.vx = (bvx / base) * use;
+    bullet.vy = (bvy / base) * use;
   }
 
   /**
@@ -958,6 +953,8 @@ export class WeaponSystem {
       damage,
       vx,
       vy,
+      baseVx: vx,
+      baseVy: vy,
       kind: trait.id,
       weaponId: trait.id,
       size: meta.size,
@@ -1104,58 +1101,61 @@ export class WeaponSystem {
   }
 
   /**
-   * Hold builds the charge. Release, while still stopped on the mount,
-   * fires. Walking off the mount drops the charge without a shot.
+   * Hold builds the charge. Release fires. Moving up or down, and a
+   * one-frame missing muzzle, use the same timer as standing still:
+   * the hold is not cleared, and the release still spawns one shot.
+   * `canFire` stays in the signature so callers can pass the deploy
+   * flag. It does not gate this gun. A gap under
+   * {@link WATER_CHARGE_RELEASE_MS} is key bounce.
    * @param {number} dt
    * @param {object[]} bullets
    * @param {{ muzzleX: number, muzzleY: number }|null} slot
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @param {object} trait
    * @param {boolean} held
-   * @param {boolean} canFire
+   * @param {boolean} [_canFire]
    * @returns {boolean}
    */
-  _stepWaterCharge(dt, bullets, slot, zombies, trait, held, canFire) {
-    const gate = !!(canFire && slot && Number.isFinite(slot.muzzleX) && Number.isFinite(slot.muzzleY));
+  _stepWaterCharge(dt, bullets, slot, zombies, trait, held, _canFire) {
     const step = Math.max(0, dt);
-    if (held && gate) {
+    const live = slot && Number.isFinite(slot.muzzleX) && Number.isFinite(slot.muzzleY) ? slot : null;
+    if (live) this._chargeMuzzle = { muzzleX: live.muzzleX, muzzleY: live.muzzleY };
+    const spawn = live || this._chargeMuzzle;
+    if (held) {
       if (!this._charge) this._charge = { ms: 0, up: 0, ready: true };
       this._charge.ready = true;
       this._charge.up = 0;
       this._charge.ms += step;
-      const tierHeld = waterChargeTier(this._charge.ms);
-      this._syncChargeAura(slot, tierHeld);
-      // PIXELLAB_HOOK: L1 blue, L2 yellow from 2.5s, L3 red from 5s.
-      this.scene?.audio?.syncWaterCharge?.(tierHeld);
+      if (spawn) {
+        const tierHeld = waterChargeTier(this._charge.ms);
+        this._syncChargeAura(spawn, tierHeld);
+        // PIXELLAB_HOOK: L1 blue, L2 yellow from 1.8s, L3 red from 4s.
+        this.scene?.audio?.syncWaterCharge?.(tierHeld);
+      }
       return false;
     }
     if (!this._charge) {
       this.scene?.audio?.stopWaterChargeLoop?.();
       return false;
     }
-    // Still holding, but the mount is not ready. Walking off drops it.
-    if (held && !gate) {
-      this._clearWaterCharge();
-      this.scene?.audio?.stopWaterChargeLoop?.();
-      return false;
-    }
     // A bounced SPACE key goes up for a frame or two. That used to fire
     // whatever tier had accumulated (usually L1) and start a new charge,
     // so a long hold could show red and still release an L1 shot.
+    // W/S does not take this path: the hold stays down while she moves.
     this._charge.up = (this._charge.up || 0) + step;
     if (this._charge.up < WATER_CHARGE_RELEASE_MS) {
-      if (gate) {
+      if (spawn) {
         const tierHeld = waterChargeTier(this._charge.ms);
-        this._syncChargeAura(slot, tierHeld);
+        this._syncChargeAura(spawn, tierHeld);
         this.scene?.audio?.syncWaterCharge?.(tierHeld);
       }
       return false;
     }
     let fired = false;
     let tier = 1;
-    if (this._charge.ready && gate) {
+    if (this._charge.ready && spawn && Array.isArray(bullets)) {
       tier = waterChargeTier(this._charge.ms);
-      this._spawnWaterShot(bullets, slot, zombies, trait, tier);
+      this._spawnWaterShot(bullets, spawn, zombies, trait, tier);
       fired = true;
     }
     this._clearWaterCharge();
@@ -1166,8 +1166,8 @@ export class WeaponSystem {
 
   /**
    * PIXELLAB_HOOK: charge aura on the gun while SPACE is held.
-   * Cyan fx-water-charge-aura under 2.5s, yellow fx-water-charge-aura-l2
-   * from 2.5s, red fx-water-charge-aura-l3 from 5s. The sheet is the color.
+   * Cyan fx-water-charge-aura under 1.8s, yellow fx-water-charge-aura-l2
+   * from 1.8s, red fx-water-charge-aura-l3 from 4s. The sheet is the color.
    * @param {{ muzzleX: number, muzzleY: number }} slot
    * @param {number} tier
    */
@@ -1190,15 +1190,17 @@ export class WeaponSystem {
 
   _clearWaterCharge() {
     this._charge = null;
+    this._chargeMuzzle = null;
     this._safeDestroyGraphics(this._aura);
     this._aura = null;
   }
 
   /**
    * L2 retires on the first opaque contact and leaves fx-water-t2-aoe
-   * on that pixel for 4s. L3 is the AOE body: it keeps flying, slows
-   * 20% for each new monster, and each damage tick flashes the white X
-   * and nudges the body 2px east. Returns true when the bullet should go.
+   * on that pixel for 4s. L3 is the AOE body: it keeps flying, moves at
+   * half its spawn speed while it touches any enemy, and returns to that
+   * spawn speed when it touches none. Each damage tick flashes the white
+   * X and nudges the body 5px east. Returns true when the bullet should go.
    * @param {object} bullet
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @returns {boolean}
@@ -1227,6 +1229,7 @@ export class WeaponSystem {
     for (const id of Object.keys(bullet.aoe)) {
       if (!seen.has(id)) delete bullet.aoe[id];
     }
+    this._setL3OverlapSpeed(bullet, seen.size > 0);
     return false;
   }
 
@@ -1346,13 +1349,8 @@ export class WeaponSystem {
       y: Number.isFinite(ty) ? ty : bullet.gfx.y,
     };
     if (!slot) {
-      const known = Array.isArray(bullet.hitIds) && bullet.hitIds.includes(zombie.id);
       slot = bullet.aoe[id] = { acc: 0 };
       this.markWaterPierce(bullet, zombie);
-      if (!known) {
-        bullet.vx = (Number(bullet.vx) || 0) * WATER_L3_ENTER_SLOW;
-        bullet.vy = (Number(bullet.vy) || 0) * WATER_L3_ENTER_SLOW;
-      }
       this._payAoeTick(zombie, point, true);
       return;
     }
@@ -1384,6 +1382,23 @@ export class WeaponSystem {
     );
     this._pending.gold += gain.gold;
     this._pending.kills += gain.kills;
+  }
+
+  /**
+   * L3 speed is half the spawn velocity while `touching` is true, and
+   * the spawn velocity again when the shot is clear of every enemy.
+   * @param {object} bullet
+   * @param {boolean} touching
+   */
+  _setL3OverlapSpeed(bullet, touching) {
+    if ((bullet?.charge || 0) < 3) return;
+    if (!Number.isFinite(bullet.baseVx) || !Number.isFinite(bullet.baseVy)) {
+      bullet.baseVx = Number(bullet.vx) || 0;
+      bullet.baseVy = Number(bullet.vy) || 0;
+    }
+    const mul = touching ? WATER_L3_OVERLAP_MUL : 1;
+    bullet.vx = bullet.baseVx * mul;
+    bullet.vy = bullet.baseVy * mul;
   }
 
   /**
@@ -1429,7 +1444,8 @@ export class WeaponSystem {
    * @param {number} [tier]
    */
   _spawnWaterShot(bullets, slot, zombies, trait, tier = 1) {
-    const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
+    const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
+    const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1) * waterChargeSpeedMul(level);
     const target = pickWaterGuide(zombies, slot.muzzleX, slot.muzzleY, null);
     let aim = null;
     if (target) {
@@ -1439,10 +1455,9 @@ export class WeaponSystem {
       aim = waterLeadAim(slot.muzzleX, slot.muzzleY, tx, ty, vz, speed);
     }
     const { vx, vy } = waterConeVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
-    const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
     const vs = this._visualScale || 1;
     const l3 = level >= 3 ? waterL3DisplaySize(vs) : null;
-    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10 at 0.5 × _visualScale
+    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10 at 1.0 × _visualScale
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
       fxKey: level === 1 ? trait.projectile : WATER_CHARGE_FX.proj[level],
       hitSize: waterHitSizeFor(level),

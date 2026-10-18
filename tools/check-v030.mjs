@@ -46,8 +46,8 @@ const configSrc = readFileSync(new URL('../src/data/GameConfig.js', import.meta.
 const deploySrc = readFileSync(new URL('../src/assets/heroDeploy.js', import.meta.url), 'utf8');
 const weaponSrc = readFileSync(new URL('../src/systems/WeaponSystem.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.22' && APP_VERSION === '0.36.22', 'package and APP_VERSION are v0.36.22');
-assert(html.includes('v0.36.22'), 'document title is v0.36.22');
+assert(pkg.version === '0.36.23' && APP_VERSION === '0.36.23', 'package and APP_VERSION are v0.36.23');
+assert(html.includes('v0.36.23'), 'document title is v0.36.23');
 assert(IDS.join(',') === OWNED_WEAPON_ORDER.join(','), 'immerse ids match shop order');
 
 for (const id of IDS) {

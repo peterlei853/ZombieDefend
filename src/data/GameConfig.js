@@ -272,10 +272,20 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * the previous 0.25; WATER_L3_VS_L1 2→4) and the hit box matches that
  * width. Gold, saves, barricade max HP, and the roster stay put.
  * No GitHub Pages publish.
+ * v0.36.23: moving up or down uses the same charge as standing still.
+ * A tap or a release while W/S is held still fires one shot. Bullet
+ * direction is fixed at spawn. L2 flies at 1.3× the L1 speed and L3 at
+ * 1.5×. L3 draws at 1.0 × the depth scale (twice the v0.36.22 0.5) and
+ * the hit box matches that width. Each L3 damage tick nudges 5px east.
+ * While the L3 shot touches any enemy its speed is half the spawn
+ * speed; clear of enemies, that spawn speed returns. L2 is ready at
+ * 1.8s and L3 at 4s. A SPACE gap under 120ms still keeps the charge.
+ * Gold, saves, barricade max HP, and the roster stay put.
+ * No GitHub Pages publish.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.22';
+export const APP_VERSION = '0.36.23';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

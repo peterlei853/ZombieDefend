@@ -195,12 +195,13 @@ export function waterAimVelocity(fromX, fromY, target, speed) {
 }
 
 /** Hold this long for a level-2 charge. Under it, the shot stays L1. */
-export const WATER_CHARGE_L2_MS = 2500;
+export const WATER_CHARGE_L2_MS = 1800;
 /** Hold this long for a level-3 charge. */
-export const WATER_CHARGE_L3_MS = 5000;
+export const WATER_CHARGE_L3_MS = 4000;
 /**
  * SPACE must stay up this long before the shot leaves. A shorter gap
  * is key bounce: the same charge keeps counting instead of firing L1.
+ * Gaps under 120ms do not fire.
  */
 export const WATER_CHARGE_RELEASE_MS = 120;
 /** L2 explosion stays on the contact pixel this long, then leaves. */
@@ -208,10 +209,18 @@ export const WATER_L2_AOE_MS = 4000;
 /** Shared AOE contact tick while opaque pixels still overlap. */
 export const WATER_AOE_TICK_MS = 200;
 export const WATER_AOE_TICK_DMG = 6;
-/** Each new body an L3 shot enters. Stacks. */
-export const WATER_L3_ENTER_SLOW = 0.8;
-/** Each L3 damage tick shifts the body this far east. */
-export const WATER_L3_NUDGE_PX = 2;
+/**
+ * While an L3 shot's body is touching any enemy, flight speed is this
+ * fraction of the spawn velocity. Clearing every enemy restores the
+ * spawn velocity. It does not stack per body.
+ */
+export const WATER_L3_OVERLAP_MUL = 0.5;
+/** Each L3 damage tick shifts the body this far east, away from the hero. */
+export const WATER_L3_NUDGE_PX = 5;
+/** L2 flight speed divided by the L1 spawn speed. */
+export const WATER_L2_SPEED_MUL = 1.3;
+/** L3 flight speed divided by the L1 spawn speed. */
+export const WATER_L3_SPEED_MUL = 1.5;
 /** L1 cell. Drawn at `_visualScale` (depth taper; LAYOUT_SCALE already divided out). */
 export const WATER_L1_FRAME = 32;
 /** L3 cell. The sheet stays 512×256; gameplay scales it down. */
@@ -220,9 +229,10 @@ export const WATER_L3_CELL_H = 256;
 /**
  * On-screen L3 height is this many times the L1 frame.
  * v0.36.21 used 2 (0.25 × `_visualScale`, 64px tall at visualScale 1).
- * v0.36.22 uses 4, so the sheet draws at 0.5 × `_visualScale`.
+ * v0.36.22 used 4 (0.5 × `_visualScale`, 128px tall).
+ * v0.36.23 uses 8, so the sheet draws at 1.0 × `_visualScale` (256px tall).
  */
-export const WATER_L3_VS_L1 = 4;
+export const WATER_L3_VS_L1 = 8;
 /** L2 explosion cell. The sheet stays 256×212. */
 export const WATER_AOE_CELL_W = 256;
 export const WATER_AOE_CELL_H = 212;
@@ -252,7 +262,7 @@ export const WATER_CHARGE_FX = {
 };
 
 /**
- * Cyan under 2.5s, yellow from 2.5s, red from 5s. The sheet is the color.
+ * Cyan under 1.8s, yellow from 1.8s, red from 4s. The sheet is the color.
  * @param {number} tier
  */
 export function waterAuraKey(tier) {
@@ -262,7 +272,7 @@ export function waterAuraKey(tier) {
 }
 
 /**
- * 1 under 2.5s, 2 from 2.5s, 3 from 5s. A tap is still level 1.
+ * 1 under 1.8s, 2 from 1.8s, 3 from 4s. A tap is still level 1.
  * @param {number} ms
  */
 export function waterChargeTier(ms) {
@@ -284,9 +294,9 @@ export function waterPierceFor(tier) {
 
 /**
  * Uniform sprite scale for the L3 sheet.
- * Height lands on 4× the 32px L1 frame (128px at visualScale 1), twice
- * the v0.36.21 64px body. Width follows the 2:1 cell, so the body is
- * 256×128. The scale is 0.5 × `_visualScale`.
+ * Height lands on 8× the 32px L1 frame (256px at visualScale 1), twice
+ * the v0.36.22 128px body. Width follows the 2:1 cell, so the body is
+ * 512×256. The scale is 1.0 × `_visualScale`.
  * @param {number} [visualScale] depth taper (`_visualScale`)
  */
 export function waterL3SpriteScale(visualScale = 1) {
@@ -326,7 +336,7 @@ export function waterAoeSpriteScale(visualScale = 1) {
 /**
  * Authored hit box in field px. layoutPx(this) is the canvas AABB at
  * visualScale 1. L2 matches its 128-wide cell. L3 matches the scaled
- * body (256 canvas px), not the raw 512 sheet.
+ * body (512 canvas px at visualScale 1), the same width the sprite draws.
  * @param {number} tier
  */
 export function waterHitSizeFor(tier) {
@@ -359,6 +369,17 @@ export function waterConeVelocity(fromX, fromY, target, speed) {
   if (pitch < -max) pitch = -max;
   const aim = pitch >= 0 ? -Math.PI + pitch : Math.PI + pitch;
   return { vx: Math.cos(aim) * s, vy: Math.sin(aim) * s };
+}
+
+/**
+ * Spawn-speed multiplier against the L1 water shot. L1 stays 1.
+ * L2 is +30%. L3 is +50%.
+ * @param {number} tier
+ */
+export function waterChargeSpeedMul(tier) {
+  if (tier >= 3) return WATER_L3_SPEED_MUL;
+  if (tier === 2) return WATER_L2_SPEED_MUL;
+  return 1;
 }
 
 /**

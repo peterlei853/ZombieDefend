@@ -22,8 +22,10 @@ import {
   WATER_CHARGE_RELEASE_MS,
   WATER_L2_AOE_MS,
   WATER_AOE_CELL_H,
-  WATER_L3_ENTER_SLOW,
+  WATER_L2_SPEED_MUL,
   WATER_L3_NUDGE_PX,
+  WATER_L3_OVERLAP_MUL,
+  WATER_L3_SPEED_MUL,
   WATER_L1_FRAME,
   WATER_MOB_FRAME,
   WATER_TOUCH_X_SCALE,
@@ -65,9 +67,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.22', 'APP_VERSION is 0.36.22');
-assert(pkg.version === '0.36.22', 'package.json tracks 0.36.22');
-assert(html.includes('ZombieDefend v0.36.22'), 'title tracks 0.36.22');
+assert(APP_VERSION === '0.36.23', 'APP_VERSION is 0.36.23');
+assert(pkg.version === '0.36.23', 'package.json tracks 0.36.23');
+assert(html.includes('ZombieDefend v0.36.23'), 'title tracks 0.36.23');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -119,6 +121,8 @@ assert(defender.includes('manualFire') && defender.includes('player-girl-water-f
 assert(defender.includes('_waterLock') && defender.includes('canFire: this._waterLock ? true'), 'water stays out and can fire while moving');
 const floats = readFileSync(new URL('../src/systems/HeroFloats.js', import.meta.url), 'utf8');
 assert(floats.includes('-still') && floats.includes('_waterLock'), 'the water float keeps its still sheet');
+assert(floats.includes('muzzleOf'), 'a lane step still has a water muzzle when the sprite hides');
+assert(defender.includes("muzzleOf?.('water'"), 'stage water uses that muzzle while moving');
 assert(!floats.includes('prop-water-mount-front-alt'), 'the water float does not draw a cradle');
 assert(weaponSystem.includes('manualFire') && weaponSystem.includes('_coneFlight'), 'manual shots use the ±10° cone');
 assert(!stage.includes('player-handgun-shoot'), 'stage does not use the old handgun shoot sheet');
@@ -246,8 +250,8 @@ assert(guns.chargeTier() === 3, 'the slip leaves the charge on L3');
 assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l3Bullets, chargeSlot, [], chargeTrait, false, true) === true, 'the 5s hold releases');
 assert(l3Bullets[0]?.charge === 3, 'the released shot is L3');
 const l3Body = waterL3DisplaySize(1);
-assert(l3Body.h === WATER_L1_FRAME * 4 && l3Body.w === 256, 'L3 displays at 256×128, four times the L1 height');
-assert(waterL3SpriteScale(1) === 0.5, 'the 256px L3 cell is scaled by 0.5');
+assert(l3Body.h === WATER_L1_FRAME * 8 && l3Body.w === 512, 'L3 displays at 512×256, eight times the L1 height');
+assert(waterL3SpriteScale(1) === 1, 'the 256px L3 cell is scaled by 1');
 assert(l3Bullets[0].size === l3Body.w && l3Bullets[0].gfx.scale === waterL3SpriteScale(1), 'the L3 hit box matches the scaled sprite');
 assert(layoutPx(waterHitSizeFor(3)) === l3Body.w, 'waterHitSizeFor(3) is the displayed width, not the 512 sheet');
 assert(WATER_CHARGE_RELEASE_MS === 120, 'the release gap is 120ms');
@@ -255,6 +259,18 @@ const tapBullets = [];
 assert(guns._stepWaterCharge(40, tapBullets, chargeSlot, [], chargeTrait, true, true) === false, 'a short press is still held');
 assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, tapBullets, chargeSlot, [], chargeTrait, false, true) === true, 'releasing a short press fires');
 assert(tapBullets.length === 1 && tapBullets[0].charge === 1, 'a short press fires one L1 bullet');
+const moveBullets = [];
+assert(guns._stepWaterCharge(40, moveBullets, chargeSlot, [], chargeTrait, true, true) === false, 'a tap starts the same charge with a muzzle');
+assert(guns._stepWaterCharge(40, moveBullets, null, [], chargeTrait, true, false) === false, 'holding through a missing muzzle does not fire');
+assert(moveBullets.length === 0 && guns.chargeMs() === 80, 'W/S or a lane change does not clear the charge');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, moveBullets, null, [], chargeTrait, false, false) === true, 'releasing while the muzzle is missing still fires');
+assert(moveBullets.length === 1 && moveBullets[0].charge === 1, 'that moving release is one L1 shot');
+const standBullets = [];
+const mover = new WeaponSystem(scene);
+mover.setOwnedWeapons(['water']);
+assert(mover._stepWaterCharge(40, standBullets, chargeSlot, [], chargeTrait, true, true) === false, 'standing tap is held');
+assert(mover._stepWaterCharge(WATER_CHARGE_RELEASE_MS, standBullets, chargeSlot, [], chargeTrait, false, true) === true, 'standing release fires');
+assert(standBullets.length === 1 && standBullets[0].charge === 1 && moveBullets[0].charge === standBullets[0].charge, 'moving and standing taps both fire one L1');
 guns._visualScale = 1;
 const l3Sized = [];
 guns._spawnWaterShot(l3Sized, chargeSlot, [], chargeTrait, 3);
@@ -264,6 +280,12 @@ const l3Scaled = [];
 guns._spawnWaterShot(l3Scaled, chargeSlot, [], chargeTrait, 3);
 assert(Math.abs(l3Scaled[0].size - waterL3DisplaySize(2).w) < 1e-6, 'L3 hit box tracks visual scale');
 guns._visualScale = 1;
+const speedBag = { 1: [], 2: [], 3: [] };
+for (const tier of [1, 2, 3]) guns._spawnWaterShot(speedBag[tier], chargeSlot, [], chargeTrait, tier);
+const speedOf = (tier) => Math.hypot(speedBag[tier][0].vx, speedBag[tier][0].vy);
+assert(Math.abs(speedOf(2) / speedOf(1) - WATER_L2_SPEED_MUL) < 1e-9, 'L2 spawn speed is 1.3× L1');
+assert(Math.abs(speedOf(3) / speedOf(1) - WATER_L3_SPEED_MUL) < 1e-9, 'L3 spawn speed is 1.5× L1');
+assert(speedBag[3][0].baseVx === speedBag[3][0].vx && speedBag[3][0].baseVy === speedBag[3][0].vy, 'L3 stores the spawn velocity');
 const primary = {
   id: 1,
   x: 40,
@@ -294,6 +316,36 @@ assert(guns.confirmOpaqueHit({ weaponId: 'sling' }, primary) === true, 'other gu
 guns.applyDirectHit(primary, bullet);
 const waterKeys = spawned.map((s) => s.key).filter((key) => key !== 'fx-water-proj-t3');
 assert(waterKeys.length === 1 && waterKeys[0] === 'fx-lightning-impact', 'the only water hit sheet is fx-lightning-impact');
+const l3shot = {
+  weaponId: 'water',
+  charge: 3,
+  vx: -200,
+  vy: 0,
+  baseVx: -200,
+  baseVy: 0,
+  size: 64,
+  aoe: {},
+  hitIds: [],
+  gfx: { fillColor: 1, x: 40, y: 80, displayWidth: 20, displayHeight: 20, originX: 0.5, originY: 0.5, active: true },
+};
+const overlapFoe = {
+  id: 4,
+  x: 40,
+  y: 80,
+  alive: true,
+  goldValue: 0,
+  body: { active: true, fillColor: 1, x: 40, y: 80, displayWidth: 20, displayHeight: 20, originX: 0.5, originY: 0.5 },
+  getBounds() { return { left: 0, right: 80, top: 40, bottom: 120 }; },
+  takeDamage() { return false; },
+};
+const overlapFoe2 = { ...overlapFoe, id: 5, body: overlapFoe.body };
+guns.armHits([overlapFoe, overlapFoe2], []);
+assert(guns.stepChargeAoe(l3shot, [overlapFoe]) === false, 'L3 keeps flying on contact');
+assert(l3shot.vx === -100 && l3shot.vy === 0, 'one overlap halves the original L3 speed');
+assert(guns.stepChargeAoe(l3shot, [overlapFoe, overlapFoe2]) === false, 'a second body is still one overlap');
+assert(l3shot.vx === -100 && l3shot.vy === 0, 'extra overlaps do not stack the slow');
+assert(guns.stepChargeAoe(l3shot, []) === false, 'leaving the body does not retire L3');
+assert(l3shot.vx === -200 && l3shot.vy === 0, 'clear of enemies restores the original L3 speed');
 const burst = spawned.find((s) => s.key === 'fx-lightning-impact');
 assert(burst.x === bullet.touchX && burst.y === bullet.touchY, 'the burst is placed on the contact, not the body center');
 assert(burst.y !== primary.bodyCenterY, 'the contact is not rewritten to the chest');
@@ -313,7 +365,7 @@ guns._payAoeTick({
 }, { x: 33, y: 70 }, true);
 const mark = spawned.find((s) => s.key === 'fx-aoe-touch-x');
 assert(mark && mark.scale === WATER_TOUCH_X_SCALE * guns._visualScale, 'each AOE tick draws the white X at 2×');
-assert(nudgedBody.x === 42, 'the L3 tick still nudges 2px east');
+assert(nudgedBody.x === 45, 'the L3 tick nudges 5px east');
 
 const held = waterLeadAim(100, 0, 0, 0, 0, 100);
 assert(held.x === 0 && held.y === 0, 'a stopped body is aimed where it stands');
@@ -360,7 +412,11 @@ assert(guns.confirmOpaqueHit(near, primary) === false, 'a water shot still outsi
 const spawnAt = weaponSystem.indexOf('_spawnWaterShot(bullets, slot, zombies, trait, tier = 1) {');
 const spawnFn = weaponSystem.slice(spawnAt, weaponSystem.indexOf('_nearestLiving(zombies, x, y)', spawnAt));
 assert(spawnFn.includes('waterLeadAim') && spawnFn.includes('marchVx'), 'water leads the marching body');
-assert(weaponSystem.includes('_guideWater'), 'water keeps guiding onto a living body ahead');
+assert(!weaponSystem.includes('_guideWater'), 'water does not steer after the shot leaves the muzzle');
+assert(weaponSystem.includes('_lockWaterHeading'), 'flight keeps the spawn direction');
+const stepAt = weaponSystem.indexOf('stepBullets(bullets, deltaSec)');
+const stepFn = weaponSystem.slice(stepAt, weaponSystem.indexOf('stepCasings', stepAt));
+assert(!stepFn.includes('waterConeVelocity') && !stepFn.includes('pickWaterGuide'), 'bullets do not re-aim in flight');
 assert(weaponSystem.includes('spriteSweepContact'), 'water hits on opaque contact, including the step that crosses');
 assert(!spawnFn.includes('_chainLightning'), 'the water spawn path does not chain');
 
@@ -372,28 +428,41 @@ const flying = {
   gfx: { x: 900, y: 400, active: true },
 };
 guns.armHits([{ id: 9, x: 1000, y: 400, alive: false, bodyCenterY: 400 }], []);
-guns._guideWater(flying);
-assert(flying.vx === -376 && flying.vy === 0, 'a dead guide keeps the last heading');
-assert(flying.gfx.active === true && flying.guideId == null, 'a dead guide does not destroy the shot');
+flying.baseVx = -376;
+flying.baseVy = 0;
+guns.stepBullets([flying], 0.016);
+assert(flying.vx === -376 && flying.vy === 0, 'a dead guide keeps the spawn heading');
+assert(flying.gfx.active === true, 'a dead guide does not destroy the shot');
 
 const steered = {
   weaponId: 'water',
   guideId: null,
   vx: -100,
-  vy: 200,
-  gfx: { x: 900, y: 400, active: true },
+  vy: 0,
+  baseVx: -100,
+  baseVy: 0,
+  gfx: {
+    x: 900,
+    y: 400,
+    active: true,
+    setRotation() {},
+    setDepth() {},
+  },
 };
 guns.armHits([{
   id: 1,
-  x: 700,
-  y: 400,
+  x: 200,
+  y: 900,
   alive: true,
-  bodyCenterY: 400,
-  marchVx() { return 0; },
+  bodyCenterY: 900,
+  marchVx() { return 80; },
 }], []);
-guns._guideWater(steered);
-assert(steered.guideId === 1, 'a living body ahead is still the guide');
-assert(steered.vx < 0 && Math.abs(steered.vy) < 1, 'the shot still turns onto that body');
+guns.stepBullets([steered], 0.05);
+assert(steered.vx === -100 && steered.vy === 0, 'a living body ahead does not steer a shot after spawn');
+steered.vx = 30;
+steered.vy = 90;
+guns.stepBullets([steered], 0);
+assert(steered.vx < 0 && Math.abs(steered.vy) < 1e-6, 'a rewritten heading snaps back to the spawn direction');
 
 scene.cameras = { main: { scrollX: 0, scrollY: 0, width: 1280, height: 720 } };
 const onTarget = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water', traveled: 226 };
@@ -409,24 +478,25 @@ delete scene.cameras;
 const headless = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water' };
 assert(guns.shouldRetireBullet(headless) === true, 'without a camera the stage gutter cull still applies');
 
-assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.5s is L1');
-assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
-assert(waterChargeTier(5000) === 3, '5s is L3');
+assert(waterChargeTier(0) === 1 && waterChargeTier(1799) === 1, 'a hold under 1.8s is L1');
+assert(waterChargeTier(1800) === 2 && waterChargeTier(3999) === 2, '1.8s is L2');
+assert(waterChargeTier(4000) === 3, '4s is L3');
 assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 1 && waterPierceFor(3) === Infinity, 'L1 and L2 stop on the first body, L3 crosses the field');
-assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 160, 'L3 AABB matches the 256px scaled body');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 320, 'L3 AABB matches the 512px scaled body');
 const aoeScale = waterAoeSpriteScale(1);
 const mobH = waterMobDisplayHeight(1);
 assert(mobH === WATER_MOB_FRAME * LAYOUT_SCALE, 'a normal mob is the 84px frame times LAYOUT_SCALE');
 assert(Math.abs(aoeScale * WATER_AOE_CELL_H - 2 * mobH) < 1e-6, 'L2 AOE height is 2× a normal stage mob');
 assert(Math.abs(aoeScale * 2 - (4 * mobH) / WATER_AOE_CELL_H) < 1e-6, 'L2 AOE is half of the previous 4× mob height');
 assert(WATER_TOUCH_X_SCALE === 2, 'the white X is drawn at 2×');
-assert(Math.abs(waterL3SpriteScale(1) - 0.5) < 1e-9, 'L3 sprite scale is 0.5 × visualScale');
-assert(Math.abs(waterL3DisplaySize(1).w - 256) < 1e-6, 'L3 display width is 256 at visualScale 1');
+assert(Math.abs(waterL3SpriteScale(1) - 1) < 1e-9, 'L3 sprite scale is 1.0 × visualScale');
+assert(Math.abs(waterL3DisplaySize(1).w - 512) < 1e-6, 'L3 display width is 512 at visualScale 1');
 assert(Math.abs(waterHitSizeFor(3) * LAYOUT_SCALE - waterL3DisplaySize(1).w) < 1e-6, 'L3 hit box matches the displayed width');
 assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
 assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
-assert(WATER_L3_ENTER_SLOW === 0.8, 'each new L3 body slows the shot by 20%');
-assert(WATER_L3_NUDGE_PX === 2, 'each L3 damage tick nudges 2px');
+assert(WATER_L3_OVERLAP_MUL === 0.5, 'L3 overlap speed is half the spawn speed');
+assert(WATER_L2_SPEED_MUL === 1.3 && WATER_L3_SPEED_MUL === 1.5, 'L2 is +30% and L3 is +50% versus L1');
+assert(WATER_L3_NUDGE_PX === 5, 'each L3 damage tick nudges 5px');
 assert(waterAuraKey(1) === 'fx-water-charge-aura' && waterAuraKey(2) === 'fx-water-charge-aura-l2' && waterAuraKey(3) === 'fx-water-charge-aura-l3', 'the charge glow swaps sheets by tier');
 assert(WEAPON_TRAITS.water.label === '1 weapon', 'the water slot displays as 1 weapon');
 assert(weaponSystem.includes('stepChargeAoe') && weaponSystem.includes('fx-water-t2-aoe') && weaponSystem.includes('fx-aoe-touch-x'), 'L2/L3 contact uses the catalog AOE and the white X');
@@ -517,9 +587,9 @@ beds.syncWaterCharge(1);
 beds.syncWaterCharge(1);
 assert(heard().filter((key) => key === 'sfx-charge-l1-blue').length === 1, 'SPACE down starts one blue charge');
 assert(!heard().some((key) => key.startsWith('sfx-water-')), 'the Mega Man charge pack stays silent');
-assert(!heard().includes('sfx-charge-l2-yellow'), 'yellow waits until the hold passes 2.5s');
+assert(!heard().includes('sfx-charge-l2-yellow'), 'yellow waits until the hold reaches L2');
 beds.syncWaterCharge(2);
-assert(heard().filter((key) => key === 'sfx-charge-l2-yellow').length === 1, 'past 2.5s the blue charge stops and yellow plays');
+assert(heard().filter((key) => key === 'sfx-charge-l2-yellow').length === 1, 'past 1.8s the blue charge stops and yellow plays');
 assert(nodes.filter((node) => node.key === 'sfx-charge-l1-blue' && node.playing).length === 0, 'the blue charge is stopped at L2');
 beds.syncWaterCharge(3);
 assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'past 5s yellow stops and the red charge plays');
@@ -527,7 +597,7 @@ assert(nodes.filter((node) => node.key === 'sfx-charge-l2-yellow' && node.playin
 beds.syncWaterCharge(3);
 assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'holding L3 does not restart the red charge');
 beds.playWaterRelease(2);
-assert(heard().includes('sfx-fire-l2'), 'a 2.5s release plays sfx-fire-l2');
+assert(heard().includes('sfx-fire-l2'), 'an L2 release plays sfx-fire-l2');
 assert(nodes.filter((node) => node.key.startsWith('sfx-charge-') && node.playing).length === 0, 'release stops the charge voice');
 assert(played.find((row) => row.key === 'sfx-fire-l2')?.volume === 0.32, 'L2 fire is 0.32');
 beds.playWaterRelease(1);

@@ -358,7 +358,9 @@ export class DefenderGroup {
       );
       const visualScale = Math.abs(this.player.scaleX || 1) / LAYOUT_SCALE;
       const muzzles = this.fenceMounts ? [] : this.floats?.muzzles() || [];
-      const waterMuzzle = muzzles.find((muzzle) => muzzle.id === 'water') || null;
+      const waterMuzzle = this._waterLock
+        ? this.floats?.muzzleOf?.('water', this.player) || null
+        : muzzles.find((muzzle) => muzzle.id === 'water') || null;
       const chargeWater =
         this._waterLock ||
         (!manualStage && !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water');
