@@ -51,8 +51,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const mountSrc = readFileSync(new URL('../src/systems/WaterMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.23' && APP_VERSION === '0.36.23', 'package and APP_VERSION are 0.36.23');
-assert(html.includes('v0.36.23'), 'document title is v0.36.23');
+assert(pkg.version === '0.36.24' && APP_VERSION === '0.36.24', 'package and APP_VERSION are 0.36.24');
+assert(html.includes('v0.36.24'), 'document title is v0.36.24');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(HERO_UNARMED.command === 'player-girl-command', 'command pose stays the backup');
 assert(WATER_MOUNT_HI_VIS_KEY === 'prop-water-mount-hi-vis', 'hi-vis mount sprite key');
@@ -249,24 +249,20 @@ const early = guns.applyDirectHit(primary, {
   touchX: 12,
   touchY: 34,
 });
-assert(early.gold === 0 && early.kills === 0, 'contact does not pay gold');
-assert(damaged.length === 0, 'contact does not drop HP');
+assert(early.gold === 0 && early.kills === 0, 'contact return stays empty; gold is pending');
+assert(damaged.length === 1 && damaged[0].id === 1 && damaged[0].amount === 18, 'L1 drops HP on the one body at contact');
 const zap = spawned.filter((s) => s.key === 'fx-lightning-impact');
 assert(zap.length === 1 && zap[0].x === 12 && zap[0].y === 34, 'lightning impact sits on the opaque contact');
 assert(!spawned.some((s) => s.key === 'fx-lightning-chain'), 'water does not chain');
 assert(!spawned.some((s) => s.key === 'fx-water-splash-big' || s.key === 'fx-water-wet-ground' || s.key === 'fx-water-impact' || s.key === 'fx-water-wet' || s.key === 'fx-hit-water-chef'), 'water attack sheets stay off on contact');
-guns.stepOverlays(splashBeat - 1);
-assert(damaged.length === 0, 'HP waits through the first half of the splash');
-guns.stepOverlays(1);
-assert(damaged.length === 2, 'primary and splash share one beat');
-assert(damaged[0].id === 1 && damaged[0].amount === 18, 'primary takes the direct hit on the beat');
-assert(damaged[1].id === 2 && damaged[1].amount === 10, 'neighbor takes splash damage on the same beat');
-assert(!damaged.some((d) => d.id === 3), 'outside the splash radius is spared');
-assert(!spawned.some((s) => s.key === 'fx-hit-water-chef' || s.key === 'fx-water-impact' || s.key === 'fx-water-splash-big' || s.key === 'fx-water-wet' || s.key === 'fx-water-wet-ground'), 'the damage beat does not play water sheets');
-assert(spawned.filter((s) => s.key === 'fx-lightning-impact').length === 1, 'the beat does not add a second lightning burst');
-assert(spawned.filter((s) => s.key === 'fx-lightning-chain').length === 0, 'splash neighbors are not a chain');
+guns.stepOverlays(splashBeat);
+assert(damaged.length === 1, 'L1 does not add a splash beat');
+assert(!damaged.some((d) => d.id === 2 || d.id === 3), 'neighbors are not hit');
+assert(!spawned.some((s) => s.key === 'fx-hit-water-chef' || s.key === 'fx-water-impact' || s.key === 'fx-water-splash-big' || s.key === 'fx-water-wet' || s.key === 'fx-water-wet-ground' || s.key === 'fx-aoe-touch-x'), 'L1 does not play a splash or white X');
+assert(spawned.filter((s) => s.key === 'fx-lightning-impact').length === 1, 'contact does not add a second lightning burst');
+assert(spawned.filter((s) => s.key === 'fx-lightning-chain').length === 0, 'the single target is not a chain');
 const pending = guns.consumePending();
-assert(pending.gold === 4 && pending.kills === 1, 'kill gold lands with the FX beat');
+assert(pending.gold === 4 && pending.kills === 1, 'kill gold lands with the contact');
 
 const legacyScene = makeScene(['fx-water-impact', 'fx-water-wet']);
 const legacyHits = [];
@@ -297,11 +293,10 @@ legacy.applyDirectHit(legacyZ, {
 });
 assert(!spawned.some((s) => s.key === 'fx-water-impact' || s.key === 'fx-water-wet'), 'legacy water sheets are not played');
 assert(!spawned.some((s) => s.key === 'fx-lightning-impact'), 'a missing lightning sheet does not fall back to water');
-legacy.stepOverlays(249);
-assert(legacyHits.length === 0, 'legacy sheet still waits 250ms');
-legacy.stepOverlays(1);
-assert(legacyHits.length === 1 && legacyHits[0] === 9, 'legacy sheet drops HP at 250ms');
-assert(!spawned.some((s) => s.key === 'fx-water-impact' || s.key === 'fx-water-wet'), 'the beat still does not play water sheets');
+assert(legacyHits.length === 1 && legacyHits[0] === 9, 'L1 still drops the one body when the lightning sheet is missing');
+legacy.stepOverlays(250);
+assert(legacyHits.length === 1, 'a later overlay step does not hit again');
+assert(!spawned.some((s) => s.key === 'fx-water-impact' || s.key === 'fx-water-wet'), 'the hit still does not play water sheets');
 
 const slingHits = [];
 const slingZ = {

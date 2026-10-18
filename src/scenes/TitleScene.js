@@ -94,6 +94,18 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     const startY = cardY + 96;
+    addKitText(this, width / 2, startY + 36, 'HOLD SPACE OR SWAP', {
+      font: FONT_TINY,
+      size: 14,
+      color: '#f6e7c2',
+      depth: 4,
+    });
+    addKitText(this, width / 2, startY + 54, '點按 L1 · 按住蓄力發射', {
+      system: true,
+      size: 14,
+      color: '#f6e7c2',
+      depth: 4,
+    });
     addKitImage(this, width / 2 - 100, startY, UI.ready, { depth: 4 });
     const btn = addParchmentButton(this, width / 2, startY, 'START', () => startStage(defaultStage), {
       scale: 2,

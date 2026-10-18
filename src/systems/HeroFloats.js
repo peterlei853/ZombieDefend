@@ -119,6 +119,7 @@ export class HeroFloats {
         sprite.setAlpha(0);
         continue;
       }
+      // PIXELLAB_HOOK: lone water float Y is WATER_FLOAT_EYE_Y (eye height).
       const off = settled ? { ...arc[shownAt], alpha: 1 } : deployOffset(shownAt, shown.length, t);
       const selected = this._waterLock || !this._selected || gun.id === this._selected;
       sprite.setVisible(true);

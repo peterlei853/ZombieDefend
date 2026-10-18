@@ -16,8 +16,12 @@ import {
   skipsHurtKnockback,
   takeZombieSkin,
   zombieActionKey,
+  zombieDeathKeys,
+  pickDeathKey,
   zombieSheetKey,
   zombieSkinDef,
+  ZOMBIE_HURT_MS,
+  ZOMBIE_HURT_SPEED_MUL,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
@@ -88,6 +92,8 @@ export class Zombie {
     /** Panda slow. March speed only — barricade bite DPS is untouched. */
     this._slowMs = 0;
     this._slowMult = 1;
+    /** Hit reaction. March speed ×0.5 until this expires. Bite DPS is untouched. */
+    this._hurtMs = 0;
     /** Freeze / stun. March and chase only — barricade bite DPS is untouched. */
     this._rootMs = 0;
     /** Dragon smoke burn. Ticked by tickStatus; does not change contact DPS. */
@@ -573,11 +579,13 @@ export class Zombie {
     this._burnLeft = Math.max(this._burnLeft || 0, dur);
   }
 
-  /** 0 while rooted, otherwise the panda slow multiplier, else 1. */
+  /** 0 while rooted, otherwise panda slow and the hurt-window half speed. */
   _slowFactor() {
     if (this._rootMs > 0) return 0;
-    if (!(this._slowMs > 0)) return 1;
-    return this._slowMult > 0 ? this._slowMult : 1;
+    let factor = 1;
+    if (this._slowMs > 0) factor *= this._slowMult > 0 ? this._slowMult : 1;
+    if (this._hurtMs > 0) factor *= ZOMBIE_HURT_SPEED_MUL;
+    return factor;
   }
 
   /**
@@ -591,6 +599,7 @@ export class Zombie {
       this._slowMs = Math.max(0, this._slowMs - dt);
       if (this._slowMs <= 0) this._slowMult = 1;
     }
+    if (this._hurtMs > 0) this._hurtMs = Math.max(0, this._hurtMs - dt);
     if (this._rootMs > 0) this._rootMs = Math.max(0, this._rootMs - dt);
     if (!(this._burnLeft > 0) || !this.alive) return { gold: 0, kills: 0 };
     this._burnLeft -= dt;
@@ -690,6 +699,10 @@ export class Zombie {
    */
   _syncLocomotion() {
     if (!this._isSprite || !this.body?.anims || !this.alive || this.atBarricade) return;
+    const hurt = this._animKey('hurt');
+    const current = this.body.anims.currentAnim?.key;
+    // A hit just started the hurt strip. Do not replace it with walk this frame.
+    if (hurt && current === hurt && this.body.anims.isPlaying) return;
     const stumble = this._animKey('stumble');
     const walk = this._animKey('walk');
     const stumbleReady =
@@ -697,7 +710,6 @@ export class Zombie {
       (this.skin ? this._animReady(stumble) : hasZombieAnim(this.scene, this.variant, 'stumble'));
     const key = this.isCritical() && stumbleReady ? stumble : walk;
     if (!this.scene.anims.exists(key)) return;
-    const current = this.body.anims.currentAnim?.key;
     if (current === key && this.body.anims.isPlaying) return;
     this.body.play(key);
   }
@@ -781,7 +793,10 @@ export class Zombie {
     if (amount > 0) {
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
       else this.scene.audio?.playZombieHurt();
-      if (scripted && hit.hurtStrip === true) this._playHurtStrip();
+      // Stage hits play the catalog hurt strip. Feel-booth ranged hits
+      // still opt in with hurtStrip so a baked crescent is not forced on.
+      if (!scripted || hit.hurtStrip === true) this._playHurtStrip();
+      this._beginHurtSlow();
     }
     return false;
   }
@@ -957,11 +972,20 @@ export class Zombie {
     due(showing);
   }
 
-  /** Hurt strip after the white flash. No-op when that sheet is not loaded. */
+  /**
+   * Hurt strip after the white flash. No-op when that sheet is not loaded.
+   * PIXELLAB_HOOK: zombie-office-worker-v2-hurt, zombie-delivery-hurt,
+   * zombie-chef-hurt are 4 frames @ 10. Other types use `{prefix}-hurt`.
+   */
   _playHurtStrip() {
     const hurt = this._animKey('hurt');
     if (!hurt) return false;
     return this.playShowcaseStrip(hurt);
+  }
+
+  /** Half march speed for the hurt window. Bite DPS does not read this. */
+  _beginHurtSlow() {
+    this._hurtMs = ZOMBIE_HURT_MS;
   }
 
   /**
@@ -1065,8 +1089,15 @@ export class Zombie {
       const blast = this._animKey('blast');
       if (this._animReady(blast)) return blast;
     }
-    const death = this._animKey('death');
-    return this._animReady(death) ? death : null;
+    /** @type {string[]} */
+    const ready = [];
+    for (const key of zombieDeathKeys(this.skin)) {
+      if (this._animReady(key) && !ready.includes(key)) ready.push(key);
+    }
+    const primary = this._animKey('death');
+    if (primary && this._animReady(primary) && !ready.includes(primary)) ready.push(primary);
+    // PIXELLAB_HOOK: random die1 / die2 when both strips are loaded.
+    return pickDeathKey(ready);
   }
 
   /**

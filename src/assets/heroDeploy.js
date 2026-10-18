@@ -53,11 +53,18 @@ export const HERO_UNARMED = {
 };
 
 /**
+ * One-gun float Y, px above the feet origin. v0.36.23 sat at −8 (near
+ * the boots). v0.36.24 lifts `player-girl-front-water` to eye height.
+ * PIXELLAB_HOOK: Pipeline may refine this mount. Stay inside −40…−55.
+ */
+export const WATER_FLOAT_EYE_Y = -48;
+
+/**
  * Front arc, px from the girl origin. Negative X is west (in front).
- * Indexed by owned-count 1..6.
+ * Indexed by owned-count 1..6. The lone water gun uses slot 1.
  */
 export const FRONT_ARC = {
-  1: [{ x: -36, y: -8 }],
+  1: [{ x: -36, y: WATER_FLOAT_EYE_Y }],
   2: [
     { x: -36, y: -22 },
     { x: -34, y: 8 },
@@ -105,6 +112,9 @@ export const DEPLOY_START_X = 12;
 
 /** West muzzle, fraction of the weapon frame width past center. */
 export const MUZZLE_WEST_FRAC = 0.35;
+
+/** Last cell of `player-girl-deploy` (8 frames). Finger already points left. */
+export const DEPLOY_LAST_FRAME = DEPLOY_FRAMES - 1;
 
 /** Flame cone grows from 1/6 of the view to 2/3 while the hero stays deployed. */
 export const FLAME_RANGE_START = 1 / 6;
@@ -316,7 +326,55 @@ export function unarmedAnimKeys(dy, dx) {
   if (dy > 0) return [HERO_UNARMED.run.south, HERO_UNARMED.walk.south, idle];
   if (dx < 0) return [HERO_UNARMED.run.west, HERO_UNARMED.walk.west, idle];
   if (dx > 0) return [HERO_UNARMED.run.east, HERO_UNARMED.walk.east, idle];
-  return [idle];
+  // Rest prefers the bare-hands deploy sweep. Idle is only a missing-sheet fallback.
+  return [HERO_UNARMED.deploy, idle];
+}
+
+/**
+ * At rest, play `player-girl-deploy` once and hold frame 7.
+ * That cell already points left and does not grip a gun. Do not start
+ * `player-girl-idle` after it. Clear `memory.rested` when she walks so
+ * the next stop plays the sweep again. A shot can return here without
+ * replaying.
+ * PIXELLAB_HOOK: there is no `deploy-sweep-clean` key. This is
+ * `player-girl-deploy` (8×92 @ 12). The water gun stays a front float.
+ * @param {Phaser.GameObjects.Sprite} sprite
+ * @param {Phaser.Scene} scene
+ * @param {{ rested?: boolean }} [memory]
+ * @returns {boolean}
+ */
+export function holdBareHandsRest(sprite, scene, memory = {}) {
+  const key = HERO_UNARMED.deploy;
+  if (!sprite || typeof sprite.play !== 'function') return false;
+  const anims = scene?.anims;
+  if (!anims || typeof anims.exists !== 'function' || !anims.exists(key)) return false;
+  const current = sprite.anims?.currentAnim?.key ?? null;
+  const playing = !!sprite.anims?.isPlaying;
+  if (current === key && playing) return true;
+  if (memory.rested || (current === key && !playing)) {
+    memory.rested = true;
+    const frameName = sprite.frame?.name;
+    const onLast =
+      sprite.texture?.key === key &&
+      (frameName === DEPLOY_LAST_FRAME || frameName === String(DEPLOY_LAST_FRAME)) &&
+      !playing;
+    if (onLast) return true;
+    try {
+      sprite.anims?.stop?.();
+    } catch (_) {
+      /* rectangle */
+    }
+    if (typeof sprite.setTexture === 'function' && scene.textures?.exists?.(key)) {
+      sprite.setTexture(key, DEPLOY_LAST_FRAME);
+    }
+    return true;
+  }
+  try {
+    sprite.play(key);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 /** @returns {{ phase: 'move', holdMs: number, deployMs: number, t: number, canFire: boolean }} */

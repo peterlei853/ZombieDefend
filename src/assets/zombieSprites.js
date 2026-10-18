@@ -219,11 +219,46 @@ function skin(id, prefix, extra = {}) {
       run: `${prefix}-run`,
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
+      // PIXELLAB_HOOK: die1 and die2. Death picks one that is actually loaded.
+      deaths: extra.deaths || [`${prefix}-die1`, `${prefix}-die2`],
+      // PIXELLAB_HOOK: `{prefix}-hurt` (office / delivery / chef are 4 frames @ 10).
       hurt: extra.hurt || `${prefix}-hurt`,
       blast: extra.blast || null,
       attach: extra.attach || null,
     },
   };
+}
+
+/** Walk speed while a hurt strip is playing. Half of the march speed. */
+export const ZOMBIE_HURT_SPEED_MUL = 0.5;
+/** Hurt window matches a 4-frame strip at 10 fps. Each hit refreshes it. */
+export const ZOMBIE_HURT_MS = 400;
+
+/**
+ * Death strips this skin may play. `deaths` is die1 + die2 when the
+ * catalog has both. A custom primary (armor break) is included by the caller
+ * when it is not already in the list.
+ * @param {{ actions?: { deaths?: string[], death?: string } }|null|undefined} skinDef
+ * @returns {string[]}
+ */
+export function zombieDeathKeys(skinDef) {
+  const listed = skinDef?.actions?.deaths;
+  if (Array.isArray(listed) && listed.length) return listed.filter((key) => !!key);
+  const one = skinDef?.actions?.death;
+  return one ? [one] : [];
+}
+
+/**
+ * @param {string[]} keys ready anim keys
+ * @param {() => number} [rng] returns a number in [0, 1)
+ * @returns {string|null}
+ */
+export function pickDeathKey(keys, rng = Math.random) {
+  if (!Array.isArray(keys) || keys.length === 0) return null;
+  const roll = Number(rng());
+  const u = Number.isFinite(roll) ? roll : 0;
+  const i = Math.min(keys.length - 1, Math.max(0, Math.floor(u * keys.length)));
+  return keys[i];
 }
 
 /**

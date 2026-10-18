@@ -46,8 +46,8 @@ const configSrc = readFileSync(new URL('../src/data/GameConfig.js', import.meta.
 const deploySrc = readFileSync(new URL('../src/assets/heroDeploy.js', import.meta.url), 'utf8');
 const weaponSrc = readFileSync(new URL('../src/systems/WeaponSystem.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.23' && APP_VERSION === '0.36.23', 'package and APP_VERSION are v0.36.23');
-assert(html.includes('v0.36.23'), 'document title is v0.36.23');
+assert(pkg.version === '0.36.24' && APP_VERSION === '0.36.24', 'package and APP_VERSION are v0.36.24');
+assert(html.includes('v0.36.24'), 'document title is v0.36.24');
 assert(IDS.join(',') === OWNED_WEAPON_ORDER.join(','), 'immerse ids match shop order');
 
 for (const id of IDS) {
@@ -111,7 +111,7 @@ assert(!stageSrc.includes('localStorage.setItem') && !stageSrc.includes('MockDB.
 
 assert(BARRICADE_MAX_HP === 720, 'barricade HP stays 720');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP stays put');
-assert(rosterForStage(1).join() === 'office-worker-v2', 'stage 1 spawns only office-worker-v2');
+assert(rosterForStage(1).join() === 'office-worker-v2,delivery,chef', 'stage 1 rolls types 1/2/3');
 assert(rosterForStage(5).join() === 'brute', 'stage 5 spawns only brute');
 assert(stageSrc.includes('startStageBgm'), 'stage BGM hook stays');
 

@@ -1,11 +1,12 @@
 /**
- * Main-stage enemy roster (v0.36.11).
+ * Main-stage enemy roster (v0.36.24).
  *
- * Five stages, one skin each. Stage N spawns only id N from the feel-booth
- * order (the first five of DEMO_ENEMY_IDS). #5 is brute. HP, speed, DPS,
- * counts, and gold-by-HP stay on the wave row. A missing strip falls back
- * to `office-worker-v2` only. The removed 64px `zombie-office-*` group is
- * not a skin and not a fallback.
+ * Five stages. Stages 2–5 still spawn one skin: stage N is id N from the
+ * feel-booth order (the first five of DEMO_ENEMY_IDS). Stage 1 randomly
+ * spawns types 1 / 2 / 3 (`office-worker-v2`, `delivery`, `chef`). #5 is
+ * brute. HP, speed, DPS, counts, and gold-by-HP stay on the wave row. A
+ * missing strip falls back to `office-worker-v2` only. The removed 64px
+ * `zombie-office-*` group is not a skin and not a fallback.
  */
 
 /** How many main stages exist. Stage select and shop Next stop here. */
@@ -13,6 +14,7 @@ export const STAGE_COUNT = 5;
 
 /**
  * Stage 1 → stage 5, in play order. Must stay the first five DEMO_ENEMY_IDS.
+ * Stage 1's live pool is STAGE_1_MIX, not only the first id.
  * @type {string[]}
  */
 export const STAGE_ROSTER = [
@@ -22,6 +24,12 @@ export const STAGE_ROSTER = [
   'nurse',
   'brute',
 ];
+
+/**
+ * Stage 1 spawn pool. Types 1 / 2 / 3 only. Later stages do not use this.
+ * @type {string[]}
+ */
+export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef'];
 
 /**
  * Clamp a stage number onto 1..STAGE_COUNT.
@@ -36,7 +44,8 @@ export function clampStage(stage) {
 }
 
 /**
- * The one skin id this stage spawns.
+ * The headline skin for this stage. Stage 1's headline is type 1.
+ * The stage 1 spawn pool is {@link rosterForStage}.
  * @param {number} stage
  * @returns {string}
  */
@@ -45,11 +54,13 @@ export function skinForStage(stage) {
 }
 
 /**
- * Skin ids for this stage. Length is always 1.
+ * Skin ids this stage may spawn. Stage 1 is types 1 / 2 / 3.
+ * Stages 2–5 stay a single id.
  * @param {number} stage
  * @returns {string[]}
  */
 export function rosterForStage(stage) {
+  if (clampStage(stage) === 1) return STAGE_1_MIX.slice();
   return [skinForStage(stage)];
 }
 

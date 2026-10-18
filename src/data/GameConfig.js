@@ -282,10 +282,21 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * 1.8s and L3 at 4s. A SPACE gap under 120ms still keeps the charge.
  * Gold, saves, barricade max HP, and the roster stay put.
  * No GitHub Pages publish.
+ * v0.36.24: the stage opening tip is gone, so the lane is free at the
+ * start. The same words sit on the title. A tap that rises before the
+ * poll still fires L1. A SPACE gap under 120ms still does not release
+ * a charge that is already open. L2 flies at 1.5× L1 and L3 at 2×.
+ * An L3 tick retreats the body 5px toward spawn. While the L3 shot
+ * touches any enemy its speed is 0.4× the spawn speed. L1 hits one
+ * body. At rest she holds the last frame of player-girl-deploy. The
+ * water gun floats at eye height. A hit plays the hurt strip and halves
+ * walk speed for that window. Death picks die1 or die2. Stage 1 rolls
+ * types 1 / 2 / 3. Gold, saves, and barricade max HP stay put.
+ * No GitHub Pages publish.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.23';
+export const APP_VERSION = '0.36.24';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

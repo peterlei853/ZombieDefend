@@ -42,7 +42,7 @@ function assert(cond, message) {
   console.error(`FAIL: ${message}`);
 }
 
-assert(APP_VERSION === '0.36.23', `APP_VERSION ${APP_VERSION}`);
+assert(APP_VERSION === '0.36.24', `APP_VERSION ${APP_VERSION}`);
 assert(getGoldByHP(40) === 10 && getGoldByHP(105) === 15 && getGoldByHP(165) === 20, 'gold-by-HP unchanged');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP unchanged');
 assert(WAVE_DEFS.map((wave) => wave.total).join() === '5,6,10,48', 'wave counts unchanged');
@@ -54,7 +54,9 @@ assert(STAGE_COUNT === 5 && STAGE_ROSTER.join() === expected.join(), `roster ${S
 assert(STAGE_ROSTER.join() === DEMO_ENEMY_IDS.slice(0, 5).join(), 'roster is the first five feel-booth ids');
 assert(!STAGE_ROSTER.includes('office-worker'), 'old office skin is not in the roster');
 assert(!STAGE_ROSTER.includes('clown') && !STAGE_ROSTER.includes('cyborg') && !STAGE_ROSTER.includes('slime'), 'old progressive mix is gone');
-for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
+assert(rosterForStage(1).join() === 'office-worker-v2,delivery,chef', 'stage 1 rolls types 1/2/3');
+assert(skinForStage(1) === 'office-worker-v2', 'stage 1 headline skin stays type 1');
+for (let stage = 2; stage <= STAGE_COUNT; stage += 1) {
   const skins = rosterForStage(stage);
   assert(skins.length === 1 && skins[0] === expected[stage - 1], `stage ${stage} skin ${skins}`);
   assert(skinForStage(stage) === expected[stage - 1], `skinForStage ${stage}`);
@@ -66,7 +68,7 @@ const defs1 = waveDefsForStage(1);
 assert(defs1[0].archetypes[0].hp === 40 && defs1[0].archetypes[0].speed === 32 && defs1[0].archetypes[0].dps === 3, 'stamped row keeps wave 1 numbers');
 assert(WAVE_DEFS.slice(0, 3).map((wave) => wave.archetypes[0].dps).join() === '3,5,8', 'waves 1–3 contact DPS is 3/5/8');
 assert(WAVE_DEFS[3].archetypes.map((row) => row.dps).join() === '11,16,20', 'wave 4 DPS mix is unchanged');
-assert(defs1[0].archetypes[0].skins.join() === 'office-worker-v2', 'stage 1 waves carry only office-worker-v2');
+assert(defs1[0].archetypes[0].skins.join() === 'office-worker-v2,delivery,chef', 'stage 1 waves carry types 1/2/3');
 assert(waveDefsForStage(2)[0].archetypes[0].skins.join() === 'delivery', 'stage 2 waves carry only delivery');
 assert(waveDefsForStage(5)[3].archetypes.every((row) => row.skins.join() === 'brute'), 'stage 5 wave 4 is only brute');
 
@@ -81,8 +83,13 @@ function skinCounts(stage) {
 }
 
 const mix1 = skinCounts(1);
-assert(Object.keys(mix1).join() === 'office-worker-v2' && mix1['office-worker-v2'] === 69, `stage 1 is only office-worker-v2 ${JSON.stringify(mix1)}`);
-for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
+const mix1Ids = Object.keys(mix1).sort();
+const mix1Total = Object.values(mix1).reduce((sum, n) => sum + n, 0);
+assert(mix1Ids.join() === 'chef,delivery,office-worker-v2' && mix1Total === 69, `stage 1 rolls types 1/2/3 ${JSON.stringify(mix1)}`);
+for (const id of ['office-worker-v2', 'delivery', 'chef']) {
+  assert(mix1[id] > 0, `stage 1 spawned ${id}`);
+}
+for (let stage = 2; stage <= STAGE_COUNT; stage += 1) {
   const mix = skinCounts(stage);
   const id = expected[stage - 1];
   assert(Object.keys(mix).join() === id && mix[id] === 69, `stage ${stage} spawns only ${id} ${JSON.stringify(mix)}`);

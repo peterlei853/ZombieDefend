@@ -67,9 +67,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.23', 'APP_VERSION is 0.36.23');
-assert(pkg.version === '0.36.23', 'package.json tracks 0.36.23');
-assert(html.includes('ZombieDefend v0.36.23'), 'title tracks 0.36.23');
+assert(APP_VERSION === '0.36.24', 'APP_VERSION is 0.36.24');
+assert(pkg.version === '0.36.24', 'package.json tracks 0.36.24');
+assert(html.includes('ZombieDefend v0.36.24'), 'title tracks 0.36.24');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -146,6 +146,7 @@ const waterStart = weaponSystem.indexOf('_queueWaterSplash(primary, bullet)');
 const waterFn = weaponSystem.slice(waterStart, weaponSystem.indexOf('/**', waterStart));
 assert(waterFn.includes('fx-lightning-impact') || waterFn.includes('WATER_HIT_FX'), 'water contact spawns the lightning impact');
 assert(!waterFn.includes('_chainLightning') && !waterFn.includes('fx-lightning-chain'), 'water contact does not chain');
+assert(!waterFn.includes('splashRadius'), 'L1 contact does not splash neighbors');
 assert(!waterFn.includes('_spawnGround') && !waterFn.includes('waterWetKey'), 'water contact does not spawn wet ground');
 assert(!waterFn.includes('fx-water-impact') && !waterFn.includes('fx-water-splash') && !waterFn.includes('fx-hit-water'), 'water contact does not name a water hit sheet');
 
@@ -271,6 +272,19 @@ mover.setOwnedWeapons(['water']);
 assert(mover._stepWaterCharge(40, standBullets, chargeSlot, [], chargeTrait, true, true) === false, 'standing tap is held');
 assert(mover._stepWaterCharge(WATER_CHARGE_RELEASE_MS, standBullets, chargeSlot, [], chargeTrait, false, true) === true, 'standing release fires');
 assert(standBullets.length === 1 && standBullets[0].charge === 1 && moveBullets[0].charge === standBullets[0].charge, 'moving and standing taps both fire one L1');
+const flicker = new WeaponSystem(scene);
+flicker.setOwnedWeapons(['water']);
+const flickerBullets = [];
+assert(flicker._stepWaterCharge(8, flickerBullets, chargeSlot, [], chargeTrait, false, true, true) === false, 'a sub-frame tap arms L1 without firing inside the bounce gap');
+assert(flickerBullets.length === 0 && flicker.chargeTier() === 1, 'that tap is an open L1 charge');
+assert(flicker._stepWaterCharge(WATER_CHARGE_RELEASE_MS, flickerBullets, chargeSlot, [], chargeTrait, false, true, false) === true, 'the armed tap still fires');
+assert(flickerBullets.length === 1 && flickerBullets[0].charge === 1, 'a sub-frame tap fires one L1');
+const bounced = new WeaponSystem(scene);
+bounced.setOwnedWeapons(['water']);
+const bouncedBullets = [];
+assert(bounced._stepWaterCharge(4000, bouncedBullets, chargeSlot, [], chargeTrait, true, true, true) === false, 'a 4s hold is still charging');
+assert(bounced._stepWaterCharge(16, bouncedBullets, chargeSlot, [], chargeTrait, false, true, true) === false, 'a sub-frame bounce does not release L3');
+assert(bouncedBullets.length === 0 && bounced.chargeTier() === 3, 'the L3 charge survives a bounce under 120ms');
 guns._visualScale = 1;
 const l3Sized = [];
 guns._spawnWaterShot(l3Sized, chargeSlot, [], chargeTrait, 3);
@@ -283,8 +297,8 @@ guns._visualScale = 1;
 const speedBag = { 1: [], 2: [], 3: [] };
 for (const tier of [1, 2, 3]) guns._spawnWaterShot(speedBag[tier], chargeSlot, [], chargeTrait, tier);
 const speedOf = (tier) => Math.hypot(speedBag[tier][0].vx, speedBag[tier][0].vy);
-assert(Math.abs(speedOf(2) / speedOf(1) - WATER_L2_SPEED_MUL) < 1e-9, 'L2 spawn speed is 1.3× L1');
-assert(Math.abs(speedOf(3) / speedOf(1) - WATER_L3_SPEED_MUL) < 1e-9, 'L3 spawn speed is 1.5× L1');
+assert(Math.abs(speedOf(2) / speedOf(1) - WATER_L2_SPEED_MUL) < 1e-9, 'L2 spawn speed is 1.5× L1');
+assert(Math.abs(speedOf(3) / speedOf(1) - WATER_L3_SPEED_MUL) < 1e-9, 'L3 spawn speed is 2× L1');
 assert(speedBag[3][0].baseVx === speedBag[3][0].vx && speedBag[3][0].baseVy === speedBag[3][0].vy, 'L3 stores the spawn velocity');
 const primary = {
   id: 1,
@@ -341,9 +355,9 @@ const overlapFoe = {
 const overlapFoe2 = { ...overlapFoe, id: 5, body: overlapFoe.body };
 guns.armHits([overlapFoe, overlapFoe2], []);
 assert(guns.stepChargeAoe(l3shot, [overlapFoe]) === false, 'L3 keeps flying on contact');
-assert(l3shot.vx === -100 && l3shot.vy === 0, 'one overlap halves the original L3 speed');
+assert(l3shot.vx === -80 && l3shot.vy === 0, 'one overlap slows L3 to 0.4× spawn speed');
 assert(guns.stepChargeAoe(l3shot, [overlapFoe, overlapFoe2]) === false, 'a second body is still one overlap');
-assert(l3shot.vx === -100 && l3shot.vy === 0, 'extra overlaps do not stack the slow');
+assert(l3shot.vx === -80 && l3shot.vy === 0, 'extra overlaps do not stack the slow');
 assert(guns.stepChargeAoe(l3shot, []) === false, 'leaving the body does not retire L3');
 assert(l3shot.vx === -200 && l3shot.vy === 0, 'clear of enemies restores the original L3 speed');
 const burst = spawned.find((s) => s.key === 'fx-lightning-impact');
@@ -365,7 +379,7 @@ guns._payAoeTick({
 }, { x: 33, y: 70 }, true);
 const mark = spawned.find((s) => s.key === 'fx-aoe-touch-x');
 assert(mark && mark.scale === WATER_TOUCH_X_SCALE * guns._visualScale, 'each AOE tick draws the white X at 2×');
-assert(nudgedBody.x === 45, 'the L3 tick nudges 5px east');
+assert(nudgedBody.x === 35, 'the L3 tick retreats 5px toward spawn');
 
 const held = waterLeadAim(100, 0, 0, 0, 0, 100);
 assert(held.x === 0 && held.y === 0, 'a stopped body is aimed where it stands');
@@ -494,13 +508,13 @@ assert(Math.abs(waterL3DisplaySize(1).w - 512) < 1e-6, 'L3 display width is 512 
 assert(Math.abs(waterHitSizeFor(3) * LAYOUT_SCALE - waterL3DisplaySize(1).w) < 1e-6, 'L3 hit box matches the displayed width');
 assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
 assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
-assert(WATER_L3_OVERLAP_MUL === 0.5, 'L3 overlap speed is half the spawn speed');
-assert(WATER_L2_SPEED_MUL === 1.3 && WATER_L3_SPEED_MUL === 1.5, 'L2 is +30% and L3 is +50% versus L1');
-assert(WATER_L3_NUDGE_PX === 5, 'each L3 damage tick nudges 5px');
+assert(WATER_L3_OVERLAP_MUL === 0.4, 'L3 overlap speed is 0.4× the spawn speed');
+assert(WATER_L2_SPEED_MUL === 1.5 && WATER_L3_SPEED_MUL === 2, 'L2 is +50% and L3 is +100% versus L1');
+assert(WATER_L3_NUDGE_PX === 5, 'each L3 damage tick retreats 5px');
 assert(waterAuraKey(1) === 'fx-water-charge-aura' && waterAuraKey(2) === 'fx-water-charge-aura-l2' && waterAuraKey(3) === 'fx-water-charge-aura-l3', 'the charge glow swaps sheets by tier');
 assert(WEAPON_TRAITS.water.label === '1 weapon', 'the water slot displays as 1 weapon');
 assert(weaponSystem.includes('stepChargeAoe') && weaponSystem.includes('fx-water-t2-aoe') && weaponSystem.includes('fx-aoe-touch-x'), 'L2/L3 contact uses the catalog AOE and the white X');
-assert(weaponSystem.includes('_spawnWaterExplosion') && weaponSystem.includes('_nudgeEast'), 'L2 leaves a contact explosion and L3 nudges east');
+assert(weaponSystem.includes('_spawnWaterExplosion') && weaponSystem.includes('_nudgeRetreat'), 'L2 leaves a contact explosion and L3 retreats toward spawn');
 assert(!weaponSystem.includes('_dropPathBurn') && !weaponSystem.includes('fx-water-t3-impact'), 'L3 does not play a pierce-impact or path burn');
 const steep = waterConeVelocity(500, 400, { x: 200, y: 40 }, 100);
 const steepPitch = Math.atan2(steep.vy, steep.vx);
@@ -530,7 +544,8 @@ assert(demo.includes('_moveHero'), 'sandbox water can move while charging');
 const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
 assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
 assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits far enough west for an L1 to read, and the last stays on screen');
-assert(!stage.includes("_spaceKey.on('down'"), 'SPACE shoots instead of cycling');
+assert(stage.includes('_spaceDownEdge'), 'a SPACE press that ends before the poll still arms a shot');
+assert(!stage.includes("_spaceKey.on('down', () => this._toggleWeapon"), 'SPACE shoots instead of cycling');
 assert(stage.includes('preloadGameAudio(this)'), 'stage preload includes the shared audio queue');
 assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
 const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');

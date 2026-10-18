@@ -45,8 +45,8 @@ const hudSrc = readFileSync(new URL('../src/ui/PetPortraitHud.js', import.meta.u
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.23' && APP_VERSION === '0.36.23', 'package and APP_VERSION are v0.36.23');
-assert(html.includes('v0.36.23'), 'document title is v0.36.23');
+assert(pkg.version === '0.36.24' && APP_VERSION === '0.36.24', 'package and APP_VERSION are v0.36.24');
+assert(html.includes('v0.36.24'), 'document title is v0.36.24');
 assert(pets.HP === 192 && BARRICADE_MAX_HP === 720, 'pet HP and barricade HP stay put');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15, 'gold-by-HP stays put');
 

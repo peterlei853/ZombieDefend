@@ -3,7 +3,7 @@
  * No Phaser, no mounts, no saves. Stage combat does not import this.
  */
 
-import { MUZZLE_WEST_FRAC, OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
+import { MUZZLE_WEST_FRAC, OWNED_WEAPON_ORDER, WATER_FLOAT_EYE_Y, WEAPON_TRAITS } from '../assets/heroDeploy.js';
 
 export const SANDBOX_WEAPONS = OWNED_WEAPON_ORDER.slice();
 
@@ -12,10 +12,10 @@ export const SANDBOX_FLOAT_FRAME = 56;
 
 /**
  * Frame px from the hero's feet. Negative X is west (in front).
- * Negative Y is up the body, so the gun sits at the chest instead of the boots.
+ * Negative Y is up the body. v0.36.24 uses eye height (WATER_FLOAT_EYE_Y).
  * The try-out multiplies by the hero display scale, the same way HeroFloats does.
  */
-export const SANDBOX_FLOAT_OFFSET = { x: -46, y: -42 };
+export const SANDBOX_FLOAT_OFFSET = { x: -46, y: WATER_FLOAT_EYE_Y };
 
 /** Durable dummy so several hits stay readable. Not a wave-table HP. */
 export const SANDBOX_TARGET_HP = 360;
