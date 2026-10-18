@@ -103,7 +103,11 @@ export class DefenderGroup {
       this.floats.setFenceMounts('all');
     } else if (soleWater || soleSling) {
       this.floats.setFenceMounts(true);
+    } else {
+      this.floats.setSolo(true);
     }
+    /** SPACE or SWAP is down. Stage fire reads this; nothing shoots while it is up. */
+    this.triggerHeld = false;
     this._deploy = createDeployMachine();
     /** Unarmed girl + front-float guns. Legacy handgun/shotgun stays when that sheet is missing. */
     this._frontFloat = heroLibraryReady(scene);
@@ -289,6 +293,7 @@ export class DefenderGroup {
     this._syncPlayerTransform();
 
     let fired = null;
+    const manualStage = !this.fenceMounts && !this.waterMounts && !this.slingMounts;
     if (this._frontFloat) {
       const moving = dy !== 0 || dx !== 0;
       this._deploy = stepDeploy(this._deploy, moving, deltaMs);
@@ -300,15 +305,31 @@ export class DefenderGroup {
       const slingSlot = this.fenceMounts ? null : (this.slingMounts?.aligned(this.player.y) || null);
       if (!this.fenceMounts) this.slingMounts?.setActive(slingSlot ? slingSlot.index : -1);
       const ownedIds = this.weapons.ownedIds();
+      const skinId = this.weapons.getSkin?.()?.id || null;
+      const triggerHeld = !!this.triggerHeld;
       const command =
+        !manualStage &&
         this._deploy.phase === 'fire' &&
         (!!fenceSlot ||
           (!!waterSlot && ownedIds.includes('water')) ||
           (!!slingSlot && ownedIds.includes('sling')));
-      this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
-      this.floats?.setSelected(this.weapons.getSkin?.()?.id);
+      const attacking = this._deploy.phase === 'fire' && triggerHeld;
+      if (!this._syncWaterFirePose(this._deploy.phase, attacking)) {
+        this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
+      }
+      this.floats?.setSelected(skinId);
       this.floats?.sync(this.player, this._deploy);
       const visualScale = Math.abs(this.player.scaleX || 1) / LAYOUT_SCALE;
+      const muzzles = this.fenceMounts ? [] : this.floats?.muzzles() || [];
+      const waterMuzzle = muzzles.find((muzzle) => muzzle.id === 'water') || null;
+      const chargeWater =
+        manualStage
+          ? skinId === 'water'
+          : !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water';
+      const floatSlot =
+        chargeWater && waterMuzzle
+          ? { muzzleX: waterMuzzle.x, muzzleY: waterMuzzle.y }
+          : null;
       fired = this.weapons.updatePlayerFire(
         deltaMs,
         this.player.x,
@@ -318,10 +339,13 @@ export class DefenderGroup {
         {
           frontFloat: true,
           canFire: this._deploy.canFire,
-          muzzles: this.fenceMounts ? [] : this.floats?.muzzles() || [],
-          waterMount: waterSlot,
-          waterCharge: !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water',
-          waterHeld: !!this.waterHeld,
+          muzzles,
+          waterMount: floatSlot || waterSlot,
+          waterCharge: chargeWater,
+          waterHeld: chargeWater ? triggerHeld : !!this.waterHeld,
+          manualFire: manualStage,
+          triggerHeld,
+          selectedId: skinId,
           slingFromMount: !!this.slingMounts,
           slingMount: slingSlot,
           fenceOnly: !!this.fenceMounts,
@@ -351,7 +375,11 @@ export class DefenderGroup {
     // One fire SFX per volley. Front-float passes the weapon id that actually shot.
     if (fired) {
       const ids = this.weapons.ownedIds?.() || [];
-      const chargeWater = !this.fenceMounts && ids.length === 1 && ids[0] === 'water' && fired === 'water';
+      const skinId = this.weapons.getSkin?.()?.id;
+      const chargeWater =
+        fired === 'water' &&
+        ((manualStage && skinId === 'water') ||
+          (!this.fenceMounts && ids.length === 1 && ids[0] === 'water'));
       if (!chargeWater) {
         const cue = this._frontFloat ? { id: fired } : this.weapons.getSkin?.();
         this.scene.audio?.playWeaponShot(cue, fired);
@@ -453,6 +481,48 @@ export class DefenderGroup {
    * @param {number} dx
    * @param {{ command?: boolean }} [pose]
    */
+  /**
+   * `player-girl-water-fire`: frames 0–2 once, 3–6 while the trigger is
+   * held, then 7–8 once. Walk and deploy keep their own sheets.
+   * @param {string} phase
+   * @param {boolean} attacking
+   * @returns {boolean} true while this pose owns the body
+   */
+  _syncWaterFirePose(phase, attacking) {
+    const base = HERO_UNARMED.waterFire;
+    if (phase === 'move' || phase === 'hold' || phase === 'deploy') {
+      this._attackPose = null;
+      return false;
+    }
+    const start = `${base}:start`;
+    const loop = `${base}:loop`;
+    const end = `${base}:end`;
+    const current = this._currentAnimKey();
+    const playing = !!this.player?.anims?.isPlaying;
+    if (attacking) {
+      this._attackPose = 'hold';
+      if ((current === loop || current === start) && playing) return true;
+      if (current === start && !playing && this._playAnim(loop, true)) return true;
+      if (this._playAnim(start, true)) return true;
+      if (this._playAnim(base, true)) return true;
+      this._attackPose = null;
+      return false;
+    }
+    if (this._attackPose !== 'hold' && this._attackPose !== 'end') return false;
+    if (current === end && playing) {
+      this._attackPose = 'end';
+      return true;
+    }
+    if (current === end && !playing) {
+      this._attackPose = null;
+      return false;
+    }
+    this._attackPose = 'end';
+    if (this._playAnim(end, false)) return true;
+    this._attackPose = null;
+    return false;
+  }
+
   _updateUnarmedPose(phase, dy, dx, pose = {}) {
     const player = this.player;
     if (!player) return;

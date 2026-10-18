@@ -36,6 +36,8 @@ export const HERO_UNARMED = {
    * Backup operator still. Same feet origin. Used only if tower-fire is absent.
    */
   command: 'player-girl-command',
+  /** 9×92 shoot pose. Start, loop while the trigger is held, then the end. */
+  waterFire: 'player-girl-water-fire',
   walk: {
     west: 'player-girl-walk-west',
     east: 'player-girl-walk-east',

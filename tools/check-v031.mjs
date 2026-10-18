@@ -123,7 +123,7 @@ assert(nearestWaterMount(between, slots, Infinity)?.index === 2, 'spawn snap sti
 
 assert(barricadeSrc.includes('return barricadeXAtY(y, postW / 2) - postW / 2'), 'contact face is unchanged');
 assert(!barricadeSrc.includes('localStorage') && !barricadeSrc.includes('spendGold'), 'mount anchor does not touch saves or gold');
-assert(stageSrc.includes('new WaterMounts'), 'stage places the mounts');
+assert(!stageSrc.includes('new WaterMounts'), 'stage does not place water fence mounts');
 assert(defenderSrc.includes('waterMount'), 'fire is gated on a mount slot');
 
 const spawned = [];

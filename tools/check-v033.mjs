@@ -46,8 +46,8 @@ const barricadeSrc = readFileSync(new URL('../src/entities/Barricade.js', import
 const fenceAssetSrc = readFileSync(new URL('../src/assets/fenceMounts.js', import.meta.url), 'utf8');
 const fenceSysSrc = readFileSync(new URL('../src/systems/FenceMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.11' && APP_VERSION === '0.36.11', 'package and APP_VERSION are 0.36.11');
-assert(html.includes('v0.36.11'), 'document title is v0.36.11');
+assert(pkg.version === '0.36.20' && APP_VERSION === '0.36.20', 'package and APP_VERSION are 0.36.20');
+assert(html.includes('v0.36.20'), 'document title is v0.36.20');
 assert(FENCE_MOUNT_COUNT === 6, 'six fence mounts');
 assert(FENCE_WEAPON_ORDER.join() === OWNED_WEAPON_ORDER.join(), 'mount order is OWNED_WEAPON_ORDER');
 assert(
@@ -106,10 +106,10 @@ assert(nearestFenceMount(slots[5].y, slots, align) === slots[5], 'standing on th
 const between = (slots[2].y + slots[3].y) / 2;
 assert(nearestFenceMount(between, slots, align) === null, 'the gap between mounts does not fire');
 
-assert(stageSrc.includes('new FenceMounts'), 'stage places the composite mounts');
+assert(!stageSrc.includes('new FenceMounts'), 'stage leaves the fence empty');
 assert(stageSrc.includes('weaponImmerse'), 'default stage is separate from ?weapon=');
-assert(stageSrc.includes('new WaterMounts') && stageSrc.includes('new SlingMounts'), 'immerse still builds the single-gun rows');
-assert(stageSrc.includes('!ownsWater'), 'sling immerse still yields the fence to water');
+assert(!stageSrc.includes('new WaterMounts') && !stageSrc.includes('new SlingMounts'), 'stage does not build single-gun fence rows');
+assert(stageSrc.includes('triggerHeld'), 'stage shoots from the held trigger');
 assert(defenderSrc.includes('fenceMounts.nearest'), 'opening stance snaps to a mount');
 assert(defenderSrc.includes('fenceOnly'), 'composite fire is gated on the fence');
 assert(defenderSrc.includes('HERO_UNARMED.towerFire'), 'tower-fire still is held on a mount');

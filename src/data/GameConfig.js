@@ -252,10 +252,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * that reaches 2.5s releases L2 and one that reaches 5s releases L3.
  * Gold-by-HP, saves, barricade max HP, the roster, and the other five
  * weapons stay put.
+ * v0.36.20: the main stage uses that same charge. Nothing auto-fires.
+ * The highlighted gun floats in front of the girl. SPACE and SWAP shoot.
+ * Shots go west with ±10° homing. Gold-by-HP, saves, barricade max HP,
+ * and the roster stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.19';
+export const APP_VERSION = '0.36.20';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

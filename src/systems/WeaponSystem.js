@@ -774,6 +774,9 @@ export class WeaponSystem {
         canFire
       );
       if (released) firedEarly = 'water';
+    } else if (this._charge) {
+      this._clearWaterCharge();
+      this.scene?.audio?.stopWaterChargeLoop?.();
     }
     if (!canFire || !Array.isArray(bullets)) {
       this._wasFrontFire = false;
@@ -781,6 +784,11 @@ export class WeaponSystem {
       return firedEarly;
     }
     if (opts.fenceOnly) return this._updateFenceFire(dt, zombies, bullets, opts);
+    if (opts.manualFire && opts.triggerHeld !== true) {
+      this._wasFrontFire = false;
+      this._syncFlame(false, null, dt, zombies);
+      return firedEarly;
+    }
     if (!this._wasFrontFire) {
       this._ownedIds.forEach((id, i) => {
         this._cooldowns[id] = i * 70;
@@ -794,6 +802,7 @@ export class WeaponSystem {
     for (const id of this._ownedIds) {
       const trait = WEAPON_TRAITS[id];
       if (!trait) continue;
+      if (opts.manualFire && opts.selectedId && id !== opts.selectedId) continue;
       if (id === 'water') {
         if (opts.waterCharge) continue;
         if (!waterSlot) continue;
@@ -825,7 +834,9 @@ export class WeaponSystem {
       if (this._cooldowns[id] > 0) continue;
       this._cooldowns[id] = trait.fireMs;
       const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
-      const { vx, vy } = forwardVelocity(speed);
+      const { vx, vy } = opts.manualFire
+        ? this._coneFlight(muzzle.x, muzzle.y, zombies, speed)
+        : forwardVelocity(speed);
       this._spawnFrontBullet(bullets, muzzle.x, muzzle.y, vx, vy, trait, {
         split: trait.id === 'bubble',
         tier: trait.tier || null,
@@ -1375,6 +1386,25 @@ export class WeaponSystem {
 
   /** L2 explosions are not parented to the bullet, so retire is a no-op. */
   releaseChargeAoe(_bullet) {}
+
+  /**
+   * West, steered at most ±10° toward a body in front of the muzzle.
+   * @param {number} x
+   * @param {number} y
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @param {number} speed
+   */
+  _coneFlight(x, y, zombies, speed) {
+    const target = pickWaterGuide(zombies, x, y, null);
+    let aim = null;
+    if (target) {
+      const tx = target.x;
+      const ty = Number.isFinite(target.bodyCenterY) ? target.bodyCenterY : target.y;
+      const vz = typeof target.marchVx === 'function' ? target.marchVx() : 0;
+      aim = waterLeadAim(x, y, tx, ty, vz, speed);
+    }
+    return waterConeVelocity(x, y, aim, speed);
+  }
 
   /**
    * @param {object[]} bullets

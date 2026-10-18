@@ -1,8 +1,5 @@
 import { WaveManager } from '../systems/WaveManager.js';
 import { Barricade } from '../entities/Barricade.js';
-import { WaterMounts } from '../systems/WaterMounts.js';
-import { SlingMounts } from '../systems/SlingMounts.js';
-import { FenceMounts } from '../systems/FenceMounts.js';
 import { applyHpBarDensity, Zombie } from '../entities/Zombie.js';
 import { DefenderGroup } from '../entities/Defender.js';
 import {
@@ -168,7 +165,7 @@ export default class StageScene extends Phaser.Scene {
     preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
-    // Ear-preview charge cues ride this queue so stage ?weapon=water hears them.
+    // Ear-preview charge cues ride this queue with the rest of the stage beds.
     preloadGameAudio(this);
   }
 
@@ -194,23 +191,10 @@ export default class StageScene extends Phaser.Scene {
     this.barricade = new Barricade(this, {
       maxHp: BARRICADE_MAX_HP,
     });
-    // Default stage: six cradles, one gun each. ?weapon= keeps the
-    // single-gun immerse (water/sling mounts, or a lone front-float).
-    if (this.weaponImmerse) {
-      const ownsWater = this.ownedWeapons.includes('water');
-      this.fenceMounts = null;
-      this.waterMounts = ownsWater ? new WaterMounts(this, this.barricade) : null;
-      // Sling takes the fence only when water is not already using it.
-      // ?weapon=sling is that case. A mixed stage keeps sling on the west ray.
-      this.slingMounts =
-        !ownsWater && this.ownedWeapons.includes('sling')
-          ? new SlingMounts(this, this.barricade)
-          : null;
-    } else {
-      this.fenceMounts = new FenceMounts(this, this.barricade);
-      this.waterMounts = null;
-      this.slingMounts = null;
-    }
+    // Guns float in front of the girl. Nothing sits on the fence.
+    this.fenceMounts = null;
+    this.waterMounts = null;
+    this.slingMounts = null;
 
     this.defenders = new DefenderGroup(this, {
       ownedWeapons: this.ownedWeapons,
@@ -230,16 +214,12 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE cycles the highlighted gun, except water immerse: there SPACE
-    // holds a charge and releases the shot. Q and the touch SWAP button
-    // keep the cycle for every loadout.
+    // SPACE and SWAP shoot. 1 weapon charges while either is held.
+    // Q still cycles the highlighted gun.
     const keyboard = this.input.keyboard;
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       keyboard.addCapture(Phaser.Input.Keyboard.KeyCodes.SPACE);
-      if (this.weaponImmerse !== 'water') {
-        this._spaceKey.on('down', () => this._toggleWeapon());
-      }
       this._cycleKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       this._cycleKey.on('down', () => this._toggleWeapon());
       // One flinch: white fill, red fill, hurt strip. Does not restart mid-sequence.
@@ -271,9 +251,7 @@ export default class StageScene extends Phaser.Scene {
       this._installEnemyFeel();
     }
 
-    this.touchControls = new VirtualControls(this, {
-      onWeapon: () => this._toggleWeapon(),
-    });
+    this.touchControls = new VirtualControls(this);
     this.defenders.touchControls = this.touchControls;
     this.petHud = new PetPortraitHud(this, {
       views: () => this.defenders.petCombat?.portraitViews() || [],
@@ -1057,27 +1035,15 @@ export default class StageScene extends Phaser.Scene {
     this._reflowHud();
 
     this._announcedWave = null;
-    this._showBanner(
-      this.fenceMounts
-        ? {
-            icon: UI.ready,
-            title: 'STOP TO FIRE',
-            sub: 'STAND BEHIND A GUN',
-            zh: '停在炮台後，只開那一把',
-            hold: 6500,
-            y: 230,
-            lockMove: true,
-          }
-        : {
-            icon: UI.ready,
-            title: 'STOP TO FIRE',
-            sub: 'W/S LANE SWAP',
-            zh: '停步展開射擊 · 換道 · 換武器',
-            hold: 6500,
-            y: 230,
-            lockMove: true,
-          }
-    );
+    this._showBanner({
+      icon: UI.ready,
+      title: 'HOLD TO SHOOT',
+      sub: 'SPACE OR SWAP',
+      zh: '按住蓄力，放開發射',
+      hold: 6500,
+      y: 230,
+      lockMove: true,
+    });
     this.events.once('shutdown', () => this._clearBanner());
   }
 
@@ -1258,7 +1224,9 @@ export default class StageScene extends Phaser.Scene {
 
     // Defenders fire + hits. Pet gold includes baby-pet kills; burn gold is statusGold.
     if (this.defenders) {
-      this.defenders.waterHeld = !!(this.weaponImmerse === 'water' && this._spaceKey?.isDown);
+      const shoot = !!(this._spaceKey?.isDown || this.touchControls?.weaponHeld);
+      this.defenders.triggerHeld = shoot;
+      this.defenders.waterHeld = shoot;
     }
     const petGain = this.defenders.update(deltaMs, this.zombies);
     const hitGain = this.defenders.resolveHits(this.zombies);

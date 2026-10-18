@@ -1,6 +1,6 @@
 /**
  * Sandbox weapon try-out stays off stage combat.
- * The hub links to /sandbox/weapons.html. Stage fence mounts stay.
+ * The hub links to /sandbox/weapons.html. Stage guns float and fire on SPACE or SWAP.
  * Gold, saves, barricade HP, and the five-stage roster are not retargeted.
  */
 import { readFileSync } from 'node:fs';
@@ -56,9 +56,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.19', 'APP_VERSION is 0.36.19');
-assert(pkg.version === '0.36.19', 'package.json tracks 0.36.19');
-assert(html.includes('ZombieDefend v0.36.19'), 'title tracks 0.36.19');
+assert(APP_VERSION === '0.36.20', 'APP_VERSION is 0.36.20');
+assert(pkg.version === '0.36.20', 'package.json tracks 0.36.20');
+assert(html.includes('ZombieDefend v0.36.20'), 'title tracks 0.36.20');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -104,7 +104,13 @@ assert(demo.includes('showcaseHold = true'), 'target stays in front of the gun')
 assert(demo.includes('playLibraryAnim'), 'float bob uses the library guard');
 assert(!demo.includes('.play('), 'try-out does not call sprite.play directly');
 
-assert(stage.includes('new FenceMounts'), 'stage still places fence mounts');
+assert(!stage.includes('new FenceMounts') && !stage.includes('new WaterMounts') && !stage.includes('new SlingMounts'), 'stage does not place fence mounts');
+assert(stage.includes('triggerHeld') && stage.includes('weaponHeld'), 'SPACE and SWAP share the shoot hold');
+assert(defender.includes('manualFire') && defender.includes('player-girl-water-fire'), 'stage shoots from the water fire pose');
+const floats = readFileSync(new URL('../src/systems/HeroFloats.js', import.meta.url), 'utf8');
+assert(floats.includes('-still') && floats.includes('prop-water-mount-front-alt'), 'the water float keeps its still sheet and optional cradle');
+assert(weaponSystem.includes('manualFire') && weaponSystem.includes('_coneFlight'), 'manual shots use the ±10° cone');
+assert(!stage.includes('player-handgun-shoot'), 'stage does not use the old handgun shoot sheet');
 assert(!stage.includes('weaponTryout') && !stage.includes('WeaponTryout'), 'stage scene does not start the try-out');
 assert(!main.includes('weaponTryout') && !main.includes('WeaponTryout'), 'main game does not register the try-out');
 assert(stage.includes('Keys 5–9 only preview') || stage.includes('Keys 5-9 only preview'), 'feel keys 6–9 stay previews');
@@ -379,7 +385,8 @@ assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox 
 const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
 assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
 assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits far enough west for an L1 to read, and the last stays on screen');
-assert(stage.includes("weaponImmerse !== 'water'"), 'water immerse does not cycle on SPACE');
+assert(!stage.includes("_spaceKey.on('down'"), 'SPACE shoots instead of cycling');
+assert(stage.includes('preloadGameAudio(this)'), 'stage preload includes the shared audio queue');
 assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
 const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 for (const key of WATER_EAR_PREVIEW_KEYS) {
