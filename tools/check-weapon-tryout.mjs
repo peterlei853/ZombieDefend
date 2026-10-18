@@ -21,15 +21,24 @@ import {
   WATER_AOE_TICK_MS,
   WATER_CHARGE_RELEASE_MS,
   WATER_L2_AOE_MS,
+  WATER_AOE_CELL_H,
   WATER_L3_ENTER_SLOW,
   WATER_L3_NUDGE_PX,
+  WATER_L1_FRAME,
+  WATER_MOB_FRAME,
+  WATER_TOUCH_X_SCALE,
+  waterAoeSpriteScale,
   waterAuraKey,
   waterChargeTier,
   waterConeVelocity,
   waterHitSizeFor,
+  waterL3DisplaySize,
+  waterL3SpriteScale,
   waterLeadAim,
+  waterMobDisplayHeight,
   waterPierceFor,
 } from '../src/assets/waterMounts.js';
+import { LAYOUT_SCALE, layoutPx } from '../src/systems/DepthView.js';
 import {
   SANDBOX_FLOAT_FRAME,
   SANDBOX_FLOAT_OFFSET,
@@ -56,9 +65,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.20', 'APP_VERSION is 0.36.20');
-assert(pkg.version === '0.36.20', 'package.json tracks 0.36.20');
-assert(html.includes('ZombieDefend v0.36.20'), 'title tracks 0.36.20');
+assert(APP_VERSION === '0.36.21', 'APP_VERSION is 0.36.21');
+assert(pkg.version === '0.36.21', 'package.json tracks 0.36.21');
+assert(html.includes('ZombieDefend v0.36.21'), 'title tracks 0.36.21');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -168,7 +177,7 @@ function fxSprite(x, y, key) {
   const obj = {
     x, y, key, active: true,
     setOrigin() { return obj; },
-    setScale() { return obj; },
+    setScale(scale) { obj.scale = scale; return obj; },
     setDepth() { return obj; },
     setFlipX() { return obj; },
     setRotation() { return obj; },
@@ -187,6 +196,9 @@ const scene = {
       'fx-water-wet',
       'fx-water-wet-ground',
       'fx-hit-water-office-v2',
+      'fx-water-proj-t3',
+      'fx-water-t2-aoe',
+      'fx-aoe-touch-x',
     ].includes(key),
   },
   anims: { exists: () => false },
@@ -195,6 +207,20 @@ const scene = {
     rectangle(x, y, w, h) {
       return { x, y, w, h, active: true, setDepth() {} };
     },
+    text() {
+      const label = { active: true };
+      label.setOrigin = () => label;
+      label.setDepth = () => label;
+      label.setText = () => label;
+      label.setAlpha = () => label;
+      label.once = () => label;
+      label.destroy = () => { label.active = false; };
+      return label;
+    },
+  },
+  tweens: {
+    killTweensOf() {},
+    add() { return { stop() {} }; },
   },
   time: { now: 0 },
 };
@@ -217,6 +243,11 @@ assert(guns._stepWaterCharge(16, l3Bullets, chargeSlot, [], chargeTrait, false, 
 assert(guns.chargeTier() === 3, 'the slip leaves the charge on L3');
 assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l3Bullets, chargeSlot, [], chargeTrait, false, true) === true, 'the 5s hold releases');
 assert(l3Bullets[0]?.charge === 3, 'the released shot is L3');
+const l3Body = waterL3DisplaySize(1);
+assert(l3Body.h === WATER_L1_FRAME * 2 && l3Body.w === 128, 'L3 displays at 128×64, twice the L1 height');
+assert(waterL3SpriteScale(1) === 0.25, 'the 256px L3 cell is scaled by 0.25');
+assert(l3Bullets[0].size === l3Body.w && l3Bullets[0].gfx.scale === waterL3SpriteScale(1), 'the L3 hit box matches the scaled sprite');
+assert(layoutPx(waterHitSizeFor(3)) === l3Body.w, 'waterHitSizeFor(3) is the displayed width, not the 512 sheet');
 assert(WATER_CHARGE_RELEASE_MS === 120, 'the release gap is 120ms');
 const primary = {
   id: 1,
@@ -246,10 +277,28 @@ const missed = {
 assert(guns.confirmOpaqueHit(missed, primary) === false, 'a water shot missing the body does not hit');
 assert(guns.confirmOpaqueHit({ weaponId: 'sling' }, primary) === true, 'other guns keep the box test');
 guns.applyDirectHit(primary, bullet);
-const waterKeys = spawned.map((s) => s.key);
+const waterKeys = spawned.map((s) => s.key).filter((key) => key !== 'fx-water-proj-t3');
 assert(waterKeys.length === 1 && waterKeys[0] === 'fx-lightning-impact', 'the only water hit sheet is fx-lightning-impact');
-assert(spawned[0].x === bullet.touchX && spawned[0].y === bullet.touchY, 'the burst is placed on the contact, not the body center');
-assert(spawned[0].y !== primary.bodyCenterY, 'the contact is not rewritten to the chest');
+const burst = spawned.find((s) => s.key === 'fx-lightning-impact');
+assert(burst.x === bullet.touchX && burst.y === bullet.touchY, 'the burst is placed on the contact, not the body center');
+assert(burst.y !== primary.bodyCenterY, 'the contact is not rewritten to the chest');
+guns._visualScale = 1;
+guns._spawnWaterExplosion(30, 40);
+const boom = spawned.find((s) => s.key === 'fx-water-t2-aoe');
+assert(boom && Math.abs(boom.scale - waterAoeSpriteScale(1)) < 1e-9, 'L2 explosion uses the 4× mob scale');
+const nudgedBody = { x: 40, active: true };
+guns._payAoeTick({
+  id: 7,
+  x: 40,
+  y: 80,
+  alive: true,
+  body: nudgedBody,
+  goldValue: 0,
+  takeDamage() { return false; },
+}, { x: 33, y: 70 }, true);
+const mark = spawned.find((s) => s.key === 'fx-aoe-touch-x');
+assert(mark && mark.scale === WATER_TOUCH_X_SCALE * guns._visualScale, 'each AOE tick draws the white X at 2×');
+assert(nudgedBody.x === 42, 'the L3 tick still nudges 2px east');
 
 const held = waterLeadAim(100, 0, 0, 0, 0, 100);
 assert(held.x === 0 && held.y === 0, 'a stopped body is aimed where it stands');
@@ -349,7 +398,12 @@ assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.
 assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
 assert(waterChargeTier(5000) === 3, '5s is L3');
 assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 1 && waterPierceFor(3) === Infinity, 'L1 and L2 stop on the first body, L3 crosses the field');
-assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 320, 'the L3 AABB covers the native 512-wide cell');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 80, 'L3 AABB matches the 128px scaled body');
+const aoeScale = waterAoeSpriteScale(1);
+const mobH = waterMobDisplayHeight(1);
+assert(mobH === WATER_MOB_FRAME * LAYOUT_SCALE, 'a normal mob is the 84px frame times LAYOUT_SCALE');
+assert(Math.abs(aoeScale * WATER_AOE_CELL_H - 4 * mobH) < 1e-6, 'L2 AOE height is 4× a normal stage mob');
+assert(WATER_TOUCH_X_SCALE === 2, 'the white X is drawn at 2×');
 assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
 assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
 assert(WATER_L3_ENTER_SLOW === 0.8, 'each new L3 body slows the shot by 20%');

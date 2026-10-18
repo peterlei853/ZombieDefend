@@ -28,11 +28,15 @@ import {
   WATER_L2_AOE_MS,
   WATER_L3_ENTER_SLOW,
   WATER_L3_NUDGE_PX,
+  WATER_TOUCH_X_SCALE,
   waterAimVelocity,
+  waterAoeSpriteScale,
   waterAuraKey,
   waterChargeTier,
   waterConeVelocity,
   waterHitSizeFor,
+  waterL3DisplaySize,
+  waterL3SpriteScale,
   waterImpactBeatMs,
   waterLeadAim,
   waterPierceFor,
@@ -917,14 +921,20 @@ export class WeaponSystem {
   _spawnFrontBullet(bullets, x, y, vx, vy, trait, extra = {}) {
     const fxKey = extra.fxKey || trait.projectile;
     const damage = this._scaledDamage(trait.id, extra.damage ?? trait.damage);
+    const visualScale = Number.isFinite(extra.spriteScale) && extra.spriteScale > 0
+      ? extra.spriteScale
+      : (this._visualScale || 1);
+    const size = Number.isFinite(extra.canvasSize) && extra.canvasSize > 0
+      ? extra.canvasSize
+      : layoutPx(extra.hitSize || trait.hitSize || 10);
     const meta = {
       kind: trait.id,
       weaponId: trait.id,
       fxKey,
       damage,
-      visualScale: this._visualScale || 1,
+      visualScale,
       rotate: trait.rotate === true,
-      size: layoutPx(extra.hitSize || trait.hitSize || 10),
+      size,
       maxDistance: null,
       knockbackBodies: extra.knockbackBodies ?? trait.knockbackBodies ?? 0,
       impact: trait.impact || null,
@@ -1253,14 +1263,15 @@ export class WeaponSystem {
 
   /**
    * PIXELLAB_HOOK: fx-water-t2-aoe, 256×212, 30 frames @ 8 fps, loop, 6×5.
-   * Native catalog scale. Centered on the contact pixel for 4 seconds.
+   * Scaled so the cell height is about 4× a normal stage mob. Centered
+   * on the contact pixel for 4 seconds.
    * @param {number} x
    * @param {number} y
    */
   _spawnWaterExplosion(x, y) {
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     const sprite = playLibraryFx(this.scene, x, y, WATER_CHARGE_FX.aoe, {
-      scale: this._visualScale || 1,
+      scale: waterAoeSpriteScale(this._visualScale || 1),
       depth: depthFromY(y, 5),
     });
     const boom = { sprite, life: WATER_L2_AOE_MS, acc: {} };
@@ -1358,7 +1369,11 @@ export class WeaponSystem {
    */
   _payAoeTick(zombie, point, nudgeEast) {
     // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once, every hurt.
-    this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie);
+    // Drawn above the explosion so the white glyph stays visible on the 0.2s beat.
+    this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie, {
+      scaleMul: WATER_TOUCH_X_SCALE,
+      depthBias: 12,
+    });
     this.scene?.audio?.playWaterWhiteX?.();
     if (nudgeEast) this._nudgeEast(zombie, WATER_L3_NUDGE_PX);
     const gain = this._hurtZombie(
@@ -1425,10 +1440,14 @@ export class WeaponSystem {
     }
     const { vx, vy } = waterConeVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
     const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
-    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10, charge aura sheets
+    const vs = this._visualScale || 1;
+    const l3 = level >= 3 ? waterL3DisplaySize(vs) : null;
+    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10 scaled to 2× L1
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
       fxKey: level === 1 ? trait.projectile : WATER_CHARGE_FX.proj[level],
       hitSize: waterHitSizeFor(level),
+      spriteScale: level >= 3 ? waterL3SpriteScale(vs) : vs,
+      canvasSize: l3 ? Math.max(l3.w, l3.h) : undefined,
       pierce: waterPierceFor(level),
       charge: level,
     });
@@ -1797,12 +1816,14 @@ export class WeaponSystem {
    * @param {number} y
    * @param {{ y?: number, scale?: number }} [zombie]
    */
-  _spawnPointFx(key, x, y, zombie) {
+  _spawnPointFx(key, x, y, zombie, opts = {}) {
     if (!key || !Number.isFinite(x) || !Number.isFinite(y)) return;
     const feet = Number.isFinite(zombie?.y) ? zombie.y : y;
+    const mul = Number.isFinite(opts.scaleMul) && opts.scaleMul > 0 ? opts.scaleMul : 1;
+    const bias = Number.isFinite(opts.depthBias) ? opts.depthBias : 4;
     playLibraryFx(this.scene, x, y, key, {
-      scale: this._visualScale || Math.abs(zombie?.scale || 1) || 1,
-      depth: depthFromY(feet, 4),
+      scale: (this._visualScale || Math.abs(zombie?.scale || 1) || 1) * mul,
+      depth: depthFromY(feet, bias),
     });
   }
 

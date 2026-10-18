@@ -122,10 +122,10 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // Coordinates only. Water and sling already aim from a muzzle slot;
       // nothing here instantiates a cradle sprite.
       // PIXELLAB_HOOK: charge sheets — see SANDBOX_WATER_CHARGE_SHEETS.
-      // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16).
-      // L3 fx-water-proj-t3 is 512×256, 8 frames @ 10. L2 AOE fx-water-t2-aoe
-      // is 256×212, 30 frames @ 8. Auras: blue fx-water-charge-aura, yellow
-      // fx-water-charge-aura-l2, red fx-water-charge-aura-l3. Gameplay swaps them.
+      // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16, drawn at 2×).
+      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 2× the 32px L1 shot.
+      // L2 AOE fx-water-t2-aoe is 256×212, drawn about 4× a normal mob.
+      // Auras: blue fx-water-charge-aura, yellow fx-water-charge-aura-l2, red fx-water-charge-aura-l3.
       waterMount: water ? slot : null,
       waterCharge: water,
       waterHeld: water && !!this._space?.isDown,

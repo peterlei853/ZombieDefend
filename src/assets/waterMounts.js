@@ -7,7 +7,7 @@
  * The shot travels west toward the nearest living enemy.
  */
 
-import { grassYMax, grassYMin, layoutPx } from '../systems/DepthView.js';
+import { grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 
 export const WATER_MOUNT_COUNT = 6;
 /**
@@ -212,6 +212,25 @@ export const WATER_AOE_TICK_DMG = 6;
 export const WATER_L3_ENTER_SLOW = 0.8;
 /** Each L3 damage tick shifts the body this far east. */
 export const WATER_L3_NUDGE_PX = 2;
+/** L1 cell. Drawn at `_visualScale` (depth taper; LAYOUT_SCALE already divided out). */
+export const WATER_L1_FRAME = 32;
+/** L3 cell. The sheet stays 512×256; gameplay scales it down. */
+export const WATER_L3_CELL_W = 512;
+export const WATER_L3_CELL_H = 256;
+/** On-screen L3 height is this many times the L1 frame. */
+export const WATER_L3_VS_L1 = 2;
+/** L2 explosion cell. The sheet stays 256×212. */
+export const WATER_AOE_CELL_W = 256;
+export const WATER_AOE_CELL_H = 212;
+/**
+ * Profession roster frame (office, delivery, chef, nurse). Live bounds are
+ * this frame times the depth taper times LAYOUT_SCALE. Brute is taller.
+ */
+export const WATER_MOB_FRAME = 84;
+/** L2 explosion display height is this many mob frames tall. */
+export const WATER_AOE_MOB_MULT = 4;
+/** `fx-aoe-touch-x` is 32×32. 2× keeps the white glyph readable on the body. */
+export const WATER_TOUCH_X_SCALE = 2;
 /** Steering never leaves this many degrees off horizontal. */
 export const WATER_HOMING_DEG = 10;
 
@@ -257,13 +276,53 @@ export function waterPierceFor(tier) {
 }
 
 /**
- * Authored hit box in field px. L2 is a 128-wide cell and L3 is a
- * 512-wide cell, so the AABB stays large enough for the opaque test.
- * layoutPx(320) is 512 at the 1.6 field scale.
+ * Uniform sprite scale for the L3 sheet.
+ * Height lands on 2× the 32px L1 frame (64px at visualScale 1). Width
+ * follows the 2:1 cell, so the body is 128×64 instead of the raw 512×256.
+ * @param {number} [visualScale] depth taper (`_visualScale`)
+ */
+export function waterL3SpriteScale(visualScale = 1) {
+  const vs = Number.isFinite(visualScale) && visualScale > 0 ? visualScale : 1;
+  return vs * (WATER_L3_VS_L1 * WATER_L1_FRAME) / WATER_L3_CELL_H;
+}
+
+/**
+ * Displayed L3 frame in canvas px at this depth taper.
+ * @param {number} [visualScale]
+ * @returns {{ w: number, h: number }}
+ */
+export function waterL3DisplaySize(visualScale = 1) {
+  const scale = waterL3SpriteScale(visualScale);
+  return { w: WATER_L3_CELL_W * scale, h: WATER_L3_CELL_H * scale };
+}
+
+/**
+ * Live height of a normal stage mob: the 84px profession frame times the
+ * depth taper times LAYOUT_SCALE. That is the sprite box `getBounds` uses.
+ * @param {number} [visualScale]
+ */
+export function waterMobDisplayHeight(visualScale = 1) {
+  const vs = Number.isFinite(visualScale) && visualScale > 0 ? visualScale : 1;
+  return WATER_MOB_FRAME * vs * LAYOUT_SCALE;
+}
+
+/**
+ * Sprite scale for `fx-water-t2-aoe`. The 212px cell height is drawn at
+ * 4× a normal mob, so the 256px width lands a little over 4× as well.
+ * @param {number} [visualScale]
+ */
+export function waterAoeSpriteScale(visualScale = 1) {
+  return (WATER_AOE_MOB_MULT * waterMobDisplayHeight(visualScale)) / WATER_AOE_CELL_H;
+}
+
+/**
+ * Authored hit box in field px. layoutPx(this) is the canvas AABB at
+ * visualScale 1. L2 matches its 128-wide cell. L3 matches the scaled
+ * body (128 canvas px), not the raw 512 sheet.
  * @param {number} tier
  */
 export function waterHitSizeFor(tier) {
-  if (tier >= 3) return 320;
+  if (tier >= 3) return waterL3DisplaySize(1).w / LAYOUT_SCALE;
   if (tier === 2) return 80;
   return 16;
 }
