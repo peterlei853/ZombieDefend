@@ -14,7 +14,10 @@ import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelT
 import {
   pickWaterGuide,
   WATER_AOE_TICK_MS,
+  WATER_L2_AOE_MS,
   WATER_L3_ENTER_SLOW,
+  WATER_L3_NUDGE_PX,
+  waterAuraKey,
   waterChargeTier,
   waterConeVelocity,
   waterHitSizeFor,
@@ -45,9 +48,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.17', 'APP_VERSION is 0.36.17');
-assert(pkg.version === '0.36.17', 'package.json tracks 0.36.17');
-assert(html.includes('ZombieDefend v0.36.17'), 'title tracks 0.36.17');
+assert(APP_VERSION === '0.36.18', 'APP_VERSION is 0.36.18');
+assert(pkg.version === '0.36.18', 'package.json tracks 0.36.18');
+assert(html.includes('ZombieDefend v0.36.18'), 'title tracks 0.36.18');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -302,12 +305,16 @@ assert(guns.shouldRetireBullet(headless) === true, 'without a camera the stage g
 assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.5s is L1');
 assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
 assert(waterChargeTier(5000) === 3, '5s is L3');
-assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 5 && waterPierceFor(3) === Infinity, 'pierce is 1, then 5, then the field');
-assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 160, 'v2 sheets keep an AABB wide enough for the opaque test');
+assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 1 && waterPierceFor(3) === Infinity, 'L1 and L2 stop on the first body, L3 crosses the field');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 320, 'the L3 AABB covers the native 512-wide cell');
 assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
-assert(WATER_L3_ENTER_SLOW === 0.95, 'each new L3 body slows the shot by 5%');
+assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
+assert(WATER_L3_ENTER_SLOW === 0.8, 'each new L3 body slows the shot by 20%');
+assert(WATER_L3_NUDGE_PX === 2, 'each L3 damage tick nudges 2px');
+assert(waterAuraKey(1) === 'fx-water-charge-aura' && waterAuraKey(2) === 'fx-water-charge-aura-l2' && waterAuraKey(3) === 'fx-water-charge-aura-l3', 'the charge glow swaps sheets by tier');
 assert(WEAPON_TRAITS.water.label === '1 weapon', 'the water slot displays as 1 weapon');
 assert(weaponSystem.includes('stepChargeAoe') && weaponSystem.includes('fx-water-t2-aoe') && weaponSystem.includes('fx-aoe-touch-x'), 'L2/L3 contact uses the catalog AOE and the white X');
+assert(weaponSystem.includes('_spawnWaterExplosion') && weaponSystem.includes('_nudgeEast'), 'L2 leaves a contact explosion and L3 nudges east');
 assert(!weaponSystem.includes('_dropPathBurn') && !weaponSystem.includes('fx-water-t3-impact'), 'L3 does not play a pierce-impact or path burn');
 const steep = waterConeVelocity(500, 400, { x: 200, y: 40 }, 100);
 const steepPitch = Math.atan2(steep.vy, steep.vx);
@@ -318,9 +325,10 @@ const flat = waterConeVelocity(500, 400, { x: 200, y: 400 }, 100);
 assert(flat.vx < 0 && Math.abs(flat.vy) < 1e-6, 'a body on the lane is a flat shot');
 const piercing = { weaponId: 'water', pierce: 5, hitIds: [] };
 for (const id of [1, 2, 3, 4]) guns.markWaterPierce(piercing, { id });
-assert(guns.waterKeepsFlying(piercing) === true, 'L2 keeps flying before the fifth body');
+assert(guns.waterKeepsFlying(piercing) === true, 'a pierce-5 shot keeps flying before the fifth body');
 guns.markWaterPierce(piercing, { id: 5 });
-assert(guns.waterKeepsFlying(piercing) === false, 'L2 stops after five bodies');
+assert(guns.waterKeepsFlying(piercing) === false, 'a pierce-5 shot stops after five bodies');
+assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: 1, hitIds: [] }) === false, 'L2 pierce 1 does not keep the shot in the air');
 assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: Infinity, hitIds: [1, 2, 3, 4, 5, 6] }) === true, 'L3 keeps flying across the field');
 assert(weaponSystem.includes('if (opts.waterCharge) continue'), 'charged water does not auto-fire');
 assert(weaponSystem.includes('syncWaterCharge'), 'holding SPACE notifies the charge audio hook');

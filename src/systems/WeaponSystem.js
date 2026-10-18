@@ -24,8 +24,11 @@ import {
   WATER_AOE_TICK_DMG,
   WATER_AOE_TICK_MS,
   WATER_CHARGE_FX,
+  WATER_L2_AOE_MS,
   WATER_L3_ENTER_SLOW,
+  WATER_L3_NUDGE_PX,
   waterAimVelocity,
+  waterAuraKey,
   waterChargeTier,
   waterConeVelocity,
   waterHitSizeFor,
@@ -161,6 +164,12 @@ export class WeaponSystem {
     this._charge = null;
     /** @type {Phaser.GameObjects.Sprite|null} */
     this._aura = null;
+    /**
+     * L2 explosions live here, not on the bullet. The shot is retired
+     * on the first contact and the burst stays for WATER_L2_AOE_MS.
+     * @type {{ sprite: Phaser.GameObjects.Sprite|null, life: number, acc: Record<string, number> }[]}
+     */
+    this._waterExplosions = [];
     /** @type {{ zombie: import('../entities/Zombie.js').Zombie, life: number, acc: number, damage: number, every: number }[]} */
     this._waterDots = [];
     /** @type {{ sprite: Phaser.GameObjects.Sprite, life: number, acc: number, x: number, y: number }[]} */
@@ -481,6 +490,7 @@ export class WeaponSystem {
     this._waterBeats = [];
     this._slingBeats = [];
     this._clearWaterCharge();
+    this._clearWaterExplosions();
     this._destroyFlame();
   }
 
@@ -679,6 +689,7 @@ export class WeaponSystem {
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     this._frameMs = dt;
     this._stepWaterBeats(dt);
+    this._stepWaterExplosions(dt);
     this._stepSlingBeats(dt);
     const alive = [];
     for (const f of this._follows || []) {
@@ -1108,12 +1119,14 @@ export class WeaponSystem {
   }
 
   /**
-   * PIXELLAB_HOOK: fx-water-charge-aura on the water mount while SPACE is held.
+   * PIXELLAB_HOOK: charge aura on the gun while SPACE is held.
+   * Cyan fx-water-charge-aura under 2.5s, yellow fx-water-charge-aura-l2
+   * from 2.5s, red fx-water-charge-aura-l3 from 5s. The sheet is the color.
    * @param {{ muzzleX: number, muzzleY: number }} slot
    * @param {number} tier
    */
   _syncChargeAura(slot, tier) {
-    const key = WATER_CHARGE_FX.aura;
+    const key = waterAuraKey(tier);
     if (!this.scene?.add?.sprite || !this.scene.textures?.exists?.(key)) return;
     if (!this._aura?.active || this._aura.texture?.key !== key) {
       this._safeDestroyGraphics(this._aura);
@@ -1136,16 +1149,17 @@ export class WeaponSystem {
   }
 
   /**
-   * L2 and L3 stay in the air and hurt only while opaque pixels overlap.
-   * A new contact plays the white X. L2 also holds fx-water-t2-aoe on that
-   * body. L3 slows 5% for each new body and does not play a pierce flash.
-   * Returns true when an L2 shot has spent its pierce.
+   * L2 retires on the first opaque contact and leaves fx-water-t2-aoe
+   * on that pixel for 4s. L3 is the AOE body: it keeps flying, slows
+   * 20% for each new monster, and each damage tick flashes the white X
+   * and nudges the body 2px east. Returns true when the bullet should go.
    * @param {object} bullet
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @returns {boolean}
    */
   stepChargeAoe(bullet, zombies) {
     if (!bullet?.gfx || bullet.gfx.active === false || (bullet.charge || 0) < 2) return false;
+    if (bullet.charge === 2) return this._detonateWaterL2(bullet, zombies);
     if (!bullet.aoe) bullet.aoe = {};
     const half = ((bullet.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
     const bx = bullet.gfx.x;
@@ -1165,9 +1179,110 @@ export class WeaponSystem {
       this._tickChargeAoe(bullet, zombie);
     }
     for (const id of Object.keys(bullet.aoe)) {
-      if (!seen.has(id)) this._leaveChargeAoe(bullet, id);
+      if (!seen.has(id)) delete bullet.aoe[id];
     }
-    return !this.waterKeepsFlying(bullet);
+    return false;
+  }
+
+  /**
+   * First opaque∩opaque contact retires the L2 shot. The explosion is
+   * owned by the weapon system so destroying the bullet does not end it.
+   * @param {object} bullet
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @returns {boolean}
+   */
+  _detonateWaterL2(bullet, zombies) {
+    const half = ((bullet.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
+    const bx = bullet.gfx.x;
+    const by = bullet.gfx.y;
+    for (const zombie of zombies || []) {
+      if (!zombie?.alive || !zombie.body) continue;
+      const bounds = typeof zombie.getBounds === 'function' ? zombie.getBounds() : null;
+      if (!bounds) continue;
+      const box = bx + half >= bounds.left
+        && bx - half <= bounds.right
+        && by + half >= bounds.top
+        && by - half <= bounds.bottom;
+      if (!box || this.confirmOpaqueHit(bullet, zombie) === false) continue;
+      const tx = Number(bullet.touchX);
+      const ty = Number(bullet.touchY);
+      const px = Number.isFinite(tx) ? tx : bx;
+      const py = Number.isFinite(ty) ? ty : by;
+      this._spawnWaterExplosion(px, py);
+      this.scene?.audio?.playWaterImpact?.(2);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * PIXELLAB_HOOK: fx-water-t2-aoe, 256×212, 30 frames @ 8 fps, loop, 6×5.
+   * Native catalog scale. Centered on the contact pixel for 4 seconds.
+   * @param {number} x
+   * @param {number} y
+   */
+  _spawnWaterExplosion(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    const sprite = playLibraryFx(this.scene, x, y, WATER_CHARGE_FX.aoe, {
+      scale: this._visualScale || 1,
+      depth: depthFromY(y, 5),
+    });
+    const boom = { sprite, life: WATER_L2_AOE_MS, acc: {} };
+    this._waterExplosions.push(boom);
+    this._tickWaterExplosion(boom, 0);
+  }
+
+  /**
+   * @param {number} dt
+   */
+  _stepWaterExplosions(dt) {
+    const alive = [];
+    for (const boom of this._waterExplosions || []) {
+      boom.life -= Math.max(0, dt);
+      if (boom.life <= 0) {
+        this._safeDestroyGraphics(boom.sprite);
+        continue;
+      }
+      this._tickWaterExplosion(boom, dt);
+      alive.push(boom);
+    }
+    this._waterExplosions = alive;
+  }
+
+  _clearWaterExplosions() {
+    for (const boom of this._waterExplosions || []) this._safeDestroyGraphics(boom.sprite);
+    this._waterExplosions = [];
+  }
+
+  /**
+   * While the explosion's opaque pixels meet a body, hurt it and flash
+   * the white X on the first contact and every 0.2s after.
+   * @param {{ sprite: Phaser.GameObjects.Sprite|null, acc: Record<string, number> }} boom
+   * @param {number} dt
+   */
+  _tickWaterExplosion(boom, dt) {
+    if (!boom?.sprite?.active) return;
+    /** @type {Set<string>} */
+    const seen = new Set();
+    for (const zombie of this._liveZombies || []) {
+      if (!zombie?.alive || !zombie.body || zombie.id == null) continue;
+      const point = spriteSweepContact(boom.sprite, zombie.body, null);
+      if (!point) continue;
+      const id = String(zombie.id);
+      seen.add(id);
+      if (boom.acc[id] == null) {
+        boom.acc[id] = 0;
+        this._payAoeTick(zombie, point, false);
+        continue;
+      }
+      boom.acc[id] += Math.max(0, dt);
+      if (boom.acc[id] < WATER_AOE_TICK_MS) continue;
+      boom.acc[id] -= WATER_AOE_TICK_MS;
+      this._payAoeTick(zombie, point, false);
+    }
+    for (const id of Object.keys(boom.acc)) {
+      if (!seen.has(id)) delete boom.acc[id];
+    }
   }
 
   /**
@@ -1177,45 +1292,39 @@ export class WeaponSystem {
   _tickChargeAoe(bullet, zombie) {
     const id = String(zombie.id);
     let slot = bullet.aoe[id];
+    const tx = Number(bullet.touchX);
+    const ty = Number(bullet.touchY);
+    const point = {
+      x: Number.isFinite(tx) ? tx : bullet.gfx.x,
+      y: Number.isFinite(ty) ? ty : bullet.gfx.y,
+    };
     if (!slot) {
       const known = Array.isArray(bullet.hitIds) && bullet.hitIds.includes(zombie.id);
-      slot = bullet.aoe[id] = { acc: 0, sprite: null };
+      slot = bullet.aoe[id] = { acc: 0 };
       this.markWaterPierce(bullet, zombie);
-      const tx = Number(bullet.touchX);
-      const ty = Number(bullet.touchY);
-      const px = Number.isFinite(tx) ? tx : bullet.gfx.x;
-      const py = Number.isFinite(ty) ? ty : bullet.gfx.y;
-      // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once.
-      this._spawnPointFx(WATER_CHARGE_FX.touch, px, py, zombie);
-      if (bullet.charge === 2) {
-        // PIXELLAB_HOOK: fx-water-t2-aoe, 147×122, 30 frames @ 8 fps, loop.
-        const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
-        slot.sprite = playLibraryFx(this.scene, zombie.x, y, WATER_CHARGE_FX.aoe, {
-          scale: this._visualScale || 1,
-          depth: depthFromY(zombie.y, 5),
-        });
-      }
-      if (!known && bullet.charge >= 3) {
+      if (!known) {
         bullet.vx = (Number(bullet.vx) || 0) * WATER_L3_ENTER_SLOW;
         bullet.vy = (Number(bullet.vy) || 0) * WATER_L3_ENTER_SLOW;
+        this.scene?.audio?.playWaterImpact?.(3);
       }
-      this.scene?.audio?.playWaterImpact?.(bullet.charge >= 3 ? 3 : 2);
-      this._payAoeTick(zombie);
-    }
-    if (slot.sprite?.active) {
-      const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
-      slot.sprite.setPosition(zombie.x, y);
+      this._payAoeTick(zombie, point, true);
+      return;
     }
     slot.acc += Math.max(0, this._frameMs || 0);
     if (slot.acc < WATER_AOE_TICK_MS) return;
     slot.acc -= WATER_AOE_TICK_MS;
-    this._payAoeTick(zombie);
+    this._payAoeTick(zombie, point, true);
   }
 
   /**
    * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {{ x: number, y: number }} point
+   * @param {boolean} nudgeEast
    */
-  _payAoeTick(zombie) {
+  _payAoeTick(zombie, point, nudgeEast) {
+    // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once, every hurt.
+    this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie);
+    if (nudgeEast) this._nudgeEast(zombie, WATER_L3_NUDGE_PX);
     const gain = this._hurtZombie(
       zombie,
       WATER_AOE_TICK_DMG,
@@ -1227,21 +1336,20 @@ export class WeaponSystem {
   }
 
   /**
-   * @param {object} bullet
-   * @param {string} id
+   * Positional nudge only. East is +X, away from a west-firing shot.
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {number} px
    */
-  _leaveChargeAoe(bullet, id) {
-    const slot = bullet.aoe?.[id];
-    if (!slot) return;
-    this._safeDestroyGraphics(slot.sprite);
-    delete bullet.aoe[id];
+  _nudgeEast(zombie, px) {
+    if (!zombie?.alive || !zombie.body) return;
+    const amount = Number(px);
+    if (!(amount > 0) || !Number.isFinite(amount)) return;
+    zombie.body.x += amount;
+    zombie._lastX = zombie.body.x;
   }
 
-  /** Drop L2 AOE sprites when the shot leaves. */
-  releaseChargeAoe(bullet) {
-    if (!bullet?.aoe) return;
-    for (const id of Object.keys(bullet.aoe)) this._leaveChargeAoe(bullet, id);
-  }
+  /** L2 explosions are not parented to the bullet, so retire is a no-op. */
+  releaseChargeAoe(_bullet) {}
 
   /**
    * @param {object[]} bullets
@@ -1262,7 +1370,7 @@ export class WeaponSystem {
     }
     const { vx, vy } = waterConeVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
     const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
-    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 256×128 @ 10, fx-water-charge-aura
+    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10, charge aura sheets
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
       fxKey: level === 1 ? trait.projectile : WATER_CHARGE_FX.proj[level],
       hitSize: waterHitSizeFor(level),

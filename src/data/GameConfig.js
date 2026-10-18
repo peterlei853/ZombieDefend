@@ -240,10 +240,17 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * X and tick, 5% slower for each new body, and no pierce-impact sheet.
  * Gold-by-HP, saves, barricade max HP, the roster, and the other five
  * weapons stay put.
+ * v0.36.18: the charge glow swaps sheets — cyan, then yellow at 2.5s,
+ * then red at 5s. L2 does not pierce: the first opaque contact retires
+ * the shot and leaves fx-water-t2-aoe on that pixel for 4s, ticking
+ * every 0.2s with the white X. L3 uses the 512×256 sheet at native
+ * size, slows 20% for each new body, flashes the white X on every
+ * damage tick, and nudges that body 2px east. Gold-by-HP, saves,
+ * barricade max HP, the roster, and the other five weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.17';
+export const APP_VERSION = '0.36.18';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

@@ -120,10 +120,10 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // nothing here instantiates a cradle sprite.
       // PIXELLAB_HOOK: charge sheets load from the catalog (not hardcoded here).
       // fx-water-proj-t2 128×64, 8 frames @ 12 fps, loop, west.
-      // fx-water-proj-t3 256×128, 8 frames @ 10 fps, loop, west.
-      // fx-water-t2-aoe 147×122, 30 frames @ 8 fps, loop, grid 6×5.
+      // fx-water-proj-t3 512×256, 8 frames @ 10 fps, loop, west.
+      // fx-water-t2-aoe 256×212, 30 frames @ 8 fps, loop, grid 6×5.
       // fx-aoe-touch-x 32×32, 4 frames @ 16 fps, once.
-      // Stage combat still fires L1 fx-water-proj. No pierce-impact sheet.
+      // fx-water-charge-aura cyan, -l2 yellow, -l3 red. No pierce-impact sheet.
       waterMount: water ? slot : null,
       waterCharge: water,
       waterHeld: water && !!this._space?.isDown,

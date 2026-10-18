@@ -198,23 +198,37 @@ export function waterAimVelocity(fromX, fromY, target, speed) {
 export const WATER_CHARGE_L2_MS = 2500;
 /** Hold this long for a level-3 charge. */
 export const WATER_CHARGE_L3_MS = 5000;
-/** L2 shots pass through this many bodies, then stop. */
-export const WATER_L2_PIERCE = 5;
+/** L2 explosion stays on the contact pixel this long, then leaves. */
+export const WATER_L2_AOE_MS = 4000;
 /** Shared AOE contact tick while opaque pixels still overlap. */
 export const WATER_AOE_TICK_MS = 200;
 export const WATER_AOE_TICK_DMG = 6;
 /** Each new body an L3 shot enters. Stacks. */
-export const WATER_L3_ENTER_SLOW = 0.95;
+export const WATER_L3_ENTER_SLOW = 0.8;
+/** Each L3 damage tick shifts the body this far east. */
+export const WATER_L3_NUDGE_PX = 2;
 /** Steering never leaves this many degrees off horizontal. */
 export const WATER_HOMING_DEG = 10;
 
 export const WATER_CHARGE_FX = {
   aura: 'fx-water-charge-aura',
+  auraL2: 'fx-water-charge-aura-l2',
+  auraL3: 'fx-water-charge-aura-l3',
   proj: { 2: 'fx-water-proj-t2', 3: 'fx-water-proj-t3' },
-  // PIXELLAB_HOOK: catalog v2. L2 AOE burst and the shared white X.
+  // PIXELLAB_HOOK: catalog v2.1. L2 explosion and the shared white X.
   aoe: 'fx-water-t2-aoe',
   touch: 'fx-aoe-touch-x',
 };
+
+/**
+ * Cyan under 2.5s, yellow from 2.5s, red from 5s. The sheet is the color.
+ * @param {number} tier
+ */
+export function waterAuraKey(tier) {
+  if (tier >= 3) return WATER_CHARGE_FX.auraL3;
+  if (tier >= 2) return WATER_CHARGE_FX.auraL2;
+  return WATER_CHARGE_FX.aura;
+}
 
 /**
  * 1 under 2.5s, 2 from 2.5s, 3 from 5s. A tap is still level 1.
@@ -229,22 +243,22 @@ export function waterChargeTier(ms) {
 
 /**
  * Bodies a charge shot may hit before it is spent.
- * Level 3 keeps going across the field.
+ * Level 2 stops on the first body. Level 3 keeps going across the field.
  * @param {number} tier
  */
 export function waterPierceFor(tier) {
   if (tier >= 3) return Infinity;
-  if (tier === 2) return WATER_L2_PIERCE;
   return 1;
 }
 
 /**
- * Authored hit box in field px. v2 L2 is a 128-wide cell and v2 L3 is
- * 256-wide, so the AABB stays large enough for the opaque test to run.
+ * Authored hit box in field px. L2 is a 128-wide cell and L3 is a
+ * 512-wide cell, so the AABB stays large enough for the opaque test.
+ * layoutPx(320) is 512 at the 1.6 field scale.
  * @param {number} tier
  */
 export function waterHitSizeFor(tier) {
-  if (tier >= 3) return 160;
+  if (tier >= 3) return 320;
   if (tier === 2) return 80;
   return 16;
 }
