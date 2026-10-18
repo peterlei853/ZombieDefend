@@ -757,6 +757,10 @@ export class DefenderGroup {
         remove.add(i);
         continue;
       }
+      if ((b.charge || 0) >= 2) {
+        if (this.weapons.stepChargeAoe(b, list)) remove.add(i);
+        continue;
+      }
       const half = ((b.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
       const bx = b.gfx.x;
       const by = b.gfx.y;
@@ -771,10 +775,7 @@ export class DefenderGroup {
         ) {
           continue;
         }
-        if (b.weaponId === 'water' && b.hitIds?.includes(z.id)) {
-          if (b.charge === 3) this.weapons.touchWaterOverlap(b, z);
-          continue;
-        }
+        if (b.weaponId === 'water' && b.hitIds?.includes(z.id)) continue;
         const bounds = z.getBounds();
         if (!bounds) continue;
         if (
@@ -827,6 +828,7 @@ export class DefenderGroup {
   /** @param {object|undefined} b */
   _destroyBulletParts(b) {
     if (!b) return;
+    this.weapons?.releaseChargeAoe?.(b);
     for (const key of ['gfx', 'trail']) {
       if (!b[key]) continue;
       try {

@@ -200,27 +200,20 @@ export const WATER_CHARGE_L2_MS = 2500;
 export const WATER_CHARGE_L3_MS = 5000;
 /** L2 shots pass through this many bodies, then stop. */
 export const WATER_L2_PIERCE = 5;
-/** L2 wet damage keeps ticking for this long after the hit. */
-export const WATER_L2_DOT_MS = 5000;
-export const WATER_L2_DOT_DMG = 4;
-export const WATER_L2_DOT_EVERY = 500;
-/** L3 damage while a body is inside the projectile. */
-export const WATER_L3_DOT_DMG = 6;
-export const WATER_L3_DOT_EVERY = 350;
-/** L3 crumbs left behind the projectile. */
-export const WATER_PATH_DMG = 2;
-export const WATER_PATH_EVERY = 450;
-export const WATER_PATH_LIFE = 1000;
-export const WATER_PATH_GAP = 48;
+/** Shared AOE contact tick while opaque pixels still overlap. */
+export const WATER_AOE_TICK_MS = 200;
+export const WATER_AOE_TICK_DMG = 6;
+/** Each new body an L3 shot enters. Stacks. */
+export const WATER_L3_ENTER_SLOW = 0.95;
 /** Steering never leaves this many degrees off horizontal. */
 export const WATER_HOMING_DEG = 10;
 
 export const WATER_CHARGE_FX = {
   aura: 'fx-water-charge-aura',
   proj: { 2: 'fx-water-proj-t2', 3: 'fx-water-proj-t3' },
-  impact: { 2: 'fx-water-t2-impact', 3: 'fx-water-t3-impact' },
-  dot: { 2: 'fx-water-t2-dot', 3: 'fx-water-t3-inbullet-dot' },
-  path: 'fx-water-t3-path-burn',
+  // PIXELLAB_HOOK: catalog v2. L2 AOE burst and the shared white X.
+  aoe: 'fx-water-t2-aoe',
+  touch: 'fx-aoe-touch-x',
 };
 
 /**
@@ -246,12 +239,13 @@ export function waterPierceFor(tier) {
 }
 
 /**
- * Authored hit box. The L2 / L3 sheets are already 2× and 4× the L1 frame.
+ * Authored hit box in field px. v2 L2 is a 128-wide cell and v2 L3 is
+ * 256-wide, so the AABB stays large enough for the opaque test to run.
  * @param {number} tier
  */
 export function waterHitSizeFor(tier) {
-  if (tier >= 3) return 64;
-  if (tier === 2) return 32;
+  if (tier >= 3) return 160;
+  if (tier === 2) return 80;
   return 16;
 }
 

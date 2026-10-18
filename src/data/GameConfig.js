@@ -234,10 +234,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * The 16-bit pack plays charge L2 from the hold, charge L3 after 2.5s,
  * a release by tier, and an impact by projectile tier. Gold-by-HP,
  * saves, barricade max HP, the roster, and the other five weapons stay put.
+ * v0.36.17: the sandbox slot displays as "1 weapon". L2 overlaps play
+ * fx-water-t2-aoe and fx-aoe-touch-x, ticking every 0.2s while the
+ * pixels still meet. L3 is the projectile body itself: the same white
+ * X and tick, 5% slower for each new body, and no pierce-impact sheet.
+ * Gold-by-HP, saves, barricade max HP, the roster, and the other five
+ * weapons stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.16';
+export const APP_VERSION = '0.36.17';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

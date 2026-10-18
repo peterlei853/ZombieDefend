@@ -118,7 +118,7 @@ export const FLAME_GROW_MS = 1100;
 export const WEAPON_TRAITS = {
   water: {
     id: 'water',
-    label: 'Water',
+    label: '1 weapon',
     profile: 'handgun',
     fireMs: 680,
     speed: 0.5,

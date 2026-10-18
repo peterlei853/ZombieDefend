@@ -13,8 +13,11 @@ import { SoundManager } from '../src/systems/SoundManager.js';
 import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
 import {
   pickWaterGuide,
+  WATER_AOE_TICK_MS,
+  WATER_L3_ENTER_SLOW,
   waterChargeTier,
   waterConeVelocity,
+  waterHitSizeFor,
   waterLeadAim,
   waterPierceFor,
 } from '../src/assets/waterMounts.js';
@@ -42,9 +45,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.16', 'APP_VERSION is 0.36.16');
-assert(pkg.version === '0.36.16', 'package.json tracks 0.36.16');
-assert(html.includes('ZombieDefend v0.36.16'), 'title tracks 0.36.16');
+assert(APP_VERSION === '0.36.17', 'APP_VERSION is 0.36.17');
+assert(pkg.version === '0.36.17', 'package.json tracks 0.36.17');
+assert(html.includes('ZombieDefend v0.36.17'), 'title tracks 0.36.17');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -300,6 +303,12 @@ assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.
 assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
 assert(waterChargeTier(5000) === 3, '5s is L3');
 assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 5 && waterPierceFor(3) === Infinity, 'pierce is 1, then 5, then the field');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 160, 'v2 sheets keep an AABB wide enough for the opaque test');
+assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
+assert(WATER_L3_ENTER_SLOW === 0.95, 'each new L3 body slows the shot by 5%');
+assert(WEAPON_TRAITS.water.label === '1 weapon', 'the water slot displays as 1 weapon');
+assert(weaponSystem.includes('stepChargeAoe') && weaponSystem.includes('fx-water-t2-aoe') && weaponSystem.includes('fx-aoe-touch-x'), 'L2/L3 contact uses the catalog AOE and the white X');
+assert(!weaponSystem.includes('_dropPathBurn') && !weaponSystem.includes('fx-water-t3-impact'), 'L3 does not play a pierce-impact or path burn');
 const steep = waterConeVelocity(500, 400, { x: 200, y: 40 }, 100);
 const steepPitch = Math.atan2(steep.vy, steep.vx);
 const steepDelta = steepPitch > 0 ? steepPitch - Math.PI : steepPitch + Math.PI;

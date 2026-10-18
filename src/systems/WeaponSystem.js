@@ -21,16 +21,10 @@ import {
 } from '../assets/heroDeploy.js';
 import { aimRotation, libraryAsset, libraryFxDuration, playLibraryAnim, playLibraryFx } from '../assets/libraryAssets.js';
 import {
+  WATER_AOE_TICK_DMG,
+  WATER_AOE_TICK_MS,
   WATER_CHARGE_FX,
-  WATER_L2_DOT_DMG,
-  WATER_L2_DOT_EVERY,
-  WATER_L2_DOT_MS,
-  WATER_L3_DOT_DMG,
-  WATER_L3_DOT_EVERY,
-  WATER_PATH_DMG,
-  WATER_PATH_EVERY,
-  WATER_PATH_GAP,
-  WATER_PATH_LIFE,
+  WATER_L3_ENTER_SLOW,
   waterAimVelocity,
   waterChargeTier,
   waterConeVelocity,
@@ -446,7 +440,6 @@ export class WeaponSystem {
       if (typeof b.gfx.setDepth === 'function') {
         b.gfx.setDepth(depthFromY(b.gfx.y));
       }
-      if (b.charge === 3) this._dropPathBurn(b);
     }
   }
 
@@ -487,8 +480,6 @@ export class WeaponSystem {
     this._follows = [];
     this._waterBeats = [];
     this._slingBeats = [];
-    this._waterDots = [];
-    this._clearPathEmbers();
     this._clearWaterCharge();
     this._destroyFlame();
   }
@@ -688,8 +679,6 @@ export class WeaponSystem {
     const dt = Number.isFinite(deltaMs) ? deltaMs : 0;
     this._frameMs = dt;
     this._stepWaterBeats(dt);
-    this._stepWaterDots(dt);
-    this._stepPathEmbers(dt);
     this._stepSlingBeats(dt);
     const alive = [];
     for (const f of this._follows || []) {
@@ -964,8 +953,9 @@ export class WeaponSystem {
   _applyFrontHit(zombie, bullet) {
     const trait = WEAPON_TRAITS[bullet.weaponId];
     if (trait?.id === 'water') {
-      if ((bullet.charge || 0) >= 2) this._applyChargedWaterHit(zombie, bullet);
-      else this._queueWaterSplash(zombie, bullet);
+      // L2/L3 damage is the overlap tick in stepChargeAoe, not this hit.
+      if ((bullet.charge || 0) >= 2) return { gold: 0, kills: 0 };
+      this._queueWaterSplash(zombie, bullet);
       return { gold: 0, kills: 0 };
     }
     if (trait?.id === 'sling') {
@@ -1146,129 +1136,111 @@ export class WeaponSystem {
   }
 
   /**
-   * L2 and L3 skip the lightning splash. L2 starts a 5s wet DoT.
-   * L3 flashes on entry; the in-bullet DoT ticks while the body stays inside.
-   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * L2 and L3 stay in the air and hurt only while opaque pixels overlap.
+   * A new contact plays the white X. L2 also holds fx-water-t2-aoe on that
+   * body. L3 slows 5% for each new body and does not play a pierce flash.
+   * Returns true when an L2 shot has spent its pierce.
    * @param {object} bullet
+   * @param {import('../entities/Zombie.js').Zombie[]} zombies
+   * @returns {boolean}
    */
-  _applyChargedWaterHit(zombie, bullet) {
-    const tier = bullet.charge >= 3 ? 3 : 2;
-    const key = WATER_CHARGE_FX.impact[tier];
-    const tx = Number(bullet.touchX);
-    const ty = Number(bullet.touchY);
-    if (Number.isFinite(tx) && Number.isFinite(ty)) this._spawnPointFx(key, tx, ty, zombie);
-    // PIXELLAB_HOOK: impact L2 / L3 from the 16-bit pack.
-    this.scene?.audio?.playWaterImpact?.(tier);
-    const gain = this._hurtZombie(zombie, bullet.damage, bullet, { impact: false, knock: false });
+  stepChargeAoe(bullet, zombies) {
+    if (!bullet?.gfx || bullet.gfx.active === false || (bullet.charge || 0) < 2) return false;
+    if (!bullet.aoe) bullet.aoe = {};
+    const half = ((bullet.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
+    const bx = bullet.gfx.x;
+    const by = bullet.gfx.y;
+    /** @type {Set<string>} */
+    const seen = new Set();
+    for (const zombie of zombies || []) {
+      if (!zombie?.alive || !zombie.body || zombie.id == null) continue;
+      const bounds = typeof zombie.getBounds === 'function' ? zombie.getBounds() : null;
+      if (!bounds) continue;
+      const box = bx + half >= bounds.left
+        && bx - half <= bounds.right
+        && by + half >= bounds.top
+        && by - half <= bounds.bottom;
+      if (!box || this.confirmOpaqueHit(bullet, zombie) === false) continue;
+      seen.add(String(zombie.id));
+      this._tickChargeAoe(bullet, zombie);
+    }
+    for (const id of Object.keys(bullet.aoe)) {
+      if (!seen.has(id)) this._leaveChargeAoe(bullet, id);
+    }
+    return !this.waterKeepsFlying(bullet);
+  }
+
+  /**
+   * @param {object} bullet
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   */
+  _tickChargeAoe(bullet, zombie) {
+    const id = String(zombie.id);
+    let slot = bullet.aoe[id];
+    if (!slot) {
+      const known = Array.isArray(bullet.hitIds) && bullet.hitIds.includes(zombie.id);
+      slot = bullet.aoe[id] = { acc: 0, sprite: null };
+      this.markWaterPierce(bullet, zombie);
+      const tx = Number(bullet.touchX);
+      const ty = Number(bullet.touchY);
+      const px = Number.isFinite(tx) ? tx : bullet.gfx.x;
+      const py = Number.isFinite(ty) ? ty : bullet.gfx.y;
+      // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once.
+      this._spawnPointFx(WATER_CHARGE_FX.touch, px, py, zombie);
+      if (bullet.charge === 2) {
+        // PIXELLAB_HOOK: fx-water-t2-aoe, 147×122, 30 frames @ 8 fps, loop.
+        const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+        slot.sprite = playLibraryFx(this.scene, zombie.x, y, WATER_CHARGE_FX.aoe, {
+          scale: this._visualScale || 1,
+          depth: depthFromY(zombie.y, 5),
+        });
+      }
+      if (!known && bullet.charge >= 3) {
+        bullet.vx = (Number(bullet.vx) || 0) * WATER_L3_ENTER_SLOW;
+        bullet.vy = (Number(bullet.vy) || 0) * WATER_L3_ENTER_SLOW;
+      }
+      this.scene?.audio?.playWaterImpact?.(bullet.charge >= 3 ? 3 : 2);
+      this._payAoeTick(zombie);
+    }
+    if (slot.sprite?.active) {
+      const y = Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : zombie.y;
+      slot.sprite.setPosition(zombie.x, y);
+    }
+    slot.acc += Math.max(0, this._frameMs || 0);
+    if (slot.acc < WATER_AOE_TICK_MS) return;
+    slot.acc -= WATER_AOE_TICK_MS;
+    this._payAoeTick(zombie);
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie} zombie
+   */
+  _payAoeTick(zombie) {
+    const gain = this._hurtZombie(
+      zombie,
+      WATER_AOE_TICK_DMG,
+      { weaponId: 'water' },
+      { impact: false, knock: false },
+    );
     this._pending.gold += gain.gold;
     this._pending.kills += gain.kills;
-    if (tier === 2) {
-      this._attachFollow(zombie, WATER_CHARGE_FX.dot[2], WATER_L2_DOT_MS, { chest: true });
-      this._waterDots.push({
-        zombie,
-        life: WATER_L2_DOT_MS,
-        acc: 0,
-        damage: WATER_L2_DOT_DMG,
-        every: WATER_L2_DOT_EVERY,
-      });
-    }
   }
 
   /**
-   * Level 3 keeps hurting a body for as long as it sits in the projectile.
    * @param {object} bullet
-   * @param {import('../entities/Zombie.js').Zombie} zombie
+   * @param {string} id
    */
-  touchWaterOverlap(bullet, zombie) {
-    if (bullet?.charge !== 3 || !zombie?.alive || !zombie.body) return;
-    if (!bullet.dotAcc) bullet.dotAcc = {};
-    const id = zombie.id;
-    bullet.dotAcc[id] = (bullet.dotAcc[id] || 0) + (this._frameMs || 0);
-    this._attachFollow(zombie, WATER_CHARGE_FX.dot[3], Math.max(400, WATER_L3_DOT_EVERY), { chest: true });
-    if (bullet.dotAcc[id] < WATER_L3_DOT_EVERY) return;
-    bullet.dotAcc[id] = 0;
-    const gain = this._hurtZombie(zombie, WATER_L3_DOT_DMG, { weaponId: 'water' }, { impact: false, knock: false });
-    this._pending.gold += gain.gold;
-    this._pending.kills += gain.kills;
+  _leaveChargeAoe(bullet, id) {
+    const slot = bullet.aoe?.[id];
+    if (!slot) return;
+    this._safeDestroyGraphics(slot.sprite);
+    delete bullet.aoe[id];
   }
 
-  /**
-   * @param {number} dt
-   */
-  _stepWaterDots(dt) {
-    const pending = [];
-    for (const dot of this._waterDots || []) {
-      dot.life -= dt;
-      if (dot.life <= 0 || !dot.zombie?.alive || !dot.zombie.body) continue;
-      dot.acc += dt;
-      if (dot.acc >= dot.every) {
-        dot.acc -= dot.every;
-        const gain = this._hurtZombie(dot.zombie, dot.damage, { weaponId: 'water' }, { impact: false, knock: false });
-        this._pending.gold += gain.gold;
-        this._pending.kills += gain.kills;
-      }
-      pending.push(dot);
-    }
-    this._waterDots = pending;
-  }
-
-  /**
-   * Leave a burning crumb along a level-3 shot.
-   * @param {object} bullet
-   */
-  _dropPathBurn(bullet) {
-    const key = WATER_CHARGE_FX.path;
-    if (!bullet?.gfx || !this.scene?.add?.sprite || !this.scene.textures?.exists?.(key)) return;
-    const traveled = bullet.traveled || 0;
-    if (bullet.pathAt == null) bullet.pathAt = 0;
-    if (traveled - bullet.pathAt < WATER_PATH_GAP) return;
-    bullet.pathAt = traveled;
-    const sprite = playLibraryFx(this.scene, bullet.gfx.x, bullet.gfx.y, key, {
-      scale: this._visualScale || 1,
-      depth: depthFromY(bullet.gfx.y, 2),
-    });
-    if (!sprite) return;
-    this._pathEmbers.push({
-      sprite,
-      life: WATER_PATH_LIFE,
-      acc: WATER_PATH_EVERY,
-      x: bullet.gfx.x,
-      y: bullet.gfx.y,
-    });
-  }
-
-  /**
-   * @param {number} dt
-   */
-  _stepPathEmbers(dt) {
-    const pending = [];
-    for (const ember of this._pathEmbers || []) {
-      ember.life -= dt;
-      if (ember.life <= 0 || !ember.sprite?.active) {
-        this._safeDestroyGraphics(ember.sprite);
-        continue;
-      }
-      ember.acc += dt;
-      if (ember.acc >= WATER_PATH_EVERY) {
-        ember.acc = 0;
-        for (const z of this._liveZombies || []) {
-          if (!z?.alive || !z.body) continue;
-          const cy = Number.isFinite(z.bodyCenterY) ? z.bodyCenterY : z.y;
-          if (Math.hypot(z.x - ember.x, cy - ember.y) > layoutPx(36)) continue;
-          const gain = this._hurtZombie(z, WATER_PATH_DMG, { weaponId: 'water' }, { impact: false, knock: false });
-          this._pending.gold += gain.gold;
-          this._pending.kills += gain.kills;
-          break;
-        }
-      }
-      pending.push(ember);
-    }
-    this._pathEmbers = pending;
-  }
-
-  _clearPathEmbers() {
-    for (const ember of this._pathEmbers || []) this._safeDestroyGraphics(ember?.sprite);
-    this._pathEmbers = [];
+  /** Drop L2 AOE sprites when the shot leaves. */
+  releaseChargeAoe(bullet) {
+    if (!bullet?.aoe) return;
+    for (const id of Object.keys(bullet.aoe)) this._leaveChargeAoe(bullet, id);
   }
 
   /**
@@ -1290,7 +1262,7 @@ export class WeaponSystem {
     }
     const { vx, vy } = waterConeVelocity(slot.muzzleX, slot.muzzleY, aim, speed);
     const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
-    // PIXELLAB_HOOK: water charge — fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura
+    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 256×128 @ 10, fx-water-charge-aura
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
       fxKey: level === 1 ? trait.projectile : WATER_CHARGE_FX.proj[level],
       hitSize: waterHitSizeFor(level),

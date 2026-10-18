@@ -321,6 +321,10 @@ export default class WeaponTryoutScene extends Phaser.Scene {
         remove.add(i);
         continue;
       }
+      if ((bullet.charge || 0) >= 2) {
+        if (this.weapons.stepChargeAoe(bullet, list)) remove.add(i);
+        continue;
+      }
       const half = ((bullet.size ?? BULLET_SIZE * LAYOUT_SCALE) / 2) + 2 * LAYOUT_SCALE;
       const bx = bullet.gfx.x;
       const by = bullet.gfx.y;
@@ -333,10 +337,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
         ) {
           continue;
         }
-        if (bullet.weaponId === 'water' && bullet.hitIds?.includes(zombie.id)) {
-          if (bullet.charge === 3) this.weapons.touchWaterOverlap(bullet, zombie);
-          continue;
-        }
+        if (bullet.weaponId === 'water' && bullet.hitIds?.includes(zombie.id)) continue;
         const bounds = zombie.getBounds();
         if (!bounds) continue;
         if (
@@ -363,6 +364,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     const indices = Array.from(remove).sort((a, b) => b - a);
     for (const index of indices) {
       const bullet = this.bullets[index];
+      this.weapons.releaseChargeAoe?.(bullet);
       try {
         bullet?.gfx?.destroy();
       } catch (_) {
@@ -381,6 +383,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
 
   _clearBullets() {
     for (const bullet of this.bullets) {
+      this.weapons.releaseChargeAoe?.(bullet);
       try {
         bullet?.gfx?.destroy();
       } catch (_) {
