@@ -134,7 +134,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // nothing here instantiates a cradle sprite.
       // PIXELLAB_HOOK: charge sheets — see SANDBOX_WATER_CHARGE_SHEETS.
       // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16, drawn at 2×).
-      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 0.5 × _visualScale (4× the 32px L1 height).
+      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 1.0 × _visualScale (8× the 32px L1 height).
       // L2 AOE fx-water-t2-aoe is 256×212, drawn at 2× a normal mob (half of the v0.36.21 4×).
       // Auras: blue fx-water-charge-aura, yellow fx-water-charge-aura-l2, red fx-water-charge-aura-l3.
       waterMount: water ? slot : null,
@@ -153,7 +153,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       const held = tier
         ? `charging L${tier} ${(this.weapons.chargeMs() / 1000).toFixed(1)}s`
         : 'SPACE hold';
-      this.hint.setText(`${held} · tap L1 · hold 2.5s L2 · 5s L3 · W/S move and shoot · gun stays out · 1–6 switch · R reset`);
+      this.hint.setText(`${held} · tap L1 · hold 1.8s L2 · 4s L3 · W/S move and shoot · gun stays out · 1–6 switch · R reset`);
     }
     this.weapons.stepBullets(this.bullets, dt / 1000);
     this.weapons.stepCasings?.(dt);

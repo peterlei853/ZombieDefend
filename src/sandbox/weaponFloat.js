@@ -71,8 +71,8 @@ export function sandboxMuzzle(origin, frame = SANDBOX_FLOAT_FRAME) {
  * PIXELLAB_HOOK: 1-weapon charge sheets. Sandbox and Stage preload these
  * from the catalog. Frame size is the catalog cell, not a hardcoded slice.
  * Aura color swap is Gameplay: blue while charging toward L2, yellow at
- * ≥2.5s (`fx-water-charge-aura-l2`), red at ≥5s (`fx-water-charge-aura-l3`).
- * Combat rules (L2 no-pierce, AOE duration, L3 speed, knockback) stay put.
+ * ≥1.8s (`fx-water-charge-aura-l2`), red at ≥4s (`fx-water-charge-aura-l3`).
+ * L2 does not pierce. The L2 explosion size stays the v0.36.22 half-size.
  */
 export const SANDBOX_WATER_CHARGE_SHEETS = [
   { key: 'fx-water-charge-aura', frameWidth: 48, frameHeight: 48, frames: 8, frameRate: 10 },

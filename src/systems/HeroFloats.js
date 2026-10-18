@@ -2,6 +2,7 @@ import { depthFromY } from './DepthView.js';
 import { playLibraryAnim } from '../assets/libraryAssets.js';
 import {
   WEAPON_TRAITS,
+  MUZZLE_WEST_FRAC,
   deployOffset,
   frontArcFor,
   frontKey,
@@ -142,11 +143,34 @@ export class HeroFloats {
       const scale = Math.abs(sprite.scaleX || 1);
       out.push({
         id: gun.id,
-        x: sprite.x - FRONT_FRAME * scale * 0.35,
+        x: sprite.x - FRONT_FRAME * scale * MUZZLE_WEST_FRAC,
         y: sprite.y,
       });
     }
     return out;
+  }
+
+  /**
+   * Water lock still has a muzzle when the sprite is hidden for a frame,
+   * so W/S cannot drop the charge slot. A visible gun uses its sprite.
+   * @param {string} id
+   * @param {{ x?: number, y?: number, scaleX?: number }|null|undefined} girl
+   * @returns {{ id: string, x: number, y: number }|null}
+   */
+  muzzleOf(id, girl) {
+    const found = this.muzzles().find((muzzle) => muzzle.id === id);
+    if (found) return found;
+    if (!this._waterLock || id !== 'water' || !girl) return null;
+    if (!Number.isFinite(girl.x) || !Number.isFinite(girl.y)) return null;
+    const scale = Math.abs(girl.scaleX || 1) || 1;
+    const off = frontArcFor(1)[0] || { x: -36, y: -8 };
+    const gunX = girl.x + off.x * scale;
+    const gunY = girl.y + off.y * scale;
+    return {
+      id: 'water',
+      x: gunX - FRONT_FRAME * scale * MUZZLE_WEST_FRAC,
+      y: gunY,
+    };
   }
 
   destroy() {

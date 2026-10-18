@@ -6980,7 +6980,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
       "description": "Player Girl — weapon FX: water-charge-aura — 8 frames 48x48 @ 10 fps, loop.",
-      "note": "v1.1 blue/cyan water charge cue while charging toward L2 (hold under 2.5s). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Same frame meta as v1.0. Yellow fx-water-charge-aura-l2 shows at ≥2.5s. Red fx-water-charge-aura-l3 shows at ≥5s. Stage combat rules are unchanged.",
+      "note": "v1.1 blue/cyan water charge cue while charging toward L2 (hold under 1.8s). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Same frame meta as v1.0. Yellow fx-water-charge-aura-l2 shows at ≥1.8s. Red fx-water-charge-aura-l3 shows at ≥4s. Stage combat rules are unchanged.",
       "tags": [
         "hero",
         "girl-fx",
@@ -6996,7 +6996,7 @@
           "role": "chargeCue",
           "tier": "charging",
           "color": "blue",
-          "showWhile": "charge < 2.5s",
+          "showWhile": "charge < 1.8s",
           "status": "sandbox-catalog"
         },
         "sheet": {
@@ -7043,7 +7043,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
       "description": "Player Girl — weapon FX: water-charge-aura-l2 — 8 frames 48x48 @ 10 fps, loop.",
-      "note": "v1.0 yellow water charge cue. Show when charge ≥2.5s (L2 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
+      "note": "v1.0 yellow water charge cue. Show when charge ≥1.8s (L2 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
       "tags": [
         "hero",
         "girl-fx",
@@ -7059,7 +7059,7 @@
           "role": "chargeCue",
           "tier": "L2",
           "color": "yellow",
-          "showWhile": "charge ≥ 2.5s",
+          "showWhile": "charge ≥ 1.8s",
           "status": "sandbox-catalog"
         },
         "sheet": {
@@ -7105,7 +7105,7 @@
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
       "description": "Player Girl — weapon FX: water-charge-aura-l3 — 8 frames 48x48 @ 10 fps, loop.",
-      "note": "v1.0 red water charge cue. Show when charge ≥5s (L3 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
+      "note": "v1.0 red water charge cue. Show when charge ≥4s (L3 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
       "tags": [
         "hero",
         "girl-fx",
@@ -7121,7 +7121,7 @@
           "role": "chargeCue",
           "tier": "L3",
           "color": "red",
-          "showWhile": "charge ≥ 5s",
+          "showWhile": "charge ≥ 4s",
           "status": "sandbox-catalog"
         },
         "sheet": {
