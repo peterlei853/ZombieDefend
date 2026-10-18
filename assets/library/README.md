@@ -108,17 +108,21 @@ Merged v0.31 still times the HP drop to `fx-water-impact` (6×64 @ 12 fps, once;
 
 Profession body-hit overlays (same splash, light tint, origin center, once @ 12 fps): `fx-hit-water-office-v2` (gray), `fx-hit-water-delivery` (yellow), `fx-hit-water-chef` (white), `fx-hit-water-nurse` (pink). The merged hook looks up `fx-hit-<skinId>` (`fx-hit-office-worker-v2`, `fx-hit-delivery`, `fx-hit-chef`, `fx-hit-nurse`) and skips the puff when that texture is missing. These water keys are the catalog names; pointing the hook at them is a later code change.
 
-## Water Mega Man charge (v1.0, catalog only)
+## Water Mega Man charge (v1.0 pack, v2.0 L2/L3 projectiles)
 
-Eight charge sheets sit with the other girl weapon FX in `characters/hero/girl/fx/`. Each key is **v1.0** (`extra.version`). `fx-water-proj` (L1, 32×32 @ 10 fps, loop, origin center) is unchanged. This catalog does not wire Stage, combat, gold, saves, or barricade. Sandbox Gameplay wires the keys later. Hold GitHub Pages until the sandbox demo Passes and Peter OKs.
+Charge sheets sit with the other girl weapon FX in `characters/hero/girl/fx/`. `fx-water-proj` (L1, 32×32 @ 10 fps, loop, origin center) is unchanged. v2.0 replaces `fx-water-proj-t2` on the same path and adds `fx-aoe-touch-x`. r2 keeps the blue `fx-water-charge-aura` and adds yellow `fx-water-charge-aura-l2` and red `fx-water-charge-aura-l3`. `fx-water-proj-t3` is v3.0 (512×256) and `fx-water-t2-aoe` is v2.0 (256×212) on the same paths. Stage combat, gold, saves, and barricade are unchanged. Sandbox and Stage both slice these sheets from the catalog frame size. Hold Stage combat wiring and GitHub Pages until the sandbox demo Passes and Peter OKs. There is no pierce-impact sheet.
 
-Sheets are row-major grids (`grid: [cols, rows]`). Frame *i* is column `i % cols`, row `floor(i / cols)`. Use the listed frame count even when the grid has empty trailing cells.
+Row-major grids use `grid: [cols, rows]`. Frame *i* is column `i % cols`, row `floor(i / cols)`. A horizontal strip has no `grid`. Use the listed frame count even when a grid has empty trailing cells.
 
-| Key | Cell | Frames | FPS | Playback | Origin | Grid | Role |
+| Key | Cell | Frames | FPS | Playback | Origin | Layout | Role |
 |---|---|---:|---:|---|---|---|---|
-| `fx-water-proj-t2` | 64×32 | 4 | 12 | loop | (0.5, 0.5) center | 2×2, 128×64 | L2 projectile, faces west |
-| `fx-water-proj-t3` | 128×64 | 4 | 12 | loop | (0.5, 0.5) center | 2×2, 256×128 | L3 projectile, faces west |
-| `fx-water-charge-aura` | 48×48 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 144×144 (cell 8 empty) | charge cue |
+| `fx-water-proj-t2` | 128×64 | 8 | 12 | loop | (0.5, 0.5) center | strip, 1024×64 | v2.0 L2 projectile, faces west. GIF 80ms (~12.5 fps) |
+| `fx-water-proj-t3` | 512×256 | 8 | 10 | loop | (0.5, 0.5) center | strip, 4096×256 | v3.0 L3 projectile, faces west. GIF 100ms |
+| `fx-water-t2-aoe` | 256×212 | 30 | 8 | loop | (0.5, 0.5) center | 6×5, 1536×1060 | v2.0 L2 fire AOE. GIF 120ms (~8 fps) |
+| `fx-aoe-touch-x` | 32×32 | 4 | 16 | once | (0.5, 0.5) center | strip, 128×32 | v1.0 white contact X. GIF 60ms (~17 fps) |
+| `fx-water-charge-aura` | 48×48 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 144×144 (cell 8 empty) | v1.1 blue/cyan cue while charging toward L2 |
+| `fx-water-charge-aura-l2` | 48×48 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 144×144 (cell 8 empty) | v1.0 yellow cue when charge ≥2.5s |
+| `fx-water-charge-aura-l3` | 48×48 | 8 | 10 | loop | (0.5, 0.5) center | 3×3, 144×144 (cell 8 empty) | v1.0 red cue when charge ≥5s |
 | `fx-water-t2-impact` | 32×32 | 6 | 14 | once | (0.5, 0.5) center | 3×2, 96×64 | L2 hit |
 | `fx-water-t2-dot` | 48×48 | 10 | 11 | loop | (0.5, 1.0) feet | 4×3, 192×144 (cells 10–11 empty) | L2 DoT overlay |
 | `fx-water-t3-impact` | 40×40 | 6 | 14 | once | (0.5, 0.5) center | 3×2, 120×80 | L3 hit |

@@ -16,6 +16,8 @@ import {
   SANDBOX_WEAPONS,
   sandboxFloatOrigin,
   sandboxMuzzle,
+  SANDBOX_WATER_CHARGE_SHEETS,
+  sandboxChargeSheetReady,
   sandboxWeaponFromSearch,
   sandboxWeaponLabel,
 } from '../src/sandbox/weaponFloat.js';
@@ -91,6 +93,12 @@ assert(demo.includes('confirmOpaqueHit'), 'try-out gates water on opaque pixels'
 assert(defender.includes('confirmOpaqueHit'), 'stage gates water on the same opaque-pixel test');
 assert(WATER_HIT_FX === 'fx-lightning-impact', 'water hit sheet is the lightning impact');
 assert(WEAPON_TRAITS.water.projectile === 'fx-water-proj', 'water projectile stays');
+const chargeByKey = Object.fromEntries(SANDBOX_WATER_CHARGE_SHEETS.map((spec) => [spec.key, spec]));
+assert(sandboxChargeSheetReady(chargeByKey['fx-water-proj-t3'], { frameWidth: 512, frameHeight: 256, frames: 8, frameRate: 10 }), 'L3 projectile cell is 512×256, 8 @ 10');
+assert(sandboxChargeSheetReady(chargeByKey['fx-water-t2-aoe'], { frameWidth: 256, frameHeight: 212, frames: 30, frameRate: 8 }), 'L2 AOE cell is 256×212, 30 @ 8');
+assert(chargeByKey['fx-water-charge-aura-l2'] && chargeByKey['fx-water-charge-aura-l3'], 'yellow and red charge auras are registered');
+assert(demo.includes('SANDBOX_WATER_CHARGE_SHEETS'), 'try-out preloads the charge sheets');
+assert(page.includes('fx-water-charge-aura-l2') && page.includes('fx-water-proj-t3') && page.includes('512'), 'weapon page names the r2 charge sheets');
 assert(WEAPON_TRAITS.lightning.chainFx === 'fx-lightning-chain', 'lightning chain sheet stays on the lightning gun');
 
 const waterStart = weaponSystem.indexOf('_queueWaterSplash(primary, bullet)');
