@@ -1,6 +1,6 @@
 /**
  * Sandbox weapon try-out stays off stage combat.
- * The hub links to /sandbox/weapons.html. Stage fence mounts stay.
+ * The hub links to /sandbox/weapons.html. Stage guns float and fire on SPACE or SWAP.
  * Gold, saves, barricade HP, and the five-stage roster are not retargeted.
  */
 import { readFileSync } from 'node:fs';
@@ -9,7 +9,27 @@ import { MUZZLE_WEST_FRAC, WEAPON_TRAITS } from '../src/assets/heroDeploy.js';
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { WATER_HIT_FX, WeaponSystem } from '../src/systems/WeaponSystem.js';
-import { pixelBodiesTouchPoint } from '../src/systems/pixelTouch.js';
+import {
+  preloadGameAudio,
+  SoundManager,
+  WATER_EAR_PREVIEW_KEYS,
+  WATER_EAR_VOLUME,
+} from '../src/systems/SoundManager.js';
+import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
+import {
+  pickWaterGuide,
+  WATER_AOE_TICK_MS,
+  WATER_CHARGE_RELEASE_MS,
+  WATER_L2_AOE_MS,
+  WATER_L3_ENTER_SLOW,
+  WATER_L3_NUDGE_PX,
+  waterAuraKey,
+  waterChargeTier,
+  waterConeVelocity,
+  waterHitSizeFor,
+  waterLeadAim,
+  waterPierceFor,
+} from '../src/assets/waterMounts.js';
 import {
   SANDBOX_FLOAT_FRAME,
   SANDBOX_FLOAT_OFFSET,
@@ -36,9 +56,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.13', 'APP_VERSION is 0.36.13');
-assert(pkg.version === '0.36.13', 'package.json tracks 0.36.13');
-assert(html.includes('ZombieDefend v0.36.13'), 'title tracks 0.36.13');
+assert(APP_VERSION === '0.36.20', 'APP_VERSION is 0.36.20');
+assert(pkg.version === '0.36.20', 'package.json tracks 0.36.20');
+assert(html.includes('ZombieDefend v0.36.20'), 'title tracks 0.36.20');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -84,7 +104,13 @@ assert(demo.includes('showcaseHold = true'), 'target stays in front of the gun')
 assert(demo.includes('playLibraryAnim'), 'float bob uses the library guard');
 assert(!demo.includes('.play('), 'try-out does not call sprite.play directly');
 
-assert(stage.includes('new FenceMounts'), 'stage still places fence mounts');
+assert(!stage.includes('new FenceMounts') && !stage.includes('new WaterMounts') && !stage.includes('new SlingMounts'), 'stage does not place fence mounts');
+assert(stage.includes('triggerHeld') && stage.includes('weaponHeld'), 'SPACE and SWAP share the shoot hold');
+assert(defender.includes('manualFire') && defender.includes('player-girl-water-fire'), 'stage shoots from the water fire pose');
+const floats = readFileSync(new URL('../src/systems/HeroFloats.js', import.meta.url), 'utf8');
+assert(floats.includes('-still') && floats.includes('prop-water-mount-front-alt'), 'the water float keeps its still sheet and optional cradle');
+assert(weaponSystem.includes('manualFire') && weaponSystem.includes('_coneFlight'), 'manual shots use the ±10° cone');
+assert(!stage.includes('player-handgun-shoot'), 'stage does not use the old handgun shoot sheet');
 assert(!stage.includes('weaponTryout') && !stage.includes('WeaponTryout'), 'stage scene does not start the try-out');
 assert(!main.includes('weaponTryout') && !main.includes('WeaponTryout'), 'main game does not register the try-out');
 assert(stage.includes('Keys 5–9 only preview') || stage.includes('Keys 5-9 only preview'), 'feel keys 6–9 stay previews');
@@ -164,11 +190,34 @@ const scene = {
     ].includes(key),
   },
   anims: { exists: () => false },
-  add: { sprite: fxSprite },
+  add: {
+    sprite: fxSprite,
+    rectangle(x, y, w, h) {
+      return { x, y, w, h, active: true, setDepth() {} };
+    },
+  },
   time: { now: 0 },
 };
 const guns = new WeaponSystem(scene);
 guns.setOwnedWeapons(['water']);
+const chargeSlot = { muzzleX: 900, muzzleY: 400 };
+const chargeBullets = [];
+const chargeTrait = WEAPON_TRAITS.water;
+assert(guns._stepWaterCharge(1000, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'holding does not fire');
+assert(guns._stepWaterCharge(16, chargeBullets, chargeSlot, [], chargeTrait, false, true) === false, 'a 16ms SPACE gap does not fire');
+assert(chargeBullets.length === 0 && guns.chargeMs() === 1000, 'the gap keeps the same charge');
+assert(guns._stepWaterCharge(1600, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'the hold continues after the gap');
+assert(guns.chargeTier() === 2, '2.6s of hold with a short slip is L2');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, chargeBullets, chargeSlot, [], chargeTrait, false, true) === true, 'SPACE staying up releases the shot');
+assert(chargeBullets.length === 1 && chargeBullets[0].charge === 2, 'the released shot is L2');
+assert(guns.chargeMs() === 0, 'release clears the charge');
+const l3Bullets = [];
+assert(guns._stepWaterCharge(5000, l3Bullets, chargeSlot, [], chargeTrait, true, true) === false, 'a 5s hold is still charging');
+assert(guns._stepWaterCharge(16, l3Bullets, chargeSlot, [], chargeTrait, false, true) === false, 'a slip at 5s does not fire early');
+assert(guns.chargeTier() === 3, 'the slip leaves the charge on L3');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l3Bullets, chargeSlot, [], chargeTrait, false, true) === true, 'the 5s hold releases');
+assert(l3Bullets[0]?.charge === 3, 'the released shot is L3');
+assert(WATER_CHARGE_RELEASE_MS === 120, 'the release gap is 120ms');
 const primary = {
   id: 1,
   x: 40,
@@ -201,5 +250,225 @@ const waterKeys = spawned.map((s) => s.key);
 assert(waterKeys.length === 1 && waterKeys[0] === 'fx-lightning-impact', 'the only water hit sheet is fx-lightning-impact');
 assert(spawned[0].x === bullet.touchX && spawned[0].y === bullet.touchY, 'the burst is placed on the contact, not the body center');
 assert(spawned[0].y !== primary.bodyCenterY, 'the contact is not rewritten to the chest');
+
+const held = waterLeadAim(100, 0, 0, 0, 0, 100);
+assert(held.x === 0 && held.y === 0, 'a stopped body is aimed where it stands');
+const led = waterLeadAim(100, 0, 0, 0, 50, 100);
+assert(led.y === 0 && led.x > 30 && led.x < 36, 'a marching body is aimed at the intercept');
+
+const crowd = [
+  { id: 1, x: 10, y: 0, alive: true },
+  { id: 2, x: 40, y: 30, alive: true },
+  { id: 3, x: 200, y: 0, alive: false },
+];
+assert(pickWaterGuide(crowd, 100, 0, 2).id === 2, 'a water shot sticks to the body it is already guiding');
+assert(pickWaterGuide(crowd, 100, 0, 3).id === 1, 'a dead guide is replaced by the body on the shot lane');
+assert(pickWaterGuide(crowd, 0, 0, null) === null, 'nobody west of the shot is not a guide');
+const otherLane = [
+  { id: 1, x: 40, y: 0, alive: true },
+  { id: 2, x: 80, y: 200, alive: true },
+];
+assert(pickWaterGuide(otherLane, 100, 0, null).id === 1, 'water prefers the lane it is fired on over a closer other lane');
+
+function box(x, y, w, h) {
+  return {
+    fillColor: 1,
+    active: true,
+    x,
+    y,
+    originX: 0.5,
+    originY: 0.5,
+    displayWidth: w,
+    displayHeight: h,
+  };
+}
+const enemy = box(0, 0, 20, 40);
+assert(spriteSweepContact(box(0, -30, 4, 4), enemy) === null, 'a skim that has not entered the body is not a hit');
+const swept = spriteSweepContact(box(0, 0, 4, 4), enemy, { x: 0, y: -100 });
+assert(swept && Math.abs(swept.x) <= 10 && Math.abs(swept.y) <= 20, 'a step that crosses the opaque box connects');
+
+const near = {
+  weaponId: 'water',
+  gfx: box(40, 66, 4, 4),
+};
+assert(guns.confirmOpaqueHit(near, primary) === false, 'a water shot still outside the body does not hit');
+
+const spawnAt = weaponSystem.indexOf('_spawnWaterShot(bullets, slot, zombies, trait, tier = 1) {');
+const spawnFn = weaponSystem.slice(spawnAt, weaponSystem.indexOf('_nearestLiving(zombies, x, y)', spawnAt));
+assert(spawnFn.includes('waterLeadAim') && spawnFn.includes('marchVx'), 'water leads the marching body');
+assert(weaponSystem.includes('_guideWater'), 'water keeps guiding onto a living body ahead');
+assert(weaponSystem.includes('spriteSweepContact'), 'water hits on opaque contact, including the step that crosses');
+assert(!spawnFn.includes('_chainLightning'), 'the water spawn path does not chain');
+
+const flying = {
+  weaponId: 'water',
+  guideId: 9,
+  vx: -376,
+  vy: 0,
+  gfx: { x: 900, y: 400, active: true },
+};
+guns.armHits([{ id: 9, x: 1000, y: 400, alive: false, bodyCenterY: 400 }], []);
+guns._guideWater(flying);
+assert(flying.vx === -376 && flying.vy === 0, 'a dead guide keeps the last heading');
+assert(flying.gfx.active === true && flying.guideId == null, 'a dead guide does not destroy the shot');
+
+const steered = {
+  weaponId: 'water',
+  guideId: null,
+  vx: -100,
+  vy: 200,
+  gfx: { x: 900, y: 400, active: true },
+};
+guns.armHits([{
+  id: 1,
+  x: 700,
+  y: 400,
+  alive: true,
+  bodyCenterY: 400,
+  marchVx() { return 0; },
+}], []);
+guns._guideWater(steered);
+assert(steered.guideId === 1, 'a living body ahead is still the guide');
+assert(steered.vx < 0 && Math.abs(steered.vy) < 1, 'the shot still turns onto that body');
+
+scene.cameras = { main: { scrollX: 0, scrollY: 0, width: 1280, height: 720 } };
+const onTarget = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water', traveled: 226 };
+assert(guns.shouldRetireBullet(onTarget) === false, 'a shot still on the sandbox view is not culled at the stage gutter');
+const offLeft = { gfx: { x: -90, y: 369, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(offLeft) === true, 'a shot past the left of the view is retired');
+scene.cameras = { main: { scrollX: 832, scrollY: 0, width: 1280, height: 720 } };
+const stageGutter = { gfx: { x: 700, y: 400, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(stageGutter) === true, 'a shot left of the stage camera is retired off screen');
+const stageLive = { gfx: { x: 900, y: 400, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(stageLive) === false, 'a shot still inside the stage view keeps flying');
+delete scene.cameras;
+const headless = { gfx: { x: 734, y: 369, active: true }, weaponId: 'water' };
+assert(guns.shouldRetireBullet(headless) === true, 'without a camera the stage gutter cull still applies');
+
+assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.5s is L1');
+assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
+assert(waterChargeTier(5000) === 3, '5s is L3');
+assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 1 && waterPierceFor(3) === Infinity, 'L1 and L2 stop on the first body, L3 crosses the field');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 320, 'the L3 AABB covers the native 512-wide cell');
+assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
+assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
+assert(WATER_L3_ENTER_SLOW === 0.8, 'each new L3 body slows the shot by 20%');
+assert(WATER_L3_NUDGE_PX === 2, 'each L3 damage tick nudges 2px');
+assert(waterAuraKey(1) === 'fx-water-charge-aura' && waterAuraKey(2) === 'fx-water-charge-aura-l2' && waterAuraKey(3) === 'fx-water-charge-aura-l3', 'the charge glow swaps sheets by tier');
+assert(WEAPON_TRAITS.water.label === '1 weapon', 'the water slot displays as 1 weapon');
+assert(weaponSystem.includes('stepChargeAoe') && weaponSystem.includes('fx-water-t2-aoe') && weaponSystem.includes('fx-aoe-touch-x'), 'L2/L3 contact uses the catalog AOE and the white X');
+assert(weaponSystem.includes('_spawnWaterExplosion') && weaponSystem.includes('_nudgeEast'), 'L2 leaves a contact explosion and L3 nudges east');
+assert(!weaponSystem.includes('_dropPathBurn') && !weaponSystem.includes('fx-water-t3-impact'), 'L3 does not play a pierce-impact or path burn');
+const steep = waterConeVelocity(500, 400, { x: 200, y: 40 }, 100);
+const steepPitch = Math.atan2(steep.vy, steep.vx);
+const steepDelta = steepPitch > 0 ? steepPitch - Math.PI : steepPitch + Math.PI;
+assert(steep.vx < 0, 'a steep guide still flies west');
+assert(Math.abs(steepDelta) <= (10 * Math.PI) / 180 + 1e-6, 'homing stays inside ±10 degrees');
+const flat = waterConeVelocity(500, 400, { x: 200, y: 400 }, 100);
+assert(flat.vx < 0 && Math.abs(flat.vy) < 1e-6, 'a body on the lane is a flat shot');
+const piercing = { weaponId: 'water', pierce: 5, hitIds: [] };
+for (const id of [1, 2, 3, 4]) guns.markWaterPierce(piercing, { id });
+assert(guns.waterKeepsFlying(piercing) === true, 'a pierce-5 shot keeps flying before the fifth body');
+guns.markWaterPierce(piercing, { id: 5 });
+assert(guns.waterKeepsFlying(piercing) === false, 'a pierce-5 shot stops after five bodies');
+assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: 1, hitIds: [] }) === false, 'L2 pierce 1 does not keep the shot in the air');
+assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: Infinity, hitIds: [1, 2, 3, 4, 5, 6] }) === true, 'L3 keeps flying across the field');
+assert(weaponSystem.includes('if (opts.waterCharge) continue'), 'charged water does not auto-fire');
+assert(weaponSystem.includes('syncWaterCharge'), 'holding SPACE notifies the charge audio hook');
+assert(weaponSystem.includes('playWaterRelease'), 'release notifies the charge audio hook');
+assert(weaponSystem.includes('playWaterHitL1'), 'an L1 hit notifies sfx-hit-l1');
+assert(weaponSystem.includes('playWaterAoeBoom'), 'the L2 contact notifies the AOE boom once');
+assert(weaponSystem.includes('playWaterWhiteX'), 'each white X notifies sfx-white-x');
+assert(!weaponSystem.includes('playWaterImpact'), 'the Mega Man impact hooks are gone');
+assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
+assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
+const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
+assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
+assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits far enough west for an L1 to read, and the last stays on screen');
+assert(!stage.includes("_spaceKey.on('down'"), 'SPACE shoots instead of cycling');
+assert(stage.includes('preloadGameAudio(this)'), 'stage preload includes the shared audio queue');
+assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
+const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
+for (const key of WATER_EAR_PREVIEW_KEYS) {
+  assert(audio.includes(`assets/audio/${key}.mp3`), `${key} is registered in GAME_AUDIO`);
+}
+assert(demo.includes('preloadGameAudio(this, { sandbox: true })'), 'sandbox water preloads the ear preview');
+assert(demo.includes('ear SFX'), 'the water caption reports the ear preview');
+assert(WATER_EAR_VOLUME.chargeL1 === 0.28 && WATER_EAR_VOLUME.chargeL2 === 0.3 && WATER_EAR_VOLUME.chargeL3 === 0.32, 'charge volumes stay in 0.28–0.32');
+assert(WATER_EAR_VOLUME.fireL1 === 0.28 && WATER_EAR_VOLUME.fireL2 === 0.32 && WATER_EAR_VOLUME.fireL3 === 0.36, 'fire volumes are 0.28 / 0.32 / 0.36');
+assert(WATER_EAR_VOLUME.hitL1 === 0.3 && WATER_EAR_VOLUME.aoeL2 === 0.38 && WATER_EAR_VOLUME.whiteX === 0.26, 'hit, boom, and white X volumes');
+const stageQueued = [];
+preloadGameAudio({
+  load: { audio(key) { stageQueued.push(key); } },
+  cache: { audio: { exists: () => false } },
+});
+const sandboxQueued = [];
+preloadGameAudio({
+  load: { audio(key) { sandboxQueued.push(key); } },
+  cache: { audio: { exists: () => false } },
+}, { sandbox: true });
+for (const key of WATER_EAR_PREVIEW_KEYS) {
+  assert(stageQueued.includes(key), `${key} preloads on the stage queue`);
+  assert(sandboxQueued.includes(key), `${key} preloads for the sandbox`);
+}
+assert(stage.includes('preloadGameAudio(this)'), 'stage preload includes the shared audio queue');
+assert(stageQueued.includes('bgm-stage') && sandboxQueued.includes('bgm-stage'), 'the ear preview does not drop the live beds');
+const played = [];
+const nodes = [];
+const fake = {
+  time: { now: 0 },
+  sound: {
+    mute: false,
+    locked: false,
+    add(key, cfg) {
+      const node = {
+        key,
+        volume: cfg.volume,
+        loop: !!cfg.loop,
+        playing: false,
+        play() { this.playing = true; played.push({ key, volume: cfg.volume }); },
+        stop() { this.playing = false; },
+        destroy() { this.playing = false; },
+      };
+      nodes.push(node);
+      return node;
+    },
+  },
+  cache: { audio: { exists: () => true } },
+};
+const beds = new SoundManager(fake);
+const heard = () => played.map((row) => row.key);
+beds.syncWaterCharge(1);
+beds.syncWaterCharge(1);
+assert(heard().filter((key) => key === 'sfx-charge-l1-blue').length === 1, 'SPACE down starts one blue charge');
+assert(!heard().some((key) => key.startsWith('sfx-water-')), 'the Mega Man charge pack stays silent');
+assert(!heard().includes('sfx-charge-l2-yellow'), 'yellow waits until the hold passes 2.5s');
+beds.syncWaterCharge(2);
+assert(heard().filter((key) => key === 'sfx-charge-l2-yellow').length === 1, 'past 2.5s the blue charge stops and yellow plays');
+assert(nodes.filter((node) => node.key === 'sfx-charge-l1-blue' && node.playing).length === 0, 'the blue charge is stopped at L2');
+beds.syncWaterCharge(3);
+assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'past 5s yellow stops and the red charge plays');
+assert(nodes.filter((node) => node.key === 'sfx-charge-l2-yellow' && node.playing).length === 0, 'the yellow charge is stopped at L3');
+beds.syncWaterCharge(3);
+assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'holding L3 does not restart the red charge');
+beds.playWaterRelease(2);
+assert(heard().includes('sfx-fire-l2'), 'a 2.5s release plays sfx-fire-l2');
+assert(nodes.filter((node) => node.key.startsWith('sfx-charge-') && node.playing).length === 0, 'release stops the charge voice');
+assert(played.find((row) => row.key === 'sfx-fire-l2')?.volume === 0.32, 'L2 fire is 0.32');
+beds.playWaterRelease(1);
+beds.playWaterRelease(3);
+assert(heard().includes('sfx-fire-l1') && heard().includes('sfx-fire-l3'), 'L1 and L3 release play their fire cues');
+beds.playWaterHitL1();
+beds.playWaterAoeBoom();
+beds.playWaterAoeBoom();
+assert(heard().filter((key) => key === 'sfx-hit-l1').length === 1, 'L1 hit plays sfx-hit-l1');
+assert(heard().filter((key) => key === 'sfx-aoe-l2-boom').length === 2, 'the boom helper plays each time the contact calls it');
+beds.playWaterWhiteX();
+beds.playWaterWhiteX();
+assert(heard().filter((key) => key === 'sfx-white-x').length === 1, 'same-frame white X marks do not stack');
+fake.time.now = 200;
+beds.playWaterWhiteX();
+assert(heard().filter((key) => key === 'sfx-white-x').length === 2, 'the next 0.2s tick plays white X again');
+assert(played.find((row) => row.key === 'sfx-white-x')?.volume === 0.26, 'white X stays at 0.26');
 
 console.log('weapon try-out ok');

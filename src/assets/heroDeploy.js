@@ -36,6 +36,8 @@ export const HERO_UNARMED = {
    * Backup operator still. Same feet origin. Used only if tower-fire is absent.
    */
   command: 'player-girl-command',
+  /** 9×92 shoot pose. Start, loop while the trigger is held, then the end. */
+  waterFire: 'player-girl-water-fire',
   walk: {
     west: 'player-girl-walk-west',
     east: 'player-girl-walk-east',
@@ -118,7 +120,7 @@ export const FLAME_GROW_MS = 1100;
 export const WEAPON_TRAITS = {
   water: {
     id: 'water',
-    label: 'Water',
+    label: '1 weapon',
     profile: 'handgun',
     fireMs: 680,
     speed: 0.5,
@@ -158,6 +160,8 @@ export const WEAPON_TRAITS = {
     projectile: 'fx-bubble-proj-l',
     childProjectile: { l: 'fx-bubble-proj-m', m: 'fx-bubble-proj-s' },
     childTier: { l: 'm', m: 's' },
+    // TODO(follow-up): sandbox bubble shows the -12 flash, but fx-bubble-pop
+    // is hard to see. Left alone here so the water hit-rate fix stays the change.
     impact: 'fx-bubble-pop',
     rotate: false,
     hitSize: 22,

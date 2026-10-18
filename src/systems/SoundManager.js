@@ -68,6 +68,27 @@ export const GAME_AUDIO = [
   { key: 'shoot-lightning', url: 'assets/audio/shoot-lightning.mp3' },
   { key: 'shoot-flame', url: 'assets/audio/shoot-flame.mp3' },
   { key: 'shoot-water', url: 'assets/audio/shoot-water.mp3' },
+  // Earlier Mega Man water charge pack. Still cataloged. Sandbox water no longer plays these.
+  { key: 'sfx-water-charge-l2', url: 'assets/audio/sfx-water-charge-l2.mp3' },
+  { key: 'sfx-water-charge-l3', url: 'assets/audio/sfx-water-charge-l3.mp3' },
+  { key: 'sfx-water-charge-loop', url: 'assets/audio/sfx-water-charge-loop.mp3' },
+  { key: 'sfx-water-release-l1', url: 'assets/audio/sfx-water-release-l1.mp3' },
+  { key: 'sfx-water-release-l2', url: 'assets/audio/sfx-water-release-l2.mp3' },
+  { key: 'sfx-water-release-l3', url: 'assets/audio/sfx-water-release-l3.mp3' },
+  { key: 'sfx-water-impact-l1', url: 'assets/audio/sfx-water-impact-l1.mp3' },
+  { key: 'sfx-water-impact-l2', url: 'assets/audio/sfx-water-impact-l2.mp3' },
+  { key: 'sfx-water-impact-l3', url: 'assets/audio/sfx-water-impact-l3.mp3' },
+  // Peter-approved 1-weapon ear preview. Replaces the sfx-water-* charge hooks.
+  // Sandbox water preloads these. Stage / Boot / Shop stay on the audio HOLD.
+  { key: 'sfx-charge-l1-blue', url: 'assets/audio/sfx-charge-l1-blue.mp3' },
+  { key: 'sfx-charge-l2-yellow', url: 'assets/audio/sfx-charge-l2-yellow.mp3' },
+  { key: 'sfx-charge-l3-red', url: 'assets/audio/sfx-charge-l3-red.mp3' },
+  { key: 'sfx-fire-l1', url: 'assets/audio/sfx-fire-l1.mp3' },
+  { key: 'sfx-fire-l2', url: 'assets/audio/sfx-fire-l2.mp3' },
+  { key: 'sfx-fire-l3', url: 'assets/audio/sfx-fire-l3.mp3' },
+  { key: 'sfx-hit-l1', url: 'assets/audio/sfx-hit-l1.mp3' },
+  { key: 'sfx-aoe-l2-boom', url: 'assets/audio/sfx-aoe-l2-boom.mp3' },
+  { key: 'sfx-white-x', url: 'assets/audio/sfx-white-x.mp3' },
   { key: 'shoot-frost', url: 'assets/audio/shoot-frost.mp3' },
   { key: 'shoot-handgun', url: 'assets/audio/shoot-handgun.mp3' },
   { key: 'shoot-shotgun', url: 'assets/audio/shoot-shotgun.mp3' },
@@ -222,12 +243,70 @@ export function weaponShotKey(skin, profile) {
  */
 const SANDBOX_PET_PREVIEW_AUDIO = new Set(['pet-summon', 'pet-recall']);
 
+/** Basenames of the approved 1-weapon ear preview. GAME_AUDIO key = filename without .mp3. */
+export const WATER_EAR_PREVIEW_KEYS = Object.freeze([
+  'sfx-charge-l1-blue',
+  'sfx-charge-l2-yellow',
+  'sfx-charge-l3-red',
+  'sfx-fire-l1',
+  'sfx-fire-l2',
+  'sfx-fire-l3',
+  'sfx-hit-l1',
+  'sfx-aoe-l2-boom',
+  'sfx-white-x',
+]);
+
+/**
+ * Charge / fire / hit / boom / white-X levels for sandbox and stage `?weapon=water`.
+ * Charge stays inside 0.28–0.32. White X stays at 0.26 so the 0.2s tick is not harsh.
+ */
+export const WATER_EAR_VOLUME = Object.freeze({
+  chargeL1: 0.28,
+  chargeL2: 0.3,
+  chargeL3: 0.32,
+  fireL1: 0.28,
+  fireL2: 0.32,
+  fireL3: 0.36,
+  hitL1: 0.3,
+  aoeL2: 0.38,
+  whiteX: 0.26,
+});
+
+/** Collapse same-frame white X marks. The 200ms damage tick still gets through. */
+const WATER_EAR_WHITE_X_COOLDOWN_MS = 140;
+
+const WATER_EAR_CHARGE = Object.freeze({
+  1: { key: 'sfx-charge-l1-blue', volume: WATER_EAR_VOLUME.chargeL1 },
+  2: { key: 'sfx-charge-l2-yellow', volume: WATER_EAR_VOLUME.chargeL2 },
+  3: { key: 'sfx-charge-l3-red', volume: WATER_EAR_VOLUME.chargeL3 },
+});
+
+const WATER_EAR_FIRE = Object.freeze({
+  1: { key: 'sfx-fire-l1', volume: WATER_EAR_VOLUME.fireL1 },
+  2: { key: 'sfx-fire-l2', volume: WATER_EAR_VOLUME.fireL2 },
+  3: { key: 'sfx-fire-l3', volume: WATER_EAR_VOLUME.fireL3 },
+});
+
+/**
+ * @param {number} tier
+ * @returns {1|2|3}
+ */
+function waterEarLevel(tier) {
+  if (tier >= 3) return 3;
+  if (tier >= 2) return 2;
+  return 1;
+}
+
 /**
  * Queue every clip that is not already in the audio cache.
  * Safe to call from Boot and again from Stage (retry / direct start).
+ * The nine 1-weapon ear-preview keys are on this queue so main Stage
+ * `?weapon=water` hears them. Sandbox passes `{ sandbox: true }` and
+ * loads the same list.
  * @param {Phaser.Scene} scene
+ * @param {{ sandbox?: boolean }} [_options]
  */
-export function preloadGameAudio(scene) {
+export function preloadGameAudio(scene, _options = {}) {
   const loader = scene?.load;
   if (typeof loader?.audio !== 'function') return;
   const cache = scene.cache?.audio;
@@ -381,6 +460,107 @@ export class SoundManager {
     this._stopFireVoice();
     const node = this._cue(weaponShotKey(skin, profile), AUDIO_VOLUME.fire);
     this._fireVoice = node;
+  }
+
+  /**
+   * PIXELLAB_HOOK: 1-weapon ear preview while SPACE is held.
+   * L1 blue under 2.5s, L2 yellow from 2.5s, L3 red from 5s.
+   * One voice. Entering the next tier stops the previous charge.
+   * The clips are rises, not loops, so a held tier does not restart.
+   * @param {number} tier
+   */
+  syncWaterCharge(tier) {
+    if (this._disposed) return;
+    const row = WATER_EAR_CHARGE[waterEarLevel(tier)];
+    if (this._waterRiseKey === row.key) return;
+    this._stopWaterRise();
+    this._waterRiseKey = row.key;
+    this._waterRise = this._addWaterNode(row.key, row.volume, false);
+    if (!this._waterRise) this._waterRiseKey = null;
+  }
+
+  /** Hard cut. Release and a cancelled hold both stop the charge voice. */
+  stopWaterChargeLoop() {
+    this._stopWaterRise();
+  }
+
+  /**
+   * Stop the charge voice and play the fire cue for this tier.
+   * @param {number} tier
+   */
+  playWaterRelease(tier) {
+    const row = WATER_EAR_FIRE[waterEarLevel(tier)];
+    this.stopWaterChargeLoop();
+    this._cue(row.key, row.volume);
+  }
+
+  /** L1 enemy hit. Lightning VFX stays with the caller. */
+  playWaterHitL1() {
+    this._cue('sfx-hit-l1', WATER_EAR_VOLUME.hitL1);
+  }
+
+  /** L2 first opaque contact. The caller plays this once per shot. */
+  playWaterAoeBoom() {
+    this._cue('sfx-aoe-l2-boom', WATER_EAR_VOLUME.aoeL2);
+  }
+
+  /**
+   * White X tick. Volume stays at 0.26. A short cooldown keeps several
+   * bodies marked on the same frame from stacking into one harsh hit.
+   */
+  playWaterWhiteX() {
+    this._cue('sfx-white-x', WATER_EAR_VOLUME.whiteX, WATER_EAR_WHITE_X_COOLDOWN_MS);
+  }
+
+  _stopWaterRise() {
+    this._stopWaterNode(this._waterRise);
+    this._waterRise = null;
+    this._waterRiseKey = null;
+  }
+
+  /**
+   * @param {string} key
+   * @param {number} volume
+   * @param {boolean} loop
+   */
+  _addWaterNode(key, volume, loop) {
+    const sound = this._sound();
+    if (!sound || !this._cached(key) || sound.locked) return null;
+    try {
+      if (typeof sound.add === 'function') {
+        const node = sound.add(key, { volume, loop: !!loop });
+        if (!node) return null;
+        node.play?.();
+        return node;
+      }
+      sound.play(key, { volume, loop: !!loop });
+      return { loose: true, key };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /** @param {Phaser.Sound.BaseSound|{ loose?: boolean, key?: string }|null|undefined} node */
+  _stopWaterNode(node) {
+    if (!node) return;
+    if (node.loose) {
+      try {
+        this.scene?.sound?.stopByKey?.(node.key);
+      } catch (_) {
+        /* already stopped */
+      }
+      return;
+    }
+    try {
+      node.stop?.();
+    } catch (_) {
+      /* already stopped */
+    }
+    try {
+      node.destroy?.();
+    } catch (_) {
+      /* already destroyed */
+    }
   }
 
   playHitImpact() {
@@ -573,6 +753,7 @@ export class SoundManager {
   /** Stop the bed and drop unlock hooks. One-shots already queued still flush. */
   dispose() {
     this._disposed = true;
+    this.stopWaterChargeLoop();
     this.stopBgm();
     this._stopFireVoice();
     this._stopEnemyVoice();

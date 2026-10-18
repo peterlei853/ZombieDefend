@@ -102,6 +102,8 @@ export function sandboxWeaponLabel(id) {
   if (trait.continuous) {
     return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.cone} · burn ${trait.burnFx}`;
   }
-  const hit = id === 'water' ? 'fx-lightning-impact' : trait.impact;
-  return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.projectile} · hit ${hit}`;
+  if (id === 'water') {
+    return `${trait.label} · SPACE charge · L1 ${trait.projectile} + fx-lightning-impact · L2 fx-water-proj-t2 · L3 fx-water-proj-t3`;
+  }
+  return `${trait.label} · floating ${SANDBOX_FLOAT_FRAME}×${SANDBOX_FLOAT_FRAME} · ${trait.projectile} · hit ${trait.impact}`;
 }

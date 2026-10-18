@@ -253,6 +253,155 @@ export function spritesTouchPoint(a, b) {
   return pixelBodiesTouchPoint(left, right);
 }
 
+/** @type {WeakMap<object, { minX: number, minY: number, maxX: number, maxY: number }|null>} */
+const frameOpaqueBox = new WeakMap();
+
+/**
+ * Inclusive frame-pixel box of alpha > 0, or null when the frame is empty.
+ * @param {object} body
+ * @returns {{ minX: number, minY: number, maxX: number, maxY: number }|null}
+ */
+function scanOpaqueBox(body) {
+  let minX = body.frameWidth;
+  let minY = body.frameHeight;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < body.frameHeight; y++) {
+    for (let x = 0; x < body.frameWidth; x++) {
+      if (body.alphaAt(x, y) > 0) {
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (maxX < 0) return null;
+  return { minX, minY, maxX, maxY };
+}
+
+/**
+ * World AABB of the opaque pixels, or null when the sprite cannot be read.
+ * @param {Phaser.GameObjects.GameObject|null|undefined} sprite
+ * @returns {{ left: number, right: number, top: number, bottom: number }|null}
+ */
+export function opaqueWorldRect(sprite) {
+  const body = pixelBodyFromSprite(sprite);
+  if (!body) return null;
+  const frame = sprite?.frame;
+  let box = frame && frameOpaqueBox.has(frame) ? frameOpaqueBox.get(frame) : null;
+  if (!box && !(frame && frameOpaqueBox.has(frame))) {
+    box = scanOpaqueBox(body);
+    if (frame) frameOpaqueBox.set(frame, box);
+  }
+  if (!box) return null;
+  const bounds = displayBounds(body);
+  const mapX = (fx) => {
+    let u = (fx + 0.5) / body.frameWidth;
+    if (body.flipX) u = 1 - u;
+    return bounds.left + u * bounds.width;
+  };
+  const mapY = (fy) => {
+    let v = (fy + 0.5) / body.frameHeight;
+    if (body.flipY) v = 1 - v;
+    return bounds.top + v * bounds.height;
+  };
+  const xs = [mapX(box.minX), mapX(box.maxX)];
+  const ys = [mapY(box.minY), mapY(box.maxY)];
+  return {
+    left: Math.min(xs[0], xs[1]),
+    right: Math.max(xs[0], xs[1]),
+    top: Math.min(ys[0], ys[1]),
+    bottom: Math.max(ys[0], ys[1]),
+  };
+}
+
+/**
+ * @param {{ left: number, right: number, top: number, bottom: number }} rect
+ * @param {{ x: number, y: number }} point
+ */
+function clampToRect(rect, point) {
+  return {
+    x: Math.min(rect.right, Math.max(rect.left, point.x)),
+    y: Math.min(rect.bottom, Math.max(rect.top, point.y)),
+  };
+}
+
+/**
+ * @param {{ left: number, right: number, top: number, bottom: number }} a
+ * @param {{ left: number, right: number, top: number, bottom: number }} b
+ */
+function rectsOverlap(a, b) {
+  return a.right >= b.left && a.left <= b.right && a.bottom >= b.top && a.top <= b.bottom;
+}
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {{ left: number, right: number, top: number, bottom: number }} rect
+ */
+function pointInRect(x, y, rect) {
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
+/**
+ * First point where the segment enters `rect`, or null.
+ * @param {number} x0
+ * @param {number} y0
+ * @param {number} x1
+ * @param {number} y1
+ * @param {{ left: number, right: number, top: number, bottom: number }} rect
+ * @returns {{ x: number, y: number }|null}
+ */
+function segmentEnter(x0, y0, x1, y1, rect) {
+  if (pointInRect(x1, y1, rect)) return { x: x1, y: y1 };
+  if (pointInRect(x0, y0, rect)) return clampToRect(rect, { x: x1, y: y1 });
+  const dist = Math.hypot(x1 - x0, y1 - y0);
+  const steps = Math.max(1, Math.ceil(dist / 4));
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const x = x0 + (x1 - x0) * t;
+    const y = y0 + (y1 - y0) * t;
+    if (pointInRect(x, y, rect)) return { x, y };
+  }
+  return null;
+}
+
+/**
+ * Opaque-pixel contact, or the point where this step's opaque core
+ * actually crosses `b`'s opaque box. A near miss stays null — steering
+ * the shot onto the body is the caller's job.
+ * @param {Phaser.GameObjects.GameObject|null|undefined} a
+ * @param {Phaser.GameObjects.GameObject|null|undefined} b
+ * @param {{ x?: number, y?: number }|null} [from]
+ * @returns {{ x: number, y: number }|null}
+ */
+export function spriteSweepContact(a, b, from = null) {
+  const left = pixelBodyFromSprite(a);
+  const right = pixelBodyFromSprite(b);
+  if (left && right) {
+    const exact = pixelBodiesTouchPoint(left, right);
+    if (exact) return exact;
+  }
+  const blob = opaqueWorldRect(a);
+  const body = opaqueWorldRect(b);
+  if (!blob || !body) return null;
+  const cur = { x: (blob.left + blob.right) / 2, y: (blob.top + blob.bottom) / 2 };
+  const hw = (blob.right - blob.left) / 2;
+  const hh = (blob.bottom - blob.top) / 2;
+  const reach = {
+    left: body.left - hw,
+    right: body.right + hw,
+    top: body.top - hh,
+    bottom: body.bottom + hh,
+  };
+  if (rectsOverlap(blob, body)) return clampToRect(body, cur);
+  if (!Number.isFinite(from?.x) || !Number.isFinite(from?.y)) return null;
+  const crossed = segmentEnter(from.x, from.y, cur.x, cur.y, reach);
+  if (!crossed) return null;
+  return clampToRect(body, crossed);
+}
+
 /**
  * True when any cell of `a`'s playing strip shares an opaque world pixel
  * with `b`'s current frame. The pose is `a`'s current origin, scale, and

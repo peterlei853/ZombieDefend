@@ -10,7 +10,7 @@ import { FONT_INK, INK_TINT, UI, addKitText } from './uiKit.js';
  * (DefenderGroup still clamps X to the barricade lane).
  * When the kit textures are cached, the stick is `ui-joystick-base` with
  * `ui-joystick-knob`, swapping to `ui-joystick-knob-pressed` while active.
- * SWAP (bottom-right) cycles weapons once per tap, like SPACE.
+ * SWAP (bottom-right) shoots while held, the same as SPACE.
  *
  * Both sit above the HUD (`setScrollFactor(0)`) and ignore camera X scroll.
  * They are not full-screen hit targets, so the rest of the stage still receives clicks.
@@ -142,7 +142,9 @@ export class VirtualControls {
 
     this._joyPointerId = null;
     this._weaponPointerId = null;
-    /** Press started on SWAP and has not yet fired. */
+    /** True from SWAP pointerdown until that finger lifts. */
+    this.weaponHeld = false;
+    /** Press started on SWAP and has not yet lifted. */
     this._weaponArmed = false;
     this._destroyed = false;
 
@@ -396,6 +398,7 @@ export class VirtualControls {
     if (this._weaponPointerId == null && this._hitButton(x, y)) {
       this._weaponPointerId = pointer.id;
       this._weaponArmed = true;
+      this.weaponHeld = true;
       this._setButtonPressed(true);
       return;
     }
@@ -412,6 +415,8 @@ export class VirtualControls {
       if (this._joyPointerId != null) this._resetStick();
       this._weaponPointerId = null;
       this._weaponArmed = false;
+      this.weaponHeld = false;
+      this._setButtonPressed(false);
       return;
     }
     if (pointer.id === this._joyPointerId) {
@@ -425,8 +430,9 @@ export class VirtualControls {
   }
 
   /**
-   * One SWAP per tap: armed on pointerdown, fired on pointerup while still
-   * inside the button. Sliding off or releasing outside cancels.
+   * SWAP stays down until the finger lifts, including a slide off the
+   * button, so a charge is not cancelled by a small drift. `onWeapon`
+   * still fires only for a release that ends on the button.
    * @param {Phaser.Input.Pointer} pointer
    * @param {boolean} insideCanvas
    */
@@ -443,6 +449,7 @@ export class VirtualControls {
       this._hitButton(pointer.x, pointer.y);
     this._weaponPointerId = null;
     this._weaponArmed = false;
+    this.weaponHeld = false;
     this._setButtonPressed(false);
     if (stillOnButton) this.onWeapon?.();
   }

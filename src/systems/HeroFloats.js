@@ -32,6 +32,10 @@ export class HeroFloats {
      * @type {boolean|'all'}
      */
     this._fenceMounts = false;
+    /** Stage draws only the highlighted gun, at the one-gun front slot. */
+    this._solo = false;
+    /** @type {Phaser.GameObjects.Sprite|null} */
+    this._cradle = null;
   }
 
   /**
@@ -39,6 +43,14 @@ export class HeroFloats {
    */
   setFenceMounts(on) {
     this._fenceMounts = on === 'all' ? 'all' : !!on;
+  }
+
+  /**
+   * One gun in front of the girl. The others stay hidden.
+   * @param {boolean} on
+   */
+  setSolo(on) {
+    this._solo = !!on;
   }
 
   /**
@@ -75,20 +87,26 @@ export class HeroFloats {
       this._fenceMounts === true && (loneId === 'water' || loneId === 'sling');
     const hidden = this._fenceMounts === 'all' || loneFence || phase === 'move' || phase === 'hold';
     const scale = Math.abs(girl.scaleX || 1) || 1;
-    const arc = frontArcFor(this._guns.length);
+    const shown = this._guns.filter(
+      (gun) => !this._solo || !this._selected || gun.id === this._selected
+    );
+    const arc = frontArcFor(shown.length);
     const t = phase === 'fire' ? 1 : phase === 'deploy' ? deploy.t || 0 : 0;
     const depth = (girl.depth ?? depthFromY(girl.y)) + 2;
+    let cradleGun = null;
 
     for (let i = 0; i < this._guns.length; i++) {
       const gun = this._guns[i];
       const sprite = gun.sprite;
       if (!sprite?.active) continue;
-      if (hidden) {
+      const shownAt = shown.indexOf(gun);
+      if (hidden || shownAt < 0) {
         sprite.setVisible(false);
         sprite.setAlpha(0);
         continue;
       }
-      const off = phase === 'fire' ? { ...arc[i], alpha: 1 } : deployOffset(i, this._guns.length, t);
+      const off =
+        phase === 'fire' ? { ...arc[shownAt], alpha: 1 } : deployOffset(shownAt, shown.length, t);
       const selected = !this._selected || gun.id === this._selected;
       sprite.setVisible(true);
       sprite.setAlpha(phase === 'fire' && !selected ? off.alpha * 0.92 : off.alpha);
@@ -96,7 +114,9 @@ export class HeroFloats {
       sprite.setPosition(girl.x + off.x * scale, girl.y + off.y * scale);
       sprite.setDepth(depth + i);
       this._syncBob(gun, phase);
+      if (gun.id === 'water') cradleGun = gun;
     }
+    this._syncCradle(cradleGun, scale, depth);
   }
 
   /**
@@ -128,6 +148,12 @@ export class HeroFloats {
       }
     }
     this._guns = [];
+    try {
+      this._cradle?.destroy();
+    } catch (_) {
+      /* already destroyed */
+    }
+    this._cradle = null;
   }
 
   /**
@@ -156,7 +182,11 @@ export class HeroFloats {
     const sprite = gun.sprite;
     if (typeof sprite.play !== 'function') return;
     const anims = this.scene?.anims;
+    const still = `${gun.key}-still`;
     if (phase === 'fire' && anims?.exists?.(gun.key)) {
+      if (sprite.texture?.key !== gun.key && typeof sprite.setTexture === 'function') {
+        sprite.setTexture(gun.key, 0);
+      }
       const current = sprite.anims?.currentAnim?.key;
       if (current !== gun.key || !sprite.anims?.isPlaying) {
         playLibraryAnim(sprite, gun.key, this.scene);
@@ -168,8 +198,40 @@ export class HeroFloats {
     } catch (_) {
       /* rectangle */
     }
+    if (this.scene.textures?.exists?.(still) && typeof sprite.setTexture === 'function') {
+      if (sprite.texture?.key !== still) sprite.setTexture(still);
+      return;
+    }
     if (typeof sprite.setFrame === 'function' && this.scene.textures?.exists?.(gun.key)) {
       sprite.setFrame(0);
     }
+  }
+
+  /**
+   * Optional steel cradle behind the water float. Feet origin, so the
+   * cradle pixel sits on the gun center.
+   * @param {{ id: string, sprite: Phaser.GameObjects.Sprite }|null} gun
+   * @param {number} scale
+   * @param {number} depth
+   */
+  _syncCradle(gun, scale, depth) {
+    const scene = this.scene;
+    if (!this._cradle && scene?.textures?.exists?.('prop-water-mount-front-alt') && scene.add?.sprite) {
+      this._cradle = scene.add.sprite(0, 0, 'prop-water-mount-front-alt');
+      this._cradle.setOrigin(0.5, 0.9375);
+      this._cradle.setVisible(false);
+    }
+    const cradle = this._cradle;
+    if (!cradle?.active) return;
+    const sprite = gun?.sprite;
+    if (!sprite?.visible || gun.id !== 'water') {
+      cradle.setVisible(false);
+      return;
+    }
+    cradle.setVisible(true);
+    cradle.setAlpha(sprite.alpha);
+    cradle.setScale(scale);
+    cradle.setPosition(sprite.x, sprite.y + 48 * scale);
+    cradle.setDepth(Math.max(0, depth - 1));
   }
 }
