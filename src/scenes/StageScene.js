@@ -168,6 +168,7 @@ export default class StageScene extends Phaser.Scene {
     preloadLibrary(this);
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
+    // Ear-preview charge cues ride this queue so stage ?weapon=water hears them.
     preloadGameAudio(this);
   }
 
