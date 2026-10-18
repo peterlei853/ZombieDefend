@@ -67,6 +67,34 @@ export function sandboxMuzzle(origin, frame = SANDBOX_FLOAT_FRAME) {
   };
 }
 
+/**
+ * PIXELLAB_HOOK: 1-weapon charge sheets. Sandbox and Stage preload these
+ * from the catalog. Frame size is the catalog cell, not a hardcoded slice.
+ * Aura color swap is Gameplay: blue while charging toward L2, yellow at
+ * ≥2.5s (`fx-water-charge-aura-l2`), red at ≥5s (`fx-water-charge-aura-l3`).
+ * Combat rules (L2 no-pierce, AOE duration, L3 speed, knockback) stay put.
+ */
+export const SANDBOX_WATER_CHARGE_SHEETS = [
+  { key: 'fx-water-charge-aura', frameWidth: 48, frameHeight: 48, frames: 8, frameRate: 10 },
+  { key: 'fx-water-charge-aura-l2', frameWidth: 48, frameHeight: 48, frames: 8, frameRate: 10 },
+  { key: 'fx-water-charge-aura-l3', frameWidth: 48, frameHeight: 48, frames: 8, frameRate: 10 },
+  { key: 'fx-water-proj-t3', frameWidth: 512, frameHeight: 256, frames: 8, frameRate: 10 },
+  { key: 'fx-water-t2-aoe', frameWidth: 256, frameHeight: 212, frames: 30, frameRate: 8 },
+];
+
+/**
+ * True when a catalog entry matches the sandbox charge-sheet cell.
+ * @param {{ frameWidth?: number, frameHeight?: number, frames?: number, frameRate?: number }|null|undefined} asset
+ * @param {{ frameWidth: number, frameHeight: number, frames: number, frameRate: number }} spec
+ */
+export function sandboxChargeSheetReady(asset, spec) {
+  if (!asset || !spec) return false;
+  return asset.frameWidth === spec.frameWidth
+    && asset.frameHeight === spec.frameHeight
+    && asset.frames === spec.frames
+    && asset.frameRate === spec.frameRate;
+}
+
 /** @param {string} id */
 export function sandboxWeaponLabel(id) {
   const trait = WEAPON_TRAITS[id];

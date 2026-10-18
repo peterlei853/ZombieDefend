@@ -4,7 +4,7 @@
   "group": "girl-fx",
   "title": "Player Girl — weapon FX",
   "titleZh": "女主角武器特效",
-  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. v2.0 replaces fx-water-proj-t2 and fx-water-proj-t3 on the same keys and paths, and adds fx-water-t2-aoe plus fx-aoe-touch-x. t2 is a west 8-frame 128×64 strip @ 12 fps (GIF 80ms). t3 is a west 8-frame 256×128 strip @ 10 fps. t2-aoe is a 6×5 grid of 147×122, 30 frames @ 8 fps, loop (GIF 120ms). touch-x is a 4-frame 32×32 strip, once @ 16 fps (GIF 60ms). Stage combat is unchanged. fx-water-proj (L1) stays. No pierce-impact sheet. v2.1 replaces fx-water-proj-t3 with a west 8-frame 512×256 strip @ 10 fps (sheet 4096×256) and fx-water-t2-aoe with a 6×5 grid of 256×212, 30 frames @ 8 fps (sheet 1536×1060). Adds fx-water-charge-aura-l2 (yellow, ≥2.5s) and fx-water-charge-aura-l3 (red, ≥5s) beside the cyan fx-water-charge-aura (<2.5s), same 48×48 3×3 grid.",
+  "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. v2.0 replaces fx-water-proj-t2 on the same key and path (west 8-frame 128×64 strip @ 12 fps) and adds fx-aoe-touch-x (4-frame 32×32 strip, once @ 16 fps). r2 keeps fx-water-charge-aura as the blue/cyan 48×48 8f@10 cue while charging toward L2, and adds yellow fx-water-charge-aura-l2 (≥2.5s) and red fx-water-charge-aura-l3 (≥5s). fx-water-proj-t3 is v3.0, a west 8-frame 512×256 strip @ 10 fps (sheet 4096×256). fx-water-t2-aoe is v2.0, a 6×5 grid of 256×212, 30 frames @ 8 fps (sheet 1536×1060). The group thumb omits those two large sheets so the montage stays under 1600px; catalog cards still play them. Stage combat is unchanged. fx-water-proj (L1) stays. No pierce-impact sheet.",
   "source": {
     "sourceFolder": "player-girl"
   },
@@ -24,12 +24,10 @@
       "fx-flame-cone",
       "fx-water-proj",
       "fx-water-proj-t2",
-      "fx-water-proj-t3",
-      "fx-water-t2-aoe",
       "fx-aoe-touch-x",
       "fx-water-charge-aura",
-      "fx-water-charge-aura-l3",
       "fx-water-charge-aura-l2",
+      "fx-water-charge-aura-l3",
       "fx-water-t2-impact",
       "fx-water-t2-dot",
       "fx-water-t3-impact",
@@ -772,16 +770,10 @@
       "frames": 8,
       "frameRate": 12,
       "loop": true,
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "origin": [0.5, 0.5],
       "type": "fx",
       "facing": "west",
-      "tags": [
-        "v2.0",
-        "charge"
-      ],
+      "tags": ["v2.0", "charge"],
       "note": "v2.0 water Mega Man charge L2 projectile (Peter OK remake). 8 frames, cell 128×64 @ 12 fps, loop, origin center. Sheet 1024×64 is a west-facing horizontal strip. GIF holds each frame 80ms (12.5 fps); catalog uses 12 fps. Replaces the v1.0 2×2 grid (4 frames, cell 64×32 @ 12 fps) on the same key and path. Stage combat is unchanged. L1 fx-water-proj stays.",
       "extra": {
         "version": "v2.0",
@@ -810,19 +802,13 @@
       "frames": 8,
       "frameRate": 10,
       "loop": true,
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "origin": [0.5, 0.5],
       "type": "fx",
       "facing": "west",
-      "tags": [
-        "v2.1",
-        "charge"
-      ],
-      "note": "v2.1 water charge L3 projectile. 8 frames, cell 512×256 @ 10 fps, loop, origin center. Sheet 4096×256 is a west-facing horizontal strip. Display at native catalog size. Replaces the v2.0 256×128 strip on the same key and path. L1 fx-water-proj stays. No pierce-impact sheet.",
+      "tags": ["v3.0", "charge"],
+      "note": "v3.0 water Mega Man charge L3 projectile (Peter r2, ×2). 8 frames, cell 512×256 @ 10 fps, loop, origin center. Sheet 4096×256 is a west-facing horizontal strip. GIF holds each frame 100ms. Replaces the v2.0 256×128 strip on the same key and path. Stage combat rules are unchanged. L1 fx-water-proj stays. No pierce-impact sheet.",
       "extra": {
-        "version": "v2.1",
+        "version": "v3.0",
         "gameplayNotes": {
           "role": "chargeProjectile",
           "tier": "L3",
@@ -848,28 +834,19 @@
       "frames": 30,
       "frameRate": 8,
       "loop": true,
-      "grid": [
-        6,
-        5
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [6, 5],
+      "origin": [0.5, 0.5],
       "type": "fx",
       "facing": null,
-      "tags": [
-        "v2.1",
-        "charge"
-      ],
-      "note": "v2.1 water charge L2 explosion. 30 frames, cell 256×212 @ 8 fps, loop, origin center. Sheet 1536×1060 is a 6×5 row-major grid. About four times a 64px mob on the long side. Held 4s on the contact pixel. Replaces the 147×122 sheet on the same key and path.",
+      "tags": ["v2.0", "charge"],
+      "note": "v2.0 water Mega Man charge L2 AOE (Peter r2). 30 frames, cell 256×212 @ 8 fps, loop, origin center. Sheet 1536×1060 is a 6×5 row-major grid. GIF holds each cell 120ms (~8 fps). Replaces the v1.0 147×122 cell on the same key and path. Stage combat rules are unchanged. fx-water-t2-impact stays.",
       "extra": {
-        "version": "v2.1",
+        "version": "v2.0",
         "gameplayNotes": {
           "role": "chargeAoe",
           "tier": "L2",
           "status": "sandbox-catalog",
-          "durationMs": 4000
+          "keeps": "fx-water-t2-impact"
         },
         "sheet": {
           "layout": "grid",
@@ -890,16 +867,10 @@
       "frames": 4,
       "frameRate": 16,
       "loop": false,
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "origin": [0.5, 0.5],
       "type": "fx",
       "facing": null,
-      "tags": [
-        "v1.0",
-        "charge"
-      ],
+      "tags": ["v1.0", "charge"],
       "note": "v1.0 shared AOE contact flash. 4 frames, cell 32×32 @ 16 fps, once, origin center. Sheet 128×32 is a horizontal strip. GIF holds each frame 60ms (~17 fps); catalog uses 16. White X spawned on opaque overlap. Cataloged for the sandbox demo. Stage combat is unchanged.",
       "extra": {
         "version": "v1.0",
@@ -926,25 +897,18 @@
       "frames": 8,
       "frameRate": 10,
       "loop": true,
-      "grid": [
-        3,
-        3
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
       "type": "fx",
-      "tags": [
-        "v2.1",
-        "charge"
-      ],
-      "note": "v2.1 water charge aura, cyan, while the hold is under 2.5s. 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Swapped for the yellow and red sheets at 2.5s and 5s.",
+      "tags": ["v1.1", "charge"],
+      "note": "v1.1 blue/cyan water charge cue while charging toward L2 (hold under 2.5s). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Same frame meta as v1.0. Yellow fx-water-charge-aura-l2 shows at ≥2.5s. Red fx-water-charge-aura-l3 shows at ≥5s. Stage combat rules are unchanged.",
       "extra": {
-        "version": "v2.1",
+        "version": "v1.1",
         "gameplayNotes": {
           "role": "chargeCue",
-          "tier": "<2.5s",
+          "tier": "charging",
+          "color": "blue",
+          "showWhile": "charge < 2.5s",
           "status": "sandbox-catalog"
         },
         "sheet": {
@@ -955,9 +919,7 @@
           "width": 144,
           "height": 144,
           "usedFrames": 8,
-          "emptyCells": [
-            8
-          ]
+          "emptyCells": [8]
         },
         "pixellabEffectId": "7b3832f9-2a85-4a23-bba8-75037f158c48"
       }
@@ -970,25 +932,19 @@
       "frames": 8,
       "frameRate": 10,
       "loop": true,
-      "grid": [
-        3,
-        3
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
       "type": "fx",
-      "tags": [
-        "v2.1",
-        "charge"
-      ],
-      "note": "v2.1 water charge aura, yellow, while the hold is ≥2.5s. 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Swapped on the gun by charge tier. No tint.",
+      "facing": null,
+      "tags": ["v1.0", "charge"],
+      "note": "v1.0 yellow water charge cue. Show when charge ≥2.5s (L2 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
       "extra": {
-        "version": "v2.1",
+        "version": "v1.0",
         "gameplayNotes": {
           "role": "chargeCue",
-          "tier": "≥2.5s",
+          "tier": "L2",
+          "color": "yellow",
+          "showWhile": "charge ≥ 2.5s",
           "status": "sandbox-catalog"
         },
         "sheet": {
@@ -999,9 +955,7 @@
           "width": 144,
           "height": 144,
           "usedFrames": 8,
-          "emptyCells": [
-            8
-          ]
+          "emptyCells": [8]
         }
       }
     },
@@ -1013,25 +967,19 @@
       "frames": 8,
       "frameRate": 10,
       "loop": true,
-      "grid": [
-        3,
-        3
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
       "type": "fx",
-      "tags": [
-        "v2.1",
-        "charge"
-      ],
-      "note": "v2.1 water charge aura, red, while the hold is ≥5s. 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Swapped on the gun by charge tier. No tint.",
+      "facing": null,
+      "tags": ["v1.0", "charge"],
+      "note": "v1.0 red water charge cue. Show when charge ≥5s (L3 ready). 8 frames, cell 48×48 @ 10 fps, loop, origin center. Sheet 144×144 is a 3×3 row-major grid; frame 8 (bottom-right) is empty. Stage combat rules are unchanged.",
       "extra": {
-        "version": "v2.1",
+        "version": "v1.0",
         "gameplayNotes": {
           "role": "chargeCue",
-          "tier": "≥5s",
+          "tier": "L3",
+          "color": "red",
+          "showWhile": "charge ≥ 5s",
           "status": "sandbox-catalog"
         },
         "sheet": {
@@ -1042,9 +990,7 @@
           "width": 144,
           "height": 144,
           "usedFrames": 8,
-          "emptyCells": [
-            8
-          ]
+          "emptyCells": [8]
         }
       }
     },
@@ -1056,20 +1002,10 @@
       "frames": 6,
       "frameRate": 14,
       "loop": false,
-      "grid": [
-        3,
-        2
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 2],
+      "origin": [0.5, 0.5],
       "type": "fx",
-      "tags": [
-        "v1.0",
-        "catalog-only",
-        "charge"
-      ],
+      "tags": ["v1.0", "catalog-only", "charge"],
       "note": "v1.0 water Mega Man charge L2 hit splash. 6 frames, cell 32×32 @ 14 fps, once, origin center. Sheet 96×64 is a 3×2 row-major grid. Catalog only — not wired into Stage.",
       "extra": {
         "version": "v1.0",
@@ -1098,20 +1034,10 @@
       "frames": 10,
       "frameRate": 11,
       "loop": true,
-      "grid": [
-        4,
-        3
-      ],
-      "origin": [
-        0.5,
-        1.0
-      ],
+      "grid": [4, 3],
+      "origin": [0.5, 1.0],
       "type": "fx",
-      "tags": [
-        "v1.0",
-        "catalog-only",
-        "charge"
-      ],
+      "tags": ["v1.0", "catalog-only", "charge"],
       "note": "v1.0 water Mega Man charge L2 wet DoT overlay. 10 frames, cell 48×48 @ 11 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage.",
       "extra": {
         "version": "v1.0",
@@ -1129,10 +1055,7 @@
           "width": 192,
           "height": 144,
           "usedFrames": 10,
-          "emptyCells": [
-            10,
-            11
-          ]
+          "emptyCells": [10, 11]
         },
         "pixellabEffectId": "6eba01c6-221e-4405-8467-0128e14b1c5e"
       }
@@ -1145,20 +1068,10 @@
       "frames": 6,
       "frameRate": 14,
       "loop": false,
-      "grid": [
-        3,
-        2
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 2],
+      "origin": [0.5, 0.5],
       "type": "fx",
-      "tags": [
-        "v1.0",
-        "catalog-only",
-        "charge"
-      ],
+      "tags": ["v1.0", "catalog-only", "charge"],
       "note": "v1.0 water Mega Man charge L3 hit flash. 6 frames, cell 40×40 @ 14 fps, once, origin center. Sheet 120×80 is a 3×2 row-major grid. Catalog only — not wired into Stage.",
       "extra": {
         "version": "v1.0",
@@ -1187,21 +1100,11 @@
       "frames": 8,
       "frameRate": 10,
       "loop": true,
-      "grid": [
-        3,
-        3
-      ],
-      "origin": [
-        0.5,
-        0.5
-      ],
+      "grid": [3, 3],
+      "origin": [0.5, 0.5],
       "type": "fx",
       "facing": "west",
-      "tags": [
-        "v1.0",
-        "catalog-only",
-        "charge"
-      ],
+      "tags": ["v1.0", "catalog-only", "charge"],
       "note": "v1.0 water Mega Man charge L3 path fire. 8 frames, cell 64×32 @ 10 fps, loop, origin center — same center as fx-water-proj and fx-water-stream so a trail on the projectile path lines up with the bolt. Sheet 192×96 is a 3×3 row-major grid; cell 8 (bottom-right) is empty. Catalog only — not wired into Stage.",
       "extra": {
         "version": "v1.0",
@@ -1218,9 +1121,7 @@
           "width": 192,
           "height": 96,
           "usedFrames": 8,
-          "emptyCells": [
-            8
-          ]
+          "emptyCells": [8]
         },
         "pixellabEffectId": "759c3197-baf1-439a-8d13-154b1dcad2f2"
       }
@@ -1233,20 +1134,10 @@
       "frames": 10,
       "frameRate": 12,
       "loop": true,
-      "grid": [
-        4,
-        3
-      ],
-      "origin": [
-        0.5,
-        1.0
-      ],
+      "grid": [4, 3],
+      "origin": [0.5, 1.0],
       "type": "fx",
-      "tags": [
-        "v1.0",
-        "catalog-only",
-        "charge"
-      ],
+      "tags": ["v1.0", "catalog-only", "charge"],
       "note": "v1.0 water Mega Man charge L3 in-bullet DoT overlay. 10 frames, cell 48×48 @ 12 fps, loop. Origin (0.5, 1.0) feet, same as fx-frost-freeze and fx-water-wet. Sheet 192×144 is a 4×3 row-major grid; cells 10–11 are empty. Catalog only — not wired into Stage.",
       "extra": {
         "version": "v1.0",
@@ -1264,10 +1155,7 @@
           "width": 192,
           "height": 144,
           "usedFrames": 10,
-          "emptyCells": [
-            10,
-            11
-          ]
+          "emptyCells": [10, 11]
         },
         "pixellabEffectId": "d84720fc-fd42-40fc-8e86-72ffc6ad8dc1"
       }
@@ -1460,9 +1348,7 @@
         0.5
       ],
       "type": "fx",
-      "tags": [
-        "spare"
-      ],
+      "tags": ["spare"],
       "note": "Side crescent spare only — not the feel-booth melee primary and not an overhead backup for feel-booth 4. White/cream/amber ADD-blend knife arc (2-PixelLab handoff, v0.35.2). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn at weapon tip; rotate to facing. Feel-booth 4 primary is fx-slash-ninja.",
       "extra": {
         "gameplayNotes": {
@@ -1496,10 +1382,7 @@
         0.5
       ],
       "type": "fx",
-      "tags": [
-        "deprecated",
-        "spare"
-      ],
+      "tags": ["deprecated", "spare"],
       "note": "DEPRECATED for feel melee primary. Reserved/unused spare; not the feel-booth 4 primary. Peter cancelled the overhead (top-down chop) in favor of fx-slash-ninja (Fruit Ninja diagonal; feel-booth 4 primary). PNG kept. White/cream/amber vertical C (2-PixelLab handoff, v0.35.3). 8×96 @ 14 fps, once, origin center. Blend: Phaser.BlendModes.ADD.",
       "extra": {
         "gameplayNotes": {
@@ -1533,9 +1416,7 @@
         0.5
       ],
       "type": "fx",
-      "tags": [
-        "primary"
-      ],
+      "tags": ["primary"],
       "note": "v0.35.4 feel-booth 4 primary melee. Fruit Ninja thin fast straight diagonal TL→BR, pure white / light gray (2-PixelLab handoff). 5×96 @ 30 fps, once, origin center. Blend: Phaser.BlendModes.ADD. Spawn on the target body center. fx-slash stays the side crescent spare; fx-slash-overhead stays deprecated.",
       "extra": {
         "gameplayNotes": {

@@ -15,6 +15,8 @@ import {
   SANDBOX_TARGET_HP,
   sandboxFloatOrigin,
   sandboxMuzzle,
+  SANDBOX_WATER_CHARGE_SHEETS,
+  sandboxChargeSheetReady,
   sandboxWeaponFromSearch,
   sandboxWeaponLabel,
 } from './weaponFloat.js';
@@ -118,12 +120,11 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       muzzles: [{ id: this.weaponId, x: muzzle.x, y: muzzle.y }],
       // Coordinates only. Water and sling already aim from a muzzle slot;
       // nothing here instantiates a cradle sprite.
-      // PIXELLAB_HOOK: charge sheets load from the catalog (not hardcoded here).
-      // fx-water-proj-t2 128×64, 8 frames @ 12 fps, loop, west.
-      // fx-water-proj-t3 512×256, 8 frames @ 10 fps, loop, west.
-      // fx-water-t2-aoe 256×212, 30 frames @ 8 fps, loop, grid 6×5.
-      // fx-aoe-touch-x 32×32, 4 frames @ 16 fps, once.
-      // fx-water-charge-aura cyan, -l2 yellow, -l3 red. No pierce-impact sheet.
+      // PIXELLAB_HOOK: charge sheets — see SANDBOX_WATER_CHARGE_SHEETS.
+      // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16).
+      // L3 fx-water-proj-t3 is 512×256, 8 frames @ 10. L2 AOE fx-water-t2-aoe
+      // is 256×212, 30 frames @ 8. Auras: blue fx-water-charge-aura, yellow
+      // fx-water-charge-aura-l2, red fx-water-charge-aura-l3. Gameplay swaps them.
       waterMount: water ? slot : null,
       waterCharge: water,
       waterHeld: water && !!this._space?.isDown,
@@ -419,13 +420,30 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Confirms the r2 charge sheets are preloaded at the catalog cell.
+   * The color swap itself stays with Gameplay.
+   * @returns {string}
+   */
+  _chargeLoadNote() {
+    const missing = [];
+    for (const spec of SANDBOX_WATER_CHARGE_SHEETS) {
+      const loaded = this.textures?.exists?.(spec.key) === true;
+      const asset = libraryAsset(this, spec.key);
+      if (!loaded || !sandboxChargeSheetReady(asset, spec)) missing.push(spec.key);
+    }
+    if (missing.length) return `charge sheets missing ${missing.join(', ')}`;
+    return 'charge auras blue → l2 → l3 preloaded; L3 512×256; L2 AOE 256×212';
+  }
+
   _publish() {
     const trait = WEAPON_TRAITS[this.weaponId];
     const text = this.textures.exists(frontKey(this.weaponId))
       ? sandboxWeaponLabel(this.weaponId)
       : `${trait?.label || this.weaponId} · front sheet missing`;
-    if (this.caption) this.caption.setText(text);
-    const detail = { id: this.weaponId, text };
+    const chargeNote = this.weaponId === 'water' ? this._chargeLoadNote() : '';
+    if (this.caption) this.caption.setText(chargeNote ? `${text} · ${chargeNote}` : text);
+    const detail = { id: this.weaponId, text: chargeNote ? `${text} · ${chargeNote}` : text };
     globalThis.__ZD_WEAPON_STATE = detail;
     globalThis.__ZD_WEAPON_PAINT?.(detail);
   }
