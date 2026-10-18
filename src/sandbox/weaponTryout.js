@@ -28,6 +28,7 @@ import {
   preloadLibrary,
 } from '../assets/libraryAssets.js';
 import { registerZombieAnims } from '../assets/zombieSprites.js';
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import { BULLET_SIZE, GAME_HEIGHT, GAME_WIDTH, WAVE_DEFS } from '../data/waves.js';
 import { Zombie } from '../entities/Zombie.js';
 import {
@@ -76,6 +77,9 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     );
     this.laneY = laneCenters()[4];
     this.heroX = HERO_X;
+    this.heroY = this.laneY;
+    this._moveDy = 0;
+    this._attackPose = null;
     this.dummyX = DUMMY_X;
     this.bullets = [];
     this.weapons = new WeaponSystem(this);
@@ -96,6 +100,11 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     }).setDepth(20000).setScrollFactor(0);
     this._space = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
     this.input.keyboard?.addCapture?.(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    const keys = this.input.keyboard;
+    this._up = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.W) || null;
+    this._upArrow = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.UP) || null;
+    this._down = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.S) || null;
+    this._downArrow = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.DOWN) || null;
     this._bindApi();
     this._publish();
   }
@@ -106,7 +115,9 @@ export default class WeaponTryoutScene extends Phaser.Scene {
    */
   update(_time, delta) {
     const dt = Number.isFinite(delta) ? delta : 0;
+    this._moveHero(dt);
     this._syncHero();
+    this._syncWaterPose(this.weaponId === 'water' && !!this._space?.isDown);
     this._syncGun();
     const origin = sandboxFloatOrigin(this.hero.x, this.hero.y, this.hero.scaleX);
     const frame = libraryAsset(this, frontKey(this.weaponId))?.frameWidth || SANDBOX_FLOAT_FRAME;
@@ -123,8 +134,8 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // nothing here instantiates a cradle sprite.
       // PIXELLAB_HOOK: charge sheets — see SANDBOX_WATER_CHARGE_SHEETS.
       // Keep fx-water-proj-t2 (128×64 @ 12) and fx-aoe-touch-x (32×32 @ 16, drawn at 2×).
-      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 2× the 32px L1 shot.
-      // L2 AOE fx-water-t2-aoe is 256×212, drawn about 4× a normal mob.
+      // L3 fx-water-proj-t3 is a 512×256 sheet drawn at 0.5 × _visualScale (4× the 32px L1 height).
+      // L2 AOE fx-water-t2-aoe is 256×212, drawn at 2× a normal mob (half of the v0.36.21 4×).
       // Auras: blue fx-water-charge-aura, yellow fx-water-charge-aura-l2, red fx-water-charge-aura-l3.
       waterMount: water ? slot : null,
       waterCharge: water,
@@ -142,7 +153,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       const held = tier
         ? `charging L${tier} ${(this.weapons.chargeMs() / 1000).toFixed(1)}s`
         : 'SPACE hold';
-      this.hint.setText(`${held} · release L1 / 2.5s L2 / 5s L3 · a short slip keeps the charge · 1–6 switch · R reset`);
+      this.hint.setText(`${held} · tap L1 · hold 2.5s L2 · 5s L3 · W/S move and shoot · gun stays out · 1–6 switch · R reset`);
     }
     this.weapons.stepBullets(this.bullets, dt / 1000);
     this.weapons.stepCasings?.(dt);
@@ -215,11 +226,73 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     this.hero.setDepth(depthFromY(this.laneY));
   }
 
+  /**
+   * Lane move for the water try-out. The gun stays on the hero, so a
+   * charge started up the lane still has a muzzle when she is moving.
+   * @param {number} dt
+   */
+  _moveHero(dt) {
+    const up = !!(this._up?.isDown || this._upArrow?.isDown);
+    const down = !!(this._down?.isDown || this._downArrow?.isDown);
+    this._moveDy = (down ? 1 : 0) - (up ? 1 : 0);
+    if (!this._moveDy) return;
+    const step = GAME_CONFIG.PLAYER.MOVE_SPEED * LAYOUT_SCALE * (Math.max(0, dt) / 1000);
+    const next = this.heroY + this._moveDy * step;
+    this.heroY = Math.min(grassYMax(), Math.max(grassYMin(), next));
+  }
+
   _syncHero() {
-    const scale = displayScaleFromY(this.laneY);
-    this.hero.setPosition(this.heroX, this.laneY);
+    const y = Number.isFinite(this.heroY) ? this.heroY : this.laneY;
+    const scale = displayScaleFromY(y);
+    this.hero.setPosition(this.heroX, y);
     this.hero.setScale(scale);
-    this.hero.setDepth(depthFromY(this.laneY));
+    this.hero.setDepth(depthFromY(y));
+  }
+
+  /**
+   * `player-girl-water-fire`: start, loop while SPACE is down, then the end.
+   * Walking plays the north/south sheets only when she is not shooting.
+   * @param {boolean} held
+   */
+  _syncWaterPose(held) {
+    const hero = this.hero;
+    if (!hero || typeof hero.play !== 'function') return;
+    if (this.weaponId !== 'water') {
+      this._attackPose = null;
+      return;
+    }
+    const base = HERO_UNARMED.waterFire;
+    const start = `${base}:start`;
+    const loop = `${base}:loop`;
+    const end = `${base}:end`;
+    const current = hero.anims?.currentAnim?.key ?? null;
+    const playing = !!hero.anims?.isPlaying;
+    const play = (key) => {
+      if (!this.anims?.exists?.(key)) return false;
+      return playLibraryAnim(hero, key, this);
+    };
+    if (held) {
+      this._attackPose = 'hold';
+      if ((current === loop || current === start) && playing) return;
+      if (current === start && !playing && play(loop, true)) return;
+      if (play(start, true) || play(base, true)) return;
+      this._attackPose = null;
+      return;
+    }
+    if (this._attackPose === 'hold' || this._attackPose === 'end') {
+      if (current === end && playing) {
+        this._attackPose = 'end';
+        return;
+      }
+      if (current === end && !playing) this._attackPose = null;
+      else if (play(end, false)) {
+        this._attackPose = 'end';
+        return;
+      } else this._attackPose = null;
+    }
+    if (this._moveDy < 0) play(HERO_UNARMED.walk.north, true);
+    else if (this._moveDy > 0) play(HERO_UNARMED.walk.south, true);
+    else if (current !== HERO_UNARMED.idle) play(HERO_UNARMED.idle, true);
   }
 
   _makeGun() {

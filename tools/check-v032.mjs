@@ -53,8 +53,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const mountSrc = readFileSync(new URL('../src/systems/SlingMounts.js', import.meta.url), 'utf8');
 const slingAssetSrc = readFileSync(new URL('../src/assets/slingMounts.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.11' && APP_VERSION === '0.36.11', 'package and APP_VERSION are 0.36.11');
-assert(html.includes('v0.36.11'), 'document title is v0.36.11');
+assert(pkg.version === '0.36.22' && APP_VERSION === '0.36.22', 'package and APP_VERSION are 0.36.22');
+assert(html.includes('v0.36.22'), 'document title is v0.36.22');
 assert(HERO_UNARMED.towerFire === 'player-girl-tower-fire', 'tower-fire pose key');
 assert(SLING_MOUNT_HI_VIS_KEY === 'prop-sling-mount-hi-vis', 'sling hi-vis mount key');
 assert(SLING_MOUNT_KEY === 'prop-sling-mount', 'sling mount key');
@@ -114,8 +114,8 @@ assert(nearestSlingMount(between, slots, Infinity)?.index === 2, 'spawn snap sti
 assert(barricadeSrc.includes('return barricadeXAtY(y, postW / 2) - postW / 2'), 'contact face is unchanged');
 assert(!barricadeSrc.includes('localStorage') && !barricadeSrc.includes('spendGold'), 'mount anchor does not touch saves or gold');
 assert(!slingAssetSrc.includes('localStorage') && !mountSrc.includes('localStorage'), 'sling mounts do not touch saves');
-assert(stageSrc.includes('new SlingMounts'), 'stage places the sling mounts');
-assert(stageSrc.includes('!ownsWater'), 'water keeps the fence when both guns are owned');
+assert(!stageSrc.includes('new SlingMounts') && !stageSrc.includes('new WaterMounts'), 'stage does not place gun mounts');
+assert(!stageSrc.includes('!ownsWater'), 'stage does not keep a fence when water is owned');
 
 const spawned = [];
 function label() {

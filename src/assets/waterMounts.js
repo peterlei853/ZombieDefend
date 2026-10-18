@@ -217,8 +217,12 @@ export const WATER_L1_FRAME = 32;
 /** L3 cell. The sheet stays 512×256; gameplay scales it down. */
 export const WATER_L3_CELL_W = 512;
 export const WATER_L3_CELL_H = 256;
-/** On-screen L3 height is this many times the L1 frame. */
-export const WATER_L3_VS_L1 = 2;
+/**
+ * On-screen L3 height is this many times the L1 frame.
+ * v0.36.21 used 2 (0.25 × `_visualScale`, 64px tall at visualScale 1).
+ * v0.36.22 uses 4, so the sheet draws at 0.5 × `_visualScale`.
+ */
+export const WATER_L3_VS_L1 = 4;
 /** L2 explosion cell. The sheet stays 256×212. */
 export const WATER_AOE_CELL_W = 256;
 export const WATER_AOE_CELL_H = 212;
@@ -227,8 +231,11 @@ export const WATER_AOE_CELL_H = 212;
  * this frame times the depth taper times LAYOUT_SCALE. Brute is taller.
  */
 export const WATER_MOB_FRAME = 84;
-/** L2 explosion display height is this many mob frames tall. */
-export const WATER_AOE_MOB_MULT = 4;
+/**
+ * L2 explosion display height is this many mob frames tall.
+ * v0.36.21 used 4 (~2.536 × `_visualScale`). v0.36.22 uses 2, half of that.
+ */
+export const WATER_AOE_MOB_MULT = 2;
 /** `fx-aoe-touch-x` is 32×32. 2× keeps the white glyph readable on the body. */
 export const WATER_TOUCH_X_SCALE = 2;
 /** Steering never leaves this many degrees off horizontal. */
@@ -277,8 +284,9 @@ export function waterPierceFor(tier) {
 
 /**
  * Uniform sprite scale for the L3 sheet.
- * Height lands on 2× the 32px L1 frame (64px at visualScale 1). Width
- * follows the 2:1 cell, so the body is 128×64 instead of the raw 512×256.
+ * Height lands on 4× the 32px L1 frame (128px at visualScale 1), twice
+ * the v0.36.21 64px body. Width follows the 2:1 cell, so the body is
+ * 256×128. The scale is 0.5 × `_visualScale`.
  * @param {number} [visualScale] depth taper (`_visualScale`)
  */
 export function waterL3SpriteScale(visualScale = 1) {
@@ -308,7 +316,7 @@ export function waterMobDisplayHeight(visualScale = 1) {
 
 /**
  * Sprite scale for `fx-water-t2-aoe`. The 212px cell height is drawn at
- * 4× a normal mob, so the 256px width lands a little over 4× as well.
+ * 2× a normal mob (half of the v0.36.21 4×), about 1.268 × `_visualScale`.
  * @param {number} [visualScale]
  */
 export function waterAoeSpriteScale(visualScale = 1) {
@@ -318,7 +326,7 @@ export function waterAoeSpriteScale(visualScale = 1) {
 /**
  * Authored hit box in field px. layoutPx(this) is the canvas AABB at
  * visualScale 1. L2 matches its 128-wide cell. L3 matches the scaled
- * body (128 canvas px), not the raw 512 sheet.
+ * body (256 canvas px), not the raw 512 sheet.
  * @param {number} tier
  */
 export function waterHitSizeFor(tier) {

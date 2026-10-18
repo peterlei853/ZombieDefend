@@ -89,7 +89,6 @@ export class DefenderGroup {
     this.weapons.setOwnedWeapons(opts.ownedWeapons || []);
     this.weapons.setUpgrades(opts.upgrades);
     this.floats = new HeroFloats(scene);
-    this.floats.setWeapons(this.weapons.ownedIds());
     /** @type {import('../systems/WaterMounts.js').WaterMounts|null} */
     this.waterMounts = opts.waterMounts || null;
     /** @type {import('../systems/SlingMounts.js').SlingMounts|null} */
@@ -97,14 +96,28 @@ export class DefenderGroup {
     /** @type {import('../systems/FenceMounts.js').FenceMounts|null} */
     this.fenceMounts = opts.fenceMounts || null;
     const ownedNow = this.weapons.ownedIds();
-    const soleWater = this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water';
-    const soleSling = this.slingMounts && ownedNow.length === 1 && ownedNow[0] === 'sling';
-    if (this.fenceMounts) {
-      this.floats.setFenceMounts('all');
-    } else if (soleWater || soleSling) {
-      this.floats.setFenceMounts(true);
-    } else {
+    const mounted = !!(this.fenceMounts || this.waterMounts || this.slingMounts);
+    /**
+     * Main stage (and any unmounted loadout that owns water): only the
+     * water gun floats, and it stays out. Racks and other guns stay hidden.
+     */
+    this._waterLock = !mounted && ownedNow.includes('water');
+    if (this._waterLock) {
+      this.floats.setWaterLock(true);
       this.floats.setSolo(true);
+      this.floats.setWeapons(['water']);
+      this.weapons.selectOwned?.('water');
+    } else {
+      this.floats.setWeapons(ownedNow);
+      const soleWater = this.waterMounts && ownedNow.length === 1 && ownedNow[0] === 'water';
+      const soleSling = this.slingMounts && ownedNow.length === 1 && ownedNow[0] === 'sling';
+      if (this.fenceMounts) {
+        this.floats.setFenceMounts('all');
+      } else if (soleWater || soleSling) {
+        this.floats.setFenceMounts(true);
+      } else {
+        this.floats.setSolo(true);
+      }
     }
     /** SPACE or SWAP is down. Stage fire reads this; nothing shoots while it is up. */
     this.triggerHeld = false;
@@ -253,6 +266,11 @@ export class DefenderGroup {
     return this.petCombat?.fieldPets() || [];
   }
 
+  /** Water float stays out. Other guns and mounts are not shown. */
+  get waterLocked() {
+    return !!this._waterLock;
+  }
+
   /** True while a tier-3 ultimate letterbox is holding combat. */
   combatFrozen() {
     return !!this.petCombat?.ultPlaying;
@@ -296,36 +314,54 @@ export class DefenderGroup {
     const manualStage = !this.fenceMounts && !this.waterMounts && !this.slingMounts;
     if (this._frontFloat) {
       const moving = dy !== 0 || dx !== 0;
-      this._deploy = stepDeploy(this._deploy, moving, deltaMs);
-      const fenceSlot = this.fenceMounts?.aligned(this.player.y) || null;
-      this.fenceMounts?.setActive(fenceSlot ? fenceSlot.index : -1);
+      // Water stays deployed. Up/down does not put the gun away or block a shot.
+      if (this._waterLock) {
+        this._deploy = { phase: 'fire', holdMs: 0, deployMs: 0, t: 1, canFire: true };
+      } else {
+        this._deploy = stepDeploy(this._deploy, moving, deltaMs);
+      }
+      const fenceSlot = this._waterLock ? null : (this.fenceMounts?.aligned(this.player.y) || null);
+      if (!this._waterLock) this.fenceMounts?.setActive(fenceSlot ? fenceSlot.index : -1);
       if (fenceSlot?.weaponId) this.weapons.selectOwned(fenceSlot.weaponId);
-      const waterSlot = this.fenceMounts ? null : (this.waterMounts?.aligned(this.player.y) || null);
-      if (!this.fenceMounts) this.waterMounts?.setActive(waterSlot ? waterSlot.index : -1);
-      const slingSlot = this.fenceMounts ? null : (this.slingMounts?.aligned(this.player.y) || null);
-      if (!this.fenceMounts) this.slingMounts?.setActive(slingSlot ? slingSlot.index : -1);
+      const waterSlot = this.fenceMounts || this._waterLock ? null : (this.waterMounts?.aligned(this.player.y) || null);
+      if (!this.fenceMounts && !this._waterLock) this.waterMounts?.setActive(waterSlot ? waterSlot.index : -1);
+      const slingSlot = this.fenceMounts || this._waterLock ? null : (this.slingMounts?.aligned(this.player.y) || null);
+      if (!this.fenceMounts && !this._waterLock) this.slingMounts?.setActive(slingSlot ? slingSlot.index : -1);
       const ownedIds = this.weapons.ownedIds();
       const skinId = this.weapons.getSkin?.()?.id || null;
       const triggerHeld = !!this.triggerHeld;
       const command =
+        !this._waterLock &&
         !manualStage &&
         this._deploy.phase === 'fire' &&
         (!!fenceSlot ||
           (!!waterSlot && ownedIds.includes('water')) ||
           (!!slingSlot && ownedIds.includes('sling')));
-      const attacking = this._deploy.phase === 'fire' && triggerHeld;
-      if (!this._syncWaterFirePose(this._deploy.phase, attacking)) {
-        this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
+      if (this._waterLock) {
+        const charging = triggerHeld;
+        const finishing = this._attackPose === 'hold' || this._attackPose === 'end';
+        const posed = charging || finishing ? this._syncWaterFirePose('fire', charging) : false;
+        if (!charging && !finishing) this._attackPose = null;
+        if (!posed) this._updateUnarmedPose(moving ? 'move' : 'fire', dy, dx, { command: false });
+      } else {
+        const attacking = this._deploy.phase === 'fire' && triggerHeld;
+        if (!this._syncWaterFirePose(this._deploy.phase, attacking)) {
+          this._updateUnarmedPose(this._deploy.phase, dy, dx, { command });
+        }
       }
-      this.floats?.setSelected(skinId);
-      this.floats?.sync(this.player, this._deploy);
+      this.floats?.setSelected(this._waterLock ? 'water' : skinId);
+      this.floats?.sync(
+        this.player,
+        this._waterLock
+          ? { phase: triggerHeld ? 'fire' : 'float', t: 1, canFire: true }
+          : this._deploy
+      );
       const visualScale = Math.abs(this.player.scaleX || 1) / LAYOUT_SCALE;
       const muzzles = this.fenceMounts ? [] : this.floats?.muzzles() || [];
       const waterMuzzle = muzzles.find((muzzle) => muzzle.id === 'water') || null;
       const chargeWater =
-        manualStage
-          ? skinId === 'water'
-          : !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water';
+        this._waterLock ||
+        (!manualStage && !this.fenceMounts && ownedIds.length === 1 && ownedIds[0] === 'water');
       const floatSlot =
         chargeWater && waterMuzzle
           ? { muzzleX: waterMuzzle.x, muzzleY: waterMuzzle.y }
@@ -338,17 +374,17 @@ export class DefenderGroup {
         this.bullets,
         {
           frontFloat: true,
-          canFire: this._deploy.canFire,
+          canFire: this._waterLock ? true : this._deploy.canFire,
           muzzles,
           waterMount: floatSlot || waterSlot,
           waterCharge: chargeWater,
           waterHeld: chargeWater ? triggerHeld : !!this.waterHeld,
           manualFire: manualStage,
           triggerHeld,
-          selectedId: skinId,
+          selectedId: this._waterLock ? 'water' : skinId,
           slingFromMount: !!this.slingMounts,
           slingMount: slingSlot,
-          fenceOnly: !!this.fenceMounts,
+          fenceOnly: !!this.fenceMounts && !this._waterLock,
           fenceMount: fenceSlot,
           visualScale,
           scaleX: this.player.scaleX,
@@ -378,7 +414,8 @@ export class DefenderGroup {
       const skinId = this.weapons.getSkin?.()?.id;
       const chargeWater =
         fired === 'water' &&
-        ((manualStage && skinId === 'water') ||
+        (this._waterLock ||
+          (manualStage && skinId === 'water') ||
           (!this.fenceMounts && ids.length === 1 && ids[0] === 'water'));
       if (!chargeWater) {
         const cue = this._frontFloat ? { id: fired } : this.weapons.getSkin?.();

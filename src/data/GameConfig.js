@@ -262,10 +262,20 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * 84px profession mob. The white X stays the 32px sheet, drawn at 2×,
  * on every 0.2s overlap tick. Gold, saves, barricade HP, and the roster
  * stay put. No GitHub Pages publish.
+ * v0.36.22: only the water gun floats, and it stays out. Other guns, racks,
+ * cradles, and fence mounts are not shown. A short press fires one L1
+ * shot. Hold still releases L2 at 2.5s and L3 at 5s. A SPACE gap under
+ * 120ms does not fire early. She can charge and shoot while moving up
+ * or down, on `player-girl-water-fire`. L2 `fx-water-t2-aoe` draws at
+ * half the v0.36.21 burst (mob multiplier 4→2, about 1.268 × the depth
+ * scale). L3 `fx-water-proj-t3` draws at 0.5 × the depth scale (twice
+ * the previous 0.25; WATER_L3_VS_L1 2→4) and the hit box matches that
+ * width. Gold, saves, barricade max HP, and the roster stay put.
+ * No GitHub Pages publish.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.21';
+export const APP_VERSION = '0.36.22';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

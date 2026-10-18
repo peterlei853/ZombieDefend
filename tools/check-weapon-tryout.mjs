@@ -65,9 +65,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.21', 'APP_VERSION is 0.36.21');
-assert(pkg.version === '0.36.21', 'package.json tracks 0.36.21');
-assert(html.includes('ZombieDefend v0.36.21'), 'title tracks 0.36.21');
+assert(APP_VERSION === '0.36.22', 'APP_VERSION is 0.36.22');
+assert(pkg.version === '0.36.22', 'package.json tracks 0.36.22');
+assert(html.includes('ZombieDefend v0.36.22'), 'title tracks 0.36.22');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -116,8 +116,10 @@ assert(!demo.includes('.play('), 'try-out does not call sprite.play directly');
 assert(!stage.includes('new FenceMounts') && !stage.includes('new WaterMounts') && !stage.includes('new SlingMounts'), 'stage does not place fence mounts');
 assert(stage.includes('triggerHeld') && stage.includes('weaponHeld'), 'SPACE and SWAP share the shoot hold');
 assert(defender.includes('manualFire') && defender.includes('player-girl-water-fire'), 'stage shoots from the water fire pose');
+assert(defender.includes('_waterLock') && defender.includes('canFire: this._waterLock ? true'), 'water stays out and can fire while moving');
 const floats = readFileSync(new URL('../src/systems/HeroFloats.js', import.meta.url), 'utf8');
-assert(floats.includes('-still') && floats.includes('prop-water-mount-front-alt'), 'the water float keeps its still sheet and optional cradle');
+assert(floats.includes('-still') && floats.includes('_waterLock'), 'the water float keeps its still sheet');
+assert(!floats.includes('prop-water-mount-front-alt'), 'the water float does not draw a cradle');
 assert(weaponSystem.includes('manualFire') && weaponSystem.includes('_coneFlight'), 'manual shots use the ±10° cone');
 assert(!stage.includes('player-handgun-shoot'), 'stage does not use the old handgun shoot sheet');
 assert(!stage.includes('weaponTryout') && !stage.includes('WeaponTryout'), 'stage scene does not start the try-out');
@@ -244,11 +246,24 @@ assert(guns.chargeTier() === 3, 'the slip leaves the charge on L3');
 assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l3Bullets, chargeSlot, [], chargeTrait, false, true) === true, 'the 5s hold releases');
 assert(l3Bullets[0]?.charge === 3, 'the released shot is L3');
 const l3Body = waterL3DisplaySize(1);
-assert(l3Body.h === WATER_L1_FRAME * 2 && l3Body.w === 128, 'L3 displays at 128×64, twice the L1 height');
-assert(waterL3SpriteScale(1) === 0.25, 'the 256px L3 cell is scaled by 0.25');
+assert(l3Body.h === WATER_L1_FRAME * 4 && l3Body.w === 256, 'L3 displays at 256×128, four times the L1 height');
+assert(waterL3SpriteScale(1) === 0.5, 'the 256px L3 cell is scaled by 0.5');
 assert(l3Bullets[0].size === l3Body.w && l3Bullets[0].gfx.scale === waterL3SpriteScale(1), 'the L3 hit box matches the scaled sprite');
 assert(layoutPx(waterHitSizeFor(3)) === l3Body.w, 'waterHitSizeFor(3) is the displayed width, not the 512 sheet');
 assert(WATER_CHARGE_RELEASE_MS === 120, 'the release gap is 120ms');
+const tapBullets = [];
+assert(guns._stepWaterCharge(40, tapBullets, chargeSlot, [], chargeTrait, true, true) === false, 'a short press is still held');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, tapBullets, chargeSlot, [], chargeTrait, false, true) === true, 'releasing a short press fires');
+assert(tapBullets.length === 1 && tapBullets[0].charge === 1, 'a short press fires one L1 bullet');
+guns._visualScale = 1;
+const l3Sized = [];
+guns._spawnWaterShot(l3Sized, chargeSlot, [], chargeTrait, 3);
+assert(l3Sized.length === 1 && Math.abs(l3Sized[0].size - waterL3DisplaySize(1).w) < 1e-6, 'L3 hit box matches the displayed width');
+guns._visualScale = 2;
+const l3Scaled = [];
+guns._spawnWaterShot(l3Scaled, chargeSlot, [], chargeTrait, 3);
+assert(Math.abs(l3Scaled[0].size - waterL3DisplaySize(2).w) < 1e-6, 'L3 hit box tracks visual scale');
+guns._visualScale = 1;
 const primary = {
   id: 1,
   x: 40,
@@ -285,7 +300,7 @@ assert(burst.y !== primary.bodyCenterY, 'the contact is not rewritten to the che
 guns._visualScale = 1;
 guns._spawnWaterExplosion(30, 40);
 const boom = spawned.find((s) => s.key === 'fx-water-t2-aoe');
-assert(boom && Math.abs(boom.scale - waterAoeSpriteScale(1)) < 1e-9, 'L2 explosion uses the 4× mob scale');
+assert(boom && Math.abs(boom.scale - waterAoeSpriteScale(1)) < 1e-9, 'L2 explosion uses the 2× mob scale');
 const nudgedBody = { x: 40, active: true };
 guns._payAoeTick({
   id: 7,
@@ -398,12 +413,16 @@ assert(waterChargeTier(0) === 1 && waterChargeTier(2499) === 1, 'a hold under 2.
 assert(waterChargeTier(2500) === 2 && waterChargeTier(4999) === 2, '2.5s is L2');
 assert(waterChargeTier(5000) === 3, '5s is L3');
 assert(waterPierceFor(1) === 1 && waterPierceFor(2) === 1 && waterPierceFor(3) === Infinity, 'L1 and L2 stop on the first body, L3 crosses the field');
-assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 80, 'L3 AABB matches the 128px scaled body');
+assert(waterHitSizeFor(1) === 16 && waterHitSizeFor(2) === 80 && waterHitSizeFor(3) === 160, 'L3 AABB matches the 256px scaled body');
 const aoeScale = waterAoeSpriteScale(1);
 const mobH = waterMobDisplayHeight(1);
 assert(mobH === WATER_MOB_FRAME * LAYOUT_SCALE, 'a normal mob is the 84px frame times LAYOUT_SCALE');
-assert(Math.abs(aoeScale * WATER_AOE_CELL_H - 4 * mobH) < 1e-6, 'L2 AOE height is 4× a normal stage mob');
+assert(Math.abs(aoeScale * WATER_AOE_CELL_H - 2 * mobH) < 1e-6, 'L2 AOE height is 2× a normal stage mob');
+assert(Math.abs(aoeScale * 2 - (4 * mobH) / WATER_AOE_CELL_H) < 1e-6, 'L2 AOE is half of the previous 4× mob height');
 assert(WATER_TOUCH_X_SCALE === 2, 'the white X is drawn at 2×');
+assert(Math.abs(waterL3SpriteScale(1) - 0.5) < 1e-9, 'L3 sprite scale is 0.5 × visualScale');
+assert(Math.abs(waterL3DisplaySize(1).w - 256) < 1e-6, 'L3 display width is 256 at visualScale 1');
+assert(Math.abs(waterHitSizeFor(3) * LAYOUT_SCALE - waterL3DisplaySize(1).w) < 1e-6, 'L3 hit box matches the displayed width');
 assert(WATER_AOE_TICK_MS === 200, 'AOE contact ticks every 0.2s');
 assert(WATER_L2_AOE_MS === 4000, 'the L2 explosion lasts 4 seconds');
 assert(WATER_L3_ENTER_SLOW === 0.8, 'each new L3 body slows the shot by 20%');
@@ -436,6 +455,8 @@ assert(weaponSystem.includes('playWaterWhiteX'), 'each white X notifies sfx-whit
 assert(!weaponSystem.includes('playWaterImpact'), 'the Mega Man impact hooks are gone');
 assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
 assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
+assert(demo.includes('_syncWaterPose') && demo.includes('waterFire'), 'sandbox water uses the finger-forward fire pose');
+assert(demo.includes('_moveHero'), 'sandbox water can move while charging');
 const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
 assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
 assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits far enough west for an L1 to read, and the last stays on screen');
