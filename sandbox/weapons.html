@@ -37,7 +37,7 @@ footer{color:var(--muted);font-size:12px;padding:8px 0}
 <body>
 <header>
   <h1>ZombieDefend <span>weapon try-out</span></h1>
-  <p class="lede">Sandbox only. Each gun floats in front of the girl at its 56×56 catalog size and fires its own projectile into a living target. No gun tower, fence cradle, or mount is drawn. Stage combat is unchanged. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
+  <p class="lede">Sandbox only. Water floats one gun in front of the girl and leaves it there. A tap fires L1. Hold for L2 at 2.5s and L3 at 5s. W/S moves while she charges, on the same finger-forward fire pose as Stage. No other gun, rack, cradle, or mount is drawn. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
 </header>
 <main>
   <p id="weapon-status">Loading weapon sheets…</p>
@@ -53,7 +53,7 @@ footer{color:var(--muted);font-size:12px;padding:8px 0}
   <div id="game-host"></div>
   <table class="keys">
     <tbody>
-      <tr><th>1</th><td>Water. <code>fx-water-proj</code> travels to the target. When its opaque pixels touch the target, <code>fx-lightning-impact</code> plays at that point. No splash, wet ground, or chain. HP still lands on the beat. Charge sheets are preloaded for Gameplay: blue <code>fx-water-charge-aura</code> while charging toward L2, yellow <code>fx-water-charge-aura-l2</code> at 2.5s, red <code>fx-water-charge-aura-l3</code> at 5s. L3 <code>fx-water-proj-t3</code> is a 512×256 sheet, 8 frames @ 10, drawn at 2× the 32×32 L1 shot. L2 <code>fx-water-t2-aoe</code> is a 256×212 sheet, 30 frames @ 8, drawn about 4× a normal zombie. The white X is the 32×32 sheet drawn at 2×. This page does not publish GitHub Pages.</td></tr>
+      <tr><th>1</th><td>Water. The gun stays floating. Tap SPACE for one <code>fx-water-proj</code> L1 shot. Hold 2.5s for L2 and 5s for L3. A gap under 120ms keeps the charge. W/S moves while charging, and she plays <code>player-girl-water-fire</code>. Opaque contact plays <code>fx-lightning-impact</code>. Charge sheets: blue <code>fx-water-charge-aura</code>, yellow <code>fx-water-charge-aura-l2</code> at 2.5s, red <code>fx-water-charge-aura-l3</code> at 5s. L2 <code>fx-water-t2-aoe</code> is a 256×212 sheet drawn at half the previous 4× mob height (about 1.268× depth scale) for 4s. L3 <code>fx-water-proj-t3</code> is a 512×256 sheet, 8 frames @ 10, drawn at 0.5× depth scale (twice the previous 0.25) and the hit box matches. The white X stays the 32×32 sheet drawn at 2×. This page does not publish GitHub Pages.</td></tr>
       <tr><th>2</th><td>Sling. <code>fx-sling-pellet</code> travels to the target. <code>fx-sling-impact</code> plays on the body; HP and knockback land on that beat.</td></tr>
       <tr><th>3</th><td>Bubble. <code>fx-bubble-proj-l</code> travels west. <code>fx-bubble-pop</code> plays on the body, then the bubble splits.</td></tr>
       <tr><th>4</th><td>Lightning. <code>fx-lightning-bolt</code> travels west. <code>fx-lightning-impact</code> plays on the body.</td></tr>
@@ -64,7 +64,7 @@ footer{color:var(--muted);font-size:12px;padding:8px 0}
     </tbody>
   </table>
   <p class="note">Open <code>?weapon=sling</code> (or bubble, lightning, frost, flame) to start on that gun. The default is water. Hit numbers are a timing cue. Gold, saves, and barricade HP are not written.</p>
-  <footer>Does not place weapons on a tower. Stage fence mounts stay on the main stage.</footer>
+  <footer>Does not place weapons on a tower. Stage shows the water float only — no racks or other guns.</footer>
 </main>
 <script>
 window.__ZD_WEAPON_PAINT = function (detail) {

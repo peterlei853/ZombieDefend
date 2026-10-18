@@ -1263,8 +1263,8 @@ export class WeaponSystem {
 
   /**
    * PIXELLAB_HOOK: fx-water-t2-aoe, 256×212, 30 frames @ 8 fps, loop, 6×5.
-   * Scaled so the cell height is about 4× a normal stage mob. Centered
-   * on the contact pixel for 4 seconds.
+   * Scaled so the cell height is 2× a normal stage mob (half of the
+   * v0.36.21 4×). Centered on the contact pixel for 4 seconds.
    * @param {number} x
    * @param {number} y
    */
@@ -1442,7 +1442,7 @@ export class WeaponSystem {
     const level = tier >= 3 ? 3 : tier === 2 ? 2 : 1;
     const vs = this._visualScale || 1;
     const l3 = level >= 3 ? waterL3DisplaySize(vs) : null;
-    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10 scaled to 2× L1
+    // PIXELLAB_HOOK: fx-water-proj-t2 128×64 @ 12, fx-water-proj-t3 512×256 @ 10 at 0.5 × _visualScale
     this._spawnFrontBullet(bullets, slot.muzzleX, slot.muzzleY, vx, vy, trait, {
       fxKey: level === 1 ? trait.projectile : WATER_CHARGE_FX.proj[level],
       hitSize: waterHitSizeFor(level),

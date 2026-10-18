@@ -191,7 +191,7 @@ export default class StageScene extends Phaser.Scene {
     this.barricade = new Barricade(this, {
       maxHp: BARRICADE_MAX_HP,
     });
-    // Guns float in front of the girl. Nothing sits on the fence.
+    // Only the water gun floats in front of the girl. No racks, cradles, or other guns.
     this.fenceMounts = null;
     this.waterMounts = null;
     this.slingMounts = null;
@@ -214,8 +214,8 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE and SWAP shoot. 1 weapon charges while either is held.
-    // Q still cycles the highlighted gun.
+    // SPACE and SWAP shoot. A tap fires one L1 shot. Holding charges L2 at 2.5s and L3 at 5s.
+    // Q still cycles the highlighted gun when the stage is not locked to water.
     const keyboard = this.input.keyboard;
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -928,6 +928,7 @@ export default class StageScene extends Phaser.Scene {
 
   /** Handgun ↔ shotgun. Shared by SPACE and the touch SWAP button. */
   _toggleWeapon() {
+    if (this.defenders?.waterLocked) return;
     this.defenders.weapons.toggleWeapon();
     this.hudWeapon?.setText(this._weaponName());
     this._reflowHud();
