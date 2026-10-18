@@ -38,7 +38,7 @@ import {
   laneCenters,
   LAYOUT_SCALE,
 } from '../systems/DepthView.js';
-import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
+import { preloadGameAudio, SoundManager, WATER_EAR_PREVIEW_KEYS } from '../systems/SoundManager.js';
 import { WeaponSystem } from '../systems/WeaponSystem.js';
 
 const HERO_X = 1060;
@@ -59,7 +59,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
 
   preload() {
     preloadLibrary(this, { categories: ['hero', 'zombies', 'fx', 'ui'] });
-    preloadGameAudio(this);
+    preloadGameAudio(this, { sandbox: true });
   }
 
   create() {
@@ -434,7 +434,9 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       if (!loaded || !sandboxChargeSheetReady(asset, spec)) missing.push(spec.key);
     }
     if (missing.length) return `charge sheets missing ${missing.join(', ')}`;
-    return 'charge auras blue → l2 → l3 preloaded; L3 512×256; L2 AOE 256×212';
+    const earReady = WATER_EAR_PREVIEW_KEYS.every((key) => this.cache?.audio?.exists?.(key) === true);
+    const ear = earReady ? 'ear SFX ready' : 'ear SFX missing';
+    return `charge auras blue → l2 → l3 preloaded; L3 512×256; L2 AOE 256×212; ${ear}`;
   }
 
   _publish() {

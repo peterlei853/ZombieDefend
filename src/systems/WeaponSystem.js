@@ -1038,8 +1038,8 @@ export class WeaponSystem {
     if (Number.isFinite(tx) && Number.isFinite(ty)) {
       this._spawnPointFx(WATER_HIT_FX, tx, ty, primary);
     }
-    // PIXELLAB_HOOK: impact L1. Lightning VFX stays; the 16-bit impact cue still plays.
-    this.scene?.audio?.playWaterImpact?.(1);
+    // PIXELLAB_HOOK: L1 enemy hit is sfx-hit-l1. Lightning VFX stays.
+    this.scene?.audio?.playWaterHitL1?.();
     const radius = layoutPx(trait.splashRadius || 56);
     /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
     const hits = [{ zombie: primary, damage: bullet.damage, knock: true }];
@@ -1104,7 +1104,7 @@ export class WeaponSystem {
       this._charge.ms += step;
       const tierHeld = waterChargeTier(this._charge.ms);
       this._syncChargeAura(slot, tierHeld);
-      // PIXELLAB_HOOK: charge-l2 from the hold, charge-l3 once the tier passes 2.5s.
+      // PIXELLAB_HOOK: L1 blue, L2 yellow from 2.5s, L3 red from 5s.
       this.scene?.audio?.syncWaterCharge?.(tierHeld);
       return false;
     }
@@ -1123,7 +1123,11 @@ export class WeaponSystem {
     // so a long hold could show red and still release an L1 shot.
     this._charge.up = (this._charge.up || 0) + step;
     if (this._charge.up < WATER_CHARGE_RELEASE_MS) {
-      if (gate) this._syncChargeAura(slot, waterChargeTier(this._charge.ms));
+      if (gate) {
+        const tierHeld = waterChargeTier(this._charge.ms);
+        this._syncChargeAura(slot, tierHeld);
+        this.scene?.audio?.syncWaterCharge?.(tierHeld);
+      }
       return false;
     }
     let fired = false;
@@ -1229,8 +1233,8 @@ export class WeaponSystem {
       const ty = Number(bullet.touchY);
       const px = Number.isFinite(tx) ? tx : bx;
       const py = Number.isFinite(ty) ? ty : by;
+      this.scene?.audio?.playWaterAoeBoom?.();
       this._spawnWaterExplosion(px, py);
-      this.scene?.audio?.playWaterImpact?.(2);
       return true;
     }
     return false;
@@ -1326,7 +1330,6 @@ export class WeaponSystem {
       if (!known) {
         bullet.vx = (Number(bullet.vx) || 0) * WATER_L3_ENTER_SLOW;
         bullet.vy = (Number(bullet.vy) || 0) * WATER_L3_ENTER_SLOW;
-        this.scene?.audio?.playWaterImpact?.(3);
       }
       this._payAoeTick(zombie, point, true);
       return;
@@ -1345,6 +1348,7 @@ export class WeaponSystem {
   _payAoeTick(zombie, point, nudgeEast) {
     // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once, every hurt.
     this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie);
+    this.scene?.audio?.playWaterWhiteX?.();
     if (nudgeEast) this._nudgeEast(zombie, WATER_L3_NUDGE_PX);
     const gain = this._hurtZombie(
       zombie,

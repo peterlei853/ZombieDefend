@@ -9,7 +9,12 @@ import { MUZZLE_WEST_FRAC, WEAPON_TRAITS } from '../src/assets/heroDeploy.js';
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { STAGE_COUNT, STAGE_ROSTER } from '../src/data/stageRoster.js';
 import { WATER_HIT_FX, WeaponSystem } from '../src/systems/WeaponSystem.js';
-import { SoundManager } from '../src/systems/SoundManager.js';
+import {
+  preloadGameAudio,
+  SoundManager,
+  WATER_EAR_PREVIEW_KEYS,
+  WATER_EAR_VOLUME,
+} from '../src/systems/SoundManager.js';
 import { pixelBodiesTouchPoint, spriteSweepContact } from '../src/systems/pixelTouch.js';
 import {
   pickWaterGuide,
@@ -365,7 +370,10 @@ assert(guns.waterKeepsFlying({ weaponId: 'water', pierce: Infinity, hitIds: [1, 
 assert(weaponSystem.includes('if (opts.waterCharge) continue'), 'charged water does not auto-fire');
 assert(weaponSystem.includes('syncWaterCharge'), 'holding SPACE notifies the charge audio hook');
 assert(weaponSystem.includes('playWaterRelease'), 'release notifies the charge audio hook');
-assert(weaponSystem.includes('playWaterImpact'), 'a water hit notifies the impact audio hook');
+assert(weaponSystem.includes('playWaterHitL1'), 'an L1 hit notifies sfx-hit-l1');
+assert(weaponSystem.includes('playWaterAoeBoom'), 'the L2 contact notifies the AOE boom once');
+assert(weaponSystem.includes('playWaterWhiteX'), 'each white X notifies sfx-white-x');
+assert(!weaponSystem.includes('playWaterImpact'), 'the Mega Man impact hooks are gone');
 assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
 assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
 const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
@@ -374,23 +382,34 @@ assert(waterLine[0] <= 760 && waterLine[4] >= 70, 'the nearest water dummy sits 
 assert(stage.includes("weaponImmerse !== 'water'"), 'water immerse does not cycle on SPACE');
 assert(stage.includes('KeyCodes.Q'), 'Q still cycles the other loadouts');
 const audio = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
-const waterSfx = [
-  'sfx-water-charge-l2',
-  'sfx-water-charge-l3',
-  'sfx-water-charge-loop',
-  'sfx-water-release-l1',
-  'sfx-water-release-l2',
-  'sfx-water-release-l3',
-  'sfx-water-impact-l1',
-  'sfx-water-impact-l2',
-  'sfx-water-impact-l3',
-];
-for (const key of waterSfx) {
-  assert(audio.includes(`assets/audio/${key}.mp3`), `${key} is preloaded with the other game cues`);
+for (const key of WATER_EAR_PREVIEW_KEYS) {
+  assert(audio.includes(`assets/audio/${key}.mp3`), `${key} is registered in GAME_AUDIO`);
 }
+assert(demo.includes('preloadGameAudio(this, { sandbox: true })'), 'sandbox water preloads the ear preview');
+assert(demo.includes('ear SFX'), 'the water caption reports the ear preview');
+assert(WATER_EAR_VOLUME.chargeL1 === 0.28 && WATER_EAR_VOLUME.chargeL2 === 0.3 && WATER_EAR_VOLUME.chargeL3 === 0.32, 'charge volumes stay in 0.28–0.32');
+assert(WATER_EAR_VOLUME.fireL1 === 0.28 && WATER_EAR_VOLUME.fireL2 === 0.32 && WATER_EAR_VOLUME.fireL3 === 0.36, 'fire volumes are 0.28 / 0.32 / 0.36');
+assert(WATER_EAR_VOLUME.hitL1 === 0.3 && WATER_EAR_VOLUME.aoeL2 === 0.38 && WATER_EAR_VOLUME.whiteX === 0.26, 'hit, boom, and white X volumes');
+const stageQueued = [];
+preloadGameAudio({
+  load: { audio(key) { stageQueued.push(key); } },
+  cache: { audio: { exists: () => false } },
+});
+const sandboxQueued = [];
+preloadGameAudio({
+  load: { audio(key) { sandboxQueued.push(key); } },
+  cache: { audio: { exists: () => false } },
+}, { sandbox: true });
+for (const key of WATER_EAR_PREVIEW_KEYS) {
+  assert(stageQueued.includes(key), `${key} preloads on the stage queue`);
+  assert(sandboxQueued.includes(key), `${key} preloads for the sandbox`);
+}
+assert(stage.includes('preloadGameAudio(this)'), 'stage preload includes the shared audio queue');
+assert(stageQueued.includes('bgm-stage') && sandboxQueued.includes('bgm-stage'), 'the ear preview does not drop the live beds');
 const played = [];
 const nodes = [];
 const fake = {
+  time: { now: 0 },
   sound: {
     mute: false,
     locked: false,
@@ -400,7 +419,7 @@ const fake = {
         volume: cfg.volume,
         loop: !!cfg.loop,
         playing: false,
-        play() { this.playing = true; played.push(key); },
+        play() { this.playing = true; played.push({ key, volume: cfg.volume }); },
         stop() { this.playing = false; },
         destroy() { this.playing = false; },
       };
@@ -411,21 +430,38 @@ const fake = {
   cache: { audio: { exists: () => true } },
 };
 const beds = new SoundManager(fake);
+const heard = () => played.map((row) => row.key);
 beds.syncWaterCharge(1);
 beds.syncWaterCharge(1);
-assert(played.filter((key) => key === 'sfx-water-charge-l2').length === 1, 'SPACE down starts one charge-l2');
-assert(played.filter((key) => key === 'sfx-water-charge-loop').length === 1, 'the charge loop does not stack');
-assert(!played.includes('sfx-water-charge-l3'), 'charge-l3 waits until the hold passes 2.5s');
+assert(heard().filter((key) => key === 'sfx-charge-l1-blue').length === 1, 'SPACE down starts one blue charge');
+assert(!heard().some((key) => key.startsWith('sfx-water-')), 'the Mega Man charge pack stays silent');
+assert(!heard().includes('sfx-charge-l2-yellow'), 'yellow waits until the hold passes 2.5s');
 beds.syncWaterCharge(2);
-assert(played.filter((key) => key === 'sfx-water-charge-l3').length === 1, 'past 2.5s the L2 rise stops and charge-l3 plays');
-assert(nodes.filter((node) => node.key === 'sfx-water-charge-l2' && node.playing).length === 0, 'charge-l2 is stopped once charge-l3 starts');
+assert(heard().filter((key) => key === 'sfx-charge-l2-yellow').length === 1, 'past 2.5s the blue charge stops and yellow plays');
+assert(nodes.filter((node) => node.key === 'sfx-charge-l1-blue' && node.playing).length === 0, 'the blue charge is stopped at L2');
 beds.syncWaterCharge(3);
-assert(played.filter((key) => key === 'sfx-water-charge-l3').length === 1, 'L3 does not start a second climax');
+assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'past 5s yellow stops and the red charge plays');
+assert(nodes.filter((node) => node.key === 'sfx-charge-l2-yellow' && node.playing).length === 0, 'the yellow charge is stopped at L3');
+beds.syncWaterCharge(3);
+assert(heard().filter((key) => key === 'sfx-charge-l3-red').length === 1, 'holding L3 does not restart the red charge');
 beds.playWaterRelease(2);
-assert(played.includes('sfx-water-release-l2'), 'a 2.5s release plays release-l2');
-assert(nodes.filter((node) => node.key.startsWith('sfx-water-charge') && node.playing).length === 0, 'release stops the charge beds');
-beds.playWaterImpact(1);
-beds.playWaterImpact(3);
-assert(played.includes('sfx-water-impact-l1') && played.includes('sfx-water-impact-l3'), 'hits play the impact for the projectile tier');
+assert(heard().includes('sfx-fire-l2'), 'a 2.5s release plays sfx-fire-l2');
+assert(nodes.filter((node) => node.key.startsWith('sfx-charge-') && node.playing).length === 0, 'release stops the charge voice');
+assert(played.find((row) => row.key === 'sfx-fire-l2')?.volume === 0.32, 'L2 fire is 0.32');
+beds.playWaterRelease(1);
+beds.playWaterRelease(3);
+assert(heard().includes('sfx-fire-l1') && heard().includes('sfx-fire-l3'), 'L1 and L3 release play their fire cues');
+beds.playWaterHitL1();
+beds.playWaterAoeBoom();
+beds.playWaterAoeBoom();
+assert(heard().filter((key) => key === 'sfx-hit-l1').length === 1, 'L1 hit plays sfx-hit-l1');
+assert(heard().filter((key) => key === 'sfx-aoe-l2-boom').length === 2, 'the boom helper plays each time the contact calls it');
+beds.playWaterWhiteX();
+beds.playWaterWhiteX();
+assert(heard().filter((key) => key === 'sfx-white-x').length === 1, 'same-frame white X marks do not stack');
+fake.time.now = 200;
+beds.playWaterWhiteX();
+assert(heard().filter((key) => key === 'sfx-white-x').length === 2, 'the next 0.2s tick plays white X again');
+assert(played.find((row) => row.key === 'sfx-white-x')?.volume === 0.26, 'white X stays at 0.26');
 
 console.log('weapon try-out ok');
