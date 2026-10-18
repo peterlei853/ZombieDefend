@@ -18,11 +18,11 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 615,
+    "total": 617,
     "byCategory": {
       "hero": {
         "groups": 3,
-        "assets": 137
+        "assets": 139
       },
       "pets": {
         "groups": 17,
@@ -64,7 +64,7 @@
     "byType": {
       "background": 13,
       "concept": 21,
-      "fx": 89,
+      "fx": 91,
       "icon": 75,
       "image": 38,
       "spritesheet": 379
@@ -197,7 +197,7 @@
       "group": "girl-fx",
       "title": "Player Girl — weapon FX",
       "titleZh": "女主角武器特效",
-      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. Those sheets are row-major grids. Catalog only — not wired into Stage. fx-water-proj (L1) stays.",
+      "description": "Hero girl weapon FX (water/sling/bubble/lightning/frost/flame). v0.27 folds the v0.22 projectile remake: fx-water-proj, fx-sling-knockback, fx-flame-cone-short, fx-flame-burn, fx-frost-freeze. v0.31 adds profession water body-hit overlays plus clearer fx-water-splash-big and fx-water-wet-ground. v0.32 adds stone/pebble sling body-hit overlays (fx-hit-sling-*). v0.32.1 replaces fx-sling-pellet, fx-sling-impact, and those hit overlays with brighter sheets after a Tester Conditional Fail (invisible pellet on asphalt, faint hit on the body). v0.35.2 adds fx-slash as a side-crescent spare only (not the feel-booth melee primary). v0.35.3 adds fx-slash-overhead, deprecated as the feel melee primary: PNG kept, reserved unused spare, not feel-booth 4. v0.35.4 adds fx-slash-ninja, the feel-booth 4 primary melee: Fruit Ninja thin straight diagonal TL→BR, pure white / light gray, 5×96 @ 30 fps, ADD, origin center, spawn on the target body center. Legacy water FX stay. v1.0 catalogs the water Mega Man charge pack beside them: fx-water-proj-t2, fx-water-proj-t3, fx-water-charge-aura, fx-water-t2-impact, fx-water-t2-dot, fx-water-t3-impact, fx-water-t3-path-burn, and fx-water-t3-inbullet-dot. v2.0 replaces fx-water-proj-t2 and fx-water-proj-t3 on the same keys and paths, and adds fx-water-t2-aoe plus fx-aoe-touch-x. t2 is a west 8-frame 128×64 strip @ 12 fps (GIF 80ms). t3 is a west 8-frame 256×128 strip @ 10 fps. t2-aoe is a 6×5 grid of 147×122, 30 frames @ 8 fps, loop (GIF 120ms). touch-x is a 4-frame 32×32 strip, once @ 16 fps (GIF 60ms). Stage combat is unchanged. fx-water-proj (L1) stays. No pierce-impact sheet.",
       "manifest": "assets/library/characters/hero/girl/fx/manifest.json",
       "dir": "assets/library/characters/hero/girl/fx",
       "thumb": "assets/library/previews/hero/girl-fx/preview.gif",
@@ -210,7 +210,7 @@
       ],
       "keyPrefix": "fx-",
       "mainKey": "fx-water-impact",
-      "count": 57,
+      "count": 59,
       "frameSizes": [
         "16x16",
         "24x24",
@@ -229,11 +229,13 @@
         "64x64",
         "96x96",
         "128x48",
-        "128x64"
+        "128x64",
+        "147x122",
+        "256x128"
       ],
       "framesRange": [
         4,
-        10
+        30
       ],
       "fpsRange": [
         8,
@@ -280,6 +282,8 @@
         "fx-water-proj",
         "fx-water-proj-t2",
         "fx-water-proj-t3",
+        "fx-water-t2-aoe",
+        "fx-aoe-touch-x",
         "fx-water-charge-aura",
         "fx-water-t2-impact",
         "fx-water-t2-dot",
@@ -6735,9 +6739,9 @@
       "group": "girl-fx",
       "path": "assets/library/characters/hero/girl/fx/fx-water-proj-t2.png",
       "type": "fx",
-      "frameWidth": 64,
-      "frameHeight": 32,
-      "frames": 4,
+      "frameWidth": 128,
+      "frameHeight": 64,
+      "frames": 8,
       "frameRate": 12,
       "loop": true,
       "loopFrom": null,
@@ -6752,8 +6756,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
-      "description": "Player Girl — weapon FX: water-proj-t2 — 4 frames 64x32 @ 12 fps, loop.",
-      "note": "v1.0 water Mega Man charge L2 projectile. 4 frames, cell 64×32 @ 12 fps, loop, origin center. Sheet 128×64 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays.",
+      "description": "Player Girl — weapon FX: water-proj-t2 — 8 frames 128x64 @ 12 fps, loop.",
+      "note": "v2.0 water Mega Man charge L2 projectile (Peter OK remake). 8 frames, cell 128×64 @ 12 fps, loop, origin center. Sheet 1024×64 is a west-facing horizontal strip. GIF holds each frame 80ms (12.5 fps); catalog uses 12 fps. Replaces the v1.0 2×2 grid (4 frames, cell 64×32 @ 12 fps) on the same key and path. Stage combat is unchanged. L1 fx-water-proj stays.",
       "tags": [
         "hero",
         "girl-fx",
@@ -6762,33 +6766,27 @@
         "water",
         "loop",
         "tileable",
-        "v1.0",
-        "catalog-only",
+        "v2.0",
         "charge"
       ],
       "extra": {
-        "version": "v1.0",
+        "version": "v2.0",
         "gameplayNotes": {
           "role": "chargeProjectile",
           "tier": "L2",
-          "status": "catalog-only",
+          "status": "sandbox-catalog",
           "keeps": "fx-water-proj"
         },
         "sheet": {
-          "layout": "grid",
-          "columns": 2,
-          "rows": 2,
-          "order": "row-major",
-          "width": 128,
+          "layout": "strip",
+          "columns": 8,
+          "rows": 1,
+          "order": "horizontal",
+          "width": 1024,
           "height": 64,
-          "usedFrames": 4
-        },
-        "pixellabEffectId": "b2feafff-1d07-4ef2-885f-19bfa088e184"
+          "usedFrames": 8
+        }
       },
-      "grid": [
-        2,
-        2
-      ],
       "action": "water-proj-t2"
     },
     {
@@ -6797,10 +6795,10 @@
       "group": "girl-fx",
       "path": "assets/library/characters/hero/girl/fx/fx-water-proj-t3.png",
       "type": "fx",
-      "frameWidth": 128,
-      "frameHeight": 64,
-      "frames": 4,
-      "frameRate": 12,
+      "frameWidth": 256,
+      "frameHeight": 128,
+      "frames": 8,
+      "frameRate": 10,
       "loop": true,
       "loopFrom": null,
       "loopTo": null,
@@ -6814,8 +6812,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/hero/girl-fx/preview.gif",
-      "description": "Player Girl — weapon FX: water-proj-t3 — 4 frames 128x64 @ 12 fps, loop.",
-      "note": "v1.0 water Mega Man charge L3 projectile. 4 frames, cell 128×64 @ 12 fps, loop, origin center. Sheet 256×128 is a 2×2 row-major grid. Points west, same facing as fx-water-proj. Catalog only — not wired into Stage. L1 fx-water-proj stays.",
+      "description": "Player Girl — weapon FX: water-proj-t3 — 8 frames 256x128 @ 10 fps, loop.",
+      "note": "v2.0 water Mega Man charge L3 projectile (Peter OK remake). 8 frames, cell 256×128 @ 10 fps, loop, origin center. Sheet 2048×128 is a west-facing horizontal strip. GIF holds each frame 100ms. Replaces the v1.0 2×2 grid (4 frames, cell 128×64 @ 12 fps) on the same key and path. Stage combat is unchanged. L1 fx-water-proj stays. No pierce-impact sheet.",
       "tags": [
         "hero",
         "girl-fx",
@@ -6824,34 +6822,139 @@
         "water",
         "loop",
         "tileable",
+        "v2.0",
+        "charge"
+      ],
+      "extra": {
+        "version": "v2.0",
+        "gameplayNotes": {
+          "role": "chargeProjectile",
+          "tier": "L3",
+          "status": "sandbox-catalog",
+          "keeps": "fx-water-proj"
+        },
+        "sheet": {
+          "layout": "strip",
+          "columns": 8,
+          "rows": 1,
+          "order": "horizontal",
+          "width": 2048,
+          "height": 128,
+          "usedFrames": 8
+        },
+        "pixellabEffectId": "1ee28b04-8f20-4bd4-a164-2366a62b91a2",
+        "pixellabStillId": "23029089-e839-4b12-bd69-6b65eab03359"
+      },
+      "action": "water-proj-t3"
+    },
+    {
+      "key": "fx-water-t2-aoe",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-water-t2-aoe.png",
+      "type": "fx",
+      "frameWidth": 147,
+      "frameHeight": 122,
+      "frames": 30,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: water-t2-aoe — 30 frames 147x122 @ 8 fps, loop.",
+      "note": "v1.0 water Mega Man charge L2 AOE. 30 frames, cell 147×122 @ 8 fps, loop, origin center. Sheet 882×610 is a 6×5 row-major grid. GIF holds each cell 120ms (~8 fps). Fire burst for the L2 shot. Cataloged for the sandbox demo. Stage combat is unchanged. fx-water-t2-impact stays.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "water",
+        "loop",
         "v1.0",
-        "catalog-only",
         "charge"
       ],
       "extra": {
         "version": "v1.0",
         "gameplayNotes": {
-          "role": "chargeProjectile",
-          "tier": "L3",
-          "status": "catalog-only",
-          "keeps": "fx-water-proj"
+          "role": "chargeAoe",
+          "tier": "L2",
+          "status": "sandbox-catalog",
+          "keeps": "fx-water-t2-impact"
         },
         "sheet": {
           "layout": "grid",
-          "columns": 2,
-          "rows": 2,
+          "columns": 6,
+          "rows": 5,
           "order": "row-major",
-          "width": 256,
-          "height": 128,
-          "usedFrames": 4
-        },
-        "pixellabEffectId": "4070adfc-a8d9-4fb8-80a6-b9531d348916"
+          "width": 882,
+          "height": 610,
+          "usedFrames": 30
+        }
       },
       "grid": [
-        2,
-        2
+        6,
+        5
       ],
-      "action": "water-proj-t3"
+      "action": "water-t2-aoe"
+    },
+    {
+      "key": "fx-aoe-touch-x",
+      "category": "hero",
+      "group": "girl-fx",
+      "path": "assets/library/characters/hero/girl/fx/fx-aoe-touch-x.png",
+      "type": "fx",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 4,
+      "frameRate": 16,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/hero/girl-fx/preview.gif",
+      "description": "Player Girl — weapon FX: aoe-touch-x — 4 frames 32x32 @ 16 fps, once.",
+      "note": "v1.0 shared AOE contact flash. 4 frames, cell 32×32 @ 16 fps, once, origin center. Sheet 128×32 is a horizontal strip. GIF holds each frame 60ms (~17 fps); catalog uses 16. White X spawned on opaque overlap. Cataloged for the sandbox demo. Stage combat is unchanged.",
+      "tags": [
+        "hero",
+        "girl-fx",
+        "fx",
+        "once",
+        "v1.0",
+        "charge"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "gameplayNotes": {
+          "role": "aoeTouch",
+          "status": "sandbox-catalog"
+        },
+        "sheet": {
+          "layout": "strip",
+          "columns": 4,
+          "rows": 1,
+          "order": "horizontal",
+          "width": 128,
+          "height": 32,
+          "usedFrames": 4
+        }
+      },
+      "action": "aoe-touch-x"
     },
     {
       "key": "fx-water-charge-aura",

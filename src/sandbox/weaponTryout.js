@@ -110,6 +110,12 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       muzzles: [{ id: this.weaponId, x: muzzle.x, y: muzzle.y }],
       // Coordinates only. Water and sling already aim from a muzzle slot;
       // nothing here instantiates a cradle sprite.
+      // PIXELLAB_HOOK: charge sheets load from the catalog (not hardcoded here).
+      // fx-water-proj-t2 128×64, 8 frames @ 12 fps, loop, west.
+      // fx-water-proj-t3 256×128, 8 frames @ 10 fps, loop, west.
+      // fx-water-t2-aoe 147×122, 30 frames @ 8 fps, loop, grid 6×5.
+      // fx-aoe-touch-x 32×32, 4 frames @ 16 fps, once.
+      // Stage combat still fires L1 fx-water-proj. No pierce-impact sheet.
       waterMount: this.weaponId === 'water' ? slot : null,
       slingFromMount: this.weaponId === 'sling',
       slingMount: this.weaponId === 'sling' ? slot : null,
