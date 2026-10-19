@@ -29,7 +29,8 @@ import { rosterForStage } from './stageRoster.js';
  * HP, speed, DPS, weight, gold, barricade HP, or stage length.
  * v0.28 stamps a visual `skins` list in waveDefsForStage. Those ids do not
  * change the numbers on these rows.
- * v0.36.11 puts one roster id in that list: stage N spawns only monster N.
+ * v0.36.11 put one roster id in that list: stage N spawned only monster N.
+ * v0.36.24 stage 1 rolls types 1 / 2 / 3. Stages 2–5 stay one skin.
  */
 export const STAGE_DURATION = 90;
 

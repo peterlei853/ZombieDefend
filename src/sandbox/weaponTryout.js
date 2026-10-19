@@ -9,7 +9,7 @@
  * stage registry. Feel-booth keys 6–9 are not wired here.
  */
 
-import { frontKey, HERO_UNARMED, OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
+import { frontKey, HERO_UNARMED, holdBareHandsRest, OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
 import {
   SANDBOX_FLOAT_FRAME,
   SANDBOX_TARGET_HP,
@@ -80,6 +80,8 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     this.heroY = this.laneY;
     this._moveDy = 0;
     this._attackPose = null;
+    this._bareRest = { rested: false };
+    this._spaceDownEdge = false;
     this.dummyX = DUMMY_X;
     this.bullets = [];
     this.weapons = new WeaponSystem(this);
@@ -100,6 +102,9 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     }).setDepth(20000).setScrollFactor(0);
     this._space = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE) || null;
     this.input.keyboard?.addCapture?.(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this._space?.on?.('down', () => {
+      this._spaceDownEdge = true;
+    });
     const keys = this.input.keyboard;
     this._up = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.W) || null;
     this._upArrow = keys?.addKey?.(Phaser.Input.Keyboard.KeyCodes.UP) || null;
@@ -117,7 +122,11 @@ export default class WeaponTryoutScene extends Phaser.Scene {
     const dt = Number.isFinite(delta) ? delta : 0;
     this._moveHero(dt);
     this._syncHero();
-    this._syncWaterPose(this.weaponId === 'water' && !!this._space?.isDown);
+    const spaceHeld = !!this._space?.isDown;
+    const spacePulse = this._spaceDownEdge === true;
+    this._spaceDownEdge = false;
+    this._syncWaterPose(this.weaponId === 'water' && spaceHeld);
+    this._spacePulse = spacePulse;
     this._syncGun();
     const origin = sandboxFloatOrigin(this.hero.x, this.hero.y, this.hero.scaleX);
     const frame = libraryAsset(this, frontKey(this.weaponId))?.frameWidth || SANDBOX_FLOAT_FRAME;
@@ -140,6 +149,7 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       waterMount: water ? slot : null,
       waterCharge: water,
       waterHeld: water && !!this._space?.isDown,
+      waterPulsed: water && this._spacePulse === true,
       slingFromMount: this.weaponId === 'sling',
       slingMount: this.weaponId === 'sling' ? slot : null,
       fenceOnly: false,
@@ -290,9 +300,17 @@ export default class WeaponTryoutScene extends Phaser.Scene {
         return;
       } else this._attackPose = null;
     }
-    if (this._moveDy < 0) play(HERO_UNARMED.walk.north, true);
-    else if (this._moveDy > 0) play(HERO_UNARMED.walk.south, true);
-    else if (current !== HERO_UNARMED.idle) play(HERO_UNARMED.idle, true);
+    if (this._moveDy < 0) {
+      this._bareRest.rested = false;
+      play(HERO_UNARMED.walk.north, true);
+    } else if (this._moveDy > 0) {
+      this._bareRest.rested = false;
+      play(HERO_UNARMED.walk.south, true);
+    } else {
+      // PIXELLAB_HOOK: bare hands hold the last deploy frame. No gun in the hands.
+      holdBareHandsRest(hero, this, this._bareRest);
+    }
+    void current;
   }
 
   _makeGun() {

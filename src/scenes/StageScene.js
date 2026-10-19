@@ -11,6 +11,7 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import { clampStage } from '../data/stageRoster.js';
+import { holdBareHandsRest } from '../assets/heroDeploy.js';
 import {
   BRUTE_SHOCK_KEY,
   bruteShockHandPoint,
@@ -220,6 +221,11 @@ export default class StageScene extends Phaser.Scene {
     if (keyboard) {
       this._spaceKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       keyboard.addCapture(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      // A click or SPACE that rises before update still counts as a press.
+      this._spaceDownEdge = false;
+      this._spaceKey.on('down', () => {
+        this._spaceDownEdge = true;
+      });
       this._cycleKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       this._cycleKey.on('down', () => this._toggleWeapon());
       // One flinch: white fill, red fill, hurt strip. Does not restart mid-sequence.
@@ -837,6 +843,9 @@ export default class StageScene extends Phaser.Scene {
     }
     const restore = () => {
       if (this._heroFeelToken !== token || !player.active) return;
+      const memory = this.defenders?._bareRest || { rested: true };
+      memory.rested = true;
+      if (holdBareHandsRest(player, this, memory)) return;
       const idle = this.anims.exists('player-girl-idle') ? 'player-girl-idle' : 'player-idle';
       if (!this.anims.exists(idle)) return;
       try {
@@ -1035,16 +1044,10 @@ export default class StageScene extends Phaser.Scene {
     this._hudRow.push(this.hudWeapon, this.hudBarricade);
     this._reflowHud();
 
+    // v0.36.24: the shoot tip lives on the title. Stage start does not
+    // cover the field or lock the lane.
     this._announcedWave = null;
-    this._showBanner({
-      icon: UI.ready,
-      title: 'HOLD TO SHOOT',
-      sub: 'SPACE OR SWAP',
-      zh: '按住蓄力，放開發射',
-      hold: 6500,
-      y: 230,
-      lockMove: true,
-    });
+    this._tipLocksMove = false;
     this.events.once('shutdown', () => this._clearBanner());
   }
 
@@ -1225,8 +1228,15 @@ export default class StageScene extends Phaser.Scene {
 
     // Defenders fire + hits. Pet gold includes baby-pet kills; burn gold is statusGold.
     if (this.defenders) {
-      const shoot = !!(this._spaceKey?.isDown || this.touchControls?.weaponHeld);
+      const space = this._spaceKey;
+      const spaceHeld = !!space?.isDown;
+      const spacePulse = this._spaceDownEdge === true;
+      this._spaceDownEdge = false;
+      const swapHeld = !!this.touchControls?.weaponHeld;
+      const swapPulse = !!this.touchControls?.consumeShotPulse?.();
+      const shoot = spaceHeld || swapHeld;
       this.defenders.triggerHeld = shoot;
+      this.defenders.triggerPulsed = spacePulse || swapPulse;
       this.defenders.waterHeld = shoot;
     }
     const petGain = this.defenders.update(deltaMs, this.zombies);

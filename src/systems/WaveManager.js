@@ -24,7 +24,7 @@ export class WaveManager {
     this.queue = [];
     this.spawnedCount = 0;
     this.totalPlanned = 0;
-    /** Round-robin across the spawn's skin pool. A one-skin stage stays that skin. */
+    /** Round-robin for a multi-skin pool that is not stage 1. Stage 1 rolls. */
     this._skinCursor = 0;
     this._buildQueue();
   }
@@ -68,12 +68,15 @@ export class WaveManager {
 
   /**
    * Next skin in the pool. `skins` on the row wins; otherwise the stage roster.
-   * A pool of one (main stages 1–5) returns that id every time.
+   * Stage 1 rolls among types 1 / 2 / 3. A pool of one returns that id.
    * @param {string[]|null|undefined} skins
    */
   _nextSkin(skins) {
     const pool = Array.isArray(skins) && skins.length ? skins : this.roster;
     if (!pool.length) return null;
+    if (this.stage === 1 && pool.length > 1) {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
     const skin = pool[this._skinCursor % pool.length];
     this._skinCursor += 1;
     return skin;

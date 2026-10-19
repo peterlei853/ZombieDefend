@@ -40,6 +40,7 @@ import {
 import {
   HERO_UNARMED,
   createDeployMachine,
+  holdBareHandsRest,
   stepDeploy,
   unarmedAnimKeys,
 } from '../assets/heroDeploy.js';
@@ -121,6 +122,10 @@ export class DefenderGroup {
     }
     /** SPACE or SWAP is down. Stage fire reads this; nothing shoots while it is up. */
     this.triggerHeld = false;
+    /** A press started this frame, even if it already lifted. Keeps a sub-frame tap. */
+    this.triggerPulsed = false;
+    /** Bare-hands deploy sweep has finished and should hold frame 7. */
+    this._bareRest = { rested: false };
     this._deploy = createDeployMachine();
     /** Unarmed girl + front-float guns. Legacy handgun/shotgun stays when that sheet is missing. */
     this._frontFloat = heroLibraryReady(scene);
@@ -330,6 +335,7 @@ export class DefenderGroup {
       const ownedIds = this.weapons.ownedIds();
       const skinId = this.weapons.getSkin?.()?.id || null;
       const triggerHeld = !!this.triggerHeld;
+      const triggerPulsed = !!this.triggerPulsed;
       const command =
         !this._waterLock &&
         !manualStage &&
@@ -342,6 +348,7 @@ export class DefenderGroup {
         const finishing = this._attackPose === 'hold' || this._attackPose === 'end';
         const posed = charging || finishing ? this._syncWaterFirePose('fire', charging) : false;
         if (!charging && !finishing) this._attackPose = null;
+        if (moving) this._bareRest.rested = false;
         if (!posed) this._updateUnarmedPose(moving ? 'move' : 'fire', dy, dx, { command: false });
       } else {
         const attacking = this._deploy.phase === 'fire' && triggerHeld;
@@ -381,6 +388,7 @@ export class DefenderGroup {
           waterMount: floatSlot || waterSlot,
           waterCharge: chargeWater,
           waterHeld: chargeWater ? triggerHeld : !!this.waterHeld,
+          waterPulsed: chargeWater ? triggerPulsed : false,
           manualFire: manualStage,
           triggerHeld,
           selectedId: this._waterLock ? 'water' : skinId,
@@ -576,6 +584,7 @@ export class DefenderGroup {
       return;
     }
     if (phase === 'move') {
+      this._bareRest.rested = false;
       this._playFirstExisting(unarmedAnimKeys(dy, dx));
       return;
     }
@@ -587,6 +596,8 @@ export class DefenderGroup {
         if (this._holdStill(key)) return;
       }
     }
+    // PIXELLAB_HOOK: player-girl-deploy once, then hold frame 7. No gun in the hands.
+    if (holdBareHandsRest(player, this.scene, this._bareRest)) return;
     this._playFirstExisting([HERO_UNARMED.idle, 'player-idle']);
   }
 

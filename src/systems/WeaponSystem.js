@@ -770,7 +770,8 @@ export class WeaponSystem {
         zombies,
         WEAPON_TRAITS.water,
         opts.waterHeld === true,
-        canFire
+        canFire,
+        opts.waterPulsed === true
       );
       if (released) firedEarly = 'water';
     } else if (this._charge) {
@@ -1040,17 +1041,13 @@ export class WeaponSystem {
   }
 
   /**
-   * Opaque contact plays fx-lightning-impact at the pixel point.
-   * Water splash, wet ground, and body-hit sheets stay off. No chain.
-   * HP for the primary and every neighbor in the splash still waits
-   * for the same beat.
+   * L1 opaque contact plays fx-lightning-impact at the pixel point.
+   * One target, one attack. No neighbor splash, no white X, no chain.
+   * Damage lands on that contact, not on a later splash beat.
    * @param {import('../entities/Zombie.js').Zombie} primary
    * @param {object} bullet
    */
   _queueWaterSplash(primary, bullet) {
-    const trait = WEAPON_TRAITS.water;
-    const px = primary.x;
-    const py = primary.y;
     const tx = Number(bullet?.touchX);
     const ty = Number(bullet?.touchY);
     if (Number.isFinite(tx) && Number.isFinite(ty)) {
@@ -1058,24 +1055,18 @@ export class WeaponSystem {
     }
     // PIXELLAB_HOOK: L1 enemy hit is sfx-hit-l1. Lightning VFX stays.
     this.scene?.audio?.playWaterHitL1?.();
-    const radius = layoutPx(trait.splashRadius || 56);
-    /** @type {{ zombie: import('../entities/Zombie.js').Zombie, damage: number, knock: boolean }[]} */
-    const hits = [{ zombie: primary, damage: bullet.damage, knock: true }];
-    for (const z of this._liveZombies || []) {
-      if (!z?.alive || !z.body || z === primary) continue;
-      const reach = radius + (z.displayHalf || 0);
-      if (Math.hypot(z.x - px, z.y - py) > reach) continue;
-      hits.push({
-        zombie: z,
-        damage: this._scaledDamage('water', trait.splash),
-        knock: false,
-      });
-    }
-    this._waterBeats.push({
-      life: this._waterBeatMs(),
-      hits,
-      knockbackBodies: bullet.knockbackBodies || 0,
-    });
+    const gain = this._hurtZombie(
+      primary,
+      bullet.damage,
+      {
+        weaponId: 'water',
+        impact: WATER_HIT_FX,
+        knockbackBodies: bullet.knockbackBodies || 0,
+      },
+      { impact: false, knock: true }
+    );
+    this._pending.gold += gain.gold;
+    this._pending.kills += gain.kills;
   }
 
   /**
@@ -1106,7 +1097,10 @@ export class WeaponSystem {
    * the hold is not cleared, and the release still spawns one shot.
    * `canFire` stays in the signature so callers can pass the deploy
    * flag. It does not gate this gun. A gap under
-   * {@link WATER_CHARGE_RELEASE_MS} is key bounce.
+   * {@link WATER_CHARGE_RELEASE_MS} is key bounce: it must not release
+   * the tier already on the timer. A press that never shows `held`
+   * (click, tap, or SPACE that rises before the poll) still opens an
+   * L1 charge so the same gap can fire it.
    * @param {number} dt
    * @param {object[]} bullets
    * @param {{ muzzleX: number, muzzleY: number }|null} slot
@@ -1114,9 +1108,10 @@ export class WeaponSystem {
    * @param {object} trait
    * @param {boolean} held
    * @param {boolean} [_canFire]
+   * @param {boolean} [pulsed] true when a press started this frame
    * @returns {boolean}
    */
-  _stepWaterCharge(dt, bullets, slot, zombies, trait, held, _canFire) {
+  _stepWaterCharge(dt, bullets, slot, zombies, trait, held, _canFire, pulsed = false) {
     const step = Math.max(0, dt);
     const live = slot && Number.isFinite(slot.muzzleX) && Number.isFinite(slot.muzzleY) ? slot : null;
     if (live) this._chargeMuzzle = { muzzleX: live.muzzleX, muzzleY: live.muzzleY };
@@ -1133,6 +1128,22 @@ export class WeaponSystem {
         this.scene?.audio?.syncWaterCharge?.(tierHeld);
       }
       return false;
+    }
+    const open = this._charge;
+    if (pulsed && open) {
+      // Down and up inside one frame while a charge is already open.
+      // Keep that tier. Do not release it.
+      open.up = 0;
+      if (spawn) {
+        const tierHeld = waterChargeTier(open.ms);
+        this._syncChargeAura(spawn, tierHeld);
+        this.scene?.audio?.syncWaterCharge?.(tierHeld);
+      }
+      return false;
+    }
+    if (pulsed && !open) {
+      // The whole press fit between polls. It is still an L1 tap.
+      this._charge = { ms: Math.max(step, 1), up: 0, ready: true };
     }
     if (!this._charge) {
       this.scene?.audio?.stopWaterChargeLoop?.();
@@ -1198,9 +1209,9 @@ export class WeaponSystem {
   /**
    * L2 retires on the first opaque contact and leaves fx-water-t2-aoe
    * on that pixel for 4s. L3 is the AOE body: it keeps flying, moves at
-   * half its spawn speed while it touches any enemy, and returns to that
+   * 0.4× its spawn speed while it touches any enemy, and returns to that
    * spawn speed when it touches none. Each damage tick flashes the white
-   * X and nudges the body 5px east. Returns true when the bullet should go.
+   * X and retreats the body 5px toward spawn. Returns true when the bullet should go.
    * @param {object} bullet
    * @param {import('../entities/Zombie.js').Zombie[]} zombies
    * @returns {boolean}
@@ -1373,7 +1384,7 @@ export class WeaponSystem {
       depthBias: 12,
     });
     this.scene?.audio?.playWaterWhiteX?.();
-    if (nudgeEast) this._nudgeEast(zombie, WATER_L3_NUDGE_PX);
+    if (nudgeEast) this._nudgeRetreat(zombie, WATER_L3_NUDGE_PX);
     const gain = this._hurtZombie(
       zombie,
       WATER_AOE_TICK_DMG,
@@ -1385,7 +1396,7 @@ export class WeaponSystem {
   }
 
   /**
-   * L3 speed is half the spawn velocity while `touching` is true, and
+   * L3 speed is 0.4× the spawn velocity while `touching` is true, and
    * the spawn velocity again when the shot is clear of every enemy.
    * @param {object} bullet
    * @param {boolean} touching
@@ -1402,15 +1413,16 @@ export class WeaponSystem {
   }
 
   /**
-   * Positional nudge only. East is +X, away from a west-firing shot.
+   * Positional nudge only. Zombies march east toward the barricade, so
+   * a hurt retreat is −X, back toward spawn. Not toward the fence.
    * @param {import('../entities/Zombie.js').Zombie} zombie
    * @param {number} px
    */
-  _nudgeEast(zombie, px) {
+  _nudgeRetreat(zombie, px) {
     if (!zombie?.alive || !zombie.body) return;
     const amount = Number(px);
     if (!(amount > 0) || !Number.isFinite(amount)) return;
-    zombie.body.x += amount;
+    zombie.body.x -= amount;
     zombie._lastX = zombie.body.x;
   }
 

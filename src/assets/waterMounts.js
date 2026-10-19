@@ -211,16 +211,20 @@ export const WATER_AOE_TICK_MS = 200;
 export const WATER_AOE_TICK_DMG = 6;
 /**
  * While an L3 shot's body is touching any enemy, flight speed is this
- * fraction of the spawn velocity. Clearing every enemy restores the
- * spawn velocity. It does not stack per body.
+ * fraction of the spawn velocity. v0.36.24 reads「減速 150%」as 2.5×
+ * slower (0.4), stronger than the v0.36.23 half-speed. Clearing every
+ * enemy restores the spawn velocity. It does not stack per body.
  */
-export const WATER_L3_OVERLAP_MUL = 0.5;
-/** Each L3 damage tick shifts the body this far east, away from the hero. */
+export const WATER_L3_OVERLAP_MUL = 0.4;
+/**
+ * Each L3 damage tick shifts the body this far back toward spawn,
+ * away from the barricade. Zombies march +X, so the retreat is −X.
+ */
 export const WATER_L3_NUDGE_PX = 5;
-/** L2 flight speed divided by the L1 spawn speed. */
-export const WATER_L2_SPEED_MUL = 1.3;
-/** L3 flight speed divided by the L1 spawn speed. */
-export const WATER_L3_SPEED_MUL = 1.5;
+/** L2 flight speed divided by the L1 spawn speed. v0.36.24 is +50%. */
+export const WATER_L2_SPEED_MUL = 1.5;
+/** L3 flight speed divided by the L1 spawn speed. v0.36.24 is +100%. */
+export const WATER_L3_SPEED_MUL = 2;
 /** L1 cell. Drawn at `_visualScale` (depth taper; LAYOUT_SCALE already divided out). */
 export const WATER_L1_FRAME = 32;
 /** L3 cell. The sheet stays 512×256; gameplay scales it down. */
@@ -373,7 +377,7 @@ export function waterConeVelocity(fromX, fromY, target, speed) {
 
 /**
  * Spawn-speed multiplier against the L1 water shot. L1 stays 1.
- * L2 is +30%. L3 is +50%.
+ * L2 is +50%. L3 is +100%.
  * @param {number} tier
  */
 export function waterChargeSpeedMul(tier) {

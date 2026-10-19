@@ -160,8 +160,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.23' && APP_VERSION === '0.36.23', 'package and APP_VERSION are 0.36.23');
-assert(html.includes('v0.36.23'), 'document title is v0.36.23');
+assert(pkg.version === '0.36.24' && APP_VERSION === '0.36.24', 'package and APP_VERSION are 0.36.24');
+assert(html.includes('v0.36.24'), 'document title is v0.36.24');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {

@@ -144,6 +144,8 @@ export class VirtualControls {
     this._weaponPointerId = null;
     /** True from SWAP pointerdown until that finger lifts. */
     this.weaponHeld = false;
+    /** True after pointerdown until the stage consumes it, even if the finger already lifted. */
+    this._weaponPulse = false;
     /** Press started on SWAP and has not yet lifted. */
     this._weaponArmed = false;
     this._destroyed = false;
@@ -157,6 +159,17 @@ export class VirtualControls {
     this._createObjects();
     this._layout();
     this._bind();
+  }
+
+  /**
+   * True once when SWAP was pressed since the last read, including a
+   * click or tap that ended before this frame's poll.
+   * @returns {boolean}
+   */
+  consumeShotPulse() {
+    const pulsed = this._weaponPulse === true;
+    this._weaponPulse = false;
+    return pulsed;
   }
 
   /** Analog axes in [-1, 1]. Zero when the stick is idle or inside the deadzone. */
@@ -399,6 +412,7 @@ export class VirtualControls {
       this._weaponPointerId = pointer.id;
       this._weaponArmed = true;
       this.weaponHeld = true;
+      this._weaponPulse = true;
       this._setButtonPressed(true);
       return;
     }

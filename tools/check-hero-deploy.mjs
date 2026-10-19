@@ -79,7 +79,8 @@ check('flame cone', WEAPON_TRAITS.flame.continuous === true && WEAPON_TRAITS.fla
 
 const moveKeys = unarmedAnimKeys(1, 0);
 check('south prefers run then walk', moveKeys[0] === 'player-girl-run-south' && moveKeys[1] === 'player-girl-walk-south');
-check('idle when stopped keys', unarmedAnimKeys(0, 0)[0] === 'player-girl-idle');
+check('rest prefers deploy', unarmedAnimKeys(0, 0)[0] === 'player-girl-deploy');
+check('idle remains the missing-sheet fallback', unarmedAnimKeys(0, 0)[1] === 'player-girl-idle');
 
 if (failed) {
   console.error(`${failed} check(s) failed`);
