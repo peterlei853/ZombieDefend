@@ -67,9 +67,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.24', 'APP_VERSION is 0.36.24');
-assert(pkg.version === '0.36.24', 'package.json tracks 0.36.24');
-assert(html.includes('ZombieDefend v0.36.24'), 'title tracks 0.36.24');
+assert(APP_VERSION === '0.36.25', 'APP_VERSION is 0.36.25');
+assert(pkg.version === '0.36.25', 'package.json tracks 0.36.25');
+assert(html.includes('ZombieDefend v0.36.25'), 'title tracks 0.36.25');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 

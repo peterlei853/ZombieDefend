@@ -4,11 +4,13 @@
   "group": "office-worker-v2",
   "title": "Office Worker Zombie v2",
   "titleZh": "上班族丧尸",
-  "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Eleven actions; hurt_shock is 8 frames. The 64×64 zombie-office-* group was deprecated after v0.28 Accept and removed from the catalog.",
+  "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
   "source": {
     "pixellabCharacterId": "f8f0ce35-4b64-4807-a4ec-e7177aac1284",
     "sourceFolder": "new-zombies/office-worker",
-    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas is 84×84. Keys are zombie-office-worker-v2-*. The earlier 64×64 zombie-office-* group was deprecated after v0.28 Accept."
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas is 84×84. Keys are zombie-office-worker-v2-*. The earlier 64×64 zombie-office-* group was deprecated after v0.28 Accept. Rule-anim v1.0 (2026-10-20) east strips, cell 84×84 RGBA. Legacy walk/hurt/die1/die2 share the new Walk-normal, Hurt-normal, Die-normal01, and Die-normal02 sheets. The 8-frame attack strip stays so barricade contact is unchanged; hit01-normal is the new attack key.",
+    "ruleExport": "2026-10-20",
+    "ruleVersion": "v1.0"
   },
   "defaults": {
     "type": "spritesheet",
@@ -22,10 +24,12 @@
   },
   "preview": {
     "animate": [
-      "zombie-office-worker-v2-walk",
-      "zombie-office-worker-v2-attack",
-      "zombie-office-worker-v2-hurt_burn",
-      "zombie-office-worker-v2-die1"
+      "zombie-office-worker-v2-walk-normal",
+      "zombie-office-worker-v2-hit01-normal",
+      "zombie-office-worker-v2-hit02-normal",
+      "zombie-office-worker-v2-hurt-normal",
+      "zombie-office-worker-v2-die-normal01",
+      "zombie-office-worker-v2-die-critical-hit"
     ],
     "thumb": "assets/library/previews/zombies/office-worker-v2/preview.gif",
     "sheets": [],
@@ -39,7 +43,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 8,
-      "loop": true
+      "loop": true,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-office-worker-v2-run",
@@ -57,7 +69,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal01` (die-normal01, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-die-normal01",
+        "pixellabAnim": "die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-office-worker-v2-die2",
@@ -66,7 +86,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal02` (die-normal 2, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-die-normal02",
+        "pixellabAnim": "die-normal 2",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-office-worker-v2-attack",
@@ -91,9 +119,17 @@
       "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hurt.png",
       "frameWidth": 84,
       "frameHeight": 84,
-      "frames": 4,
+      "frames": 5,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-hurt-normal` (Hurt-normal, 5 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-office-worker-v2-idle_itch",
@@ -131,6 +167,171 @@
       "frameRate": 12,
       "loop": true,
       "note": "8 frames."
+    },
+    {
+      "key": "zombie-office-worker-v2-walk-normal",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-walk-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-office-worker-v2-walk` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-walk"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-walk-tiremove",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-walk-tiremove.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 9,
+      "frameRate": 8,
+      "loop": true,
+      "note": "v1.0 rule anim. 9×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-hurt-normal",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hurt-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 5,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 5×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-office-worker-v2-hurt` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-hurt"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-hit01-normal",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit01-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 17,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-office-worker-v2-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-office-worker-v2-attack"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-hit02-normal",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit02-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 17,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "custom-Pull the weapon back (alias hit02)",
+        "status": "ALIAS",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-die-normal01",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-normal01.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal01. PixelLab name is `die-normal01` (lowercase). Legacy `zombie-office-worker-v2-die1` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-die1"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-die-normal02",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-normal02.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal 2. PixelLab name is `die-normal 2`; the strip file and key use die-normal02. Legacy `zombie-office-worker-v2-die2` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "die-normal 2",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-die2"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-die-deathwalk",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-deathwalk.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-die-critical-hit",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-critical-hit.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-die-disappear",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-disappear.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      }
     }
   ]
 }

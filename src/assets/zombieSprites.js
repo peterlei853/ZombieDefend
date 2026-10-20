@@ -120,11 +120,20 @@ function textureFrameCount(tex) {
  * @type {Record<string, { id: string, facing: 'east'|'west', actions: Record<string, string|null>, blastFx?: string }>}
  */
 export const ZOMBIE_LIBRARY_SKINS = {
-  /** 84px profession sheets. Missing walks fall back here, never the removed 64px office group. */
-  'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2'),
-  delivery: skin('delivery', 'zombie-delivery'),
-  chef: skin('chef', 'zombie-chef'),
-  nurse: skin('nurse', 'zombie-nurse', { attach: 'zombie-nurse-attach' }),
+  /** 84px profession sheets. Missing walks fall back here, never the removed 64px office group.
+   * Rule-anim v1.0: legacy walk/hurt/die1/die2 share the new sheets.
+   * The 8-frame attack strip stays so barricade contact is unchanged.
+   * `ruleAnims` lists the PixelLab keys. Death still picks die1 or die2. */
+  'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2', {
+    ruleAnims: true,
+    hit02Alias: true,
+  }),
+  delivery: skin('delivery', 'zombie-delivery', { ruleAnims: true }),
+  chef: skin('chef', 'zombie-chef', { ruleAnims: true }),
+  nurse: skin('nurse', 'zombie-nurse', {
+    attach: 'zombie-nurse-attach',
+    ruleAnims: true,
+  }),
   clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
   cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
   slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
@@ -201,10 +210,39 @@ const SKIN_POOLS = {
 /** @type {Record<string, number>} */
 const skinCursor = { walker: 0, runner: 0, tank: 0 };
 
+/** The four profession groups that received the 2026-10-20 rule-anim strips. */
+export const PROFESSION_RULE_GROUPS = ['office-worker-v2', 'delivery', 'chef', 'nurse'];
+
+/**
+ * PixelLab rule-anim keys for one profession prefix (`zombie-chef`).
+ * Legacy Stage actions keep their old names and share these sheets:
+ * walk ← walk-normal, hurt ← hurt-normal,
+ * die1 ← die-normal01, die2 ← die-normal02.
+ * The live attack key stays the previous 8-frame bite. hit01-normal is loaded beside it.
+ * walk-tiremove, hit02-normal, die-deathwalk, die-critical-hit, and
+ * die-disappear are loaded with the library. They are not in `deaths`.
+ * Office hit02-normal is an ALIAS of the custom pull-weapon strip.
+ * @param {string} prefix
+ */
+export function professionRuleAnims(prefix) {
+  return {
+    walkNormal: `${prefix}-walk-normal`,
+    walkTire: `${prefix}-walk-tiremove`,
+    hurtNormal: `${prefix}-hurt-normal`,
+    hit01: `${prefix}-hit01-normal`,
+    hit02: `${prefix}-hit02-normal`,
+    dieNormal01: `${prefix}-die-normal01`,
+    dieNormal02: `${prefix}-die-normal02`,
+    dieDeathwalk: `${prefix}-die-deathwalk`,
+    dieCriticalHit: `${prefix}-die-critical-hit`,
+    dieDisappear: `${prefix}-die-disappear`,
+  };
+}
+
 /**
  * @param {string} id
  * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
- * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string }} [extra]
+ * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string, ruleAnims?: boolean, hit02Alias?: boolean }} [extra]
  */
 function skin(id, prefix, extra = {}) {
   return {
@@ -214,14 +252,19 @@ function skin(id, prefix, extra = {}) {
     fallbackId: extra.fallbackId || null,
     /** Big body stays planted on a hurt shove. Brute only. */
     noHurtKnockback: extra.noHurtKnockback === true,
+    /** Office only: hit02-normal is the custom pull-weapon strip. */
+    hit02Alias: extra.hit02Alias === true,
+    ruleAnims: extra.ruleAnims ? professionRuleAnims(prefix) : null,
     actions: {
       walk: `${prefix}-walk`,
       run: `${prefix}-run`,
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
-      // PIXELLAB_HOOK: die1 and die2. Death picks one that is actually loaded.
+      // PIXELLAB_HOOK: die1 and die2 share Die-normal01/02 on the four professions.
+      // Crit / L3 / disappear stay on ruleAnims until Gameplay wires them.
       deaths: extra.deaths || [`${prefix}-die1`, `${prefix}-die2`],
-      // PIXELLAB_HOOK: `{prefix}-hurt` (office / delivery / chef are 4 frames @ 10).
+      // PIXELLAB_HOOK: `{prefix}-hurt`. Office Hurt-normal is 5 frames @ 10.
+      // Delivery, chef, and nurse Hurt-normal stay 4 frames @ 10.
       hurt: extra.hurt || `${prefix}-hurt`,
       blast: extra.blast || null,
       attach: extra.attach || null,
@@ -231,7 +274,7 @@ function skin(id, prefix, extra = {}) {
 
 /** Walk speed while a hurt strip is playing. Half of the march speed. */
 export const ZOMBIE_HURT_SPEED_MUL = 0.5;
-/** Hurt window matches a 4-frame strip at 10 fps. Each hit refreshes it. */
+/** Hurt window stays 400ms (a 4-frame beat at 10 fps). Office Hurt-normal is 5 frames and uses this same window. */
 export const ZOMBIE_HURT_MS = 400;
 
 /**

@@ -293,10 +293,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * walk speed for that window. Death picks die1 or die2. Stage 1 rolls
  * types 1 / 2 / 3. Gold, saves, and barricade max HP stay put.
  * No GitHub Pages publish.
+ * v0.36.25: office, delivery, chef, and nurse load rule-anim v1.0
+ * (84×84). Legacy walk / hurt / die1 / die2 share Walk-normal,
+ * Hurt-normal, and Die-normal01/02. hit01, hit02, walk-tiremove,
+ * die-deathwalk, die-critical-hit, and die-disappear are registered
+ * for a later Gameplay wire. The 8-frame attack strip stays.
+ * Office hit02-normal is the ALIAS pull-weapon strip. Death still
+ * picks die1 or die2. Gold, saves, barricade HP, and physics stay put.
+ * GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.24';
+export const APP_VERSION = '0.36.25';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

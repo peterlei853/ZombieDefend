@@ -11,6 +11,8 @@ import { DEMO_ENEMY_IDS } from './GameConfig.js';
  * @type {Record<string, { anim: string, cue: string }[]>}
  */
 export const ENEMY_SKILL_STRIPS = {
+  // Rule anims load with the library (`skin.ruleAnims`). They are not skills.
+  // Key 3 stays empty here so office / delivery / chef keep "no skill".
   'office-worker-v2': [],
   delivery: [],
   chef: [],

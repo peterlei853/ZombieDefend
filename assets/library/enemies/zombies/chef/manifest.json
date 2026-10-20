@@ -4,11 +4,13 @@
   "group": "chef",
   "title": "Chef Zombie",
   "titleZh": "大廚丧尸",
-  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.",
+  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
   "source": {
     "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
     "sourceFolder": "new-zombies/chef",
-    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas 84×84."
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas 84×84. Rule-anim v1.0 (2026-10-20) east strips, cell 84×84 RGBA. Legacy walk/hurt/die1/die2 share the new Walk-normal, Hurt-normal, Die-normal01, and Die-normal02 sheets. The 8-frame attack strip stays so barricade contact is unchanged; hit01-normal is the new attack key.",
+    "ruleExport": "2026-10-20",
+    "ruleVersion": "v1.0"
   },
   "defaults": {
     "type": "spritesheet",
@@ -22,10 +24,12 @@
   },
   "preview": {
     "animate": [
-      "zombie-chef-walk",
-      "zombie-chef-attack",
-      "zombie-chef-hurt_burn",
-      "zombie-chef-die1"
+      "zombie-chef-walk-normal",
+      "zombie-chef-hit01-normal",
+      "zombie-chef-hit02-normal",
+      "zombie-chef-hurt-normal",
+      "zombie-chef-die-normal01",
+      "zombie-chef-die-critical-hit"
     ],
     "thumb": "assets/library/previews/zombies/chef/preview.gif",
     "sheets": [],
@@ -39,7 +43,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 8,
-      "loop": true
+      "loop": true,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-chef-run",
@@ -57,7 +69,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-die-normal01",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-chef-die2",
@@ -66,7 +86,15 @@
       "frameHeight": 84,
       "frames": 8,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-die-normal02",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-chef-attack",
@@ -93,7 +121,15 @@
       "frameHeight": 84,
       "frames": 4,
       "frameRate": 10,
-      "loop": false
+      "loop": false,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key.",
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      }
     },
     {
       "key": "zombie-chef-idle_itch",
@@ -130,6 +166,171 @@
       "frames": 8,
       "frameRate": 12,
       "loop": true
+    },
+    {
+      "key": "zombie-chef-walk-normal",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-walk-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-chef-walk` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-walk"
+      }
+    },
+    {
+      "key": "zombie-chef-walk-tiremove",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-walk-tiremove.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-chef-hurt-normal",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-chef-hurt` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-hurt"
+      }
+    },
+    {
+      "key": "zombie-chef-hit01-normal",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hit01-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-chef-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-chef-attack"
+      }
+    },
+    {
+      "key": "zombie-chef-hit02-normal",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hit02-normal.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit02-normal",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-chef-die-normal01",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-normal01.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-chef-die1` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-die1"
+      }
+    },
+    {
+      "key": "zombie-chef-die-normal02",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-normal02.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-die2"
+      }
+    },
+    {
+      "key": "zombie-chef-die-deathwalk",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-deathwalk.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-chef-die-critical-hit",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-critical-hit.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      }
+    },
+    {
+      "key": "zombie-chef-die-disappear",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-disappear.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      }
     }
   ]
 }

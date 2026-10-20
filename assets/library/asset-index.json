@@ -7,7 +7,7 @@
   "conventions": {
     "strips": "horizontal; frame i at x = i*frameWidth, y = 0 (unless \"grid\" is given)",
     "origin": "Phaser setOrigin(x, y) fractions of one frame",
-    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
+    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse rule-anim v1.0 cells 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
     "bosses": "128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative",
     "pets": "Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX",
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 619,
+    "total": 659,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -34,7 +34,7 @@
       },
       "zombies": {
         "groups": 15,
-        "assets": 180
+        "assets": 220
       },
       "bosses": {
         "groups": 4,
@@ -67,7 +67,7 @@
       "fx": 93,
       "icon": 75,
       "image": 38,
-      "spritesheet": 379
+      "spritesheet": 419
     }
   },
   "groups": [
@@ -1243,21 +1243,21 @@
       "group": "chef",
       "title": "Chef Zombie",
       "titleZh": "大廚丧尸",
-      "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.",
+      "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
       "manifest": "assets/library/enemies/zombies/chef/manifest.json",
       "dir": "assets/library/enemies/zombies/chef",
       "thumb": "assets/library/previews/zombies/chef/preview.gif",
       "sheets": [],
       "extras": [],
       "keyPrefix": "zombie-chef-",
-      "mainKey": "zombie-chef-walk",
-      "count": 11,
+      "mainKey": "zombie-chef-walk-normal",
+      "count": 21,
       "frameSizes": [
         "84x84"
       ],
       "framesRange": [
         4,
-        8
+        33
       ],
       "fpsRange": [
         6,
@@ -1277,7 +1277,17 @@
         "zombie-chef-idle_itch",
         "zombie-chef-hurt_freeze",
         "zombie-chef-hurt_burn",
-        "zombie-chef-hurt_shock"
+        "zombie-chef-hurt_shock",
+        "zombie-chef-walk-normal",
+        "zombie-chef-walk-tiremove",
+        "zombie-chef-hurt-normal",
+        "zombie-chef-hit01-normal",
+        "zombie-chef-hit02-normal",
+        "zombie-chef-die-normal01",
+        "zombie-chef-die-normal02",
+        "zombie-chef-die-deathwalk",
+        "zombie-chef-die-critical-hit",
+        "zombie-chef-die-disappear"
       ]
     },
     {
@@ -1387,21 +1397,21 @@
       "group": "delivery",
       "title": "Delivery Rider Zombie",
       "titleZh": "外送員丧尸",
-      "description": "Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.",
+      "description": "Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
       "manifest": "assets/library/enemies/zombies/delivery/manifest.json",
       "dir": "assets/library/enemies/zombies/delivery",
       "thumb": "assets/library/previews/zombies/delivery/preview.gif",
       "sheets": [],
       "extras": [],
       "keyPrefix": "zombie-delivery-",
-      "mainKey": "zombie-delivery-walk",
-      "count": 11,
+      "mainKey": "zombie-delivery-walk-normal",
+      "count": 21,
       "frameSizes": [
         "84x84"
       ],
       "framesRange": [
         4,
-        8
+        33
       ],
       "fpsRange": [
         6,
@@ -1421,7 +1431,17 @@
         "zombie-delivery-idle_itch",
         "zombie-delivery-hurt_freeze",
         "zombie-delivery-hurt_burn",
-        "zombie-delivery-hurt_shock"
+        "zombie-delivery-hurt_shock",
+        "zombie-delivery-walk-normal",
+        "zombie-delivery-walk-tiremove",
+        "zombie-delivery-hurt-normal",
+        "zombie-delivery-hit01-normal",
+        "zombie-delivery-hit02-normal",
+        "zombie-delivery-die-normal01",
+        "zombie-delivery-die-normal02",
+        "zombie-delivery-die-deathwalk",
+        "zombie-delivery-die-critical-hit",
+        "zombie-delivery-die-disappear"
       ]
     },
     {
@@ -1480,21 +1500,21 @@
       "group": "nurse",
       "title": "Nurse Zombie",
       "titleZh": "護士丧尸",
-      "description": "Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.",
+      "description": "Nurse zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). attach stays an 8-frame once latch. hurt_shock stays 4 frames. Cell stays 84×84.",
       "manifest": "assets/library/enemies/zombies/nurse/manifest.json",
       "dir": "assets/library/enemies/zombies/nurse",
       "thumb": "assets/library/previews/zombies/nurse/preview.gif",
       "sheets": [],
       "extras": [],
       "keyPrefix": "zombie-nurse-",
-      "mainKey": "zombie-nurse-walk",
-      "count": 12,
+      "mainKey": "zombie-nurse-walk-normal",
+      "count": 22,
       "frameSizes": [
         "84x84"
       ],
       "framesRange": [
         4,
-        8
+        33
       ],
       "fpsRange": [
         6,
@@ -1515,6 +1535,16 @@
         "zombie-nurse-hurt_freeze",
         "zombie-nurse-hurt_burn",
         "zombie-nurse-hurt_shock",
+        "zombie-nurse-walk-normal",
+        "zombie-nurse-walk-tiremove",
+        "zombie-nurse-hurt-normal",
+        "zombie-nurse-hit01-normal",
+        "zombie-nurse-hit02-normal",
+        "zombie-nurse-die-normal01",
+        "zombie-nurse-die-normal02",
+        "zombie-nurse-die-deathwalk",
+        "zombie-nurse-die-critical-hit",
+        "zombie-nurse-die-disappear",
         "zombie-nurse-attach"
       ]
     },
@@ -1524,21 +1554,21 @@
       "group": "office-worker-v2",
       "title": "Office Worker Zombie v2",
       "titleZh": "上班族丧尸",
-      "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Eleven actions; hurt_shock is 8 frames. The 64×64 zombie-office-* group was deprecated after v0.28 Accept and removed from the catalog.",
+      "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
       "manifest": "assets/library/enemies/zombies/office-worker-v2/manifest.json",
       "dir": "assets/library/enemies/zombies/office-worker-v2",
       "thumb": "assets/library/previews/zombies/office-worker-v2/preview.gif",
       "sheets": [],
       "extras": [],
       "keyPrefix": "zombie-office-worker-v2-",
-      "mainKey": "zombie-office-worker-v2-walk",
-      "count": 11,
+      "mainKey": "zombie-office-worker-v2-walk-normal",
+      "count": 21,
       "frameSizes": [
         "84x84"
       ],
       "framesRange": [
-        4,
-        8
+        5,
+        33
       ],
       "fpsRange": [
         6,
@@ -1558,7 +1588,17 @@
         "zombie-office-worker-v2-idle_itch",
         "zombie-office-worker-v2-hurt_freeze",
         "zombie-office-worker-v2-hurt_burn",
-        "zombie-office-worker-v2-hurt_shock"
+        "zombie-office-worker-v2-hurt_shock",
+        "zombie-office-worker-v2-walk-normal",
+        "zombie-office-worker-v2-walk-tiremove",
+        "zombie-office-worker-v2-hurt-normal",
+        "zombie-office-worker-v2-hit01-normal",
+        "zombie-office-worker-v2-hit02-normal",
+        "zombie-office-worker-v2-die-normal01",
+        "zombie-office-worker-v2-die-normal02",
+        "zombie-office-worker-v2-die-deathwalk",
+        "zombie-office-worker-v2-die-critical-hit",
+        "zombie-office-worker-v2-die-disappear"
       ]
     },
     {
@@ -15137,7 +15177,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: walk — 8 frames 84x84 @ 8 fps, loop.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "chef",
@@ -15145,7 +15185,13 @@
         "walk",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "walk"
     },
     {
@@ -15207,7 +15253,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: die1 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "chef",
@@ -15215,7 +15261,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-die-normal01",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die1"
     },
     {
@@ -15242,7 +15294,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: die2 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "chef",
@@ -15250,7 +15302,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-die-normal02",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die2"
     },
     {
@@ -15347,7 +15405,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: hurt — 4 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-chef-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "chef",
@@ -15355,7 +15413,13 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-chef-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "hurt"
     },
     {
@@ -15503,6 +15567,410 @@
       ],
       "extra": null,
       "action": "hurt_shock"
+    },
+    {
+      "key": "zombie-chef-walk-normal",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-walk-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: walk-normal — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-chef-walk` points at this sheet.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-walk"
+      },
+      "action": "walk-normal"
+    },
+    {
+      "key": "zombie-chef-walk-tiremove",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-walk-tiremove.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: walk-tiremove — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "walk-tiremove"
+    },
+    {
+      "key": "zombie-chef-hurt-normal",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hurt-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: hurt-normal — 4 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-chef-hurt` points at this sheet.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-hurt"
+      },
+      "action": "hurt-normal"
+    },
+    {
+      "key": "zombie-chef-hit01-normal",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hit01-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: hit01-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-chef-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-chef-attack"
+      },
+      "action": "hit01-normal"
+    },
+    {
+      "key": "zombie-chef-hit02-normal",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-hit02-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: hit02-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit02-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "hit02-normal"
+    },
+    {
+      "key": "zombie-chef-die-normal01",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-normal01.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: die-normal01 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-chef-die1` points at this sheet.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-die1"
+      },
+      "action": "die-normal01"
+    },
+    {
+      "key": "zombie-chef-die-normal02",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-normal02.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: die-normal02 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-chef-die2"
+      },
+      "action": "die-normal02"
+    },
+    {
+      "key": "zombie-chef-die-deathwalk",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-deathwalk.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: die-deathwalk — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "die",
+        "death",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-deathwalk"
+    },
+    {
+      "key": "zombie-chef-die-critical-hit",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-critical-hit.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: die-critical-hit — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-critical-hit"
+    },
+    {
+      "key": "zombie-chef-die-disappear",
+      "category": "zombies",
+      "group": "chef",
+      "path": "assets/library/enemies/zombies/chef/strips/zombie-chef-die-disappear.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/chef/preview.gif",
+      "description": "Chef Zombie: die-disappear — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "tags": [
+        "zombies",
+        "chef",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-disappear"
     },
     {
       "key": "zombie-clown-walk",
@@ -16490,7 +16958,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/delivery/preview.gif",
       "description": "Delivery Rider Zombie: walk — 8 frames 84x84 @ 8 fps, loop.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-delivery-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "delivery",
@@ -16498,7 +16966,13 @@
         "walk",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-delivery-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "walk"
     },
     {
@@ -16560,7 +17034,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/delivery/preview.gif",
       "description": "Delivery Rider Zombie: die1 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-delivery-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "delivery",
@@ -16568,7 +17042,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-delivery-die-normal01",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die1"
     },
     {
@@ -16595,7 +17075,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/delivery/preview.gif",
       "description": "Delivery Rider Zombie: die2 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-delivery-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "delivery",
@@ -16603,7 +17083,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-delivery-die-normal02",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die2"
     },
     {
@@ -16700,7 +17186,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/delivery/preview.gif",
       "description": "Delivery Rider Zombie: hurt — 4 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-delivery-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "delivery",
@@ -16708,7 +17194,13 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-delivery-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "hurt"
     },
     {
@@ -16856,6 +17348,410 @@
       ],
       "extra": null,
       "action": "hurt_shock"
+    },
+    {
+      "key": "zombie-delivery-walk-normal",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-walk-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: walk-normal — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-delivery-walk` points at this sheet.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-delivery-walk"
+      },
+      "action": "walk-normal"
+    },
+    {
+      "key": "zombie-delivery-walk-tiremove",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-walk-tiremove.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: walk-tiremove — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "walk-tiremove"
+    },
+    {
+      "key": "zombie-delivery-hurt-normal",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hurt-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: hurt-normal — 4 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-delivery-hurt` points at this sheet.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-delivery-hurt"
+      },
+      "action": "hurt-normal"
+    },
+    {
+      "key": "zombie-delivery-hit01-normal",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hit01-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: hit01-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-delivery-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-delivery-attack"
+      },
+      "action": "hit01-normal"
+    },
+    {
+      "key": "zombie-delivery-hit02-normal",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-hit02-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: hit02-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit02-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "hit02-normal"
+    },
+    {
+      "key": "zombie-delivery-die-normal01",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die-normal01.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: die-normal01 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-delivery-die1` points at this sheet.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-delivery-die1"
+      },
+      "action": "die-normal01"
+    },
+    {
+      "key": "zombie-delivery-die-normal02",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die-normal02.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: die-normal02 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-delivery-die2` points at this sheet.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-delivery-die2"
+      },
+      "action": "die-normal02"
+    },
+    {
+      "key": "zombie-delivery-die-deathwalk",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die-deathwalk.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: die-deathwalk — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "die",
+        "death",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-deathwalk"
+    },
+    {
+      "key": "zombie-delivery-die-critical-hit",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die-critical-hit.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: die-critical-hit — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-critical-hit"
+    },
+    {
+      "key": "zombie-delivery-die-disappear",
+      "category": "zombies",
+      "group": "delivery",
+      "path": "assets/library/enemies/zombies/delivery/strips/zombie-delivery-die-disappear.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/delivery/preview.gif",
+      "description": "Delivery Rider Zombie: die-disappear — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "tags": [
+        "zombies",
+        "delivery",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-disappear"
     },
     {
       "key": "zombie-exploder-walk",
@@ -17344,7 +18240,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/nurse/preview.gif",
       "description": "Nurse Zombie: walk — 8 frames 84x84 @ 8 fps, loop.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-nurse-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "nurse",
@@ -17352,7 +18248,13 @@
         "walk",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-nurse-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "walk"
     },
     {
@@ -17414,7 +18316,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/nurse/preview.gif",
       "description": "Nurse Zombie: die1 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-nurse-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "nurse",
@@ -17422,7 +18324,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-nurse-die-normal01",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die1"
     },
     {
@@ -17449,7 +18357,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/nurse/preview.gif",
       "description": "Nurse Zombie: die2 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-nurse-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "nurse",
@@ -17457,7 +18365,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-nurse-die-normal02",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die2"
     },
     {
@@ -17554,7 +18468,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/nurse/preview.gif",
       "description": "Nurse Zombie: hurt — 4 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-nurse-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "nurse",
@@ -17562,7 +18476,13 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-nurse-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "hurt"
     },
     {
@@ -17712,6 +18632,410 @@
       "action": "hurt_shock"
     },
     {
+      "key": "zombie-nurse-walk-normal",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-walk-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: walk-normal — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-nurse-walk` points at this sheet.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-nurse-walk"
+      },
+      "action": "walk-normal"
+    },
+    {
+      "key": "zombie-nurse-walk-tiremove",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-walk-tiremove.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: walk-tiremove — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "walk-tiremove"
+    },
+    {
+      "key": "zombie-nurse-hurt-normal",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hurt-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: hurt-normal — 4 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-nurse-hurt` points at this sheet.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-nurse-hurt"
+      },
+      "action": "hurt-normal"
+    },
+    {
+      "key": "zombie-nurse-hit01-normal",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hit01-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: hit01-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-nurse-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-nurse-attack"
+      },
+      "action": "hit01-normal"
+    },
+    {
+      "key": "zombie-nurse-hit02-normal",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-hit02-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: hit02-normal — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit02-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "hit02-normal"
+    },
+    {
+      "key": "zombie-nurse-die-normal01",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die-normal01.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: die-normal01 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-nurse-die1` points at this sheet.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-nurse-die1"
+      },
+      "action": "die-normal01"
+    },
+    {
+      "key": "zombie-nurse-die-normal02",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die-normal02.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: die-normal02 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-nurse-die2` points at this sheet.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-normal02",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-nurse-die2"
+      },
+      "action": "die-normal02"
+    },
+    {
+      "key": "zombie-nurse-die-deathwalk",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die-deathwalk.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: die-deathwalk — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "die",
+        "death",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-deathwalk"
+    },
+    {
+      "key": "zombie-nurse-die-critical-hit",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die-critical-hit.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: die-critical-hit — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-critical-hit"
+    },
+    {
+      "key": "zombie-nurse-die-disappear",
+      "category": "zombies",
+      "group": "nurse",
+      "path": "assets/library/enemies/zombies/nurse/strips/zombie-nurse-die-disappear.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/nurse/preview.gif",
+      "description": "Nurse Zombie: die-disappear — 32 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "tags": [
+        "zombies",
+        "nurse",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-disappear"
+    },
+    {
       "key": "zombie-nurse-attach",
       "category": "zombies",
       "group": "nurse",
@@ -17769,7 +19093,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
       "description": "Office Worker Zombie v2: walk — 8 frames 84x84 @ 8 fps, loop.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "office-worker-v2",
@@ -17777,7 +19101,13 @@
         "walk",
         "loop"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-walk-normal",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "walk"
     },
     {
@@ -17839,7 +19169,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
       "description": "Office Worker Zombie v2: die1 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal01` (die-normal01, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "office-worker-v2",
@@ -17847,7 +19177,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-die-normal01",
+        "pixellabAnim": "die-normal01",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die1"
     },
     {
@@ -17874,7 +19210,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
       "description": "Office Worker Zombie v2: die2 — 8 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal02` (die-normal 2, 8 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "office-worker-v2",
@@ -17882,7 +19218,13 @@
         "die",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-die-normal02",
+        "pixellabAnim": "die-normal 2",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "die2"
     },
     {
@@ -17963,7 +19305,7 @@
       "type": "spritesheet",
       "frameWidth": 84,
       "frameHeight": 84,
-      "frames": 4,
+      "frames": 5,
       "frameRate": 10,
       "loop": false,
       "loopFrom": null,
@@ -17978,8 +19320,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
-      "description": "Office Worker Zombie v2: hurt — 4 frames 84x84 @ 10 fps, once.",
-      "note": null,
+      "description": "Office Worker Zombie v2: hurt — 5 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0. Same 84×84 sheet as `zombie-office-worker-v2-hurt-normal` (Hurt-normal, 5 frames). Stage still plays this legacy key.",
       "tags": [
         "zombies",
         "office-worker-v2",
@@ -17987,7 +19329,13 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v1.0",
+        "sameSheetAs": "zombie-office-worker-v2-hurt-normal",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84"
+      },
       "action": "hurt"
     },
     {
@@ -18135,6 +19483,410 @@
       ],
       "extra": null,
       "action": "hurt_shock"
+    },
+    {
+      "key": "zombie-office-worker-v2-walk-normal",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-walk-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: walk-normal — 8 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-office-worker-v2-walk` points at this sheet.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-walk"
+      },
+      "action": "walk-normal"
+    },
+    {
+      "key": "zombie-office-worker-v2-walk-tiremove",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-walk-tiremove.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 9,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: walk-tiremove — 9 frames 84x84 @ 8 fps, loop.",
+      "note": "v1.0 rule anim. 9×84 east, origin (0.5, 1). PixelLab Walk-TireMove.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Walk-TireMove",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "walk-tiremove"
+    },
+    {
+      "key": "zombie-office-worker-v2-hurt-normal",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hurt-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 5,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: hurt-normal — 5 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 5×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-office-worker-v2-hurt` points at this sheet.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Hurt-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-hurt"
+      },
+      "action": "hurt-normal"
+    },
+    {
+      "key": "zombie-office-worker-v2-hit01-normal",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit01-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 17,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: hit01-normal — 17 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-office-worker-v2-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "hit01-normal",
+        "status": "OK",
+        "cell": "84x84",
+        "liveAttackKey": "zombie-office-worker-v2-attack"
+      },
+      "action": "hit01-normal"
+    },
+    {
+      "key": "zombie-office-worker-v2-hit02-normal",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit02-normal.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 17,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: hit02-normal — 17 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "custom-Pull the weapon back (alias hit02)",
+        "status": "ALIAS",
+        "cell": "84x84"
+      },
+      "action": "hit02-normal"
+    },
+    {
+      "key": "zombie-office-worker-v2-die-normal01",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-normal01.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: die-normal01 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal01. PixelLab name is `die-normal01` (lowercase). Legacy `zombie-office-worker-v2-die1` points at this sheet.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "die-normal01",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-die1"
+      },
+      "action": "die-normal01"
+    },
+    {
+      "key": "zombie-office-worker-v2-die-normal02",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-normal02.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: die-normal02 — 8 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal 2. PixelLab name is `die-normal 2`; the strip file and key use die-normal02. Legacy `zombie-office-worker-v2-die2` points at this sheet.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "die-normal 2",
+        "status": "OK",
+        "cell": "84x84",
+        "legacyKey": "zombie-office-worker-v2-die2"
+      },
+      "action": "die-normal02"
+    },
+    {
+      "key": "zombie-office-worker-v2-die-deathwalk",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-deathwalk.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: die-deathwalk — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "die",
+        "death",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-deathwalk",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-deathwalk"
+    },
+    {
+      "key": "zombie-office-worker-v2-die-critical-hit",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-critical-hit.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: die-critical-hit — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-critical hit.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-critical hit",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-critical-hit"
+    },
+    {
+      "key": "zombie-office-worker-v2-die-disappear",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-die-disappear.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 33,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: die-disappear — 33 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-disappear.",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabAnim": "Die-disappear",
+        "status": "OK",
+        "cell": "84x84"
+      },
+      "action": "die-disappear"
     },
     {
       "key": "zombie-riot-walk",
