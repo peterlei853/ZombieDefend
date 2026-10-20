@@ -199,9 +199,10 @@ export const WATER_CHARGE_L2_MS = 1800;
 /** Hold this long for a level-3 charge. */
 export const WATER_CHARGE_L3_MS = 4000;
 /**
- * SPACE must stay up this long before the shot leaves. A shorter gap
- * is key bounce: the same charge keeps counting instead of firing L1.
- * Gaps under 120ms do not fire.
+ * Bounce window after the charge has already reached L2. A gap shorter
+ * than this keeps that L2/L3 timer instead of releasing early.
+ * A release before L2 does not use this window: that key-up fires L1
+ * immediately, including a tap that never lasted a full poll.
  */
 export const WATER_CHARGE_RELEASE_MS = 120;
 /** L2 explosion stays on the contact pixel this long, then leaves. */

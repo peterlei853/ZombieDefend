@@ -71,6 +71,10 @@ import {
   DEMO_ENEMY_IDS,
   demoEnemyId,
   enemyFeelEnabled,
+  forceDeathMode,
+  forceHurtEnabled,
+  forceTireEnabled,
+  showZombieHpEnabled,
 } from '../src/data/GameConfig.js';
 import {
   ENEMY_ATTACK_HIT_FRAME,
@@ -162,8 +166,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.25' && APP_VERSION === '0.36.25', 'package and APP_VERSION are 0.36.25');
-assert(html.includes('v0.36.25'), 'document title is v0.36.25');
+assert(pkg.version === '0.36.26' && APP_VERSION === '0.36.26', 'package and APP_VERSION are 0.36.26');
+assert(html.includes('v0.36.26'), 'document title is v0.36.26');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -1114,7 +1118,23 @@ assert(attackContactFrame('delivery', 16, 'zombie-delivery-hit02-normal') === 10
 assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit01-normal') === 6, 'nurse hit01 impact is frame 6');
 assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit02-normal') === 12, 'nurse hit02 impact is frame 12');
 assert(!ZOMBIE_LIBRARY_SKINS.brute.ruleAnims, 'brute is not a profession rule skin');
-assert(APP_VERSION === '0.36.25', 'gameplay wire stays on v0.36.25');
+assert(APP_VERSION === '0.36.26', 'gameplay wire stays on v0.36.26');
+assert(forceTireEnabled('?feel=1&enemy=office-worker-v2&forceTire=1') === true, 'forceTire=1 is the tire sample');
+assert(forceHurtEnabled('?feel=1&enemy=office-worker-v2&forceHurt=1') === true, 'forceHurt=1 is the hurt sample');
+assert(forceTireEnabled('?feel=1&enemy=office-worker-v2') === false, 'tire sample stays off without the flag');
+assert(forceDeathMode('?forceDeath=deathwalk') === 'deathwalk', 'forceDeath=deathwalk');
+assert(forceDeathMode('?forceDeath=normal01') === 'normal01', 'forceDeath=normal01');
+assert(forceDeathMode('?forceDeath=normal02') === 'normal02', 'forceDeath=normal02');
+assert(forceDeathMode('?forceCrit=1') === 'crit', 'forceCrit=1 is the pet-crit sample');
+assert(forceDeathMode('?forceL3=1') === 'disappear', 'forceL3=1 is the disappear sample');
+assert(forceDeathMode('?forceDeath=crit') === 'crit', 'forceDeath=crit stays on the crit gate');
+assert(forceDeathMode('?forceDeath=disappear') === 'disappear', 'forceDeath=disappear stays on the L3 gate');
+assert(forceDeathMode('') === null, 'a normal stage does not force a death strip');
+assert(showZombieHpEnabled('?showHp=1') === true, 'showHp=1 labels stage zombies');
+assert(showZombieHpEnabled('?feel=1&enemy=chef') === true, 'the feel booth shows HP');
+assert(showZombieHpEnabled('?feel=1') === false, 'feel without an enemy does not turn HP labels on');
+assert(stageSrc.includes("_feelTire") && stageSrc.includes("feelKill('crit'") && stageSrc.includes("feelKill('disappear'"), 'feel booth can sample tire, pet crit, and L3');
+assert(stageSrc.includes("action === 'deathwalk'") && stageSrc.includes("action === 'normal01'") && stageSrc.includes("action === 'normal02'"), 'feel booth can sample each settle death');
 const petSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.meta.url), 'utf8');
 assert(weaponSrc.includes('charge: Number(bullet?.charge) || 0'), 'weapon hits forward the existing charge tag');
 assert(weaponSrc.includes('this._payAoeTick(zombie, point, true, bullet.charge)'), 'L3 overlap tick keeps bullet.charge');

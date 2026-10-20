@@ -344,12 +344,9 @@ export class DefenderGroup {
           (!!waterSlot && ownedIds.includes('water')) ||
           (!!slingSlot && ownedIds.includes('sling')));
       if (this._waterLock) {
-        const charging = triggerHeld;
-        const finishing = this._attackPose === 'hold' || this._attackPose === 'end';
-        const posed = charging || finishing ? this._syncWaterFirePose('fire', charging) : false;
-        if (!charging && !finishing) this._attackPose = null;
-        if (moving) this._bareRest.rested = false;
-        if (!posed) this._updateUnarmedPose(moving ? 'move' : 'fire', dy, dx, { command: false });
+        // v0.36.26: charge and shot release do not take the body.
+        // Up/down keeps the walk. Standing stays on the deploy rest.
+        this._syncWaterLockPose(moving, dy, dx);
       } else {
         const attacking = this._deploy.phase === 'fire' && triggerHeld;
         if (!this._syncWaterFirePose(this._deploy.phase, attacking)) {
@@ -529,8 +526,24 @@ export class DefenderGroup {
    * @param {{ command?: boolean }} [pose]
    */
   /**
+   * Water-lock body. Walk while W/S (or A/D facing) is held, including
+   * during a charge and on the frame the shot leaves. Standing holds
+   * the last `player-girl-deploy` frame. This path does not play
+   * `player-girl-water-fire`. The float gun still charges and fires.
+   * @param {boolean} moving
+   * @param {number} dy
+   * @param {number} dx
+   */
+  _syncWaterLockPose(moving, dy, dx) {
+    this._attackPose = null;
+    if (moving) this._bareRest.rested = false;
+    this._updateUnarmedPose(moving ? 'move' : 'fire', dy, dx, { command: false });
+  }
+
+  /**
    * `player-girl-water-fire`: frames 0–2 once, 3–6 while the trigger is
-   * held, then 7–8 once. Walk and deploy keep their own sheets.
+   * held, then 7–8 once. The stage water lock does not call this.
+   * Fence mounts may still use it. Walk and deploy keep their own sheets.
    * @param {string} phase
    * @param {boolean} attacking
    * @returns {boolean} true while this pose owns the body

@@ -305,10 +305,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * on the water shot. Neither changes damage. Gold, saves, barricade
  * HP, spawn counts, and collision math stay put. The cell was already
  * 84×84, so the hitbox is unchanged. GitHub Pages stays unpublished.
+ * v0.36.26: up/down keeps the walk while she charges or fires. The
+ * body does not play `player-girl-water-fire` on shot release. Each
+ * fire-key release before 1.8s spawns one L1, including a tap that
+ * ends before the poll. L2 at 1.8s and L3 at 4s stay, and a gap under
+ * 120ms still keeps a charge that has already reached L2. Feel booth
+ * can show HP and force tire, hurt, pet-crit, L3 disappear, and the
+ * three settle deaths. Gold, saves, barricade HP, zombie anim percents,
+ * weapon DPS, and spawn tables stay put. GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.25';
+export const APP_VERSION = '0.36.26';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -440,6 +448,65 @@ export function enemyFeelEnabled(search) {
   } catch (_) {
     return false;
   }
+}
+
+/**
+ * @param {string} [search]
+ * @returns {URLSearchParams}
+ */
+function feelSearchParams(search) {
+  try {
+    const raw = search ?? (globalThis.location?.search || '');
+    return new URLSearchParams(raw || '');
+  } catch (_) {
+    return new URLSearchParams();
+  }
+}
+
+/**
+ * `?showHp=1` prints a live HP number on every zombie. The feel booth
+ * turns the same label on without this flag. Combat HP is unchanged.
+ * @param {string} [search]
+ */
+export function showZombieHpEnabled(search) {
+  if (enemyFeelEnabled(search)) return true;
+  return feelSearchParams(search).get('showHp') === '1';
+}
+
+/**
+ * `?forceTire=1` with the feel booth. The body is placed under the
+ * HP 30 tire gate so walk-tiremove and ×0.3 can be watched alone.
+ * @param {string} [search]
+ */
+export function forceTireEnabled(search) {
+  return feelSearchParams(search).get('forceTire') === '1';
+}
+
+/**
+ * `?forceHurt=1` with the feel booth. Hurt-normal and ×0.5 run while
+ * HP stays at or above 30, so tire ×0.3 is not also on.
+ * @param {string} [search]
+ */
+export function forceHurtEnabled(search) {
+  return feelSearchParams(search).get('forceHurt') === '1';
+}
+
+/** Feel-only death samples. Live rolls stay 10 / 45 / 45. */
+export const FEEL_DEATH_MODES = ['deathwalk', 'normal01', 'normal02', 'crit', 'disappear'];
+
+/**
+ * Feel booth death sample. `forceDeath` names the strip. `forceCrit=1`
+ * and `forceL3=1` are the pet-crit and water-L3 gates. Null on a
+ * normal stage, so the 10/45/45 roll is unchanged.
+ * @param {string} [search]
+ * @returns {'deathwalk'|'normal01'|'normal02'|'crit'|'disappear'|null}
+ */
+export function forceDeathMode(search) {
+  const params = feelSearchParams(search);
+  if (params.get('forceCrit') === '1') return 'crit';
+  if (params.get('forceL3') === '1') return 'disappear';
+  const id = (params.get('forceDeath') || '').trim().toLowerCase();
+  return FEEL_DEATH_MODES.includes(id) ? id : null;
 }
 const KNOCKBACK_HANDGUN_PX = 10;
 const KNOCKBACK_SHOTGUN_PX = 8;

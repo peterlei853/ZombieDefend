@@ -26,6 +26,8 @@ import {
   zombieSkinDef,
   ZOMBIE_HURT_MS,
   ZOMBIE_HURT_SPEED_MUL,
+  ZOMBIE_TIRE_HP,
+  ZOMBIE_TIRE_SPEED_MUL,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
@@ -129,6 +131,17 @@ export class Zombie {
     this._flashToken = 0;
     /** Feel booth holds this body in front of the fence. Waves never set it. */
     this.showcaseHold = false;
+    /**
+     * Feel-only march inside a short lane so tire ×0.3 and hurt ×0.5
+     * can be watched. Waves never set it. It does not deal contact damage.
+     */
+    this.feelPace = false;
+    /** Feel-only. Keeps hurt-normal and ×0.5 without dropping under the tire gate. */
+    this._feelHurtLatch = false;
+    /** Feel-only death strip. Live rolls never set this. */
+    this._feelDeathKey = null;
+    /** @type {Phaser.GameObjects.Text|null} */
+    this._hpLabel = null;
     /** Eastward march used to lead a water shot. 0 while held or stopped. */
     this._marchVx = 0;
     this._showcaseToken = 0;
@@ -399,8 +412,18 @@ export class Zombie {
 
   update(deltaSec, contactX, pet = null) {
     this._marchVx = 0;
-    if (!this.alive) return;
-    if (this.showcaseHold) return;
+    if (!this.alive) {
+      this._syncHpReadout();
+      return;
+    }
+    if (this.showcaseHold && !this.feelPace) {
+      this._syncBars();
+      return;
+    }
+    if (this.feelPace && this.showcaseHold) {
+      this._tickFeelPace(deltaSec);
+      return;
+    }
 
     if (this._petSlideMs > 0 && this.body) {
       const ms = Math.max(0, deltaSec * 1000);
@@ -1169,6 +1192,7 @@ export class Zombie {
       const blast = this._animKey('blast');
       if (this._animReady(blast)) return blast;
     }
+    if (this._feelDeathKey && this._animReady(this._feelDeathKey)) return this._feelDeathKey;
     if (this.skin.ruleAnims) {
       const picked = pickProfessionDeathKey(
         this.skin.ruleAnims,
@@ -1295,7 +1319,10 @@ export class Zombie {
   }
 
   _syncBars() {
-    if (!this._hpBar || !this.body) return;
+    if (!this._hpBar || !this.body) {
+      this._syncHpReadout();
+      return;
+    }
     const h = this._hpBar.displayHeight;
     const barY = this._crownY() - layoutPx(2) - h / 2;
     const ratio = this.maxHp > 0 ? Math.max(0, this.hp / this.maxHp) : 0;
@@ -1303,6 +1330,168 @@ export class Zombie {
     this._barH = h;
     this._hpBar.setPosition(this.body.x, barY);
     this._hpBar.setRatio(ratio);
+    this._syncHpReadout();
+  }
+
+  /**
+   * Feel booth, or `?showHp=1`. A number near the sprite. Display only.
+   */
+  _syncHpReadout() {
+    const scene = this.scene;
+    if (!scene?.showZombieHp || !this.body?.active) {
+      this._releaseHpLabel();
+      return;
+    }
+    if (!this._hpLabel?.active) {
+      const label = scene.add?.text?.(0, 0, '', {
+        fontFamily: 'ui-monospace, monospace',
+        fontSize: '14px',
+        color: '#ffe7a0',
+        stroke: '#1a1208',
+        strokeThickness: 4,
+      });
+      if (!label) return;
+      label.setOrigin?.(0.5, 1);
+      this._hpLabel = label;
+    }
+    this._hpLabel.setText(this._hpReadoutTag());
+    const top = Number.isFinite(this.visualTop) ? this.visualTop : this.body.y;
+    this._hpLabel.setPosition(this.body.x, top - layoutPx(6));
+    if (typeof this._hpLabel.setDepth === 'function') {
+      this._hpLabel.setDepth((this.body.depth || 0) + 12);
+    }
+  }
+
+  /** Short debug line: HP, the speed gate, and the strip that is playing. */
+  _hpReadoutTag() {
+    const hp = Math.max(0, Math.ceil(Number(this.hp) || 0));
+    const bits = [`HP ${hp}`];
+    if (this.skin?.ruleAnims) {
+      if (Number(this.hp) < ZOMBIE_TIRE_HP) bits.push(`tire×${ZOMBIE_TIRE_SPEED_MUL}`);
+      if (this._hurtMs > 0 || this._feelHurtLatch) bits.push(`hurt×${ZOMBIE_HURT_SPEED_MUL}`);
+    }
+    const key = this.body?.anims?.currentAnim?.key || '';
+    if (key.includes('die-')) bits.push(key.slice(key.indexOf('die-')));
+    else if (key.includes('walk-tire')) bits.push('walk-tiremove');
+    else if (key.includes('hurt')) bits.push('hurt-normal');
+    else if (key.includes('walk')) bits.push('walk-normal');
+    return bits.join(' ');
+  }
+
+  _releaseHpLabel() {
+    this._hpLabel?.destroy?.();
+    this._hpLabel = null;
+  }
+
+  /**
+   * Feel-only walk between two X values at the live march speed.
+   * Does not reach the barricade and does not change DPS.
+   * @param {number} deltaSec
+   */
+  _tickFeelPace(deltaSec) {
+    if (!this.body) return;
+    if (this._feelHurtLatch) {
+      this._hurtMs = ZOMBIE_HURT_MS;
+      const hurt = this._hurtAnimKey();
+      const current = this.body.anims?.currentAnim?.key;
+      const playing = !!this.body.anims?.isPlaying;
+      if (hurt && (current !== hurt || !playing)) this._playHurtStrip();
+    }
+    const speed = this._marchSpeed() * LAYOUT_SCALE;
+    const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
+    const next = this.body.x + speed * dt;
+    const maxX = Number.isFinite(this._paceMax) ? this._paceMax : this.body.x;
+    const minX = Number.isFinite(this._paceMin) ? this._paceMin : this.body.x;
+    this.body.x = next >= maxX ? minX : next;
+    if (!this._feelHurtLatch) this._syncLocomotion();
+    this._applyDepth();
+    this._syncBars();
+  }
+
+  /** Stop the feel march. The next sample can start a new one. */
+  stopFeelPace() {
+    this.feelPace = false;
+    this._feelHurtLatch = false;
+    this._hurtMs = 0;
+  }
+
+  /**
+   * Pace west of the fence at the current march speed.
+   * Waves never call this.
+   */
+  beginFeelPace() {
+    if (!this.body) return;
+    this.feelPace = true;
+    this.showcaseHold = true;
+    this._paceMax = this.body.x;
+    this._paceMin = this.body.x - layoutPx(140);
+    this.body.x = this._paceMin;
+    this._syncBars();
+  }
+
+  /**
+   * HP under 30, no hurt latch. walk-tiremove at ×0.3.
+   * maxHp and gold stay on the wave row.
+   */
+  applyFeelTire() {
+    if (!this.alive) return false;
+    this.stopFeelPace();
+    this._feelDeathKey = null;
+    const under = ZOMBIE_TIRE_HP - 1;
+    this.hp = Math.min(this.hp, under);
+    if (!(this.hp > 0)) this.hp = under;
+    this._syncLocomotion();
+    this.beginFeelPace();
+    return true;
+  }
+
+  /**
+   * Hurt-normal and ×0.5 while HP stays on the walk-normal side of the gate.
+   */
+  applyFeelHurt() {
+    if (!this.alive) return false;
+    this.stopFeelPace();
+    this._feelDeathKey = null;
+    if (Number(this.hp) < ZOMBIE_TIRE_HP) this.hp = ZOMBIE_TIRE_HP;
+    this._feelHurtLatch = true;
+    this._hurtMs = ZOMBIE_HURT_MS;
+    this._playHurtStrip();
+    this.beginFeelPace();
+    return true;
+  }
+
+  /**
+   * Feel-only kill sample. `crit` and `disappear` use the live gates
+   * (pet crit, water charge ≥ 3) and do not spawn a projectile.
+   * The three settle names play that strip once. Weights stay 10/45/45.
+   * @param {'deathwalk'|'normal01'|'normal02'|'crit'|'disappear'} mode
+   */
+  feelKill(mode) {
+    if (!this.alive || !this.body) return false;
+    this.stopFeelPace();
+    this.showcaseHold = true;
+    const rules = this.skin?.ruleAnims;
+    if (mode === 'crit') {
+      this._feelDeathKey = null;
+      this.takeDamage(this.hp, { feel: true, kind: 'pet', crit: true, hurtStrip: false });
+      return true;
+    }
+    if (mode === 'disappear') {
+      this._feelDeathKey = null;
+      this.takeDamage(this.hp, { feel: true, kind: 'water', charge: 3, hurtStrip: false });
+      return true;
+    }
+    const key = mode === 'deathwalk'
+      ? rules?.dieDeathwalk
+      : mode === 'normal01'
+        ? rules?.dieNormal01
+        : mode === 'normal02'
+          ? rules?.dieNormal02
+          : null;
+    if (!key) return false;
+    this._feelDeathKey = key;
+    this.takeDamage(this.hp, { feel: true, kind: 'feel', hurtStrip: false });
+    return true;
   }
 
   _releaseBars() {
@@ -1342,6 +1531,7 @@ export class Zombie {
       this.body = null;
     }
     this._releaseBars();
+    this._releaseHpLabel();
   }
 }
 

@@ -67,9 +67,9 @@ function assert(cond, message) {
   if (!cond) throw new Error(message);
 }
 
-assert(APP_VERSION === '0.36.25', 'APP_VERSION is 0.36.25');
-assert(pkg.version === '0.36.25', 'package.json tracks 0.36.25');
-assert(html.includes('ZombieDefend v0.36.25'), 'title tracks 0.36.25');
+assert(APP_VERSION === '0.36.26', 'APP_VERSION is 0.36.26');
+assert(pkg.version === '0.36.26', 'package.json tracks 0.36.26');
+assert(html.includes('ZombieDefend v0.36.26'), 'title tracks 0.36.26');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(STAGE_COUNT === 5 && STAGE_ROSTER.length === 5, 'five single-type stages stay');
 
@@ -117,7 +117,10 @@ assert(!demo.includes('.play('), 'try-out does not call sprite.play directly');
 
 assert(!stage.includes('new FenceMounts') && !stage.includes('new WaterMounts') && !stage.includes('new SlingMounts'), 'stage does not place fence mounts');
 assert(stage.includes('triggerHeld') && stage.includes('weaponHeld'), 'SPACE and SWAP share the shoot hold');
-assert(defender.includes('manualFire') && defender.includes('player-girl-water-fire'), 'stage shoots from the water fire pose');
+assert(defender.includes('manualFire') && defender.includes('_syncWaterLockPose'), 'stage water has a body pose that is not the fire strip');
+const lockStart = defender.indexOf('_syncWaterLockPose(moving');
+const lockFn = defender.slice(lockStart, defender.indexOf('_syncWaterFirePose(phase'));
+assert(lockFn.includes("moving ? 'move'") && !lockFn.includes('waterFire'), 'water lock keeps the walk and does not play the fire pose');
 assert(defender.includes('_waterLock') && defender.includes('canFire: this._waterLock ? true'), 'water stays out and can fire while moving');
 const floats = readFileSync(new URL('../src/systems/HeroFloats.js', import.meta.url), 'utf8');
 assert(floats.includes('-still') && floats.includes('_waterLock'), 'the water float keeps its still sheet');
@@ -237,12 +240,16 @@ const chargeSlot = { muzzleX: 900, muzzleY: 400 };
 const chargeBullets = [];
 const chargeTrait = WEAPON_TRAITS.water;
 assert(guns._stepWaterCharge(1000, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'holding does not fire');
-assert(guns._stepWaterCharge(16, chargeBullets, chargeSlot, [], chargeTrait, false, true) === false, 'a 16ms SPACE gap does not fire');
-assert(chargeBullets.length === 0 && guns.chargeMs() === 1000, 'the gap keeps the same charge');
-assert(guns._stepWaterCharge(1600, chargeBullets, chargeSlot, [], chargeTrait, true, true) === false, 'the hold continues after the gap');
-assert(guns.chargeTier() === 2, '2.6s of hold with a short slip is L2');
-assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, chargeBullets, chargeSlot, [], chargeTrait, false, true) === true, 'SPACE staying up releases the shot');
-assert(chargeBullets.length === 1 && chargeBullets[0].charge === 2, 'the released shot is L2');
+assert(guns._stepWaterCharge(16, chargeBullets, chargeSlot, [], chargeTrait, false, true) === true, 'a release before L2 fires on that key-up');
+assert(chargeBullets.length === 1 && chargeBullets[0].charge === 1 && guns.chargeMs() === 0, 'a 1s release is one L1 and the timer is clear');
+const l2Hold = [];
+assert(guns._stepWaterCharge(1800, l2Hold, chargeSlot, [], chargeTrait, true, true) === false, 'an L2 hold is still charging');
+assert(guns._stepWaterCharge(16, l2Hold, chargeSlot, [], chargeTrait, false, true) === false, 'a 16ms gap after L2 does not fire');
+assert(l2Hold.length === 0 && guns.chargeTier() === 2, 'the short gap keeps the L2 charge');
+assert(guns._stepWaterCharge(200, l2Hold, chargeSlot, [], chargeTrait, true, true) === false, 'the hold continues after the gap');
+assert(guns.chargeTier() === 2, 'the continued hold is still L2');
+assert(guns._stepWaterCharge(WATER_CHARGE_RELEASE_MS, l2Hold, chargeSlot, [], chargeTrait, false, true) === true, 'SPACE staying up releases the shot');
+assert(l2Hold.length === 1 && l2Hold[0].charge === 2, 'the released shot is L2');
 assert(guns.chargeMs() === 0, 'release clears the charge');
 const l3Bullets = [];
 assert(guns._stepWaterCharge(5000, l3Bullets, chargeSlot, [], chargeTrait, true, true) === false, 'a 5s hold is still charging');
@@ -275,10 +282,22 @@ assert(standBullets.length === 1 && standBullets[0].charge === 1 && moveBullets[
 const flicker = new WeaponSystem(scene);
 flicker.setOwnedWeapons(['water']);
 const flickerBullets = [];
-assert(flicker._stepWaterCharge(8, flickerBullets, chargeSlot, [], chargeTrait, false, true, true) === false, 'a sub-frame tap arms L1 without firing inside the bounce gap');
-assert(flickerBullets.length === 0 && flicker.chargeTier() === 1, 'that tap is an open L1 charge');
-assert(flicker._stepWaterCharge(WATER_CHARGE_RELEASE_MS, flickerBullets, chargeSlot, [], chargeTrait, false, true, false) === true, 'the armed tap still fires');
-assert(flickerBullets.length === 1 && flickerBullets[0].charge === 1, 'a sub-frame tap fires one L1');
+assert(flicker._stepWaterCharge(8, flickerBullets, chargeSlot, [], chargeTrait, false, true, true) === true, 'a sub-frame tap fires L1 on that poll');
+assert(flickerBullets.length === 1 && flickerBullets[0].charge === 1 && flicker.chargeMs() === 0, 'a sub-frame tap is one L1 and does not stay charged');
+const spam = new WeaponSystem(scene);
+spam.setOwnedWeapons(['water']);
+const spamBullets = [];
+for (let tap = 0; tap < 8; tap += 1) {
+  assert(spam._stepWaterCharge(12, spamBullets, chargeSlot, [], chargeTrait, true, true, true) === false, 'a rapid tap down does not fire');
+  assert(spam._stepWaterCharge(12, spamBullets, chargeSlot, [], chargeTrait, false, true, false) === true, 'a rapid tap up fires one L1');
+}
+assert(spamBullets.length === 8 && spamBullets.every((shot) => shot.charge === 1), 'eight taps spawn eight L1 shots');
+const doubled = new WeaponSystem(scene);
+doubled.setOwnedWeapons(['water']);
+const doubledBullets = [];
+assert(doubled._stepWaterCharge(20, doubledBullets, chargeSlot, [], chargeTrait, true, true, true) === false, 'the first tap of a pair is held');
+assert(doubled._stepWaterCharge(8, doubledBullets, chargeSlot, [], chargeTrait, false, true, true) === true, 'a release plus a finished tap in one poll still fires');
+assert(doubledBullets.length === 2 && doubledBullets.every((shot) => shot.charge === 1), 'that poll emits one L1 per finished press');
 const bounced = new WeaponSystem(scene);
 bounced.setOwnedWeapons(['water']);
 const bouncedBullets = [];
@@ -539,7 +558,8 @@ assert(weaponSystem.includes('playWaterWhiteX'), 'each white X notifies sfx-whit
 assert(!weaponSystem.includes('playWaterImpact'), 'the Mega Man impact hooks are gone');
 assert(weaponSystem.includes('fx-lightning-impact') || weaponSystem.includes('WATER_HIT_FX'), 'L1 still uses the lightning impact');
 assert(demo.includes('waterCharge') && demo.includes('waterHeld'), 'the sandbox charges water from SPACE');
-assert(demo.includes('_syncWaterPose') && demo.includes('waterFire'), 'sandbox water uses the finger-forward fire pose');
+assert(demo.includes('_syncWaterPose') && demo.includes('walk.north') && demo.includes('walk.south'), 'sandbox water keeps the walk while charging');
+assert(!demo.includes('waterFire'), 'sandbox water does not play the fire body pose');
 assert(demo.includes('_moveHero'), 'sandbox water can move while charging');
 const waterLine = (demo.match(/WATER_LINE_X = \[([^\]]+)\]/) || [])[1]?.split(',').map((part) => Number(part.trim()));
 assert(waterLine?.length === 5 && waterLine.every((x, i) => i === 0 || x < waterLine[i - 1]), 'sandbox water still lines up five bodies running west');
