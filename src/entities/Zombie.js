@@ -974,8 +974,8 @@ export class Zombie {
 
   /**
    * Hurt strip after the white flash. No-op when that sheet is not loaded.
-   * PIXELLAB_HOOK: zombie-office-worker-v2-hurt, zombie-delivery-hurt,
-   * zombie-chef-hurt are 4 frames @ 10. Other types use `{prefix}-hurt`.
+   * PIXELLAB_HOOK: `{prefix}-hurt` shares Hurt-normal on the four professions.
+   * Office is 5 frames @ 10. Delivery, chef, and nurse stay 4 @ 10.
    */
   _playHurtStrip() {
     const hurt = this._animKey('hurt');
