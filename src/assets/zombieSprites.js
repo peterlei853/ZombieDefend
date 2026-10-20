@@ -121,9 +121,9 @@ function textureFrameCount(tex) {
  */
 export const ZOMBIE_LIBRARY_SKINS = {
   /** 84px profession sheets. Missing walks fall back here, never the removed 64px office group.
-   * Rule-anim v1.0: legacy walk/hurt/die1/die2 share the new sheets.
-   * The 8-frame attack strip stays so barricade contact is unchanged.
-   * `ruleAnims` lists the PixelLab keys. Death still picks die1 or die2. */
+   * v0.36.25 plays `ruleAnims`: walk-normal / walk-tiremove, hurt-normal,
+   * hit01 / hit02, and the death gates. Legacy walk/hurt/die1/die2 still
+   * share those sheets for any caller that names the old keys. */
   'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2', {
     ruleAnims: true,
     hit02Alias: true,
@@ -215,13 +215,10 @@ export const PROFESSION_RULE_GROUPS = ['office-worker-v2', 'delivery', 'chef', '
 
 /**
  * PixelLab rule-anim keys for one profession prefix (`zombie-chef`).
- * Legacy Stage actions keep their old names and share these sheets:
- * walk ← walk-normal, hurt ← hurt-normal,
- * die1 ← die-normal01, die2 ← die-normal02.
- * The live attack key stays the previous 8-frame bite. hit01-normal is loaded beside it.
- * walk-tiremove, hit02-normal, die-deathwalk, die-critical-hit, and
- * die-disappear are loaded with the library. They are not in `deaths`.
- * Office hit02-normal is an ALIAS of the custom pull-weapon strip.
+ * v0.36.25 Stage plays these keys. Legacy walk / hurt / die1 / die2
+ * still share Walk-normal, Hurt-normal, and Die-normal01/02.
+ * Office hit02-normal is an ALIAS of the custom pull-weapon strip;
+ * the key is still `hit02` and Stage still plays it.
  * @param {string} prefix
  */
 export function professionRuleAnims(prefix) {
@@ -261,7 +258,7 @@ function skin(id, prefix, extra = {}) {
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
       // PIXELLAB_HOOK: die1 and die2 share Die-normal01/02 on the four professions.
-      // Crit / L3 / disappear stay on ruleAnims until Gameplay wires them.
+      // v0.36.25 death selection uses ruleAnims (crit / L3 / 10-45-45), not this list.
       deaths: extra.deaths || [`${prefix}-die1`, `${prefix}-die2`],
       // PIXELLAB_HOOK: `{prefix}-hurt`. Office Hurt-normal is 5 frames @ 10.
       // Delivery, chef, and nurse Hurt-normal stay 4 frames @ 10.
@@ -272,8 +269,17 @@ function skin(id, prefix, extra = {}) {
   };
 }
 
-/** Walk speed while a hurt strip is playing. Half of the march speed. */
+/** Walk speed while a hurt strip is playing. Half of the march speed. v0.36.25 keeps this. */
 export const ZOMBIE_HURT_SPEED_MUL = 0.5;
+
+/**
+ * v0.36.25 profession walk gate. HP at or above this plays walk-normal
+ * at the wave speed. HP under this plays walk-tiremove at
+ * {@link ZOMBIE_TIRE_SPEED_MUL}. Absolute HP, not the 30% critical ratio.
+ */
+export const ZOMBIE_TIRE_HP = 30;
+/** TireMove march speed. −70% of the wave speed. The hurt half stacks on top. */
+export const ZOMBIE_TIRE_SPEED_MUL = 0.3;
 /** Hurt window stays 400ms (a 4-frame beat at 10 fps). Office Hurt-normal is 5 frames and uses this same window. */
 export const ZOMBIE_HURT_MS = 400;
 
@@ -302,6 +308,87 @@ export function pickDeathKey(keys, rng = Math.random) {
   const u = Number.isFinite(roll) ? roll : 0;
   const i = Math.min(keys.length - 1, Math.max(0, Math.floor(u * keys.length)));
   return keys[i];
+}
+
+/**
+ * v0.36.25 Peter death gates for one profession `ruleAnims` map.
+ * Crit kill → die-critical-hit. Water L3 (`charge` ≥ 3) → die-disappear.
+ * Otherwise die-deathwalk 10% / die-normal01 45% / die-normal02 45%.
+ * Crit wins when both flags are set. A missing strip is skipped and the
+ * remaining weights are renormalized. Null when none of those keys are ready.
+ * @param {{ dieCriticalHit?: string, dieDisappear?: string, dieDeathwalk?: string, dieNormal01?: string, dieNormal02?: string }|null|undefined} ruleAnims
+ * @param {{ crit?: boolean, charge?: number }|null|undefined} cause
+ * @param {(key: string) => boolean} ready
+ * @param {() => number} [rng]
+ * @returns {string|null}
+ */
+export function pickProfessionDeathKey(ruleAnims, cause, ready, rng = Math.random) {
+  if (!ruleAnims || typeof ready !== 'function') return null;
+  const playable = (key) => typeof key === 'string' && !!key && ready(key);
+  if (cause?.crit === true && playable(ruleAnims.dieCriticalHit)) return ruleAnims.dieCriticalHit;
+  const charge = Number(cause?.charge);
+  if (charge >= 3 && playable(ruleAnims.dieDisappear)) return ruleAnims.dieDisappear;
+  /** @type {[string, number][]} */
+  const rows = [
+    [ruleAnims.dieDeathwalk, 0.1],
+    [ruleAnims.dieNormal01, 0.45],
+    [ruleAnims.dieNormal02, 0.45],
+  ].filter((row) => playable(row[0]));
+  if (!rows.length) return null;
+  const total = rows.reduce((sum, row) => sum + row[1], 0);
+  let roll = Number(rng());
+  if (!Number.isFinite(roll) || roll < 0) roll = 0;
+  if (roll >= 1) roll = 0.999999;
+  let acc = 0;
+  for (const [key, weight] of rows) {
+    acc += weight / total;
+    if (roll < acc) return key;
+  }
+  return rows[rows.length - 1][0];
+}
+
+/**
+ * Barricade / player bite. `[0, 0.5)` is hit01, `[0.5, 1)` is hit02.
+ * Office hit02 is the ALIAS pull-weapon key; this still returns it.
+ * @param {{ hit01?: string, hit02?: string }|null|undefined} ruleAnims
+ * @param {() => number} [rng]
+ * @returns {string|null}
+ */
+export function pickProfessionAttackKey(ruleAnims, rng = Math.random) {
+  if (!ruleAnims) return null;
+  const hit01 = ruleAnims.hit01 || null;
+  const hit02 = ruleAnims.hit02 || null;
+  if (!hit01 && !hit02) return null;
+  const roll = Number(rng());
+  const u = Number.isFinite(roll) ? roll : 0;
+  if (u < 0.5) return hit01 || hit02;
+  return hit02 || hit01;
+}
+
+/**
+ * walk-normal at HP ≥ {@link ZOMBIE_TIRE_HP}, otherwise walk-tiremove.
+ * @param {{ walkNormal?: string, walkTire?: string }|null|undefined} ruleAnims
+ * @param {number} hp
+ * @returns {string|null}
+ */
+export function professionLocomotionKey(ruleAnims, hp) {
+  if (!ruleAnims) return null;
+  const tired = Number(hp) < ZOMBIE_TIRE_HP;
+  const key = tired ? ruleAnims.walkTire : ruleAnims.walkNormal;
+  return key || null;
+}
+
+/**
+ * Wave speed, or that speed ×0.3 while HP is under the tire gate.
+ * Does not apply the 30% critical-HP ratio. Callers multiply the hurt half separately.
+ * @param {number} speed
+ * @param {number} hp
+ */
+export function tireMoveSpeed(speed, hp) {
+  const base = Number(speed);
+  const march = Number.isFinite(base) ? base : 0;
+  if (Number(hp) < ZOMBIE_TIRE_HP) return march * ZOMBIE_TIRE_SPEED_MUL;
+  return march;
 }
 
 /**

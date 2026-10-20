@@ -87,7 +87,7 @@ Office, delivery, chef, and nurse keep their 84×84 east cells and feet origin `
 | `zombie-<slug>-walk-normal` | Walk-normal | `zombie-<slug>-walk` |
 | `zombie-<slug>-walk-tiremove` | Walk-TireMove | — |
 | `zombie-<slug>-hurt-normal` | Hurt-normal | `zombie-<slug>-hurt` |
-| `zombie-<slug>-hit01-normal` | hit01-normal | live `zombie-<slug>-attack` stays the previous 8-frame bite |
+| `zombie-<slug>-hit01-normal` | hit01-normal | v0.36.25 bites roll this with hit02; legacy attack strip stays loaded |
 | `zombie-<slug>-hit02-normal` | hit02-normal | — |
 | `zombie-<slug>-die-normal01` | Die-normal01 | `zombie-<slug>-die1` |
 | `zombie-<slug>-die-normal02` | Die-normal02 | `zombie-<slug>-die2` |
@@ -95,7 +95,7 @@ Office, delivery, chef, and nurse keep their 84×84 east cells and feet origin `
 | `zombie-<slug>-die-critical-hit` | Die-critical hit | — |
 | `zombie-<slug>-die-disappear` | Die-disappear | — |
 
-`<slug>` is `office-worker-v2`, `delivery`, `chef`, or `nurse`. Each rule asset's `extra.version` is `v1.0`. Office `hit02-normal` is **ALIAS**: PixelLab has no anim with that name, so the strip is the unnamed custom pull-weapon (17×84), cataloged as `zombie-office-worker-v2-hit02-normal`. Office Die-normal02's PixelLab name is `die-normal 2`. Frame counts differ by slug (office walk-tire is 9 and hurt is 5; office hits and the three long deaths are 17 and 33; the other three slugs are 8 / 4 / 16 and 33 / 32 / 32). The live attack key stays 8 frames so the barricade contact index stays on that bite. Run, bite, idle, elemental hurts, and nurse `attach` are unchanged. Death selection still uses die1 and die2. `hit01-normal`, `hit02-normal`, `die-deathwalk`, `die-critical-hit`, and `die-disappear` are loaded for Gameplay. The cell is 84×84 (PixelLab padded; design size 64×64), so a later pass may retune the hitbox or anchor if the new padding sits differently inside the frame. Hero sheets are untouched.
+`<slug>` is `office-worker-v2`, `delivery`, `chef`, or `nurse`. Each rule asset's `extra.version` is `v1.0`. Office `hit02-normal` is **ALIAS**: PixelLab has no anim with that name, so the strip is the unnamed custom pull-weapon (17×84), cataloged as `zombie-office-worker-v2-hit02-normal`. Office Die-normal02's PixelLab name is `die-normal 2`. Frame counts differ by slug (office walk-tire is 9 and hurt is 5; office hits and the three long deaths are 17 and 33; the other three slugs are 8 / 4 / 16 and 33 / 32 / 32). v0.36.25 Stage plays these rule keys for the four professions: crit → `die-critical-hit`, water L3 → `die-disappear`, else deathwalk / normal01 / normal02 at 10/45/45; bites roll hit01/hit02; hurt is `hurt-normal`; walk switches at HP 30. Contact on the new hit strips is the impact cell (legacy 8-frame index 6 does not transfer). The cell was already 84×84, so the hitbox is unchanged. Hero sheets are untouched.
 
 ## Pets
 

@@ -1032,7 +1032,13 @@ export class WeaponSystem {
       this._spawnImpactKey(bullet.impact, hx, Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : hy, zombie);
     }
     this._spawnSkinHit(zombie, bullet?.weaponId);
-    const killed = zombie.takeDamage(dmg, { kind: bullet?.weaponId || bullet?.kind });
+    // v0.36.25: charge is the water tier already on the bullet (L3 is 3).
+    // It selects the death strip. It does not change `dmg`.
+    const killed = zombie.takeDamage(dmg, {
+      kind: bullet?.weaponId || bullet?.kind,
+      charge: Number(bullet?.charge) || 0,
+      crit: bullet?.crit === true,
+    });
     if (dmg > 0) this.scene.audio?.playHitImpact();
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, dmg, color, zombie.id);
@@ -1333,13 +1339,13 @@ export class WeaponSystem {
       seen.add(id);
       if (boom.acc[id] == null) {
         boom.acc[id] = 0;
-        this._payAoeTick(zombie, point, false);
+        this._payAoeTick(zombie, point, false, 2);
         continue;
       }
       boom.acc[id] += Math.max(0, dt);
       if (boom.acc[id] < WATER_AOE_TICK_MS) continue;
       boom.acc[id] -= WATER_AOE_TICK_MS;
-      this._payAoeTick(zombie, point, false);
+      this._payAoeTick(zombie, point, false, 2);
     }
     for (const id of Object.keys(boom.acc)) {
       if (!seen.has(id)) delete boom.acc[id];
@@ -1362,21 +1368,22 @@ export class WeaponSystem {
     if (!slot) {
       slot = bullet.aoe[id] = { acc: 0 };
       this.markWaterPierce(bullet, zombie);
-      this._payAoeTick(zombie, point, true);
+      this._payAoeTick(zombie, point, true, bullet.charge);
       return;
     }
     slot.acc += Math.max(0, this._frameMs || 0);
     if (slot.acc < WATER_AOE_TICK_MS) return;
     slot.acc -= WATER_AOE_TICK_MS;
-    this._payAoeTick(zombie, point, true);
+    this._payAoeTick(zombie, point, true, bullet.charge);
   }
 
   /**
    * @param {import('../entities/Zombie.js').Zombie} zombie
    * @param {{ x: number, y: number }} point
    * @param {boolean} nudgeEast
+   * @param {number|null|undefined} charge water tier already on the shot. L3 is 3. L2 explosion is 2.
    */
-  _payAoeTick(zombie, point, nudgeEast) {
+  _payAoeTick(zombie, point, nudgeEast, charge) {
     // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once, every hurt.
     // Drawn above the explosion so the white glyph stays visible on the 0.2s beat.
     this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie, {
@@ -1388,7 +1395,7 @@ export class WeaponSystem {
     const gain = this._hurtZombie(
       zombie,
       WATER_AOE_TICK_DMG,
-      { weaponId: 'water' },
+      { weaponId: 'water', charge: Number(charge) || 0 },
       { impact: false, knock: false },
     );
     this._pending.gold += gain.gold;

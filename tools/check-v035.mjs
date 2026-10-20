@@ -76,7 +76,9 @@ import {
   ENEMY_ATTACK_HIT_FRAME,
   ENEMY_SFX_FILES,
   ENEMY_SKILL_STRIPS,
+  RULE_ATTACK_HIT_FRAME,
   attackContactFrame,
+  ruleAttackContactFrame,
   enemySfxClips,
   enemySfxKey,
   enemySfxUrl,
@@ -122,7 +124,7 @@ import {
 } from '../src/systems/feelImpact.js';
 import { AUDIO_VOLUME, GAME_AUDIO, preloadGameAudio } from '../src/systems/SoundManager.js';
 import { stageLibraryCategories } from '../src/assets/libraryAssets.js';
-import { ZOMBIE_BOSS_SKINS, ZOMBIE_LIBRARY_SKINS, ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y, skipsHurtKnockback } from '../src/assets/zombieSprites.js';
+import { ZOMBIE_BOSS_SKINS, ZOMBIE_HURT_SPEED_MUL, ZOMBIE_LIBRARY_SKINS, ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y, ZOMBIE_TIRE_HP, ZOMBIE_TIRE_SPEED_MUL, pickProfessionAttackKey, pickProfessionDeathKey, professionLocomotionKey, skipsHurtKnockback, tireMoveSpeed } from '../src/assets/zombieSprites.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 import { pixelBodiesTouch } from '../src/systems/pixelTouch.js';
@@ -848,6 +850,7 @@ function attackHost(partial = {}) {
   host._clearAttackContact = Zombie.prototype._clearAttackContact;
   host._armAttackContact = Zombie.prototype._armAttackContact;
   host._armBarricadeBeat = Zombie.prototype._armBarricadeBeat;
+  host._pickBiteKey = Zombie.prototype._pickBiteKey;
   host._playAttackPunch = Zombie.prototype._playAttackPunch;
   host.playShowcaseAttack = Zombie.prototype.playShowcaseAttack;
   if (!host.playShowcaseStrip) host.playShowcaseStrip = () => true;
@@ -929,7 +932,49 @@ assert(nurse._attackBeat === false, 'nurse frame 5 is still before the attach st
 nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 7 });
 assert(nurse._attackBeat === false, 'nurse frame 7 is the end pose and does not strike');
 nurse.body._ons[0].fn({ key: 'zombie-nurse-attach' }, { index: 6 });
-assert(nurse._attackBeat === true, 'nurse contact is frame 6 of the 8-frame attach strip');
+assert(nurse._attackBeat === true, 'nurse without ruleAnims still contacts on frame 6 of attach');
+
+const nurseRule = attackHost({
+  skin: ZOMBIE_LIBRARY_SKINS.nurse,
+  _attackRng: () => 0,
+  _animKey(action) {
+    if (action === 'attach') return 'zombie-nurse-attach';
+    if (action === 'attack') return 'zombie-nurse-attack';
+    return null;
+  },
+  scene: {
+    tweens: { added: 0, killTweensOf() {}, add() { this.added += 1; } },
+    anims: {
+      exists: () => true,
+      get: () => ({ frames: new Array(16) }),
+    },
+  },
+});
+nurseRule._playAttackPunch();
+assert(nurseRule.body.anims.currentAnim.key === 'zombie-nurse-hit01-normal', 'v0.36.25 nurse bite plays hit01, not attach');
+assert(nurseRule.body.x === 120 && nurseRule._attackBeat === false, 'nurse hit01 waits for the impact cell');
+nurseRule.body._ons[0].fn({ key: 'zombie-nurse-hit01-normal' }, { index: 5 });
+assert(nurseRule._attackBeat === false, 'nurse hit01 frame 5 is still the windup');
+nurseRule.body._ons[0].fn({ key: 'zombie-nurse-hit01-normal' }, { index: 6 });
+assert(nurseRule._attackBeat === true, 'nurse hit01 contacts on frame 6');
+
+const officeHit = attackHost({
+  skin: ZOMBIE_LIBRARY_SKINS['office-worker-v2'],
+  _attackRng: () => 0.5,
+  scene: {
+    tweens: { added: 0, killTweensOf() {}, add() { this.added += 1; } },
+    anims: {
+      exists: () => true,
+      get: () => ({ frames: new Array(17) }),
+    },
+  },
+});
+officeHit._playAttackPunch();
+assert(officeHit.body.anims.currentAnim.key === 'zombie-office-worker-v2-hit02-normal', 'office alias hit02 still plays');
+officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02-normal' }, { index: 10 });
+assert(officeHit._attackBeat === false, 'office hit02 frame 10 is still the pull-back');
+officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02-normal' }, { index: 11 });
+assert(officeHit._attackBeat === true, 'office hit02 contacts on frame 11');
 
 const plain = attackHost({ _isSprite: false, _animReady: () => false, skin: null });
 plain._playAttackPunch();
@@ -1029,6 +1074,99 @@ const west = bruteShockHandPoint(100, 200, 1, true);
 assert(west.x === 54 && west.y === 192, 'flipX mirrors the forward offset');
 const scaled = bruteShockHandPoint(10, 40, 2, false);
 assert(scaled.x === 102 && scaled.y === 24, 'hand offset scales with the body and not by 1.5');
+
+const chefRules = ZOMBIE_LIBRARY_SKINS.chef.ruleAnims;
+const readyAll = () => true;
+assert(pickProfessionDeathKey(chefRules, { crit: true }, readyAll, () => 0.99) === chefRules.dieCriticalHit, 'crit kill plays die-critical-hit');
+assert(pickProfessionDeathKey(chefRules, { crit: true, charge: 3 }, readyAll, () => 0) === chefRules.dieCriticalHit, 'crit wins over L3');
+assert(pickProfessionDeathKey(chefRules, { charge: 3 }, readyAll, () => 0.99) === chefRules.dieDisappear, 'L3 kill plays die-disappear');
+assert(pickProfessionDeathKey(chefRules, { charge: 2 }, readyAll, () => 0) === chefRules.dieDeathwalk, 'L2 is not disappear');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0) === chefRules.dieDeathwalk, 'roll 0 is deathwalk');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.09) === chefRules.dieDeathwalk, 'deathwalk holds the first 10%');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.1) === chefRules.dieNormal01, 'normal01 starts at 10%');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.549) === chefRules.dieNormal01, 'normal01 holds its 45%');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.55) === chefRules.dieNormal02, 'normal02 starts at 55%');
+assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.99) === chefRules.dieNormal02, 'normal02 holds the last 45%');
+assert(pickProfessionAttackKey(chefRules, () => 0) === chefRules.hit01, 'attack roll under 0.5 is hit01');
+assert(pickProfessionAttackKey(chefRules, () => 0.499) === chefRules.hit01, 'attack roll just under 0.5 stays hit01');
+assert(pickProfessionAttackKey(chefRules, () => 0.5) === chefRules.hit02, 'attack roll at 0.5 is hit02');
+assert(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].hit02Alias === true, 'office hit02 stays the alias flag');
+assert(pickProfessionAttackKey(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].ruleAnims, () => 0.5).endsWith('-hit02-normal'), 'office still rolls hit02');
+assert(professionLocomotionKey(chefRules, ZOMBIE_TIRE_HP) === chefRules.walkNormal, 'HP 30 plays walk-normal');
+assert(professionLocomotionKey(chefRules, ZOMBIE_TIRE_HP - 1) === chefRules.walkTire, 'HP 29 plays walk-tiremove');
+assert(tireMoveSpeed(40, 30) === 40, 'HP 30 keeps the wave speed');
+assert(tireMoveSpeed(40, 29) === 40 * ZOMBIE_TIRE_SPEED_MUL, 'HP 29 marches at 30%');
+assert(ZOMBIE_HURT_SPEED_MUL === 0.5, 'hurt still halves march speed');
+assert(ZOMBIE_TIRE_SPEED_MUL === 0.3, 'tiremove is a 70% slow');
+for (const id of ['office-worker-v2', 'delivery', 'chef', 'nurse']) {
+  const skin = ZOMBIE_LIBRARY_SKINS[id];
+  assert(skin.ruleAnims?.dieCriticalHit?.endsWith('-die-critical-hit'), `${id} exposes die-critical-hit`);
+  assert(skin.ruleAnims?.dieDisappear?.endsWith('-die-disappear'), `${id} exposes die-disappear`);
+  assert(ruleAttackContactFrame(skin.ruleAnims.hit01) === RULE_ATTACK_HIT_FRAME[skin.ruleAnims.hit01], `${id} hit01 contact is tabled`);
+  assert(attackContactFrame(id, 8) === 6, `${id} legacy 8-frame bite stays index 6`);
+}
+assert(attackContactFrame('office-worker-v2', 17, 'zombie-office-worker-v2-hit01-normal') === 7, 'office hit01 impact is frame 7');
+assert(attackContactFrame('office-worker-v2', 17, 'zombie-office-worker-v2-hit02-normal') === 11, 'office hit02 impact is frame 11');
+assert(attackContactFrame('chef', 16, 'zombie-chef-hit01-normal') === 8, 'chef hit01 impact is frame 8');
+assert(attackContactFrame('chef', 16, 'zombie-chef-hit02-normal') === 10, 'chef hit02 impact is frame 10');
+assert(attackContactFrame('delivery', 16, 'zombie-delivery-hit01-normal') === 8, 'delivery hit01 impact is frame 8');
+assert(attackContactFrame('delivery', 16, 'zombie-delivery-hit02-normal') === 10, 'delivery hit02 impact is frame 10');
+assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit01-normal') === 6, 'nurse hit01 impact is frame 6');
+assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit02-normal') === 12, 'nurse hit02 impact is frame 12');
+assert(!ZOMBIE_LIBRARY_SKINS.brute.ruleAnims, 'brute is not a profession rule skin');
+assert(APP_VERSION === '0.36.25', 'gameplay wire stays on v0.36.25');
+const petSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.meta.url), 'utf8');
+assert(weaponSrc.includes('charge: Number(bullet?.charge) || 0'), 'weapon hits forward the existing charge tag');
+assert(weaponSrc.includes('this._payAoeTick(zombie, point, true, bullet.charge)'), 'L3 overlap tick keeps bullet.charge');
+assert(weaponSrc.includes('WATER_AOE_TICK_DMG'), 'L3 tick damage constant is unchanged');
+assert(petSrc.includes("takeDamage(amount, { kind: 'pet', crit })"), 'pet crit roll is passed without a new damage value');
+
+const dying = {
+  _isSprite: true,
+  skin: ZOMBIE_LIBRARY_SKINS.delivery,
+  _animReady: () => true,
+  _animKey: () => null,
+};
+dying._libraryDeathKey = Zombie.prototype._libraryDeathKey;
+assert(dying._libraryDeathKey(false, { crit: true }) === ZOMBIE_LIBRARY_SKINS.delivery.ruleAnims.dieCriticalHit, 'delivery crit death uses the rule key');
+assert(dying._libraryDeathKey(false, { charge: 3 }) === ZOMBIE_LIBRARY_SKINS.delivery.ruleAnims.dieDisappear, 'delivery L3 death uses die-disappear');
+assert(dying._libraryDeathKey(false, { charge: 1 }) !== ZOMBIE_LIBRARY_SKINS.delivery.ruleAnims.dieDisappear, 'L1 does not disappear');
+
+const mover = {
+  skin: ZOMBIE_LIBRARY_SKINS.chef,
+  hp: 40,
+  maxHp: 80,
+  speed: 50,
+  alive: true,
+  variant: 'runner',
+  _slowMs: 0,
+  _rootMs: 0,
+  _hurtMs: 0,
+  _animReady: () => true,
+  _animKey(action) {
+    if (action === 'walk') return 'zombie-chef-run';
+    if (action === 'hurt') return 'zombie-chef-hurt';
+    return null;
+  },
+};
+mover._locomotionAnimKey = Zombie.prototype._locomotionAnimKey;
+mover._marchSpeed = Zombie.prototype._marchSpeed;
+mover._slowFactor = Zombie.prototype._slowFactor;
+mover._hurtAnimKey = Zombie.prototype._hurtAnimKey;
+mover.isCritical = Zombie.prototype.isCritical;
+assert(mover._locomotionAnimKey() === 'zombie-chef-walk-normal', 'a healthy profession runner plays walk-normal, not run');
+assert(mover._marchSpeed() === 50, 'HP 40 keeps the wave speed');
+mover.hp = 10;
+assert(mover._locomotionAnimKey() === 'zombie-chef-walk-tiremove', 'HP 10 plays walk-tiremove');
+assert(mover._marchSpeed() === 50 * ZOMBIE_TIRE_SPEED_MUL, 'tiremove is 30% and does not also apply the ratio slow');
+mover._hurtMs = 200;
+assert(mover._marchSpeed() === 50 * ZOMBIE_TIRE_SPEED_MUL * ZOMBIE_HURT_SPEED_MUL, 'hurt halves the tire march');
+mover.hp = 40;
+assert(mover._marchSpeed() === 25, 'hurt on a healthy march is half speed');
+assert(mover._hurtAnimKey() === 'zombie-chef-hurt-normal', 'hurt plays hurt-normal');
+mover.hp = 80;
+mover._hurtMs = 0;
+assert(mover._locomotionAnimKey() === 'zombie-chef-walk-normal', 'HP back at 80 restores walk-normal');
 
 if (failed) {
   console.error(`${failed} v0.35 check(s) failed`);

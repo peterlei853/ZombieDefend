@@ -293,14 +293,18 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * walk speed for that window. Death picks die1 or die2. Stage 1 rolls
  * types 1 / 2 / 3. Gold, saves, and barricade max HP stay put.
  * No GitHub Pages publish.
- * v0.36.25: office, delivery, chef, and nurse load rule-anim v1.0
- * (84×84). Legacy walk / hurt / die1 / die2 share Walk-normal,
- * Hurt-normal, and Die-normal01/02. hit01, hit02, walk-tiremove,
- * die-deathwalk, die-critical-hit, and die-disappear are registered
- * for a later Gameplay wire. The 8-frame attack strip stays.
- * Office hit02-normal is the ALIAS pull-weapon strip. Death still
- * picks die1 or die2. Gold, saves, barricade HP, and physics stay put.
- * GitHub Pages stays unpublished.
+ * v0.36.25: office, delivery, chef, and nurse play rule-anim v1.0
+ * (84×84). Crit kill plays die-critical-hit. Water L3 (charge ≥ 3)
+ * plays die-disappear. Other kills roll die-deathwalk 10% /
+ * die-normal01 45% / die-normal02 45%. Barricade bites roll
+ * hit01-normal / hit02-normal 50/50; contact is the impact cell on
+ * that strip. Hurt plays hurt-normal and keeps the ×0.5 march.
+ * HP ≥ 30 plays walk-normal. HP < 30 plays walk-tiremove at ×0.3.
+ * Office hit02-normal is the ALIAS pull-weapon strip and still plays.
+ * Crit is the existing pet crit roll. L3 is the charge tag already
+ * on the water shot. Neither changes damage. Gold, saves, barricade
+ * HP, spawn counts, and collision math stay put. The cell was already
+ * 84×84, so the hitbox is unchanged. GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
