@@ -9,7 +9,7 @@ import {
   STAGE_DURATION,
   WAVE_DEFS,
 } from '../data/waves.js';
-import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, forceDeathMode, forceHurtEnabled, forceTireEnabled, petHurtDebugRequested, petLowHpDebugRequested, showZombieHpEnabled } from '../data/GameConfig.js';
 import { clampStage } from '../data/stageRoster.js';
 import { holdBareHandsRest } from '../assets/heroDeploy.js';
 import {
@@ -139,6 +139,7 @@ export default class StageScene extends Phaser.Scene {
     this.weaponImmerse = demoWeaponId();
     this.demoEnemyId = demoEnemyId();
     this.enemyFeel = enemyFeelEnabled();
+    this.showZombieHp = showZombieHpEnabled();
     this._showcase = null;
     this._feelSkillCursor = 0;
     this.ownedWeapons = resolveOwnedWeapons(this.stage, carried, this.weaponImmerse);
@@ -215,7 +216,9 @@ export default class StageScene extends Phaser.Scene {
 
     this._buildHud();
 
-    // SPACE and SWAP shoot. A tap fires one L1 shot. Holding charges L2 at 1.8s and L3 at 4s.
+    // SPACE and SWAP shoot. Each release before 1.8s fires one L1.
+    // Holding charges L2 at 1.8s and L3 at 4s. A gap under 120ms keeps
+    // the charge only after L2 is already reached.
     // Q still cycles the highlighted gun when the stage is not locked to water.
     const keyboard = this.input.keyboard;
     if (keyboard) {
@@ -255,6 +258,7 @@ export default class StageScene extends Phaser.Scene {
     }
     if (this.enemyFeel) {
       this._installEnemyFeel();
+      this._armFeelPreview();
     }
 
     this.touchControls = new VirtualControls(this);
@@ -462,6 +466,13 @@ export default class StageScene extends Phaser.Scene {
       else if (action === 'skill') this._feelSkill();
       else if (action === 'melee') this._feelMelee();
       else if (action === 'reset') this._feelReset();
+      else if (action === 'tire') this._feelTire();
+      else if (action === 'hurtgate') this._feelHurtGate();
+      else if (action === 'crit') this._feelCritKill();
+      else if (action === 'l3') this._feelL3Kill();
+      else if (action === 'deathwalk' || action === 'normal01' || action === 'normal02') {
+        this._feelDeathSample(action);
+      }
       else if (action.startsWith('wave:')) this._feelWave(action.slice(5));
     };
     const keyboard = this.input.keyboard;
@@ -477,6 +488,13 @@ export default class StageScene extends Phaser.Scene {
         [Phaser.Input.Keyboard.KeyCodes.EIGHT, Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT, 'wave:fire'],
         [Phaser.Input.Keyboard.KeyCodes.NINE, Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE, 'wave:water'],
         [Phaser.Input.Keyboard.KeyCodes.R, null, 'reset'],
+        [Phaser.Input.Keyboard.KeyCodes.T, null, 'tire'],
+        [Phaser.Input.Keyboard.KeyCodes.Y, null, 'hurtgate'],
+        [Phaser.Input.Keyboard.KeyCodes.C, null, 'crit'],
+        [Phaser.Input.Keyboard.KeyCodes.V, null, 'l3'],
+        [Phaser.Input.Keyboard.KeyCodes.F1, null, 'deathwalk'],
+        [Phaser.Input.Keyboard.KeyCodes.F2, null, 'normal01'],
+        [Phaser.Input.Keyboard.KeyCodes.F3, null, 'normal02'],
       ];
       const bound = [];
       for (const [code, pad, action] of codes) {
@@ -497,13 +515,27 @@ export default class StageScene extends Phaser.Scene {
 
     const depth = HUD_DEPTH + 50;
     const id = this.demoEnemyId || '';
-    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 108, `${id}  1 hit  2 hurt  3 skill  4 melee  R reset    5 red  6 white  7 dot  8 fire  9 water`, {
+    this._feelHint = addKitText(this, GAME_WIDTH / 2, GAME_HEIGHT - 184, `${id}  1 hit  2 hurt  3 skill  4 melee  R reset    5 red  6 white  7 dot  8 fire  9 water`, {
       system: true,
       size: 14,
       color: '#ffe7a0',
       depth: depth + 1,
     });
     const rows = [
+      {
+        y: GAME_HEIGHT - 148,
+        gap: 108,
+        width: 100,
+        labels: [
+          ['T TIRE', 'tire'],
+          ['Y HURT', 'hurtgate'],
+          ['C CRIT', 'crit'],
+          ['V L3', 'l3'],
+          ['F1 DW', 'deathwalk'],
+          ['F2 N1', 'normal01'],
+          ['F3 N2', 'normal02'],
+        ],
+      },
       {
         y: GAME_HEIGHT - 72,
         gap: 118,
@@ -553,6 +585,101 @@ export default class StageScene extends Phaser.Scene {
   _setFeelHint(note) {
     const id = this.demoEnemyId || '';
     this._feelHint?.setText?.(`${id}  ${note}`);
+  }
+
+  /**
+   * Query samples for the booth. `forceTire` and `forceHurt` are
+   * separate. A death query plays after a short beat so the walk is
+   * visible first. Live 10/45/45 rolls are not changed.
+   * @returns {boolean} true when a sample owns the hint
+   */
+  _armFeelPreview() {
+    const z = this._livingShowcase();
+    if (!z || !this.enemyFeel) return false;
+    this._feelDeathTimer?.remove?.();
+    this._feelDeathTimer = null;
+    const tire = forceTireEnabled();
+    const hurt = forceHurtEnabled();
+    let armed = false;
+    if (tire && !hurt) {
+      z.applyFeelTire();
+      this._setFeelHint(`tire ×0.3  HP ${Math.ceil(z.hp)}  walk-tiremove`);
+      armed = true;
+    } else if (hurt) {
+      z.applyFeelHurt();
+      this._setFeelHint(`hurt ×0.5  HP ${Math.ceil(z.hp)}  hurt-normal`);
+      armed = true;
+    }
+    const death = forceDeathMode();
+    if (!death) return armed;
+    this._feelDeathTimer = this.time?.delayedCall?.(450, () => {
+      const live = this._livingShowcase();
+      if (!live) return;
+      live.feelKill(death);
+      this._noteFeelKill(live, death);
+    });
+    return true;
+  }
+
+  /**
+   * @param {import('../entities/Zombie.js').Zombie|null} z
+   * @param {string} label
+   */
+  _noteFeelKill(z, label) {
+    const key = z?.body?.anims?.currentAnim?.key || 'none';
+    const hp = Math.ceil(z?.hp || 0);
+    this._setFeelHint(`${label}  HP ${hp}  ${key}`);
+  }
+
+  _feelTire() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    z.applyFeelTire();
+    this._setFeelHint(`tire ×0.3  HP ${Math.ceil(z.hp)}  walk-tiremove`);
+  }
+
+  _feelHurtGate() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    z.applyFeelHurt();
+    this._setFeelHint(`hurt ×0.5  HP ${Math.ceil(z.hp)}  hurt-normal`);
+  }
+
+  _feelCritKill() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    z.feelKill('crit');
+    this._noteFeelKill(z, 'pet crit');
+  }
+
+  _feelL3Kill() {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    z.feelKill('disappear');
+    this._noteFeelKill(z, 'L3 disappear');
+  }
+
+  /** @param {'deathwalk'|'normal01'|'normal02'} mode */
+  _feelDeathSample(mode) {
+    const z = this._livingShowcase();
+    if (!z) {
+      this._setFeelHint('down — R reset');
+      return;
+    }
+    const played = z.feelKill(mode);
+    this._noteFeelKill(z, played ? mode : `${mode} missing`);
   }
 
   _livingShowcase() {
@@ -794,8 +921,10 @@ export default class StageScene extends Phaser.Scene {
   _feelReset() {
     this._feelSkillCursor = 0;
     this._keepBruteShock(null);
+    this._feelDeathTimer?.remove?.();
+    this._feelDeathTimer = null;
     this._spawnShowcaseEnemy();
-    this._setFeelHint('R reset');
+    if (!this._armFeelPreview()) this._setFeelHint('R reset');
   }
 
   /**
@@ -1166,6 +1295,10 @@ export default class StageScene extends Phaser.Scene {
       this._refreshHud();
       this.petHud?.update(rawMs);
       this.defenders?.petCombat?.tickContactHurts?.(rawMs);
+      const showcase = this._showcase;
+      if (showcase && this.barricade) {
+        showcase.update(rawMs / 1000, this.barricade.contactXAt(showcase.y), null);
+      }
       return;
     }
     this.petEvolve?.notifyStageProgress(this.waveManager.getElapsed() / STAGE_DURATION);

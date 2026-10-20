@@ -18,15 +18,21 @@ import {
   zombieActionKey,
   zombieDeathKeys,
   pickDeathKey,
+  pickProfessionAttackKey,
+  pickProfessionDeathKey,
+  professionLocomotionKey,
+  tireMoveSpeed,
   zombieSheetKey,
   zombieSkinDef,
   ZOMBIE_HURT_MS,
   ZOMBIE_HURT_SPEED_MUL,
+  ZOMBIE_TIRE_HP,
+  ZOMBIE_TIRE_SPEED_MUL,
 } from '../assets/zombieSprites.js';
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
-import { attackContactFrame } from '../data/enemyShowcase.js';
+import { attackContactFrame, ruleAttackContactFrame } from '../data/enemyShowcase.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
@@ -125,6 +131,17 @@ export class Zombie {
     this._flashToken = 0;
     /** Feel booth holds this body in front of the fence. Waves never set it. */
     this.showcaseHold = false;
+    /**
+     * Feel-only march inside a short lane so tire ×0.3 and hurt ×0.5
+     * can be watched. Waves never set it. It does not deal contact damage.
+     */
+    this.feelPace = false;
+    /** Feel-only. Keeps hurt-normal and ×0.5 without dropping under the tire gate. */
+    this._feelHurtLatch = false;
+    /** Feel-only death strip. Live rolls never set this. */
+    this._feelDeathKey = null;
+    /** @type {Phaser.GameObjects.Text|null} */
+    this._hpLabel = null;
     /** Eastward march used to lead a water shot. 0 while held or stopped. */
     this._marchVx = 0;
     this._showcaseToken = 0;
@@ -154,9 +171,11 @@ export class Zombie {
     this._baseFill = this.typeDef.placeholderColor;
     this._baseStroke = this.typeDef.placeholderStroke;
 
-    // PIXELLAB_HOOK: rectangle stands in until the library `{group}-walk` strip is cached
+    // PIXELLAB_HOOK: rectangle stands in until the library `{group}-walk` strip is cached.
+    // v0.36.25 profession bodies start on walk-normal or walk-tiremove.
+    const startKey = (this._isSprite && this._locomotionAnimKey()) || walkKey;
     this.body = this._isSprite
-      ? this._createSprite(scene, cfg.x, cfg.y, walkKey)
+      ? this._createSprite(scene, cfg.x, cfg.y, startKey)
       : this._createPlaceholder(scene, cfg.x, cfg.y);
 
     const metrics = this._barMetrics();
@@ -393,8 +412,18 @@ export class Zombie {
 
   update(deltaSec, contactX, pet = null) {
     this._marchVx = 0;
-    if (!this.alive) return;
-    if (this.showcaseHold) return;
+    if (!this.alive) {
+      this._syncHpReadout();
+      return;
+    }
+    if (this.showcaseHold && !this.feelPace) {
+      this._syncBars();
+      return;
+    }
+    if (this.feelPace && this.showcaseHold) {
+      this._tickFeelPace(deltaSec);
+      return;
+    }
 
     if (this._petSlideMs > 0 && this.body) {
       const ms = Math.max(0, deltaSec * 1000);
@@ -419,8 +448,8 @@ export class Zombie {
       this.petBiteTarget = null;
       if (!this.atBarricade) {
         // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
-        // Critical HP uses CRIT_SPEED_MULT (stumble sheet or not).
-        const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
+        // Professions use the HP 30 tire gate. Everyone else uses CRIT_SPEED_MULT.
+        const speed = this._marchSpeed();
         const march = speed * LAYOUT_SCALE;
         const nextX = this.body.x + march * deltaSec;
         const halt = contactX - this.displayHalf;
@@ -507,7 +536,7 @@ export class Zombie {
     this.petBiteTarget = null;
     this._haltX = null;
     this.scene?.tweens?.killTweensOf?.(this.body);
-    const speed = woundedMoveSpeed(this.speed, this.hp, this.maxHp) * this._slowFactor();
+    const speed = this._marchSpeed();
     const step = speed * LAYOUT_SCALE * deltaSec;
     if (dist > 0.001) {
       this.body.x += (dx / dist) * step;
@@ -675,9 +704,32 @@ export class Zombie {
   _stopWalkAnim() {
     if (!this._isSprite || !this.body?.anims) return;
     const key = this.body.anims.currentAnim?.key || '';
-    if (key.endsWith('-walk') || key.endsWith('-run') || key.endsWith('-stumble')) {
-      this.body.anims.stop();
-    }
+    if (this._isLocomotionKey(key)) this.body.anims.stop();
+  }
+
+  /**
+   * Walk, run, stumble, walk-normal, and walk-tiremove.
+   * @param {string} key
+   */
+  _isLocomotionKey(key) {
+    return key.endsWith('-walk')
+      || key.endsWith('-run')
+      || key.endsWith('-stumble')
+      || key.endsWith('-walk-normal')
+      || key.endsWith('-walk-tiremove');
+  }
+
+  /**
+   * Profession rule skins march at wave speed until HP drops under 30,
+   * then at 30% (TireMove). Other skins keep the critical-HP ratio slow.
+   * Hurt ×0.5 stacks on either march speed.
+   */
+  _marchSpeed() {
+    const rules = this.skin?.ruleAnims;
+    const base = rules
+      ? tireMoveSpeed(this.speed, this.hp)
+      : woundedMoveSpeed(this.speed, this.hp, this.maxHp);
+    return base * this._slowFactor();
   }
 
   /**
@@ -694,29 +746,64 @@ export class Zombie {
   }
 
   /**
-   * Stumble loop when that sheet is registered and HP is critical.
-   * Otherwise keep the walk loop. No-op for rectangle placeholders.
+   * Profession rule skins: walk-normal at HP ≥ 30, walk-tiremove under 30.
+   * Other skins: stumble loop when that sheet is registered and HP is
+   * critical, otherwise the walk (runners use run).
+   * @returns {string|null}
    */
-  _syncLocomotion() {
-    if (!this._isSprite || !this.body?.anims || !this.alive || this.atBarricade) return;
-    const hurt = this._animKey('hurt');
-    const current = this.body.anims.currentAnim?.key;
-    // A hit just started the hurt strip. Do not replace it with walk this frame.
-    if (hurt && current === hurt && this.body.anims.isPlaying) return;
+  _locomotionAnimKey() {
+    const rules = this.skin?.ruleAnims;
+    if (rules) {
+      const ruleKey = professionLocomotionKey(rules, this.hp);
+      if (this._animReady(ruleKey)) return ruleKey;
+    }
     const stumble = this._animKey('stumble');
     const walk = this._animKey('walk');
     const stumbleReady =
       !!stumble &&
       (this.skin ? this._animReady(stumble) : hasZombieAnim(this.scene, this.variant, 'stumble'));
-    const key = this.isCritical() && stumbleReady ? stumble : walk;
-    if (!this.scene.anims.exists(key)) return;
+    if (this.isCritical() && stumbleReady) return stumble;
+    return walk;
+  }
+
+  /**
+   * Keep the locomotion loop. No-op for rectangle placeholders and while biting.
+   */
+  _syncLocomotion() {
+    if (!this._isSprite || !this.body?.anims || !this.alive || this.atBarricade) return;
+    const hurt = this._hurtAnimKey();
+    const current = this.body.anims.currentAnim?.key;
+    // A hit just started the hurt strip. Do not replace it with walk this frame.
+    if (hurt && current === hurt && this.body.anims.isPlaying) return;
+    const key = this._locomotionAnimKey();
+    if (!key || !this.scene.anims.exists(key)) return;
     if (current === key && this.body.anims.isPlaying) return;
     this.body.play(key);
   }
 
   /**
+   * Bite strip for barricade and player contact.
+   * v0.36.25 profession skins roll hit01 / hit02 50/50, including office
+   * hit02 (ALIAS). Nurse attach stays a skill strip, not this bite.
+   * Skins without ruleAnims keep attach, then the legacy attack key.
+   * @returns {string|null}
+   */
+  _pickBiteKey() {
+    const rules = this.skin?.ruleAnims;
+    const rng = typeof this._attackRng === 'function' ? this._attackRng : Math.random;
+    if (rules) {
+      const rolled = pickProfessionAttackKey(rules, rng);
+      if (this._animReady(rolled)) return rolled;
+      const other = rolled === rules.hit01 ? rules.hit02 : rules.hit01;
+      if (this._animReady(other)) return other;
+    }
+    const attachKey = this._animKey('attach');
+    if (!rules && this._animReady(attachKey)) return attachKey;
+    return this._animKey('attack');
+  }
+
+  /**
    * Play the bite strip without stepping forward. Feet stay on the halt X.
-   * Nurse uses the attach strip when it is loaded; everyone else uses attack.
    * The wall flash waits for that strip's contact frame.
    */
   _playAttackPunch() {
@@ -725,8 +812,7 @@ export class Zombie {
     this.scene?.tweens?.killTweensOf?.(this.body);
     this.body.x = homeX;
     this._stopWalkAnim();
-    const attachKey = this._animKey('attach');
-    const attackKey = this._animReady(attachKey) ? attachKey : this._animKey('attack');
+    const attackKey = this._pickBiteKey();
     const played = !!(this._isSprite && this._animReady(attackKey));
     if (played) this.body.play(attackKey);
     this._armBarricadeBeat(played ? attackKey : null);
@@ -741,7 +827,7 @@ export class Zombie {
     this._clearAttackContact();
     if (!this.alive || !this.atBarricade || this.petBiteTarget) return;
     const total = attackKey ? (this.scene?.anims?.get?.(attackKey)?.frames?.length || 0) : 0;
-    const hitFrame = attackContactFrame(this.skin?.id, total);
+    const hitFrame = attackContactFrame(this.skin?.id, total, attackKey);
     const ready = !!(attackKey && this._animReady(attackKey) && Number.isInteger(hitFrame));
     if (!ready) {
       this._attackBeat = true;
@@ -765,7 +851,7 @@ export class Zombie {
 
   /**
    * @param {number} amount
-   * @param {{ kind?: string, feel?: boolean, flashMs?: number, hurtStrip?: boolean }} [hit]
+   * @param {{ kind?: string, feel?: boolean, flashMs?: number, hurtStrip?: boolean, crit?: boolean, charge?: number }} [hit]
    * `hurtStrip` must be exactly true. Ranged feel hits leave it off so the
    * hurt sheet's baked yellow crescent never plays. Melee opts in.
    * @returns {boolean} true if killed
@@ -818,7 +904,7 @@ export class Zombie {
     }
     const restore = () => {
       if (this._showcaseToken !== token || !this.alive || !this.body) return;
-      const walk = this._animKey('walk');
+      const walk = this._locomotionAnimKey();
       if (!this._animReady(walk)) return;
       try {
         this.body.play(walk);
@@ -854,9 +940,11 @@ export class Zombie {
   playShowcaseAttack(hitFrame, onContact) {
     if (!this.alive || !this.body) return false;
     this._clearAttackContact();
-    const attackKey = this._animKey('attack');
+    const attackKey = this._pickBiteKey();
     const played = attackKey ? this.playShowcaseStrip(attackKey) : false;
-    this._armAttackContact(played ? attackKey : null, hitFrame, onContact);
+    const ruleFrame = ruleAttackContactFrame(attackKey);
+    const frame = ruleFrame != null ? ruleFrame : hitFrame;
+    this._armAttackContact(played ? attackKey : null, frame, onContact);
     return played;
   }
 
@@ -974,13 +1062,23 @@ export class Zombie {
 
   /**
    * Hurt strip after the white flash. No-op when that sheet is not loaded.
-   * PIXELLAB_HOOK: zombie-office-worker-v2-hurt, zombie-delivery-hurt,
-   * zombie-chef-hurt are 4 frames @ 10. Other types use `{prefix}-hurt`.
+   * v0.36.25 profession skins play `hurt-normal`. Office is 5 frames @ 10.
+   * Delivery, chef, and nurse stay 4 @ 10. Other skins keep `{prefix}-hurt`.
    */
   _playHurtStrip() {
-    const hurt = this._animKey('hurt');
+    const hurt = this._hurtAnimKey();
     if (!hurt) return false;
     return this.playShowcaseStrip(hurt);
+  }
+
+  /**
+   * Profession hurt-normal when that strip is loaded, otherwise the skin hurt key.
+   * @returns {string|null}
+   */
+  _hurtAnimKey() {
+    const rules = this.skin?.ruleAnims;
+    if (rules?.hurtNormal && this._animReady(rules.hurtNormal)) return rules.hurtNormal;
+    return this._animKey('hurt');
   }
 
   /** Half march speed for the hurt window. Bite DPS does not read this. */
@@ -1044,7 +1142,7 @@ export class Zombie {
     this._deathMode = overkill ? 'overkill' : 'normal';
     this._playHitFlash(hit?.flashMs);
 
-    const deathKey = this._libraryDeathKey(overkill);
+    const deathKey = this._libraryDeathKey(overkill, hit);
     if (deathKey) {
       if (overkill) {
         beginHitlag(this.scene);
@@ -1080,14 +1178,28 @@ export class Zombie {
   /**
    * Authored death strip when the library skin is on this body.
    * Exploders use the explode strip on an overkill so the blast FX can attach.
+   * v0.36.25 profession skins use Peter's gates: crit → die-critical-hit,
+   * water L3 → die-disappear, else deathwalk 10% / normal01 45% / normal02 45%.
+   * Crit is the existing pet crit roll (`hit.crit`). L3 is `hit.charge` ≥ 3.
+   * Neither flag changes the damage number. Other skins still roll die1 / die2.
    * @param {boolean} overkill
+   * @param {{ crit?: boolean, charge?: number }} [hit]
    * @returns {string|null}
    */
-  _libraryDeathKey(overkill) {
+  _libraryDeathKey(overkill, hit) {
     if (!this._isSprite || !this.skin) return null;
     if (overkill) {
       const blast = this._animKey('blast');
       if (this._animReady(blast)) return blast;
+    }
+    if (this._feelDeathKey && this._animReady(this._feelDeathKey)) return this._feelDeathKey;
+    if (this.skin.ruleAnims) {
+      const picked = pickProfessionDeathKey(
+        this.skin.ruleAnims,
+        { crit: hit?.crit === true, charge: Number(hit?.charge) || 0 },
+        (key) => this._animReady(key),
+      );
+      if (picked) return picked;
     }
     /** @type {string[]} */
     const ready = [];
@@ -1207,7 +1319,10 @@ export class Zombie {
   }
 
   _syncBars() {
-    if (!this._hpBar || !this.body) return;
+    if (!this._hpBar || !this.body) {
+      this._syncHpReadout();
+      return;
+    }
     const h = this._hpBar.displayHeight;
     const barY = this._crownY() - layoutPx(2) - h / 2;
     const ratio = this.maxHp > 0 ? Math.max(0, this.hp / this.maxHp) : 0;
@@ -1215,6 +1330,168 @@ export class Zombie {
     this._barH = h;
     this._hpBar.setPosition(this.body.x, barY);
     this._hpBar.setRatio(ratio);
+    this._syncHpReadout();
+  }
+
+  /**
+   * Feel booth, or `?showHp=1`. A number near the sprite. Display only.
+   */
+  _syncHpReadout() {
+    const scene = this.scene;
+    if (!scene?.showZombieHp || !this.body?.active) {
+      this._releaseHpLabel();
+      return;
+    }
+    if (!this._hpLabel?.active) {
+      const label = scene.add?.text?.(0, 0, '', {
+        fontFamily: 'ui-monospace, monospace',
+        fontSize: '14px',
+        color: '#ffe7a0',
+        stroke: '#1a1208',
+        strokeThickness: 4,
+      });
+      if (!label) return;
+      label.setOrigin?.(0.5, 1);
+      this._hpLabel = label;
+    }
+    this._hpLabel.setText(this._hpReadoutTag());
+    const top = Number.isFinite(this.visualTop) ? this.visualTop : this.body.y;
+    this._hpLabel.setPosition(this.body.x, top - layoutPx(6));
+    if (typeof this._hpLabel.setDepth === 'function') {
+      this._hpLabel.setDepth((this.body.depth || 0) + 12);
+    }
+  }
+
+  /** Short debug line: HP, the speed gate, and the strip that is playing. */
+  _hpReadoutTag() {
+    const hp = Math.max(0, Math.ceil(Number(this.hp) || 0));
+    const bits = [`HP ${hp}`];
+    if (this.skin?.ruleAnims) {
+      if (Number(this.hp) < ZOMBIE_TIRE_HP) bits.push(`tire×${ZOMBIE_TIRE_SPEED_MUL}`);
+      if (this._hurtMs > 0 || this._feelHurtLatch) bits.push(`hurt×${ZOMBIE_HURT_SPEED_MUL}`);
+    }
+    const key = this.body?.anims?.currentAnim?.key || '';
+    if (key.includes('die-')) bits.push(key.slice(key.indexOf('die-')));
+    else if (key.includes('walk-tire')) bits.push('walk-tiremove');
+    else if (key.includes('hurt')) bits.push('hurt-normal');
+    else if (key.includes('walk')) bits.push('walk-normal');
+    return bits.join(' ');
+  }
+
+  _releaseHpLabel() {
+    this._hpLabel?.destroy?.();
+    this._hpLabel = null;
+  }
+
+  /**
+   * Feel-only walk between two X values at the live march speed.
+   * Does not reach the barricade and does not change DPS.
+   * @param {number} deltaSec
+   */
+  _tickFeelPace(deltaSec) {
+    if (!this.body) return;
+    if (this._feelHurtLatch) {
+      this._hurtMs = ZOMBIE_HURT_MS;
+      const hurt = this._hurtAnimKey();
+      const current = this.body.anims?.currentAnim?.key;
+      const playing = !!this.body.anims?.isPlaying;
+      if (hurt && (current !== hurt || !playing)) this._playHurtStrip();
+    }
+    const speed = this._marchSpeed() * LAYOUT_SCALE;
+    const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
+    const next = this.body.x + speed * dt;
+    const maxX = Number.isFinite(this._paceMax) ? this._paceMax : this.body.x;
+    const minX = Number.isFinite(this._paceMin) ? this._paceMin : this.body.x;
+    this.body.x = next >= maxX ? minX : next;
+    if (!this._feelHurtLatch) this._syncLocomotion();
+    this._applyDepth();
+    this._syncBars();
+  }
+
+  /** Stop the feel march. The next sample can start a new one. */
+  stopFeelPace() {
+    this.feelPace = false;
+    this._feelHurtLatch = false;
+    this._hurtMs = 0;
+  }
+
+  /**
+   * Pace west of the fence at the current march speed.
+   * Waves never call this.
+   */
+  beginFeelPace() {
+    if (!this.body) return;
+    this.feelPace = true;
+    this.showcaseHold = true;
+    this._paceMax = this.body.x;
+    this._paceMin = this.body.x - layoutPx(140);
+    this.body.x = this._paceMin;
+    this._syncBars();
+  }
+
+  /**
+   * HP under 30, no hurt latch. walk-tiremove at ×0.3.
+   * maxHp and gold stay on the wave row.
+   */
+  applyFeelTire() {
+    if (!this.alive) return false;
+    this.stopFeelPace();
+    this._feelDeathKey = null;
+    const under = ZOMBIE_TIRE_HP - 1;
+    this.hp = Math.min(this.hp, under);
+    if (!(this.hp > 0)) this.hp = under;
+    this._syncLocomotion();
+    this.beginFeelPace();
+    return true;
+  }
+
+  /**
+   * Hurt-normal and ×0.5 while HP stays on the walk-normal side of the gate.
+   */
+  applyFeelHurt() {
+    if (!this.alive) return false;
+    this.stopFeelPace();
+    this._feelDeathKey = null;
+    if (Number(this.hp) < ZOMBIE_TIRE_HP) this.hp = ZOMBIE_TIRE_HP;
+    this._feelHurtLatch = true;
+    this._hurtMs = ZOMBIE_HURT_MS;
+    this._playHurtStrip();
+    this.beginFeelPace();
+    return true;
+  }
+
+  /**
+   * Feel-only kill sample. `crit` and `disappear` use the live gates
+   * (pet crit, water charge ≥ 3) and do not spawn a projectile.
+   * The three settle names play that strip once. Weights stay 10/45/45.
+   * @param {'deathwalk'|'normal01'|'normal02'|'crit'|'disappear'} mode
+   */
+  feelKill(mode) {
+    if (!this.alive || !this.body) return false;
+    this.stopFeelPace();
+    this.showcaseHold = true;
+    const rules = this.skin?.ruleAnims;
+    if (mode === 'crit') {
+      this._feelDeathKey = null;
+      this.takeDamage(this.hp, { feel: true, kind: 'pet', crit: true, hurtStrip: false });
+      return true;
+    }
+    if (mode === 'disappear') {
+      this._feelDeathKey = null;
+      this.takeDamage(this.hp, { feel: true, kind: 'water', charge: 3, hurtStrip: false });
+      return true;
+    }
+    const key = mode === 'deathwalk'
+      ? rules?.dieDeathwalk
+      : mode === 'normal01'
+        ? rules?.dieNormal01
+        : mode === 'normal02'
+          ? rules?.dieNormal02
+          : null;
+    if (!key) return false;
+    this._feelDeathKey = key;
+    this.takeDamage(this.hp, { feel: true, kind: 'feel', hurtStrip: false });
+    return true;
   }
 
   _releaseBars() {
@@ -1254,6 +1531,7 @@ export class Zombie {
       this.body = null;
     }
     this._releaseBars();
+    this._releaseHpLabel();
   }
 }
 

@@ -3657,11 +3657,14 @@ function strike(scene, zombie, damage, color, opts = {}) {
   const hx = zombie.x;
   const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : chestY(zombie);
   const goldVal = zombie.goldValue || 0;
-  const killed = zombie.takeDamage(amount, { kind: 'pet' });
+  // Existing display crit. The roll does not change `amount`.
+  // v0.36.25 passes it so a killing crit can play die-critical-hit.
+  const chance = Number.isFinite(opts.critChance) ? opts.critChance : (scene?._zdCrit ?? 0.15);
+  const crit = chance > 0 && Math.random() < chance;
+  const killed = zombie.takeDamage(amount, { kind: 'pet', crit });
   if (amount > 0) scene?.audio?.playHitImpact?.();
   showDamageText(scene, hx, hy, amount, color, zombie.id);
-  const chance = Number.isFinite(opts.critChance) ? opts.critChance : (scene?._zdCrit ?? 0.15);
-  if (chance > 0 && Math.random() < chance) showCritText(scene, hx, hy - layoutPx(12));
+  if (crit) showCritText(scene, hx, hy - layoutPx(12));
   if (killed) return { gold: goldVal, kills: 1, killed: true };
   return { gold: 0, kills: 0, killed: false };
 }

@@ -8,14 +8,14 @@
 | [Hero](#hero) | 3 | 141 |
 | [Pets](#pets) | 17 | 124 |
 | [UI](#ui) | 1 | 51 |
-| [Zombies](#zombies) | 15 | 180 |
+| [Zombies](#zombies) | 15 | 220 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **619** |
+| **Total** | **54** | **659** |
 
 <a id="hero"></a>
 ## Hero
@@ -613,23 +613,33 @@ Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: pri
 
 <img src="previews/zombies/chef/preview.gif" alt="chef preview" height="140">
 
-Chef zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.
+Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.
 
-- group `chef` · 11 assets · frame 84x84 · key prefix `zombie-chef-` · manifest [enemies/zombies/chef/manifest.json](enemies/zombies/chef/manifest.json)
+- group `chef` · 21 assets · frame 84x84 · key prefix `zombie-chef-` · manifest [enemies/zombies/chef/manifest.json](enemies/zombies/chef/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `zombie-chef-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) |  |
+| `zombie-chef-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key. |
 | `zombie-chef-run` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
-| `zombie-chef-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
-| `zombie-chef-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-chef-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key. |
+| `zombie-chef-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key. |
 | `zombie-chef-attack` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-chef-bite` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-chef-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-chef-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key. |
 | `zombie-chef-idle_itch` | 8 | 84x84 | 6 | loop | (0.5, 1.0) |  |
 | `zombie-chef-hurt_freeze` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
 | `zombie-chef-hurt_burn` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-chef-hurt_shock` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
+| `zombie-chef-walk-normal` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-chef-walk` points at this sheet. |
+| `zombie-chef-walk-tiremove` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove. |
+| `zombie-chef-hurt-normal` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-chef-hurt` points at this sheet. |
+| `zombie-chef-hit01-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-chef-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
+| `zombie-chef-hit02-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal. |
+| `zombie-chef-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-chef-die1` points at this sheet. |
+| `zombie-chef-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet. |
+| `zombie-chef-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |
+| `zombie-chef-die-critical-hit` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit. |
+| `zombie-chef-die-disappear` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear. |
 
 ### Comedic Loot Dropper (Clown) (小丑/奇特搞怪喪屍)
 
@@ -686,23 +696,33 @@ Half-machine zombie: spark hurt, fall, and self-destruct explode strips.
 
 <img src="previews/zombies/delivery/preview.gif" alt="delivery preview" height="140">
 
-Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2. hurt_shock is 8 frames.
+Delivery rider zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.
 
-- group `delivery` · 11 assets · frame 84x84 · key prefix `zombie-delivery-` · manifest [enemies/zombies/delivery/manifest.json](enemies/zombies/delivery/manifest.json)
+- group `delivery` · 21 assets · frame 84x84 · key prefix `zombie-delivery-` · manifest [enemies/zombies/delivery/manifest.json](enemies/zombies/delivery/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `zombie-delivery-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) |  |
+| `zombie-delivery-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-delivery-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key. |
 | `zombie-delivery-run` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
-| `zombie-delivery-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
-| `zombie-delivery-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-delivery-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-delivery-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key. |
+| `zombie-delivery-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-delivery-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key. |
 | `zombie-delivery-attack` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-delivery-bite` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-delivery-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-delivery-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-delivery-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key. |
 | `zombie-delivery-idle_itch` | 8 | 84x84 | 6 | loop | (0.5, 1.0) |  |
 | `zombie-delivery-hurt_freeze` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
 | `zombie-delivery-hurt_burn` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-delivery-hurt_shock` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
+| `zombie-delivery-walk-normal` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-delivery-walk` points at this sheet. |
+| `zombie-delivery-walk-tiremove` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove. |
+| `zombie-delivery-hurt-normal` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-delivery-hurt` points at this sheet. |
+| `zombie-delivery-hit01-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-delivery-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
+| `zombie-delivery-hit02-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal. |
+| `zombie-delivery-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-delivery-die1` points at this sheet. |
+| `zombie-delivery-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-delivery-die2` points at this sheet. |
+| `zombie-delivery-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |
+| `zombie-delivery-die-critical-hit` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit. |
+| `zombie-delivery-die-disappear` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear. |
 
 ### Bloated Toxic Exploder (劇毒自爆型喪屍)
 
@@ -733,46 +753,66 @@ Self-destructing zombie. `zombie-exploder-explode` is the body animation; spawn 
 
 <img src="previews/zombies/nurse/preview.gif" alt="nurse preview" height="140">
 
-Nurse zombie. 84×84 east strips, origin (0.5, 1.0), standard action parity with office-worker-v2, plus attach: an 8-frame once latch that lunges and plants a syringe and IV into a barricade. hurt_shock is 4 frames.
+Nurse zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). attach stays an 8-frame once latch. hurt_shock stays 4 frames. Cell stays 84×84.
 
-- group `nurse` · 12 assets · frame 84x84 · key prefix `zombie-nurse-` · manifest [enemies/zombies/nurse/manifest.json](enemies/zombies/nurse/manifest.json)
+- group `nurse` · 22 assets · frame 84x84 · key prefix `zombie-nurse-` · manifest [enemies/zombies/nurse/manifest.json](enemies/zombies/nurse/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `zombie-nurse-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) |  |
+| `zombie-nurse-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-nurse-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key. |
 | `zombie-nurse-run` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
-| `zombie-nurse-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
-| `zombie-nurse-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-nurse-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-nurse-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key. |
+| `zombie-nurse-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-nurse-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key. |
 | `zombie-nurse-attack` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-nurse-bite` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-nurse-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-nurse-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-nurse-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key. |
 | `zombie-nurse-idle_itch` | 8 | 84x84 | 6 | loop | (0.5, 1.0) |  |
 | `zombie-nurse-hurt_freeze` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
 | `zombie-nurse-hurt_burn` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-nurse-hurt_shock` | 4 | 84x84 | 12 | loop | (0.5, 1.0) | 4 frames. |
+| `zombie-nurse-walk-normal` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-nurse-walk` points at this sheet. |
+| `zombie-nurse-walk-tiremove` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-TireMove. |
+| `zombie-nurse-hurt-normal` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 4×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-nurse-hurt` points at this sheet. |
+| `zombie-nurse-hit01-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-nurse-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
+| `zombie-nurse-hit02-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal. |
+| `zombie-nurse-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-nurse-die1` points at this sheet. |
+| `zombie-nurse-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-nurse-die2` points at this sheet. |
+| `zombie-nurse-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |
+| `zombie-nurse-die-critical-hit` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit. |
+| `zombie-nurse-die-disappear` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear. |
 | `zombie-nurse-attach` | 8 | 84x84 | 10 | once | (0.5, 1.0) | Latch onto a barricade: lunge, plant syringe and IV, cling. Plays once. |
 
 ### Office Worker Zombie v2 (上班族丧尸)
 
 <img src="previews/zombies/office-worker-v2/preview.gif" alt="office-worker-v2 preview" height="140">
 
-84×84 salaryman zombie (east, origin 0.5, 1.0). Eleven actions; hurt_shock is 8 frames. The 64×64 zombie-office-* group was deprecated after v0.28 Accept and removed from the catalog.
+84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.
 
-- group `office-worker-v2` · 11 assets · frame 84x84 · key prefix `zombie-office-worker-v2-` · manifest [enemies/zombies/office-worker-v2/manifest.json](enemies/zombies/office-worker-v2/manifest.json)
+- group `office-worker-v2` · 21 assets · frame 84x84 · key prefix `zombie-office-worker-v2-` · manifest [enemies/zombies/office-worker-v2/manifest.json](enemies/zombies/office-worker-v2/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
-| `zombie-office-worker-v2-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) |  |
+| `zombie-office-worker-v2-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-office-worker-v2-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key. |
 | `zombie-office-worker-v2-run` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
-| `zombie-office-worker-v2-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
-| `zombie-office-worker-v2-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-office-worker-v2-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal01` (die-normal01, 8 frames). Stage still plays this legacy key. |
+| `zombie-office-worker-v2-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-office-worker-v2-die-normal02` (die-normal 2, 8 frames). Stage still plays this legacy key. |
 | `zombie-office-worker-v2-attack` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-bite` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
-| `zombie-office-worker-v2-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) |  |
+| `zombie-office-worker-v2-hurt` | 5 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-office-worker-v2-hurt-normal` (Hurt-normal, 5 frames). Stage still plays this legacy key. |
 | `zombie-office-worker-v2-idle_itch` | 8 | 84x84 | 6 | loop | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-hurt_freeze` | 8 | 84x84 | 10 | once | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-hurt_burn` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-office-worker-v2-hurt_shock` | 8 | 84x84 | 12 | loop | (0.5, 1.0) | 8 frames. |
+| `zombie-office-worker-v2-walk-normal` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Walk-normal. Legacy `zombie-office-worker-v2-walk` points at this sheet. |
+| `zombie-office-worker-v2-walk-tiremove` | 9 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 9×84 east, origin (0.5, 1). PixelLab Walk-TireMove. |
+| `zombie-office-worker-v2-hurt-normal` | 5 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 5×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-office-worker-v2-hurt` points at this sheet. |
+| `zombie-office-worker-v2-hit01-normal` | 17 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-office-worker-v2-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
+| `zombie-office-worker-v2-hit02-normal` | 17 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal. |
+| `zombie-office-worker-v2-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal01. PixelLab name is `die-normal01` (lowercase). Legacy `zombie-office-worker-v2-die1` points at this sheet. |
+| `zombie-office-worker-v2-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal 2. PixelLab name is `die-normal 2`; the strip file and key use die-normal02. Legacy `zombie-office-worker-v2-die2` points at this sheet. |
+| `zombie-office-worker-v2-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |
+| `zombie-office-worker-v2-die-critical-hit` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-critical hit. |
+| `zombie-office-worker-v2-die-disappear` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-disappear. |
 
 ### Heavy Armored Riot Zombie (armored) (重裝防爆喪屍（可破甲）)
 

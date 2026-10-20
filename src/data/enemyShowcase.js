@@ -11,6 +11,8 @@ import { DEMO_ENEMY_IDS } from './GameConfig.js';
  * @type {Record<string, { anim: string, cue: string }[]>}
  */
 export const ENEMY_SKILL_STRIPS = {
+  // Rule anims load with the library (`skin.ruleAnims`). They are not skills.
+  // Key 3 stays empty here so office / delivery / chef keep "no skill".
   'office-worker-v2': [],
   delivery: [],
   chef: [],
@@ -283,12 +285,8 @@ export function feelSkillSelection(id, strips, cursor) {
 }
 
 /**
- * Contact frame for the strip that is actually playing.
- * A catalog id uses {@link ENEMY_ATTACK_HIT_FRAME} when that index fits.
- * Bare and legacy strips, which are not in the table, use the same ~80%
- * rule. Null when there is no strip to wait for.
+ * Catalog contact index, or null when this id is not in the live table.
  * @param {string|null|undefined} id
- * @param {number} frameCount
  * @returns {number|null}
  */
 function listedAttackHitFrame(id) {
@@ -297,9 +295,54 @@ function listedAttackHitFrame(id) {
   return Number.isInteger(frame) ? frame : null;
 }
 
-export function attackContactFrame(id, frameCount) {
+/**
+ * v0.36.25 contact on the profession hit01 / hit02 strips.
+ * Phaser index is 1-based. Each value is the impact cell: the first
+ * frame where the weapon reaches the barricade, before the held
+ * follow-through. Measured on the 84×84 sheets.
+ * Legacy 8-frame bites stay on {@link ENEMY_ATTACK_HIT_FRAME}
+ * (index 6; office feel 5; nurse feel 7). Those indexes do not
+ * transfer onto these longer strips.
+ * Office hit02 is the ALIAS pull-weapon strip; its strike is index 11.
+ * @type {Record<string, number>}
+ */
+export const RULE_ATTACK_HIT_FRAME = {
+  'zombie-office-worker-v2-hit01-normal': 7,
+  'zombie-office-worker-v2-hit02-normal': 11,
+  'zombie-chef-hit01-normal': 8,
+  'zombie-chef-hit02-normal': 10,
+  'zombie-delivery-hit01-normal': 8,
+  'zombie-delivery-hit02-normal': 10,
+  'zombie-nurse-hit01-normal': 6,
+  'zombie-nurse-hit02-normal': 12,
+};
+
+/**
+ * @param {string|null|undefined} attackKey
+ * @returns {number|null}
+ */
+export function ruleAttackContactFrame(attackKey) {
+  if (!attackKey || !Object.prototype.hasOwnProperty.call(RULE_ATTACK_HIT_FRAME, attackKey)) return null;
+  const frame = RULE_ATTACK_HIT_FRAME[attackKey];
+  return Number.isInteger(frame) ? frame : null;
+}
+
+/**
+ * Contact frame for the strip that is actually playing.
+ * A rule hit key uses {@link RULE_ATTACK_HIT_FRAME} when that index fits.
+ * Otherwise a catalog id uses {@link ENEMY_ATTACK_HIT_FRAME}.
+ * Bare and legacy strips use the same ~80% rule.
+ * Null when there is no strip to wait for.
+ * @param {string|null|undefined} id
+ * @param {number} frameCount
+ * @param {string|null|undefined} [attackKey]
+ * @returns {number|null}
+ */
+export function attackContactFrame(id, frameCount, attackKey) {
   const total = Number(frameCount);
   const hasStrip = Number.isInteger(total) && total > 0;
+  const rule = ruleAttackContactFrame(attackKey);
+  if (rule != null && hasStrip && rule >= 1 && rule <= total) return rule;
   const listed = listedAttackHitFrame(id);
   if (listed != null && hasStrip && listed >= 1 && listed <= total) return listed;
   if (hasStrip) return lateAttackFrame(total);
@@ -307,9 +350,11 @@ export function attackContactFrame(id, frameCount) {
 }
 
 /**
- * Attack contact frame for feel key 2, or null when that id has no strike.
+ * Legacy 8-frame feel key 2, or null when that id has no strike.
  * Office and nurse use {@link FEEL_ATTACK_HIT_OVERRIDE}. Everyone else uses
  * the live table. Delivery is not overridden.
+ * v0.36.25 profession bites play hit01/hit02 and use
+ * {@link RULE_ATTACK_HIT_FRAME} instead of this override.
  * @param {string|null|undefined} id
  * @returns {number|null}
  */

@@ -260,46 +260,20 @@ export default class WeaponTryoutScene extends Phaser.Scene {
   }
 
   /**
-   * `player-girl-water-fire`: start, loop while SPACE is down, then the end.
-   * Walking plays the north/south sheets only when she is not shooting.
-   * @param {boolean} held
+   * v0.36.26: the sandbox water body does not play `player-girl-water-fire`.
+   * Up/down keeps the walk while SPACE is charging or on the release frame.
+   * Standing holds the last deploy frame. The float gun still fires.
+   * @param {boolean} [_held]
    */
-  _syncWaterPose(held) {
+  _syncWaterPose(_held) {
     const hero = this.hero;
     if (!hero || typeof hero.play !== 'function') return;
-    if (this.weaponId !== 'water') {
-      this._attackPose = null;
-      return;
-    }
-    const base = HERO_UNARMED.waterFire;
-    const start = `${base}:start`;
-    const loop = `${base}:loop`;
-    const end = `${base}:end`;
-    const current = hero.anims?.currentAnim?.key ?? null;
-    const playing = !!hero.anims?.isPlaying;
+    this._attackPose = null;
+    if (this.weaponId !== 'water') return;
     const play = (key) => {
       if (!this.anims?.exists?.(key)) return false;
       return playLibraryAnim(hero, key, this);
     };
-    if (held) {
-      this._attackPose = 'hold';
-      if ((current === loop || current === start) && playing) return;
-      if (current === start && !playing && play(loop, true)) return;
-      if (play(start, true) || play(base, true)) return;
-      this._attackPose = null;
-      return;
-    }
-    if (this._attackPose === 'hold' || this._attackPose === 'end') {
-      if (current === end && playing) {
-        this._attackPose = 'end';
-        return;
-      }
-      if (current === end && !playing) this._attackPose = null;
-      else if (play(end, false)) {
-        this._attackPose = 'end';
-        return;
-      } else this._attackPose = null;
-    }
     if (this._moveDy < 0) {
       this._bareRest.rested = false;
       play(HERO_UNARMED.walk.north, true);
@@ -310,7 +284,6 @@ export default class WeaponTryoutScene extends Phaser.Scene {
       // PIXELLAB_HOOK: bare hands hold the last deploy frame. No gun in the hands.
       holdBareHandsRest(hero, this, this._bareRest);
     }
-    void current;
   }
 
   _makeGun() {

@@ -1032,7 +1032,13 @@ export class WeaponSystem {
       this._spawnImpactKey(bullet.impact, hx, Number.isFinite(zombie.bodyCenterY) ? zombie.bodyCenterY : hy, zombie);
     }
     this._spawnSkinHit(zombie, bullet?.weaponId);
-    const killed = zombie.takeDamage(dmg, { kind: bullet?.weaponId || bullet?.kind });
+    // v0.36.25: charge is the water tier already on the bullet (L3 is 3).
+    // It selects the death strip. It does not change `dmg`.
+    const killed = zombie.takeDamage(dmg, {
+      kind: bullet?.weaponId || bullet?.kind,
+      charge: Number(bullet?.charge) || 0,
+      crit: bullet?.crit === true,
+    });
     if (dmg > 0) this.scene.audio?.playHitImpact();
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, dmg, color, zombie.id);
@@ -1096,11 +1102,12 @@ export class WeaponSystem {
    * one-frame missing muzzle, use the same timer as standing still:
    * the hold is not cleared, and the release still spawns one shot.
    * `canFire` stays in the signature so callers can pass the deploy
-   * flag. It does not gate this gun. A gap under
-   * {@link WATER_CHARGE_RELEASE_MS} is key bounce: it must not release
-   * the tier already on the timer. A press that never shows `held`
-   * (click, tap, or SPACE that rises before the poll) still opens an
-   * L1 charge so the same gap can fire it.
+   * flag. It does not gate this gun.
+   * v0.36.26: a release before L2 fires one L1 on that key-up. A tap
+   * that rises before the poll does too. Nothing here waits on the
+   * water fire-rate. A gap under {@link WATER_CHARGE_RELEASE_MS} keeps
+   * the timer only after the hold has already reached L2, so a bounce
+   * cannot turn a red charge into an L1.
    * @param {number} dt
    * @param {object[]} bullets
    * @param {{ muzzleX: number, muzzleY: number }|null} slot
@@ -1116,63 +1123,64 @@ export class WeaponSystem {
     const live = slot && Number.isFinite(slot.muzzleX) && Number.isFinite(slot.muzzleY) ? slot : null;
     if (live) this._chargeMuzzle = { muzzleX: live.muzzleX, muzzleY: live.muzzleY };
     const spawn = live || this._chargeMuzzle;
+    const showAura = (ms) => {
+      if (!spawn) return;
+      const tierHeld = waterChargeTier(ms);
+      this._syncChargeAura(spawn, tierHeld);
+      // PIXELLAB_HOOK: L1 blue, L2 yellow from 1.8s, L3 red from 4s.
+      this.scene?.audio?.syncWaterCharge?.(tierHeld);
+    };
+    /**
+     * Spawn the tier already on the timer and clear it.
+     * @returns {boolean}
+     */
+    const emit = () => {
+      let fired = false;
+      let tier = 1;
+      if (this._charge?.ready && spawn && Array.isArray(bullets)) {
+        tier = waterChargeTier(this._charge.ms);
+        this._spawnWaterShot(bullets, spawn, zombies, trait, tier);
+        fired = true;
+      }
+      this._clearWaterCharge();
+      if (fired) this.scene?.audio?.playWaterRelease?.(tier);
+      else this.scene?.audio?.stopWaterChargeLoop?.();
+      return fired;
+    };
     if (held) {
       if (!this._charge) this._charge = { ms: 0, up: 0, ready: true };
       this._charge.ready = true;
       this._charge.up = 0;
       this._charge.ms += step;
-      if (spawn) {
-        const tierHeld = waterChargeTier(this._charge.ms);
-        this._syncChargeAura(spawn, tierHeld);
-        // PIXELLAB_HOOK: L1 blue, L2 yellow from 1.8s, L3 red from 4s.
-        this.scene?.audio?.syncWaterCharge?.(tierHeld);
-      }
+      showAura(this._charge.ms);
       return false;
     }
-    const open = this._charge;
-    if (pulsed && open) {
-      // Down and up inside one frame while a charge is already open.
-      // Keep that tier. Do not release it.
-      open.up = 0;
-      if (spawn) {
-        const tierHeld = waterChargeTier(open.ms);
-        this._syncChargeAura(spawn, tierHeld);
-        this.scene?.audio?.syncWaterCharge?.(tierHeld);
-      }
-      return false;
-    }
-    if (pulsed && !open) {
-      // The whole press fit between polls. It is still an L1 tap.
+    if (!this._charge && pulsed) {
+      // The whole press fit between polls. It is one L1, not a charge to keep.
       this._charge = { ms: Math.max(step, 1), up: 0, ready: true };
+      return emit();
     }
     if (!this._charge) {
       this.scene?.audio?.stopWaterChargeLoop?.();
       return false;
     }
-    // A bounced SPACE key goes up for a frame or two. That used to fire
-    // whatever tier had accumulated (usually L1) and start a new charge,
-    // so a long hold could show red and still release an L1 shot.
-    // W/S does not take this path: the hold stays down while she moves.
-    this._charge.up = (this._charge.up || 0) + step;
-    if (this._charge.up < WATER_CHARGE_RELEASE_MS) {
-      if (spawn) {
-        const tierHeld = waterChargeTier(this._charge.ms);
-        this._syncChargeAura(spawn, tierHeld);
-        this.scene?.audio?.syncWaterCharge?.(tierHeld);
-      }
+    const tierNow = waterChargeTier(this._charge.ms);
+    if (tierNow < 2) {
+      // Released before 1.8s. One L1 now. A second press that also
+      // finished before this poll is its own L1, not a merged charge.
+      const fired = emit();
+      if (!pulsed) return fired;
+      this._charge = { ms: 1, up: 0, ready: true };
+      return emit() || fired;
+    }
+    // L2 or L3 is already on the timer. A short gap is key bounce.
+    if (pulsed || (this._charge.up || 0) + step < WATER_CHARGE_RELEASE_MS) {
+      if (pulsed) this._charge.up = 0;
+      else this._charge.up = (this._charge.up || 0) + step;
+      showAura(this._charge.ms);
       return false;
     }
-    let fired = false;
-    let tier = 1;
-    if (this._charge.ready && spawn && Array.isArray(bullets)) {
-      tier = waterChargeTier(this._charge.ms);
-      this._spawnWaterShot(bullets, spawn, zombies, trait, tier);
-      fired = true;
-    }
-    this._clearWaterCharge();
-    if (fired) this.scene?.audio?.playWaterRelease?.(tier);
-    else this.scene?.audio?.stopWaterChargeLoop?.();
-    return fired;
+    return emit();
   }
 
   /**
@@ -1333,13 +1341,13 @@ export class WeaponSystem {
       seen.add(id);
       if (boom.acc[id] == null) {
         boom.acc[id] = 0;
-        this._payAoeTick(zombie, point, false);
+        this._payAoeTick(zombie, point, false, 2);
         continue;
       }
       boom.acc[id] += Math.max(0, dt);
       if (boom.acc[id] < WATER_AOE_TICK_MS) continue;
       boom.acc[id] -= WATER_AOE_TICK_MS;
-      this._payAoeTick(zombie, point, false);
+      this._payAoeTick(zombie, point, false, 2);
     }
     for (const id of Object.keys(boom.acc)) {
       if (!seen.has(id)) delete boom.acc[id];
@@ -1362,21 +1370,22 @@ export class WeaponSystem {
     if (!slot) {
       slot = bullet.aoe[id] = { acc: 0 };
       this.markWaterPierce(bullet, zombie);
-      this._payAoeTick(zombie, point, true);
+      this._payAoeTick(zombie, point, true, bullet.charge);
       return;
     }
     slot.acc += Math.max(0, this._frameMs || 0);
     if (slot.acc < WATER_AOE_TICK_MS) return;
     slot.acc -= WATER_AOE_TICK_MS;
-    this._payAoeTick(zombie, point, true);
+    this._payAoeTick(zombie, point, true, bullet.charge);
   }
 
   /**
    * @param {import('../entities/Zombie.js').Zombie} zombie
    * @param {{ x: number, y: number }} point
    * @param {boolean} nudgeEast
+   * @param {number|null|undefined} charge water tier already on the shot. L3 is 3. L2 explosion is 2.
    */
-  _payAoeTick(zombie, point, nudgeEast) {
+  _payAoeTick(zombie, point, nudgeEast, charge) {
     // PIXELLAB_HOOK: fx-aoe-touch-x, 32×32, 4 frames @ 16 fps, once, every hurt.
     // Drawn above the explosion so the white glyph stays visible on the 0.2s beat.
     this._spawnPointFx(WATER_CHARGE_FX.touch, point.x, point.y, zombie, {
@@ -1388,7 +1397,7 @@ export class WeaponSystem {
     const gain = this._hurtZombie(
       zombie,
       WATER_AOE_TICK_DMG,
-      { weaponId: 'water' },
+      { weaponId: 'water', charge: Number(charge) || 0 },
       { impact: false, knock: false },
     );
     this._pending.gold += gain.gold;
