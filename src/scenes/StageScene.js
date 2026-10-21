@@ -11,6 +11,8 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, forceDeathMode, forceHurtEnabled, forceTireEnabled, petHurtDebugRequested, petLowHpDebugRequested, showZombieHpEnabled } from '../data/GameConfig.js';
 import { clampStage } from '../data/stageRoster.js';
+import { readSelectedPetId } from '../data/SaveManager.js';
+import { isOpeningPetId, spriteKeyForPet } from '../data/petSelectRoster.js';
 import { holdBareHandsRest } from '../assets/heroDeploy.js';
 import {
   BRUTE_SHOCK_KEY,
@@ -130,6 +132,11 @@ export default class StageScene extends Phaser.Scene {
     this.runStartGold = data?.gold ?? this.registry.get('gold') ?? 0;
     this.gold = this.runStartGold;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
+    // Opening pet. Combat still summons from the portrait bars.
+    // Gameplay reads selectedPetId / selectedPetSpriteKey for GO! / Back!.
+    const passedPet = isOpeningPetId(data?.selectedPetId) ? data.selectedPetId : null;
+    this.selectedPetId = passedPet || readSelectedPetId(this.registry);
+    this.selectedPetSpriteKey = spriteKeyForPet(this.selectedPetId);
 
     const carried = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
@@ -148,6 +155,8 @@ export default class StageScene extends Phaser.Scene {
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
+    this.registry.set('selectedPetId', this.selectedPetId);
+    this.registry.set('selectedPetSpriteKey', this.selectedPetSpriteKey);
     this.registry.set('ownedWeapons', this.ownedWeapons);
     this.registry.set('weaponUpgrades', this.weaponUpgrades);
 
@@ -1511,6 +1520,7 @@ export default class StageScene extends Phaser.Scene {
         stage: this.stage,
         gold: this.gold,
         characterId: this.characterId,
+        selectedPetId: this.selectedPetId,
         ownedWeapons: this.ownedWeapons,
         upgrades: this.weaponUpgrades,
       });
@@ -1571,6 +1581,7 @@ export default class StageScene extends Phaser.Scene {
           stage: this.stage,
           gold: this.runStartGold,
           characterId: this.characterId,
+          selectedPetId: this.selectedPetId,
         });
       },
       { scale: 2, depth: d + 4 }

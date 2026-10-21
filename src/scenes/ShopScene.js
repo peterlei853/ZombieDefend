@@ -3,7 +3,7 @@
  * buyWeapon / upgradeWeapon spend through SaveManager.spendGold when that
  * object is already on the registry. Otherwise they spend the run purse.
  * This scene does not add save keys or change the gold-by-HP table.
- * Receives { stage, gold, characterId, ownedWeapons, upgrades } from Stage.
+ * Receives { stage, gold, characterId, selectedPetId, ownedWeapons, upgrades } from Stage.
  * The shop bed is bgm-shop (started below; beds are not re-hung here).
  */
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
@@ -27,6 +27,7 @@ export default class ShopScene extends Phaser.Scene {
     this.stage = clampStage(data?.stage ?? this.registry.get('stage') ?? 1);
     this.gold = data?.gold ?? this.registry.get('gold') ?? 0;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
+    this.selectedPetId = data?.selectedPetId ?? this.registry.get('selectedPetId') ?? null;
     this.ownedWeapons = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
       : (this.registry.get('ownedWeapons') || []).slice();
@@ -38,6 +39,7 @@ export default class ShopScene extends Phaser.Scene {
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
+    this.registry.set('selectedPetId', this.selectedPetId);
     this.registry.set('ownedWeapons', this.ownedWeapons);
     this.registry.set('weaponUpgrades', this.upgrades);
     this.registry.set('shopItems', this.shopItems);
@@ -77,6 +79,7 @@ export default class ShopScene extends Phaser.Scene {
       stage: nextStage,
       gold: this.gold,
       characterId: this.characterId,
+      selectedPetId: this.selectedPetId,
       ownedWeapons: this.ownedWeapons,
       upgrades: this.upgrades,
     });

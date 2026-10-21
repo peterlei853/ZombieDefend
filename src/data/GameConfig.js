@@ -313,10 +313,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * can show HP and force tire, hurt, pet-crit, L3 disappear, and the
  * three settle deaths. Gold, saves, barricade HP, zombie anim percents,
  * weapon DPS, and spawn tables stay put. GitHub Pages stays unpublished.
+ * v0.36.27: Title opens PetSelect (phoenix, panda, lion, dragon — pick one)
+ * before Stage. The pick is selectedPetId on SaveManager
+ * (`zombieDefend.save.v1`). Avatar select does not choose a pet.
+ * Gold, barricade max HP, weapon DPS, and spawn tables stay put.
+ * GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.26';
+export const APP_VERSION = '0.36.27';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
