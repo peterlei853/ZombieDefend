@@ -3,8 +3,8 @@
  * Sound Effect owns the binaries. This module is the hook map.
  *
  * Growl clips are about 2.2s. Death clips are about 1.15s.
- * Ambient playback picks a|b once per profession every 10s.
- * Death playback picks a|b once per kill.
+ * Each living zombie growls about every 10s, picking a|b for its type.
+ * Each kill picks death a|b for that type.
  *
  * Pet / UI (files may already be present; playback no-ops if a key is missing):
  *   sfx-pet-basic-attack  ~0.55s  pet normal attack
@@ -17,7 +17,7 @@
  * Later professions append a slug here. They do not get a second catalog.
  */
 
-/** How often one living profession may growl. */
+/** How often one living zombie may growl. */
 export const VOCAL_GROWL_INTERVAL_MS = 10000;
 
 /** @type {Record<string, string>} catalog skin id → clip slug */

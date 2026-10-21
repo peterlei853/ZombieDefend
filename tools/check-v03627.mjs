@@ -21,6 +21,7 @@ import {
   vocalClipKeys,
 } from '../src/data/vocalSfx.js';
 import { separateFootprints, smallHurtLocksMove } from '../src/systems/footprints.js';
+import { VocalAmbience } from '../src/systems/vocalAmbience.js';
 import { Zombie } from '../src/entities/Zombie.js';
 
 let failed = 0;
@@ -87,6 +88,20 @@ assert(vocalClipKey('nurse', 'death', 'b') === 'sfx-nurse-death-b', 'nurse death
 assert(PET_UI_SFX.basicAttack === 'sfx-pet-basic-attack', 'pet attack key');
 assert(PET_UI_SFX.go === 'sfx-ui-pet-go' && PET_UI_SFX.back === 'sfx-ui-pet-back', 'GO and Back keys');
 assert(VOCAL_GROWL_INTERVAL_MS === 10000, 'growl every 10s');
+const growls = [];
+const ambience = new VocalAmbience();
+const office = { alive: true, skin: { id: 'office-worker-v2' } };
+const nurse = { alive: true, skin: { id: 'nurse' } };
+const growlScene = { audio: { playProfessionGrowl(slug) { growls.push(slug); } } };
+ambience.update(growlScene, [office, nurse], 0);
+ambience.update(growlScene, [office, nurse], 9999);
+assert(growls.length === 0, 'living zombies stay quiet for the first 10s');
+for (let t = 10000; t <= 14000; t += 400) ambience.update(growlScene, [office, nurse], t);
+assert(growls.includes('office') && growls.includes('nurse') && growls.length === 2, 'each living zombie growls once');
+nurse.alive = false;
+const before = growls.length;
+for (let t = 20000; t <= 25000; t += 400) ambience.update(growlScene, [office, nurse], t);
+assert(growls.length === before + 1 && growls[growls.length - 1] === 'office', 'a dead zombie stops growling');
 
 const small = { skin: { ruleAnims: {} }, _hurtMs: 200, _rootMs: 0, _slowMs: 0 };
 small._slowFactor = Zombie.prototype._slowFactor;

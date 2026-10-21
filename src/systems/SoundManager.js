@@ -642,12 +642,12 @@ export class SoundManager {
     const slug = professionVocalSlug(skinId);
     if (!slug) return false;
     const key = vocalClipKey(slug, 'death', pickVocalVariant());
-    this._cue(key, AUDIO_VOLUME.death, AUDIO_COOLDOWN_MS.death);
+    this._cue(key, AUDIO_VOLUME.death, 0);
     return true;
   }
 
   /**
-   * Ambient growl. Caller waits ~10s per slug. Picks a|b.
+   * One living zombie's growl. The stage waits about 10s per body. Picks a|b.
    * @param {string} slug
    */
   playProfessionGrowl(slug) {
