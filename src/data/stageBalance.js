@@ -9,9 +9,9 @@
  * still serves stage 4+.
  *
  * Opening player attack is 10 (~14.7 DPS if they tap L1 on the 680ms
- * water cadence) plus one pet normal attack (~14 DPS). Stage 1 is
- * clearable on taps alone. Stage 2 wants the pet. Stage 3 is the
- * tight clear of the loop.
+ * water cadence) plus one pet normal attack (~14 DPS). Stage 1 waves
+ * 3–4 stay light enough that taps alone can finish the 90s before the
+ * wall breaks. Stage 2 wants the pet. Stage 3 is the tight clear.
  */
 
 /** @typedef {{ hp: number, speed: number, dps: number, weight?: number, variant?: string, skins: string[], gold: number }} EarlyArch */
@@ -22,8 +22,8 @@ export const EARLY_STAGE_WAVES = {
   1: [
     row(1, 0, 22, 4, 24, 26, 2, 8, ['office-worker-v2', 'office-worker-v2', 'delivery', 'chef']),
     row(2, 23, 44, 5, 36, 30, 3, 10, ['office-worker-v2', 'delivery', 'chef']),
-    row(3, 45, 66, 6, 48, 33, 4, 12, ['office-worker-v2', 'delivery', 'chef']),
-    row(4, 67, 90, 7, 60, 36, 5, 14, ['office-worker-v2', 'delivery', 'chef']),
+    row(3, 45, 66, 4, 36, 30, 3, 16, ['office-worker-v2', 'delivery', 'chef']),
+    row(4, 67, 90, 5, 44, 32, 3, 18, ['office-worker-v2', 'delivery', 'chef']),
   ],
   2: [
     row(1, 0, 20, 5, 36, 32, 4, 10, ['office-worker-v2', 'delivery', 'delivery', 'chef']),

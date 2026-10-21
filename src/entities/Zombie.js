@@ -331,17 +331,30 @@ export class Zombie {
   }
 
   /**
+   * Cell under 100×100 while the hurt window is open. March is exactly 0.
+   * @returns {boolean}
+   */
+  hurtMarchLocked() {
+    return (this._hurtMs > 0 || this._feelHurtLatch) && smallHurtLocksMove(this);
+  }
+
+  /**
    * Push from the footprint pass. March speed is unchanged.
+   * A hurt-locked body stays planted and returns false so the other
+   * sole takes the full separation.
    * @param {number} dx
    * @param {number} dy
+   * @returns {boolean} false when this body refuses the push
    */
   shift(dx, dy) {
-    if (!this.alive || !this.body) return;
+    if (!this.alive || !this.body) return false;
+    if (this.hurtMarchLocked()) return false;
     if (dx) this.body.x += dx;
     if (dy) this.body.y += dy;
     this._lastX = this.body.x;
     this._lastY = this.body.y;
     this.laneY = this.body.y;
+    return true;
   }
 
   /**
@@ -471,19 +484,25 @@ export class Zombie {
     }
 
     if (this._petSlideMs > 0 && this.body) {
-      const ms = Math.max(0, deltaSec * 1000);
-      const use = Math.min(ms, this._petSlideMs);
-      const dist = this._petSlidePx * (use / Math.max(this._petSlideMs, 0.001));
-      this.body.x -= dist;
-      this._petSlidePx -= dist;
-      this._petSlideMs -= use;
-      if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
-      this._lastX = this.body.x;
-      this._lastY = this.body.y;
-      this._syncLocomotion();
-      this._applyDepth();
-      this._syncBars();
-      return;
+      if (this.hurtMarchLocked()) {
+        this._petSlideMs = 0;
+        this._petSlidePx = 0;
+        this._marchVx = 0;
+      } else {
+        const ms = Math.max(0, deltaSec * 1000);
+        const use = Math.min(ms, this._petSlideMs);
+        const dist = this._petSlidePx * (use / Math.max(this._petSlideMs, 0.001));
+        this.body.x -= dist;
+        this._petSlidePx -= dist;
+        this._petSlideMs -= use;
+        if (Number.isFinite(this.laneY)) this.body.y = this.laneY;
+        this._lastX = this.body.x;
+        this._lastY = this.body.y;
+        this._syncLocomotion();
+        this._applyDepth();
+        this._syncBars();
+        return;
+      }
     }
 
     const chase = this._petToChase(pet, contactX);
@@ -494,18 +513,23 @@ export class Zombie {
       if (!this.atBarricade) {
         // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
         // Professions use the HP 30 tire gate. Everyone else uses CRIT_SPEED_MULT.
-        const speed = this._marchSpeed();
+        // A locked hurt cell contributes exactly 0, not the ×0.5 residual.
+        const speed = this.hurtMarchLocked() ? 0 : this._marchSpeed();
         const march = speed * LAYOUT_SCALE;
-        const nextX = this.body.x + march * deltaSec;
-        const halt = contactX - this.displayHalf;
-        if (nextX >= halt) {
-          this.body.x = halt;
-          this.atBarricade = true;
-          this._haltX = halt;
-          this._stopWalkAnim();
+        if (!(march > 0)) {
+          this._marchVx = 0;
         } else {
-          this.body.x = nextX;
-          this._marchVx = march;
+          const nextX = this.body.x + march * deltaSec;
+          const halt = contactX - this.displayHalf;
+          if (nextX >= halt) {
+            this.body.x = halt;
+            this.atBarricade = true;
+            this._haltX = halt;
+            this._stopWalkAnim();
+          } else {
+            this.body.x = nextX;
+            this._marchVx = march;
+          }
         }
       }
 
@@ -554,6 +578,10 @@ export class Zombie {
    * @param {number} contactX
    */
   _chasePet(deltaSec, pet, contactX) {
+    if (this.hurtMarchLocked()) {
+      this._marchVx = 0;
+      return;
+    }
     const reach = this._biteReach(pet);
     const dx = pet.x - this.body.x;
     const dy = pet.y - this.body.y;
@@ -653,7 +681,7 @@ export class Zombie {
     this._burnLeft = Math.max(this._burnLeft || 0, dur);
   }
 
-  /** 0 while rooted, otherwise panda slow and the hurt-window half speed. */
+  /** 0 while rooted or hurt-locked. Otherwise panda slow and the hurt-window half speed. */
   _slowFactor() {
     if (this._rootMs > 0) return 0;
     if ((this._hurtMs > 0 || this._feelHurtLatch) && smallHurtLocksMove(this)) return 0;
@@ -1445,8 +1473,13 @@ export class Zombie {
       const playing = !!this.body.anims?.isPlaying;
       if (hurt && (current !== hurt || !playing)) this._playHurtStrip();
     }
-    const speed = this._marchSpeed() * LAYOUT_SCALE;
+    const speed = this.hurtMarchLocked() ? 0 : this._marchSpeed() * LAYOUT_SCALE;
     const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
+    if (!(speed > 0)) {
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
     const next = this.body.x + speed * dt;
     const maxX = Number.isFinite(this._paceMax) ? this._paceMax : this.body.x;
     const minX = Number.isFinite(this._paceMin) ? this._paceMin : this.body.x;

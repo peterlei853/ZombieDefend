@@ -30,3 +30,14 @@ export function playerCombatStats() {
     critDamage: player.CRIT_DAMAGE,
   };
 }
+
+/**
+ * Stage HUD line so a clear can confirm the opening crit gate.
+ * @param {{ attack?: number, critChance?: number, critDamage?: number }} [stats]
+ */
+export function playerCombatHudLabel(stats = playerCombatStats()) {
+  const atk = Math.round(Number(stats?.attack) || 0);
+  const chance = Math.round((Number(stats?.critChance) || 0) * 100);
+  const bonus = Math.round((Number(stats?.critDamage) || 0) * 100);
+  return `ATK ${atk}  CRIT ${chance}%  CRITDMG +${bonus}%`;
+}

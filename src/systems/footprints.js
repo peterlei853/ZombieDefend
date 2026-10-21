@@ -8,8 +8,10 @@ import { grassYMax, grassYMin, layoutPx } from './DepthView.js';
  * apart. Enabling Arcade now would fight that stepper and the barricade
  * halt, so the separator stays a post-step push. Barricade HP is not read.
  *
- * Radius is 0.42 of the display width: centers stay apart, padded pixels
- * may still graze. Spawn code also staggers X.
+ * Radius is half the display box plus a small pad, so pet and zombie
+ * sprites do not sit inside each other. Spawn code also staggers X.
+ * A hurt-locked body reports shift() === false and stays planted; the
+ * other body takes the full push.
  */
 
 /** Cell (or display, if the cell is unknown) under this box cannot march while hurt. */
@@ -23,12 +25,15 @@ export const HURT_LOCK_CELL = 100;
  * @returns {{ w: number, h: number }|null}
  */
 export function monsterCellSize(monster) {
+  // Authored cell wins over the current frame. A hurt strip is 84×N
+  // on the sheet; reading that sheet width would skip the lock and
+  // leave the ×0.5 march, which still creeps during the flash.
+  if (monster?.skin?.ruleAnims) return { w: 84, h: 84 };
+  if (monster?.skin?.id === 'brute') return { w: 96, h: 96 };
   const frame = monster?.body?.frame;
   const fw = Number(frame?.realWidth || frame?.width);
   const fh = Number(frame?.realHeight || frame?.height);
-  if (fw > 0 && fh > 0) return { w: fw, h: fh };
-  if (monster?.skin?.ruleAnims) return { w: 84, h: 84 };
-  if (monster?.skin?.id === 'brute') return { w: 96, h: 96 };
+  if (fw > 0 && fh > 0 && fw < 200 && fh < 200) return { w: fw, h: fh };
   const dw = Math.abs(Number(monster?.body?.displayWidth) || 0);
   const dh = Math.abs(Number(monster?.body?.displayHeight) || 0);
   if (dw > 0 && dh > 0) return { w: dw, h: dh };
@@ -52,9 +57,10 @@ export function smallHurtLocksMove(monster) {
  */
 export function footprintRadius(displayWidth, fallback = 0) {
   const w = Number(displayWidth);
-  if (w > 8) return Math.max(layoutPx(12), w * 0.42);
+  const pad = layoutPx(4);
+  if (w > 8) return w * 0.5 + pad;
   const fb = Number(fallback);
-  return Math.max(layoutPx(12), fb > 0 ? fb : layoutPx(16));
+  return Math.max(layoutPx(18), (fb > 0 ? fb : layoutPx(28)) * 0.5 + pad);
 }
 
 /**
@@ -79,8 +85,10 @@ function pushApart(a, b) {
   const push = (min - dist) / 2;
   const nx = dx / dist;
   const ny = dy / dist;
-  a.shift(-nx * push, -ny * push);
-  b.shift(nx * push, ny * push);
+  const movedA = a.shift(-nx * push, -ny * push) !== false;
+  const movedB = b.shift(nx * push, ny * push) !== false;
+  if (movedA && !movedB) a.shift(-nx * push, -ny * push);
+  else if (movedB && !movedA) b.shift(nx * push, ny * push);
 }
 
 /**
@@ -91,7 +99,7 @@ export function separateFootprints(bodies, opts = {}) {
   const items = (Array.isArray(bodies) ? bodies : []).filter(
     (body) => body && Number.isFinite(body.x) && Number.isFinite(body.y) && typeof body.shift === 'function'
   );
-  const rounds = opts.rounds > 0 ? opts.rounds : 3;
+  const rounds = opts.rounds > 0 ? opts.rounds : 6;
   for (let n = 0; n < rounds; n += 1) {
     for (let i = 0; i < items.length; i += 1) {
       for (let j = i + 1; j < items.length; j += 1) pushApart(items[i], items[j]);

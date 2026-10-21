@@ -89,7 +89,7 @@ const mix1 = skinCounts(1);
 const mix1Ids = Object.keys(mix1).sort();
 const mix1Total = Object.values(mix1).reduce((sum, n) => sum + n, 0);
 assert(
-  mix1Ids.every((id) => rosterForStage(1).includes(id)) && mix1Total === 22,
+  mix1Ids.every((id) => rosterForStage(1).includes(id)) && mix1Total === 18,
   `stage 1 rolls types 1/2/3 ${JSON.stringify(mix1)}`
 );
 const earlyTotals = { 2: 24, 3: 28 };

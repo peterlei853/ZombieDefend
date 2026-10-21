@@ -4,7 +4,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { APP_VERSION, GAME_CONFIG } from '../src/data/GameConfig.js';
-import { applyPlayerCrit } from '../src/data/playerCombat.js';
+import { applyPlayerCrit, playerCombatHudLabel } from '../src/data/playerCombat.js';
 import { EARLY_STAGE_WAVES, stageBalanceRows } from '../src/data/stageBalance.js';
 import { PET_SELECT_ROSTER, spriteKeyForPet } from '../src/data/petSelectRoster.js';
 import {
@@ -44,7 +44,7 @@ assert(waveDefsForStage(4)[3].total === 48 && waveDefsForStage(5)[0].archetypes[
 assert(PLAYABLE_STAGE_CAP === 3, 'the clear loop is three stages');
 assert(rosterForStage(3).includes('nurse') && !rosterForStage(4).includes('chef'), 'nurse joins stage 3 only');
 
-const totals = { 1: 22, 2: 24, 3: 28 };
+const totals = { 1: 18, 2: 24, 3: 28 };
 for (const stage of [1, 2, 3]) {
   const rows = stageBalanceRows(stage);
   const count = rows.reduce((sum, row) => sum + row.count, 0);
@@ -53,6 +53,12 @@ for (const stage of [1, 2, 3]) {
   assert(rows[0].hp < rows[3].hp && rows[0].dps < rows[3].dps, `stage ${stage} rises`);
 }
 assert(stageBalanceRows(1)[0].hp < stageBalanceRows(2)[0].hp, 'stage 2 opens harder than stage 1');
+const s1 = stageBalanceRows(1);
+assert(s1[0].count === 4 && s1[0].hp === 24 && s1[0].dps === 2 && s1[0].gold === 8, 'stage 1 wave 1 stays the opener');
+assert(s1[1].count === 5 && s1[1].hp === 36 && s1[1].dps === 3, 'stage 1 wave 2 stays');
+assert(s1[2].count === 4 && s1[2].hp === 36 && s1[2].dps === 3 && s1[2].gold === 16, 'stage 1 wave 3 is eased');
+assert(s1[3].count === 5 && s1[3].hp === 44 && s1[3].speed === 32 && s1[3].dps === 3 && s1[3].gold === 18, 'stage 1 wave 4 is eased');
+assert(playerCombatHudLabel() === 'ATK 10  CRIT 5%  CRITDMG +80%', 'HUD shows the crit gate');
 assert(stageBalanceRows(2)[3].hp < stageBalanceRows(3)[3].hp, 'stage 3 wave 4 is the heaviest early row');
 
 assert(PET_SELECT_ROSTER.map((pet) => pet.id).join() === 'phoenix,panda,lion,dragon', 'opening pet ids');
@@ -106,6 +112,23 @@ assert(growls.length === before + 1 && growls[growls.length - 1] === 'office', '
 const small = { skin: { ruleAnims: {} }, _hurtMs: 200, _rootMs: 0, _slowMs: 0 };
 small._slowFactor = Zombie.prototype._slowFactor;
 assert(smallHurtLocksMove(small) && small._slowFactor() === 0, '84px hurt cannot march');
+const wideSheet = {
+  skin: { ruleAnims: {} },
+  body: { x: 10, y: 20, frame: { width: 420, height: 84 } },
+  _hurtMs: 200,
+  _feelHurtLatch: false,
+  _rootMs: 0,
+  _slowMs: 0,
+  alive: true,
+  _lastX: 10,
+  _lastY: 20,
+  laneY: 20,
+};
+wideSheet.hurtMarchLocked = Zombie.prototype.hurtMarchLocked;
+wideSheet._slowFactor = Zombie.prototype._slowFactor;
+wideSheet.shift = Zombie.prototype.shift;
+assert(smallHurtLocksMove(wideSheet) && wideSheet._slowFactor() === 0, 'a wide hurt sheet still locks the 84px cell');
+assert(wideSheet.shift(4, 2) === false && wideSheet.body.x === 10 && wideSheet.body.y === 20, 'hurt lock does not creep');
 const big = {
   skin: null,
   body: { frame: { width: 128, height: 128 } },
@@ -120,12 +143,17 @@ const left = { x: 0, y: 10, displayWidth: 40, shift(dx, dy) { this.x += dx; this
 const right = { x: 1, y: 10, displayWidth: 40, shift(dx, dy) { this.x += dx; this.y += dy; } };
 separateFootprints([left, right], { rounds: 4 });
 assert(Math.hypot(right.x - left.x, right.y - left.y) >= 32, 'overlapping footprints separate');
+const boxA = { x: 0, y: 0, displayWidth: 84, shift(dx, dy) { this.x += dx; this.y += dy; } };
+const boxB = { x: 8, y: 0, displayWidth: 64, shift(dx, dy) { this.x += dx; this.y += dy; } };
+separateFootprints([boxA, boxB], { rounds: 8 });
+assert(Math.hypot(boxB.x - boxA.x, boxB.y - boxA.y) >= 74, 'a pet and a zombie box stay apart');
 
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const defenderSrc = readFileSync(new URL('../src/entities/Defender.js', import.meta.url), 'utf8');
 const buttonSrc = readFileSync(new URL('../src/ui/PetDeployButton.js', import.meta.url), 'utf8');
 const combatSrc = readFileSync(new URL('../src/systems/PetCombat.js', import.meta.url), 'utf8');
 assert(stageSrc.includes('PetDeployButton') && stageSrc.includes('getSelectedPetSpriteKey'), 'stage deploys the saved sprite');
+assert(stageSrc.includes('playerCombatHudLabel'), 'stage HUD prints the crit gate');
 assert(stageSrc.includes('selectedPetId') && stageSrc.includes('selectedPetSpriteKey'), 'stage keeps both registry fields');
 assert(!stageSrc.includes("from '../data/selectedPet.js'"), 'stage does not keep a second pet reader');
 assert(buttonSrc.includes('GO!') && buttonSrc.includes('Back!') && buttonSrc.includes('PIXELLAB_HOOK'), 'GO!/Back! button hook');

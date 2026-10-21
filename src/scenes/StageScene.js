@@ -10,7 +10,7 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, forceDeathMode, forceHurtEnabled, forceTireEnabled, petHurtDebugRequested, petLowHpDebugRequested, showZombieHpEnabled } from '../data/GameConfig.js';
-import { playerCombatStats } from '../data/playerCombat.js';
+import { playerCombatHudLabel, playerCombatStats } from '../data/playerCombat.js';
 import { clampStage } from '../data/stageRoster.js';
 import { readSelectedPetId, readSelectedPetSpriteKey } from '../data/SaveManager.js';
 import { PET_SELECT_ROSTER, isOpeningPetId, spriteKeyForPet } from '../data/petSelectRoster.js';
@@ -1189,6 +1189,13 @@ export default class StageScene extends Phaser.Scene {
     });
     this.hudWeapon = addKitText(this, 16, rowY, this._weaponName(), textOpts);
     this.hudBarricade = addKitText(this, 16, rowY, `WALL ${BARRICADE_MAX_HP}`, textOpts);
+    this.hudCrit = addKitText(this, 16, rowY + 22, playerCombatHudLabel(this.playerCombat), {
+      font: FONT_TINY,
+      size: 14,
+      originX: 0,
+      originY: 0.5,
+      depth: d + 3,
+    });
     this.hudStage = addKitText(this, GAME_WIDTH - 12, rowY, `v${APP_VERSION} STAGE ${this.stage}`, {
       font: FONT_TINY,
       size: 16,
