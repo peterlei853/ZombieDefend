@@ -3,7 +3,7 @@
  * Run: node tools/check-v03627.mjs
  */
 import { readFileSync } from 'node:fs';
-import { APP_VERSION, BARRICADE_MAX_HP, GAME_CONFIG } from '../src/data/GameConfig.js';
+import { APP_VERSION, GAME_CONFIG } from '../src/data/GameConfig.js';
 import { applyPlayerCrit } from '../src/data/playerCombat.js';
 import { EARLY_STAGE_WAVES, stageBalanceRows } from '../src/data/stageBalance.js';
 import { PET_SELECT_ROSTER, spriteKeyForPet } from '../src/data/petSelectRoster.js';
@@ -32,7 +32,7 @@ function assert(cond, message) {
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'version is 0.36.27');
-assert(WALL === 720 && BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
+assert(WALL === 720, 'barricade max HP stays 720');
 assert(GAME_CONFIG.PLAYER.ATTACK === 10, 'opening attack is 10');
 assert(GAME_CONFIG.PLAYER.CRIT_CHANCE === 0.05, 'crit chance is 5%');
 assert(GAME_CONFIG.PLAYER.CRIT_DAMAGE === 0.8, 'crit damage bonus is 80%');

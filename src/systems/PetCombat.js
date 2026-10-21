@@ -1954,6 +1954,7 @@ export class PetCombat {
       inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
     );
     this._showMeleeFan(actor);
+    this.scene?.audio?.playPetMeleeHit?.();
     this.scene?.audio?.playPetBasicAttack?.();
     const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
     return this._strikeAll(actor, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
