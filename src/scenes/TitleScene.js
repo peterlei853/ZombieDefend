@@ -1,5 +1,5 @@
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
-import { STAGE_COUNT, stageFromQuery } from '../data/stageRoster.js';
+import { PLAYABLE_STAGE_CAP, STAGE_COUNT, stageFromQuery } from '../data/stageRoster.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
 import {
@@ -100,10 +100,23 @@ export default class TitleScene extends Phaser.Scene {
     const total = STAGE_COUNT * btnW + (STAGE_COUNT - 1) * gap;
     let x = width / 2 - total / 2 + btnW / 2;
     for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
-      addParchmentButton(this, x, rowY, String(stage), () => startStage(stage), {
+      const gated = stage > PLAYABLE_STAGE_CAP;
+      const button = addParchmentButton(this, x, rowY, String(stage), () => {
+        if (gated) return;
+        startStage(stage);
+      }, {
         scale: 1,
         depth: 4,
       });
+      if (gated) {
+        button.bg?.setAlpha?.(0.4);
+        addKitText(this, x, rowY + 28, 'SOON', {
+          font: FONT_TINY,
+          size: 11,
+          color: '#f6e7c2',
+          depth: 5,
+        });
+      }
       x += btnW + gap;
     }
 
@@ -137,7 +150,11 @@ export default class TitleScene extends Phaser.Scene {
     this.input.keyboard?.once('keydown-SPACE', () => startStage(defaultStage));
     const digitCodes = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'];
     digitCodes.forEach((code, index) => {
-      this.input.keyboard?.once(`keydown-${code}`, () => startStage(index + 1));
+      this.input.keyboard?.once(`keydown-${code}`, () => {
+        const stage = index + 1;
+        if (stage > PLAYABLE_STAGE_CAP) return;
+        startStage(stage);
+      });
     });
     if (petHurtDebugRequested() || petLowHpDebugRequested() || demoWeaponId() || debugPetSkillEnabled() || demoEnemyId()) {
       this.time.delayedCall(0, () => enterStage(defaultStage));

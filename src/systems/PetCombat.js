@@ -6,6 +6,7 @@ import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { petSkillKey, petSkillSpec } from '../assets/petSkills.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
+import { clampPetFoot } from './footprints.js';
 import {
   barricadeXAtY,
   depthFromY,
@@ -63,9 +64,15 @@ const RESIDUE_KEY = {
  * running. The camera does not shake.
  */
 export class PetCombat {
-  /** @param {Phaser.Scene} scene */
-  constructor(scene) {
+  /**
+   * @param {Phaser.Scene} scene
+   * @param {{ skillsEnabled?: boolean }} [opts]
+   * Stage passes `skillsEnabled: false`. Tests omit it, so the skill
+   * strips still run when a check pumps the orbs. Live play does not.
+   */
+  constructor(scene, opts = {}) {
     this.scene = scene;
+    this._skillsEnabled = opts.skillsEnabled !== false;
     /** @type {PetActor[]} */
     this._actors = PET_LINEUP.map((role) => this._makeActor(role));
     /** @type {PhoenixBolt[]} */
@@ -424,6 +431,33 @@ export class PetCombat {
   }
 
   /**
+   * Baby idle catalog key for this party slot.
+   * Stage passes the key from getSelectedPetSpriteKey().
+   * A missing texture keeps the lineup idle. Skills stay on their own flag.
+   * @param {number} index
+   * @param {string|null|undefined} idleKey
+   */
+  setBabyIdleKey(index, idleKey) {
+    const actor = this._actors[index];
+    if (!actor) return;
+    actor._babyIdleKey = typeof idleKey === 'string' && idleKey ? idleKey : null;
+  }
+
+  /**
+   * Standing strip. The saved baby idle wins when that texture is loaded.
+   * @param {PetActor} actor
+   */
+  _babyIdleKey(actor) {
+    const override = actor?._babyIdleKey;
+    const scene = this.scene;
+    if (typeof override === 'string' && override) {
+      const loaded = !scene?.textures || scene.textures.exists(override) || scene.anims?.exists?.(override);
+      if (loaded) return override;
+    }
+    return actor?.role?.key;
+  }
+
+  /**
    * Advance an in-progress flinch. The feel booth skips the field tick,
    * so a shock hit would otherwise stay on the white fill.
    * @param {number} deltaMs
@@ -466,6 +500,37 @@ export class PetCombat {
         },
         onField: true,
         takeDamage: (amount) => this._damage(actor, amount),
+      });
+    }
+    return out;
+  }
+
+  /**
+   * Every pet sprite still on screen, including a body walking to its bed.
+   * Footprints push these so they do not share a sole with a zombie.
+   */
+  occupiedPets() {
+    /** @type {{ kind: 'pet', id: string, x: number, y: number, footprintWidth: () => number, shift: (dx: number, dy: number) => void }[]} */
+    const out = [];
+    for (const actor of this._actors) {
+      const sprite = actor.sprite;
+      if (!sprite?.active) continue;
+      out.push({
+        kind: 'pet',
+        id: actor.role.id,
+        get x() {
+          return sprite.x;
+        },
+        get y() {
+          return sprite.y;
+        },
+        footprintWidth: () => Math.abs(sprite.displayWidth || 0),
+        shift: (dx, dy) => {
+          if (dx) sprite.x += dx;
+          if (dy) sprite.y = clampPetFoot(sprite.y + dy);
+          actor.x = sprite.x;
+          actor.y = sprite.y;
+        },
       });
     }
     return out;
@@ -750,6 +815,7 @@ export class PetCombat {
     this._attachBars(actor);
     this._showFloat(actor, 'go', player);
     this._noteCue(PET_AUDIO_KEYS.go);
+    this.scene?.audio?.playPetGo?.();
   }
 
   /**
@@ -779,12 +845,13 @@ export class PetCombat {
     actor.popLeft = 0;
     if (actor.sprite && typeof actor.sprite.setAlpha === 'function') actor.sprite.setAlpha(1);
     faceLeft(actor.sprite);
-    playLoop(actor.sprite, actor.role.key);
+    playLoop(actor.sprite, this._babyIdleKey(actor));
     this._destroyBars(actor);
     this._attachBars(actor);
     this._place(actor);
     this._showFloat(actor, 'go', anchor);
     this._noteCue(PET_AUDIO_KEYS.go);
+    this.scene?.audio?.playPetGo?.();
   }
 
   /**
@@ -822,6 +889,7 @@ export class PetCombat {
     this._claimBed(actor);
     this._showFloat(actor, 'back', anchor);
     this._noteCue(PET_AUDIO_KEYS.back);
+    this.scene?.audio?.playPetBack?.();
   }
 
   /**
@@ -898,7 +966,7 @@ export class PetCombat {
     actor.state = 'move';
     const moveKey = actor.role.move;
     if (moveKey && sprite.scene?.anims?.exists?.(moveKey)) playLoop(sprite, moveKey);
-    else playLoop(sprite, actor.role.key);
+    else playLoop(sprite, this._babyIdleKey(actor));
     if (typeof sprite.setFlipX === 'function') sprite.setFlipX(dx > layoutPx(2));
     this._placeRest(actor);
   }
@@ -1069,7 +1137,7 @@ export class PetCombat {
    */
   _spawnSprite(actor, x, y) {
     const scene = this.scene;
-    const key = actor.role.key;
+    const key = this._babyIdleKey(actor);
     const scale = displayScaleFromY(y);
     /** @type {Phaser.GameObjects.Sprite|Phaser.GameObjects.Rectangle|null} */
     let sprite = null;
@@ -1495,6 +1563,7 @@ export class PetCombat {
    * @param {number} dt
    */
   _tickOrbs(actor, dt) {
+    if (this._skillsEnabled === false) return;
     if (actor.phase !== 'field' || actor.wakeLeft > 0) return;
     const unlocked = this._unlockedCount(actor);
     for (const orb of actor.orbs) {
@@ -1570,6 +1639,7 @@ export class PetCombat {
    * @param {number} dt
    */
   _tickSleepCd(actor, dt) {
+    if (this._skillsEnabled === false) return;
     const unlocked = this._unlockedCount(actor);
     const step = Math.max(0, dt);
     for (const orb of actor.orbs) {
@@ -1623,7 +1693,7 @@ export class PetCombat {
         const use = Math.min(actor.wakeLeft, dt);
         actor.wakeLeft -= use;
         dt -= use;
-        playLoop(sprite, actor.role.key);
+        playLoop(sprite, this._babyIdleKey(actor));
         faceLeft(sprite);
         this._place(actor);
         if (actor.wakeLeft > 0 || dt <= 0) return gain;
@@ -1668,7 +1738,7 @@ export class PetCombat {
         return;
       }
       actor.state = 'idle';
-      playLoop(sprite, actor.role.key);
+      playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
       return;
     }
@@ -1691,7 +1761,7 @@ export class PetCombat {
       sprite.x = actor.destX;
       sprite.y = actor.destY;
       actor.state = 'idle';
-      playLoop(sprite, actor.role.key);
+      playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
       this._place(actor);
       this.tryBasic(actor, this._liveZombies);
@@ -1704,7 +1774,7 @@ export class PetCombat {
     actor.state = 'move';
     const moveKey = actor.role.move;
     if (moveKey && sprite.scene?.anims?.exists?.(moveKey)) playLoop(sprite, moveKey);
-    else playLoop(sprite, actor.role.key);
+    else playLoop(sprite, this._babyIdleKey(actor));
     faceLeft(sprite);
     this._place(actor);
   }
@@ -1748,7 +1818,7 @@ export class PetCombat {
       sprite.y = dest.y;
       actor.leaving = false;
       actor.state = 'idle';
-      playLoop(sprite, actor.role.key);
+      playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
       this._place(actor);
       return;
@@ -1760,7 +1830,7 @@ export class PetCombat {
     actor.state = 'move';
     const moveKey = actor.role.move;
     if (moveKey && sprite.scene?.anims?.exists?.(moveKey)) playLoop(sprite, moveKey);
-    else playLoop(sprite, actor.role.key);
+    else playLoop(sprite, this._babyIdleKey(actor));
     if (typeof sprite.setFlipX === 'function') sprite.setFlipX(dx > layoutPx(2));
     this._place(actor);
   }
@@ -1819,7 +1889,7 @@ export class PetCombat {
       this.scene?.events?.emit?.('pet:wake', { petId: actor.role.id });
     }
     faceLeft(actor.sprite);
-    playLoop(actor.sprite, actor.role.key);
+    playLoop(actor.sprite, this._babyIdleKey(actor));
   }
 
   /**
@@ -1851,7 +1921,7 @@ export class PetCombat {
       actor.meleePhase = null;
       actor.state = 'idle';
       actor.meleeGap = pets.GAP_MS;
-      playLoop(actor.sprite, actor.role.key);
+      playLoop(actor.sprite, this._babyIdleKey(actor));
       break;
     }
     this._place(actor);
@@ -1884,7 +1954,7 @@ export class PetCombat {
       inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
     );
     this._showMeleeFan(actor);
-    if (hits.length) this.scene?.audio?.playPetMeleeHit?.();
+    this.scene?.audio?.playPetBasicAttack?.();
     const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
     return this._strikeAll(actor, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
   }
@@ -2285,7 +2355,7 @@ export class PetCombat {
     actor.attackElapsed = 0;
     actor.castSkill = '';
     faceLeft(actor.sprite);
-    playLoop(actor.sprite, actor.role.key);
+    playLoop(actor.sprite, this._babyIdleKey(actor));
   }
 
   /**

@@ -56,20 +56,23 @@ assert(!STAGE_ROSTER.includes('office-worker'), 'old office skin is not in the r
 assert(!STAGE_ROSTER.includes('clown') && !STAGE_ROSTER.includes('cyborg') && !STAGE_ROSTER.includes('slime'), 'old progressive mix is gone');
 assert(rosterForStage(1).join() === 'office-worker-v2,delivery,chef', 'stage 1 rolls types 1/2/3');
 assert(skinForStage(1) === 'office-worker-v2', 'stage 1 headline skin stays type 1');
-for (let stage = 2; stage <= STAGE_COUNT; stage += 1) {
-  const skins = rosterForStage(stage);
-  assert(skins.length === 1 && skins[0] === expected[stage - 1], `stage ${stage} skin ${skins}`);
+for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
   assert(skinForStage(stage) === expected[stage - 1], `skinForStage ${stage}`);
 }
+assert(rosterForStage(2).join() === 'office-worker-v2,delivery,chef', 'stage 2 pool is the early trio');
+assert(rosterForStage(3).join() === 'office-worker-v2,delivery,chef,nurse', 'stage 3 pool adds nurse');
+assert(rosterForStage(4).join() === 'nurse' && rosterForStage(5).join() === 'brute', 'stage 4–5 stay one skin');
 assert(clampStage(0) === 1 && clampStage(99) === 5 && rosterForStage(99).join() === 'brute', 'stages outside 1–5 clamp');
 assert(stageFromQuery('?stage=4') === 4 && stageFromQuery('?stage=6') === null && stageFromQuery('') === null, 'stage query stays on 1–5');
 
 const defs1 = waveDefsForStage(1);
-assert(defs1[0].archetypes[0].hp === 40 && defs1[0].archetypes[0].speed === 32 && defs1[0].archetypes[0].dps === 3, 'stamped row keeps wave 1 numbers');
-assert(WAVE_DEFS.slice(0, 3).map((wave) => wave.archetypes[0].dps).join() === '3,5,8', 'waves 1–3 contact DPS is 3/5/8');
+assert(defs1[0].archetypes[0].hp === 24 && defs1[0].archetypes[0].speed === 26 && defs1[0].archetypes[0].dps === 2, 'stage 1 wave 1 is the rising row');
+assert(defs1[0].archetypes[0].gold === 8, 'stage 1 wave 1 gold is explicit');
+assert(WAVE_DEFS.slice(0, 3).map((wave) => wave.archetypes[0].dps).join() === '3,5,8', 'legacy waves 1–3 contact DPS is 3/5/8');
 assert(WAVE_DEFS[3].archetypes.map((row) => row.dps).join() === '11,16,20', 'wave 4 DPS mix is unchanged');
-assert(defs1[0].archetypes[0].skins.join() === 'office-worker-v2,delivery,chef', 'stage 1 waves carry types 1/2/3');
-assert(waveDefsForStage(2)[0].archetypes[0].skins.join() === 'delivery', 'stage 2 waves carry only delivery');
+assert(defs1[0].archetypes[0].skins.join() === 'office-worker-v2,office-worker-v2,delivery,chef', 'stage 1 wave 1 weights office');
+assert(waveDefsForStage(2)[0].archetypes[0].skins.includes('chef'), 'stage 2 waves include chef');
+assert(waveDefsForStage(4)[0].archetypes[0].hp === 40 && waveDefsForStage(4)[0].total === 5, 'stage 4 keeps the legacy wave 1 row');
 assert(waveDefsForStage(5)[3].archetypes.every((row) => row.skins.join() === 'brute'), 'stage 5 wave 4 is only brute');
 
 function skinCounts(stage) {
@@ -85,11 +88,18 @@ function skinCounts(stage) {
 const mix1 = skinCounts(1);
 const mix1Ids = Object.keys(mix1).sort();
 const mix1Total = Object.values(mix1).reduce((sum, n) => sum + n, 0);
-assert(mix1Ids.join() === 'chef,delivery,office-worker-v2' && mix1Total === 69, `stage 1 rolls types 1/2/3 ${JSON.stringify(mix1)}`);
-for (const id of ['office-worker-v2', 'delivery', 'chef']) {
-  assert(mix1[id] > 0, `stage 1 spawned ${id}`);
+assert(
+  mix1Ids.every((id) => rosterForStage(1).includes(id)) && mix1Total === 22,
+  `stage 1 rolls types 1/2/3 ${JSON.stringify(mix1)}`
+);
+const earlyTotals = { 2: 24, 3: 28 };
+for (const stage of [2, 3]) {
+  const mix = skinCounts(stage);
+  const ids = Object.keys(mix).sort();
+  const total = Object.values(mix).reduce((sum, n) => sum + n, 0);
+  assert(ids.every((id) => rosterForStage(stage).includes(id)) && total === earlyTotals[stage], `stage ${stage} pool ${JSON.stringify(mix)}`);
 }
-for (let stage = 2; stage <= STAGE_COUNT; stage += 1) {
+for (const stage of [4, 5]) {
   const mix = skinCounts(stage);
   const id = expected[stage - 1];
   assert(Object.keys(mix).join() === id && mix[id] === 69, `stage ${stage} spawns only ${id} ${JSON.stringify(mix)}`);

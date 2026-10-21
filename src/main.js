@@ -10,6 +10,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from './data/waves.js';
  * Boot → Title → PetSelect → Stage → Shop.
  * Auth and CharSelect are not in this build. PetSelect is the opening pet pick.
  * SaveManager is installed from Boot. Pets are not chosen on an avatar.
+ * Arcade physics is off. Zombie and pet soles separate in footprints.js.
  *
  * parent: 'game-host' matches Architect shell index.html.
  */

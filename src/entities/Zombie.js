@@ -33,6 +33,7 @@ import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layo
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
 import { attackContactFrame, ruleAttackContactFrame } from '../data/enemyShowcase.js';
+import { smallHurtLocksMove } from '../systems/footprints.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
@@ -121,7 +122,10 @@ export class Zombie {
     this.barricadeDmgAccum = 0;
     /** Pet being bitten this frame. Null while the barricade is the target. */
     this.petBiteTarget = null;
-    this.goldValue = getGoldByHP(this.maxHp);
+    const explicitGold = Number(cfg.gold);
+    this.goldValue = cfg.gold != null && Number.isFinite(explicitGold)
+      ? explicitGold
+      : getGoldByHP(this.maxHp);
     this.laneY = cfg.y;
     this._lastX = cfg.x;
     this._lastY = cfg.y;
@@ -317,6 +321,47 @@ export class Zombie {
     if (!this.body || !Number.isFinite(x)) return;
     this.body.x = x;
     this._lastX = x;
+    this._syncBars();
+  }
+
+  /** Display width used as the occupied footprint. */
+  footprintWidth() {
+    if (this._isSprite && this.body) return Math.abs(this.body.displayWidth) || 0;
+    return this.baseSize * this.scale * this.variantScale;
+  }
+
+  /**
+   * Push from the footprint pass. March speed is unchanged.
+   * @param {number} dx
+   * @param {number} dy
+   */
+  shift(dx, dy) {
+    if (!this.alive || !this.body) return;
+    if (dx) this.body.x += dx;
+    if (dy) this.body.y += dy;
+    this._lastX = this.body.x;
+    this._lastY = this.body.y;
+    this.laneY = this.body.y;
+  }
+
+  /**
+   * Keep a pushed body on the grass and on the barricade side of the halt.
+   * Does not change barricade HP.
+   * @param {{ contactXAt: (y: number) => number }|null|undefined} barricade
+   */
+  clampFoot(barricade) {
+    if (!this.alive || !this.body) return;
+    const yMin = grassYMin();
+    const yMax = grassYMax();
+    if (this.body.y < yMin) this.body.y = yMin;
+    if (this.body.y > yMax) this.body.y = yMax;
+    this.laneY = this.body.y;
+    if (barricade && typeof barricade.contactXAt === 'function') {
+      const halt = barricade.contactXAt(this.body.y) - this.displayHalf;
+      if (this.body.x > halt) this.body.x = halt;
+    }
+    this._lastX = this.body.x;
+    this._lastY = this.body.y;
     this._syncBars();
   }
 
@@ -611,6 +656,7 @@ export class Zombie {
   /** 0 while rooted, otherwise panda slow and the hurt-window half speed. */
   _slowFactor() {
     if (this._rootMs > 0) return 0;
+    if ((this._hurtMs > 0 || this._feelHurtLatch) && smallHurtLocksMove(this)) return 0;
     let factor = 1;
     if (this._slowMs > 0) factor *= this._slowMult > 0 ? this._slowMult : 1;
     if (this._hurtMs > 0) factor *= ZOMBIE_HURT_SPEED_MUL;
@@ -871,7 +917,7 @@ export class Zombie {
       this.alive = false;
       this._beginDeath(amount, hit);
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'die');
-      else this.scene.audio?.playZombieDeath();
+      else if (!this.scene.audio?.playProfessionDeath?.(this.skin?.id)) this.scene.audio?.playZombieDeath();
       if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
     }
@@ -1368,7 +1414,9 @@ export class Zombie {
     const bits = [`HP ${hp}`];
     if (this.skin?.ruleAnims) {
       if (Number(this.hp) < ZOMBIE_TIRE_HP) bits.push(`tire×${ZOMBIE_TIRE_SPEED_MUL}`);
-      if (this._hurtMs > 0 || this._feelHurtLatch) bits.push(`hurt×${ZOMBIE_HURT_SPEED_MUL}`);
+      if (this._hurtMs > 0 || this._feelHurtLatch) {
+        bits.push(smallHurtLocksMove(this) ? 'hurt-lock' : `hurt×${ZOMBIE_HURT_SPEED_MUL}`);
+      }
     }
     const key = this.body?.anims?.currentAnim?.key || '';
     if (key.includes('die-')) bits.push(key.slice(key.indexOf('die-')));

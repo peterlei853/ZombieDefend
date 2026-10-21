@@ -14,7 +14,7 @@ import {
   SHOP_WEAPON_COST,
   tryShopAction,
 } from '../data/shopList.js';
-import { STAGE_COUNT, clampStage } from '../data/stageRoster.js';
+import { PLAYABLE_STAGE_CAP, STAGE_COUNT, clampStage } from '../data/stageRoster.js';
 
 export { SHOP_UPGRADE_COST, SHOP_WEAPON_COST };
 
@@ -64,11 +64,12 @@ export default class ShopScene extends Phaser.Scene {
   }
 
   /**
-   * Next stage, through stage 5. Keeps the purse, owned weapons, and
-   * upgrade ranks. After stage 5, return to the title picker.
+   * Next stage through the 3-loop cap. Keeps the purse, owned weapons, and
+   * upgrade ranks. After PLAYABLE_STAGE_CAP (and after STAGE_COUNT) return
+   * to the title. Stages 4–5 stay on disk; this loop does not enter them.
    */
   continue() {
-    if (this.stage >= STAGE_COUNT) {
+    if (this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT) {
       this.registry.set('stage', 1);
       this.scene.start('TitleScene');
       return;
@@ -225,7 +226,7 @@ export default class ShopScene extends Phaser.Scene {
     });
     this._refreshRows();
 
-    addParchmentButton(this, width / 2, 672, this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
+    addParchmentButton(this, width / 2, 672, this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
       this.audio?.playUiClick();
       this.continue();
     }, { scale: 2, depth: 5 });

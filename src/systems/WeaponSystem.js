@@ -8,7 +8,8 @@ import {
   LAYOUT_SCALE,
   layoutPx,
 } from './DepthView.js';
-import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { applyPlayerCrit } from '../data/playerCombat.js';
+import { DAMAGE_COLORS, showCritText, showDamageText } from '../ui/damageText.js';
 import { HERO_WEAPONS } from '../assets/heroLoadout.js';
 import {
   FLAME_GROW_MS,
@@ -916,7 +917,10 @@ export class WeaponSystem {
    */
   _spawnFrontBullet(bullets, x, y, vx, vy, trait, extra = {}) {
     const fxKey = extra.fxKey || trait.projectile;
-    const damage = this._scaledDamage(trait.id, extra.damage ?? trait.damage);
+    const chargeLevel = Number(extra.charge) || 0;
+    const opening = Number(this.scene?.playerCombat?.attack);
+    const useOpening = opening > 0 && chargeLevel < 2;
+    const damage = this._scaledDamage(trait.id, useOpening ? opening : (extra.damage ?? trait.damage));
     const visualScale = Number.isFinite(extra.spriteScale) && extra.spriteScale > 0
       ? extra.spriteScale
       : (this._visualScale || 1);
@@ -1021,6 +1025,17 @@ export class WeaponSystem {
     const hx = zombie.x;
     const hy = Number.isFinite(zombie.visualTop) ? zombie.visualTop : zombie.y;
     const goldVal = zombie.goldValue || 0;
+    let dealt = dmg;
+    let crit = bullet?.crit === true;
+    if (this.scene?.playerCombat) {
+      const rolled = applyPlayerCrit(
+        dmg,
+        this.scene._playerCritRng || Math.random,
+        this.scene.playerCombat
+      );
+      dealt = rolled.amount;
+      crit = rolled.crit;
+    }
     if (opts.knock && bullet?.knockbackBodies > 0) {
       const body = (zombie.displayHalf || 0) * 2;
       if (body > 0 && typeof zombie.applyKnockback === 'function') {
@@ -1034,14 +1049,15 @@ export class WeaponSystem {
     this._spawnSkinHit(zombie, bullet?.weaponId);
     // v0.36.25: charge is the water tier already on the bullet (L3 is 3).
     // It selects the death strip. It does not change `dmg`.
-    const killed = zombie.takeDamage(dmg, {
+    const killed = zombie.takeDamage(dealt, {
       kind: bullet?.weaponId || bullet?.kind,
       charge: Number(bullet?.charge) || 0,
-      crit: bullet?.crit === true,
+      crit,
     });
-    if (dmg > 0) this.scene.audio?.playHitImpact();
+    if (dealt > 0) this.scene.audio?.playHitImpact();
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
-    showDamageText(this.scene, hx, hy, dmg, color, zombie.id);
+    showDamageText(this.scene, hx, hy, dealt, color, zombie.id);
+    if (crit) showCritText(this.scene, hx, hy - layoutPx(12));
     if (killed) return { gold: goldVal, kills: 1 };
     return { gold: 0, kills: 0 };
   }

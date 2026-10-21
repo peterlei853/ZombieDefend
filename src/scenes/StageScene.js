@@ -10,9 +10,10 @@ import {
   WAVE_DEFS,
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, forceDeathMode, forceHurtEnabled, forceTireEnabled, petHurtDebugRequested, petLowHpDebugRequested, showZombieHpEnabled } from '../data/GameConfig.js';
+import { playerCombatStats } from '../data/playerCombat.js';
 import { clampStage } from '../data/stageRoster.js';
-import { readSelectedPetId } from '../data/SaveManager.js';
-import { isOpeningPetId, spriteKeyForPet } from '../data/petSelectRoster.js';
+import { readSelectedPetId, readSelectedPetSpriteKey } from '../data/SaveManager.js';
+import { PET_SELECT_ROSTER, isOpeningPetId, spriteKeyForPet } from '../data/petSelectRoster.js';
 import { holdBareHandsRest } from '../assets/heroDeploy.js';
 import {
   BRUTE_SHOCK_KEY,
@@ -67,7 +68,9 @@ import { spritesTouchAnyFrame } from '../systems/pixelTouch.js';
 import { pickPetTarget } from '../systems/ZombieAggro.js';
 import { ExpOrbManager } from '../systems/ExpOrbManager.js';
 import { PetEvolve, T2_COST, T3_COST } from '../systems/PetEvolve.js';
-import { PetPortraitHud } from '../ui/PetPortraitHud.js';
+import { PetDeployButton } from '../ui/PetDeployButton.js';
+import { separateFootprints } from '../systems/footprints.js';
+import { VocalAmbience } from '../systems/vocalAmbience.js';
 import { debugBgmEnabled } from '../debugBgm.js';
 import { debugExpEnabled, grantDebugExp } from '../debugExp.js';
 import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
@@ -118,6 +121,20 @@ import { resolveOwnedWeapons } from '../assets/heroDeploy.js';
  * does not shake.
  */
 
+/**
+ * Demo-only `?pet=phoenix|panda|lion|dragon`. Does not write SaveManager.
+ * A saved pick still wins.
+ * @returns {string|null}
+ */
+function demoPetQuery() {
+  try {
+    const id = new URLSearchParams(globalThis.location?.search || '').get('pet');
+    return isOpeningPetId(id) ? id : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 export default class StageScene extends Phaser.Scene {
   constructor() {
     super('StageScene');
@@ -125,18 +142,27 @@ export default class StageScene extends Phaser.Scene {
 
   init(data) {
     this.stage = clampStage(data?.stage ?? this.registry.get('stage') ?? 1);
+    this.playerCombat = playerCombatStats();
     // Purse for this attempt. Boot and Shop pass the gold the run starts
     // with. Kills add on top. Retry restores this value so a failed attempt
-    // cannot farm gold. There is no separate SaveManager write during Stage;
-    // MockDB account gold is not touched here.
+    // cannot farm gold. Stage does not call setSelectedPetId. A missing
+    // pick fields phoenix for this run only.
     this.runStartGold = data?.gold ?? this.registry.get('gold') ?? 0;
     this.gold = this.runStartGold;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
-    // Opening pet. Combat still summons from the portrait bars.
-    // Gameplay reads selectedPetId / selectedPetSpriteKey for GO! / Back!.
+    const save = this.registry.get('saveManager');
     const passedPet = isOpeningPetId(data?.selectedPetId) ? data.selectedPetId : null;
-    this.selectedPetId = passedPet || readSelectedPetId(this.registry);
-    this.selectedPetSpriteKey = spriteKeyForPet(this.selectedPetId);
+    const savedPet = readSelectedPetId(this.registry);
+    const queryPet = demoPetQuery();
+    this.selectedPetId = passedPet || savedPet || queryPet || 'phoenix';
+    const managerId = typeof save?.getSelectedPetId === 'function' ? save.getSelectedPetId() : save?.selectedPetId;
+    const managerSprite = this.selectedPetId === managerId && typeof save?.getSelectedPetSpriteKey === 'function'
+      ? save.getSelectedPetSpriteKey()
+      : null;
+    const registrySprite = this.selectedPetId === this.registry.get('selectedPetId')
+      ? readSelectedPetSpriteKey(this.registry)
+      : null;
+    this.selectedPetSpriteKey = managerSprite || registrySprite || spriteKeyForPet(this.selectedPetId);
 
     const carried = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
@@ -155,8 +181,10 @@ export default class StageScene extends Phaser.Scene {
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
-    this.registry.set('selectedPetId', this.selectedPetId);
-    this.registry.set('selectedPetSpriteKey', this.selectedPetSpriteKey);
+    if (passedPet || savedPet || queryPet) {
+      this.registry.set('selectedPetId', this.selectedPetId);
+      this.registry.set('selectedPetSpriteKey', this.selectedPetSpriteKey);
+    }
     this.registry.set('ownedWeapons', this.ownedWeapons);
     this.registry.set('weaponUpgrades', this.weaponUpgrades);
 
@@ -272,9 +300,11 @@ export default class StageScene extends Phaser.Scene {
 
     this.touchControls = new VirtualControls(this);
     this.defenders.touchControls = this.touchControls;
-    this.petHud = new PetPortraitHud(this, {
+    this.vocals = new VocalAmbience();
+    this.petHud = new PetDeployButton(this, {
+      petId: this.selectedPetId,
       views: () => this.defenders.petCombat?.portraitViews() || [],
-      onSummon: (index) => this.defenders.summonPet(index, this.zombies),
+      onToggle: () => this._toggleSelectedPet(),
     });
     this.events.once('shutdown', () => {
       this.petHud?.destroy();
@@ -1390,6 +1420,8 @@ export default class StageScene extends Phaser.Scene {
       this.audio?.playCoin();
     }
     this.expOrbs?.update(deltaMs, this.defenders.fieldPets());
+    this._separateFeet();
+    this.vocals?.update(this, this.zombies, this.time?.now ?? 0);
 
     // Prune dead refs occasionally
     if (this.zombies.length > 40) {
@@ -1429,6 +1461,35 @@ export default class StageScene extends Phaser.Scene {
     }
   }
 
+  /** GO! / Back! for the Architect-selected pet. Other party slots stay in bed. */
+  _toggleSelectedPet() {
+    const index = Math.max(0, PET_SELECT_ROSTER.findIndex((pet) => pet.id === this.selectedPetId));
+    const idle = this.selectedPetSpriteKey || spriteKeyForPet(this.selectedPetId);
+    this.defenders?.petCombat?.setBabyIdleKey?.(index, idle);
+    this.defenders?.summonPet(index, this.zombies);
+  }
+
+  /**
+   * Push overlapping zombie and pet soles apart. Arcade physics is not on.
+   * The barricade halt is re-applied so a push cannot cross the posts.
+   */
+  _separateFeet() {
+    /** @type {object[]} */
+    const bodies = [];
+    for (const zombie of this.zombies) {
+      if (!zombie?.alive || !zombie.body) continue;
+      bodies.push(zombie);
+    }
+    const pets = this.defenders?.petCombat?.occupiedPets?.() || [];
+    for (const pet of pets) bodies.push(pet);
+    const barricade = this.barricade;
+    separateFootprints(bodies, {
+      clamp: (body) => {
+        if (typeof body.clampFoot === 'function') body.clampFoot(barricade);
+      },
+    });
+  }
+
   _spawnZombie(intent) {
     const y = takeEvenLaneY(this._laneCycle);
     const arch = intent.archetype;
@@ -1442,9 +1503,12 @@ export default class StageScene extends Phaser.Scene {
       wave: intent.wave,
       variant: arch.variant,
       skin: arch.skin,
+      gold: arch.gold,
     });
     // Inset by the measured half-body so the left edge does not crop it.
-    z.placeAt(zombieSpawnWorldX(z.displayHalf));
+    // A short X stagger keeps a same-lane pair from sharing a sole at spawn.
+    const stagger = (this.zombies.length % 4) * layoutPx(28);
+    z.placeAt(zombieSpawnWorldX(z.displayHalf) - stagger);
     this.zombies.push(z);
   }
 
