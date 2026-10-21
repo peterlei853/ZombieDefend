@@ -4,9 +4,7 @@ import { clampStage } from '../data/stageRoster.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import {
   FONT_HUD,
-  FONT_INK,
   FONT_TINY,
-  INK_TINT,
   addKitImage,
   addKitText,
   addParchmentButton,
@@ -142,10 +140,8 @@ export default class PetSelectScene extends Phaser.Scene {
     }
 
     addKitText(this, x, y + 78, pet.label, {
-      font: FONT_INK,
+      font: FONT_HUD,
       size: 16,
-      tint: INK_TINT,
-      color: '#2a2118',
       depth: 4,
     });
     addKitText(this, x, y + 108, pet.labelZh, {
