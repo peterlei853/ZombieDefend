@@ -7,7 +7,7 @@
   "conventions": {
     "strips": "horizontal; frame i at x = i*frameWidth, y = 0 (unless \"grid\" is given)",
     "origin": "Phaser setOrigin(x, y) fractions of one frame",
-    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse rule-anim v1.0 cells 84x84, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
+    "zombies": "64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse rule-anim v1.0 cells 84x84, S4 construction/schoolgirl/delivery/salaryman catalog-only 88x88, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east",
     "bosses": "128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative",
     "pets": "Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX",
     "hero": "92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south",
@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 659,
+    "total": 733,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -29,32 +29,32 @@
         "assets": 124
       },
       "ui": {
-        "groups": 1,
-        "assets": 51
+        "groups": 2,
+        "assets": 59
       },
       "zombies": {
-        "groups": 15,
-        "assets": 220
+        "groups": 19,
+        "assets": 236
       },
       "bosses": {
-        "groups": 4,
-        "assets": 39
+        "groups": 5,
+        "assets": 41
       },
       "fx": {
-        "groups": 9,
-        "assets": 23
+        "groups": 14,
+        "assets": 48
       },
       "pickups": {
         "groups": 1,
         "assets": 5
       },
       "environment": {
-        "groups": 2,
-        "assets": 20
+        "groups": 3,
+        "assets": 38
       },
       "backgrounds": {
-        "groups": 1,
-        "assets": 15
+        "groups": 2,
+        "assets": 20
       },
       "concepts": {
         "groups": 1,
@@ -62,12 +62,12 @@
       }
     },
     "byType": {
-      "background": 13,
+      "background": 18,
       "concept": 21,
-      "fx": 93,
-      "icon": 75,
-      "image": 38,
-      "spritesheet": 419
+      "fx": 120,
+      "icon": 83,
+      "image": 56,
+      "spritesheet": 435
     }
   },
   "groups": [
@@ -1181,6 +1181,54 @@
       ]
     },
     {
+      "id": "ui/m2-ui",
+      "category": "ui",
+      "group": "m2-ui",
+      "title": "Milestone 2 UI Panels",
+      "titleZh": "里程碑 2 介面",
+      "description": "Eight Milestone 2 panels, v1.0. Cataloged beside the live HUD kit. None of these keys replace ui-hp-bar-player, ui-hp-bar-enemy, ui-float-go, or ui-float-back. SFX keys are notes only.",
+      "manifest": "assets/library/ui/m2/manifest.json",
+      "dir": "assets/library/ui/m2",
+      "thumb": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "sheets": [
+        "assets/library/ui/m2/ui-card-shop-item.png",
+        "assets/library/ui/m2/ui-btn-pet-go.png",
+        "assets/library/ui/m2/ui-btn-pet-back.png",
+        "assets/library/ui/m2/ui-dmg-normal.png",
+        "assets/library/ui/m2/ui-heal-number.png",
+        "assets/library/ui/m2/ui-banner-wave.png",
+        "assets/library/ui/m2/ui-panel-settings.png"
+      ],
+      "extras": [],
+      "keyPrefix": "ui-",
+      "mainKey": "ui-hp-bar-boss",
+      "count": 8,
+      "frameSizes": [
+        "192x192",
+        "256x320",
+        "384x384",
+        "512x192"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "icon"
+      ],
+      "keys": [
+        "ui-hp-bar-boss",
+        "ui-card-shop-item",
+        "ui-btn-pet-go",
+        "ui-btn-pet-back",
+        "ui-dmg-normal",
+        "ui-heal-number",
+        "ui-banner-wave",
+        "ui-panel-settings"
+      ]
+    },
+    {
       "id": "zombies/brute",
       "category": "zombies",
       "group": "brute",
@@ -1697,6 +1745,150 @@
       ]
     },
     {
+      "id": "zombies/s4-construction",
+      "category": "zombies",
+      "group": "s4-construction",
+      "title": "S4 Construction Zombie",
+      "titleZh": "工地丧尸",
+      "description": "S4 Construction Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Hardhat and wrench stay readable on the attack strip. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.",
+      "manifest": "assets/library/enemies/zombies/s4/construction/manifest.json",
+      "dir": "assets/library/enemies/zombies/s4/construction",
+      "thumb": "assets/library/previews/zombies/s4-construction/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "zombie-s4-construction-",
+      "mainKey": "zombie-s4-construction-walk",
+      "count": 4,
+      "frameSizes": [
+        "88x88"
+      ],
+      "framesRange": [
+        8,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "zombie-s4-construction-walk",
+        "zombie-s4-construction-attack",
+        "zombie-s4-construction-hurt",
+        "zombie-s4-construction-die"
+      ]
+    },
+    {
+      "id": "zombies/s4-delivery",
+      "category": "zombies",
+      "group": "s4-delivery",
+      "title": "S4 Delivery Zombie",
+      "titleZh": "外送丧尸 S4",
+      "description": "S4 Delivery Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Separate from the live 84px delivery profession. Walk, attack, hurt, and die exported with no edge-clip flag. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.",
+      "manifest": "assets/library/enemies/zombies/s4/delivery/manifest.json",
+      "dir": "assets/library/enemies/zombies/s4/delivery",
+      "thumb": "assets/library/previews/zombies/s4-delivery/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "zombie-s4-delivery-",
+      "mainKey": "zombie-s4-delivery-walk",
+      "count": 4,
+      "frameSizes": [
+        "88x88"
+      ],
+      "framesRange": [
+        8,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "zombie-s4-delivery-walk",
+        "zombie-s4-delivery-attack",
+        "zombie-s4-delivery-hurt",
+        "zombie-s4-delivery-die"
+      ]
+    },
+    {
+      "id": "zombies/s4-salaryman",
+      "category": "zombies",
+      "group": "s4-salaryman",
+      "title": "S4 Salaryman Zombie",
+      "titleZh": "上班族丧尸 S4",
+      "description": "S4 Salaryman Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Die strip shows the briefcase drop and collapse. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.",
+      "manifest": "assets/library/enemies/zombies/s4/salaryman/manifest.json",
+      "dir": "assets/library/enemies/zombies/s4/salaryman",
+      "thumb": "assets/library/previews/zombies/s4-salaryman/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "zombie-s4-salaryman-",
+      "mainKey": "zombie-s4-salaryman-walk",
+      "count": 4,
+      "frameSizes": [
+        "88x88"
+      ],
+      "framesRange": [
+        8,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "zombie-s4-salaryman-walk",
+        "zombie-s4-salaryman-attack",
+        "zombie-s4-salaryman-hurt",
+        "zombie-s4-salaryman-die"
+      ]
+    },
+    {
+      "id": "zombies/s4-schoolgirl",
+      "category": "zombies",
+      "group": "s4-schoolgirl",
+      "title": "S4 Schoolgirl Zombie",
+      "titleZh": "女學生丧尸",
+      "description": "S4 Schoolgirl Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Walk, attack, hurt, and die exported with no edge-clip flag. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.",
+      "manifest": "assets/library/enemies/zombies/s4/schoolgirl/manifest.json",
+      "dir": "assets/library/enemies/zombies/s4/schoolgirl",
+      "thumb": "assets/library/previews/zombies/s4-schoolgirl/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "zombie-s4-schoolgirl-",
+      "mainKey": "zombie-s4-schoolgirl-walk",
+      "count": 4,
+      "frameSizes": [
+        "88x88"
+      ],
+      "framesRange": [
+        8,
+        8
+      ],
+      "fpsRange": [
+        8,
+        10
+      ],
+      "types": [
+        "spritesheet"
+      ],
+      "keys": [
+        "zombie-s4-schoolgirl-walk",
+        "zombie-s4-schoolgirl-attack",
+        "zombie-s4-schoolgirl-hurt",
+        "zombie-s4-schoolgirl-die"
+      ]
+    },
+    {
       "id": "zombies/slime",
       "category": "zombies",
       "group": "slime",
@@ -2027,6 +2219,37 @@
         "zombie-boss-lava-fx-breath",
         "zombie-boss-lava-fx-meteor",
         "zombie-boss-lava-fx-meteor-impact"
+      ]
+    },
+    {
+      "id": "bosses/m2-boss-fx",
+      "category": "bosses",
+      "group": "m2-boss-fx",
+      "title": "Milestone 2 Boss Skill FX",
+      "titleZh": "里程碑 2 首領技能特效",
+      "description": "Balun and Balam skill stills from the Milestone 2 credit burn, v1.0. Each is a static 96×96 image, origin center. These keys do not replace zombie-boss-lava-fx-* or zombie-boss-steel-fx-*. SFX keys are notes only.",
+      "manifest": "assets/library/enemies/bosses/m2-skill-fx/manifest.json",
+      "dir": "assets/library/enemies/bosses/m2-skill-fx",
+      "thumb": "assets/library/previews/bosses/m2-boss-fx/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-boss-",
+      "mainKey": "vfx-boss-balun-skill",
+      "count": 2,
+      "frameSizes": [
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-boss-balun-skill",
+        "vfx-boss-balam-skill"
       ]
     },
     {
@@ -2430,6 +2653,196 @@
       ]
     },
     {
+      "id": "fx/m2-vfx-bubble",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "title": "Bubble Weapon VFX",
+      "titleZh": "泡泡武器特效",
+      "description": "Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-bubble-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).",
+      "manifest": "assets/library/vfx/weapons/bubble/manifest.json",
+      "dir": "assets/library/vfx/weapons/bubble",
+      "thumb": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-bubble-",
+      "mainKey": "vfx-bubble-projectile",
+      "count": 5,
+      "frameSizes": [
+        "64x64",
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        8
+      ],
+      "fpsRange": [
+        12,
+        12
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-bubble-projectile",
+        "vfx-bubble-charge",
+        "vfx-bubble-aoe",
+        "vfx-bubble-hit",
+        "vfx-bubble-aoe-explode"
+      ]
+    },
+    {
+      "id": "fx/m2-vfx-flame",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "title": "Flame Weapon VFX",
+      "titleZh": "火焰武器特效",
+      "description": "Flame Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-flame-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.",
+      "manifest": "assets/library/vfx/weapons/flame/manifest.json",
+      "dir": "assets/library/vfx/weapons/flame",
+      "thumb": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-flame-",
+      "mainKey": "vfx-flame-projectile",
+      "count": 5,
+      "frameSizes": [
+        "64x64",
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        8
+      ],
+      "fpsRange": [
+        12,
+        12
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-flame-projectile",
+        "vfx-flame-charge",
+        "vfx-flame-aoe",
+        "vfx-flame-hit",
+        "vfx-flame-aoe-explode"
+      ]
+    },
+    {
+      "id": "fx/m2-vfx-freeze",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "title": "Freeze Weapon VFX",
+      "titleZh": "冰凍武器特效",
+      "description": "Freeze Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-freeze-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.",
+      "manifest": "assets/library/vfx/weapons/freeze/manifest.json",
+      "dir": "assets/library/vfx/weapons/freeze",
+      "thumb": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-freeze-",
+      "mainKey": "vfx-freeze-projectile",
+      "count": 5,
+      "frameSizes": [
+        "64x64",
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        8
+      ],
+      "fpsRange": [
+        12,
+        12
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-freeze-projectile",
+        "vfx-freeze-charge",
+        "vfx-freeze-aoe",
+        "vfx-freeze-hit",
+        "vfx-freeze-aoe-explode"
+      ]
+    },
+    {
+      "id": "fx/m2-vfx-rail",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "title": "Rail Weapon VFX",
+      "titleZh": "軌道武器特效",
+      "description": "Rail Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-rail-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.",
+      "manifest": "assets/library/vfx/weapons/rail/manifest.json",
+      "dir": "assets/library/vfx/weapons/rail",
+      "thumb": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-rail-",
+      "mainKey": "vfx-rail-projectile",
+      "count": 5,
+      "frameSizes": [
+        "64x64",
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        8
+      ],
+      "fpsRange": [
+        12,
+        12
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-rail-projectile",
+        "vfx-rail-charge",
+        "vfx-rail-aoe",
+        "vfx-rail-hit",
+        "vfx-rail-aoe-explode"
+      ]
+    },
+    {
+      "id": "fx/m2-vfx-sling",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "title": "Sling Weapon VFX",
+      "titleZh": "彈弓武器特效",
+      "description": "Sling Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-sling-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.",
+      "manifest": "assets/library/vfx/weapons/sling/manifest.json",
+      "dir": "assets/library/vfx/weapons/sling",
+      "thumb": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "vfx-sling-",
+      "mainKey": "vfx-sling-projectile",
+      "count": 5,
+      "frameSizes": [
+        "64x64",
+        "96x96"
+      ],
+      "framesRange": [
+        1,
+        8
+      ],
+      "fpsRange": [
+        12,
+        12
+      ],
+      "types": [
+        "fx"
+      ],
+      "keys": [
+        "vfx-sling-projectile",
+        "vfx-sling-charge",
+        "vfx-sling-aoe",
+        "vfx-sling-hit",
+        "vfx-sling-aoe-explode"
+      ]
+    },
+    {
       "id": "pickups/clown-loot",
       "category": "pickups",
       "group": "clown-loot",
@@ -2550,6 +2963,53 @@
       ]
     },
     {
+      "id": "environment/path-brick-sidewalk",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "title": "Brick Sidewalk Path Tiles",
+      "titleZh": "紅磚人行道",
+      "description": "Worn red brick sidewalk over dusty dirt, 18 tiles at 32×32, v1.0. Square top-down path, edge connectivity (arity 4). Tiles 00–16 are placeable; tile 17 is stamp-only. The credit-burn tarball did not include this folder; the PNGs are the completed PixelLab tileset 140dd29a-1d0d-4419-a20d-b0f65d366fb3 named in the handoff. Catalog only. Fence and gold stay with the filler pass.",
+      "manifest": "assets/library/environment/tiles/path-brick-sidewalk/manifest.json",
+      "dir": "assets/library/environment/tiles/path-brick-sidewalk",
+      "thumb": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "path-brick-sidewalk-",
+      "mainKey": "path-brick-sidewalk-00",
+      "count": 18,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "path-brick-sidewalk-00",
+        "path-brick-sidewalk-01",
+        "path-brick-sidewalk-02",
+        "path-brick-sidewalk-03",
+        "path-brick-sidewalk-04",
+        "path-brick-sidewalk-05",
+        "path-brick-sidewalk-06",
+        "path-brick-sidewalk-07",
+        "path-brick-sidewalk-08",
+        "path-brick-sidewalk-09",
+        "path-brick-sidewalk-10",
+        "path-brick-sidewalk-11",
+        "path-brick-sidewalk-12",
+        "path-brick-sidewalk-13",
+        "path-brick-sidewalk-14",
+        "path-brick-sidewalk-15",
+        "path-brick-sidewalk-16",
+        "path-brick-sidewalk-17"
+      ]
+    },
+    {
       "id": "backgrounds/campus",
       "category": "backgrounds",
       "group": "campus",
@@ -2606,6 +3066,45 @@
         "bg-campus-night-full-bleed",
         "bg-campus-fire",
         "bg-campus-lamp"
+      ]
+    },
+    {
+      "id": "backgrounds/m2-backdrops",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "title": "Milestone 2 Stage Backgrounds",
+      "titleZh": "里程碑 2 場景背景",
+      "description": "Five 320×180 stage plates from the Milestone 2 credit burn, v1.0. Includes the bonus moon street. These do not replace the 1280×720 campus plates. Fence and gold were not re-exported.",
+      "manifest": "assets/library/backgrounds/m2/manifest.json",
+      "dir": "assets/library/backgrounds/m2",
+      "thumb": "assets/library/backgrounds/m2/bg-night-street.png",
+      "sheets": [
+        "assets/library/backgrounds/m2/bg-night-street-moon.png",
+        "assets/library/backgrounds/m2/bg-rainy-market.png",
+        "assets/library/backgrounds/m2/bg-subway.png",
+        "assets/library/backgrounds/m2/bg-rooftop-dusk.png"
+      ],
+      "extras": [],
+      "keyPrefix": "bg-",
+      "mainKey": "bg-night-street",
+      "count": 5,
+      "frameSizes": [
+        "320x180"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "background"
+      ],
+      "keys": [
+        "bg-night-street",
+        "bg-night-street-moon",
+        "bg-rainy-market",
+        "bg-subway",
+        "bg-rooftop-dusk"
       ]
     },
     {
@@ -14565,6 +15064,325 @@
       "action": "float-back-burst-hd"
     },
     {
+      "key": "ui-hp-bar-boss",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: hp-bar-boss (512x192 image).",
+      "note": "v1.0. Boss HP panel. Does not replace ui-hp-bar-player, ui-hp-bar-enemy, or ui-hp-bar-barricade. No SFX key.",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "4e56f3f3-76ac-41d1-b8b3-141b7fbd247b",
+        "replacesLiveHud": false
+      },
+      "action": "hp-bar-boss"
+    },
+    {
+      "key": "ui-card-shop-item",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-card-shop-item.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 320,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: card-shop-item (256x320 image).",
+      "note": "v1.0. Shop item card. New key; does not replace a live HUD texture. SFX `sfx-ui-shop` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "50aa6914-0bad-4d63-95f6-e98e2ec8d4ba",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-shop"
+      },
+      "action": "card-shop-item"
+    },
+    {
+      "key": "ui-btn-pet-go",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-btn-pet-go.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: btn-pet-go (192x192 image).",
+      "note": "v1.0. Pet GO button. Does not replace ui-float-go. SFX `sfx-ui-click` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "312e19b3-9177-495e-816e-f444820f138e",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-click"
+      },
+      "action": "btn-pet-go"
+    },
+    {
+      "key": "ui-btn-pet-back",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-btn-pet-back.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: btn-pet-back (192x192 image).",
+      "note": "v1.0. Pet Back button. Does not replace ui-float-back. SFX `sfx-ui-click` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "0b7c55cf-f2f8-474c-8eb1-93d312e90696",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-click"
+      },
+      "action": "btn-pet-back"
+    },
+    {
+      "key": "ui-dmg-normal",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-dmg-normal.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: dmg-normal (192x192 image).",
+      "note": "v1.0. Damage number plate. PixelLab name ui-dmg-normal-number; catalog key is ui-dmg-normal. SFX `sfx-ui-dmg` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "09d28b49-5b88-488c-9c43-a4171f53cfaa",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-dmg"
+      },
+      "action": "dmg-normal"
+    },
+    {
+      "key": "ui-heal-number",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-heal-number.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: heal-number (192x192 image).",
+      "note": "v1.0. Heal number plate. New key. SFX `sfx-ui-heal` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "9748ecb2-b3c6-4a4b-9f01-7f5ea04fbc92",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-heal"
+      },
+      "action": "heal-number"
+    },
+    {
+      "key": "ui-banner-wave",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-banner-wave.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: banner-wave (512x192 image).",
+      "note": "v1.0. Wave banner. New key. SFX `sfx-ui-wave` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "92aa51e8-f92d-4eb9-a606-ebe7d1fe1625",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-wave"
+      },
+      "action": "banner-wave"
+    },
+    {
+      "key": "ui-panel-settings",
+      "category": "ui",
+      "group": "m2-ui",
+      "path": "assets/library/ui/m2/ui-panel-settings.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "description": "Milestone 2 UI Panels: panel-settings (384x384 image).",
+      "note": "v1.0. Settings panel. New key. SFX `sfx-ui-settings` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2-ui",
+        "icon",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "4be0e26a-2e92-4261-9cc0-30fec2c80524",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-settings"
+      },
+      "action": "panel-settings"
+    },
+    {
       "key": "zombie-brute-walk",
       "category": "zombies",
       "group": "brute",
@@ -20706,6 +21524,678 @@
       "action": "dismantled_defeat"
     },
     {
+      "key": "zombie-s4-construction-walk",
+      "category": "zombies",
+      "group": "s4-construction",
+      "path": "assets/library/enemies/zombies/s4/construction/strips/zombie-s4-construction-walk.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-construction/preview.gif",
+      "description": "S4 Construction Zombie: walk — 8 frames 88x88 @ 8 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 657a4e2f-ca2a-49c1-9a1f-de409730ecb3. SFX `sfx-zombie-s4-construction-growl` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-construction",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "657a4e2f-ca2a-49c1-9a1f-de409730ecb3",
+        "sfx": "sfx-zombie-s4-construction-growl",
+        "wired": false
+      },
+      "action": "walk"
+    },
+    {
+      "key": "zombie-s4-construction-attack",
+      "category": "zombies",
+      "group": "s4-construction",
+      "path": "assets/library/enemies/zombies/s4/construction/strips/zombie-s4-construction-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-construction/preview.gif",
+      "description": "S4 Construction Zombie: attack — 8 frames 88x88 @ 10 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group e98bd2d2-88c3-40d9-ace9-4a19e33bfa3e. SFX `sfx-zombie-s4-construction-hit` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-construction",
+        "spritesheet",
+        "attack",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "e98bd2d2-88c3-40d9-ace9-4a19e33bfa3e",
+        "sfx": "sfx-zombie-s4-construction-hit",
+        "wired": false
+      },
+      "action": "attack"
+    },
+    {
+      "key": "zombie-s4-construction-hurt",
+      "category": "zombies",
+      "group": "s4-construction",
+      "path": "assets/library/enemies/zombies/s4/construction/strips/zombie-s4-construction-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-construction/preview.gif",
+      "description": "S4 Construction Zombie: hurt — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group aafeea67-1f63-4e86-80d9-921ad1a53586. SFX `sfx-zombie-s4-construction-hurt` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-construction",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "aafeea67-1f63-4e86-80d9-921ad1a53586",
+        "sfx": "sfx-zombie-s4-construction-hurt",
+        "wired": false
+      },
+      "action": "hurt"
+    },
+    {
+      "key": "zombie-s4-construction-die",
+      "category": "zombies",
+      "group": "s4-construction",
+      "path": "assets/library/enemies/zombies/s4/construction/strips/zombie-s4-construction-die.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-construction/preview.gif",
+      "description": "S4 Construction Zombie: die — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 774802fb-8686-488c-a3ca-10b0c2292a54. SFX `sfx-zombie-s4-construction-death` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-construction",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "774802fb-8686-488c-a3ca-10b0c2292a54",
+        "sfx": "sfx-zombie-s4-construction-death",
+        "wired": false
+      },
+      "action": "die"
+    },
+    {
+      "key": "zombie-s4-delivery-walk",
+      "category": "zombies",
+      "group": "s4-delivery",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-walk.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-delivery/preview.gif",
+      "description": "S4 Delivery Zombie: walk — 8 frames 88x88 @ 8 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 2e18d315-37d3-43ec-84f9-9df20d9a0850. SFX `sfx-zombie-s4-delivery-growl` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-delivery",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "2e18d315-37d3-43ec-84f9-9df20d9a0850",
+        "sfx": "sfx-zombie-s4-delivery-growl",
+        "wired": false
+      },
+      "action": "walk"
+    },
+    {
+      "key": "zombie-s4-delivery-attack",
+      "category": "zombies",
+      "group": "s4-delivery",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-delivery/preview.gif",
+      "description": "S4 Delivery Zombie: attack — 8 frames 88x88 @ 10 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 507a3aec-aaa8-4a48-8d6d-b28a0f09101f. SFX `sfx-zombie-s4-delivery-hit` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-delivery",
+        "spritesheet",
+        "attack",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "507a3aec-aaa8-4a48-8d6d-b28a0f09101f",
+        "sfx": "sfx-zombie-s4-delivery-hit",
+        "wired": false
+      },
+      "action": "attack"
+    },
+    {
+      "key": "zombie-s4-delivery-hurt",
+      "category": "zombies",
+      "group": "s4-delivery",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-delivery/preview.gif",
+      "description": "S4 Delivery Zombie: hurt — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group c3000661-1ec1-4902-acfa-3465d935faad. SFX `sfx-zombie-s4-delivery-hurt` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-delivery",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "c3000661-1ec1-4902-acfa-3465d935faad",
+        "sfx": "sfx-zombie-s4-delivery-hurt",
+        "wired": false
+      },
+      "action": "hurt"
+    },
+    {
+      "key": "zombie-s4-delivery-die",
+      "category": "zombies",
+      "group": "s4-delivery",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-die.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-delivery/preview.gif",
+      "description": "S4 Delivery Zombie: die — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 45854a6f-0322-4360-a1d7-4719681ecf45. SFX `sfx-zombie-s4-delivery-death` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-delivery",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "45854a6f-0322-4360-a1d7-4719681ecf45",
+        "sfx": "sfx-zombie-s4-delivery-death",
+        "wired": false
+      },
+      "action": "die"
+    },
+    {
+      "key": "zombie-s4-salaryman-walk",
+      "category": "zombies",
+      "group": "s4-salaryman",
+      "path": "assets/library/enemies/zombies/s4/salaryman/strips/zombie-s4-salaryman-walk.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-salaryman/preview.gif",
+      "description": "S4 Salaryman Zombie: walk — 8 frames 88x88 @ 8 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 5335ad43-b511-4d39-a496-63ec489370b5. SFX `sfx-zombie-s4-salaryman-growl` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-salaryman",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "5335ad43-b511-4d39-a496-63ec489370b5",
+        "sfx": "sfx-zombie-s4-salaryman-growl",
+        "wired": false
+      },
+      "action": "walk"
+    },
+    {
+      "key": "zombie-s4-salaryman-attack",
+      "category": "zombies",
+      "group": "s4-salaryman",
+      "path": "assets/library/enemies/zombies/s4/salaryman/strips/zombie-s4-salaryman-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-salaryman/preview.gif",
+      "description": "S4 Salaryman Zombie: attack — 8 frames 88x88 @ 10 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 289837d9-625d-44ee-b5d5-7cfcef5d2181. SFX `sfx-zombie-s4-salaryman-hit` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-salaryman",
+        "spritesheet",
+        "attack",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "289837d9-625d-44ee-b5d5-7cfcef5d2181",
+        "sfx": "sfx-zombie-s4-salaryman-hit",
+        "wired": false
+      },
+      "action": "attack"
+    },
+    {
+      "key": "zombie-s4-salaryman-hurt",
+      "category": "zombies",
+      "group": "s4-salaryman",
+      "path": "assets/library/enemies/zombies/s4/salaryman/strips/zombie-s4-salaryman-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-salaryman/preview.gif",
+      "description": "S4 Salaryman Zombie: hurt — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 8d929459-1719-4bd4-89ab-9241b9a75517. SFX `sfx-zombie-s4-salaryman-hurt` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-salaryman",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "8d929459-1719-4bd4-89ab-9241b9a75517",
+        "sfx": "sfx-zombie-s4-salaryman-hurt",
+        "wired": false
+      },
+      "action": "hurt"
+    },
+    {
+      "key": "zombie-s4-salaryman-die",
+      "category": "zombies",
+      "group": "s4-salaryman",
+      "path": "assets/library/enemies/zombies/s4/salaryman/strips/zombie-s4-salaryman-die.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-salaryman/preview.gif",
+      "description": "S4 Salaryman Zombie: die — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group a8174a05-c639-459e-82ed-64c2efa915c6. SFX `sfx-zombie-s4-salaryman-death` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-salaryman",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "a8174a05-c639-459e-82ed-64c2efa915c6",
+        "sfx": "sfx-zombie-s4-salaryman-death",
+        "wired": false
+      },
+      "action": "die"
+    },
+    {
+      "key": "zombie-s4-schoolgirl-walk",
+      "category": "zombies",
+      "group": "s4-schoolgirl",
+      "path": "assets/library/enemies/zombies/s4/schoolgirl/strips/zombie-s4-schoolgirl-walk.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-schoolgirl/preview.gif",
+      "description": "S4 Schoolgirl Zombie: walk — 8 frames 88x88 @ 8 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 7f7ca8bd-26eb-44ae-996b-8d379642f2e4. SFX `sfx-zombie-s4-schoolgirl-growl` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-schoolgirl",
+        "spritesheet",
+        "walk",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "7f7ca8bd-26eb-44ae-996b-8d379642f2e4",
+        "sfx": "sfx-zombie-s4-schoolgirl-growl",
+        "wired": false
+      },
+      "action": "walk"
+    },
+    {
+      "key": "zombie-s4-schoolgirl-attack",
+      "category": "zombies",
+      "group": "s4-schoolgirl",
+      "path": "assets/library/enemies/zombies/s4/schoolgirl/strips/zombie-s4-schoolgirl-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-schoolgirl/preview.gif",
+      "description": "S4 Schoolgirl Zombie: attack — 8 frames 88x88 @ 10 fps, loop.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group edbb1d86-6d88-493d-9f4c-3a1705809d35. SFX `sfx-zombie-s4-schoolgirl-hit` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-schoolgirl",
+        "spritesheet",
+        "attack",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "edbb1d86-6d88-493d-9f4c-3a1705809d35",
+        "sfx": "sfx-zombie-s4-schoolgirl-hit",
+        "wired": false
+      },
+      "action": "attack"
+    },
+    {
+      "key": "zombie-s4-schoolgirl-hurt",
+      "category": "zombies",
+      "group": "s4-schoolgirl",
+      "path": "assets/library/enemies/zombies/s4/schoolgirl/strips/zombie-s4-schoolgirl-hurt.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-schoolgirl/preview.gif",
+      "description": "S4 Schoolgirl Zombie: hurt — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 5470d096-502f-4b80-b2d3-464a98160173. SFX `sfx-zombie-s4-schoolgirl-hurt` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-schoolgirl",
+        "spritesheet",
+        "hurt",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "5470d096-502f-4b80-b2d3-464a98160173",
+        "sfx": "sfx-zombie-s4-schoolgirl-hurt",
+        "wired": false
+      },
+      "action": "hurt"
+    },
+    {
+      "key": "zombie-s4-schoolgirl-die",
+      "category": "zombies",
+      "group": "s4-schoolgirl",
+      "path": "assets/library/enemies/zombies/s4/schoolgirl/strips/zombie-s4-schoolgirl-die.png",
+      "type": "spritesheet",
+      "frameWidth": 88,
+      "frameHeight": 88,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/s4-schoolgirl/preview.gif",
+      "description": "S4 Schoolgirl Zombie: die — 8 frames 88x88 @ 10 fps, once.",
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group deef2486-351d-4004-b63f-306fa4e7b339. SFX `sfx-zombie-s4-schoolgirl-death` (index note only; no audio file).",
+      "tags": [
+        "zombies",
+        "s4-schoolgirl",
+        "spritesheet",
+        "die",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "deef2486-351d-4004-b63f-306fa4e7b339",
+        "sfx": "sfx-zombie-s4-schoolgirl-death",
+        "wired": false
+      },
+      "action": "die"
+    },
+    {
       "key": "zombie-slime-walk",
       "category": "zombies",
       "group": "slime",
@@ -23469,6 +24959,84 @@
       "action": "meteor-impact"
     },
     {
+      "key": "vfx-boss-balun-skill",
+      "category": "bosses",
+      "group": "m2-boss-fx",
+      "path": "assets/library/enemies/bosses/m2-skill-fx/vfx-boss-balun-skill.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/bosses/m2-boss-fx/preview.gif",
+      "description": "Milestone 2 Boss Skill FX: balun-skill — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Angry balloon with a pink swirl aura. Completed object b6ff9068. Static 96×96. SFX `sfx-boss-balun-skill` (index note only; no audio file).",
+      "tags": [
+        "bosses",
+        "m2-boss-fx",
+        "fx"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "b6ff9068-a589-4433-8085-80b562bce474",
+        "sfx": "sfx-boss-balun-skill",
+        "static": true
+      },
+      "action": "balun-skill"
+    },
+    {
+      "key": "vfx-boss-balam-skill",
+      "category": "bosses",
+      "group": "m2-boss-fx",
+      "path": "assets/library/enemies/bosses/m2-skill-fx/vfx-boss-balam-skill.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/bosses/m2-boss-fx/preview.gif",
+      "description": "Milestone 2 Boss Skill FX: balam-skill — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Selected completed object 401769bc. Review parent 7356bc0e was not exported. Static 96×96. SFX `sfx-boss-balam-skill` (index note only; no audio file).",
+      "tags": [
+        "bosses",
+        "m2-boss-fx",
+        "fx"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "401769bc-0a1e-4ea8-8ed5-a6f1100f03be",
+        "sfx": "sfx-boss-balam-skill",
+        "static": true
+      },
+      "action": "balam-skill"
+    },
+    {
       "key": "zombie-boss-steel-spawn",
       "category": "bosses",
       "group": "steel-balam",
@@ -25289,6 +26857,1011 @@
       "action": "dragon"
     },
     {
+      "key": "vfx-bubble-projectile",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-projectile.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "description": "Bubble Weapon VFX: projectile — 8 frames 64x64 @ 12 fps, loop.",
+      "note": "v1.0. 8-frame fly strip. PixelLab object f3cf1a57-950d-4939-a841-55bc9480eb31. SFX `sfx-weapon-bubble-shot` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-bubble",
+        "projectile",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "f3cf1a57-950d-4939-a841-55bc9480eb31",
+        "sfx": "sfx-weapon-bubble-shot",
+        "static": false
+      },
+      "action": "projectile"
+    },
+    {
+      "key": "vfx-bubble-charge",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-charge.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "description": "Bubble Weapon VFX: charge — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame charge. Selected review winner. Static 1-frame. Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-bubble"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "2bd29209-15f9-42ba-a537-94f5ae3a9309",
+        "sfx": "sfx-weapon-bubble-charge",
+        "static": true
+      },
+      "action": "charge"
+    },
+    {
+      "key": "vfx-bubble-aoe",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-aoe.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "description": "Bubble Weapon VFX: aoe — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-bubble-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-bubble"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "db572ab6-317f-4682-a3ce-7d32dcb47a19",
+        "sfx": "sfx-weapon-bubble-aoe",
+        "static": true,
+        "animatedKey": "vfx-bubble-aoe-explode"
+      },
+      "action": "aoe"
+    },
+    {
+      "key": "vfx-bubble-hit",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-hit.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "description": "Bubble Weapon VFX: hit — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame hit. PixelLab object 50fe5323-ce0c-44fc-9144-7a1a1ae2caaf. SFX `sfx-weapon-bubble-hit` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-bubble"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "50fe5323-ce0c-44fc-9144-7a1a1ae2caaf",
+        "sfx": "sfx-weapon-bubble-hit",
+        "static": true
+      },
+      "action": "hit"
+    },
+    {
+      "key": "vfx-bubble-aoe-explode",
+      "category": "fx",
+      "group": "m2-vfx-bubble",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
+      "description": "Bubble Weapon VFX: aoe-explode — 8 frames 96x96 @ 12 fps, once.",
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Cyan foam bubble dome and splash droplets. Same PixelLab object as `vfx-bubble-aoe` (db572ab6-317f-4682-a3ce-7d32dcb47a19); burst group c1cf92be-8e53-427d-a1e0-507f701c357a. Static `vfx-bubble-aoe` stays. SFX `sfx-weapon-bubble-aoe-explode` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-bubble",
+        "explode",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "db572ab6-317f-4682-a3ce-7d32dcb47a19",
+        "pixellabBurstGroupId": "c1cf92be-8e53-427d-a1e0-507f701c357a",
+        "sfx": "sfx-weapon-bubble-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-bubble-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
+      },
+      "action": "aoe-explode"
+    },
+    {
+      "key": "vfx-flame-projectile",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "path": "assets/library/vfx/weapons/flame/vfx-flame-projectile.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "description": "Flame Weapon VFX: projectile — 8 frames 64x64 @ 12 fps, loop.",
+      "note": "v1.0. 8-frame fly strip. Does not replace live flame sheets. PixelLab object c8a68e24-12e4-4fa1-b1f9-e180890d5c9e. SFX `sfx-weapon-flame-shot` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-flame",
+        "projectile",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "c8a68e24-12e4-4fa1-b1f9-e180890d5c9e",
+        "sfx": "sfx-weapon-flame-shot",
+        "static": false
+      },
+      "action": "projectile"
+    },
+    {
+      "key": "vfx-flame-charge",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "path": "assets/library/vfx/weapons/flame/vfx-flame-charge.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "description": "Flame Weapon VFX: charge — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 75a2591e-8657-4048-af3b-b22dc57efbb7. SFX `sfx-weapon-flame-charge` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-flame"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "75a2591e-8657-4048-af3b-b22dc57efbb7",
+        "sfx": "sfx-weapon-flame-charge",
+        "static": true
+      },
+      "action": "charge"
+    },
+    {
+      "key": "vfx-flame-aoe",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "path": "assets/library/vfx/weapons/flame/vfx-flame-aoe.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "description": "Flame Weapon VFX: aoe — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-flame-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object fba3ca31-56ec-406e-91af-18e1763420a8. SFX `sfx-weapon-flame-aoe` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-flame"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "fba3ca31-56ec-406e-91af-18e1763420a8",
+        "sfx": "sfx-weapon-flame-aoe",
+        "static": true,
+        "animatedKey": "vfx-flame-aoe-explode"
+      },
+      "action": "aoe"
+    },
+    {
+      "key": "vfx-flame-hit",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "path": "assets/library/vfx/weapons/flame/vfx-flame-hit.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "description": "Flame Weapon VFX: hit — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame hit. PixelLab object 7e176c02-1ad7-490f-87ed-058bffc802e6. SFX `sfx-weapon-flame-hit` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-flame"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "7e176c02-1ad7-490f-87ed-058bffc802e6",
+        "sfx": "sfx-weapon-flame-hit",
+        "static": true
+      },
+      "action": "hit"
+    },
+    {
+      "key": "vfx-flame-aoe-explode",
+      "category": "fx",
+      "group": "m2-vfx-flame",
+      "path": "assets/library/vfx/weapons/flame/vfx-flame-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-flame/preview.gif",
+      "description": "Flame Weapon VFX: aoe-explode — 8 frames 96x96 @ 12 fps, once.",
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Fire ring that expands, then ember and smoke fade. Same PixelLab object as `vfx-flame-aoe` (fba3ca31-56ec-406e-91af-18e1763420a8); burst group e721b6c7-8f26-4275-9aab-3a47d22667b0. Static `vfx-flame-aoe` stays. SFX `sfx-weapon-flame-aoe-explode` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-flame",
+        "explode",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "fba3ca31-56ec-406e-91af-18e1763420a8",
+        "pixellabBurstGroupId": "e721b6c7-8f26-4275-9aab-3a47d22667b0",
+        "sfx": "sfx-weapon-flame-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-flame-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
+      },
+      "action": "aoe-explode"
+    },
+    {
+      "key": "vfx-freeze-projectile",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "path": "assets/library/vfx/weapons/freeze/vfx-freeze-projectile.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "description": "Freeze Weapon VFX: projectile — 8 frames 64x64 @ 12 fps, loop.",
+      "note": "v1.0. 8-frame fly strip. Does not replace live frost sheets. PixelLab object 3b8d70ec-417e-4b2a-abbe-812c148d887b. SFX `sfx-weapon-freeze-shot` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-freeze",
+        "projectile",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "3b8d70ec-417e-4b2a-abbe-812c148d887b",
+        "sfx": "sfx-weapon-freeze-shot",
+        "static": false
+      },
+      "action": "projectile"
+    },
+    {
+      "key": "vfx-freeze-charge",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "path": "assets/library/vfx/weapons/freeze/vfx-freeze-charge.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "description": "Freeze Weapon VFX: charge — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 8285f90e-0b5a-4700-9947-5f7f93b1fa27. SFX `sfx-weapon-freeze-charge` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-freeze"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "8285f90e-0b5a-4700-9947-5f7f93b1fa27",
+        "sfx": "sfx-weapon-freeze-charge",
+        "static": true
+      },
+      "action": "charge"
+    },
+    {
+      "key": "vfx-freeze-aoe",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "path": "assets/library/vfx/weapons/freeze/vfx-freeze-aoe.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "description": "Freeze Weapon VFX: aoe — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-freeze-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object 9233fcad-252d-4191-9fd8-a9310ed3274d. SFX `sfx-weapon-freeze-aoe` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-freeze"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "9233fcad-252d-4191-9fd8-a9310ed3274d",
+        "sfx": "sfx-weapon-freeze-aoe",
+        "static": true,
+        "animatedKey": "vfx-freeze-aoe-explode"
+      },
+      "action": "aoe"
+    },
+    {
+      "key": "vfx-freeze-hit",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "path": "assets/library/vfx/weapons/freeze/vfx-freeze-hit.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "description": "Freeze Weapon VFX: hit — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame hit. PixelLab object 95abeec6-5d95-4bc3-986b-071e72f3247a. SFX `sfx-weapon-freeze-hit` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-freeze"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "95abeec6-5d95-4bc3-986b-071e72f3247a",
+        "sfx": "sfx-weapon-freeze-hit",
+        "static": true
+      },
+      "action": "hit"
+    },
+    {
+      "key": "vfx-freeze-aoe-explode",
+      "category": "fx",
+      "group": "m2-vfx-freeze",
+      "path": "assets/library/vfx/weapons/freeze/vfx-freeze-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-freeze/preview.gif",
+      "description": "Freeze Weapon VFX: aoe-explode — 8 frames 96x96 @ 12 fps, once.",
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Ice-spike frost nova that expands and settles. Freeze frames 1–2 were soft-shifted +4px right inside the same 96 canvas. Raw frames are not cataloged. Same PixelLab object as `vfx-freeze-aoe` (9233fcad-252d-4191-9fd8-a9310ed3274d); burst group 81926ee6-2860-4f77-9e06-d29d6063e06e. Static `vfx-freeze-aoe` stays. SFX `sfx-weapon-freeze-aoe-explode` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-freeze",
+        "explode",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "9233fcad-252d-4191-9fd8-a9310ed3274d",
+        "pixellabBurstGroupId": "81926ee6-2860-4f77-9e06-d29d6063e06e",
+        "sfx": "sfx-weapon-freeze-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-freeze-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
+      },
+      "action": "aoe-explode"
+    },
+    {
+      "key": "vfx-rail-projectile",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "path": "assets/library/vfx/weapons/rail/vfx-rail-projectile.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "description": "Rail Weapon VFX: projectile — 8 frames 64x64 @ 12 fps, loop.",
+      "note": "v1.0. 8-frame fly strip. Does not replace live lightning sheets. PixelLab object c84f6bc4-8815-4ac4-aeef-ef09ffec570c. SFX `sfx-weapon-rail-shot` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-rail",
+        "projectile",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "c84f6bc4-8815-4ac4-aeef-ef09ffec570c",
+        "sfx": "sfx-weapon-rail-shot",
+        "static": false
+      },
+      "action": "projectile"
+    },
+    {
+      "key": "vfx-rail-charge",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "path": "assets/library/vfx/weapons/rail/vfx-rail-charge.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "description": "Rail Weapon VFX: charge — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 348bd457-3077-4ba8-8ba0-71e416a83497. SFX `sfx-weapon-rail-charge` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-rail"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "348bd457-3077-4ba8-8ba0-71e416a83497",
+        "sfx": "sfx-weapon-rail-charge",
+        "static": true
+      },
+      "action": "charge"
+    },
+    {
+      "key": "vfx-rail-aoe",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "path": "assets/library/vfx/weapons/rail/vfx-rail-aoe.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "description": "Rail Weapon VFX: aoe — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-rail-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object 5673e5af-4414-4abb-8125-f2c1e2b18618. SFX `sfx-weapon-rail-aoe` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-rail"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "5673e5af-4414-4abb-8125-f2c1e2b18618",
+        "sfx": "sfx-weapon-rail-aoe",
+        "static": true,
+        "animatedKey": "vfx-rail-aoe-explode"
+      },
+      "action": "aoe"
+    },
+    {
+      "key": "vfx-rail-hit",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "path": "assets/library/vfx/weapons/rail/vfx-rail-hit.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "description": "Rail Weapon VFX: hit — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame hit. PixelLab object 511d1515-62ed-4a77-8c9c-f1af20b72407. SFX `sfx-weapon-rail-hit` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-rail"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "511d1515-62ed-4a77-8c9c-f1af20b72407",
+        "sfx": "sfx-weapon-rail-hit",
+        "static": true
+      },
+      "action": "hit"
+    },
+    {
+      "key": "vfx-rail-aoe-explode",
+      "category": "fx",
+      "group": "m2-vfx-rail",
+      "path": "assets/library/vfx/weapons/rail/vfx-rail-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-rail/preview.gif",
+      "description": "Rail Weapon VFX: aoe-explode — 8 frames 96x96 @ 12 fps, once.",
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Cyan and purple electric shockwave ring with lightning arcs. Same PixelLab object as `vfx-rail-aoe` (5673e5af-4414-4abb-8125-f2c1e2b18618); burst group 09ba3016-3794-4737-824a-4e7c509138f3. Static `vfx-rail-aoe` stays. SFX `sfx-weapon-rail-aoe-explode` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-rail",
+        "explode",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "5673e5af-4414-4abb-8125-f2c1e2b18618",
+        "pixellabBurstGroupId": "09ba3016-3794-4737-824a-4e7c509138f3",
+        "sfx": "sfx-weapon-rail-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-rail-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
+      },
+      "action": "aoe-explode"
+    },
+    {
+      "key": "vfx-sling-projectile",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "path": "assets/library/vfx/weapons/sling/vfx-sling-projectile.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "description": "Sling Weapon VFX: projectile — 8 frames 64x64 @ 12 fps, loop.",
+      "note": "v1.0. 8-frame fly strip. PixelLab object 3e1374d0-c22d-42de-b51e-34ed55c0ba1e. SFX `sfx-weapon-sling-shot` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-sling",
+        "projectile",
+        "loop"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "3e1374d0-c22d-42de-b51e-34ed55c0ba1e",
+        "sfx": "sfx-weapon-sling-shot",
+        "static": false
+      },
+      "action": "projectile"
+    },
+    {
+      "key": "vfx-sling-charge",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "path": "assets/library/vfx/weapons/sling/vfx-sling-charge.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "description": "Sling Weapon VFX: charge — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object d0bf4f5e-c8f0-4b97-a1ef-66cb225b34ef. SFX `sfx-weapon-sling-charge` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-sling"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "d0bf4f5e-c8f0-4b97-a1ef-66cb225b34ef",
+        "sfx": "sfx-weapon-sling-charge",
+        "static": true
+      },
+      "action": "charge"
+    },
+    {
+      "key": "vfx-sling-aoe",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "path": "assets/library/vfx/weapons/sling/vfx-sling-aoe.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "description": "Sling Weapon VFX: aoe — 1 frames 96x96 @ None fps, static.",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-sling-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object ebf0a1e6-6bf0-4050-8321-6cc96d9d333e. SFX `sfx-weapon-sling-aoe` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-sling"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "ebf0a1e6-6bf0-4050-8321-6cc96d9d333e",
+        "sfx": "sfx-weapon-sling-aoe",
+        "static": true,
+        "animatedKey": "vfx-sling-aoe-explode"
+      },
+      "action": "aoe"
+    },
+    {
+      "key": "vfx-sling-hit",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "path": "assets/library/vfx/weapons/sling/vfx-sling-hit.png",
+      "type": "fx",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "description": "Sling Weapon VFX: hit — 1 frames 64x64 @ None fps, static.",
+      "note": "v1.0. Yellow star impact. Selected from review 028c9cac (indices 6+12). Sibling 0a2bc026 was not the primary export. PixelLab object a158a499-2298-417c-ac22-249465ed1654. SFX `sfx-weapon-sling-hit` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-sling"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabObjectId": "a158a499-2298-417c-ac22-249465ed1654",
+        "sfx": "sfx-weapon-sling-hit",
+        "static": true
+      },
+      "action": "hit"
+    },
+    {
+      "key": "vfx-sling-aoe-explode",
+      "category": "fx",
+      "group": "m2-vfx-sling",
+      "path": "assets/library/vfx/weapons/sling/vfx-sling-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/fx/m2-vfx-sling/preview.gif",
+      "description": "Sling Weapon VFX: aoe-explode — 8 frames 96x96 @ 12 fps, once.",
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Rock fragments, dust ring, and orange impact flash. Same PixelLab object as `vfx-sling-aoe` (ebf0a1e6-6bf0-4050-8321-6cc96d9d333e); burst group 12fe446b-a24e-487f-9d11-ca0a26e1a3cb. Static `vfx-sling-aoe` stays. SFX `sfx-weapon-sling-aoe-explode` (index note only; no audio file).",
+      "tags": [
+        "fx",
+        "m2-vfx-sling",
+        "explode",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "ebf0a1e6-6bf0-4050-8321-6cc96d9d333e",
+        "pixellabBurstGroupId": "12fe446b-a24e-487f-9d11-ca0a26e1a3cb",
+        "sfx": "sfx-weapon-sling-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-sling-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
+      },
+      "action": "aoe-explode"
+    },
+    {
       "key": "zombie-clown-coin",
       "category": "pickups",
       "group": "clown-loot",
@@ -26420,6 +28993,761 @@
       "action": "flame-mount-front-alt"
     },
     {
+      "key": "path-brick-sidewalk-00",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 00 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 0,
+        "placementMask": 0,
+        "placementEdges": "none"
+      },
+      "action": "00"
+    },
+    {
+      "key": "path-brick-sidewalk-01",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 01 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 1,
+        "placementMask": 0,
+        "placementEdges": "none"
+      },
+      "action": "01"
+    },
+    {
+      "key": "path-brick-sidewalk-02",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 02 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 1 (N). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 2,
+        "placementMask": 1,
+        "placementEdges": "N"
+      },
+      "action": "02"
+    },
+    {
+      "key": "path-brick-sidewalk-03",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 03 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 2 (E). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 3,
+        "placementMask": 2,
+        "placementEdges": "E"
+      },
+      "action": "03"
+    },
+    {
+      "key": "path-brick-sidewalk-04",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 04 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 4 (S). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 4,
+        "placementMask": 4,
+        "placementEdges": "S"
+      },
+      "action": "04"
+    },
+    {
+      "key": "path-brick-sidewalk-05",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 05 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 8 (W). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 5,
+        "placementMask": 8,
+        "placementEdges": "W"
+      },
+      "action": "05"
+    },
+    {
+      "key": "path-brick-sidewalk-06",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 06 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 10 (EW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 6,
+        "placementMask": 10,
+        "placementEdges": "EW"
+      },
+      "action": "06"
+    },
+    {
+      "key": "path-brick-sidewalk-07",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 07 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 5 (NS). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 7,
+        "placementMask": 5,
+        "placementEdges": "NS"
+      },
+      "action": "07"
+    },
+    {
+      "key": "path-brick-sidewalk-08",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 08 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 6 (ES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 8,
+        "placementMask": 6,
+        "placementEdges": "ES"
+      },
+      "action": "08"
+    },
+    {
+      "key": "path-brick-sidewalk-09",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 09 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 12 (SW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 9,
+        "placementMask": 12,
+        "placementEdges": "SW"
+      },
+      "action": "09"
+    },
+    {
+      "key": "path-brick-sidewalk-10",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 10 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 3 (NE). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 10,
+        "placementMask": 3,
+        "placementEdges": "NE"
+      },
+      "action": "10"
+    },
+    {
+      "key": "path-brick-sidewalk-11",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 11 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 9 (NW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 11,
+        "placementMask": 9,
+        "placementEdges": "NW"
+      },
+      "action": "11"
+    },
+    {
+      "key": "path-brick-sidewalk-12",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 12 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 14 (ESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 12,
+        "placementMask": 14,
+        "placementEdges": "ESW"
+      },
+      "action": "12"
+    },
+    {
+      "key": "path-brick-sidewalk-13",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 13 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 13 (NSW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 13,
+        "placementMask": 13,
+        "placementEdges": "NSW"
+      },
+      "action": "13"
+    },
+    {
+      "key": "path-brick-sidewalk-14",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 14 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 11 (NEW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 14,
+        "placementMask": 11,
+        "placementEdges": "NEW"
+      },
+      "action": "14"
+    },
+    {
+      "key": "path-brick-sidewalk-15",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 15 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 7 (NES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 15,
+        "placementMask": 7,
+        "placementEdges": "NES"
+      },
+      "action": "15"
+    },
+    {
+      "key": "path-brick-sidewalk-16",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 16 (32x32 image).",
+      "note": "v1.0. Edge-4 mask 15 (NESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 16,
+        "placementMask": 15,
+        "placementEdges": "NESW"
+      },
+      "action": "16"
+    },
+    {
+      "key": "path-brick-sidewalk-17",
+      "category": "environment",
+      "group": "path-brick-sidewalk",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+      "description": "Brick Sidewalk Path Tiles: 17 (32x32 image).",
+      "note": "v1.0. Stamp-only. No edge mask; not in the placeable list. No SFX key.",
+      "tags": [
+        "environment",
+        "path-brick-sidewalk",
+        "image",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 17,
+        "stampOnly": true
+      },
+      "action": "17"
+    },
+    {
       "key": "bg-campus-a",
       "category": "backgrounds",
       "group": "campus",
@@ -27054,6 +30382,201 @@
       ],
       "extra": null,
       "action": "lamp"
+    },
+    {
+      "key": "bg-night-street",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "path": "assets/library/backgrounds/m2/bg-night-street.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/m2/bg-night-street.png",
+      "description": "Industrial night street with lamps. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Industrial night street with lamps. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "backgrounds",
+        "m2-backdrops",
+        "background",
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:cabc3449-f6e2-522c-a784-f2738e3df2bf"
+      },
+      "action": "night-street"
+    },
+    {
+      "key": "bg-night-street-moon",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "path": "assets/library/backgrounds/m2/bg-night-street-moon.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/m2/bg-night-street.png",
+      "description": "Bonus alt night street with a moon. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Bonus alt night street with a moon. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "backgrounds",
+        "m2-backdrops",
+        "background",
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:7d0f27dc-02a5-501d-ba39-08d58eb79e45"
+      },
+      "action": "night-street-moon"
+    },
+    {
+      "key": "bg-rainy-market",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "path": "assets/library/backgrounds/m2/bg-rainy-market.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/m2/bg-night-street.png",
+      "description": "Rainy market alley. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Rainy market alley. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "backgrounds",
+        "m2-backdrops",
+        "background",
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:0de3b911-b772-5c13-9be7-89a2ddefa6c0"
+      },
+      "action": "rainy-market"
+    },
+    {
+      "key": "bg-subway",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "path": "assets/library/backgrounds/m2/bg-subway.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/m2/bg-night-street.png",
+      "description": "Subway tunnel with green lights. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Subway tunnel with green lights. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "backgrounds",
+        "m2-backdrops",
+        "background",
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:e2a7e9eb-d4cd-592f-a3c5-dc642743ebd3"
+      },
+      "action": "subway"
+    },
+    {
+      "key": "bg-rooftop-dusk",
+      "category": "backgrounds",
+      "group": "m2-backdrops",
+      "path": "assets/library/backgrounds/m2/bg-rooftop-dusk.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0,
+        0
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/m2/bg-night-street.png",
+      "description": "Rooftop dusk skyline. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Rooftop dusk skyline. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "backgrounds",
+        "m2-backdrops",
+        "background",
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:13640c45-b3de-5d86-b4cb-d6be8733f572"
+      },
+      "action": "rooftop-dusk"
     },
     {
       "key": "concept-chibi-01-office-worker",

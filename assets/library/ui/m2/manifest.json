@@ -1,0 +1,236 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "ui",
+  "group": "m2-ui",
+  "title": "Milestone 2 UI Panels",
+  "titleZh": "里程碑 2 介面",
+  "description": "Eight Milestone 2 panels, v1.0. Cataloged beside the live HUD kit. None of these keys replace ui-hp-bar-player, ui-hp-bar-enemy, ui-float-go, or ui-float-back. SFX keys are notes only.",
+  "source": {
+    "sourceFolder": "zd-credit-m2/ui",
+    "milestone": "m2-credit-burn"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/ui/m2/ui-hp-bar-boss.png",
+    "sheets": [
+      "assets/library/ui/m2/ui-card-shop-item.png",
+      "assets/library/ui/m2/ui-btn-pet-go.png",
+      "assets/library/ui/m2/ui-btn-pet-back.png",
+      "assets/library/ui/m2/ui-dmg-normal.png",
+      "assets/library/ui/m2/ui-heal-number.png",
+      "assets/library/ui/m2/ui-banner-wave.png",
+      "assets/library/ui/m2/ui-panel-settings.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "ui-hp-bar-boss",
+      "path": "assets/library/ui/m2/ui-hp-bar-boss.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Boss HP panel. Does not replace ui-hp-bar-player, ui-hp-bar-enemy, or ui-hp-bar-barricade. No SFX key.",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "4e56f3f3-76ac-41d1-b8b3-141b7fbd247b",
+        "replacesLiveHud": false
+      }
+    },
+    {
+      "key": "ui-card-shop-item",
+      "path": "assets/library/ui/m2/ui-card-shop-item.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 320,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Shop item card. New key; does not replace a live HUD texture. SFX `sfx-ui-shop` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "50aa6914-0bad-4d63-95f6-e98e2ec8d4ba",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-shop"
+      }
+    },
+    {
+      "key": "ui-btn-pet-go",
+      "path": "assets/library/ui/m2/ui-btn-pet-go.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Pet GO button. Does not replace ui-float-go. SFX `sfx-ui-click` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "312e19b3-9177-495e-816e-f444820f138e",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-click"
+      }
+    },
+    {
+      "key": "ui-btn-pet-back",
+      "path": "assets/library/ui/m2/ui-btn-pet-back.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Pet Back button. Does not replace ui-float-back. SFX `sfx-ui-click` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "0b7c55cf-f2f8-474c-8eb1-93d312e90696",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-click"
+      }
+    },
+    {
+      "key": "ui-dmg-normal",
+      "path": "assets/library/ui/m2/ui-dmg-normal.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Damage number plate. PixelLab name ui-dmg-normal-number; catalog key is ui-dmg-normal. SFX `sfx-ui-dmg` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "09d28b49-5b88-488c-9c43-a4171f53cfaa",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-dmg"
+      }
+    },
+    {
+      "key": "ui-heal-number",
+      "path": "assets/library/ui/m2/ui-heal-number.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Heal number plate. New key. SFX `sfx-ui-heal` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "9748ecb2-b3c6-4a4b-9f01-7f5ea04fbc92",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-heal"
+      }
+    },
+    {
+      "key": "ui-banner-wave",
+      "path": "assets/library/ui/m2/ui-banner-wave.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Wave banner. New key. SFX `sfx-ui-wave` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "92aa51e8-f92d-4eb9-a606-ebe7d1fe1625",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-wave"
+      }
+    },
+    {
+      "key": "ui-panel-settings",
+      "path": "assets/library/ui/m2/ui-panel-settings.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "note": "v1.0. Settings panel. New key. SFX `sfx-ui-settings` (index note only; no audio file).",
+      "tags": [
+        "ui",
+        "m2"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabUiAssetId": "4be0e26a-2e92-4261-9cc0-30fec2c80524",
+        "replacesLiveHud": false,
+        "sfx": "sfx-ui-settings"
+      }
+    }
+  ]
+}
