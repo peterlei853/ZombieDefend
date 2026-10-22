@@ -4,7 +4,7 @@
   "group": "panda-young",
   "title": "Momo / 墨墨 — Young",
   "titleZh": "墨墨·青年",
-  "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
+  "description": "Black Panda 墨熊貓. Young form (64px body). Skill strip v2.0 is 84×84 (was 64×64): bamboo staff wind-up then thrust, tip clear of the right edge. Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
   "source": {
     "pixellabCharacterId": "55cdb271-abc0-4a66-882a-0e8cd317a102",
     "sourceFolder": "pets/panda/young"
@@ -68,8 +68,8 @@
     {
       "key": "pet-panda-young-skill",
       "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill.png",
-      "frameWidth": 64,
-      "frameHeight": 64,
+      "frameWidth": 84,
+      "frameHeight": 84,
       "frames": 8,
       "frameRate": 12,
       "loop": false,
@@ -88,7 +88,17 @@
       "fx": [
         "fx-pet-panda-bamboo-sweep"
       ],
-      "role": "melee arc AoE in front + knockback"
+      "role": "melee arc AoE in front + knockback",
+      "note": "v2.0 crop remake. 8×84 west, origin (0.5, 1). Canvas grew 64→84 so the staff tip is not cropped. Stage loads frameWidth/Height from this entry. SFX: sfx-pet-panda-skill (alias sfx-pet-panda-skill-staff; not generated).",
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "55cdb271-abc0-4a66-882a-0e8cd317a102",
+        "pixellabAnimGroup": "1c5316c6-29a1-4766-b3bc-fc577174f2c1",
+        "previousCell": "64x64",
+        "cell": "84x84",
+        "sfx": "sfx-pet-panda-skill",
+        "sfxAlias": "sfx-pet-panda-skill-staff"
+      }
     },
     {
       "key": "pet-panda-young-hurt",

@@ -73,6 +73,14 @@ const FONT_GRID = {
  * Texture-pixel trough inside each empty frame.
  * Measured from the navy interior so the fill stays off the stone rim.
  */
+/**
+ * Wave3 credit-burn panels are catalog-only under assets/library/ui/wave3/.
+ * `ui-hp-bar-player-wave3` (384×192) and `ui-hp-bar-barricade-wave3` (384×192)
+ * do not replace these frames — the troughs below were measured on the stock
+ * sheets. Shop, title, pause, auth, banners, tip, pet select, gold, crit
+ * number, and the weapons row are registered and not drawn here.
+ * SFX tags live on those index notes (sfx-ui-*) and are not generated.
+ */
 export const HP_FRAMES = {
   player: {
     frame: 'ui-hp-bar-player',

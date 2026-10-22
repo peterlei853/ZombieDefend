@@ -4,7 +4,7 @@
   "group": "dragon-baby",
   "title": "Jade / 翠火 — Baby",
   "titleZh": "翠火·幼年",
-  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is an 8×64 attack beside claw (v1.1 overhead slam, was v1.0 PASS_WARN); `pet-dragon-baby-hurt` is replaced at 8×64.",
   "source": {
     "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
     "sourceFolder": "pets/dragon/baby"
@@ -32,7 +32,9 @@
       "pet-dragon-baby-skill",
       "pet-dragon-baby-sleep",
       "pet-dragon-baby-claw",
-      "pet-dragon-baby-skill-aoe"
+      "pet-dragon-baby-attack",
+      "pet-dragon-baby-skill-aoe",
+      "pet-dragon-baby-hurt"
     ],
     "thumb": "assets/library/previews/pets/dragon-baby.gif"
   },
@@ -93,16 +95,27 @@
     {
       "key": "pet-dragon-baby-hurt",
       "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-hurt.png",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "origin": [
         0.5,
         1.0
       ],
-      "facing": "west"
+      "facing": "west",
+      "note": "v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-dragon-hurt (not generated).",
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
+        "pixellabAnimGroup": "c3d43fd2-45f1-42c6-9456-5510c44a8726",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "64x64",
+        "frames": 8,
+        "sfx": "sfx-pet-dragon-hurt"
+      }
     },
     {
       "key": "pet-dragon-baby-sleep-start",
@@ -165,6 +178,33 @@
       ],
       "facing": "west",
       "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw."
+    },
+    {
+      "key": "pet-dragon-baby-attack",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v1.1 REPLACE remake. 8×64 west, origin (0.5, 1). Was v1.0 PASS_WARN subtle claw; now a BIG overhead slam (wind-up, arms overhead, slam, recovery). Same key and cell as v1.0. Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. Discarded anim group 92bdf771-5b92-4761-8e24-bdf06a743a44. SFX: sfx-pet-dragon-attack (not generated).",
+      "extra": {
+        "version": "v1.1",
+        "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
+        "pixellabAnimGroup": "d14e7c3e-1ccc-4c0a-a1ed-3cec975aa0ea",
+        "discardedAnimGroup": "92bdf771-5b92-4761-8e24-bdf06a743a44",
+        "previousAnimGroup": "fe9b961c-c7f4-4bbc-8069-fcb1cb953053",
+        "previousQc": "PASS_WARN",
+        "cell": "64x64",
+        "sfx": "sfx-pet-dragon-attack",
+        "alongside": "pet-dragon-baby-claw",
+        "qc": "PASS"
+      }
     },
     {
       "key": "pet-dragon-baby-skill-aoe",

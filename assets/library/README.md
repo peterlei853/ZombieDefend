@@ -80,7 +80,7 @@ The office worker lives in `office-worker-v2/` with keys `zombie-office-worker-v
 
 ### Profession rule anims (v1.0, 2026-10-20)
 
-Office, delivery, chef, and nurse keep their 84×84 east cells and feet origin `(0.5, 1)`. The new strips use PixelLab names. Legacy keys stay so Stage can play them before a Gameplay wire, and each legacy key shares pixels with the rule key.
+Office, delivery, chef, and nurse keep their 84×84 east cells and feet origin `(0.5, 1)`. The new strips use PixelLab names. Legacy keys stay so Stage can play them before a Gameplay wire. Walk, hurt, and die1 still share pixels with the rule key. Chef `die2` does not: it is the v2 faceplant, and `die-normal02` keeps the v1 kneel.
 
 | Rule key | PixelLab name | Legacy key (same sheet) |
 |---|---|---|
@@ -89,13 +89,14 @@ Office, delivery, chef, and nurse keep their 84×84 east cells and feet origin `
 | `zombie-<slug>-hurt-normal` | Hurt-normal | `zombie-<slug>-hurt` |
 | `zombie-<slug>-hit01-normal` | hit01-normal | v0.36.25 bites roll this with hit02; legacy attack strip stays loaded |
 | `zombie-<slug>-hit02-normal` | hit02-normal | — |
+| `zombie-office-worker-v2-hit02` | Hit02 (true 16×84) | Stage office bite. Not an alias of attack. |
 | `zombie-<slug>-die-normal01` | Die-normal01 | `zombie-<slug>-die1` |
-| `zombie-<slug>-die-normal02` | Die-normal02 | `zombie-<slug>-die2` |
+| `zombie-<slug>-die-normal02` | Die-normal02 | `zombie-<slug>-die2`, except chef: Stage plays `zombie-chef-die2` (v2 faceplant); this row's kneel sheet stays `zombie-chef-die-normal02` |
 | `zombie-<slug>-die-deathwalk` | Die-deathwalk | — |
 | `zombie-<slug>-die-critical-hit` | Die-critical hit | — |
 | `zombie-<slug>-die-disappear` | Die-disappear | — |
 
-`<slug>` is `office-worker-v2`, `delivery`, `chef`, or `nurse`. Each rule asset's `extra.version` is `v1.0`. Office `hit02-normal` is **ALIAS**: PixelLab has no anim with that name, so the strip is the unnamed custom pull-weapon (17×84), cataloged as `zombie-office-worker-v2-hit02-normal`. Office Die-normal02's PixelLab name is `die-normal 2`. Frame counts differ by slug (office walk-tire is 9 and hurt is 5; office hits and the three long deaths are 17 and 33; the other three slugs are 8 / 4 / 16 and 33 / 32 / 32). v0.36.25 Stage plays these rule keys for the four professions: crit → `die-critical-hit`, water L3 → `die-disappear`, else deathwalk / normal01 / normal02 at 10/45/45; bites roll hit01/hit02; hurt is `hurt-normal`; walk switches at HP 30. Contact on the new hit strips is the impact cell (legacy 8-frame index 6 does not transfer). The cell was already 84×84, so the hitbox is unchanged. Hero sheets are untouched.
+`<slug>` is `office-worker-v2`, `delivery`, `chef`, or `nurse`. Each rule asset's `extra.version` is `v1.0` unless a later remake says otherwise. Office `hit02-normal` stays the **ALIAS** pull-weapon strip (17×84) on disk. Stage office bites play `zombie-office-worker-v2-hit02` instead: 16×84, slash on 0-based cell 6 (Phaser index 7). SFX tag `sfx-zombie-office-hit02` (not generated). Chef `zombie-chef-die2` is **v2.0**, an 8×84 faceplant with the frying pan, distinct from the die1 kneel. The v1.0 `zombie-chef-die-normal02` kneel stays on disk. Stage's chef normal02 slot plays `zombie-chef-die2`. SFX tag `sfx-zombie-chef-die2` (not generated). Office Die-normal02's PixelLab name is `die-normal 2`. Frame counts differ by slug (office walk-tire is 9 and hurt is 5; office hit01 and the three long deaths are 17 and 33; office hit02 is 16; the other three slugs are 8 / 4 / 16 and 33 / 32 / 32). v0.36.25 Stage plays these rule keys for the four professions: crit → `die-critical-hit`, water L3 → `die-disappear`, else deathwalk / normal01 / normal02 at 10/45/45; bites roll hit01/hit02; hurt is `hurt-normal`; walk switches at HP 30. Contact on the hit strips is the impact cell (legacy 8-frame index 6 does not transfer). The cell was already 84×84, so the hitbox is unchanged. Hero sheets are untouched.
 
 ## Pets
 
@@ -105,6 +106,22 @@ Category `pets/` holds four chibi companions (phoenix / panda / lion / dragon), 
 - `pets/<pet>/fx/fx-pet-<pet>-*.png` (standalone skill FX + evolve)
 
 Keys: `pet-<pet>-<form>-<action>`, `fx-pet-<pet>-<name>`. Canvas baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128). Origin `(0.5, 1)`. Facing west. Skill = cast strip + FX; see group manifest `castFrame` / `spawnOffset`.
+
+Wave1–2 credit burn (catalog + the Stage keys that already load):
+
+| Key | Version | Cell | Frames | SFX (not generated) |
+|---|---|---|---|---|
+| `pet-panda-young-skill` | v2.0 replace | 84×84 (was 64×64) | 8 | `sfx-pet-panda-skill` (alias `sfx-pet-panda-skill-staff`) |
+| `pet-dragon-baby-attack` | v1.1 REPLACE remake (was v1.0 PASS_WARN subtle claw) | 64×64 | 8 | `sfx-pet-dragon-attack` |
+| `pet-dragon-baby-hurt` | v2.0 replace | 64×64 (was 48) | 8 (was 4) | `sfx-pet-dragon-hurt` |
+| `pet-lion-baby-attack` | v1.0 new, beside claw | 52×52 | 8 | `sfx-pet-lion-attack` |
+| `pet-lion-baby-hurt` | v2.0 replace | 52×52 (was 48) | 8 (was 4) | `sfx-pet-lion-hurt` |
+| `pet-panda-baby-attack` | v1.0 new, beside claw | 48×48 | 8 | `sfx-pet-panda-attack` |
+| `pet-panda-baby-hurt` | v2.0 replace | 48×48 | 8 (was 4) | `sfx-pet-panda-hurt` |
+| `pet-phoenix-baby-attack` | v1.0 new, beside claw | 64×64 | 8 | `sfx-pet-phoenix-attack` |
+| `pet-phoenix-baby-hurt` | v2.0 replace | 64×64 (was 48) | 8 (was 4) | `sfx-pet-phoenix-hurt` |
+
+`pet-*-baby-claw` stays. Stage preloads `pet-*-baby-attack` and still plays claw until Gameplay swaps. **`pet-dragon-baby-attack` is v1.1 PASS**, a big overhead slam on the same 8×64 cell (anim group `d14e7c3e-1ccc-4c0a-a1ed-3cec975aa0ea`). The v1.0 PASS_WARN subtle-claw strip and discarded group `92bdf771-5b92-4761-8e24-bdf06a743a44` are not in the catalog. `pet-panda-young-skill` loads at 84×84 from the index (the cast spec stays 8 frames @ 12 fps).
 
 ## v0.26 overnight VFX
 
@@ -248,7 +265,7 @@ Owned guns are separate sprites in front of the unarmed girl (`player-girl-idle`
 
 ## UI kit
 
-`ui/` is the title and stage chrome (v0.22): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, Latin bitmap font atlases, pet float callouts, and the v0.22 Accept style fixes. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. TitleScene draws `ui-title-bg-clean` (688×384, no baked menu or v0.21 footer); `ui-title-bg-clean-hd` is the 1280×720 fallback. `bg-title-zombie-vs-buddy` still aliases the older `ui-title-bg` and is used only when the clean splash is missing. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. v0.26.1 redraws digit cells 0–9 on the five HUD atlases so 0, 1, and 6 stay distinct; letters, punctuation, the 8×10 grid, and the texture keys are unchanged, and the TTF companions were not regenerated. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
+`ui/` is the title and stage chrome (v0.22): the title splash, empty HP frames, fill strips, dialog and toast panels, parchment buttons, icons, Latin bitmap font atlases, pet float callouts, and the v0.22 Accept style fixes. Wave3 credit-burn panels sit in `ui/wave3/` and are **catalog-only**. `ui-hp-bar-player` (248×36) and `ui-hp-bar-barricade` (251×45) stay the measured HUD frames. The new 384×192 panels are `ui-hp-bar-player-wave3` and `ui-hp-bar-barricade-wave3`. The other Wave3 keys (`ui-dmg-crit-number`, `ui-panel-shop`, `ui-panel-title`, `ui-panel-pause`, `ui-panel-auth`, `ui-banner-stage-clear`, `ui-banner-stage-fail`, `ui-tip-prompt`, `ui-panel-pet-select`, `ui-hud-gold`, `ui-icon-weapons-row`) are registered and not drawn: none of them matches a PIXELLAB_HOOK or a stock key's size. SFX tags on those notes (`sfx-ui-crit`, `sfx-ui-shop`, `sfx-ui-pause`, `sfx-ui-auth`, `sfx-ui-stage-clear`, `sfx-ui-stage-fail`, `sfx-ui-tip`, `sfx-ui-gold`) are not generated. HP frames stay empty; the game crops a fill strip into each trough. Prefer `ui-font-hud-bold-atlas-outlined`, `ui-font-hud-bold-atlas-gold`, and `ui-font-hud-tiny-atlas-cream`. TitleScene draws `ui-title-bg-clean` (688×384, no baked menu or v0.21 footer); `ui-title-bg-clean-hd` is the 1280×720 fallback. `bg-title-zombie-vs-buddy` still aliases the older `ui-title-bg` and is used only when the clean splash is missing. The atlases are Latin-only (8×10, no space glyph). Chinese stays on the system font. v0.26.1 redraws digit cells 0–9 on the five HUD atlases so 0, 1, and 6 stay distinct; letters, punctuation, the 8×10 grid, and the texture keys are unchanged, and the TTF companions were not regenerated. Pet HUD keys (`ui-pet-*`) stay in `pets/ui/` and are not part of this kit.
 
 **v0.22 Accept style fixes.** Bar frames, the joystick, and the title splash use origin **(0.5, 0.5)**. Enemy fill strips use **(0, 0.5)**, the same left-grow as `ui-hp-fill-*`.
 

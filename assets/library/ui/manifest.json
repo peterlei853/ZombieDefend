@@ -4,7 +4,7 @@
   "group": "hud-kit",
   "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
   "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated.",
+  "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated. Wave3 credit-burn panels live under ui/wave3/ and are catalog-only: ui-hp-bar-player and ui-hp-bar-barricade stay the measured HUD frames; the 384×192 panels are ui-hp-bar-player-wave3 and ui-hp-bar-barricade-wave3. Shop, title, pause, auth, banners, tip, pet select, gold chip, crit number, and the weapons row are registered and not drawn.",
   "source": {
     "tool": "2-PixelLab Bot ui-kit",
     "note": "Cataloged by PixelLab Asset Pipeline from /workspace/ui-kit"
@@ -1060,6 +1060,369 @@
       "extra": {
         "displayMs": "600-800",
         "place": "above pet"
+      }
+    },
+    {
+      "key": "ui-hp-bar-player-wave3",
+      "path": "assets/library/ui/wave3/ui-hp-bar-player.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 credit-burn player HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-player` (248×36); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "note": "Wave3 credit-burn player HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-player` (248×36); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "142660f6-50ef-4f1f-8384-87994a4b4eac",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "stockKey": "ui-hp-bar-player",
+        "reason": "stock frame size does not match this panel; trough math stays on the stock key"
+      }
+    },
+    {
+      "key": "ui-hp-bar-barricade-wave3",
+      "path": "assets/library/ui/wave3/ui-hp-bar-barricade.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 credit-burn barricade HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-barricade` (251×45); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "note": "Wave3 credit-burn barricade HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-barricade` (251×45); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "91d15f8d-0a88-4e73-a9ec-125cf3d86182",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "stockKey": "ui-hp-bar-barricade",
+        "reason": "stock frame size does not match this panel; trough math stays on the stock key"
+      }
+    },
+    {
+      "key": "ui-dmg-crit-number",
+      "path": "assets/library/ui/wave3/ui-dmg-crit-number.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 crit number pop, 192×192. Catalog-only. No stock key draws this yet. SFX: sfx-ui-crit (not generated).",
+      "note": "Wave3 crit number pop, 192×192. Catalog-only. No stock key draws this yet. SFX: sfx-ui-crit (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "ee189b25-2e13-4f6b-8109-a7f614e30ad0",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "192x192",
+        "sfx": "sfx-ui-crit"
+      }
+    },
+    {
+      "key": "ui-panel-shop",
+      "path": "assets/library/ui/wave3/ui-panel-shop.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 shop panel, 512×384. Catalog-only. No PIXELLAB_HOOK draws a shop panel yet. SFX: sfx-ui-shop (not generated).",
+      "note": "Wave3 shop panel, 512×384. Catalog-only. No PIXELLAB_HOOK draws a shop panel yet. SFX: sfx-ui-shop (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "e7a9c2d6-cd1a-44c4-878a-6e2426a46d72",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x384",
+        "sfx": "sfx-ui-shop"
+      }
+    },
+    {
+      "key": "ui-panel-title",
+      "path": "assets/library/ui/wave3/ui-panel-title.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 288,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 title panel, 512×288. Catalog-only. TitleScene still draws `ui-title-bg-clean` (688×384). Sizes do not match, so this panel is not swapped in. SFX: none.",
+      "note": "Wave3 title panel, 512×288. Catalog-only. TitleScene still draws `ui-title-bg-clean` (688×384). Sizes do not match, so this panel is not swapped in. SFX: none.",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "823f5344-cf79-4d06-9fc5-6f611e76a846",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x288"
+      }
+    },
+    {
+      "key": "ui-panel-pause",
+      "path": "assets/library/ui/wave3/ui-panel-pause.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 pause panel, 384×384. Catalog-only. Live pause chrome is `ui-icon-pause`, not this panel. SFX: sfx-ui-pause (not generated).",
+      "note": "Wave3 pause panel, 384×384. Catalog-only. Live pause chrome is `ui-icon-pause`, not this panel. SFX: sfx-ui-pause (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "4c8ed53d-fe07-461f-ba1b-e9e49b1e08e6",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x384",
+        "sfx": "sfx-ui-pause"
+      }
+    },
+    {
+      "key": "ui-panel-auth",
+      "path": "assets/library/ui/wave3/ui-panel-auth.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 auth panel, 384×384. Catalog-only. No PIXELLAB_HOOK maps an auth panel. SFX: sfx-ui-auth (not generated).",
+      "note": "Wave3 auth panel, 384×384. Catalog-only. No PIXELLAB_HOOK maps an auth panel. SFX: sfx-ui-auth (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "1969e07b-a284-41cb-8392-338b898aeaca",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x384",
+        "sfx": "sfx-ui-auth"
+      }
+    },
+    {
+      "key": "ui-banner-stage-clear",
+      "path": "assets/library/ui/wave3/ui-banner-stage-clear.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 Stage Clear banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-clear (not generated).",
+      "note": "Wave3 Stage Clear banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-clear (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "fb72c83e-a409-45af-8693-55fba24889c4",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192",
+        "sfx": "sfx-ui-stage-clear"
+      }
+    },
+    {
+      "key": "ui-banner-stage-fail",
+      "path": "assets/library/ui/wave3/ui-banner-stage-fail.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 Stage Fail banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-fail (not generated).",
+      "note": "Wave3 Stage Fail banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-fail (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "b28bb1df-7896-41af-b708-3601c30f993b",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192",
+        "sfx": "sfx-ui-stage-fail"
+      }
+    },
+    {
+      "key": "ui-tip-prompt",
+      "path": "assets/library/ui/wave3/ui-tip-prompt.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 tip prompt, 384×192. Catalog-only. Tips still use `ui-toast-panel` / `ui-dialog-panel`. SFX: sfx-ui-tip (not generated).",
+      "note": "Wave3 tip prompt, 384×192. Catalog-only. Tips still use `ui-toast-panel` / `ui-dialog-panel`. SFX: sfx-ui-tip (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "20d9aac5-b55d-40b9-b146-3f59e28e6e91",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "sfx": "sfx-ui-tip"
+      }
+    },
+    {
+      "key": "ui-panel-pet-select",
+      "path": "assets/library/ui/wave3/ui-panel-pet-select.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 pet-select panel, 512×384. Catalog-only. PetSelectScene draws catalog heads on parchment buttons, not this panel. SFX: none.",
+      "note": "Wave3 pet-select panel, 512×384. Catalog-only. PetSelectScene draws catalog heads on parchment buttons, not this panel. SFX: none.",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "3f5b0716-1730-49b4-9edd-4b6c2c490353",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x384"
+      }
+    },
+    {
+      "key": "ui-hud-gold",
+      "path": "assets/library/ui/wave3/ui-hud-gold.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 gold HUD chip, 256×192. Catalog-only. Gold text still uses `ui-font-hud-bold-atlas-gold`. SFX: sfx-ui-gold (not generated).",
+      "note": "Wave3 gold HUD chip, 256×192. Catalog-only. Gold text still uses `ui-font-hud-bold-atlas-gold`. SFX: sfx-ui-gold (not generated).",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "065d6fff-c432-44db-bc3d-663032e2585f",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "256x192",
+        "sfx": "sfx-ui-gold"
+      }
+    },
+    {
+      "key": "ui-icon-weapons-row",
+      "path": "assets/library/ui/wave3/ui-icon-weapons-row.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "description": "Wave3 weapons icon row, 512×192. Catalog-only. Weapon icons stay `icon-*` on the hero. SFX: none.",
+      "note": "Wave3 weapons icon row, 512×192. Catalog-only. Weapon icons stay `icon-*` on the hero. SFX: none.",
+      "tags": [
+        "ui",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "5ddeb441-e9ec-415d-813d-99662fd1f722",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192"
       }
     }
   ],
