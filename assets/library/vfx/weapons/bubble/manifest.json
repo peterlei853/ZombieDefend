@@ -4,7 +4,7 @@
   "group": "m2-vfx-bubble",
   "title": "Bubble Weapon VFX",
   "titleZh": "泡泡武器特效",
-  "description": "Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).",
+  "description": "Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-bubble-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).",
   "source": {
     "sourceFolder": "zd-credit-m2/vfx/bubble",
     "milestone": "m2-credit-burn",
@@ -23,7 +23,8 @@
       "vfx-bubble-projectile",
       "vfx-bubble-charge",
       "vfx-bubble-aoe",
-      "vfx-bubble-hit"
+      "vfx-bubble-hit",
+      "vfx-bubble-aoe-explode"
     ],
     "thumb": "assets/library/previews/fx/m2-vfx-bubble/preview.gif",
     "sheets": [],
@@ -64,7 +65,7 @@
         0.5,
         0.5
       ],
-      "note": "v1.0. Static 1-frame charge. Selected review winner. No explode anim yet; Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file).",
+      "note": "v1.0. Static 1-frame charge. Selected review winner. Static 1-frame. Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file).",
       "extra": {
         "version": "v1.0",
         "milestone": "m2-credit-burn",
@@ -85,13 +86,14 @@
         0.5,
         0.5
       ],
-      "note": "v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file).",
+      "note": "v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-bubble-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file).",
       "extra": {
         "version": "v1.0",
         "milestone": "m2-credit-burn",
         "pixellabObjectId": "db572ab6-317f-4682-a3ce-7d32dcb47a19",
         "sfx": "sfx-weapon-bubble-aoe",
-        "static": true
+        "static": true,
+        "animatedKey": "vfx-bubble-aoe-explode"
       }
     },
     {
@@ -113,6 +115,34 @@
         "pixellabObjectId": "50fe5323-ce0c-44fc-9144-7a1a1ae2caaf",
         "sfx": "sfx-weapon-bubble-hit",
         "static": true
+      }
+    },
+    {
+      "key": "vfx-bubble-aoe-explode",
+      "path": "assets/library/vfx/weapons/bubble/vfx-bubble-aoe-explode.png",
+      "type": "fx",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        0.75
+      ],
+      "note": "v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Cyan foam bubble dome and splash droplets. Same PixelLab object as `vfx-bubble-aoe` (db572ab6-317f-4682-a3ce-7d32dcb47a19); burst group c1cf92be-8e53-427d-a1e0-507f701c357a. Static `vfx-bubble-aoe` stays. SFX `sfx-weapon-bubble-aoe-explode` (index note only; no audio file).",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-aoe-explode",
+        "pixellabObjectId": "db572ab6-317f-4682-a3ce-7d32dcb47a19",
+        "pixellabBurstGroupId": "c1cf92be-8e53-427d-a1e0-507f701c357a",
+        "sfx": "sfx-weapon-bubble-aoe-explode",
+        "static": false,
+        "fallbackKey": "vfx-bubble-aoe",
+        "originAlt": [
+          0.5,
+          0.85
+        ]
       }
     }
   ]

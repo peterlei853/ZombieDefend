@@ -48,7 +48,7 @@ assets/library/
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
 ├── environment/tiles/path-brick-sidewalk/  18× 32×32 worn brick path (path-brick-sidewalk-00 … 17)
-├── vfx/weapons/{sling,bubble,rail,freeze,flame}/  M2 projectile strips + charge/AOE/hit (bubble charge included)
+├── vfx/weapons/{sling,bubble,rail,freeze,flame}/  M2 projectile strips + charge/AOE/hit + aoe-explode (8×96)
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── backgrounds/m2/           five 320×180 plates (bg-night-street, moon alt, rainy-market, subway, rooftop-dusk)
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
@@ -64,7 +64,7 @@ assets/library/
 Ready-clean PixelLab export, version `v1.0` on every new key. Nothing here replaces a live HUD key, the campus plate, `fx-sling-pellet`, or the 84px profession strips. Fence damage and gold coin stay with the filler pass. Water VFX was not in this export.
 
 - **S4 zombies** — `enemies/zombies/s4/{construction,schoolgirl,delivery,salaryman}/`. Each has walk / attack / hurt / die, 8×88 east, origin `(0.5, 1)`. There is no S4 row in `ZOMBIE_LIBRARY_SKINS` or the wave pools. Gameplay adds the spawn hook and sets frame width and height to 88.
-- **Weapon VFX** — `vfx/weapons/{sling,bubble,rail,freeze,flame}/`. Projectile strips are 8×64. Charge, AOE, and hit images are static 1-frame (AOE is 96×96), including `vfx-bubble-charge`. These keys do not replace the live weapon sheets.
+- **Weapon VFX** — `vfx/weapons/{sling,bubble,rail,freeze,flame}/`. Projectile strips are 8×64. Charge, hit, and `vfx-<weapon>-aoe` stay static 1-frame (AOE pose 96×96), including `vfx-bubble-charge`. The ground burst is a new key, `vfx-<weapon>-aoe-explode`: 8×96, once, origin `(0.5, 0.75)`. SFX note `sfx-weapon-<weapon>-aoe-explode`. These keys do not replace the live weapon sheets.
 - **Boss skill stills** — `vfx-boss-balun-skill` and `vfx-boss-balam-skill`, 96×96, under `enemies/bosses/m2-skill-fx/`.
 - **UI** — eight panels in `ui/m2/` (`ui-hp-bar-boss`, `ui-card-shop-item`, `ui-btn-pet-go`, `ui-btn-pet-back`, `ui-dmg-normal`, `ui-heal-number`, `ui-banner-wave`, `ui-panel-settings`). Live `ui-float-go` / `ui-float-back` and the enemy HP bar stay as they are.
 - **Backgrounds** — five 320×180 plates in `backgrounds/m2/`. `drawCampusBackdrop` still uses `bg-campus-*`.

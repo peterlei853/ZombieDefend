@@ -10,12 +10,12 @@
 | [UI](#ui) | 2 | 59 |
 | [Zombies](#zombies) | 19 | 236 |
 | [Bosses](#bosses) | 5 | 41 |
-| [Shared FX](#fx) | 14 | 43 |
+| [Shared FX](#fx) | 14 | 48 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 3 | 38 |
 | [Backgrounds](#backgrounds) | 2 | 20 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **67** | **728** |
+| **Total** | **67** | **733** |
 
 <a id="hero"></a>
 ## Hero
@@ -1279,76 +1279,81 @@ v0.26 pet ultimate keyframes, 384×216, origin centre (0.5, 0.5). Each frame is 
 
 <img src="previews/fx/m2-vfx-bubble/preview.gif" alt="m2-vfx-bubble preview" height="140">
 
-Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).
+Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-bubble-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).
 
-- group `m2-vfx-bubble` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-bubble-` · manifest [vfx/weapons/bubble/manifest.json](vfx/weapons/bubble/manifest.json)
+- group `m2-vfx-bubble` · 5 assets · frame 64x64, 96x96 · key prefix `vfx-bubble-` · manifest [vfx/weapons/bubble/manifest.json](vfx/weapons/bubble/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `vfx-bubble-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. PixelLab object f3cf1a57-950d-4939-a841-55bc9480eb31. SFX `sfx-weapon-bubble-shot` (index note only; no audio file). |
-| `vfx-bubble-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Selected review winner. No explode anim yet; Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file). |
-| `vfx-bubble-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file). |
+| `vfx-bubble-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Selected review winner. Static 1-frame. Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file). |
+| `vfx-bubble-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-bubble-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file). |
 | `vfx-bubble-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 50fe5323-ce0c-44fc-9144-7a1a1ae2caaf. SFX `sfx-weapon-bubble-hit` (index note only; no audio file). |
+| `vfx-bubble-aoe-explode` | 8 | 96x96 | 12 | once | (0.5, 0.75) | v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Cyan foam bubble dome and splash droplets. Same PixelLab object as `vfx-bubble-aoe` (db572ab6-317f-4682-a3ce-7d32dcb47a19); burst group c1cf92be-8e53-427d-a1e0-507f701c357a. Static `vfx-bubble-aoe` stays. SFX `sfx-weapon-bubble-aoe-explode` (index note only; no audio file). |
 
 ### Flame Weapon VFX (火焰武器特效)
 
 <img src="previews/fx/m2-vfx-flame/preview.gif" alt="m2-vfx-flame preview" height="140">
 
-Flame Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+Flame Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-flame-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
 
-- group `m2-vfx-flame` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-flame-` · manifest [vfx/weapons/flame/manifest.json](vfx/weapons/flame/manifest.json)
+- group `m2-vfx-flame` · 5 assets · frame 64x64, 96x96 · key prefix `vfx-flame-` · manifest [vfx/weapons/flame/manifest.json](vfx/weapons/flame/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `vfx-flame-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live flame sheets. PixelLab object c8a68e24-12e4-4fa1-b1f9-e180890d5c9e. SFX `sfx-weapon-flame-shot` (index note only; no audio file). |
-| `vfx-flame-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 75a2591e-8657-4048-af3b-b22dc57efbb7. SFX `sfx-weapon-flame-charge` (index note only; no audio file). |
-| `vfx-flame-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object fba3ca31-56ec-406e-91af-18e1763420a8. SFX `sfx-weapon-flame-aoe` (index note only; no audio file). |
+| `vfx-flame-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 75a2591e-8657-4048-af3b-b22dc57efbb7. SFX `sfx-weapon-flame-charge` (index note only; no audio file). |
+| `vfx-flame-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-flame-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object fba3ca31-56ec-406e-91af-18e1763420a8. SFX `sfx-weapon-flame-aoe` (index note only; no audio file). |
 | `vfx-flame-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 7e176c02-1ad7-490f-87ed-058bffc802e6. SFX `sfx-weapon-flame-hit` (index note only; no audio file). |
+| `vfx-flame-aoe-explode` | 8 | 96x96 | 12 | once | (0.5, 0.75) | v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Fire ring that expands, then ember and smoke fade. Same PixelLab object as `vfx-flame-aoe` (fba3ca31-56ec-406e-91af-18e1763420a8); burst group e721b6c7-8f26-4275-9aab-3a47d22667b0. Static `vfx-flame-aoe` stays. SFX `sfx-weapon-flame-aoe-explode` (index note only; no audio file). |
 
 ### Freeze Weapon VFX (冰凍武器特效)
 
 <img src="previews/fx/m2-vfx-freeze/preview.gif" alt="m2-vfx-freeze preview" height="140">
 
-Freeze Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+Freeze Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-freeze-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
 
-- group `m2-vfx-freeze` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-freeze-` · manifest [vfx/weapons/freeze/manifest.json](vfx/weapons/freeze/manifest.json)
+- group `m2-vfx-freeze` · 5 assets · frame 64x64, 96x96 · key prefix `vfx-freeze-` · manifest [vfx/weapons/freeze/manifest.json](vfx/weapons/freeze/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `vfx-freeze-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live frost sheets. PixelLab object 3b8d70ec-417e-4b2a-abbe-812c148d887b. SFX `sfx-weapon-freeze-shot` (index note only; no audio file). |
-| `vfx-freeze-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 8285f90e-0b5a-4700-9947-5f7f93b1fa27. SFX `sfx-weapon-freeze-charge` (index note only; no audio file). |
-| `vfx-freeze-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object 9233fcad-252d-4191-9fd8-a9310ed3274d. SFX `sfx-weapon-freeze-aoe` (index note only; no audio file). |
+| `vfx-freeze-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 8285f90e-0b5a-4700-9947-5f7f93b1fa27. SFX `sfx-weapon-freeze-charge` (index note only; no audio file). |
+| `vfx-freeze-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-freeze-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object 9233fcad-252d-4191-9fd8-a9310ed3274d. SFX `sfx-weapon-freeze-aoe` (index note only; no audio file). |
 | `vfx-freeze-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 95abeec6-5d95-4bc3-986b-071e72f3247a. SFX `sfx-weapon-freeze-hit` (index note only; no audio file). |
+| `vfx-freeze-aoe-explode` | 8 | 96x96 | 12 | once | (0.5, 0.75) | v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Ice-spike frost nova that expands and settles. Freeze frames 1–2 were soft-shifted +4px right inside the same 96 canvas. Raw frames are not cataloged. Same PixelLab object as `vfx-freeze-aoe` (9233fcad-252d-4191-9fd8-a9310ed3274d); burst group 81926ee6-2860-4f77-9e06-d29d6063e06e. Static `vfx-freeze-aoe` stays. SFX `sfx-weapon-freeze-aoe-explode` (index note only; no audio file). |
 
 ### Rail Weapon VFX (軌道武器特效)
 
 <img src="previews/fx/m2-vfx-rail/preview.gif" alt="m2-vfx-rail preview" height="140">
 
-Rail Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+Rail Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-rail-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
 
-- group `m2-vfx-rail` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-rail-` · manifest [vfx/weapons/rail/manifest.json](vfx/weapons/rail/manifest.json)
+- group `m2-vfx-rail` · 5 assets · frame 64x64, 96x96 · key prefix `vfx-rail-` · manifest [vfx/weapons/rail/manifest.json](vfx/weapons/rail/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `vfx-rail-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live lightning sheets. PixelLab object c84f6bc4-8815-4ac4-aeef-ef09ffec570c. SFX `sfx-weapon-rail-shot` (index note only; no audio file). |
-| `vfx-rail-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 348bd457-3077-4ba8-8ba0-71e416a83497. SFX `sfx-weapon-rail-charge` (index note only; no audio file). |
-| `vfx-rail-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object 5673e5af-4414-4abb-8125-f2c1e2b18618. SFX `sfx-weapon-rail-aoe` (index note only; no audio file). |
+| `vfx-rail-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object 348bd457-3077-4ba8-8ba0-71e416a83497. SFX `sfx-weapon-rail-charge` (index note only; no audio file). |
+| `vfx-rail-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-rail-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object 5673e5af-4414-4abb-8125-f2c1e2b18618. SFX `sfx-weapon-rail-aoe` (index note only; no audio file). |
 | `vfx-rail-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 511d1515-62ed-4a77-8c9c-f1af20b72407. SFX `sfx-weapon-rail-hit` (index note only; no audio file). |
+| `vfx-rail-aoe-explode` | 8 | 96x96 | 12 | once | (0.5, 0.75) | v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Cyan and purple electric shockwave ring with lightning arcs. Same PixelLab object as `vfx-rail-aoe` (5673e5af-4414-4abb-8125-f2c1e2b18618); burst group 09ba3016-3794-4737-824a-4e7c509138f3. Static `vfx-rail-aoe` stays. SFX `sfx-weapon-rail-aoe-explode` (index note only; no audio file). |
 
 ### Sling Weapon VFX (彈弓武器特效)
 
 <img src="previews/fx/m2-vfx-sling/preview.gif" alt="m2-vfx-sling preview" height="140">
 
-Sling Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+Sling Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, static AOE, and hit are 1-frame images (AOE pose 96×96). `vfx-sling-aoe-explode` is the 8×96 ground burst, once, origin (0.5, 0.75). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
 
-- group `m2-vfx-sling` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-sling-` · manifest [vfx/weapons/sling/manifest.json](vfx/weapons/sling/manifest.json)
+- group `m2-vfx-sling` · 5 assets · frame 64x64, 96x96 · key prefix `vfx-sling-` · manifest [vfx/weapons/sling/manifest.json](vfx/weapons/sling/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `vfx-sling-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. PixelLab object 3e1374d0-c22d-42de-b51e-34ed55c0ba1e. SFX `sfx-weapon-sling-shot` (index note only; no audio file). |
-| `vfx-sling-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object d0bf4f5e-c8f0-4b97-a1ef-66cb225b34ef. SFX `sfx-weapon-sling-charge` (index note only; no audio file). |
-| `vfx-sling-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object ebf0a1e6-6bf0-4050-8321-6cc96d9d333e. SFX `sfx-weapon-sling-aoe` (index note only; no audio file). |
+| `vfx-sling-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Static 1-frame. Stage can tween or scale. PixelLab object d0bf4f5e-c8f0-4b97-a1ef-66cb225b34ef. SFX `sfx-weapon-sling-charge` (index note only; no audio file). |
+| `vfx-sling-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE impact pose, kept as the fallback. Animated ground burst is `vfx-sling-aoe-explode` (8×96, origin (0.5, 0.75)). PixelLab object ebf0a1e6-6bf0-4050-8321-6cc96d9d333e. SFX `sfx-weapon-sling-aoe` (index note only; no audio file). |
 | `vfx-sling-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Yellow star impact. Selected from review 028c9cac (indices 6+12). Sibling 0a2bc026 was not the primary export. PixelLab object a158a499-2298-417c-ac22-249465ed1654. SFX `sfx-weapon-sling-hit` (index note only; no audio file). |
+| `vfx-sling-aoe-explode` | 8 | 96x96 | 12 | once | (0.5, 0.75) | v1.0. 8×96 ground burst, once, origin (0.5, 0.75). Alternate foot hint (0.5, 0.85). Rock fragments, dust ring, and orange impact flash. Same PixelLab object as `vfx-sling-aoe` (ebf0a1e6-6bf0-4050-8321-6cc96d9d333e); burst group 12fe446b-a24e-487f-9d11-ca0a26e1a3cb. Static `vfx-sling-aoe` stays. SFX `sfx-weapon-sling-aoe-explode` (index note only; no audio file). |
 
 <a id="pickups"></a>
 ## Pickups
