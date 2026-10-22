@@ -33,7 +33,7 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'version is 0.36.27');
+assert(pkg.version === '0.36.28' && APP_VERSION === '0.36.28', 'version is 0.36.28');
 assert(WALL === 720, 'barricade max HP stays 720');
 assert(GAME_CONFIG.PLAYER.ATTACK === 10, 'opening attack is 10');
 assert(GAME_CONFIG.PLAYER.CRIT_CHANCE === 0.05, 'crit chance is 5%');

@@ -282,6 +282,14 @@ export class Barricade {
   }
 
   /**
+   * Visual frame only. HP, contact, and damage stay on the stock numbers.
+   * @param {number} wave
+   */
+  setHudWave(wave) {
+    this._hpBar?.setWave?.(wave);
+  }
+
+  /**
    * Swap to the cracked sheet once the wall is at half HP or below.
    * Does not move posts or change contactXAt.
    * @param {number} ratio

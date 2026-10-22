@@ -26,7 +26,7 @@ export const TRYOUT_FORMS = ['baby', 'young', 'ancient'];
 const TRYOUT_ACTIONS = new Set([
   'appearance',
   'claw',
-  // PIXELLAB_HOOK: Wave2 pet-*-baby-attack loads here beside claw. attack() still plays claw.
+  // PIXELLAB_HOOK: Wave2 pet-*-baby-attack loads beside claw. attack() plays it when the sheet exists.
   'attack',
   'skill',
   'skill-aoe',
@@ -339,9 +339,12 @@ export default class PetTryoutScene extends Phaser.Scene {
       this._status('Send the pet out, then attack.');
       return;
     }
-    // PIXELLAB_HOOK: pet-<id>-<form>-attack is cataloged for baby. This booth
-    // still plays claw until Gameplay swaps. Dragon baby attack is the v1.1 slam.
-    const key = tryoutStrip(this.petId, this.form, 'claw');
+    // Same rule as PetCombat.tryBasic: play attack when that sheet is loaded.
+    // Dragon baby is the v1.1 overhead slam. Claw remains the fallback.
+    const attackKey = tryoutStrip(this.petId, this.form, 'attack');
+    const clawKey = tryoutStrip(this.petId, this.form, 'claw');
+    const key = this.textures.exists(attackKey) ? attackKey : clawKey;
+    const label = key === attackKey ? 'attack' : 'claw';
     if (!this.textures.exists(key)) {
       this._begin();
       this._status(`${this._name()} has no claw strip. Melee cue only.`);
@@ -374,7 +377,7 @@ export default class PetTryoutScene extends Phaser.Scene {
       if (!this.out) return;
       this._poseIdle();
     });
-    this._status(`${this._name()} claw.`);
+    this._status(`${this._name()} ${label}.`);
   }
 
   skill() {

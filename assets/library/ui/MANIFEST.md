@@ -168,3 +168,7 @@ Player Tester Accept flagged a flat enemy HP bar, a flat joystick, and a dirty t
 3. **Title** — `title/ui-title-bg-clean.png` and `ui-title-bg-clean-hd.png` have no baked menu labels and no v0.21 footer.
 
 Bar frames, joystick parts, and both clean title splashes use origin **(0.5, 0.5)**. Enemy fill strips use **(0, 0.5)** so they grow from the left like `ui-hp-fill-*`. Assets only — no game code in this change.
+
+## Wave 3 HUD panels (`wave3/`)
+
+`ui-hp-bar-player-wave3` and `ui-hp-bar-barricade-wave3` are **384×192** panels. The painted bar sits on the bottom of the sheet. Stage wave 3+ draws those keys. Waves 1–2 keep `ui-hp-bar-player` (248×36) and `ui-hp-bar-barricade` (251×45). The trough is measured on the 384×192 sheet. Gold, banners, and the other wave3 panels stay registered and are not drawn on the HP-bar path.

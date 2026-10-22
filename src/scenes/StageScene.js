@@ -1307,6 +1307,9 @@ export default class StageScene extends Phaser.Scene {
     this.hudGold.setText(`GOLD ${this.gold}`);
     this.hudWeapon.setText(this._weaponName());
     this.playerHp?.setRatio(1);
+    // Wave 3+ hangs the 384×192 panels. Ratio stays full; HP is unchanged.
+    this.playerHp?.setWave(wave);
+    this.barricade?.setHudWave(wave);
     const iconKey = this.defenders.weapons.getSkin?.()?.icon;
     if (this.hudWeaponIcon && iconKey && this.textures.exists(iconKey)) {
       this.hudWeaponIcon.setTexture(iconKey);

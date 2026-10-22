@@ -166,8 +166,8 @@ const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta
 const soundSrc = readFileSync(new URL('../src/systems/SoundManager.js', import.meta.url), 'utf8');
 const zombieSrc = readFileSync(new URL('../src/entities/Zombie.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'package and APP_VERSION are 0.36.27');
-assert(html.includes('v0.36.27'), 'document title is v0.36.27');
+assert(pkg.version === '0.36.28' && APP_VERSION === '0.36.28', 'package and APP_VERSION are 0.36.28');
+assert(html.includes('v0.36.28'), 'document title is v0.36.28');
 assert(IDS.join() === DEMO_ENEMY_IDS.join(), 'showcase ids match the catalog list');
 
 for (const id of IDS) {
@@ -1120,7 +1120,7 @@ assert(attackContactFrame('delivery', 16, 'zombie-delivery-hit02-normal') === 10
 assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit01-normal') === 6, 'nurse hit01 impact is frame 6');
 assert(attackContactFrame('nurse', 16, 'zombie-nurse-hit02-normal') === 12, 'nurse hit02 impact is frame 12');
 assert(!ZOMBIE_LIBRARY_SKINS.brute.ruleAnims, 'brute is not a profession rule skin');
-assert(APP_VERSION === '0.36.27', 'gameplay wire stays on v0.36.27');
+assert(APP_VERSION === '0.36.28', 'gameplay wire stays on v0.36.28');
 assert(forceTireEnabled('?feel=1&enemy=office-worker-v2&forceTire=1') === true, 'forceTire=1 is the tire sample');
 assert(forceHurtEnabled('?feel=1&enemy=office-worker-v2&forceHurt=1') === true, 'forceHurt=1 is the hurt sample');
 assert(forceTireEnabled('?feel=1&enemy=office-worker-v2') === false, 'tire sample stays off without the flag');

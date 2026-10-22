@@ -37,7 +37,7 @@ footer{color:var(--muted);font-size:12px;padding:8px 0}
 <body>
 <header>
   <h1>ZombieDefend <span>pet try-out</span></h1>
-  <p class="lede">Sandbox only. Send out, recall, claw, skill, and evolve. Stage combat is unchanged. Default pet is dragon. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
+  <p class="lede">Sandbox only. Send out, recall, attack, skill, and evolve. Stage combat is unchanged. Default pet is dragon. <a href="sandbox/index.html">Back to the sandbox hub</a>.</p>
 </header>
 <main>
   <p id="pet-status">Loading pet strips…</p>
@@ -58,7 +58,7 @@ footer{color:var(--muted);font-size:12px;padding:8px 0}
   <table class="keys">
     <tbody>
       <tr><th>1</th><td>Send out or recall. Send-out shows <code>appearance</code>, then idle. Recall plays <code>sleep-start</code> and the sleep loop when that form has them.</td></tr>
-      <tr><th>2</th><td>Attack. Plays the form <code>claw</code> strip and <code>pet-melee-hit</code> plus <code>pet-knockback</code>. Ancient has no claw strip, so the melee cue still plays.</td></tr>
+      <tr><th>2</th><td>Attack. Plays the form <code>attack</code> strip when it is loaded (dragon baby is the overhead slam) and otherwise <code>claw</code>, plus <code>pet-melee-hit</code> and <code>pet-knockback</code>. Ancient has neither sheet, so the melee cue still plays.</td></tr>
       <tr><th>3</th><td>Skill. Plays that form’s cast strip and the FX named in <code>PET_SKILL_SPECS</code>. Baby and young also show <code>skill-aoe</code> when the sheet exists.</td></tr>
       <tr><th>4</th><td>Evolve. Baby plays <code>evolve-from-baby</code>, <code>fx-pet-*-evolve</code>, and <code>pet-evolve</code>, then stands as young. Young plays the evolve FX and stands as ancient.</td></tr>
       <tr><th>R</th><td>Reset this pet to baby, recalled.</td></tr>

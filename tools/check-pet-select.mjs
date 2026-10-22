@@ -33,8 +33,8 @@ function assert(cond, message) {
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'package and APP_VERSION are 0.36.27');
-assert(html.includes('v0.36.27'), 'document title is v0.36.27');
+assert(pkg.version === '0.36.28' && APP_VERSION === '0.36.28', 'package and APP_VERSION are 0.36.28');
+assert(html.includes('v0.36.28'), 'document title is v0.36.28');
 assert(BARRICADE_MAX_HP === 720, 'barricade max HP stays 720');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15 && getGoldByHP(300) === 50, 'gold-by-HP stays put');
 
