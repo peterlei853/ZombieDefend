@@ -325,10 +325,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * on the existing crit flag. Stage pets normal-attack only. GO! / Back!
  * deploys that saved pet. Barricade max HP stays 720. GitHub Pages
  * stays unpublished.
+ * v0.36.28: a pet basic attack plays `role.attack` when that anim is
+ * loaded. Dragon plays `pet-dragon-baby-attack` (overhead slam). Panda,
+ * lion, and phoenix use the same path. Hurt stays white, then red, then
+ * the hurt strip. Melee damage, gap, gold, saves, and barricade HP stay
+ * put. GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.27';
+export const APP_VERSION = '0.36.28';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

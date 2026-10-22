@@ -37,8 +37,8 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.36.27', `package.json version ${pkg.version}`);
-assert(APP_VERSION === '0.36.27', `APP_VERSION ${APP_VERSION}`);
+assert(pkg.version === '0.36.28', `package.json version ${pkg.version}`);
+assert(APP_VERSION === '0.36.28', `APP_VERSION ${APP_VERSION}`);
 assert(pkg.version === APP_VERSION, 'package version matches APP_VERSION');
 
 const boot = readFileSync(new URL('../src/scenes/BootScene.js', import.meta.url), 'utf8');
@@ -52,7 +52,7 @@ assert(title.includes('APP_VERSION'), 'title uses APP_VERSION');
 assert(!title.includes('v0.19'), 'title is not 0.19');
 assert(boot.includes('TitleScene'), 'boot opens the title');
 assert(stage.includes('APP_VERSION'), 'HUD uses APP_VERSION');
-assert(html.includes('v0.36.27'), 'document title is v0.36.27');
+assert(html.includes('v0.36.28'), 'document title is v0.36.28');
 assert(!defender.includes('_createLineupPet'), 'fence lineup is not spawned');
 assert(!defender.includes('petLineupSlots'), 'defender does not place fence slots');
 assert(defender.includes('summonPet'), 'defender summons from the bar');
@@ -86,6 +86,15 @@ assert(PET_LINEUP.map((pet) => pet.id).join() === 'phoenix,panda,lion,dragon', '
 assert(PET_LINEUP.map((pet) => pet.element).join() === 'fire,ice,electric,poison', 'element map');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-skill'), 'phoenix skill loads');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-hurt'), 'phoenix hurt loads');
+for (const pet of PET_LINEUP) {
+  assert(typeof pet.attack === 'string' && pet.attack.endsWith('-baby-attack'), `${pet.id} names an attack strip`);
+  assert(PET_STAGE_KEYS.has(pet.attack), `${pet.id} attack sheet loads on stage`);
+}
+assert(PET_LINEUP.find((pet) => pet.id === 'dragon').attack === 'pet-dragon-baby-attack', 'dragon attack is the slam sheet');
+assert(combatSrc.includes('role?.attack'), 'basic swing reads role.attack');
+assert(combatSrc.includes('_playBasicStrip'), 'tryBasic plays the attack strip');
+assert(combatSrc.includes('actor.role.hurt'), 'hurt still plays role.hurt');
+assert(combatSrc.includes("actor.hitPhase = 'white'"), 'hurt still opens on the white fill');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-sleep-start'), 'phoenix sleep-start loads');
 assert(PET_STAGE_KEYS.has('pet-phoenix-baby-sleep'), 'phoenix sleep loop loads');
 assert(PET_STAGE_KEYS.has('pet-panda-baby-sleep'), 'panda sleep loads');
@@ -133,6 +142,8 @@ assert(stageLibraryFilter({ category: 'hero', key: 'player-girl' }), 'hero still
 assert(!stageLibraryFilter({ category: 'pets', key: 'pet-lion-ancient-idle' }), 'ancient filtered');
 
 const petsCfg = GAME_CONFIG.PETS;
+assert(petsCfg.MELEE.DAMAGE === 8, 'melee damage stays 8');
+assert(petsCfg.MELEE.WINDUP_MS === 120 && petsCfg.MELEE.RECOVER_MS === 200 && petsCfg.MELEE.GAP_MS === 260, 'melee timing stays');
 assert(petsCfg.REVIVE_CD_MS === 18000, 'revive cooldown is 18s');
 assert(petsCfg.OFF_FIELD_REGEN_RATIO === 0.25, 'recall regen is 25% max HP per second');
 assert(petsCfg.ORB_FLASH_MS === 1000, 'orb flash is 1s');
@@ -249,6 +260,28 @@ const laneY = 432;
 const fenceX = barricadeXAtY(laneY);
 const player = { x: fenceX + layoutPx(28), y: laneY };
 const foeX = fenceX - layoutPx(110);
+
+const quietAudio = { playPetSummon() {}, playPetDeath() {}, playPetReviveReady() {}, playHitImpact() {} };
+const slamScene = mockScene(quietAudio);
+const slam = new PetCombat(slamScene);
+assert(slam.summon(3, player, []).id === 'dragon', 'dragon slot summons');
+const dragon = slam._actors[3];
+const dragonBody = dragon.sprite;
+const slamFoe = mockZombie(dragonBody.x - layoutPx(12), dragonBody.y);
+assert(slam.tryBasic(dragon, [slamFoe]) === true, 'in-range dragon basic starts');
+assert(dragonBody.anims.currentAnim.key === 'pet-dragon-baby-attack', 'dragon basic plays the slam');
+assert(!dragonBody._played.includes('pet-dragon-baby-claw'), 'dragon basic does not play claw');
+assert(dragon.meleePhase === 'windup' && dragon.meleeLeft === petsCfg.MELEE.WINDUP_MS, 'slam keeps the melee wind-up');
+const pandaScene = mockScene(quietAudio);
+pandaScene.anims.exists = (key) => key !== 'pet-panda-baby-attack';
+const pandaCombat = new PetCombat(pandaScene);
+assert(pandaCombat.summon(1, player, []).id === 'panda', 'panda slot summons');
+const panda = pandaCombat._actors[1];
+const pandaBody = panda.sprite;
+const pandaFoe = mockZombie(pandaBody.x - layoutPx(12), pandaBody.y);
+assert(pandaCombat.tryBasic(panda, [pandaFoe]) === true, 'basic still starts when the attack anim is missing');
+assert(!pandaBody._played.includes('pet-panda-baby-attack'), 'a missing attack anim is not played');
+assert(!pandaBody._played.includes('pet-panda-baby-claw'), 'a missing attack anim does not fall back to claw');
 const empty = combat.summon(0, player, []);
 assert(empty.ok && empty.id === 'phoenix', 'summon does not require a target');
 assert(combat.portraitViews()[0].phase === 'field', 'empty field still deploys');

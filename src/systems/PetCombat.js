@@ -148,6 +148,11 @@ export class PetCombat {
 
   /**
    * Melee box in front of the pet. Wind-up, impact, recovery.
+   * Plays `role.attack` once when that anim is loaded. Dragon's key is
+   * the overhead slam (`pet-dragon-baby-attack`). Panda, lion, and
+   * phoenix use the same path. A missing strip leaves the current body.
+   * Damage timing stays on MELEE. The melee fan and the existing
+   * pet-attack cue stay. Hurt is not touched.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
    */
@@ -166,7 +171,32 @@ export class PetCombat {
     actor.meleePhase = 'windup';
     actor.meleeLeft = pets.WINDUP_MS;
     actor.state = 'melee';
+    this._playBasicStrip(actor);
     return true;
+  }
+
+  /**
+   * One-shot basic strip. `role.attack` when the anim exists. Claw is
+   * not the stage swing.
+   * @param {PetActor} actor
+   * @returns {boolean}
+   */
+  _playBasicStrip(actor) {
+    const key = actor?.role?.attack;
+    if (!key) return false;
+    return playOnce(actor.sprite, key);
+  }
+
+  /**
+   * True while the basic strip is still advancing, so idle does not cut
+   * the slam during recovery. A finished or replaced anim is not live.
+   * @param {PetActor} actor
+   */
+  _basicStripLive(actor) {
+    const key = actor?.role?.attack;
+    const anims = actor?.sprite?.anims;
+    if (!key || !anims?.isPlaying) return false;
+    return anims.currentAnim?.key === key;
   }
 
   /**
@@ -1766,7 +1796,7 @@ export class PetCombat {
       sprite.x = actor.destX;
       sprite.y = actor.destY;
       actor.state = 'idle';
-      playLoop(sprite, this._babyIdleKey(actor));
+      if (!this._basicStripLive(actor)) playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
       this._place(actor);
       this.tryBasic(actor, this._liveZombies);
@@ -1928,7 +1958,7 @@ export class PetCombat {
       actor.meleePhase = null;
       actor.state = 'idle';
       actor.meleeGap = pets.GAP_MS;
-      playLoop(actor.sprite, this._babyIdleKey(actor));
+      if (!this._basicStripLive(actor)) playLoop(actor.sprite, this._babyIdleKey(actor));
       break;
     }
     this._place(actor);
