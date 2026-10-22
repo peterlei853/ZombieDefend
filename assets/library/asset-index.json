@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 659,
+    "total": 667,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -49,8 +49,8 @@
         "assets": 5
       },
       "environment": {
-        "groups": 2,
-        "assets": 20
+        "groups": 3,
+        "assets": 28
       },
       "backgrounds": {
         "groups": 1,
@@ -66,7 +66,7 @@
       "concept": 21,
       "fx": 93,
       "icon": 75,
-      "image": 38,
+      "image": 46,
       "spritesheet": 419
     }
   },
@@ -2500,6 +2500,44 @@
       "keys": [
         "barricade-post",
         "barricade-post-damaged"
+      ]
+    },
+    {
+      "id": "environment/campus",
+      "category": "environment",
+      "group": "campus",
+      "title": "Campus Street Props",
+      "titleZh": "校園街道道具",
+      "description": "Credit-burn filler street props for campus Stage décor: street lamps, trash bins, bus stops, manholes. Visual only — no Stage physics hooks in this PR.",
+      "manifest": "assets/library/environment/campus/manifest.json",
+      "dir": "assets/library/environment/campus",
+      "thumb": "assets/library/previews/environment/campus/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "prop-",
+      "mainKey": "prop-street-lamp",
+      "count": 8,
+      "frameSizes": [
+        "48x48",
+        "64x64"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "prop-street-lamp",
+        "prop-street-lamp-double",
+        "prop-trash-bin",
+        "prop-trash-bin-alt",
+        "prop-bus-stop",
+        "prop-bus-stop-routes",
+        "prop-manhole",
+        "prop-manhole-alt"
       ]
     },
     {
@@ -25524,6 +25562,304 @@
       ],
       "extra": null,
       "action": "post-damaged"
+    },
+    {
+      "key": "prop-street-lamp",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-street-lamp.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Victorian single-head street lamp, warm glow, 64×64 campus TD prop.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "16c0b36e-cc91-4949-bc18-ae46015938d6",
+        "role": "winner"
+      },
+      "action": "street-lamp"
+    },
+    {
+      "key": "prop-street-lamp-double",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-street-lamp-double.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Double-arm twin-lantern street lamp variant, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "1b62f6d8-951c-49f2-aa11-bec35e9fd69f",
+        "role": "variant",
+        "prefer": "prop-street-lamp"
+      },
+      "action": "street-lamp-double"
+    },
+    {
+      "key": "prop-trash-bin",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-trash-bin.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Galvanized metal trash can (dented), 48×48. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "0a5f4a4e-c354-4860-8034-ee7db3fbd127",
+        "role": "winner",
+        "softFixed": "bottom-1px"
+      },
+      "action": "trash-bin"
+    },
+    {
+      "key": "prop-trash-bin-alt",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-trash-bin-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Cleaner galvanized trash can alternate, 48×48. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "bae14246-bcc7-47f5-9ca2-206f013ac558",
+        "role": "variant",
+        "prefer": "prop-trash-bin",
+        "softFixed": "bottom-1px"
+      },
+      "action": "trash-bin-alt"
+    },
+    {
+      "key": "prop-bus-stop",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-bus-stop.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Bus stop sign with bus icon + mid-pole schedule board, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "de4fcf7e-9964-448d-9133-3926f60b6b18",
+        "role": "winner"
+      },
+      "action": "bus-stop"
+    },
+    {
+      "key": "prop-bus-stop-routes",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-bus-stop-routes.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Bus stop sign with route-number board variant, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "e573f1db-a7af-4669-bc3a-176cc746eda3",
+        "role": "variant",
+        "prefer": "prop-bus-stop"
+      },
+      "action": "bus-stop-routes"
+    },
+    {
+      "key": "prop-manhole",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-manhole.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Top-down iron manhole cover with pick-hole + waffle texture, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "ce1e62e0-1bee-42e3-9275-f99906de55b6",
+        "role": "winner"
+      },
+      "action": "manhole"
+    },
+    {
+      "key": "prop-manhole-alt",
+      "category": "environment",
+      "group": "campus",
+      "path": "assets/library/environment/campus/prop-manhole-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/campus/preview.gif",
+      "description": "Top-down iron manhole cover clean waffle alt, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "campus",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "f3e7aade-9941-4a86-ba7f-cff4eb792002",
+        "role": "variant",
+        "prefer": "prop-manhole"
+      },
+      "action": "manhole-alt"
     },
     {
       "key": "prop-water-mount",

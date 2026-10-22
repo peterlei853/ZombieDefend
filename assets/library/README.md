@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade and the v0.31 water mount), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade, the v0.31 water mount, and campus street fillers), the campus battle background, and chibi concept art.
 
 **Start here:**
 
@@ -45,6 +45,7 @@ assets/library/
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
+├── environment/campus/       street fillers: lamp, trash bin, bus stop, manhole (visual only)
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
@@ -71,7 +72,7 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps, burst left → right |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
+| Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*`, `prop-street-lamp*`, `prop-trash-bin*`, `prop-bus-stop*`, `prop-manhole*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Campus street fillers in `environment/campus/`: lamps and bus stops 64×64, trash bins and manholes 48×48; upright props origin (0.5, 1.0), manholes (0.5, 0.5). Visual only. Accents: cyan, amber, magenta, yellow, ice, orange |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
