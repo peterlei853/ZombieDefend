@@ -16,8 +16,8 @@ import { PET_SKILL_LOAD_KEYS } from './petSkills.js';
  * stay on disk. All twelve cast strips and their skill FX load with
  * the stage. `attack` is the Wave2 8-frame basic attack, preloaded
  * beside `pet-*-baby-claw`. Combat still plays claw / the melee fan
- * until Gameplay swaps. `pet-dragon-baby-attack` is PASS_WARN (subtle
- * motion) — compare it with the claw strip on Stage.
+ * until Gameplay swaps. `pet-dragon-baby-attack` is the v1.1 overhead
+ * slam (8×64); the v1.0 subtle claw is replaced.
  * Order is party order: far → near, and the HUD column top → bottom.
  * Pets are not spawned with the stage. The bar summons and recalls them.
  * `hudBar` is the 64×32 bar (head already composited on the left).
@@ -92,7 +92,7 @@ export const PET_LINEUP = [
     move: 'pet-dragon-baby-move',
     skill: 'pet-dragon-baby-skill',
     hurt: 'pet-dragon-baby-hurt',
-    // PIXELLAB_HOOK: 8×64 attack beside pet-dragon-baby-claw. PASS_WARN (subtle motion).
+    // PIXELLAB_HOOK: 8×64 v1.1 overhead slam beside pet-dragon-baby-claw.
     attack: 'pet-dragon-baby-attack',
     sleepStart: 'pet-dragon-baby-sleep-start',
     sleep: 'pet-dragon-baby-sleep',

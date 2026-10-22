@@ -219,7 +219,7 @@ Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Fac
 
 <img src="previews/pets/dragon-baby.gif" alt="dragon-baby preview" height="140">
 
-Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is a new 8×64 attack beside claw; `pet-dragon-baby-hurt` is replaced at 8×64.
+Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is an 8×64 attack beside claw (v1.1 overhead slam, was v1.0 PASS_WARN); `pet-dragon-baby-hurt` is replaced at 8×64.
 
 - group `dragon-baby` · 10 assets · frame 48x48, 64x64, 64x96, 85x160, 96x96 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
 
@@ -233,7 +233,7 @@ Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. 
 | `pet-dragon-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
 | `pet-dragon-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-dragon-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
-| `pet-dragon-baby-attack` | 8 | 64x64 | 12 | once | (0.5, 1.0) | v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. PASS_WARN: motion is subtle (centroid shift about 0.7). Stage should compare against pet-dragon-baby-claw and remake if the swipe does not read in play. SFX: sfx-pet-dragon-attack (not generated). |
+| `pet-dragon-baby-attack` | 8 | 64x64 | 12 | once | (0.5, 1.0) | v1.1 REPLACE remake. 8×64 west, origin (0.5, 1). Was v1.0 PASS_WARN subtle claw; now a BIG overhead slam (wind-up, arms overhead, slam, recovery). Same key and cell as v1.0. Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. Discarded anim group 92bdf771-5b92-4761-8e24-bdf06a743a44. SFX: sfx-pet-dragon-attack (not generated). |
 | `pet-dragon-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Jade / 翠火 — FX (翠火·特效)

@@ -340,7 +340,7 @@ export default class PetTryoutScene extends Phaser.Scene {
       return;
     }
     // PIXELLAB_HOOK: pet-<id>-<form>-attack is cataloged for baby. This booth
-    // still plays claw until Gameplay swaps. Dragon baby attack is PASS_WARN.
+    // still plays claw until Gameplay swaps. Dragon baby attack is the v1.1 slam.
     const key = tryoutStrip(this.petId, this.form, 'claw');
     if (!this.textures.exists(key)) {
       this._begin();

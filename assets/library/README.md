@@ -112,7 +112,7 @@ Wave1–2 credit burn (catalog + the Stage keys that already load):
 | Key | Version | Cell | Frames | SFX (not generated) |
 |---|---|---|---|---|
 | `pet-panda-young-skill` | v2.0 replace | 84×84 (was 64×64) | 8 | `sfx-pet-panda-skill` (alias `sfx-pet-panda-skill-staff`) |
-| `pet-dragon-baby-attack` | v1.0 new, beside claw | 64×64 | 8 | `sfx-pet-dragon-attack` |
+| `pet-dragon-baby-attack` | v1.1 REPLACE remake (was v1.0 PASS_WARN subtle claw) | 64×64 | 8 | `sfx-pet-dragon-attack` |
 | `pet-dragon-baby-hurt` | v2.0 replace | 64×64 (was 48) | 8 (was 4) | `sfx-pet-dragon-hurt` |
 | `pet-lion-baby-attack` | v1.0 new, beside claw | 52×52 | 8 | `sfx-pet-lion-attack` |
 | `pet-lion-baby-hurt` | v2.0 replace | 52×52 (was 48) | 8 (was 4) | `sfx-pet-lion-hurt` |
@@ -121,7 +121,7 @@ Wave1–2 credit burn (catalog + the Stage keys that already load):
 | `pet-phoenix-baby-attack` | v1.0 new, beside claw | 64×64 | 8 | `sfx-pet-phoenix-attack` |
 | `pet-phoenix-baby-hurt` | v2.0 replace | 64×64 (was 48) | 8 (was 4) | `sfx-pet-phoenix-hurt` |
 
-`pet-*-baby-claw` stays. Stage preloads `pet-*-baby-attack` and still plays claw until Gameplay swaps. **`pet-dragon-baby-attack` is PASS_WARN** — the west egg-dragon reads, and the motion is subtle. Stage should compare it with `pet-dragon-baby-claw` and remake the attack if the swipe is too weak in play. `pet-panda-young-skill` loads at 84×84 from the index (the cast spec stays 8 frames @ 12 fps).
+`pet-*-baby-claw` stays. Stage preloads `pet-*-baby-attack` and still plays claw until Gameplay swaps. **`pet-dragon-baby-attack` is v1.1 PASS**, a big overhead slam on the same 8×64 cell (anim group `d14e7c3e-1ccc-4c0a-a1ed-3cec975aa0ea`). The v1.0 PASS_WARN subtle-claw strip and discarded group `92bdf771-5b92-4761-8e24-bdf06a743a44` are not in the catalog. `pet-panda-young-skill` loads at 84×84 from the index (the cast spec stays 8 frames @ 12 fps).
 
 ## v0.26 overnight VFX
 

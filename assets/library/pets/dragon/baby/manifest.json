@@ -4,7 +4,7 @@
   "group": "dragon-baby",
   "title": "Jade / 翠火 — Baby",
   "titleZh": "翠火·幼年",
-  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is a new 8×64 attack beside claw; `pet-dragon-baby-hurt` is replaced at 8×64.",
+  "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is an 8×64 attack beside claw (v1.1 overhead slam, was v1.0 PASS_WARN); `pet-dragon-baby-hurt` is replaced at 8×64.",
   "source": {
     "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
     "sourceFolder": "pets/dragon/baby"
@@ -192,15 +192,18 @@
         1.0
       ],
       "facing": "west",
-      "note": "v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. PASS_WARN: motion is subtle (centroid shift about 0.7). Stage should compare against pet-dragon-baby-claw and remake if the swipe does not read in play. SFX: sfx-pet-dragon-attack (not generated).",
+      "note": "v1.1 REPLACE remake. 8×64 west, origin (0.5, 1). Was v1.0 PASS_WARN subtle claw; now a BIG overhead slam (wind-up, arms overhead, slam, recovery). Same key and cell as v1.0. Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. Discarded anim group 92bdf771-5b92-4761-8e24-bdf06a743a44. SFX: sfx-pet-dragon-attack (not generated).",
       "extra": {
-        "version": "v1.0",
+        "version": "v1.1",
         "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
-        "pixellabAnimGroup": "fe9b961c-c7f4-4bbc-8069-fcb1cb953053",
+        "pixellabAnimGroup": "d14e7c3e-1ccc-4c0a-a1ed-3cec975aa0ea",
+        "discardedAnimGroup": "92bdf771-5b92-4761-8e24-bdf06a743a44",
+        "previousAnimGroup": "fe9b961c-c7f4-4bbc-8069-fcb1cb953053",
+        "previousQc": "PASS_WARN",
         "cell": "64x64",
         "sfx": "sfx-pet-dragon-attack",
         "alongside": "pet-dragon-baby-claw",
-        "qc": "PASS_WARN"
+        "qc": "PASS"
       }
     },
     {
