@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 659,
+    "total": 717,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -49,12 +49,12 @@
         "assets": 5
       },
       "environment": {
-        "groups": 2,
-        "assets": 20
+        "groups": 4,
+        "assets": 76
       },
       "backgrounds": {
-        "groups": 1,
-        "assets": 15
+        "groups": 2,
+        "assets": 17
       },
       "concepts": {
         "groups": 1,
@@ -62,11 +62,11 @@
       }
     },
     "byType": {
-      "background": 13,
+      "background": 15,
       "concept": 21,
       "fx": 93,
-      "icon": 75,
-      "image": 38,
+      "icon": 79,
+      "image": 90,
       "spritesheet": 419
     }
   },
@@ -2547,6 +2547,156 @@
         "prop-flame-mount",
         "prop-flame-mount-hi-vis",
         "prop-flame-mount-front-alt"
+      ]
+    },
+    {
+      "id": "environment/street",
+      "category": "environment",
+      "group": "street",
+      "title": "Street Fill Props (burn99)",
+      "titleZh": "街道填充道具（burn99）",
+      "description": "Catalog-only burn99 street fillers: construction barrier, jersey barrier, grate, locker, kiosk, phone booth, gas pump, and the other urban props, plus SMG and grenade icons. QC 41/41. No Stage, physics, or Gameplay wire.",
+      "manifest": "assets/library/environment/street/manifest.json",
+      "dir": "assets/library/environment/street",
+      "thumb": "assets/library/previews/environment/street/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "",
+      "mainKey": "prop-street-grate",
+      "count": 38,
+      "frameSizes": [
+        "32x32",
+        "48x48",
+        "64x64"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "icon",
+        "image"
+      ],
+      "keys": [
+        "prop-street-grate",
+        "prop-street-grate-alt",
+        "prop-fire-extinguisher",
+        "prop-fire-extinguisher-alt",
+        "prop-crate-stack",
+        "prop-crate-stack-alt",
+        "prop-metal-locker",
+        "prop-metal-locker-alt",
+        "prop-traffic-barrel",
+        "prop-traffic-barrel-alt",
+        "prop-jersey-barrier",
+        "prop-jersey-barrier-alt",
+        "prop-news-kiosk",
+        "prop-news-kiosk-alt",
+        "prop-cardboard-pile",
+        "prop-cardboard-pile-alt",
+        "prop-water-cooler",
+        "prop-water-cooler-alt",
+        "proj-grenade",
+        "proj-grenade-alt",
+        "prop-pallet",
+        "prop-pallet-alt",
+        "prop-tire-stack",
+        "prop-tire-stack-alt",
+        "weapon-smg",
+        "weapon-smg-alt",
+        "prop-construction-barrier",
+        "prop-construction-barrier-alt",
+        "prop-gas-pump",
+        "prop-gas-pump-alt",
+        "prop-payphone",
+        "prop-payphone-alt",
+        "prop-chain-gate",
+        "prop-chain-gate-alt",
+        "prop-street-sign",
+        "prop-street-sign-alt",
+        "prop-phone-booth",
+        "prop-phone-booth-alt"
+      ]
+    },
+    {
+      "id": "environment/path-asphalt",
+      "category": "environment",
+      "group": "path-asphalt",
+      "title": "Asphalt Path Tiles",
+      "titleZh": "瀝青路面",
+      "description": "Cracked gray asphalt road path over dark campus dirt, 18 tiles at 32×32. PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No Stage placement wire.",
+      "manifest": "assets/library/tiles/path-asphalt/manifest.json",
+      "dir": "assets/library/tiles/path-asphalt",
+      "thumb": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "path-asphalt-",
+      "mainKey": "path-asphalt-00",
+      "count": 18,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "path-asphalt-00",
+        "path-asphalt-01",
+        "path-asphalt-02",
+        "path-asphalt-03",
+        "path-asphalt-04",
+        "path-asphalt-05",
+        "path-asphalt-06",
+        "path-asphalt-07",
+        "path-asphalt-08",
+        "path-asphalt-09",
+        "path-asphalt-10",
+        "path-asphalt-11",
+        "path-asphalt-12",
+        "path-asphalt-13",
+        "path-asphalt-14",
+        "path-asphalt-15",
+        "path-asphalt-16",
+        "path-asphalt-17"
+      ]
+    },
+    {
+      "id": "backgrounds/sewer",
+      "category": "backgrounds",
+      "group": "sewer",
+      "title": "Sewer Backgrounds",
+      "titleZh": "下水道背景",
+      "description": "Two 320×180 sewer stage plates from the burn99 street fill. They do not replace the 1280×720 campus plates. Catalog only.",
+      "manifest": "assets/library/backgrounds/manifest.json",
+      "dir": "assets/library/backgrounds",
+      "thumb": "assets/library/backgrounds/bg-sewer-tunnel.png",
+      "sheets": [
+        "assets/library/backgrounds/bg-sewer-canal.png"
+      ],
+      "extras": [],
+      "keyPrefix": "bg-sewer-",
+      "mainKey": "bg-sewer-tunnel",
+      "count": 2,
+      "frameSizes": [
+        "320x180"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "background"
+      ],
+      "keys": [
+        "bg-sewer-tunnel",
+        "bg-sewer-canal"
       ]
     },
     {
@@ -26418,6 +26568,2256 @@
         "prefer": "prop-flame-mount"
       },
       "action": "flame-mount-front-alt"
+    },
+    {
+      "key": "prop-street-grate",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-street-grate.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Flat iron street grate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "76a81a1a-f552-4041-b147-1ae9cf1e5a08",
+        "role": "winner",
+        "kind": "flat"
+      },
+      "action": "prop-street-grate"
+    },
+    {
+      "key": "prop-street-grate-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-street-grate-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Flat iron street grate alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "9e8f4443-35c3-4f59-8217-93403fe3adfe",
+        "role": "variant",
+        "kind": "flat",
+        "prefer": "prop-street-grate"
+      },
+      "action": "prop-street-grate-alt"
+    },
+    {
+      "key": "prop-fire-extinguisher",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-fire-extinguisher.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Red fire extinguisher, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "fire"
+      ],
+      "extra": {
+        "pixellabObjectId": "8742e98e-b5f3-4af8-a9ac-73d280fcb639",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-fire-extinguisher"
+    },
+    {
+      "key": "prop-fire-extinguisher-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-fire-extinguisher-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Red fire extinguisher alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "fire",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "d5086de4-93ee-4ffc-868f-5dd971e953bd",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-fire-extinguisher"
+      },
+      "action": "prop-fire-extinguisher-alt"
+    },
+    {
+      "key": "prop-crate-stack",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-crate-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Stacked wooden crates, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "1575cde6-350b-421b-890a-cc71b4f9b3f5",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-crate-stack"
+    },
+    {
+      "key": "prop-crate-stack-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-crate-stack-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Stacked wooden crates alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "99d68763-1b43-42f7-a0cb-97983727f760",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-crate-stack"
+      },
+      "action": "prop-crate-stack-alt"
+    },
+    {
+      "key": "prop-metal-locker",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-metal-locker.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Metal locker cabinet, 64×64. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "98d34ade-78b7-4473-a857-5c7f55efa70e",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-metal-locker"
+    },
+    {
+      "key": "prop-metal-locker-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-metal-locker-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Metal locker cabinet alternate, 64×64. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "01e56f81-8d60-4aa5-8409-39b32fe943c8",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-metal-locker",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-metal-locker-alt"
+    },
+    {
+      "key": "prop-traffic-barrel",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-traffic-barrel.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Orange traffic barrel, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "b5a675e8-0de8-4b50-9ad0-5786968f0d57",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-traffic-barrel"
+    },
+    {
+      "key": "prop-traffic-barrel-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-traffic-barrel-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Orange traffic barrel alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "ad6b2275-7171-45ac-9be4-da1cc705ddc6",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-traffic-barrel"
+      },
+      "action": "prop-traffic-barrel-alt"
+    },
+    {
+      "key": "prop-jersey-barrier",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-jersey-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Concrete jersey barrier, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "8ac32ec0-2f6f-46ca-a3ac-827b972b6617",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-jersey-barrier"
+    },
+    {
+      "key": "prop-jersey-barrier-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-jersey-barrier-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Concrete jersey barrier alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "c5ee3b5f-4eec-4dd5-85ce-e64d46d0c03f",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-jersey-barrier"
+      },
+      "action": "prop-jersey-barrier-alt"
+    },
+    {
+      "key": "prop-news-kiosk",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-news-kiosk.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street news kiosk, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "7154a7ca-f7da-42c3-8465-477597501928",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-news-kiosk"
+    },
+    {
+      "key": "prop-news-kiosk-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-news-kiosk-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street news kiosk alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "61342404-835d-473e-a5dd-7ab529e99fd1",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-news-kiosk"
+      },
+      "action": "prop-news-kiosk-alt"
+    },
+    {
+      "key": "prop-cardboard-pile",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-cardboard-pile.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Flattened cardboard pile, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "9053683c-c169-4fca-a24e-7f702c293d8c",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-cardboard-pile"
+    },
+    {
+      "key": "prop-cardboard-pile-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-cardboard-pile-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Flattened cardboard pile alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "e9a7023b-10cd-4471-bbf2-d438709ef137",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-cardboard-pile"
+      },
+      "action": "prop-cardboard-pile-alt"
+    },
+    {
+      "key": "prop-water-cooler",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-water-cooler.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Office water cooler, 48×48. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "8f6a22e3-9ae4-47c1-b3b2-b48194da8f2f",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-water-cooler"
+    },
+    {
+      "key": "prop-water-cooler-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-water-cooler-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Office water cooler alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "244db84d-28f8-49d1-915f-f81b141c6644",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-water-cooler"
+      },
+      "action": "prop-water-cooler-alt"
+    },
+    {
+      "key": "proj-grenade",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/proj-grenade.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Grenade projectile icon, 32×32.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "icon",
+        "projectile"
+      ],
+      "extra": {
+        "pixellabObjectId": "d60b75ce-42d5-4d17-8cb4-7c2e548dea7c",
+        "role": "winner",
+        "kind": "icon"
+      },
+      "action": "proj-grenade"
+    },
+    {
+      "key": "proj-grenade-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/proj-grenade-alt.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Grenade projectile icon alternate, 32×32.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "icon",
+        "projectile",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "c5e7619b-12fd-453f-877e-909b6704e5ff",
+        "role": "variant",
+        "kind": "icon",
+        "prefer": "proj-grenade"
+      },
+      "action": "proj-grenade-alt"
+    },
+    {
+      "key": "prop-pallet",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-pallet.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Wooden shipping pallet, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "3302a1bc-ae9f-4153-92c2-2482051c4839",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-pallet"
+    },
+    {
+      "key": "prop-pallet-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-pallet-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Wooden shipping pallet alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "0717476b-a826-4e96-b3e4-fcdadcad3f5f",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-pallet"
+      },
+      "action": "prop-pallet-alt"
+    },
+    {
+      "key": "prop-tire-stack",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-tire-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Stacked tires, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "49236a9c-8405-4993-add6-deded1df4170",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-tire-stack"
+    },
+    {
+      "key": "prop-tire-stack-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-tire-stack-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Stacked tires alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "a52fdaee-8db3-4389-ad58-d8e51e702ddd",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-tire-stack"
+      },
+      "action": "prop-tire-stack-alt"
+    },
+    {
+      "key": "weapon-smg",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/weapon-smg.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "SMG weapon icon, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "icon"
+      ],
+      "extra": {
+        "pixellabObjectId": "72f0c99f-a291-4baf-a75d-f1cc8b16830a",
+        "role": "winner",
+        "kind": "icon"
+      },
+      "action": "weapon-smg"
+    },
+    {
+      "key": "weapon-smg-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/weapon-smg-alt.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "SMG weapon icon alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "icon",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "02a0e004-70db-4db7-8b8d-634997d82ba7",
+        "role": "variant",
+        "kind": "icon",
+        "prefer": "weapon-smg"
+      },
+      "action": "weapon-smg-alt"
+    },
+    {
+      "key": "prop-construction-barrier",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-construction-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Striped construction barrier, 64×64. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "4ad486d9-5a7c-446b-9d75-c9bad27823f6",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-construction-barrier"
+    },
+    {
+      "key": "prop-construction-barrier-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-construction-barrier-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Striped construction barrier alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "e052beb4-b446-47e4-9f46-665332a61abb",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-construction-barrier"
+      },
+      "action": "prop-construction-barrier-alt"
+    },
+    {
+      "key": "prop-gas-pump",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-gas-pump.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Gas station pump, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "3faa9813-8291-48b3-8ca0-ef9950ece12a",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-gas-pump"
+    },
+    {
+      "key": "prop-gas-pump-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-gas-pump-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Gas station pump alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "f53ce633-ecbe-4d8f-9b55-c969691deb3a",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-gas-pump"
+      },
+      "action": "prop-gas-pump-alt"
+    },
+    {
+      "key": "prop-payphone",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-payphone.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street payphone, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "645c9d0f-4fea-4342-a473-8599f5707722",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-payphone"
+    },
+    {
+      "key": "prop-payphone-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-payphone-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street payphone alternate, 48×48.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "27714b4d-9503-44ee-9fbd-b0e9686e1035",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-payphone"
+      },
+      "action": "prop-payphone-alt"
+    },
+    {
+      "key": "prop-chain-gate",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-chain-gate.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Chain-link gate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "a4050266-c3d6-467a-a96f-71e43d56e743",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-chain-gate"
+    },
+    {
+      "key": "prop-chain-gate-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-chain-gate-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Chain-link gate alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "4f848c13-deba-4922-bc77-1240dec81e3c",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-chain-gate"
+      },
+      "action": "prop-chain-gate-alt"
+    },
+    {
+      "key": "prop-street-sign",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-street-sign.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street name sign, 48×48. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "6914b3e5-e84f-4fba-a9c3-f2f8a16ecc06",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-street-sign"
+    },
+    {
+      "key": "prop-street-sign-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-street-sign-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Street name sign alternate, 48×48. Soft-fixed bottom edge.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "8fb83d72-6138-4ff5-987a-85a5ef2c3f6a",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-street-sign",
+        "softFixed": "bottom-1px"
+      },
+      "action": "prop-street-sign-alt"
+    },
+    {
+      "key": "prop-phone-booth",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-phone-booth.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Phone booth, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image"
+      ],
+      "extra": {
+        "pixellabObjectId": "fae0039c-5959-4ed3-b607-062dca522cd1",
+        "role": "winner",
+        "kind": "ground"
+      },
+      "action": "prop-phone-booth"
+    },
+    {
+      "key": "prop-phone-booth-alt",
+      "category": "environment",
+      "group": "street",
+      "path": "assets/library/environment/street/prop-phone-booth-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/street/preview.gif",
+      "description": "Phone booth alternate, 64×64.",
+      "note": null,
+      "tags": [
+        "environment",
+        "street",
+        "image",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "a27648b9-c9c9-4512-9fd2-243cb30a4430",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-phone-booth"
+      },
+      "action": "prop-phone-booth-alt"
+    },
+    {
+      "key": "path-asphalt-00",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 00, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 0. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 0,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_0.png"
+      },
+      "action": "00"
+    },
+    {
+      "key": "path-asphalt-01",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 01, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 1. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 1,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_1.png"
+      },
+      "action": "01"
+    },
+    {
+      "key": "path-asphalt-02",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 02, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 2. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 2,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_2.png"
+      },
+      "action": "02"
+    },
+    {
+      "key": "path-asphalt-03",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 03, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 3. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 3,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_3.png"
+      },
+      "action": "03"
+    },
+    {
+      "key": "path-asphalt-04",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 04, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 4. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 4,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_4.png"
+      },
+      "action": "04"
+    },
+    {
+      "key": "path-asphalt-05",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 05, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 5. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 5,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_5.png"
+      },
+      "action": "05"
+    },
+    {
+      "key": "path-asphalt-06",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 06, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 6. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 6,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_6.png"
+      },
+      "action": "06"
+    },
+    {
+      "key": "path-asphalt-07",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 07, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 7. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 7,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_7.png"
+      },
+      "action": "07"
+    },
+    {
+      "key": "path-asphalt-08",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 08, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 8. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 8,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_8.png"
+      },
+      "action": "08"
+    },
+    {
+      "key": "path-asphalt-09",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 09, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 9. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 9,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_9.png"
+      },
+      "action": "09"
+    },
+    {
+      "key": "path-asphalt-10",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 10, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 10. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 10,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_10.png"
+      },
+      "action": "10"
+    },
+    {
+      "key": "path-asphalt-11",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 11, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 11. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 11,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_11.png"
+      },
+      "action": "11"
+    },
+    {
+      "key": "path-asphalt-12",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 12, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 12. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 12,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_12.png"
+      },
+      "action": "12"
+    },
+    {
+      "key": "path-asphalt-13",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 13, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 13. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 13,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_13.png"
+      },
+      "action": "13"
+    },
+    {
+      "key": "path-asphalt-14",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 14, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 14. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 14,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_14.png"
+      },
+      "action": "14"
+    },
+    {
+      "key": "path-asphalt-15",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 15, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 15. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 15,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_15.png"
+      },
+      "action": "15"
+    },
+    {
+      "key": "path-asphalt-16",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 16, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 16. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 16,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_16.png"
+      },
+      "action": "16"
+    },
+    {
+      "key": "path-asphalt-17",
+      "category": "environment",
+      "group": "path-asphalt",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-asphalt/preview.gif",
+      "description": "Cracked gray asphalt path tile 17, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 17. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-asphalt",
+        "image",
+        "tileable",
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 17,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_17.png"
+      },
+      "action": "17"
+    },
+    {
+      "key": "bg-sewer-tunnel",
+      "category": "backgrounds",
+      "group": "sewer",
+      "path": "assets/library/backgrounds/bg-sewer-tunnel.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-sewer-tunnel.png",
+      "description": "Sewer tunnel stage plate, 320×180. Does not replace the campus plates.",
+      "note": "burn99. Catalog only. No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "sewer",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:80221ab7-161a-5f96-9c5f-5fae791a5106",
+        "role": "winner"
+      },
+      "action": "tunnel"
+    },
+    {
+      "key": "bg-sewer-canal",
+      "category": "backgrounds",
+      "group": "sewer",
+      "path": "assets/library/backgrounds/bg-sewer-canal.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-sewer-tunnel.png",
+      "description": "Sewer canal stage plate, 320×180. Does not replace the campus plates.",
+      "note": "burn99. Catalog only. No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "sewer",
+        "background",
+        "stage-plate",
+        "alternate"
+      ],
+      "extra": {
+        "galleryId": "gallery:5d0455df-dbb1-5d31-aaea-7e31fdf8789c",
+        "role": "variant",
+        "prefer": "bg-sewer-tunnel"
+      },
+      "action": "canal"
     },
     {
       "key": "bg-campus-a",

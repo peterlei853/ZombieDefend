@@ -1,0 +1,873 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "street",
+  "title": "Street Fill Props (burn99)",
+  "titleZh": "街道填充道具（burn99）",
+  "description": "Catalog-only burn99 street fillers: construction barrier, jersey barrier, grate, locker, kiosk, phone booth, gas pump, and the other urban props, plus SMG and grenade icons. QC 41/41. No Stage, physics, or Gameplay wire.",
+  "source": {
+    "tool": "pixellab list_objects",
+    "note": "burn99 credit-burn fillers. Balance 6.43 generations left of 5000. QC PASS 41/41. Soft-fixed bottom −1px on metal-locker (both), water-cooler, construction-barrier, street-sign (both).",
+    "handoff": "/workspace/zd-fill-props-burn99/"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "south",
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "prop-street-grate",
+      "prop-street-grate-alt",
+      "prop-fire-extinguisher",
+      "prop-fire-extinguisher-alt",
+      "prop-crate-stack",
+      "prop-crate-stack-alt",
+      "prop-metal-locker",
+      "prop-metal-locker-alt",
+      "prop-traffic-barrel",
+      "prop-traffic-barrel-alt",
+      "prop-jersey-barrier",
+      "prop-jersey-barrier-alt",
+      "prop-news-kiosk",
+      "prop-news-kiosk-alt",
+      "prop-cardboard-pile",
+      "prop-cardboard-pile-alt",
+      "prop-water-cooler",
+      "prop-water-cooler-alt",
+      "proj-grenade",
+      "proj-grenade-alt",
+      "prop-pallet",
+      "prop-pallet-alt",
+      "prop-tire-stack",
+      "prop-tire-stack-alt",
+      "weapon-smg",
+      "weapon-smg-alt",
+      "prop-construction-barrier",
+      "prop-construction-barrier-alt",
+      "prop-gas-pump",
+      "prop-gas-pump-alt",
+      "prop-payphone",
+      "prop-payphone-alt",
+      "prop-chain-gate",
+      "prop-chain-gate-alt",
+      "prop-street-sign",
+      "prop-street-sign-alt",
+      "prop-phone-booth",
+      "prop-phone-booth-alt"
+    ],
+    "thumb": "assets/library/previews/environment/street/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "prop-street-grate",
+      "path": "assets/library/environment/street/prop-street-grate.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Flat iron street grate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "76a81a1a-f552-4041-b147-1ae9cf1e5a08",
+        "role": "winner",
+        "kind": "flat"
+      }
+    },
+    {
+      "key": "prop-street-grate-alt",
+      "path": "assets/library/environment/street/prop-street-grate-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Flat iron street grate alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "9e8f4443-35c3-4f59-8217-93403fe3adfe",
+        "role": "variant",
+        "kind": "flat",
+        "prefer": "prop-street-grate"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-fire-extinguisher",
+      "path": "assets/library/environment/street/prop-fire-extinguisher.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Red fire extinguisher, 48×48.",
+      "extra": {
+        "pixellabObjectId": "8742e98e-b5f3-4af8-a9ac-73d280fcb639",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-fire-extinguisher-alt",
+      "path": "assets/library/environment/street/prop-fire-extinguisher-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Red fire extinguisher alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "d5086de4-93ee-4ffc-868f-5dd971e953bd",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-fire-extinguisher"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-crate-stack",
+      "path": "assets/library/environment/street/prop-crate-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Stacked wooden crates, 64×64.",
+      "extra": {
+        "pixellabObjectId": "1575cde6-350b-421b-890a-cc71b4f9b3f5",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-crate-stack-alt",
+      "path": "assets/library/environment/street/prop-crate-stack-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Stacked wooden crates alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "99d68763-1b43-42f7-a0cb-97983727f760",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-crate-stack"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-metal-locker",
+      "path": "assets/library/environment/street/prop-metal-locker.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal locker cabinet, 64×64. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "98d34ade-78b7-4473-a857-5c7f55efa70e",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-metal-locker-alt",
+      "path": "assets/library/environment/street/prop-metal-locker-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal locker cabinet alternate, 64×64. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "01e56f81-8d60-4aa5-8409-39b32fe943c8",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-metal-locker",
+        "softFixed": "bottom-1px"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-traffic-barrel",
+      "path": "assets/library/environment/street/prop-traffic-barrel.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Orange traffic barrel, 48×48.",
+      "extra": {
+        "pixellabObjectId": "b5a675e8-0de8-4b50-9ad0-5786968f0d57",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-traffic-barrel-alt",
+      "path": "assets/library/environment/street/prop-traffic-barrel-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Orange traffic barrel alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "ad6b2275-7171-45ac-9be4-da1cc705ddc6",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-traffic-barrel"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-jersey-barrier",
+      "path": "assets/library/environment/street/prop-jersey-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Concrete jersey barrier, 64×64.",
+      "extra": {
+        "pixellabObjectId": "8ac32ec0-2f6f-46ca-a3ac-827b972b6617",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-jersey-barrier-alt",
+      "path": "assets/library/environment/street/prop-jersey-barrier-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Concrete jersey barrier alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "c5ee3b5f-4eec-4dd5-85ce-e64d46d0c03f",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-jersey-barrier"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-news-kiosk",
+      "path": "assets/library/environment/street/prop-news-kiosk.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street news kiosk, 64×64.",
+      "extra": {
+        "pixellabObjectId": "7154a7ca-f7da-42c3-8465-477597501928",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-news-kiosk-alt",
+      "path": "assets/library/environment/street/prop-news-kiosk-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street news kiosk alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "61342404-835d-473e-a5dd-7ab529e99fd1",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-news-kiosk"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-cardboard-pile",
+      "path": "assets/library/environment/street/prop-cardboard-pile.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Flattened cardboard pile, 48×48.",
+      "extra": {
+        "pixellabObjectId": "9053683c-c169-4fca-a24e-7f702c293d8c",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-cardboard-pile-alt",
+      "path": "assets/library/environment/street/prop-cardboard-pile-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Flattened cardboard pile alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "e9a7023b-10cd-4471-bbf2-d438709ef137",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-cardboard-pile"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-water-cooler",
+      "path": "assets/library/environment/street/prop-water-cooler.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Office water cooler, 48×48. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "8f6a22e3-9ae4-47c1-b3b2-b48194da8f2f",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-water-cooler-alt",
+      "path": "assets/library/environment/street/prop-water-cooler-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Office water cooler alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "244db84d-28f8-49d1-915f-f81b141c6644",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-water-cooler"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "proj-grenade",
+      "path": "assets/library/environment/street/proj-grenade.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Grenade projectile icon, 32×32.",
+      "extra": {
+        "pixellabObjectId": "d60b75ce-42d5-4d17-8cb4-7c2e548dea7c",
+        "role": "winner",
+        "kind": "icon"
+      }
+    },
+    {
+      "key": "proj-grenade-alt",
+      "path": "assets/library/environment/street/proj-grenade-alt.png",
+      "type": "icon",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Grenade projectile icon alternate, 32×32.",
+      "extra": {
+        "pixellabObjectId": "c5e7619b-12fd-453f-877e-909b6704e5ff",
+        "role": "variant",
+        "kind": "icon",
+        "prefer": "proj-grenade"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-pallet",
+      "path": "assets/library/environment/street/prop-pallet.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Wooden shipping pallet, 64×64.",
+      "extra": {
+        "pixellabObjectId": "3302a1bc-ae9f-4153-92c2-2482051c4839",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-pallet-alt",
+      "path": "assets/library/environment/street/prop-pallet-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Wooden shipping pallet alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "0717476b-a826-4e96-b3e4-fcdadcad3f5f",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-pallet"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-tire-stack",
+      "path": "assets/library/environment/street/prop-tire-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Stacked tires, 64×64.",
+      "extra": {
+        "pixellabObjectId": "49236a9c-8405-4993-add6-deded1df4170",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-tire-stack-alt",
+      "path": "assets/library/environment/street/prop-tire-stack-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Stacked tires alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "a52fdaee-8db3-4389-ad58-d8e51e702ddd",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-tire-stack"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "weapon-smg",
+      "path": "assets/library/environment/street/weapon-smg.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "SMG weapon icon, 48×48.",
+      "extra": {
+        "pixellabObjectId": "72f0c99f-a291-4baf-a75d-f1cc8b16830a",
+        "role": "winner",
+        "kind": "icon"
+      }
+    },
+    {
+      "key": "weapon-smg-alt",
+      "path": "assets/library/environment/street/weapon-smg-alt.png",
+      "type": "icon",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "SMG weapon icon alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "02a0e004-70db-4db7-8b8d-634997d82ba7",
+        "role": "variant",
+        "kind": "icon",
+        "prefer": "weapon-smg"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-construction-barrier",
+      "path": "assets/library/environment/street/prop-construction-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Striped construction barrier, 64×64. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "4ad486d9-5a7c-446b-9d75-c9bad27823f6",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-construction-barrier-alt",
+      "path": "assets/library/environment/street/prop-construction-barrier-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Striped construction barrier alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "e052beb4-b446-47e4-9f46-665332a61abb",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-construction-barrier"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-gas-pump",
+      "path": "assets/library/environment/street/prop-gas-pump.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Gas station pump, 64×64.",
+      "extra": {
+        "pixellabObjectId": "3faa9813-8291-48b3-8ca0-ef9950ece12a",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-gas-pump-alt",
+      "path": "assets/library/environment/street/prop-gas-pump-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Gas station pump alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "f53ce633-ecbe-4d8f-9b55-c969691deb3a",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-gas-pump"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-payphone",
+      "path": "assets/library/environment/street/prop-payphone.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street payphone, 48×48.",
+      "extra": {
+        "pixellabObjectId": "645c9d0f-4fea-4342-a473-8599f5707722",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-payphone-alt",
+      "path": "assets/library/environment/street/prop-payphone-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street payphone alternate, 48×48.",
+      "extra": {
+        "pixellabObjectId": "27714b4d-9503-44ee-9fbd-b0e9686e1035",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-payphone"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-chain-gate",
+      "path": "assets/library/environment/street/prop-chain-gate.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Chain-link gate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "a4050266-c3d6-467a-a96f-71e43d56e743",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-chain-gate-alt",
+      "path": "assets/library/environment/street/prop-chain-gate-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Chain-link gate alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "4f848c13-deba-4922-bc77-1240dec81e3c",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-chain-gate"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-street-sign",
+      "path": "assets/library/environment/street/prop-street-sign.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street name sign, 48×48. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "6914b3e5-e84f-4fba-a9c3-f2f8a16ecc06",
+        "role": "winner",
+        "kind": "ground",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-street-sign-alt",
+      "path": "assets/library/environment/street/prop-street-sign-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Street name sign alternate, 48×48. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "8fb83d72-6138-4ff5-987a-85a5ef2c3f6a",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-street-sign",
+        "softFixed": "bottom-1px"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-phone-booth",
+      "path": "assets/library/environment/street/prop-phone-booth.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Phone booth, 64×64.",
+      "extra": {
+        "pixellabObjectId": "fae0039c-5959-4ed3-b607-062dca522cd1",
+        "role": "winner",
+        "kind": "ground"
+      }
+    },
+    {
+      "key": "prop-phone-booth-alt",
+      "path": "assets/library/environment/street/prop-phone-booth-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Phone booth alternate, 64×64.",
+      "extra": {
+        "pixellabObjectId": "a27648b9-c9c9-4512-9fd2-243cb30a4430",
+        "role": "variant",
+        "kind": "ground",
+        "prefer": "prop-phone-booth"
+      },
+      "tags": [
+        "alternate"
+      ]
+    }
+  ]
+}
