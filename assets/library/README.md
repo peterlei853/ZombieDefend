@@ -45,8 +45,12 @@ assets/library/
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
+├── tiles/path-{cobble,dirt,metal-grate}/  18×32×32 path tiles (burn99 gapfill)
+├── weapons/                  SMG + grenade sprites (burn99 gapfill, canonical)
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
+├── backgrounds/              burn99 gap plates: bg-rooftop, bg-subway(+alt), bg-parking-garage, bg-rainy-alley, bg-factory, bg-bridge-underpass
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
+│                                 burn99-gap: ui-hud-health, ui-pause-menu, ui-ammo-counter
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
 ```
@@ -72,9 +76,12 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
 | Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
+| Path tiles | `path-{cobble\|dirt\|metal-grate}-00` … `-17` | 32×32, origin (0.5, 0.5). Files stay `tile_0.png` … `tile_17.png` |
+| Weapons | `weapon-smg`, `weapon-smg-alt`, `proj-grenade`, `proj-grenade-alt` | canonical under `weapons/`. SMG 48×48, grenade 32×32, origin (0.5, 0.5) |
 | Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
+| burn99 plates | `bg-rooftop`, `bg-subway`, `bg-subway-alt`, `bg-parking-garage`, `bg-rainy-alley`, `bg-factory`, `bg-bridge-underpass` | 320×180, origin (0.5, 0.5). Do not replace campus plates |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
-| UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
+| UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel`, `ui-hud-health`, `ui-pause-menu`, `ui-ammo-counter` |
 
 The office worker lives in `office-worker-v2/` with keys `zombie-office-worker-v2-*` (84×84). The earlier 64×64 `zombie-office-*` group (`office-worker/`) was deprecated after v0.28 Accept and removed from the catalog. Delivery, chef, and nurse use `zombie-delivery-*`, `zombie-chef-*`, and `zombie-nurse-*` (nurse also has `zombie-nurse-attach`). The armored and bare phases are separate groups: `zombie-trashcan-*` → `zombie-trashcan-bare-*`, and `zombie-riot-*` → `zombie-riot-bare-*`. Within a key, the action uses `_` for compound words (`hurt_freeze`, `idle_itch`) and `-` between naming segments. Status reactions are always named `hurt_freeze`, `hurt_burn` and `hurt_shock`, plus per-monster extras (`hurt_spark`, `hurt_jiggle`, `hurt_terrified`, `hurt_loot`).
 
@@ -360,6 +367,49 @@ Stage already loads every non-pet library texture, so these two keys arrive with
   - Nine lane centres at y 190-674.
   - The HUD covers y 0-51.
   - The barricade runs from screen (858, 147) to (1280, 720).
+
+## burn99 gapfill (catalog only)
+
+These plates, path tiles, HUD pieces, and weapons are cataloged and not drawn by Stage. Origins are **(0.5, 0.5)**. Gold, saves, physics, and Pages stay as they are.
+
+**Backgrounds** (`backgrounds/`, group `burn99-gap`). Seven 320×180 stage plates. They do not replace the 1280×720 campus plates.
+
+| Key | Plate |
+|---|---|
+| `bg-rooftop` | Night rooftop |
+| `bg-subway` | Subway platform (winner) |
+| `bg-subway-alt` | Subway platform alternate. Prefer `bg-subway` |
+| `bg-parking-garage` | Parking garage |
+| `bg-rainy-alley` | Rainy alley |
+| `bg-factory` | Factory |
+| `bg-bridge-underpass` | Bridge underpass |
+
+**Path tiles** (`tiles/`, 18×32×32). Keys are `path-<slug>-00` … `path-<slug>-17`. Files stay `tile_0.png` … `tile_17.png`. No placement mask is assigned.
+
+| Group | PixelLab tileset |
+|---|---|
+| `path-cobble` | `0ff4e0b7-0197-465e-b6d4-9907db5b66ac` |
+| `path-dirt` | `bc133cb0-008a-4edd-89d1-1462afe36cd3` |
+| `path-metal-grate` | `6e5fb675-f67c-438c-bcf9-40bef1795065` |
+
+**UI** (group `ui/burn99-gap`). Not part of the v0.22 HUD kit wiring.
+
+| Key | File | Size |
+|---|---|---|
+| `ui-hud-health` | `ui/bars/ui-hud-health.png` | 384×192 |
+| `ui-pause-menu` | `ui/panels/ui-pause-menu.png` | 384×384 |
+| `ui-ammo-counter` | `ui/icons/ui-ammo-counter.png` | 192×192 |
+
+**Weapons** (group `environment/weapons`). Canonical files live under `weapons/`.
+
+| Key | Size | Role | PixelLab object |
+|---|---|---|---|
+| `weapon-smg` | 48×48 | winner | `72f0c99f-a291-4baf-a75d-f1cc8b16830a` |
+| `weapon-smg-alt` | 48×48 | variant | `02a0e004-70db-4db7-8b8d-634997d82ba7` |
+| `proj-grenade` | 32×32 | winner | `c5e7619b-12fd-453f-877e-909b6704e5ff` |
+| `proj-grenade-alt` | 32×32 | variant | `d60b75ce-42d5-4d17-8cb4-7c2e548dea7c` |
+
+If a street pack also lists `weapon-smg` or `proj-grenade` under `environment/street/`, keep this `weapons/` path. Alts prefer the winner key.
 
 ## Loading in Phaser 3
 

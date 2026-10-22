@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 659,
+    "total": 727,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -29,8 +29,8 @@
         "assets": 124
       },
       "ui": {
-        "groups": 1,
-        "assets": 51
+        "groups": 2,
+        "assets": 54
       },
       "zombies": {
         "groups": 15,
@@ -49,12 +49,12 @@
         "assets": 5
       },
       "environment": {
-        "groups": 2,
-        "assets": 20
+        "groups": 6,
+        "assets": 78
       },
       "backgrounds": {
-        "groups": 1,
-        "assets": 15
+        "groups": 2,
+        "assets": 22
       },
       "concepts": {
         "groups": 1,
@@ -62,11 +62,11 @@
       }
     },
     "byType": {
-      "background": 13,
+      "background": 20,
       "concept": 21,
       "fx": 93,
-      "icon": 75,
-      "image": 38,
+      "icon": 78,
+      "image": 96,
       "spritesheet": 419
     }
   },
@@ -1178,6 +1178,43 @@
         "ui-float-go-burst-hd",
         "ui-float-back-burst",
         "ui-float-back-burst-hd"
+      ]
+    },
+    {
+      "id": "ui/burn99-gap",
+      "category": "ui",
+      "group": "burn99-gap",
+      "title": "burn99 Gapfill HUD Pieces",
+      "titleZh": "burn99 補齊介面",
+      "description": "Health bar, pause panel, and ammo counter from the burn99 gapfill. Origin (0.5, 0.5). They sit beside the v0.22 HUD kit and are not wired into Stage. Catalog only.",
+      "manifest": "assets/library/ui/burn99-gap/manifest.json",
+      "dir": "assets/library/ui/burn99-gap",
+      "thumb": "assets/library/ui/bars/ui-hud-health.png",
+      "sheets": [
+        "assets/library/ui/panels/ui-pause-menu.png",
+        "assets/library/ui/icons/ui-ammo-counter.png"
+      ],
+      "extras": [],
+      "keyPrefix": "ui-",
+      "mainKey": "ui-hud-health",
+      "count": 3,
+      "frameSizes": [
+        "192x192",
+        "384x192",
+        "384x384"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "icon"
+      ],
+      "keys": [
+        "ui-hud-health",
+        "ui-pause-menu",
+        "ui-ammo-counter"
       ]
     },
     {
@@ -2547,6 +2584,224 @@
         "prop-flame-mount",
         "prop-flame-mount-hi-vis",
         "prop-flame-mount-front-alt"
+      ]
+    },
+    {
+      "id": "environment/path-cobble",
+      "category": "environment",
+      "group": "path-cobble",
+      "title": "Cobblestone Path Tiles",
+      "titleZh": "卵石路",
+      "description": "Worn cobblestone path, 18 tiles at 32×32. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Origin (0.5, 0.5). Catalog only. No Stage placement wire.",
+      "manifest": "assets/library/tiles/path-cobble/manifest.json",
+      "dir": "assets/library/tiles/path-cobble",
+      "thumb": "assets/library/previews/environment/path-cobble/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "path-cobble-",
+      "mainKey": "path-cobble-00",
+      "count": 18,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "path-cobble-00",
+        "path-cobble-01",
+        "path-cobble-02",
+        "path-cobble-03",
+        "path-cobble-04",
+        "path-cobble-05",
+        "path-cobble-06",
+        "path-cobble-07",
+        "path-cobble-08",
+        "path-cobble-09",
+        "path-cobble-10",
+        "path-cobble-11",
+        "path-cobble-12",
+        "path-cobble-13",
+        "path-cobble-14",
+        "path-cobble-15",
+        "path-cobble-16",
+        "path-cobble-17"
+      ]
+    },
+    {
+      "id": "environment/path-dirt",
+      "category": "environment",
+      "group": "path-dirt",
+      "title": "Dirt Path Tiles",
+      "titleZh": "泥土路",
+      "description": "Packed dirt path, 18 tiles at 32×32. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Origin (0.5, 0.5). Catalog only. No Stage placement wire.",
+      "manifest": "assets/library/tiles/path-dirt/manifest.json",
+      "dir": "assets/library/tiles/path-dirt",
+      "thumb": "assets/library/previews/environment/path-dirt/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "path-dirt-",
+      "mainKey": "path-dirt-00",
+      "count": 18,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "path-dirt-00",
+        "path-dirt-01",
+        "path-dirt-02",
+        "path-dirt-03",
+        "path-dirt-04",
+        "path-dirt-05",
+        "path-dirt-06",
+        "path-dirt-07",
+        "path-dirt-08",
+        "path-dirt-09",
+        "path-dirt-10",
+        "path-dirt-11",
+        "path-dirt-12",
+        "path-dirt-13",
+        "path-dirt-14",
+        "path-dirt-15",
+        "path-dirt-16",
+        "path-dirt-17"
+      ]
+    },
+    {
+      "id": "environment/path-metal-grate",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "title": "Metal Grate Path Tiles",
+      "titleZh": "金屬格柵路",
+      "description": "Metal grate path, 18 tiles at 32×32. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Origin (0.5, 0.5). Catalog only. No Stage placement wire.",
+      "manifest": "assets/library/tiles/path-metal-grate/manifest.json",
+      "dir": "assets/library/tiles/path-metal-grate",
+      "thumb": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "path-metal-grate-",
+      "mainKey": "path-metal-grate-00",
+      "count": 18,
+      "frameSizes": [
+        "32x32"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "path-metal-grate-00",
+        "path-metal-grate-01",
+        "path-metal-grate-02",
+        "path-metal-grate-03",
+        "path-metal-grate-04",
+        "path-metal-grate-05",
+        "path-metal-grate-06",
+        "path-metal-grate-07",
+        "path-metal-grate-08",
+        "path-metal-grate-09",
+        "path-metal-grate-10",
+        "path-metal-grate-11",
+        "path-metal-grate-12",
+        "path-metal-grate-13",
+        "path-metal-grate-14",
+        "path-metal-grate-15",
+        "path-metal-grate-16",
+        "path-metal-grate-17"
+      ]
+    },
+    {
+      "id": "environment/weapons",
+      "category": "environment",
+      "group": "weapons",
+      "title": "SMG and Grenade",
+      "titleZh": "衝鋒槍與手榴彈",
+      "description": "SMG sprites (48×48) and grenade projectiles (32×32) from the burn99 gapfill. Winners are weapon-smg and proj-grenade; alts are variants. Origin (0.5, 0.5). Canonical path is assets/library/weapons/. Catalog only. No Stage or physics wire.",
+      "manifest": "assets/library/weapons/manifest.json",
+      "dir": "assets/library/weapons",
+      "thumb": "assets/library/previews/environment/weapons/preview.gif",
+      "sheets": [],
+      "extras": [],
+      "keyPrefix": "",
+      "mainKey": "weapon-smg",
+      "count": 4,
+      "frameSizes": [
+        "32x32",
+        "48x48"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "image"
+      ],
+      "keys": [
+        "weapon-smg",
+        "weapon-smg-alt",
+        "proj-grenade",
+        "proj-grenade-alt"
+      ]
+    },
+    {
+      "id": "backgrounds/burn99-gap",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "title": "burn99 Gapfill Backgrounds",
+      "titleZh": "burn99 補齊背景",
+      "description": "Seven 320×180 stage plates from the burn99 gapfill: rooftop, subway (plus alt), parking garage, rainy alley, factory, and bridge underpass. Origin (0.5, 0.5). They do not replace the 1280×720 campus plates. Catalog only. No Stage backdrop wire.",
+      "manifest": "assets/library/backgrounds/burn99-gap/manifest.json",
+      "dir": "assets/library/backgrounds/burn99-gap",
+      "thumb": "assets/library/backgrounds/bg-rooftop.png",
+      "sheets": [
+        "assets/library/backgrounds/bg-subway.png",
+        "assets/library/backgrounds/bg-subway-alt.png",
+        "assets/library/backgrounds/bg-parking-garage.png",
+        "assets/library/backgrounds/bg-rainy-alley.png",
+        "assets/library/backgrounds/bg-factory.png",
+        "assets/library/backgrounds/bg-bridge-underpass.png"
+      ],
+      "extras": [],
+      "keyPrefix": "bg-",
+      "mainKey": "bg-rooftop",
+      "count": 7,
+      "frameSizes": [
+        "320x180"
+      ],
+      "framesRange": [
+        1,
+        1
+      ],
+      "fpsRange": null,
+      "types": [
+        "background"
+      ],
+      "keys": [
+        "bg-rooftop",
+        "bg-subway",
+        "bg-subway-alt",
+        "bg-parking-garage",
+        "bg-rainy-alley",
+        "bg-factory",
+        "bg-bridge-underpass"
       ]
     },
     {
@@ -14565,6 +14820,114 @@
       "action": "float-back-burst-hd"
     },
     {
+      "key": "ui-hud-health",
+      "category": "ui",
+      "group": "burn99-gap",
+      "path": "assets/library/ui/bars/ui-hud-health.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/bars/ui-hud-health.png",
+      "description": "Health HUD bar, 384×192. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap",
+        "icon"
+      ],
+      "extra": {
+        "pixellabUiId": "3a5cbf5d-d098-447e-a074-36b611830771",
+        "handoff": "burn99-gap"
+      },
+      "action": "hud-health"
+    },
+    {
+      "key": "ui-pause-menu",
+      "category": "ui",
+      "group": "burn99-gap",
+      "path": "assets/library/ui/panels/ui-pause-menu.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/bars/ui-hud-health.png",
+      "description": "Pause menu panel, 384×384. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap",
+        "icon"
+      ],
+      "extra": {
+        "pixellabUiId": "0cda34c9-efda-41ee-b26c-552b3d121ee3",
+        "handoff": "burn99-gap"
+      },
+      "action": "pause-menu"
+    },
+    {
+      "key": "ui-ammo-counter",
+      "category": "ui",
+      "group": "burn99-gap",
+      "path": "assets/library/ui/icons/ui-ammo-counter.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/ui/bars/ui-hud-health.png",
+      "description": "Ammo counter icon, 192×192. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap",
+        "icon"
+      ],
+      "extra": {
+        "pixellabUiId": "9ac37797-0e18-48df-ac01-f308b33c33cc",
+        "handoff": "burn99-gap"
+      },
+      "action": "ammo-counter"
+    },
+    {
       "key": "zombie-brute-walk",
       "category": "zombies",
       "group": "brute",
@@ -26418,6 +26781,2706 @@
         "prefer": "prop-flame-mount"
       },
       "action": "flame-mount-front-alt"
+    },
+    {
+      "key": "path-cobble-00",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 00, 32×32.",
+      "note": "burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 0,
+        "sourceFile": "tile_0.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "00"
+    },
+    {
+      "key": "path-cobble-01",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 01, 32×32.",
+      "note": "burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 1,
+        "sourceFile": "tile_1.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "01"
+    },
+    {
+      "key": "path-cobble-02",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 02, 32×32.",
+      "note": "burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 2,
+        "sourceFile": "tile_2.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "02"
+    },
+    {
+      "key": "path-cobble-03",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 03, 32×32.",
+      "note": "burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 3,
+        "sourceFile": "tile_3.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "03"
+    },
+    {
+      "key": "path-cobble-04",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 04, 32×32.",
+      "note": "burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 4,
+        "sourceFile": "tile_4.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "04"
+    },
+    {
+      "key": "path-cobble-05",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 05, 32×32.",
+      "note": "burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 5,
+        "sourceFile": "tile_5.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "05"
+    },
+    {
+      "key": "path-cobble-06",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 06, 32×32.",
+      "note": "burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 6,
+        "sourceFile": "tile_6.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "06"
+    },
+    {
+      "key": "path-cobble-07",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 07, 32×32.",
+      "note": "burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 7,
+        "sourceFile": "tile_7.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "07"
+    },
+    {
+      "key": "path-cobble-08",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 08, 32×32.",
+      "note": "burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 8,
+        "sourceFile": "tile_8.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "08"
+    },
+    {
+      "key": "path-cobble-09",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 09, 32×32.",
+      "note": "burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 9,
+        "sourceFile": "tile_9.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "09"
+    },
+    {
+      "key": "path-cobble-10",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 10, 32×32.",
+      "note": "burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 10,
+        "sourceFile": "tile_10.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "10"
+    },
+    {
+      "key": "path-cobble-11",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 11, 32×32.",
+      "note": "burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 11,
+        "sourceFile": "tile_11.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "11"
+    },
+    {
+      "key": "path-cobble-12",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 12, 32×32.",
+      "note": "burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 12,
+        "sourceFile": "tile_12.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "12"
+    },
+    {
+      "key": "path-cobble-13",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 13, 32×32.",
+      "note": "burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 13,
+        "sourceFile": "tile_13.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "13"
+    },
+    {
+      "key": "path-cobble-14",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 14, 32×32.",
+      "note": "burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 14,
+        "sourceFile": "tile_14.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "14"
+    },
+    {
+      "key": "path-cobble-15",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 15, 32×32.",
+      "note": "burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 15,
+        "sourceFile": "tile_15.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "15"
+    },
+    {
+      "key": "path-cobble-16",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 16, 32×32.",
+      "note": "burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 16,
+        "sourceFile": "tile_16.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "16"
+    },
+    {
+      "key": "path-cobble-17",
+      "category": "environment",
+      "group": "path-cobble",
+      "path": "assets/library/tiles/path-cobble/tile_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-cobble/preview.gif",
+      "description": "Worn cobblestone path tile 17, 32×32.",
+      "note": "burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-cobble",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 17,
+        "sourceFile": "tile_17.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "17"
+    },
+    {
+      "key": "path-dirt-00",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 00, 32×32.",
+      "note": "burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 0,
+        "sourceFile": "tile_0.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "00"
+    },
+    {
+      "key": "path-dirt-01",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 01, 32×32.",
+      "note": "burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 1,
+        "sourceFile": "tile_1.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "01"
+    },
+    {
+      "key": "path-dirt-02",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 02, 32×32.",
+      "note": "burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 2,
+        "sourceFile": "tile_2.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "02"
+    },
+    {
+      "key": "path-dirt-03",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 03, 32×32.",
+      "note": "burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 3,
+        "sourceFile": "tile_3.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "03"
+    },
+    {
+      "key": "path-dirt-04",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 04, 32×32.",
+      "note": "burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 4,
+        "sourceFile": "tile_4.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "04"
+    },
+    {
+      "key": "path-dirt-05",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 05, 32×32.",
+      "note": "burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 5,
+        "sourceFile": "tile_5.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "05"
+    },
+    {
+      "key": "path-dirt-06",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 06, 32×32.",
+      "note": "burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 6,
+        "sourceFile": "tile_6.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "06"
+    },
+    {
+      "key": "path-dirt-07",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 07, 32×32.",
+      "note": "burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 7,
+        "sourceFile": "tile_7.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "07"
+    },
+    {
+      "key": "path-dirt-08",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 08, 32×32.",
+      "note": "burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 8,
+        "sourceFile": "tile_8.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "08"
+    },
+    {
+      "key": "path-dirt-09",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 09, 32×32.",
+      "note": "burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 9,
+        "sourceFile": "tile_9.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "09"
+    },
+    {
+      "key": "path-dirt-10",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 10, 32×32.",
+      "note": "burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 10,
+        "sourceFile": "tile_10.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "10"
+    },
+    {
+      "key": "path-dirt-11",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 11, 32×32.",
+      "note": "burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 11,
+        "sourceFile": "tile_11.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "11"
+    },
+    {
+      "key": "path-dirt-12",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 12, 32×32.",
+      "note": "burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 12,
+        "sourceFile": "tile_12.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "12"
+    },
+    {
+      "key": "path-dirt-13",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 13, 32×32.",
+      "note": "burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 13,
+        "sourceFile": "tile_13.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "13"
+    },
+    {
+      "key": "path-dirt-14",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 14, 32×32.",
+      "note": "burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 14,
+        "sourceFile": "tile_14.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "14"
+    },
+    {
+      "key": "path-dirt-15",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 15, 32×32.",
+      "note": "burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 15,
+        "sourceFile": "tile_15.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "15"
+    },
+    {
+      "key": "path-dirt-16",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 16, 32×32.",
+      "note": "burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 16,
+        "sourceFile": "tile_16.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "16"
+    },
+    {
+      "key": "path-dirt-17",
+      "category": "environment",
+      "group": "path-dirt",
+      "path": "assets/library/tiles/path-dirt/tile_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-dirt/preview.gif",
+      "description": "Packed dirt path tile 17, 32×32.",
+      "note": "burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-dirt",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 17,
+        "sourceFile": "tile_17.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "17"
+    },
+    {
+      "key": "path-metal-grate-00",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 00, 32×32.",
+      "note": "burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 0,
+        "sourceFile": "tile_0.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "00"
+    },
+    {
+      "key": "path-metal-grate-01",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 01, 32×32.",
+      "note": "burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 1,
+        "sourceFile": "tile_1.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "01"
+    },
+    {
+      "key": "path-metal-grate-02",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 02, 32×32.",
+      "note": "burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 2,
+        "sourceFile": "tile_2.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "02"
+    },
+    {
+      "key": "path-metal-grate-03",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 03, 32×32.",
+      "note": "burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 3,
+        "sourceFile": "tile_3.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "03"
+    },
+    {
+      "key": "path-metal-grate-04",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 04, 32×32.",
+      "note": "burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 4,
+        "sourceFile": "tile_4.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "04"
+    },
+    {
+      "key": "path-metal-grate-05",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 05, 32×32.",
+      "note": "burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 5,
+        "sourceFile": "tile_5.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "05"
+    },
+    {
+      "key": "path-metal-grate-06",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 06, 32×32.",
+      "note": "burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 6,
+        "sourceFile": "tile_6.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "06"
+    },
+    {
+      "key": "path-metal-grate-07",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 07, 32×32.",
+      "note": "burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 7,
+        "sourceFile": "tile_7.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "07"
+    },
+    {
+      "key": "path-metal-grate-08",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 08, 32×32.",
+      "note": "burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 8,
+        "sourceFile": "tile_8.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "08"
+    },
+    {
+      "key": "path-metal-grate-09",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 09, 32×32.",
+      "note": "burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 9,
+        "sourceFile": "tile_9.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "09"
+    },
+    {
+      "key": "path-metal-grate-10",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 10, 32×32.",
+      "note": "burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 10,
+        "sourceFile": "tile_10.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "10"
+    },
+    {
+      "key": "path-metal-grate-11",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 11, 32×32.",
+      "note": "burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 11,
+        "sourceFile": "tile_11.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "11"
+    },
+    {
+      "key": "path-metal-grate-12",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 12, 32×32.",
+      "note": "burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 12,
+        "sourceFile": "tile_12.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "12"
+    },
+    {
+      "key": "path-metal-grate-13",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 13, 32×32.",
+      "note": "burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 13,
+        "sourceFile": "tile_13.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "13"
+    },
+    {
+      "key": "path-metal-grate-14",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 14, 32×32.",
+      "note": "burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 14,
+        "sourceFile": "tile_14.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "14"
+    },
+    {
+      "key": "path-metal-grate-15",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 15, 32×32.",
+      "note": "burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 15,
+        "sourceFile": "tile_15.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "15"
+    },
+    {
+      "key": "path-metal-grate-16",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 16, 32×32.",
+      "note": "burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 16,
+        "sourceFile": "tile_16.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "16"
+    },
+    {
+      "key": "path-metal-grate-17",
+      "category": "environment",
+      "group": "path-metal-grate",
+      "path": "assets/library/tiles/path-metal-grate/tile_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/path-metal-grate/preview.gif",
+      "description": "Metal grate path tile 17, 32×32.",
+      "note": "burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "environment",
+        "path-metal-grate",
+        "image",
+        "tileable",
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 17,
+        "sourceFile": "tile_17.png",
+        "handoff": "burn99-gap"
+      },
+      "action": "17"
+    },
+    {
+      "key": "weapon-smg",
+      "category": "environment",
+      "group": "weapons",
+      "path": "assets/library/weapons/weapon-smg.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/weapons/preview.gif",
+      "description": "SMG weapon sprite, 48×48. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "environment",
+        "weapons",
+        "image",
+        "burn99-gap",
+        "weapon"
+      ],
+      "extra": {
+        "pixellabObjectId": "72f0c99f-a291-4baf-a75d-f1cc8b16830a",
+        "role": "winner",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/weapon-smg.png"
+      },
+      "action": "weapon-smg"
+    },
+    {
+      "key": "weapon-smg-alt",
+      "category": "environment",
+      "group": "weapons",
+      "path": "assets/library/weapons/weapon-smg-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/weapons/preview.gif",
+      "description": "SMG weapon sprite alternate, 48×48. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "environment",
+        "weapons",
+        "image",
+        "burn99-gap",
+        "weapon",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "02a0e004-70db-4db7-8b8d-634997d82ba7",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/weapon-smg-alt.png",
+        "prefer": "weapon-smg"
+      },
+      "action": "weapon-smg-alt"
+    },
+    {
+      "key": "proj-grenade",
+      "category": "environment",
+      "group": "weapons",
+      "path": "assets/library/weapons/proj-grenade.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/weapons/preview.gif",
+      "description": "Grenade projectile, 32×32. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "environment",
+        "weapons",
+        "image",
+        "projectile",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabObjectId": "c5e7619b-12fd-453f-877e-909b6704e5ff",
+        "role": "winner",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/proj-grenade.png"
+      },
+      "action": "proj-grenade"
+    },
+    {
+      "key": "proj-grenade-alt",
+      "category": "environment",
+      "group": "weapons",
+      "path": "assets/library/weapons/proj-grenade-alt.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/environment/weapons/preview.gif",
+      "description": "Grenade projectile alternate, 32×32. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "environment",
+        "weapons",
+        "image",
+        "projectile",
+        "burn99-gap",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "d60b75ce-42d5-4d17-8cb4-7c2e548dea7c",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/proj-grenade-alt.png",
+        "prefer": "proj-grenade"
+      },
+      "action": "proj-grenade-alt"
+    },
+    {
+      "key": "bg-rooftop",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-rooftop.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Night rooftop stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:2e1f6955-9a3b-552f-8a97-0951243428d8",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "rooftop"
+    },
+    {
+      "key": "bg-subway",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-subway.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Subway platform stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:3f03e6d8-6ec8-57cb-bd8d-ff64d13627c2",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "subway"
+    },
+    {
+      "key": "bg-subway-alt",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-subway-alt.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Subway platform alternate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate",
+        "alternate"
+      ],
+      "extra": {
+        "galleryId": "gallery:ed4c8b8d-fa10-563d-b895-de68e267dc99",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "prefer": "bg-subway"
+      },
+      "action": "subway-alt"
+    },
+    {
+      "key": "bg-parking-garage",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-parking-garage.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Parking garage stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:aebcf9c5-884b-510e-abf8-5b2188db5b87",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "parking-garage"
+    },
+    {
+      "key": "bg-rainy-alley",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-rainy-alley.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Rainy alley stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:243ab49e-121a-5384-8a04-132990f1e13f",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "rainy-alley"
+    },
+    {
+      "key": "bg-factory",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-factory.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Factory stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:2ef615b7-521e-5dfb-a4ab-d700ceecc311",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "factory"
+    },
+    {
+      "key": "bg-bridge-underpass",
+      "category": "backgrounds",
+      "group": "burn99-gap",
+      "path": "assets/library/backgrounds/bg-bridge-underpass.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/backgrounds/bg-rooftop.png",
+      "description": "Bridge underpass stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "backgrounds",
+        "burn99-gap",
+        "background",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:b1dbbcdd-0105-535f-b48f-0bf1ef82b4fa",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      },
+      "action": "bridge-underpass"
     },
     {
       "key": "bg-campus-a",
