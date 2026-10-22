@@ -26,6 +26,8 @@ export const TRYOUT_FORMS = ['baby', 'young', 'ancient'];
 const TRYOUT_ACTIONS = new Set([
   'appearance',
   'claw',
+  // PIXELLAB_HOOK: Wave2 pet-*-baby-attack loads here beside claw. attack() still plays claw.
+  'attack',
   'skill',
   'skill-aoe',
   'idle',
@@ -337,6 +339,8 @@ export default class PetTryoutScene extends Phaser.Scene {
       this._status('Send the pet out, then attack.');
       return;
     }
+    // PIXELLAB_HOOK: pet-<id>-<form>-attack is cataloged for baby. This booth
+    // still plays claw until Gameplay swaps. Dragon baby attack is PASS_WARN.
     const key = tryoutStrip(this.petId, this.form, 'claw');
     if (!this.textures.exists(key)) {
       this._begin();

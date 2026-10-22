@@ -969,16 +969,16 @@ const officeHit = attackHost({
     tweens: { added: 0, killTweensOf() {}, add() { this.added += 1; } },
     anims: {
       exists: () => true,
-      get: () => ({ frames: new Array(17) }),
+      get: () => ({ frames: new Array(16) }),
     },
   },
 });
 officeHit._playAttackPunch();
-assert(officeHit.body.anims.currentAnim.key === 'zombie-office-worker-v2-hit02-normal', 'office alias hit02 still plays');
-officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02-normal' }, { index: 10 });
-assert(officeHit._attackBeat === false, 'office hit02 frame 10 is still the pull-back');
-officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02-normal' }, { index: 11 });
-assert(officeHit._attackBeat === true, 'office hit02 contacts on frame 11');
+assert(officeHit.body.anims.currentAnim.key === 'zombie-office-worker-v2-hit02', 'office bite plays the true hit02 strip');
+officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02' }, { index: 6 });
+assert(officeHit._attackBeat === false, 'office hit02 frame 6 is still the wind-up');
+officeHit.body._ons[0].fn({ key: 'zombie-office-worker-v2-hit02' }, { index: 7 });
+assert(officeHit._attackBeat === true, 'office hit02 contacts on the slash (Phaser index 7)');
 
 const plain = attackHost({ _isSprite: false, _animReady: () => false, skin: null });
 plain._playAttackPunch();
@@ -1094,8 +1094,9 @@ assert(pickProfessionDeathKey(chefRules, {}, readyAll, () => 0.99) === chefRules
 assert(pickProfessionAttackKey(chefRules, () => 0) === chefRules.hit01, 'attack roll under 0.5 is hit01');
 assert(pickProfessionAttackKey(chefRules, () => 0.499) === chefRules.hit01, 'attack roll just under 0.5 stays hit01');
 assert(pickProfessionAttackKey(chefRules, () => 0.5) === chefRules.hit02, 'attack roll at 0.5 is hit02');
-assert(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].hit02Alias === true, 'office hit02 stays the alias flag');
-assert(pickProfessionAttackKey(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].ruleAnims, () => 0.5).endsWith('-hit02-normal'), 'office still rolls hit02');
+assert(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].hit02Alias === false, 'office hit02 is no longer the pull-weapon alias');
+assert(pickProfessionAttackKey(ZOMBIE_LIBRARY_SKINS['office-worker-v2'].ruleAnims, () => 0.5) === 'zombie-office-worker-v2-hit02', 'office rolls the true hit02 strip');
+assert(ZOMBIE_LIBRARY_SKINS.chef.ruleAnims.dieNormal02 === 'zombie-chef-die2', 'chef normal02 slot plays the v2 faceplant');
 assert(professionLocomotionKey(chefRules, ZOMBIE_TIRE_HP) === chefRules.walkNormal, 'HP 30 plays walk-normal');
 assert(professionLocomotionKey(chefRules, ZOMBIE_TIRE_HP - 1) === chefRules.walkTire, 'HP 29 plays walk-tiremove');
 assert(tireMoveSpeed(40, 30) === 40, 'HP 30 keeps the wave speed');
@@ -1110,7 +1111,8 @@ for (const id of ['office-worker-v2', 'delivery', 'chef', 'nurse']) {
   assert(attackContactFrame(id, 8) === 6, `${id} legacy 8-frame bite stays index 6`);
 }
 assert(attackContactFrame('office-worker-v2', 17, 'zombie-office-worker-v2-hit01-normal') === 7, 'office hit01 impact is frame 7');
-assert(attackContactFrame('office-worker-v2', 17, 'zombie-office-worker-v2-hit02-normal') === 11, 'office hit02 impact is frame 11');
+assert(attackContactFrame('office-worker-v2', 16, 'zombie-office-worker-v2-hit02') === 7, 'office hit02 slash is Phaser index 7');
+assert(attackContactFrame('office-worker-v2', 17, 'zombie-office-worker-v2-hit02-normal') === 11, 'office pull-weapon alias impact stays frame 11');
 assert(attackContactFrame('chef', 16, 'zombie-chef-hit01-normal') === 8, 'chef hit01 impact is frame 8');
 assert(attackContactFrame('chef', 16, 'zombie-chef-hit02-normal') === 10, 'chef hit02 impact is frame 10');
 assert(attackContactFrame('delivery', 16, 'zombie-delivery-hit01-normal') === 8, 'delivery hit01 impact is frame 8');

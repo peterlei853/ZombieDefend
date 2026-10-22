@@ -4,7 +4,7 @@
   "group": "panda-baby",
   "title": "Momo / 墨墨 — Baby",
   "titleZh": "墨墨·幼年",
-  "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+  "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-panda-baby-attack` is a new 8×48 attack beside claw; `pet-panda-baby-hurt` is replaced at 8×48.",
   "source": {
     "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
     "sourceFolder": "pets/panda/baby"
@@ -32,7 +32,9 @@
       "pet-panda-baby-skill",
       "pet-panda-baby-sleep",
       "pet-panda-baby-claw",
-      "pet-panda-baby-skill-aoe"
+      "pet-panda-baby-attack",
+      "pet-panda-baby-skill-aoe",
+      "pet-panda-baby-hurt"
     ],
     "thumb": "assets/library/previews/pets/panda-baby.gif"
   },
@@ -96,14 +98,25 @@
       "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-hurt.png",
       "frameWidth": 48,
       "frameHeight": 48,
-      "frames": 4,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "origin": [
         0.5,
         1.0
       ],
-      "facing": "west"
+      "facing": "west",
+      "note": "v2.0 hurt remake. 8×48 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-panda-hurt (not generated).",
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
+        "pixellabAnimGroup": "ec527084-7d50-4402-9cbd-a82ec54ac83f",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "48x48",
+        "frames": 8,
+        "sfx": "sfx-pet-panda-hurt"
+      }
     },
     {
       "key": "pet-panda-baby-sleep-start",
@@ -166,6 +179,30 @@
       ],
       "facing": "west",
       "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw."
+    },
+    {
+      "key": "pet-panda-baby-attack",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-attack.png",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v1.0 basic attack. 8×48 west, origin (0.5, 1). Cataloged beside `pet-panda-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-panda-attack (not generated).",
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
+        "pixellabAnimGroup": "93c068a6-7402-4dd7-940d-96ed7158f7b2",
+        "cell": "48x48",
+        "sfx": "sfx-pet-panda-attack",
+        "alongside": "pet-panda-baby-claw",
+        "qc": "PASS"
+      }
     },
     {
       "key": "pet-panda-baby-skill-aoe",

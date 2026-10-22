@@ -83,6 +83,7 @@ export const PET_SKILL_SPECS = {
     form: 'young',
     name: 'Bamboo Sweep',
     castFrame: 3,
+    // PIXELLAB_HOOK: v2 strip is 8×84 (was 64×64). frameWidth/Height load from the asset index.
     frames: 8,
     frameRate: 12,
     spawnOffset: [-20, -20],

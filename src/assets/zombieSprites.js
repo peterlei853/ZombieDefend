@@ -122,14 +122,19 @@ function textureFrameCount(tex) {
 export const ZOMBIE_LIBRARY_SKINS = {
   /** 84px profession sheets. Missing walks fall back here, never the removed 64px office group.
    * v0.36.25 plays `ruleAnims`: walk-normal / walk-tiremove, hurt-normal,
-   * hit01 / hit02, and the death gates. Legacy walk/hurt/die1/die2 still
-   * share those sheets for any caller that names the old keys. */
+   * hit01 / hit02, and the death gates. Legacy walk/hurt/die1 still share
+   * those sheets. Office hit02 is the true 16-frame strip. Chef die2 is
+   * the v2 faceplant and is the normal02 slot. */
   'office-worker-v2': skin('office-worker-v2', 'zombie-office-worker-v2', {
     ruleAnims: true,
-    hit02Alias: true,
+    ruleAnimKeys: { hit02: 'zombie-office-worker-v2-hit02' },
   }),
   delivery: skin('delivery', 'zombie-delivery', { ruleAnims: true }),
-  chef: skin('chef', 'zombie-chef', { ruleAnims: true }),
+  chef: skin('chef', 'zombie-chef', {
+    ruleAnims: true,
+    // PIXELLAB_HOOK: normal02 slot plays the v2 faceplant, not the v1 kneel sheet.
+    ruleAnimKeys: { dieNormal02: 'zombie-chef-die2' },
+  }),
   nurse: skin('nurse', 'zombie-nurse', {
     attach: 'zombie-nurse-attach',
     ruleAnims: true,
@@ -215,14 +220,16 @@ export const PROFESSION_RULE_GROUPS = ['office-worker-v2', 'delivery', 'chef', '
 
 /**
  * PixelLab rule-anim keys for one profession prefix (`zombie-chef`).
- * v0.36.25 Stage plays these keys. Legacy walk / hurt / die1 / die2
- * still share Walk-normal, Hurt-normal, and Die-normal01/02.
- * Office hit02-normal is an ALIAS of the custom pull-weapon strip;
- * the key is still `hit02` and Stage still plays it.
+ * v0.36.25 Stage plays these keys. Legacy walk / hurt / die1
+ * still share Walk-normal, Hurt-normal, and Die-normal01.
+ * Office hit02 is `zombie-office-worker-v2-hit02` (16×84). The
+ * pull-weapon strip stays cataloged as `…-hit02-normal` and is not
+ * the bite. Chef's normal02 slot is `zombie-chef-die2` (v2 faceplant).
  * @param {string} prefix
+ * @param {Partial<ReturnType<typeof professionRuleAnims>>|null} [overrides]
  */
-export function professionRuleAnims(prefix) {
-  return {
+export function professionRuleAnims(prefix, overrides = null) {
+  const rules = {
     walkNormal: `${prefix}-walk-normal`,
     walkTire: `${prefix}-walk-tiremove`,
     hurtNormal: `${prefix}-hurt-normal`,
@@ -234,12 +241,14 @@ export function professionRuleAnims(prefix) {
     dieCriticalHit: `${prefix}-die-critical-hit`,
     dieDisappear: `${prefix}-die-disappear`,
   };
+  if (overrides) Object.assign(rules, overrides);
+  return rules;
 }
 
 /**
  * @param {string} id
  * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
- * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string, ruleAnims?: boolean, hit02Alias?: boolean }} [extra]
+ * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string, ruleAnims?: boolean, hit02Alias?: boolean, ruleAnimKeys?: object }} [extra]
  */
 function skin(id, prefix, extra = {}) {
   return {
@@ -249,15 +258,17 @@ function skin(id, prefix, extra = {}) {
     fallbackId: extra.fallbackId || null,
     /** Big body stays planted on a hurt shove. Brute only. */
     noHurtKnockback: extra.noHurtKnockback === true,
-    /** Office only: hit02-normal is the custom pull-weapon strip. */
+    /** True only when hit02 is still the pull-weapon ALIAS. Office is not. */
     hit02Alias: extra.hit02Alias === true,
-    ruleAnims: extra.ruleAnims ? professionRuleAnims(prefix) : null,
+    ruleAnims: extra.ruleAnims ? professionRuleAnims(prefix, extra.ruleAnimKeys || null) : null,
     actions: {
       walk: `${prefix}-walk`,
       run: `${prefix}-run`,
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
-      // PIXELLAB_HOOK: die1 and die2 share Die-normal01/02 on the four professions.
+      // PIXELLAB_HOOK: die1 shares Die-normal01. Chef die2 is the v2 faceplant
+      // and is the normal02 slot (`ruleAnimKeys.dieNormal02`). The other
+      // professions still share die2 with Die-normal02.
       // v0.36.25 death selection uses ruleAnims (crit / L3 / 10-45-45), not this list.
       deaths: extra.deaths || [`${prefix}-die1`, `${prefix}-die2`],
       // PIXELLAB_HOOK: `{prefix}-hurt`. Office Hurt-normal is 5 frames @ 10.
@@ -349,7 +360,7 @@ export function pickProfessionDeathKey(ruleAnims, cause, ready, rng = Math.rando
 
 /**
  * Barricade / player bite. `[0, 0.5)` is hit01, `[0.5, 1)` is hit02.
- * Office hit02 is the ALIAS pull-weapon key; this still returns it.
+ * Office hit02 is `zombie-office-worker-v2-hit02`, not the pull-weapon alias.
  * @param {{ hit01?: string, hit02?: string }|null|undefined} ruleAnims
  * @param {() => number} [rng]
  * @returns {string|null}

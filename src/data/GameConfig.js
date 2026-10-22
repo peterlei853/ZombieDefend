@@ -300,7 +300,10 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * hit01-normal / hit02-normal 50/50; contact is the impact cell on
  * that strip. Hurt plays hurt-normal and keeps the ×0.5 march.
  * HP ≥ 30 plays walk-normal. HP < 30 plays walk-tiremove at ×0.3.
- * Office hit02-normal is the ALIAS pull-weapon strip and still plays.
+ * Office hit02 plays `zombie-office-worker-v2-hit02` (16×84, slash on
+ * Phaser index 7). `hit02-normal` stays the pull-weapon alias and is
+ * not the bite. Chef's normal02 slot plays `zombie-chef-die2` (v2
+ * faceplant). Weights stay 10/45/45.
  * Crit is the existing pet crit roll. L3 is the charge tag already
  * on the water shot. Neither changes damage. Gold, saves, barricade
  * HP, spawn counts, and collision math stay put. The cell was already

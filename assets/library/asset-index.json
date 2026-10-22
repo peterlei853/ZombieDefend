@@ -18,7 +18,7 @@
     "concepts": "concept art only; not game-ready"
   },
   "counts": {
-    "total": 659,
+    "total": 677,
     "byCategory": {
       "hero": {
         "groups": 3,
@@ -26,15 +26,15 @@
       },
       "pets": {
         "groups": 17,
-        "assets": 124
+        "assets": 128
       },
       "ui": {
         "groups": 1,
-        "assets": 51
+        "assets": 64
       },
       "zombies": {
         "groups": 15,
-        "assets": 220
+        "assets": 221
       },
       "bosses": {
         "groups": 4,
@@ -65,9 +65,9 @@
       "background": 13,
       "concept": 21,
       "fx": 93,
-      "icon": 75,
+      "icon": 88,
       "image": 38,
-      "spritesheet": 419
+      "spritesheet": 424
     }
   },
   "groups": [
@@ -387,7 +387,7 @@
       "group": "dragon-baby",
       "title": "Jade / 翠火 — Baby",
       "titleZh": "翠火·幼年",
-      "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+      "description": "Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is a new 8×64 attack beside claw; `pet-dragon-baby-hurt` is replaced at 8×64.",
       "manifest": "assets/library/pets/dragon/baby/manifest.json",
       "dir": "assets/library/pets/dragon/baby",
       "thumb": "assets/library/previews/pets/dragon-baby.gif",
@@ -395,9 +395,10 @@
       "extras": [],
       "keyPrefix": "pet-dragon-baby-",
       "mainKey": "pet-dragon-baby-idle",
-      "count": 9,
+      "count": 10,
       "frameSizes": [
         "48x48",
+        "64x64",
         "64x96",
         "85x160",
         "96x96"
@@ -423,6 +424,7 @@
         "pet-dragon-baby-sleep",
         "pet-dragon-baby-appearance",
         "pet-dragon-baby-claw",
+        "pet-dragon-baby-attack",
         "pet-dragon-baby-skill-aoe"
       ]
     },
@@ -553,7 +555,7 @@
       "group": "lion-baby",
       "title": "Leo / 雷歐 — Baby",
       "titleZh": "雷歐·幼年",
-      "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+      "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-lion-baby-attack` is a new 8×52 attack beside claw; `pet-lion-baby-hurt` is replaced at 8×52.",
       "manifest": "assets/library/pets/lion/baby/manifest.json",
       "dir": "assets/library/pets/lion/baby",
       "thumb": "assets/library/previews/pets/lion-baby.gif",
@@ -561,9 +563,10 @@
       "extras": [],
       "keyPrefix": "pet-lion-baby-",
       "mainKey": "pet-lion-baby-idle",
-      "count": 9,
+      "count": 10,
       "frameSizes": [
         "48x48",
+        "52x52",
         "64x96",
         "85x160",
         "96x96"
@@ -589,6 +592,7 @@
         "pet-lion-baby-sleep",
         "pet-lion-baby-appearance",
         "pet-lion-baby-claw",
+        "pet-lion-baby-attack",
         "pet-lion-baby-skill-aoe"
       ]
     },
@@ -717,7 +721,7 @@
       "group": "panda-baby",
       "title": "Momo / 墨墨 — Baby",
       "titleZh": "墨墨·幼年",
-      "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+      "description": "Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-panda-baby-attack` is a new 8×48 attack beside claw; `pet-panda-baby-hurt` is replaced at 8×48.",
       "manifest": "assets/library/pets/panda/baby/manifest.json",
       "dir": "assets/library/pets/panda/baby",
       "thumb": "assets/library/previews/pets/panda-baby.gif",
@@ -725,7 +729,7 @@
       "extras": [],
       "keyPrefix": "pet-panda-baby-",
       "mainKey": "pet-panda-baby-idle",
-      "count": 9,
+      "count": 10,
       "frameSizes": [
         "48x48",
         "64x96",
@@ -753,6 +757,7 @@
         "pet-panda-baby-sleep",
         "pet-panda-baby-appearance",
         "pet-panda-baby-claw",
+        "pet-panda-baby-attack",
         "pet-panda-baby-skill-aoe"
       ]
     },
@@ -803,7 +808,7 @@
       "group": "panda-young",
       "title": "Momo / 墨墨 — Young",
       "titleZh": "墨墨·青年",
-      "description": "Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
+      "description": "Black Panda 墨熊貓. Young form (64px body). Skill strip v2.0 is 84×84 (was 64×64): bamboo staff wind-up then thrust, tip clear of the right edge. Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).",
       "manifest": "assets/library/pets/panda/young/manifest.json",
       "dir": "assets/library/pets/panda/young",
       "thumb": "assets/library/previews/pets/panda-young.gif",
@@ -815,6 +820,7 @@
       "frameSizes": [
         "64x64",
         "64x96",
+        "84x84",
         "85x160",
         "96x96"
       ],
@@ -883,7 +889,7 @@
       "group": "phoenix-baby",
       "title": "Azure / 藍羽 — Baby",
       "titleZh": "藍羽·幼年",
-      "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+      "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-phoenix-baby-attack` is a new 8×64 attack beside claw; `pet-phoenix-baby-hurt` is replaced at 8×64.",
       "manifest": "assets/library/pets/phoenix/baby/manifest.json",
       "dir": "assets/library/pets/phoenix/baby",
       "thumb": "assets/library/previews/pets/phoenix-baby.gif",
@@ -891,9 +897,10 @@
       "extras": [],
       "keyPrefix": "pet-phoenix-baby-",
       "mainKey": "pet-phoenix-baby-idle",
-      "count": 9,
+      "count": 10,
       "frameSizes": [
         "48x48",
+        "64x64",
         "64x96",
         "85x160",
         "96x96"
@@ -919,6 +926,7 @@
         "pet-phoenix-baby-sleep",
         "pet-phoenix-baby-appearance",
         "pet-phoenix-baby-claw",
+        "pet-phoenix-baby-attack",
         "pet-phoenix-baby-skill-aoe"
       ]
     },
@@ -1070,7 +1078,7 @@
       "group": "hud-kit",
       "title": "Unified UI Kit — HUD fonts, HP bars, panels, buttons, tip icons",
       "titleZh": "統一 UI 套件（字體／血條／面板／按鈕／提示圖示）",
-      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated.",
+      "description": "v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated. Wave3 credit-burn panels live under ui/wave3/ and are catalog-only: ui-hp-bar-player and ui-hp-bar-barricade stay the measured HUD frames; the 384×192 panels are ui-hp-bar-player-wave3 and ui-hp-bar-barricade-wave3. Shop, title, pause, auth, banners, tip, pet select, gold chip, crit number, and the weapons row are registered and not drawn.",
       "manifest": "assets/library/ui/manifest.json",
       "dir": "assets/library/ui",
       "thumb": "assets/library/previews/ui/hud-kit/preview.png",
@@ -1083,7 +1091,7 @@
       ],
       "keyPrefix": "ui-",
       "mainKey": "ui-hp-bar-player",
-      "count": 51,
+      "count": 64,
       "frameSizes": [
         "16x16",
         "32x32",
@@ -1107,13 +1115,18 @@
         "128x160",
         "160x64",
         "170x88",
+        "192x192",
         "212x78",
         "234x148",
         "248x36",
         "251x45",
         "256x64",
+        "256x192",
+        "384x192",
+        "384x384",
         "512x192",
         "512x288",
+        "512x384",
         "688x384",
         "1280x720"
       ],
@@ -1177,7 +1190,20 @@
         "ui-float-go-burst",
         "ui-float-go-burst-hd",
         "ui-float-back-burst",
-        "ui-float-back-burst-hd"
+        "ui-float-back-burst-hd",
+        "ui-hp-bar-player-wave3",
+        "ui-hp-bar-barricade-wave3",
+        "ui-dmg-crit-number",
+        "ui-panel-shop",
+        "ui-panel-title",
+        "ui-panel-pause",
+        "ui-panel-auth",
+        "ui-banner-stage-clear",
+        "ui-banner-stage-fail",
+        "ui-tip-prompt",
+        "ui-panel-pet-select",
+        "ui-hud-gold",
+        "ui-icon-weapons-row"
       ]
     },
     {
@@ -1243,7 +1269,7 @@
       "group": "chef",
       "title": "Chef Zombie",
       "titleZh": "大廚丧尸",
-      "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
+      "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, and die1 with Walk-normal, Hurt-normal (4), and Die-normal01. zombie-chef-die2 is v2.0 (8×84 faceplant with frying pan), distinct from the die1 kneel and from the v1.0 die-normal02 sheet. Stage's normal02 death slot plays zombie-chef-die2. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
       "manifest": "assets/library/enemies/zombies/chef/manifest.json",
       "dir": "assets/library/enemies/zombies/chef",
       "thumb": "assets/library/previews/zombies/chef/preview.gif",
@@ -1554,7 +1580,7 @@
       "group": "office-worker-v2",
       "title": "Office Worker Zombie v2",
       "titleZh": "上班族丧尸",
-      "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
+      "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. zombie-office-worker-v2-hit02 is the v1.0 true Hit02 (16×84, slash on cell 6). hit02-normal stays the v1.0 pull-weapon ALIAS (17×84) and is no longer the Stage bite. New keys: walk-tiremove (9), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
       "manifest": "assets/library/enemies/zombies/office-worker-v2/manifest.json",
       "dir": "assets/library/enemies/zombies/office-worker-v2",
       "thumb": "assets/library/previews/zombies/office-worker-v2/preview.gif",
@@ -1562,7 +1588,7 @@
       "extras": [],
       "keyPrefix": "zombie-office-worker-v2-",
       "mainKey": "zombie-office-worker-v2-walk-normal",
-      "count": 21,
+      "count": 22,
       "frameSizes": [
         "84x84"
       ],
@@ -1594,6 +1620,7 @@
         "zombie-office-worker-v2-hurt-normal",
         "zombie-office-worker-v2-hit01-normal",
         "zombie-office-worker-v2-hit02-normal",
+        "zombie-office-worker-v2-hit02",
         "zombie-office-worker-v2-die-normal01",
         "zombie-office-worker-v2-die-normal02",
         "zombie-office-worker-v2-die-deathwalk",
@@ -8604,9 +8631,9 @@
       "group": "dragon-baby",
       "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-hurt.png",
       "type": "spritesheet",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "loopFrom": null,
@@ -8621,8 +8648,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/pets/dragon-baby.gif",
-      "description": "Jade / 翠火 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
-      "note": null,
+      "description": "Jade / 翠火 — Baby: hurt — 8 frames 64x64 @ 10 fps, once.",
+      "note": "v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-dragon-hurt (not generated).",
       "tags": [
         "pets",
         "dragon-baby",
@@ -8630,7 +8657,16 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
+        "pixellabAnimGroup": "c3d43fd2-45f1-42c6-9456-5510c44a8726",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "64x64",
+        "frames": 8,
+        "sfx": "sfx-pet-dragon-hurt"
+      },
       "action": "hurt"
     },
     {
@@ -8767,6 +8803,49 @@
       ],
       "extra": null,
       "action": "claw"
+    },
+    {
+      "key": "pet-dragon-baby-attack",
+      "category": "pets",
+      "group": "dragon-baby",
+      "path": "assets/library/pets/dragon/baby/strips/pet-dragon-baby-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/dragon-baby.gif",
+      "description": "Jade / 翠火 — Baby: attack — 8 frames 64x64 @ 12 fps, once.",
+      "note": "v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. PASS_WARN: motion is subtle (centroid shift about 0.7). Stage should compare against pet-dragon-baby-claw and remake if the swipe does not read in play. SFX: sfx-pet-dragon-attack (not generated).",
+      "tags": [
+        "pets",
+        "dragon-baby",
+        "spritesheet",
+        "attack",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "9eb456f8-a97a-484e-8135-142d03f374f5",
+        "pixellabAnimGroup": "fe9b961c-c7f4-4bbc-8069-fcb1cb953053",
+        "cell": "64x64",
+        "sfx": "sfx-pet-dragon-attack",
+        "alongside": "pet-dragon-baby-claw",
+        "qc": "PASS_WARN"
+      },
+      "action": "attack"
     },
     {
       "key": "pet-dragon-baby-skill-aoe",
@@ -9510,9 +9589,9 @@
       "group": "lion-baby",
       "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-hurt.png",
       "type": "spritesheet",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 52,
+      "frameHeight": 52,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "loopFrom": null,
@@ -9527,8 +9606,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/pets/lion-baby.gif",
-      "description": "Leo / 雷歐 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
-      "note": null,
+      "description": "Leo / 雷歐 — Baby: hurt — 8 frames 52x52 @ 10 fps, once.",
+      "note": "v2.0 hurt remake. 8×52 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-lion-hurt (not generated).",
       "tags": [
         "pets",
         "lion-baby",
@@ -9536,7 +9615,16 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
+        "pixellabAnimGroup": "c1180225-3df2-4f8c-8ccb-b4825913aacc",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "52x52",
+        "frames": 8,
+        "sfx": "sfx-pet-lion-hurt"
+      },
       "action": "hurt"
     },
     {
@@ -9673,6 +9761,49 @@
       ],
       "extra": null,
       "action": "claw"
+    },
+    {
+      "key": "pet-lion-baby-attack",
+      "category": "pets",
+      "group": "lion-baby",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 52,
+      "frameHeight": 52,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/lion-baby.gif",
+      "description": "Leo / 雷歐 — Baby: attack — 8 frames 52x52 @ 12 fps, once.",
+      "note": "v1.0 basic attack. 8×52 west, origin (0.5, 1). Cataloged beside `pet-lion-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-lion-attack (not generated).",
+      "tags": [
+        "pets",
+        "lion-baby",
+        "spritesheet",
+        "attack",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
+        "pixellabAnimGroup": "451b616e-4c6d-42e2-86ce-ec46879ddaa8",
+        "cell": "52x52",
+        "sfx": "sfx-pet-lion-attack",
+        "alongside": "pet-lion-baby-claw",
+        "qc": "PASS"
+      },
+      "action": "attack"
     },
     {
       "key": "pet-lion-baby-skill-aoe",
@@ -10378,7 +10509,7 @@
       "type": "spritesheet",
       "frameWidth": 48,
       "frameHeight": 48,
-      "frames": 4,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "loopFrom": null,
@@ -10393,8 +10524,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/pets/panda-baby.gif",
-      "description": "Momo / 墨墨 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
-      "note": null,
+      "description": "Momo / 墨墨 — Baby: hurt — 8 frames 48x48 @ 10 fps, once.",
+      "note": "v2.0 hurt remake. 8×48 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-panda-hurt (not generated).",
       "tags": [
         "pets",
         "panda-baby",
@@ -10402,7 +10533,16 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
+        "pixellabAnimGroup": "ec527084-7d50-4402-9cbd-a82ec54ac83f",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "48x48",
+        "frames": 8,
+        "sfx": "sfx-pet-panda-hurt"
+      },
       "action": "hurt"
     },
     {
@@ -10539,6 +10679,49 @@
       ],
       "extra": null,
       "action": "claw"
+    },
+    {
+      "key": "pet-panda-baby-attack",
+      "category": "pets",
+      "group": "panda-baby",
+      "path": "assets/library/pets/panda/baby/strips/pet-panda-baby-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/panda-baby.gif",
+      "description": "Momo / 墨墨 — Baby: attack — 8 frames 48x48 @ 12 fps, once.",
+      "note": "v1.0 basic attack. 8×48 west, origin (0.5, 1). Cataloged beside `pet-panda-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-panda-attack (not generated).",
+      "tags": [
+        "pets",
+        "panda-baby",
+        "spritesheet",
+        "attack",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "12309c7e-9834-4d96-98c7-2fbde1e26dd9",
+        "pixellabAnimGroup": "93c068a6-7402-4dd7-940d-96ed7158f7b2",
+        "cell": "48x48",
+        "sfx": "sfx-pet-panda-attack",
+        "alongside": "pet-panda-baby-claw",
+        "qc": "PASS"
+      },
+      "action": "attack"
     },
     {
       "key": "pet-panda-baby-skill-aoe",
@@ -10822,8 +11005,8 @@
       "group": "panda-young",
       "path": "assets/library/pets/panda/young/strips/pet-panda-young-skill.png",
       "type": "spritesheet",
-      "frameWidth": 64,
-      "frameHeight": 64,
+      "frameWidth": 84,
+      "frameHeight": 84,
       "frames": 8,
       "frameRate": 12,
       "loop": false,
@@ -10841,8 +11024,8 @@
       ],
       "skill": "Bamboo Sweep",
       "preview": "assets/library/previews/pets/panda-young.gif",
-      "description": "Momo / 墨墨 — Young: skill — 8 frames 64x64 @ 12 fps, once. Skill: Bamboo Sweep.",
-      "note": null,
+      "description": "Momo / 墨墨 — Young: skill — 8 frames 84x84 @ 12 fps, once. Skill: Bamboo Sweep.",
+      "note": "v2.0 crop remake. 8×84 west, origin (0.5, 1). Canvas grew 64→84 so the staff tip is not cropped. Stage loads frameWidth/Height from this entry. SFX: sfx-pet-panda-skill (alias sfx-pet-panda-skill-staff; not generated).",
       "tags": [
         "pets",
         "panda-young",
@@ -10850,7 +11033,15 @@
         "once",
         "skill"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "55cdb271-abc0-4a66-882a-0e8cd317a102",
+        "pixellabAnimGroup": "1c5316c6-29a1-4766-b3bc-fc577174f2c1",
+        "previousCell": "64x64",
+        "cell": "84x84",
+        "sfx": "sfx-pet-panda-skill",
+        "sfxAlias": "sfx-pet-panda-skill-staff"
+      },
       "action": "skill"
     },
     {
@@ -11278,9 +11469,9 @@
       "group": "phoenix-baby",
       "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-hurt.png",
       "type": "spritesheet",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "loopFrom": null,
@@ -11295,8 +11486,8 @@
       "fx": null,
       "skill": null,
       "preview": "assets/library/previews/pets/phoenix-baby.gif",
-      "description": "Azure / 藍羽 — Baby: hurt — 4 frames 48x48 @ 10 fps, once.",
-      "note": null,
+      "description": "Azure / 藍羽 — Baby: hurt — 8 frames 64x64 @ 10 fps, once.",
+      "note": "v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-phoenix-hurt (not generated).",
       "tags": [
         "pets",
         "phoenix-baby",
@@ -11304,7 +11495,16 @@
         "hurt",
         "once"
       ],
-      "extra": null,
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
+        "pixellabAnimGroup": "4ee4127c-2fe2-44d8-8e83-ec3132a688f9",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "64x64",
+        "frames": 8,
+        "sfx": "sfx-pet-phoenix-hurt"
+      },
       "action": "hurt"
     },
     {
@@ -11441,6 +11641,49 @@
       ],
       "extra": null,
       "action": "claw"
+    },
+    {
+      "key": "pet-phoenix-baby-attack",
+      "category": "pets",
+      "group": "phoenix-baby",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-attack.png",
+      "type": "spritesheet",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/pets/phoenix-baby.gif",
+      "description": "Azure / 藍羽 — Baby: attack — 8 frames 64x64 @ 12 fps, once.",
+      "note": "v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-phoenix-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-phoenix-attack (not generated).",
+      "tags": [
+        "pets",
+        "phoenix-baby",
+        "spritesheet",
+        "attack",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
+        "pixellabAnimGroup": "afd20583-0990-4a32-9069-83f1db96988d",
+        "cell": "64x64",
+        "sfx": "sfx-pet-phoenix-attack",
+        "alongside": "pet-phoenix-baby-claw",
+        "qc": "PASS"
+      },
+      "action": "attack"
     },
     {
       "key": "pet-phoenix-baby-skill-aoe",
@@ -14565,6 +14808,551 @@
       "action": "float-back-burst-hd"
     },
     {
+      "key": "ui-hp-bar-player-wave3",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-hp-bar-player.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 credit-burn player HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-player` (248×36); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "note": "Wave3 credit-burn player HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-player` (248×36); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "142660f6-50ef-4f1f-8384-87994a4b4eac",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "stockKey": "ui-hp-bar-player",
+        "reason": "stock frame size does not match this panel; trough math stays on the stock key"
+      },
+      "action": "hp-bar-player-wave3"
+    },
+    {
+      "key": "ui-hp-bar-barricade-wave3",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-hp-bar-barricade.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 credit-burn barricade HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-barricade` (251×45); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "note": "Wave3 credit-burn barricade HP panel, 384×192. Catalog-only. Live Stage frame stays `ui-hp-bar-barricade` (251×45); the trough was measured on that sheet. Do not swap until Gameplay remeasures the trough. SFX: none.",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "91d15f8d-0a88-4e73-a9ec-125cf3d86182",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "stockKey": "ui-hp-bar-barricade",
+        "reason": "stock frame size does not match this panel; trough math stays on the stock key"
+      },
+      "action": "hp-bar-barricade-wave3"
+    },
+    {
+      "key": "ui-dmg-crit-number",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-dmg-crit-number.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 crit number pop, 192×192. Catalog-only. No stock key draws this yet. SFX: sfx-ui-crit (not generated).",
+      "note": "Wave3 crit number pop, 192×192. Catalog-only. No stock key draws this yet. SFX: sfx-ui-crit (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "ee189b25-2e13-4f6b-8109-a7f614e30ad0",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "192x192",
+        "sfx": "sfx-ui-crit"
+      },
+      "action": "dmg-crit-number"
+    },
+    {
+      "key": "ui-panel-shop",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-panel-shop.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 shop panel, 512×384. Catalog-only. No PIXELLAB_HOOK draws a shop panel yet. SFX: sfx-ui-shop (not generated).",
+      "note": "Wave3 shop panel, 512×384. Catalog-only. No PIXELLAB_HOOK draws a shop panel yet. SFX: sfx-ui-shop (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "e7a9c2d6-cd1a-44c4-878a-6e2426a46d72",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x384",
+        "sfx": "sfx-ui-shop"
+      },
+      "action": "panel-shop"
+    },
+    {
+      "key": "ui-panel-title",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-panel-title.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 288,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 title panel, 512×288. Catalog-only. TitleScene still draws `ui-title-bg-clean` (688×384). Sizes do not match, so this panel is not swapped in. SFX: none.",
+      "note": "Wave3 title panel, 512×288. Catalog-only. TitleScene still draws `ui-title-bg-clean` (688×384). Sizes do not match, so this panel is not swapped in. SFX: none.",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "823f5344-cf79-4d06-9fc5-6f611e76a846",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x288"
+      },
+      "action": "panel-title"
+    },
+    {
+      "key": "ui-panel-pause",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-panel-pause.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 pause panel, 384×384. Catalog-only. Live pause chrome is `ui-icon-pause`, not this panel. SFX: sfx-ui-pause (not generated).",
+      "note": "Wave3 pause panel, 384×384. Catalog-only. Live pause chrome is `ui-icon-pause`, not this panel. SFX: sfx-ui-pause (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "4c8ed53d-fe07-461f-ba1b-e9e49b1e08e6",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x384",
+        "sfx": "sfx-ui-pause"
+      },
+      "action": "panel-pause"
+    },
+    {
+      "key": "ui-panel-auth",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-panel-auth.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 auth panel, 384×384. Catalog-only. No PIXELLAB_HOOK maps an auth panel. SFX: sfx-ui-auth (not generated).",
+      "note": "Wave3 auth panel, 384×384. Catalog-only. No PIXELLAB_HOOK maps an auth panel. SFX: sfx-ui-auth (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "1969e07b-a284-41cb-8392-338b898aeaca",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x384",
+        "sfx": "sfx-ui-auth"
+      },
+      "action": "panel-auth"
+    },
+    {
+      "key": "ui-banner-stage-clear",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-banner-stage-clear.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 Stage Clear banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-clear (not generated).",
+      "note": "Wave3 Stage Clear banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-clear (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "fb72c83e-a409-45af-8693-55fba24889c4",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192",
+        "sfx": "sfx-ui-stage-clear"
+      },
+      "action": "banner-stage-clear"
+    },
+    {
+      "key": "ui-banner-stage-fail",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-banner-stage-fail.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 Stage Fail banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-fail (not generated).",
+      "note": "Wave3 Stage Fail banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-fail (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "b28bb1df-7896-41af-b708-3601c30f993b",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192",
+        "sfx": "sfx-ui-stage-fail"
+      },
+      "action": "banner-stage-fail"
+    },
+    {
+      "key": "ui-tip-prompt",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-tip-prompt.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 tip prompt, 384×192. Catalog-only. Tips still use `ui-toast-panel` / `ui-dialog-panel`. SFX: sfx-ui-tip (not generated).",
+      "note": "Wave3 tip prompt, 384×192. Catalog-only. Tips still use `ui-toast-panel` / `ui-dialog-panel`. SFX: sfx-ui-tip (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "20d9aac5-b55d-40b9-b146-3f59e28e6e91",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "384x192",
+        "sfx": "sfx-ui-tip"
+      },
+      "action": "tip-prompt"
+    },
+    {
+      "key": "ui-panel-pet-select",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-panel-pet-select.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 384,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 pet-select panel, 512×384. Catalog-only. PetSelectScene draws catalog heads on parchment buttons, not this panel. SFX: none.",
+      "note": "Wave3 pet-select panel, 512×384. Catalog-only. PetSelectScene draws catalog heads on parchment buttons, not this panel. SFX: none.",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "3f5b0716-1730-49b4-9edd-4b6c2c490353",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x384"
+      },
+      "action": "panel-pet-select"
+    },
+    {
+      "key": "ui-hud-gold",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-hud-gold.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 gold HUD chip, 256×192. Catalog-only. Gold text still uses `ui-font-hud-bold-atlas-gold`. SFX: sfx-ui-gold (not generated).",
+      "note": "Wave3 gold HUD chip, 256×192. Catalog-only. Gold text still uses `ui-font-hud-bold-atlas-gold`. SFX: sfx-ui-gold (not generated).",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "065d6fff-c432-44db-bc3d-663032e2585f",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "256x192",
+        "sfx": "sfx-ui-gold"
+      },
+      "action": "hud-gold"
+    },
+    {
+      "key": "ui-icon-weapons-row",
+      "category": "ui",
+      "group": "hud-kit",
+      "path": "assets/library/ui/wave3/ui-icon-weapons-row.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "frames": 1,
+      "frameRate": null,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": null,
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/ui/hud-kit/preview.png",
+      "description": "Wave3 weapons icon row, 512×192. Catalog-only. Weapon icons stay `icon-*` on the hero. SFX: none.",
+      "note": "Wave3 weapons icon row, 512×192. Catalog-only. Weapon icons stay `icon-*` on the hero. SFX: none.",
+      "tags": [
+        "ui",
+        "hud-kit",
+        "icon",
+        "wave3",
+        "catalog-only"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabUiAssetId": "5ddeb441-e9ec-415d-813d-99662fd1f722",
+        "wave": "wave3",
+        "catalogOnly": true,
+        "cell": "512x192"
+      },
+      "action": "icon-weapons-row"
+    },
+    {
       "key": "zombie-brute-walk",
       "category": "zombies",
       "group": "brute",
@@ -15294,7 +16082,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: die2 — 8 frames 84x84 @ 10 fps, once.",
-      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
+      "note": "v2.0 faceplant remake. 8×84 east, origin (0.5, 1). Distinct from die1 kneel and from the v1.0 `zombie-chef-die-normal02` sheet. Stage chef normal02 slot plays this key. SFX: sfx-zombie-chef-die2 (not generated).",
       "tags": [
         "zombies",
         "chef",
@@ -15303,11 +16091,14 @@
         "once"
       ],
       "extra": {
-        "version": "v1.0",
-        "sameSheetAs": "zombie-chef-die-normal02",
+        "version": "v2.0",
+        "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
+        "pixellabAnimGroup": "71c1382f-7381-4f36-abbf-0a33ba9556f4",
         "pixellabAnim": "Die-normal02",
         "status": "OK",
-        "cell": "84x84"
+        "cell": "84x84",
+        "sfx": "sfx-zombie-chef-die2",
+        "replaces": "v1.0 shared sheet with zombie-chef-die-normal02"
       },
       "action": "die2"
     },
@@ -15834,7 +16625,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/chef/preview.gif",
       "description": "Chef Zombie: die-normal02 — 8 frames 84x84 @ 10 fps, once.",
-      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02 kneel, kept on disk. Stage chef normal02 slot plays `zombie-chef-die2` (v2.0 faceplant) instead of this sheet.",
       "tags": [
         "zombies",
         "chef",
@@ -15845,9 +16636,9 @@
       "extra": {
         "version": "v1.0",
         "pixellabAnim": "Die-normal02",
-        "status": "OK",
+        "status": "KEPT",
         "cell": "84x84",
-        "legacyKey": "zombie-chef-die2"
+        "stagePlays": "zombie-chef-die2"
       },
       "action": "die-normal02"
     },
@@ -19670,7 +20461,7 @@
       "skill": null,
       "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
       "description": "Office Worker Zombie v2: hit02-normal — 17 frames 84x84 @ 10 fps, once.",
-      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal.",
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back. ALIAS kept on disk. Stage bites no longer play this key. The true Hit02 is `zombie-office-worker-v2-hit02` (16×84, slash on 0-based cell 6). SFX for the live bite: sfx-zombie-office-hit02 (not generated).",
       "tags": [
         "zombies",
         "office-worker-v2",
@@ -19681,9 +20472,55 @@
         "version": "v1.0",
         "pixellabAnim": "custom-Pull the weapon back (alias hit02)",
         "status": "ALIAS",
-        "cell": "84x84"
+        "cell": "84x84",
+        "supersededBy": "zombie-office-worker-v2-hit02"
       },
       "action": "hit02-normal"
+    },
+    {
+      "key": "zombie-office-worker-v2-hit02",
+      "category": "zombies",
+      "group": "office-worker-v2",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit02.png",
+      "type": "spritesheet",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "loopFrom": null,
+      "loopTo": null,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "anchors": null,
+      "timing": null,
+      "fx": null,
+      "skill": null,
+      "preview": "assets/library/previews/zombies/office-worker-v2/preview.gif",
+      "description": "Office Worker Zombie v2: hit02 — 16 frames 84x84 @ 10 fps, once.",
+      "note": "v1.0 true Hit02. 16×84 east, origin (0.5, 1). Wind-up, white slash on 0-based cell 6 (Phaser index 7), then recovery. Replaces the Stage bite that used the hit02-normal pull-weapon ALIAS. SFX: sfx-zombie-office-hit02 (not generated).",
+      "tags": [
+        "zombies",
+        "office-worker-v2",
+        "spritesheet",
+        "once"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "f8f0ce35-4b64-4807-a4ec-e7177aac1284",
+        "pixellabAnimGroup": "d6b99f46-f94f-4a02-8613-08135381fb01",
+        "pixellabAnim": "hit02",
+        "status": "OK",
+        "cell": "84x84",
+        "contactFrame": 6,
+        "phaserContactIndex": 7,
+        "sfx": "sfx-zombie-office-hit02",
+        "replacesAlias": "zombie-office-worker-v2-hit02-normal"
+      },
+      "action": "hit02"
     },
     {
       "key": "zombie-office-worker-v2-die-normal01",
