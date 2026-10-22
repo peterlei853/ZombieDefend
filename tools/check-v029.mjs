@@ -24,6 +24,7 @@ import { APP_VERSION, GAME_CONFIG, HERO_REFERENCE_DPS, petHurtDebugRequested, pe
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 import { barricadeXAtY, layoutPx, grassYMax, grassYMin } from '../src/systems/DepthView.js';
+import { petLaneDrop } from '../src/systems/footprints.js';
 import { barricadePressureHigh, pickPetCombatTarget } from '../src/systems/petTarget.js';
 import { PetCombat } from '../src/systems/PetCombat.js';
 import { ULT_MS } from '../src/systems/UltCutscene.js';
@@ -157,7 +158,7 @@ assert(combat.summon(0, player, [zombie]).ok, 'melee harness summons');
 const bodySprite = scene._sprites.find((sprite) => sprite.textureKey === 'pet-phoenix-baby-idle');
 const stand = layoutPx(pets.MELEE.RANGE * 0.7);
 bodySprite.x = zombie.x + stand;
-bodySprite.y = zombie.y;
+bodySprite.y = zombie.y + petLaneDrop(layoutPx(36), layoutPx(52));
 combat.update(400, [zombie], player);
 assert(combat.fxLog.includes('melee-fan'), 'melee impact draws the fan');
 assert(audio.melee === 1, 'melee hit plays pet-melee-hit');

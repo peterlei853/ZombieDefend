@@ -1,3 +1,4 @@
+import { GAME_CONFIG } from '../data/GameConfig.js';
 import { grassYMax, grassYMin, layoutPx } from './DepthView.js';
 
 /**
@@ -16,8 +17,13 @@ import { grassYMax, grassYMin, layoutPx } from './DepthView.js';
  * the other body takes the full push.
  */
 
-/** Share of the zombie sprite, measured from the crown, that is head and torso. */
-export const TORSO_FROM_TOP = 0.64;
+/**
+ * Share of the zombie sprite, measured from the crown, that pets must not
+ * cover. 0.72 leaves the transparent foot padding plus the legs, and keeps
+ * the stand inside the melee lane. A circle at the soles was letting the
+ * pet sit on the chest.
+ */
+export const TORSO_FROM_TOP = 0.72;
 
 /** Cell (or display, if the cell is unknown) under this box cannot march while hurt. */
 export const HURT_LOCK_CELL = 100;
@@ -56,15 +62,21 @@ export function smallHurtLocksMove(monster) {
   return cell.w < HURT_LOCK_CELL && cell.h < HURT_LOCK_CELL;
 }
 
+/** Furthest a pet's feet may sit below a zombie's feet and still melee. */
+export function meleeLaneCap() {
+  return layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
+}
+
 /**
  * How far below a zombie's feet a pet's feet must sit so the pet sprite
  * stays under the head and torso. `maxDrop` caps the lane so melee still
- * reaches (canvas px). The uncapped drop is returned when maxDrop is omitted.
+ * reaches (canvas px). Defaults to the melee lane. The uncapped drop is
+ * returned when maxDrop is 0.
  * @param {number} petHeight
  * @param {number} zombieHeight
  * @param {number} [maxDrop]
  */
-export function petLaneDrop(petHeight, zombieHeight, maxDrop) {
+export function petLaneDrop(petHeight, zombieHeight, maxDrop = meleeLaneCap()) {
   const petH = Math.max(layoutPx(28), Number(petHeight) || 0);
   const zH = Math.max(layoutPx(48), Number(zombieHeight) || 0);
   const hipsFromFeet = zH * (1 - TORSO_FROM_TOP);
@@ -157,22 +169,33 @@ function pushAabb(a, b) {
 }
 
 /**
- * Drop the pet below the zombie's head and torso. If the grass clamp
- * refuses that drop, slide the pet to the barricade side of the body.
+ * Drop the pet below the zombie's head and torso when the two are on the
+ * same lane. A pet crossing the field toward its stand is left alone, so
+ * a far torso cannot pin it to the grass edge. If the grass refuses the
+ * drop, slide out on the shorter side instead of throwing the pet across
+ * the whole sprite.
  * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => boolean|void }} pet
  * @param {{ x: number, y: number, shift: (dx: number, dy: number) => boolean|void }} zombie
  */
 function pushPetOffTorso(pet, zombie) {
-  const pad = layoutPx(6);
+  if (Math.abs(pet.y - zombie.y) > layoutPx(40)) return;
+  // No extra pad here. The stand already sits layoutPx(8) below the torso,
+  // and a pad on this test was shoving the pet sideways out of melee.
   const petBox = spriteBox(pet);
-  const upper = upperBody(zombie, pad);
+  const upper = upperBody(zombie, 0);
   const overlapX = Math.min(petBox.r, upper.r) - Math.max(petBox.l, upper.l);
   const overlapY = Math.min(petBox.b, upper.b) - Math.max(petBox.t, upper.t);
   if (overlapX <= 0 || overlapY <= 0) return;
-  const drop = upper.b - petBox.t;
+  const room = zombie.y + meleeLaneCap() - pet.y;
+  const drop = Math.min(upper.b - petBox.t, room);
   if (drop > 0.5 && nudge(pet, 0, drop)) return;
-  const dx = upper.r - petBox.l;
-  if (dx > 0.5 && !nudge(pet, dx, 0)) nudge(zombie, -dx, 0);
+  const exitRight = upper.r - petBox.l;
+  const exitLeft = petBox.r - upper.l;
+  if (exitLeft <= exitRight) {
+    if (exitLeft > 0.5 && !nudge(pet, -exitLeft, 0)) nudge(zombie, exitLeft, 0);
+    return;
+  }
+  if (exitRight > 0.5 && !nudge(pet, exitRight, 0)) nudge(zombie, -exitRight, 0);
 }
 
 /**

@@ -169,6 +169,23 @@ separateFootprints([chef, phoenix], { rounds: 4 });
 const torsoBottom = (chef.y - chef.displayHeight) + chef.displayHeight * TORSO_FROM_TOP;
 const petTop = phoenix.y - phoenix.displayHeight;
 assert(petTop >= torsoBottom - 0.5, `pet sprite stays under the torso (${petTop} vs ${torsoBottom})`);
+const farChef = {
+  x: 200,
+  y: 400,
+  displayWidth: 120,
+  displayHeight: 126,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+const farPet = {
+  kind: 'pet',
+  x: 247,
+  y: 620,
+  displayWidth: 72,
+  displayHeight: 72,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+separateFootprints([farChef, farPet], { rounds: 4 });
+assert(farPet.x === 247 && farPet.y === 620, 'a pet crossing another lane is not pinned to the grass');
 const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
 const drop = petLaneDrop(72, 126, meleeCap);
 assert(drop <= meleeCap && drop >= layoutPx(18), 'lane drop stays inside the melee window');

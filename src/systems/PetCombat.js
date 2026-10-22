@@ -1796,8 +1796,7 @@ export class PetCombat {
     let x = threat.x + stand;
     const petH = Math.abs(actor.sprite?.displayHeight) || layoutPx(36);
     const zH = Math.abs(threat.body?.displayHeight) || threat.footprintHeight?.() || layoutPx(52);
-    const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
-    const y = clampGrass(threat.y + petLaneDrop(petH, zH, meleeCap));
+    const y = clampGrass(threat.y + petLaneDrop(petH, zH));
     const minX = threat.x + layoutPx(14);
     if (x < minX) x = minX;
     if (player && Number.isFinite(player.x)) {
