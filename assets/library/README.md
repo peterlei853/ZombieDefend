@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade and the v0.31 water mount), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade, the v0.31 water mount, and the burn99 street fill), the campus battle background plus two sewer plates, asphalt path tiles, and chibi concept art.
 
 **Start here:**
 
@@ -45,13 +45,20 @@ assets/library/
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
+├── environment/street/       burn99 street fill: barriers, grate, locker, kiosk, phone booth, gas pump, plus SMG and grenade icons
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
+├── backgrounds/              bg-sewer-tunnel.png, bg-sewer-canal.png + manifest.json (group sewer)
+├── tiles/path-asphalt/       18 cracked gray asphalt path tiles, 32×32 + manifest.json
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
 ```
 
 `previews/` is for documentation only. The game never loads it.
+
+### Street fill burn99 (catalog only)
+
+`environment/street/` holds 38 urban props (construction barrier, jersey barrier, street grate, metal locker, news kiosk, phone booth, gas pump, and the rest of the wave) plus SMG and grenade icons. `backgrounds/bg-sewer-tunnel.png` and `bg-sewer-canal.png` are 320×180 sewer plates. `tiles/path-asphalt/` is 18 cracked gray asphalt tiles at 32×32 (`path-asphalt-00`–`17`, PixelLab tileset `3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed`). QC is 41/41. Ground props use origin `(0.5, 1.0)`. The grate, SMG, grenade, sewer plates, and asphalt tiles use `(0.5, 0.5)`. Soft-fixed bottom −1px: `prop-metal-locker`, `prop-metal-locker-alt`, `prop-water-cooler`, `prop-construction-barrier`, `prop-street-sign`, `prop-street-sign-alt`. No Stage, physics, Gameplay, gold, or save wire.
 
 ## Naming convention (keys)
 
@@ -71,8 +78,8 @@ Each texture key equals its file name without `.png`, except `vfx-telegraph-ring
 | Bullet hits | `fx-hit-fire`, `fx-hit-water` | 4×24 @ 8 fps, burst left → right |
 | v0.26 VFX | `exp-orb`, `vfx-evolve-star(s-*)`, `vfx-telegraph-*`, `vfx-aoe-*`, `vfx-ult-*` | `vfx-telegraph-ring` file is `vfx-telegraph-ring-64.png` |
 | Pickups | original key kept | `zombie-clown-coin`, `zombie-clown-gem-red`, `zombie-clown-loot-pile` |
-| Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Accents: cyan, amber, magenta, yellow, ice, orange |
-| Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp` | `bg-campus-night-mid` |
+| Environment | `barricade-post`, `prop-{water,sling,bubble,lightning,frost,flame}-mount*`, street fill (`prop-construction-barrier`, `prop-jersey-barrier`, `prop-street-grate`, `weapon-smg`, `proj-grenade`, …), `path-asphalt-00`–`17` | 32×64 posts, origin (0.5, 1.0); mounts 64×64, origin (0.5, 0.9375). Street ground props origin (0.5, 1.0); grate, SMG, and grenade origin (0.5, 0.5). Asphalt tiles 32×32, origin (0.5, 0.5). Catalog only |
+| Backgrounds | `bg-campus-<a\|b\|c>`, `bg-campus[-night]-<far\|ground\|mid\|full\|full-bleed>`, `bg-campus-fire`, `bg-campus-lamp`, `bg-sewer-tunnel`, `bg-sewer-canal` | `bg-campus-night-mid`. Sewer plates are 320×180, origin (0.5, 0.5), and do not replace the campus plates |
 | Concepts | `concept-chibi-<NN>-<slug>` | `concept-chibi-12-jiangshi` |
 | UI | `ui-*` | `ui-hp-bar-player`, `ui-font-hud-bold-atlas-outlined`, `ui-toast-panel` |
 

@@ -1,0 +1,467 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-asphalt",
+  "title": "Asphalt Path Tiles",
+  "titleZh": "瀝青路面",
+  "description": "Cracked gray asphalt road path over dark campus dirt, 18 tiles at 32×32. PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No Stage placement wire.",
+  "source": {
+    "tool": "pixellab list_tiles_pro",
+    "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+    "kind": "paths",
+    "note": "burn99 asphalt path. 18 tiles, 32×32, origin (0.5, 0.5). QC PASS.",
+    "handoff": "/workspace/zd-fill-props-burn99/"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "path-asphalt-00",
+      "path-asphalt-01",
+      "path-asphalt-02",
+      "path-asphalt-03",
+      "path-asphalt-04",
+      "path-asphalt-05",
+      "path-asphalt-06",
+      "path-asphalt-07",
+      "path-asphalt-08",
+      "path-asphalt-09",
+      "path-asphalt-10",
+      "path-asphalt-11",
+      "path-asphalt-12",
+      "path-asphalt-13",
+      "path-asphalt-14",
+      "path-asphalt-15",
+      "path-asphalt-16",
+      "path-asphalt-17"
+    ],
+    "thumb": "assets/library/previews/environment/path-asphalt/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "path-asphalt-00",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 00, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 0. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 0,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_0.png"
+      }
+    },
+    {
+      "key": "path-asphalt-01",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 01, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 1. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 1,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_1.png"
+      }
+    },
+    {
+      "key": "path-asphalt-02",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 02, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 2. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 2,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_2.png"
+      }
+    },
+    {
+      "key": "path-asphalt-03",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 03, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 3. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 3,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_3.png"
+      }
+    },
+    {
+      "key": "path-asphalt-04",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 04, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 4. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 4,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_4.png"
+      }
+    },
+    {
+      "key": "path-asphalt-05",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 05, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 5. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 5,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_5.png"
+      }
+    },
+    {
+      "key": "path-asphalt-06",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 06, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 6. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 6,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_6.png"
+      }
+    },
+    {
+      "key": "path-asphalt-07",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 07, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 7. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 7,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_7.png"
+      }
+    },
+    {
+      "key": "path-asphalt-08",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 08, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 8. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 8,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_8.png"
+      }
+    },
+    {
+      "key": "path-asphalt-09",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 09, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 9. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 9,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_9.png"
+      }
+    },
+    {
+      "key": "path-asphalt-10",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 10, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 10. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 10,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_10.png"
+      }
+    },
+    {
+      "key": "path-asphalt-11",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 11, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 11. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 11,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_11.png"
+      }
+    },
+    {
+      "key": "path-asphalt-12",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 12, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 12. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 12,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_12.png"
+      }
+    },
+    {
+      "key": "path-asphalt-13",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 13, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 13. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 13,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_13.png"
+      }
+    },
+    {
+      "key": "path-asphalt-14",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 14, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 14. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 14,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_14.png"
+      }
+    },
+    {
+      "key": "path-asphalt-15",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 15, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 15. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 15,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_15.png"
+      }
+    },
+    {
+      "key": "path-asphalt-16",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 16, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 16. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 16,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_16.png"
+      }
+    },
+    {
+      "key": "path-asphalt-17",
+      "path": "assets/library/tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Cracked gray asphalt path tile 17, 32×32, over dark campus dirt.",
+      "note": "burn99 path tile index 17. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 17,
+        "sourceFile": "cracked_gray_asphalt_road_path_over_dark_campus_di_17.png"
+      }
+    }
+  ]
+}

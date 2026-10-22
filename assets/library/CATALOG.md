@@ -12,10 +12,10 @@
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 20 |
-| [Backgrounds](#backgrounds) | 1 | 15 |
+| [Environment](#environment) | 4 | 76 |
+| [Backgrounds](#backgrounds) | 2 | 17 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **57** | **717** |
 
 <a id="hero"></a>
 ## Hero
@@ -1248,8 +1248,100 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
 
+### Street Fill Props (burn99) (街道填充道具（burn99）)
+
+<img src="previews/environment/street/preview.gif" alt="street preview" height="140">
+
+Catalog-only burn99 street fillers: construction barrier, jersey barrier, grate, locker, kiosk, phone booth, gas pump, and the other urban props, plus SMG and grenade icons. QC 41/41. No Stage, physics, or Gameplay wire.
+
+- group `street` · 38 assets · frame 32x32, 48x48, 64x64 · manifest [environment/street/manifest.json](environment/street/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `prop-street-grate` | [prop-street-grate.png](environment/street/prop-street-grate.png) | 48x48 | image | Flat iron street grate, 48×48. |
+| `prop-street-grate-alt` | [prop-street-grate-alt.png](environment/street/prop-street-grate-alt.png) | 48x48 | image | Flat iron street grate alternate, 48×48. |
+| `prop-fire-extinguisher` | [prop-fire-extinguisher.png](environment/street/prop-fire-extinguisher.png) | 48x48 | image | Red fire extinguisher, 48×48. |
+| `prop-fire-extinguisher-alt` | [prop-fire-extinguisher-alt.png](environment/street/prop-fire-extinguisher-alt.png) | 48x48 | image | Red fire extinguisher alternate, 48×48. |
+| `prop-crate-stack` | [prop-crate-stack.png](environment/street/prop-crate-stack.png) | 64x64 | image | Stacked wooden crates, 64×64. |
+| `prop-crate-stack-alt` | [prop-crate-stack-alt.png](environment/street/prop-crate-stack-alt.png) | 64x64 | image | Stacked wooden crates alternate, 64×64. |
+| `prop-metal-locker` | [prop-metal-locker.png](environment/street/prop-metal-locker.png) | 64x64 | image | Metal locker cabinet, 64×64. Soft-fixed bottom edge. |
+| `prop-metal-locker-alt` | [prop-metal-locker-alt.png](environment/street/prop-metal-locker-alt.png) | 64x64 | image | Metal locker cabinet alternate, 64×64. Soft-fixed bottom edge. |
+| `prop-traffic-barrel` | [prop-traffic-barrel.png](environment/street/prop-traffic-barrel.png) | 48x48 | image | Orange traffic barrel, 48×48. |
+| `prop-traffic-barrel-alt` | [prop-traffic-barrel-alt.png](environment/street/prop-traffic-barrel-alt.png) | 48x48 | image | Orange traffic barrel alternate, 48×48. |
+| `prop-jersey-barrier` | [prop-jersey-barrier.png](environment/street/prop-jersey-barrier.png) | 64x64 | image | Concrete jersey barrier, 64×64. |
+| `prop-jersey-barrier-alt` | [prop-jersey-barrier-alt.png](environment/street/prop-jersey-barrier-alt.png) | 64x64 | image | Concrete jersey barrier alternate, 64×64. |
+| `prop-news-kiosk` | [prop-news-kiosk.png](environment/street/prop-news-kiosk.png) | 64x64 | image | Street news kiosk, 64×64. |
+| `prop-news-kiosk-alt` | [prop-news-kiosk-alt.png](environment/street/prop-news-kiosk-alt.png) | 64x64 | image | Street news kiosk alternate, 64×64. |
+| `prop-cardboard-pile` | [prop-cardboard-pile.png](environment/street/prop-cardboard-pile.png) | 48x48 | image | Flattened cardboard pile, 48×48. |
+| `prop-cardboard-pile-alt` | [prop-cardboard-pile-alt.png](environment/street/prop-cardboard-pile-alt.png) | 48x48 | image | Flattened cardboard pile alternate, 48×48. |
+| `prop-water-cooler` | [prop-water-cooler.png](environment/street/prop-water-cooler.png) | 48x48 | image | Office water cooler, 48×48. Soft-fixed bottom edge. |
+| `prop-water-cooler-alt` | [prop-water-cooler-alt.png](environment/street/prop-water-cooler-alt.png) | 48x48 | image | Office water cooler alternate, 48×48. |
+| `proj-grenade` | [proj-grenade.png](environment/street/proj-grenade.png) | 32x32 | icon | Grenade projectile icon, 32×32. |
+| `proj-grenade-alt` | [proj-grenade-alt.png](environment/street/proj-grenade-alt.png) | 32x32 | icon | Grenade projectile icon alternate, 32×32. |
+| `prop-pallet` | [prop-pallet.png](environment/street/prop-pallet.png) | 64x64 | image | Wooden shipping pallet, 64×64. |
+| `prop-pallet-alt` | [prop-pallet-alt.png](environment/street/prop-pallet-alt.png) | 64x64 | image | Wooden shipping pallet alternate, 64×64. |
+| `prop-tire-stack` | [prop-tire-stack.png](environment/street/prop-tire-stack.png) | 64x64 | image | Stacked tires, 64×64. |
+| `prop-tire-stack-alt` | [prop-tire-stack-alt.png](environment/street/prop-tire-stack-alt.png) | 64x64 | image | Stacked tires alternate, 64×64. |
+| `weapon-smg` | [weapon-smg.png](environment/street/weapon-smg.png) | 48x48 | icon | SMG weapon icon, 48×48. |
+| `weapon-smg-alt` | [weapon-smg-alt.png](environment/street/weapon-smg-alt.png) | 48x48 | icon | SMG weapon icon alternate, 48×48. |
+| `prop-construction-barrier` | [prop-construction-barrier.png](environment/street/prop-construction-barrier.png) | 64x64 | image | Striped construction barrier, 64×64. Soft-fixed bottom edge. |
+| `prop-construction-barrier-alt` | [prop-construction-barrier-alt.png](environment/street/prop-construction-barrier-alt.png) | 64x64 | image | Striped construction barrier alternate, 64×64. |
+| `prop-gas-pump` | [prop-gas-pump.png](environment/street/prop-gas-pump.png) | 64x64 | image | Gas station pump, 64×64. |
+| `prop-gas-pump-alt` | [prop-gas-pump-alt.png](environment/street/prop-gas-pump-alt.png) | 64x64 | image | Gas station pump alternate, 64×64. |
+| `prop-payphone` | [prop-payphone.png](environment/street/prop-payphone.png) | 48x48 | image | Street payphone, 48×48. |
+| `prop-payphone-alt` | [prop-payphone-alt.png](environment/street/prop-payphone-alt.png) | 48x48 | image | Street payphone alternate, 48×48. |
+| `prop-chain-gate` | [prop-chain-gate.png](environment/street/prop-chain-gate.png) | 64x64 | image | Chain-link gate, 64×64. |
+| `prop-chain-gate-alt` | [prop-chain-gate-alt.png](environment/street/prop-chain-gate-alt.png) | 64x64 | image | Chain-link gate alternate, 64×64. |
+| `prop-street-sign` | [prop-street-sign.png](environment/street/prop-street-sign.png) | 48x48 | image | Street name sign, 48×48. Soft-fixed bottom edge. |
+| `prop-street-sign-alt` | [prop-street-sign-alt.png](environment/street/prop-street-sign-alt.png) | 48x48 | image | Street name sign alternate, 48×48. Soft-fixed bottom edge. |
+| `prop-phone-booth` | [prop-phone-booth.png](environment/street/prop-phone-booth.png) | 64x64 | image | Phone booth, 64×64. |
+| `prop-phone-booth-alt` | [prop-phone-booth-alt.png](environment/street/prop-phone-booth-alt.png) | 64x64 | image | Phone booth alternate, 64×64. |
+
+### Asphalt Path Tiles (瀝青路面)
+
+<img src="previews/environment/path-asphalt/preview.gif" alt="path-asphalt preview" height="140">
+
+Cracked gray asphalt road path over dark campus dirt, 18 tiles at 32×32. PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No Stage placement wire.
+
+- group `path-asphalt` · 18 assets · frame 32x32 · key prefix `path-asphalt-` · manifest [tiles/path-asphalt/manifest.json](tiles/path-asphalt/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-00` | [cracked_gray_asphalt_road_path_over_dark_campus_di_0.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_0.png) | 32x32 | image | burn99 path tile index 0. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-01` | [cracked_gray_asphalt_road_path_over_dark_campus_di_1.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_1.png) | 32x32 | image | burn99 path tile index 1. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-02` | [cracked_gray_asphalt_road_path_over_dark_campus_di_2.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_2.png) | 32x32 | image | burn99 path tile index 2. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-03` | [cracked_gray_asphalt_road_path_over_dark_campus_di_3.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_3.png) | 32x32 | image | burn99 path tile index 3. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-04` | [cracked_gray_asphalt_road_path_over_dark_campus_di_4.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_4.png) | 32x32 | image | burn99 path tile index 4. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-05` | [cracked_gray_asphalt_road_path_over_dark_campus_di_5.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_5.png) | 32x32 | image | burn99 path tile index 5. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-06` | [cracked_gray_asphalt_road_path_over_dark_campus_di_6.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_6.png) | 32x32 | image | burn99 path tile index 6. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-07` | [cracked_gray_asphalt_road_path_over_dark_campus_di_7.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_7.png) | 32x32 | image | burn99 path tile index 7. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-08` | [cracked_gray_asphalt_road_path_over_dark_campus_di_8.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_8.png) | 32x32 | image | burn99 path tile index 8. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-09` | [cracked_gray_asphalt_road_path_over_dark_campus_di_9.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_9.png) | 32x32 | image | burn99 path tile index 9. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-10` | [cracked_gray_asphalt_road_path_over_dark_campus_di_10.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_10.png) | 32x32 | image | burn99 path tile index 10. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-11` | [cracked_gray_asphalt_road_path_over_dark_campus_di_11.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_11.png) | 32x32 | image | burn99 path tile index 11. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-12` | [cracked_gray_asphalt_road_path_over_dark_campus_di_12.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_12.png) | 32x32 | image | burn99 path tile index 12. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-13` | [cracked_gray_asphalt_road_path_over_dark_campus_di_13.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_13.png) | 32x32 | image | burn99 path tile index 13. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-14` | [cracked_gray_asphalt_road_path_over_dark_campus_di_14.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_14.png) | 32x32 | image | burn99 path tile index 14. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-15` | [cracked_gray_asphalt_road_path_over_dark_campus_di_15.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_15.png) | 32x32 | image | burn99 path tile index 15. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-16` | [cracked_gray_asphalt_road_path_over_dark_campus_di_16.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_16.png) | 32x32 | image | burn99 path tile index 16. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+| `path-asphalt-17` | [cracked_gray_asphalt_road_path_over_dark_campus_di_17.png](tiles/path-asphalt/cracked_gray_asphalt_road_path_over_dark_campus_di_17.png) | 32x32 | image | burn99 path tile index 17. Seamless path tile from PixelLab tileset 3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed. Catalog only. No placement mask assigned. |
+
 <a id="backgrounds"></a>
 ## Backgrounds
+
+### Sewer Backgrounds (下水道背景)
+
+<img src="backgrounds/bg-sewer-tunnel.png" alt="sewer preview" height="180">
+
+Two 320×180 sewer stage plates from the burn99 street fill. They do not replace the 1280×720 campus plates. Catalog only.
+
+- group `sewer` · 2 assets · frame 320x180 · key prefix `bg-sewer-` · manifest [backgrounds/manifest.json](backgrounds/manifest.json)
+- previews: [bg-sewer-canal.png](backgrounds/bg-sewer-canal.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `bg-sewer-tunnel` | [bg-sewer-tunnel.png](backgrounds/bg-sewer-tunnel.png) | 320x180 | background | burn99. Catalog only. No Stage backdrop wire. |
+| `bg-sewer-canal` | [bg-sewer-canal.png](backgrounds/bg-sewer-canal.png) | 320x180 | background | burn99. Catalog only. No Stage backdrop wire. |
 
 ### Campus Battle Background (校園戰場背景)
 

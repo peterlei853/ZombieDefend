@@ -1,0 +1,78 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "backgrounds",
+  "group": "sewer",
+  "title": "Sewer Backgrounds",
+  "titleZh": "下水道背景",
+  "description": "Two 320×180 sewer stage plates from the burn99 street fill. They do not replace the 1280×720 campus plates. Catalog only.",
+  "source": {
+    "tool": "pixellab list_images",
+    "note": "burn99 sewer backgrounds. QC PASS. Origin (0.5, 0.5).",
+    "handoff": "/workspace/zd-fill-props-burn99/"
+  },
+  "defaults": {
+    "type": "background",
+    "facing": null,
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "frames": 1
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/backgrounds/bg-sewer-tunnel.png",
+    "sheets": [
+      "assets/library/backgrounds/bg-sewer-canal.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "bg-sewer-tunnel",
+      "path": "assets/library/backgrounds/bg-sewer-tunnel.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Sewer tunnel stage plate, 320×180. Does not replace the campus plates.",
+      "note": "burn99. Catalog only. No Stage backdrop wire.",
+      "tags": [
+        "sewer",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:80221ab7-161a-5f96-9c5f-5fae791a5106",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "bg-sewer-canal",
+      "path": "assets/library/backgrounds/bg-sewer-canal.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Sewer canal stage plate, 320×180. Does not replace the campus plates.",
+      "note": "burn99. Catalog only. No Stage backdrop wire.",
+      "tags": [
+        "sewer",
+        "stage-plate",
+        "alternate"
+      ],
+      "extra": {
+        "galleryId": "gallery:5d0455df-dbb1-5d31-aaea-7e31fdf8789c",
+        "role": "variant",
+        "prefer": "bg-sewer-tunnel"
+      }
+    }
+  ]
+}
