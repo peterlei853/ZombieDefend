@@ -204,6 +204,25 @@ export const GAME_AUDIO = [
   { key: 'sfx-enemy-steel-balam-skill-bio_acid_spit', url: 'assets/audio/sfx-enemy-steel-balam-skill-bio_acid_spit.mp3' },
   { key: 'sfx-enemy-steel-balam-skill-steel_whirlwind', url: 'assets/audio/sfx-enemy-steel-balam-skill-steel_whirlwind.mp3' },
   { key: 'sfx-enemy-steel-balam-enrage', url: 'assets/audio/sfx-enemy-steel-balam-enrage.mp3' },
+  // Credit-burn priority weapon + dragon SFX (ElevenLabs flow bmHjwED3h0Uvkr9q9wyA).
+  // Catalog only — demo first HOLD Pages; no combat / Pages wire in this PR.
+  // Visual pairing: shot/charge/aoe-explode ↔ M2 weapon FX; sfx-pet-dragon-attack ↔ dragon slam d14e7c3e.
+  { key: 'sfx-weapon-sling-shot', url: 'assets/audio/sfx-weapon-sling-shot.mp3' },
+  { key: 'sfx-weapon-sling-charge', url: 'assets/audio/sfx-weapon-sling-charge.mp3' },
+  { key: 'sfx-weapon-sling-aoe-explode', url: 'assets/audio/sfx-weapon-sling-aoe-explode.mp3' },
+  { key: 'sfx-weapon-bubble-shot', url: 'assets/audio/sfx-weapon-bubble-shot.mp3' },
+  { key: 'sfx-weapon-bubble-charge', url: 'assets/audio/sfx-weapon-bubble-charge.mp3' },
+  { key: 'sfx-weapon-bubble-aoe-explode', url: 'assets/audio/sfx-weapon-bubble-aoe-explode.mp3' },
+  { key: 'sfx-weapon-rail-shot', url: 'assets/audio/sfx-weapon-rail-shot.mp3' },
+  { key: 'sfx-weapon-rail-charge', url: 'assets/audio/sfx-weapon-rail-charge.mp3' },
+  { key: 'sfx-weapon-rail-aoe-explode', url: 'assets/audio/sfx-weapon-rail-aoe-explode.mp3' },
+  { key: 'sfx-weapon-freeze-shot', url: 'assets/audio/sfx-weapon-freeze-shot.mp3' },
+  { key: 'sfx-weapon-freeze-charge', url: 'assets/audio/sfx-weapon-freeze-charge.mp3' },
+  { key: 'sfx-weapon-freeze-aoe-explode', url: 'assets/audio/sfx-weapon-freeze-aoe-explode.mp3' },
+  { key: 'sfx-weapon-flame-shot', url: 'assets/audio/sfx-weapon-flame-shot.mp3' },
+  { key: 'sfx-weapon-flame-charge', url: 'assets/audio/sfx-weapon-flame-charge.mp3' },
+  { key: 'sfx-weapon-flame-aoe-explode', url: 'assets/audio/sfx-weapon-flame-aoe-explode.mp3' },
+  { key: 'sfx-pet-dragon-attack', url: 'assets/audio/sfx-pet-dragon-attack.mp3' },
   // v0.36.27 profession vocals + pet/UI gap-fill. See src/data/vocalSfx.js.
   ...gameplaySfxClips(),
 ];
