@@ -7,15 +7,15 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 141 |
 | [Pets](#pets) | 17 | 124 |
-| [UI](#ui) | 1 | 51 |
+| [UI](#ui) | 2 | 54 |
 | [Zombies](#zombies) | 15 | 220 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 20 |
-| [Backgrounds](#backgrounds) | 1 | 15 |
+| [Environment](#environment) | 6 | 78 |
+| [Backgrounds](#backgrounds) | 2 | 22 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **60** | **727** |
 
 <a id="hero"></a>
 ## Hero
@@ -577,6 +577,21 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-float-go-burst-hd` | [ui-float-go-burst-hd.png](ui/floats/ui-float-go-burst-hd.png) | 170x88 | icon | 2× GO! burst. |
 | `ui-float-back-burst` | [ui-float-back-burst.png](ui/floats/ui-float-back-burst.png) | 106x39 | icon | Optional decorative Back! shout burst. |
 | `ui-float-back-burst-hd` | [ui-float-back-burst-hd.png](ui/floats/ui-float-back-burst-hd.png) | 212x78 | icon | 2× Back! burst. |
+
+### burn99 Gapfill HUD Pieces (burn99 補齊介面)
+
+<img src="ui/bars/ui-hud-health.png" alt="burn99-gap preview" height="140">
+
+Health bar, pause panel, and ammo counter from the burn99 gapfill. Origin (0.5, 0.5). They sit beside the v0.22 HUD kit and are not wired into Stage. Catalog only.
+
+- group `burn99-gap` · 3 assets · frame 192x192, 384x192, 384x384 · key prefix `ui-` · manifest [ui/burn99-gap/manifest.json](ui/burn99-gap/manifest.json)
+- previews: [ui-pause-menu.png](ui/panels/ui-pause-menu.png), [ui-ammo-counter.png](ui/icons/ui-ammo-counter.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `ui-hud-health` | [ui-hud-health.png](ui/bars/ui-hud-health.png) | 384x192 | icon | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire. |
+| `ui-pause-menu` | [ui-pause-menu.png](ui/panels/ui-pause-menu.png) | 384x384 | icon | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire. |
+| `ui-ammo-counter` | [ui-ammo-counter.png](ui/icons/ui-ammo-counter.png) | 192x192 | icon | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire. |
 
 <a id="zombies"></a>
 ## Zombies
@@ -1248,8 +1263,129 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
 
+### Cobblestone Path Tiles (卵石路)
+
+<img src="previews/environment/path-cobble/preview.gif" alt="path-cobble preview" height="140">
+
+Worn cobblestone path, 18 tiles at 32×32. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Origin (0.5, 0.5). Catalog only. No Stage placement wire.
+
+- group `path-cobble` · 18 assets · frame 32x32 · key prefix `path-cobble-` · manifest [tiles/path-cobble/manifest.json](tiles/path-cobble/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-cobble-00` | [tile_0.png](tiles/path-cobble/tile_0.png) | 32x32 | image | burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-01` | [tile_1.png](tiles/path-cobble/tile_1.png) | 32x32 | image | burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-02` | [tile_2.png](tiles/path-cobble/tile_2.png) | 32x32 | image | burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-03` | [tile_3.png](tiles/path-cobble/tile_3.png) | 32x32 | image | burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-04` | [tile_4.png](tiles/path-cobble/tile_4.png) | 32x32 | image | burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-05` | [tile_5.png](tiles/path-cobble/tile_5.png) | 32x32 | image | burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-06` | [tile_6.png](tiles/path-cobble/tile_6.png) | 32x32 | image | burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-07` | [tile_7.png](tiles/path-cobble/tile_7.png) | 32x32 | image | burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-08` | [tile_8.png](tiles/path-cobble/tile_8.png) | 32x32 | image | burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-09` | [tile_9.png](tiles/path-cobble/tile_9.png) | 32x32 | image | burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-10` | [tile_10.png](tiles/path-cobble/tile_10.png) | 32x32 | image | burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-11` | [tile_11.png](tiles/path-cobble/tile_11.png) | 32x32 | image | burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-12` | [tile_12.png](tiles/path-cobble/tile_12.png) | 32x32 | image | burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-13` | [tile_13.png](tiles/path-cobble/tile_13.png) | 32x32 | image | burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-14` | [tile_14.png](tiles/path-cobble/tile_14.png) | 32x32 | image | burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-15` | [tile_15.png](tiles/path-cobble/tile_15.png) | 32x32 | image | burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-16` | [tile_16.png](tiles/path-cobble/tile_16.png) | 32x32 | image | burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+| `path-cobble-17` | [tile_17.png](tiles/path-cobble/tile_17.png) | 32x32 | image | burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned. |
+
+### Dirt Path Tiles (泥土路)
+
+<img src="previews/environment/path-dirt/preview.gif" alt="path-dirt preview" height="140">
+
+Packed dirt path, 18 tiles at 32×32. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Origin (0.5, 0.5). Catalog only. No Stage placement wire.
+
+- group `path-dirt` · 18 assets · frame 32x32 · key prefix `path-dirt-` · manifest [tiles/path-dirt/manifest.json](tiles/path-dirt/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-dirt-00` | [tile_0.png](tiles/path-dirt/tile_0.png) | 32x32 | image | burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-01` | [tile_1.png](tiles/path-dirt/tile_1.png) | 32x32 | image | burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-02` | [tile_2.png](tiles/path-dirt/tile_2.png) | 32x32 | image | burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-03` | [tile_3.png](tiles/path-dirt/tile_3.png) | 32x32 | image | burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-04` | [tile_4.png](tiles/path-dirt/tile_4.png) | 32x32 | image | burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-05` | [tile_5.png](tiles/path-dirt/tile_5.png) | 32x32 | image | burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-06` | [tile_6.png](tiles/path-dirt/tile_6.png) | 32x32 | image | burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-07` | [tile_7.png](tiles/path-dirt/tile_7.png) | 32x32 | image | burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-08` | [tile_8.png](tiles/path-dirt/tile_8.png) | 32x32 | image | burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-09` | [tile_9.png](tiles/path-dirt/tile_9.png) | 32x32 | image | burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-10` | [tile_10.png](tiles/path-dirt/tile_10.png) | 32x32 | image | burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-11` | [tile_11.png](tiles/path-dirt/tile_11.png) | 32x32 | image | burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-12` | [tile_12.png](tiles/path-dirt/tile_12.png) | 32x32 | image | burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-13` | [tile_13.png](tiles/path-dirt/tile_13.png) | 32x32 | image | burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-14` | [tile_14.png](tiles/path-dirt/tile_14.png) | 32x32 | image | burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-15` | [tile_15.png](tiles/path-dirt/tile_15.png) | 32x32 | image | burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-16` | [tile_16.png](tiles/path-dirt/tile_16.png) | 32x32 | image | burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+| `path-dirt-17` | [tile_17.png](tiles/path-dirt/tile_17.png) | 32x32 | image | burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset bc133cb0-008a-4edd-89d1-1462afe36cd3. Catalog only. No placement mask assigned. |
+
+### Metal Grate Path Tiles (金屬格柵路)
+
+<img src="previews/environment/path-metal-grate/preview.gif" alt="path-metal-grate preview" height="140">
+
+Metal grate path, 18 tiles at 32×32. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Origin (0.5, 0.5). Catalog only. No Stage placement wire.
+
+- group `path-metal-grate` · 18 assets · frame 32x32 · key prefix `path-metal-grate-` · manifest [tiles/path-metal-grate/manifest.json](tiles/path-metal-grate/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-metal-grate-00` | [tile_0.png](tiles/path-metal-grate/tile_0.png) | 32x32 | image | burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-01` | [tile_1.png](tiles/path-metal-grate/tile_1.png) | 32x32 | image | burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-02` | [tile_2.png](tiles/path-metal-grate/tile_2.png) | 32x32 | image | burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-03` | [tile_3.png](tiles/path-metal-grate/tile_3.png) | 32x32 | image | burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-04` | [tile_4.png](tiles/path-metal-grate/tile_4.png) | 32x32 | image | burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-05` | [tile_5.png](tiles/path-metal-grate/tile_5.png) | 32x32 | image | burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-06` | [tile_6.png](tiles/path-metal-grate/tile_6.png) | 32x32 | image | burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-07` | [tile_7.png](tiles/path-metal-grate/tile_7.png) | 32x32 | image | burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-08` | [tile_8.png](tiles/path-metal-grate/tile_8.png) | 32x32 | image | burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-09` | [tile_9.png](tiles/path-metal-grate/tile_9.png) | 32x32 | image | burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-10` | [tile_10.png](tiles/path-metal-grate/tile_10.png) | 32x32 | image | burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-11` | [tile_11.png](tiles/path-metal-grate/tile_11.png) | 32x32 | image | burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-12` | [tile_12.png](tiles/path-metal-grate/tile_12.png) | 32x32 | image | burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-13` | [tile_13.png](tiles/path-metal-grate/tile_13.png) | 32x32 | image | burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-14` | [tile_14.png](tiles/path-metal-grate/tile_14.png) | 32x32 | image | burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-15` | [tile_15.png](tiles/path-metal-grate/tile_15.png) | 32x32 | image | burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-16` | [tile_16.png](tiles/path-metal-grate/tile_16.png) | 32x32 | image | burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+| `path-metal-grate-17` | [tile_17.png](tiles/path-metal-grate/tile_17.png) | 32x32 | image | burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned. |
+
+### SMG and Grenade (衝鋒槍與手榴彈)
+
+<img src="previews/environment/weapons/preview.gif" alt="weapons preview" height="140">
+
+SMG sprites (48×48) and grenade projectiles (32×32) from the burn99 gapfill. Winners are weapon-smg and proj-grenade; alts are variants. Origin (0.5, 0.5). Canonical path is assets/library/weapons/. Catalog only. No Stage or physics wire.
+
+- group `weapons` · 4 assets · frame 32x32, 48x48 · manifest [weapons/manifest.json](weapons/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `weapon-smg` | [weapon-smg.png](weapons/weapon-smg.png) | 48x48 | image | burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key. |
+| `weapon-smg-alt` | [weapon-smg-alt.png](weapons/weapon-smg-alt.png) | 48x48 | image | burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key. |
+| `proj-grenade` | [proj-grenade.png](weapons/proj-grenade.png) | 32x32 | image | burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key. |
+| `proj-grenade-alt` | [proj-grenade-alt.png](weapons/proj-grenade-alt.png) | 32x32 | image | burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key. |
+
 <a id="backgrounds"></a>
 ## Backgrounds
+
+### burn99 Gapfill Backgrounds (burn99 補齊背景)
+
+<img src="backgrounds/bg-rooftop.png" alt="burn99-gap preview" height="180">
+
+Seven 320×180 stage plates from the burn99 gapfill: rooftop, subway (plus alt), parking garage, rainy alley, factory, and bridge underpass. Origin (0.5, 0.5). They do not replace the 1280×720 campus plates. Catalog only. No Stage backdrop wire.
+
+- group `burn99-gap` · 7 assets · frame 320x180 · key prefix `bg-` · manifest [backgrounds/burn99-gap/manifest.json](backgrounds/burn99-gap/manifest.json)
+- previews: [bg-subway.png](backgrounds/bg-subway.png), [bg-subway-alt.png](backgrounds/bg-subway-alt.png), [bg-parking-garage.png](backgrounds/bg-parking-garage.png), [bg-rainy-alley.png](backgrounds/bg-rainy-alley.png), [bg-factory.png](backgrounds/bg-factory.png), [bg-bridge-underpass.png](backgrounds/bg-bridge-underpass.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `bg-rooftop` | [bg-rooftop.png](backgrounds/bg-rooftop.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-subway` | [bg-subway.png](backgrounds/bg-subway.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-subway-alt` | [bg-subway-alt.png](backgrounds/bg-subway-alt.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-parking-garage` | [bg-parking-garage.png](backgrounds/bg-parking-garage.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-rainy-alley` | [bg-rainy-alley.png](backgrounds/bg-rainy-alley.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-factory` | [bg-factory.png](backgrounds/bg-factory.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
+| `bg-bridge-underpass` | [bg-bridge-underpass.png](backgrounds/bg-bridge-underpass.png) | 320x180 | background | burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire. |
 
 ### Campus Battle Background (校園戰場背景)
 

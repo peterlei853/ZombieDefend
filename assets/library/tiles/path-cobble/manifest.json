@@ -1,0 +1,503 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-cobble",
+  "title": "Cobblestone Path Tiles",
+  "titleZh": "卵石路",
+  "description": "Worn cobblestone path, 18 tiles at 32×32. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Origin (0.5, 0.5). Catalog only. No Stage placement wire.",
+  "source": {
+    "tool": "pixellab list_tiles_pro",
+    "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+    "kind": "paths",
+    "note": "burn99 gapfill path-cobble. 18 tiles, 32×32, origin (0.5, 0.5). QC PASS.",
+    "handoff": "zd-fill-burn99-gap"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "path-cobble-00",
+      "path-cobble-01",
+      "path-cobble-02",
+      "path-cobble-03",
+      "path-cobble-04",
+      "path-cobble-05",
+      "path-cobble-06",
+      "path-cobble-07",
+      "path-cobble-08",
+      "path-cobble-09",
+      "path-cobble-10",
+      "path-cobble-11",
+      "path-cobble-12",
+      "path-cobble-13",
+      "path-cobble-14",
+      "path-cobble-15",
+      "path-cobble-16",
+      "path-cobble-17"
+    ],
+    "thumb": "assets/library/previews/environment/path-cobble/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "path-cobble-00",
+      "path": "assets/library/tiles/path-cobble/tile_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 00, 32×32.",
+      "note": "burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 0,
+        "sourceFile": "tile_0.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-01",
+      "path": "assets/library/tiles/path-cobble/tile_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 01, 32×32.",
+      "note": "burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 1,
+        "sourceFile": "tile_1.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-02",
+      "path": "assets/library/tiles/path-cobble/tile_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 02, 32×32.",
+      "note": "burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 2,
+        "sourceFile": "tile_2.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-03",
+      "path": "assets/library/tiles/path-cobble/tile_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 03, 32×32.",
+      "note": "burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 3,
+        "sourceFile": "tile_3.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-04",
+      "path": "assets/library/tiles/path-cobble/tile_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 04, 32×32.",
+      "note": "burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 4,
+        "sourceFile": "tile_4.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-05",
+      "path": "assets/library/tiles/path-cobble/tile_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 05, 32×32.",
+      "note": "burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 5,
+        "sourceFile": "tile_5.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-06",
+      "path": "assets/library/tiles/path-cobble/tile_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 06, 32×32.",
+      "note": "burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 6,
+        "sourceFile": "tile_6.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-07",
+      "path": "assets/library/tiles/path-cobble/tile_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 07, 32×32.",
+      "note": "burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 7,
+        "sourceFile": "tile_7.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-08",
+      "path": "assets/library/tiles/path-cobble/tile_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 08, 32×32.",
+      "note": "burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 8,
+        "sourceFile": "tile_8.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-09",
+      "path": "assets/library/tiles/path-cobble/tile_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 09, 32×32.",
+      "note": "burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 9,
+        "sourceFile": "tile_9.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-10",
+      "path": "assets/library/tiles/path-cobble/tile_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 10, 32×32.",
+      "note": "burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 10,
+        "sourceFile": "tile_10.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-11",
+      "path": "assets/library/tiles/path-cobble/tile_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 11, 32×32.",
+      "note": "burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 11,
+        "sourceFile": "tile_11.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-12",
+      "path": "assets/library/tiles/path-cobble/tile_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 12, 32×32.",
+      "note": "burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 12,
+        "sourceFile": "tile_12.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-13",
+      "path": "assets/library/tiles/path-cobble/tile_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 13, 32×32.",
+      "note": "burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 13,
+        "sourceFile": "tile_13.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-14",
+      "path": "assets/library/tiles/path-cobble/tile_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 14, 32×32.",
+      "note": "burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 14,
+        "sourceFile": "tile_14.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-15",
+      "path": "assets/library/tiles/path-cobble/tile_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 15, 32×32.",
+      "note": "burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 15,
+        "sourceFile": "tile_15.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-16",
+      "path": "assets/library/tiles/path-cobble/tile_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 16, 32×32.",
+      "note": "burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 16,
+        "sourceFile": "tile_16.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-cobble-17",
+      "path": "assets/library/tiles/path-cobble/tile_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Worn cobblestone path tile 17, 32×32.",
+      "note": "burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 0ff4e0b7-0197-465e-b6d4-9907db5b66ac. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 17,
+        "sourceFile": "tile_17.png",
+        "handoff": "burn99-gap"
+      }
+    }
+  ]
+}

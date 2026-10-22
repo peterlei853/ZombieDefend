@@ -1,0 +1,503 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-metal-grate",
+  "title": "Metal Grate Path Tiles",
+  "titleZh": "金屬格柵路",
+  "description": "Metal grate path, 18 tiles at 32×32. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Origin (0.5, 0.5). Catalog only. No Stage placement wire.",
+  "source": {
+    "tool": "pixellab list_tiles_pro",
+    "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+    "kind": "paths",
+    "note": "burn99 gapfill path-metal-grate. 18 tiles, 32×32, origin (0.5, 0.5). QC PASS.",
+    "handoff": "zd-fill-burn99-gap"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "path-metal-grate-00",
+      "path-metal-grate-01",
+      "path-metal-grate-02",
+      "path-metal-grate-03",
+      "path-metal-grate-04",
+      "path-metal-grate-05",
+      "path-metal-grate-06",
+      "path-metal-grate-07",
+      "path-metal-grate-08",
+      "path-metal-grate-09",
+      "path-metal-grate-10",
+      "path-metal-grate-11",
+      "path-metal-grate-12",
+      "path-metal-grate-13",
+      "path-metal-grate-14",
+      "path-metal-grate-15",
+      "path-metal-grate-16",
+      "path-metal-grate-17"
+    ],
+    "thumb": "assets/library/previews/environment/path-metal-grate/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "path-metal-grate-00",
+      "path": "assets/library/tiles/path-metal-grate/tile_0.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 00, 32×32.",
+      "note": "burn99 gapfill path tile index 0. File tile_0.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 0,
+        "sourceFile": "tile_0.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-01",
+      "path": "assets/library/tiles/path-metal-grate/tile_1.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 01, 32×32.",
+      "note": "burn99 gapfill path tile index 1. File tile_1.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 1,
+        "sourceFile": "tile_1.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-02",
+      "path": "assets/library/tiles/path-metal-grate/tile_2.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 02, 32×32.",
+      "note": "burn99 gapfill path tile index 2. File tile_2.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 2,
+        "sourceFile": "tile_2.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-03",
+      "path": "assets/library/tiles/path-metal-grate/tile_3.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 03, 32×32.",
+      "note": "burn99 gapfill path tile index 3. File tile_3.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 3,
+        "sourceFile": "tile_3.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-04",
+      "path": "assets/library/tiles/path-metal-grate/tile_4.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 04, 32×32.",
+      "note": "burn99 gapfill path tile index 4. File tile_4.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 4,
+        "sourceFile": "tile_4.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-05",
+      "path": "assets/library/tiles/path-metal-grate/tile_5.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 05, 32×32.",
+      "note": "burn99 gapfill path tile index 5. File tile_5.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 5,
+        "sourceFile": "tile_5.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-06",
+      "path": "assets/library/tiles/path-metal-grate/tile_6.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 06, 32×32.",
+      "note": "burn99 gapfill path tile index 6. File tile_6.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 6,
+        "sourceFile": "tile_6.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-07",
+      "path": "assets/library/tiles/path-metal-grate/tile_7.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 07, 32×32.",
+      "note": "burn99 gapfill path tile index 7. File tile_7.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 7,
+        "sourceFile": "tile_7.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-08",
+      "path": "assets/library/tiles/path-metal-grate/tile_8.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 08, 32×32.",
+      "note": "burn99 gapfill path tile index 8. File tile_8.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 8,
+        "sourceFile": "tile_8.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-09",
+      "path": "assets/library/tiles/path-metal-grate/tile_9.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 09, 32×32.",
+      "note": "burn99 gapfill path tile index 9. File tile_9.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 9,
+        "sourceFile": "tile_9.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-10",
+      "path": "assets/library/tiles/path-metal-grate/tile_10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 10, 32×32.",
+      "note": "burn99 gapfill path tile index 10. File tile_10.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 10,
+        "sourceFile": "tile_10.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-11",
+      "path": "assets/library/tiles/path-metal-grate/tile_11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 11, 32×32.",
+      "note": "burn99 gapfill path tile index 11. File tile_11.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 11,
+        "sourceFile": "tile_11.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-12",
+      "path": "assets/library/tiles/path-metal-grate/tile_12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 12, 32×32.",
+      "note": "burn99 gapfill path tile index 12. File tile_12.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 12,
+        "sourceFile": "tile_12.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-13",
+      "path": "assets/library/tiles/path-metal-grate/tile_13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 13, 32×32.",
+      "note": "burn99 gapfill path tile index 13. File tile_13.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 13,
+        "sourceFile": "tile_13.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-14",
+      "path": "assets/library/tiles/path-metal-grate/tile_14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 14, 32×32.",
+      "note": "burn99 gapfill path tile index 14. File tile_14.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 14,
+        "sourceFile": "tile_14.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-15",
+      "path": "assets/library/tiles/path-metal-grate/tile_15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 15, 32×32.",
+      "note": "burn99 gapfill path tile index 15. File tile_15.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 15,
+        "sourceFile": "tile_15.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-16",
+      "path": "assets/library/tiles/path-metal-grate/tile_16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 16, 32×32.",
+      "note": "burn99 gapfill path tile index 16. File tile_16.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 16,
+        "sourceFile": "tile_16.png",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "path-metal-grate-17",
+      "path": "assets/library/tiles/path-metal-grate/tile_17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Metal grate path tile 17, 32×32.",
+      "note": "burn99 gapfill path tile index 17. File tile_17.png. PixelLab tileset 6e5fb675-f67c-438c-bcf9-40bef1795065. Catalog only. No placement mask assigned.",
+      "tags": [
+        "tile",
+        "path",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 17,
+        "sourceFile": "tile_17.png",
+        "handoff": "burn99-gap"
+      }
+    }
+  ]
+}

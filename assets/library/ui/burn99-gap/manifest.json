@@ -1,0 +1,99 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "ui",
+  "group": "burn99-gap",
+  "title": "burn99 Gapfill HUD Pieces",
+  "titleZh": "burn99 補齊介面",
+  "description": "Health bar, pause panel, and ammo counter from the burn99 gapfill. Origin (0.5, 0.5). They sit beside the v0.22 HUD kit and are not wired into Stage. Catalog only.",
+  "source": {
+    "tool": "pixellab list_ui_assets",
+    "note": "burn99 gapfill UI. QC PASS. Origin (0.5, 0.5).",
+    "handoff": "zd-fill-burn99-gap"
+  },
+  "defaults": {
+    "type": "icon",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/ui/bars/ui-hud-health.png",
+    "sheets": [
+      "assets/library/ui/panels/ui-pause-menu.png",
+      "assets/library/ui/icons/ui-ammo-counter.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "ui-hud-health",
+      "path": "assets/library/ui/bars/ui-hud-health.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Health HUD bar, 384×192. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabUiId": "3a5cbf5d-d098-447e-a074-36b611830771",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "ui-pause-menu",
+      "path": "assets/library/ui/panels/ui-pause-menu.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Pause menu panel, 384×384. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabUiId": "0cda34c9-efda-41ee-b26c-552b3d121ee3",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "ui-ammo-counter",
+      "path": "assets/library/ui/icons/ui-ammo-counter.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Ammo counter icon, 192×192. burn99 gapfill. Not wired into the live HUD.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No HUD wire.",
+      "tags": [
+        "ui",
+        "burn99-gap"
+      ],
+      "extra": {
+        "pixellabUiId": "9ac37797-0e18-48df-ac01-f308b33c33cc",
+        "handoff": "burn99-gap"
+      }
+    }
+  ]
+}

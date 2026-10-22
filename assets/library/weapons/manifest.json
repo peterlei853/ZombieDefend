@@ -1,0 +1,135 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "weapons",
+  "title": "SMG and Grenade",
+  "titleZh": "衝鋒槍與手榴彈",
+  "description": "SMG sprites (48×48) and grenade projectiles (32×32) from the burn99 gapfill. Winners are weapon-smg and proj-grenade; alts are variants. Origin (0.5, 0.5). Canonical path is assets/library/weapons/. Catalog only. No Stage or physics wire.",
+  "source": {
+    "tool": "pixellab list_objects",
+    "note": "burn99 gapfill weapons. QC PASS. object ids from the handoff manifest.",
+    "handoff": "zd-fill-burn99-gap"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "facing": null,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "weapon-smg",
+      "weapon-smg-alt",
+      "proj-grenade",
+      "proj-grenade-alt"
+    ],
+    "thumb": "assets/library/previews/environment/weapons/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "weapon-smg",
+      "path": "assets/library/weapons/weapon-smg.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "SMG weapon sprite, 48×48. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "burn99-gap",
+        "weapon"
+      ],
+      "extra": {
+        "pixellabObjectId": "72f0c99f-a291-4baf-a75d-f1cc8b16830a",
+        "role": "winner",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/weapon-smg.png"
+      }
+    },
+    {
+      "key": "weapon-smg-alt",
+      "path": "assets/library/weapons/weapon-smg-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "SMG weapon sprite alternate, 48×48. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "burn99-gap",
+        "weapon",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "02a0e004-70db-4db7-8b8d-634997d82ba7",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/weapon-smg-alt.png",
+        "prefer": "weapon-smg"
+      }
+    },
+    {
+      "key": "proj-grenade",
+      "path": "assets/library/weapons/proj-grenade.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Grenade projectile, 32×32. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "burn99-gap",
+        "projectile"
+      ],
+      "extra": {
+        "pixellabObjectId": "c5e7619b-12fd-453f-877e-909b6704e5ff",
+        "role": "winner",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/proj-grenade.png"
+      }
+    },
+    {
+      "key": "proj-grenade-alt",
+      "path": "assets/library/weapons/proj-grenade-alt.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Grenade projectile alternate, 32×32. Canonical copy under assets/library/weapons/.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). Prefer this path over any environment/street/ copy of the same key.",
+      "tags": [
+        "burn99-gap",
+        "projectile",
+        "alternate"
+      ],
+      "extra": {
+        "pixellabObjectId": "d60b75ce-42d5-4d17-8cb4-7c2e548dea7c",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "canonicalPath": "assets/library/weapons/proj-grenade-alt.png",
+        "prefer": "proj-grenade"
+      }
+    }
+  ]
+}

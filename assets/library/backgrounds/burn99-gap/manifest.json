@@ -1,0 +1,200 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "backgrounds",
+  "group": "burn99-gap",
+  "title": "burn99 Gapfill Backgrounds",
+  "titleZh": "burn99 補齊背景",
+  "description": "Seven 320×180 stage plates from the burn99 gapfill: rooftop, subway (plus alt), parking garage, rainy alley, factory, and bridge underpass. Origin (0.5, 0.5). They do not replace the 1280×720 campus plates. Catalog only. No Stage backdrop wire.",
+  "source": {
+    "tool": "pixellab list_images",
+    "note": "burn99 gapfill backgrounds. QC PASS 7/7. Origin (0.5, 0.5).",
+    "handoff": "zd-fill-burn99-gap"
+  },
+  "defaults": {
+    "type": "background",
+    "facing": null,
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "frames": 1
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/backgrounds/bg-rooftop.png",
+    "sheets": [
+      "assets/library/backgrounds/bg-subway.png",
+      "assets/library/backgrounds/bg-subway-alt.png",
+      "assets/library/backgrounds/bg-parking-garage.png",
+      "assets/library/backgrounds/bg-rainy-alley.png",
+      "assets/library/backgrounds/bg-factory.png",
+      "assets/library/backgrounds/bg-bridge-underpass.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "bg-rooftop",
+      "path": "assets/library/backgrounds/bg-rooftop.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Night rooftop stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:2e1f6955-9a3b-552f-8a97-0951243428d8",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "bg-subway",
+      "path": "assets/library/backgrounds/bg-subway.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Subway platform stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:3f03e6d8-6ec8-57cb-bd8d-ff64d13627c2",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "bg-subway-alt",
+      "path": "assets/library/backgrounds/bg-subway-alt.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Subway platform alternate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate",
+        "alternate"
+      ],
+      "extra": {
+        "galleryId": "gallery:ed4c8b8d-fa10-563d-b895-de68e267dc99",
+        "role": "variant",
+        "handoff": "burn99-gap",
+        "prefer": "bg-subway"
+      }
+    },
+    {
+      "key": "bg-parking-garage",
+      "path": "assets/library/backgrounds/bg-parking-garage.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Parking garage stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:aebcf9c5-884b-510e-abf8-5b2188db5b87",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "bg-rainy-alley",
+      "path": "assets/library/backgrounds/bg-rainy-alley.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Rainy alley stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:243ab49e-121a-5384-8a04-132990f1e13f",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "bg-factory",
+      "path": "assets/library/backgrounds/bg-factory.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Factory stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:2ef615b7-521e-5dfb-a4ab-d700ceecc311",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    },
+    {
+      "key": "bg-bridge-underpass",
+      "path": "assets/library/backgrounds/bg-bridge-underpass.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "description": "Bridge underpass stage plate, 320×180. Does not replace the 1280×720 campus plates.",
+      "note": "burn99 gapfill. Catalog only. Origin (0.5, 0.5). No Stage backdrop wire.",
+      "tags": [
+        "burn99-gap",
+        "stage-plate"
+      ],
+      "extra": {
+        "galleryId": "gallery:b1dbbcdd-0105-535f-b48f-0bf1ef82b4fa",
+        "role": "winner",
+        "handoff": "burn99-gap"
+      }
+    }
+  ]
+}

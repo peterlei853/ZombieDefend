@@ -168,3 +168,15 @@ Player Tester Accept flagged a flat enemy HP bar, a flat joystick, and a dirty t
 3. **Title** — `title/ui-title-bg-clean.png` and `ui-title-bg-clean-hd.png` have no baked menu labels and no v0.21 footer.
 
 Bar frames, joystick parts, and both clean title splashes use origin **(0.5, 0.5)**. Enemy fill strips use **(0, 0.5)** so they grow from the left like `ui-hp-fill-*`. Assets only — no game code in this change.
+
+---
+
+## burn99 gapfill (catalog only)
+
+Three HUD pieces sit beside this kit. Group `ui/burn99-gap`. Origin **(0.5, 0.5)**. Not wired into Stage.
+
+| Key | File | Size | PixelLab id |
+|-----|------|------|-------------|
+| `ui-hud-health` | `bars/ui-hud-health.png` | 384×192 | `3a5cbf5d-d098-447e-a074-36b611830771` |
+| `ui-pause-menu` | `panels/ui-pause-menu.png` | 384×384 | `0cda34c9-efda-41ee-b26c-552b3d121ee3` |
+| `ui-ammo-counter` | `icons/ui-ammo-counter.png` | 192×192 | `9ac37797-0e18-48df-ac01-f308b33c33cc` |
