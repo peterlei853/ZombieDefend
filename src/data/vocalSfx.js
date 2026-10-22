@@ -48,6 +48,38 @@ export function professionVocalSlug(skinId) {
   return PROFESSION_VOCAL_SLUGS[skinId] || null;
 }
 
+/** S4 vocal slugs. Bare `delivery` stays the profession, not this set. */
+export const S4_VOCAL_SLUGS = Object.freeze(['construction', 'schoolgirl', 'delivery', 'salaryman']);
+
+/**
+ * Skin id → S4 vocal slug. `s4-delivery` and `zombie-s4-delivery` match.
+ * The live profession id `delivery` does not.
+ * @param {string|null|undefined} skinId
+ * @returns {string|null}
+ */
+export function s4VocalSlug(skinId) {
+  if (!skinId || skinId === 'delivery') return null;
+  if (S4_VOCAL_SLUGS.includes(skinId)) return skinId;
+  for (const prefix of ['zombie-s4-', 's4-']) {
+    if (!skinId.startsWith(prefix)) continue;
+    const slug = skinId.slice(prefix.length);
+    if (S4_VOCAL_SLUGS.includes(slug)) return slug;
+  }
+  return null;
+}
+
+/**
+ * @param {string|null|undefined} skinId
+ * @param {'growl'|'hit'|'hurt'|'death'} kind
+ * @returns {string|null}
+ */
+export function s4VocalKey(skinId, kind) {
+  const slug = s4VocalSlug(skinId);
+  if (!slug) return null;
+  if (kind !== 'growl' && kind !== 'hit' && kind !== 'hurt' && kind !== 'death') return null;
+  return `sfx-zombie-s4-${slug}-${kind}`;
+}
+
 /**
  * @param {string} slug
  * @param {'growl'|'death'} kind

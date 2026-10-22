@@ -287,6 +287,15 @@ export class Barricade {
    * @param {number} ratio
    */
   _syncFenceDamage(ratio) {
+    if (ratio <= 0) {
+      if (!this._fenceBroken) {
+        this._fenceBroken = true;
+        this.scene?.audio?.playFenceBreak?.();
+      }
+    } else if (ratio <= 0.5 && !this._fenceCracked) {
+      this._fenceCracked = true;
+      this.scene?.audio?.playFenceCrack?.();
+    }
     if (!this._fenceKey || !this._fenceDamagedKey) return;
     const key = ratio <= 0.5 ? this._fenceDamagedKey : this._fenceKey;
     for (const post of this.posts) {

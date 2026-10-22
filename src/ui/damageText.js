@@ -217,10 +217,12 @@ export function showDamageText(scene, x, y, damage, color, coalesceKey = null) {
       if (bucket.get(key) === entry) bucket.delete(key);
     });
     playFloat(scene, text, y, entry);
+    scene.audio?.playUiDmg?.();
     return text;
   }
 
   const text = createLabel(scene, x, y, shown, tint);
+  scene.audio?.playUiDmg?.();
   playFloat(scene, text, y, {
     text,
     total: incoming,

@@ -322,10 +322,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * on the existing crit flag. Stage pets normal-attack only. GO! / Back!
  * deploys that saved pet. Barricade max HP stays 720. GitHub Pages
  * stays unpublished.
+ * v0.36.28: Stage plays the credit-burn weapon shot / charge / hit / aoe /
+ * aoe-explode cues for sling, bubble, rail (lightning), freeze (frost),
+ * and flame, plus the dragon swing, boss skill stings, S4 vocals when
+ * that skin id is on a body, UI click / shop / damage / heal / wave,
+ * the coin pickup, and fence crack / break. Gold, saves, barricade max
+ * HP, and wave tables stay put. GitHub Pages stays unpublished.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.27';
+export const APP_VERSION = '0.36.28';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

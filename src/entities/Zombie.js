@@ -955,14 +955,16 @@ export class Zombie {
       this.alive = false;
       this._beginDeath(amount, hit);
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'die');
-      else if (!this.scene.audio?.playProfessionDeath?.(this.skin?.id)) this.scene.audio?.playZombieDeath();
+      else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'death')
+        && !this.scene.audio?.playProfessionDeath?.(this.skin?.id)) this.scene.audio?.playZombieDeath();
       if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
     }
     this._playHitFlash(hit?.flashMs);
     if (amount > 0) {
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
-      else this.scene.audio?.playZombieHurt();
+      else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hit')) this.scene.audio?.playZombieHurt();
+      this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hurt');
       // Stage hits play the catalog hurt strip. Feel-booth ranged hits
       // still opt in with hurtStrip so a baked crescent is not forced on.
       if (!scripted || hit.hurtStrip === true) this._playHurtStrip();
