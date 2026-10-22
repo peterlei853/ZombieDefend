@@ -50,6 +50,7 @@ export const MockDB = {
       stage: 1,
       gold: 0,
       shopItems: [],
+      selectedPetId: null,
       updatedAt: Date.now(),
     };
     writeDb(db);
@@ -74,6 +75,7 @@ export const MockDB = {
     acc.stage = 1;
     acc.gold = 0;
     acc.shopItems = [];
+    acc.selectedPetId = null;
     acc.updatedAt = Date.now();
     writeDb(db);
     return { ok: true, save: { ...acc, username } };
@@ -95,7 +97,10 @@ export const MockDB = {
   },
 };
 
-/** Appearance-only v0 roster — stats later if Peter locks them. */
+/**
+ * Appearance-only v0 roster — stats later if Peter locks them.
+ * Pets are not chosen on this avatar list. The opening pick is PetSelect.
+ */
 export const CHARACTERS = [
   { id: 'scout', label: 'Scout', color: 0x4fc3f7 },
   { id: 'soldier', label: 'Soldier', color: 0x81c784 },

@@ -163,7 +163,8 @@ export class DefenderGroup {
     this.player = this._createPlayerBody(scene, playerX, playerY, playerScale);
     this.weaponProp = this._createWeaponProp(scene, playerX, playerY);
 
-    this.petCombat = new PetCombat(scene);
+    // v0.36.27: pets normal-attack only. forceSkill still casts when a test calls it.
+    this.petCombat = new PetCombat(scene, { skillsEnabled: false });
 
     // W/S + arrow keys for Y-only move. Touch stick is optional (VirtualControls).
     const keyboard = scene.input.keyboard;

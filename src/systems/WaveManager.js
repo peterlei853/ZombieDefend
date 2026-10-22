@@ -24,7 +24,7 @@ export class WaveManager {
     this.queue = [];
     this.spawnedCount = 0;
     this.totalPlanned = 0;
-    /** Round-robin for a multi-skin pool that is not stage 1. Stage 1 rolls. */
+    /** Round-robin when a pool has one id. Multi-id pools roll, including duplicate weights. */
     this._skinCursor = 0;
     this._buildQueue();
   }
@@ -68,13 +68,14 @@ export class WaveManager {
 
   /**
    * Next skin in the pool. `skins` on the row wins; otherwise the stage roster.
-   * Stage 1 rolls among types 1 / 2 / 3. A pool of one returns that id.
+   * A pool longer than one rolls, so a repeated id is a weight.
+   * A pool of one returns that id (stage 4+).
    * @param {string[]|null|undefined} skins
    */
   _nextSkin(skins) {
     const pool = Array.isArray(skins) && skins.length ? skins : this.roster;
     if (!pool.length) return null;
-    if (this.stage === 1 && pool.length > 1) {
+    if (pool.length > 1) {
       return pool[Math.floor(Math.random() * pool.length)];
     }
     const skin = pool[this._skinCursor % pool.length];

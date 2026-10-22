@@ -1,4 +1,11 @@
 import { enemySfxClips, enemySfxKey } from '../data/enemyShowcase.js';
+import {
+  PET_UI_SFX,
+  gameplaySfxClips,
+  pickVocalVariant,
+  professionVocalSlug,
+  vocalClipKey,
+} from '../data/vocalSfx.js';
 
 /**
  * BGM + SFX for ZombieDefend.
@@ -197,6 +204,8 @@ export const GAME_AUDIO = [
   { key: 'sfx-enemy-steel-balam-skill-bio_acid_spit', url: 'assets/audio/sfx-enemy-steel-balam-skill-bio_acid_spit.mp3' },
   { key: 'sfx-enemy-steel-balam-skill-steel_whirlwind', url: 'assets/audio/sfx-enemy-steel-balam-skill-steel_whirlwind.mp3' },
   { key: 'sfx-enemy-steel-balam-enrage', url: 'assets/audio/sfx-enemy-steel-balam-enrage.mp3' },
+  // v0.36.27 profession vocals + pet/UI gap-fill. See src/data/vocalSfx.js.
+  ...gameplaySfxClips(),
 ];
 
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
@@ -621,6 +630,45 @@ export class SoundManager {
 
   playZombieDeath() {
     this._cue('zombie-death', AUDIO_VOLUME.death, AUDIO_COOLDOWN_MS.death);
+  }
+
+  /**
+   * Profession death cry. Picks sfx-<slug>-death-a or b.
+   * Returns false when this skin has no vocal slug so the generic cry can play.
+   * @param {string|null|undefined} skinId
+   * @returns {boolean}
+   */
+  playProfessionDeath(skinId) {
+    const slug = professionVocalSlug(skinId);
+    if (!slug) return false;
+    const key = vocalClipKey(slug, 'death', pickVocalVariant());
+    this._cue(key, AUDIO_VOLUME.death, 0);
+    return true;
+  }
+
+  /**
+   * One living zombie's growl. The stage waits about 10s per body. Picks a|b.
+   * @param {string} slug
+   */
+  playProfessionGrowl(slug) {
+    if (!slug) return;
+    const key = vocalClipKey(slug, 'growl', pickVocalVariant());
+    this._cue(key, AUDIO_VOLUME.hurt, 0);
+  }
+
+  /** Pet normal attack. ~0.55s. */
+  playPetBasicAttack() {
+    this._cue(PET_UI_SFX.basicAttack, AUDIO_VOLUME.melee, 200);
+  }
+
+  /** GO! recalled → sent. ~0.38s. */
+  playPetGo() {
+    this._cue(PET_UI_SFX.go, AUDIO_VOLUME.ui, 120);
+  }
+
+  /** Back! sent → recalled. ~0.38s. */
+  playPetBack() {
+    this._cue(PET_UI_SFX.back, AUDIO_VOLUME.ui, 120);
   }
 
   /**

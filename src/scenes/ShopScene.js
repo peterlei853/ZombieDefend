@@ -3,7 +3,7 @@
  * buyWeapon / upgradeWeapon spend through SaveManager.spendGold when that
  * object is already on the registry. Otherwise they spend the run purse.
  * This scene does not add save keys or change the gold-by-HP table.
- * Receives { stage, gold, characterId, ownedWeapons, upgrades } from Stage.
+ * Receives { stage, gold, characterId, selectedPetId, ownedWeapons, upgrades } from Stage.
  * The shop bed is bgm-shop (started below; beds are not re-hung here).
  */
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
@@ -14,7 +14,7 @@ import {
   SHOP_WEAPON_COST,
   tryShopAction,
 } from '../data/shopList.js';
-import { STAGE_COUNT, clampStage } from '../data/stageRoster.js';
+import { PLAYABLE_STAGE_CAP, STAGE_COUNT, clampStage } from '../data/stageRoster.js';
 
 export { SHOP_UPGRADE_COST, SHOP_WEAPON_COST };
 
@@ -27,6 +27,7 @@ export default class ShopScene extends Phaser.Scene {
     this.stage = clampStage(data?.stage ?? this.registry.get('stage') ?? 1);
     this.gold = data?.gold ?? this.registry.get('gold') ?? 0;
     this.characterId = data?.characterId ?? this.registry.get('characterId') ?? 'default';
+    this.selectedPetId = data?.selectedPetId ?? this.registry.get('selectedPetId') ?? null;
     this.ownedWeapons = Array.isArray(data?.ownedWeapons)
       ? data.ownedWeapons.slice()
       : (this.registry.get('ownedWeapons') || []).slice();
@@ -38,6 +39,7 @@ export default class ShopScene extends Phaser.Scene {
     this.registry.set('stage', this.stage);
     this.registry.set('gold', this.gold);
     this.registry.set('characterId', this.characterId);
+    this.registry.set('selectedPetId', this.selectedPetId);
     this.registry.set('ownedWeapons', this.ownedWeapons);
     this.registry.set('weaponUpgrades', this.upgrades);
     this.registry.set('shopItems', this.shopItems);
@@ -62,11 +64,12 @@ export default class ShopScene extends Phaser.Scene {
   }
 
   /**
-   * Next stage, through stage 5. Keeps the purse, owned weapons, and
-   * upgrade ranks. After stage 5, return to the title picker.
+   * Next stage through the 3-loop cap. Keeps the purse, owned weapons, and
+   * upgrade ranks. After PLAYABLE_STAGE_CAP (and after STAGE_COUNT) return
+   * to the title. Stages 4–5 stay on disk; this loop does not enter them.
    */
   continue() {
-    if (this.stage >= STAGE_COUNT) {
+    if (this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT) {
       this.registry.set('stage', 1);
       this.scene.start('TitleScene');
       return;
@@ -77,6 +80,7 @@ export default class ShopScene extends Phaser.Scene {
       stage: nextStage,
       gold: this.gold,
       characterId: this.characterId,
+      selectedPetId: this.selectedPetId,
       ownedWeapons: this.ownedWeapons,
       upgrades: this.upgrades,
     });
@@ -222,7 +226,7 @@ export default class ShopScene extends Phaser.Scene {
     });
     this._refreshRows();
 
-    addParchmentButton(this, width / 2, 672, this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
+    addParchmentButton(this, width / 2, 672, this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
       this.audio?.playUiClick();
       this.continue();
     }, { scale: 2, depth: 5 });

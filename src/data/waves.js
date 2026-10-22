@@ -1,5 +1,6 @@
 import { GAME_CONFIG } from './GameConfig.js';
-import { rosterForStage } from './stageRoster.js';
+import { earlyWaveDefs } from './stageBalance.js';
+import { PLAYABLE_STAGE_CAP, rosterForStage } from './stageRoster.js';
 
 /**
  * Stage 1 wave schedule (timer 0–90s).
@@ -70,12 +71,14 @@ export const WAVE_DEFS = [
 ];
 
 /**
- * Same HP / speed / DPS / weight / variant rows, plus this stage's one skin.
- * The copy is what WaveManager spawns. WAVE_DEFS itself stays the combat table.
+ * Stages 1–3 use the rising table in stageBalance.js.
+ * Stage 4+ stamps the legacy WAVE_DEFS rows (HP / speed / DPS / counts unchanged).
  * @param {number} stage
  */
 export function waveDefsForStage(stage) {
-  const skins = rosterForStage(stage);
+  const n = Math.max(1, Math.floor(Number(stage) || 1));
+  if (n <= PLAYABLE_STAGE_CAP) return earlyWaveDefs(n);
+  const skins = rosterForStage(n);
   return WAVE_DEFS.map((def) => ({
     ...def,
     archetypes: def.archetypes.map((arch) => ({ ...arch, skins })),

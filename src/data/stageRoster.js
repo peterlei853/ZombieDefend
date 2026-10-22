@@ -1,16 +1,21 @@
 /**
- * Main-stage enemy roster (v0.36.24).
+ * Main-stage enemy roster (v0.36.27).
  *
- * Five stages. Stages 2–5 still spawn one skin: stage N is id N from the
- * feel-booth order (the first five of DEMO_ENEMY_IDS). Stage 1 randomly
- * spawns types 1 / 2 / 3 (`office-worker-v2`, `delivery`, `chef`). #5 is
- * brute. HP, speed, DPS, counts, and gold-by-HP stay on the wave row. A
- * missing strip falls back to `office-worker-v2` only. The removed 64px
- * `zombie-office-*` group is not a skin and not a fallback.
+ * Five stages remain. The clear loop is stages 1–3 (`PLAYABLE_STAGE_CAP`).
+ * Stages 4–5 stay on the roster and keep their single skin; the title
+ * soft-gates those buttons. Stage 1–3 pools are lists, not a permanent
+ * lock to four professions: append a catalog id when a new early monster
+ * is wired. A missing strip falls back to `office-worker-v2` only.
  */
 
-/** How many main stages exist. Stage select and shop Next stop here. */
+/** How many main stages exist. Direct `?stage=` still accepts 1–5. */
 export const STAGE_COUNT = 5;
+
+/**
+ * Title buttons and the shop Next loop stop here.
+ * Stages above this still have wave data. They are not the 3-loop test.
+ */
+export const PLAYABLE_STAGE_CAP = 3;
 
 /**
  * Stage 1 → stage 5, in play order. Must stay the first five DEMO_ENEMY_IDS.
@@ -26,10 +31,20 @@ export const STAGE_ROSTER = [
 ];
 
 /**
- * Stage 1 spawn pool. Types 1 / 2 / 3 only. Later stages do not use this.
+ * Stage 1 spawn pool. Types 1 / 2 / 3. Kept as the stage-1 alias.
  * @type {string[]}
  */
 export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef'];
+
+/**
+ * Early-stage pools. New catalog ids append here. Stage 4+ does not use this.
+ * @type {Record<number, string[]>}
+ */
+export const EARLY_STAGE_POOLS = {
+  1: STAGE_1_MIX,
+  2: ['office-worker-v2', 'delivery', 'chef'],
+  3: ['office-worker-v2', 'delivery', 'chef', 'nurse'],
+};
 
 /**
  * Clamp a stage number onto 1..STAGE_COUNT.
@@ -54,14 +69,16 @@ export function skinForStage(stage) {
 }
 
 /**
- * Skin ids this stage may spawn. Stage 1 is types 1 / 2 / 3.
- * Stages 2–5 stay a single id.
+ * Skin ids this stage may spawn.
+ * Stages 1–3 roll {@link EARLY_STAGE_POOLS}. Stages 4–5 stay one id.
  * @param {number} stage
  * @returns {string[]}
  */
 export function rosterForStage(stage) {
-  if (clampStage(stage) === 1) return STAGE_1_MIX.slice();
-  return [skinForStage(stage)];
+  const n = clampStage(stage);
+  const pool = EARLY_STAGE_POOLS[n];
+  if (pool) return pool.slice();
+  return [skinForStage(n)];
 }
 
 /**
