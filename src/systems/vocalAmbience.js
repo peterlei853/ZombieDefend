@@ -1,6 +1,7 @@
 import {
   VOCAL_GROWL_INTERVAL_MS,
   professionVocalSlug,
+  s4VocalSlug,
 } from '../data/vocalSfx.js';
 
 /** Spread the first growl so a pack does not shout on the same frame. */
@@ -30,8 +31,10 @@ export class VocalAmbience {
     let index = 0;
     for (const zombie of zombies || []) {
       if (!zombie?.alive) continue;
-      const slug = professionVocalSlug(zombie.skin?.id);
-      if (!slug) continue;
+      const skinId = zombie.skin?.id;
+      const s4 = s4VocalSlug(skinId);
+      const slug = s4 ? null : professionVocalSlug(skinId);
+      if (!s4 && !slug) continue;
       living.add(zombie);
       const phase = (index % VOCAL_GROWL_STAGGER_SLOTS) * VOCAL_GROWL_STAGGER_MS;
       index += 1;
@@ -41,7 +44,8 @@ export class VocalAmbience {
       }
       const due = this._nextAt.get(zombie) ?? 0;
       if (now < due) continue;
-      scene?.audio?.playProfessionGrowl?.(slug);
+      if (s4) scene?.audio?.playS4Vocal?.(skinId, 'growl');
+      else scene?.audio?.playProfessionGrowl?.(slug);
       this._nextAt.set(zombie, now + VOCAL_GROWL_INTERVAL_MS);
     }
     for (const zombie of this._nextAt.keys()) {

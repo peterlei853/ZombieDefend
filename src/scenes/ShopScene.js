@@ -237,6 +237,7 @@ export default class ShopScene extends Phaser.Scene {
       this.audio = null;
     });
     this.audio.startShopBgm();
+    this.audio.playUiShop();
   }
 
   /**

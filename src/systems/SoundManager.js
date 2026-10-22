@@ -4,6 +4,7 @@ import {
   gameplaySfxClips,
   pickVocalVariant,
   professionVocalSlug,
+  s4VocalKey,
   vocalClipKey,
 } from '../data/vocalSfx.js';
 
@@ -205,8 +206,7 @@ export const GAME_AUDIO = [
   { key: 'sfx-enemy-steel-balam-skill-steel_whirlwind', url: 'assets/audio/sfx-enemy-steel-balam-skill-steel_whirlwind.mp3' },
   { key: 'sfx-enemy-steel-balam-enrage', url: 'assets/audio/sfx-enemy-steel-balam-enrage.mp3' },
   // Credit-burn priority weapon + dragon SFX (ElevenLabs flow bmHjwED3h0Uvkr9q9wyA).
-  // Catalog only — demo first HOLD Pages; no combat / Pages wire in this PR.
-  // Visual pairing: shot/charge/aoe-explode ↔ M2 weapon FX; sfx-pet-dragon-attack ↔ dragon slam d14e7c3e.
+  // Stage playback is wired in v0.36.28. GitHub Pages stays unpublished.
   { key: 'sfx-weapon-sling-shot', url: 'assets/audio/sfx-weapon-sling-shot.mp3' },
   { key: 'sfx-weapon-sling-charge', url: 'assets/audio/sfx-weapon-sling-charge.mp3' },
   { key: 'sfx-weapon-sling-aoe-explode', url: 'assets/audio/sfx-weapon-sling-aoe-explode.mp3' },
@@ -224,8 +224,7 @@ export const GAME_AUDIO = [
   { key: 'sfx-weapon-flame-aoe-explode', url: 'assets/audio/sfx-weapon-flame-aoe-explode.mp3' },
   { key: 'sfx-pet-dragon-attack', url: 'assets/audio/sfx-pet-dragon-attack.mp3' },
   // Credit-burn batch SFX (ElevenLabs flow Zas8sd19kFGbAKW9Us9B).
-  // Catalog only — demo first HOLD Pages; no combat / Pages wire.
-  // Weapon aoe+hit, boss skills, S4 vocals, UI, pickups, fence.
+  // Stage playback uses the keys that already have a combat or UI moment.
   { key: 'sfx-weapon-sling-aoe', url: 'assets/audio/sfx-weapon-sling-aoe.mp3' },
   { key: 'sfx-weapon-sling-hit', url: 'assets/audio/sfx-weapon-sling-hit.mp3' },
   { key: 'sfx-weapon-bubble-aoe', url: 'assets/audio/sfx-weapon-bubble-aoe.mp3' },
@@ -304,8 +303,63 @@ function enemyCueCooldown(cue) {
  * @param {string} [profile]
  * @returns {string}
  */
+/** Live weapon id → credit-burn slug. Lightning is rail. Frost is freeze. */
+export const PRIORITY_WEAPON_SLUG = Object.freeze({
+  sling: 'sling',
+  bubble: 'bubble',
+  lightning: 'rail',
+  frost: 'freeze',
+  flame: 'flame',
+});
+
+/**
+ * Volumes stay under the shared fire/melee rows so a volley does not shout.
+ * Charge is the draw between shots and is cut when the shot plays.
+ */
+export const PRIORITY_WEAPON_VOLUME = Object.freeze({
+  shot: 0.32,
+  charge: 0.22,
+  hit: 0.28,
+  aoe: 0.24,
+  aoeExplode: 0.32,
+});
+
+/** @param {string|null|undefined} id */
+export function priorityWeaponSlug(id) {
+  if (!id) return null;
+  return PRIORITY_WEAPON_SLUG[id] || null;
+}
+
+/**
+ * @param {string|null|undefined} id
+ * @param {'shot'|'charge'|'hit'|'aoe'|'aoe-explode'} moment
+ * @returns {string|null}
+ */
+export function priorityWeaponKey(id, moment) {
+  const slug = priorityWeaponSlug(id);
+  if (!slug || !moment) return null;
+  const key = `sfx-weapon-${slug}-${moment}`;
+  return AUDIO_KEYS.has(key) ? key : null;
+}
+
+/** Boss feel-booth skill sting. `lava-balon` uses the balun clip. */
+const BOSS_SKILL_KEY = Object.freeze({
+  'lava-balon': 'sfx-boss-balun-skill',
+  balun: 'sfx-boss-balun-skill',
+  'steel-balam': 'sfx-boss-balam-skill',
+  balam: 'sfx-boss-balam-skill',
+});
+
+/** @param {string|null|undefined} id */
+export function bossSkillKey(id) {
+  const key = id ? BOSS_SKILL_KEY[id] : null;
+  return key && AUDIO_KEYS.has(key) ? key : null;
+}
+
 export function weaponShotKey(skin, profile) {
   const id = skin?.id;
+  const priority = priorityWeaponKey(id, 'shot') || priorityWeaponKey(profile, 'shot');
+  if (priority) return priority;
   if (id && AUDIO_KEYS.has(`shoot-${id}`)) return `shoot-${id}`;
   return profile === 'shotgun' ? 'shoot-shotgun' : 'shoot-handgun';
 }
@@ -530,10 +584,125 @@ export class SoundManager {
    * @param {string} [profile]
    */
   playWeaponShot(skin, profile) {
+    const id = skin?.id || profile;
+    const key = weaponShotKey(skin, profile);
+    const priority = priorityWeaponKey(id, 'shot') === key;
     if (!this._passCooldown('weapon-fire', AUDIO_COOLDOWN_MS.fire)) return;
     this._stopFireVoice();
-    const node = this._cue(weaponShotKey(skin, profile), AUDIO_VOLUME.fire);
+    if (priority) this.stopPriorityCharge(id);
+    const node = this._cue(key, priority ? PRIORITY_WEAPON_VOLUME.shot : AUDIO_VOLUME.fire);
     this._fireVoice = node;
+  }
+
+  /**
+   * One charge voice for the gun that is waiting out its fire cooldown,
+   * or for the flame cone while it is still growing. A repeat of the same
+   * key does not restart the 2s rise. The shot cuts it.
+   * @param {string|null|undefined} weaponId
+   */
+  syncPriorityCharge(weaponId) {
+    if (this._disposed) return;
+    const key = priorityWeaponKey(weaponId, 'charge');
+    if (!key) return;
+    if (this._priorityChargeKey === key && this._priorityCharge) return;
+    this._stopPriorityCharge();
+    this._priorityChargeKey = key;
+    this._priorityCharge = this._addWaterNode(key, PRIORITY_WEAPON_VOLUME.charge, false);
+    if (!this._priorityCharge) this._priorityChargeKey = null;
+  }
+
+  /**
+   * Cut the draw. With no id, any priority charge stops. With an id, a
+   * different gun's charge is left alone.
+   * @param {string} [weaponId]
+   */
+  stopPriorityCharge(weaponId) {
+    if (weaponId) {
+      const key = priorityWeaponKey(weaponId, 'charge');
+      if (!key || (this._priorityChargeKey && this._priorityChargeKey !== key)) return;
+    }
+    this._stopPriorityCharge();
+  }
+
+  /**
+   * Body impact for weapons 2–6. Returns false when this id has no hit clip
+   * so the generic impact can play. A cooldown skip still returns true.
+   * @param {string|null|undefined} weaponId
+   * @returns {boolean}
+   */
+  playPriorityHit(weaponId) {
+    const key = priorityWeaponKey(weaponId, 'hit');
+    if (!key) return false;
+    this._cue(key, PRIORITY_WEAPON_VOLUME.hit, 140);
+    return true;
+  }
+
+  /** Area whoosh (chain, shove, freeze field, flame cone). @param {string} weaponId */
+  playPriorityAoe(weaponId) {
+    const key = priorityWeaponKey(weaponId, 'aoe');
+    if (!key) return;
+    this._cue(key, PRIORITY_WEAPON_VOLUME.aoe, 480);
+  }
+
+  /** Ground burst. Longer cooldown than the whoosh so booms do not stack. @param {string} weaponId */
+  playPriorityAoeExplode(weaponId) {
+    const key = priorityWeaponKey(weaponId, 'aoe-explode');
+    if (!key) return;
+    this._cue(key, PRIORITY_WEAPON_VOLUME.aoeExplode, 1000);
+  }
+
+  /** Dragon baby swing. Replaces the generic pet attack for that body. */
+  playDragonAttack() {
+    if (this._disposed) return;
+    this._stopDragonVoice();
+    this._dragonVoice = this._cue('sfx-pet-dragon-attack', 0.3, 0);
+  }
+
+  /**
+   * S4 growl / hit / hurt / death. True when this skin owns those clips,
+   * including when the cooldown skips a repeat.
+   * @param {string|null|undefined} skinId
+   * @param {'growl'|'hit'|'hurt'|'death'} kind
+   * @returns {boolean}
+   */
+  playS4Vocal(skinId, kind) {
+    const key = s4VocalKey(skinId, kind);
+    if (!key || !AUDIO_KEYS.has(key)) return false;
+    const volume = kind === 'death' ? 0.32 : kind === 'growl' ? 0.26 : 0.28;
+    const cooldown = kind === 'hit' ? 140 : kind === 'hurt' ? 220 : 0;
+    this._cue(key, volume, cooldown);
+    return true;
+  }
+
+  /** @param {string} id */
+  _playBossSkillSting(id) {
+    const key = bossSkillKey(id);
+    if (!key) return;
+    this._cue(key, 0.3, 900);
+  }
+
+  playUiShop() {
+    this._cue('sfx-ui-shop', 0.34);
+  }
+
+  playUiDmg() {
+    this._cue('sfx-ui-dmg', 0.22, 180);
+  }
+
+  playUiHeal() {
+    this._cue('sfx-ui-heal', 0.26, 1400);
+  }
+
+  playUiWave() {
+    this._cue('sfx-ui-wave', 0.32, 400);
+  }
+
+  playFenceCrack() {
+    this._cue('sfx-fence-crack', 0.3);
+  }
+
+  playFenceBreak() {
+    this._cue('sfx-fence-break', 0.38);
   }
 
   /**
@@ -745,6 +914,7 @@ export class SoundManager {
    */
   playEnemyCue(id, cue) {
     if (this._disposed || !id || !cue) return null;
+    if (typeof cue === 'string' && cue.startsWith('skill')) this._playBossSkillSting(id);
     const key = enemySfxKey(id, cue);
     if (!this._passCooldown(key, enemyCueCooldown(cue))) return null;
     this._stopEnemyVoice();
@@ -758,7 +928,7 @@ export class SoundManager {
   }
 
   playCoin() {
-    this._cue('coin-pickup', AUDIO_VOLUME.coin, AUDIO_COOLDOWN_MS.coin);
+    this._cue('sfx-coin-pickup', AUDIO_VOLUME.coin, AUDIO_COOLDOWN_MS.coin);
   }
 
   playWeaponSwap() {
@@ -766,7 +936,7 @@ export class SoundManager {
   }
 
   playUiClick() {
-    this._cue('ui-click', AUDIO_VOLUME.ui);
+    this._cue('sfx-ui-click', 0.34);
   }
 
   /**
@@ -869,6 +1039,8 @@ export class SoundManager {
     this.stopWaterChargeLoop();
     this.stopBgm();
     this._stopFireVoice();
+    this._stopPriorityCharge();
+    this._stopDragonVoice();
     this._stopEnemyVoice();
   }
 
@@ -1017,6 +1189,28 @@ export class SoundManager {
   _stopEnemyVoice() {
     const node = this._enemyVoice;
     this._enemyVoice = null;
+    if (!node) return;
+    try {
+      node.stop?.();
+    } catch (_) {
+      /* already stopped */
+    }
+    try {
+      node.destroy?.();
+    } catch (_) {
+      /* already destroyed */
+    }
+  }
+
+  _stopPriorityCharge() {
+    this._stopWaterNode(this._priorityCharge);
+    this._priorityCharge = null;
+    this._priorityChargeKey = null;
+  }
+
+  _stopDragonVoice() {
+    const node = this._dragonVoice;
+    this._dragonVoice = null;
     if (!node) return;
     try {
       node.stop?.();

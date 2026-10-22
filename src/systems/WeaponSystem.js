@@ -782,12 +782,14 @@ export class WeaponSystem {
     if (!canFire || !Array.isArray(bullets)) {
       this._wasFrontFire = false;
       this._syncFlame(false, null, dt, zombies);
+      this.scene?.audio?.stopPriorityCharge?.();
       return firedEarly;
     }
     if (opts.fenceOnly) return this._updateFenceFire(dt, zombies, bullets, opts);
     if (opts.manualFire && opts.triggerHeld !== true) {
       this._wasFrontFire = false;
       this._syncFlame(false, null, dt, zombies);
+      this.scene?.audio?.stopPriorityCharge?.();
       return firedEarly;
     }
     if (!this._wasFrontFire) {
@@ -845,7 +847,40 @@ export class WeaponSystem {
       fired = fired || id;
     }
     if (!flame) this._syncFlame(false, null, dt, zombies);
+    this._syncPriorityDraw(this._priorityDrawId(opts), fired);
     return fired;
+  }
+
+  /**
+   * The one gun whose draw should be heard. Manual stage uses the
+   * highlighted id. A single owned gun (sandbox, `?weapon=`) uses that id.
+   * @param {{ fenceOnly?: boolean, fenceMount?: { weaponId?: string }, manualFire?: boolean, selectedId?: string }} [opts]
+   * @returns {string|null}
+   */
+  _priorityDrawId(opts) {
+    if (!opts) return null;
+    if (opts.fenceOnly) return opts.fenceMount?.weaponId || null;
+    if (opts.manualFire && opts.selectedId) return opts.selectedId;
+    if (this._ownedIds.length === 1) return this._ownedIds[0];
+    return null;
+  }
+
+  /**
+   * Charge plays while that gun's cooldown is running. A shot this frame
+   * cuts it so the fire cue is the attack. Water and flame keep their own
+   * voices. Flame grow is handled in `_syncFlame`.
+   * @param {string|null} id
+   * @param {string|null} fired
+   */
+  _syncPriorityDraw(id, fired) {
+    if (!id || id === 'water' || id === 'flame') {
+      if (id !== 'flame') this.scene?.audio?.stopPriorityCharge?.();
+      return;
+    }
+    const spawned = fired === id;
+    if (spawned) this.scene?.audio?.stopPriorityCharge?.(id);
+    else if ((this._cooldowns[id] || 0) > 40) this.scene?.audio?.syncPriorityCharge?.(id);
+    else this.scene?.audio?.stopPriorityCharge?.(id);
   }
 
   /**
@@ -872,6 +907,7 @@ export class WeaponSystem {
     const trait = id ? WEAPON_TRAITS[id] : null;
     if (!trait || !Number.isFinite(slot?.muzzleX) || !Number.isFinite(slot?.muzzleY)) {
       this._syncFlame(false, null, dt, zombies);
+      this._syncPriorityDraw(id, null);
       return null;
     }
     if (trait.continuous) {
@@ -880,14 +916,19 @@ export class WeaponSystem {
     }
     this._syncFlame(false, null, dt, zombies);
     this._cooldowns[id] = (this._cooldowns[id] || 0) - dt;
-    if (this._cooldowns[id] > 0) return null;
+    if (this._cooldowns[id] > 0) {
+      this._syncPriorityDraw(id, null);
+      return null;
+    }
     this._cooldowns[id] = trait.fireMs;
     if (id === 'water') {
       this._spawnWaterShot(bullets, slot, zombies, trait);
+      this._syncPriorityDraw(id, id);
       return id;
     }
     if (id === 'sling') {
       this._spawnSlingShot(bullets, slot, zombies, trait);
+      this._syncPriorityDraw(id, id);
       return id;
     }
     const speed = BULLET_SPEED * LAYOUT_SCALE * (trait.speed || 1);
@@ -903,6 +944,7 @@ export class WeaponSystem {
       split: id === 'bubble',
       tier: trait.tier || null,
     });
+    this._syncPriorityDraw(id, id);
     return id;
   }
 
@@ -1001,7 +1043,11 @@ export class WeaponSystem {
       impact: true,
       knock: true,
     });
-    if (trait?.id === 'bubble' && bullet.split) this._splitBubble(zombie, bullet);
+    if (trait?.id === 'bubble' && bullet.split) {
+      if ((bullet.tier || 'l') === 'l') this.scene?.audio?.playPriorityAoeExplode?.('bubble');
+      else this.scene?.audio?.playPriorityAoe?.('bubble');
+      this._splitBubble(zombie, bullet);
+    }
     if (trait?.id === 'lightning') {
       const chain = this._chainLightning(zombie);
       gain.gold += chain.gold;
@@ -1054,7 +1100,12 @@ export class WeaponSystem {
       charge: Number(bullet?.charge) || 0,
       crit,
     });
-    if (dealt > 0) this.scene.audio?.playHitImpact();
+    const weaponId = bullet?.weaponId;
+    const priorityHit = weaponId === 'sling' || weaponId === 'flame';
+    if (!priorityHit) {
+      const specific = this.scene?.audio?.playPriorityHit?.(weaponId);
+      if (!specific && dealt > 0) this.scene.audio?.playHitImpact();
+    }
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, dealt, color, zombie.id);
     if (crit) showCritText(this.scene, hx, hy - layoutPx(12));
@@ -1564,6 +1615,7 @@ export class WeaponSystem {
     const hy = Number.isFinite(primary.bodyCenterY) ? primary.bodyCenterY : primary.y;
     const exists = (key) => !!this.scene?.textures?.exists?.(key);
     this._spawnImpactKey(slingImpactKey(exists), px, hy, primary);
+    this.scene?.audio?.playPriorityHit?.('sling');
     this._slingBeats.push({
       life: this._slingBeatMs(),
       zombie: primary,
@@ -1639,6 +1691,8 @@ export class WeaponSystem {
         );
         this._pending.gold += gain.gold;
         this._pending.kills += gain.kills;
+        this.scene?.audio?.playPriorityAoe?.('sling');
+        this.scene?.audio?.playPriorityAoeExplode?.('sling');
         if (beat.streak) this._playStreak(zombie, beat.streak);
       }
     }
@@ -1692,6 +1746,7 @@ export class WeaponSystem {
     let kills = 0;
     const used = new Set([primary.id]);
     const jumps = trait.chainJumps || 0;
+    let jumped = 0;
     for (let i = 0; i < jumps; i++) {
       let best = null;
       let bestD = range;
@@ -1705,6 +1760,9 @@ export class WeaponSystem {
       }
       if (!best) break;
       used.add(best.id);
+      jumped += 1;
+      if (jumped === 1) this.scene?.audio?.playPriorityAoe?.('lightning');
+      else this.scene?.audio?.playPriorityAoeExplode?.('lightning');
       this._spawnChain(
         from.x,
         from.bodyCenterY || from.y,
@@ -1732,6 +1790,8 @@ export class WeaponSystem {
   _freezeZombie(zombie, trait) {
     if (typeof zombie.applyRoot === 'function') zombie.applyRoot(trait.freezeMs || 0);
     this._attachFollow(zombie, trait.status, trait.freezeMs || 900);
+    this.scene?.audio?.playPriorityAoe?.('frost');
+    this.scene?.audio?.playPriorityAoeExplode?.('frost');
   }
 
   /**
@@ -1745,6 +1805,9 @@ export class WeaponSystem {
       this._destroyFlame();
       this._flameMs = 0;
       this._flameTick = 0;
+      this._flameBloomed = false;
+      this._flameHitIds = null;
+      this.scene?.audio?.stopPriorityCharge?.('flame');
       return;
     }
     const trait = WEAPON_TRAITS.flame;
@@ -1762,11 +1825,24 @@ export class WeaponSystem {
     const fw = asset?.frameWidth || (useShort ? 48 : 128);
     const fh = asset?.frameHeight || (useShort ? 32 : 48);
     if (!this._flame?.active || this._flame.texture?.key !== key) {
+      const born = !this._flame?.active;
       this._destroyFlame();
       this._flame = this.scene.add.sprite(muzzle.x, muzzle.y, key);
       const origin = asset?.origin || [1, 0.5];
       this._flame.setOrigin(origin[0], origin[1]);
       playLibraryAnim(this._flame, key, this.scene);
+      if (born) {
+        this._flameBloomed = false;
+        this._flameHitIds = new Set();
+        this.scene?.audio?.playWeaponShot?.({ id: 'flame' }, 'flame');
+      }
+    }
+    if (!this._flameBloomed && this._flameMs >= FLAME_GROW_MS) {
+      this._flameBloomed = true;
+      this.scene?.audio?.stopPriorityCharge?.('flame');
+      this.scene?.audio?.playPriorityAoeExplode?.('flame');
+    } else if (!this._flameBloomed && this._flameMs > 80) {
+      this.scene?.audio?.syncPriorityCharge?.('flame');
     }
     const sy = this._visualScale || 1;
     this._flame.setPosition(muzzle.x, muzzle.y);
@@ -1788,6 +1864,12 @@ export class WeaponSystem {
         z.applyBurn(this._scaledDamage('flame', trait.burn), trait.burnIntervalMs, trait.burnMs);
       }
       this._attachFollow(z, trait.burnFx, trait.burnMs);
+      if (!this._flameHitIds) this._flameHitIds = new Set();
+      if (!this._flameHitIds.has(z.id)) {
+        this._flameHitIds.add(z.id);
+        this.scene?.audio?.playPriorityHit?.('flame');
+      }
+      this.scene?.audio?.playPriorityAoe?.('flame');
       const gain = this._hurtZombie(z, this._scaledDamage('flame', trait.chip), { weaponId: 'flame' }, { impact: false, knock: false });
       this._pending.gold += gain.gold;
       this._pending.kills += gain.kills;
