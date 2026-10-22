@@ -12,10 +12,10 @@
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 20 |
+| [Environment](#environment) | 3 | 46 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **55** | **685** |
 
 <a id="hero"></a>
 ## Hero
@@ -1247,6 +1247,43 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `prop-flame-mount` | [prop-flame-mount.png](environment/props/prop-flame-mount.png) | 64x64 | image | v0.33 primary flame mount. Fire orange accents. Origin feet (32, 60) ≈ (0.5, 0.9375). Attach player-girl-front-flame-still at cradle pixel (32, 12), 48px above the feet. Brighter alternate: prop-flame-mount-hi-vis. |
 | `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
+
+### Street Fill Props (burn~95%) (街道填充道具（燃點~95%）)
+
+<img src="previews/environment/street/preview.gif" alt="street preview" height="140">
+
+Credit-burn filler street props + shotgun icon + plasma projectile. Visual/catalog only — no Stage physics hooks in this PR.
+
+- group `street` · 26 assets · frame 32x32, 48x48, 64x64 · manifest [environment/street/manifest.json](environment/street/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `prop-wood-crate` | [prop-wood-crate.png](environment/street/prop-wood-crate.png) | 48x48 | image | Wooden shipping crate with FRAGILE stencil + corner brackets, 48×48 campus TD prop. |
+| `prop-wood-crate-alt` | [prop-wood-crate-alt.png](environment/street/prop-wood-crate-alt.png) | 48x48 | image | Wooden shipping crate alt grain/brace variant, 48×48. |
+| `prop-oil-barrel` | [prop-oil-barrel.png](environment/street/prop-oil-barrel.png) | 48x48 | image | Rusty oil drum barrel, 48×48. Soft-fixed bottom edge. |
+| `prop-oil-barrel-alt` | [prop-oil-barrel-alt.png](environment/street/prop-oil-barrel-alt.png) | 48x48 | image | Rusty oil drum barrel alternate, 48×48. |
+| `prop-cardboard-box` | [prop-cardboard-box.png](environment/street/prop-cardboard-box.png) | 32x32 | image | Cardboard shipping box, 32×32 ground prop. |
+| `prop-cardboard-box-alt` | [prop-cardboard-box-alt.png](environment/street/prop-cardboard-box-alt.png) | 32x32 | image | Cardboard shipping box alternate, 32×32. |
+| `prop-traffic-light` | [prop-traffic-light.png](environment/street/prop-traffic-light.png) | 48x48 | image | Traffic light on pole with pedestrian box, 48×48. Soft-fixed bottom edge. |
+| `prop-traffic-light-alt` | [prop-traffic-light-alt.png](environment/street/prop-traffic-light-alt.png) | 48x48 | image | Traffic light alternate, 48×48. Soft-fixed bottom edge. |
+| `prop-shopping-cart` | [prop-shopping-cart.png](environment/street/prop-shopping-cart.png) | 48x48 | image | Metal shopping cart, 48×48 campus TD prop. |
+| `prop-shopping-cart-alt` | [prop-shopping-cart-alt.png](environment/street/prop-shopping-cart-alt.png) | 48x48 | image | Metal shopping cart alternate, 48×48. |
+| `prop-bollard` | [prop-bollard.png](environment/street/prop-bollard.png) | 64x64 | image | Metal street bollard post, 64×64. |
+| `prop-bollard-alt` | [prop-bollard-alt.png](environment/street/prop-bollard-alt.png) | 64x64 | image | Metal street bollard alternate, 64×64. |
+| `prop-trash-bags` | [prop-trash-bags.png](environment/street/prop-trash-bags.png) | 64x64 | image | Black trash bags pile, 64×64. |
+| `prop-trash-bags-alt` | [prop-trash-bags-alt.png](environment/street/prop-trash-bags-alt.png) | 64x64 | image | Black trash bags pile alternate, 64×64. |
+| `prop-sandbags` | [prop-sandbags.png](environment/street/prop-sandbags.png) | 64x64 | image | Sandbag barricade stack, 64×64. |
+| `prop-sandbags-alt` | [prop-sandbags-alt.png](environment/street/prop-sandbags-alt.png) | 64x64 | image | Sandbag barricade stack alternate, 64×64. |
+| `prop-dumpster-green` | [prop-dumpster-green.png](environment/street/prop-dumpster-green.png) | 64x64 | image | Green metal dumpster with graffiti + casters, 64×64. |
+| `prop-dumpster-green-alt` | [prop-dumpster-green-alt.png](environment/street/prop-dumpster-green-alt.png) | 64x64 | image | Green metal dumpster alternate, 64×64. |
+| `prop-parking-meter-alt` | [prop-parking-meter-alt.png](environment/street/prop-parking-meter-alt.png) | 64x64 | image | Gray parking meter (alt series), 64×64. |
+| `prop-parking-meter-alt2` | [prop-parking-meter-alt2.png](environment/street/prop-parking-meter-alt2.png) | 64x64 | image | Gray parking meter alt series variant 2, 64×64. |
+| `prop-fire-hydrant-alt` | [prop-fire-hydrant-alt.png](environment/street/prop-fire-hydrant-alt.png) | 64x64 | image | Red fire hydrant (alt series), 64×64. |
+| `prop-fire-hydrant-alt2` | [prop-fire-hydrant-alt2.png](environment/street/prop-fire-hydrant-alt2.png) | 64x64 | image | Red fire hydrant alt series variant 2, 64×64. |
+| `weapon-shotgun` | [weapon-shotgun.png](environment/street/weapon-shotgun.png) | 48x48 | image | Pump shotgun weapon icon, 48×48, center origin. |
+| `weapon-shotgun-alt` | [weapon-shotgun-alt.png](environment/street/weapon-shotgun-alt.png) | 48x48 | image | Pump shotgun weapon icon alternate, 48×48. |
+| `proj-plasma` | [proj-plasma.png](environment/street/proj-plasma.png) | 32x32 | image | Cyan plasma bolt projectile, 32×32, center origin. |
+| `proj-plasma-alt` | [proj-plasma-alt.png](environment/street/proj-plasma-alt.png) | 32x32 | image | Cyan plasma bolt projectile alternate, 32×32. |
 
 <a id="backgrounds"></a>
 ## Backgrounds

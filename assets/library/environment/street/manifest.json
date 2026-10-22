@@ -1,0 +1,584 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "street",
+  "title": "Street Fill Props (burn~95%)",
+  "titleZh": "\u8857\u9053\u586b\u5145\u9053\u5177\uff08\u71c3\u9ede~95%\uff09",
+  "description": "Credit-burn filler street props + shotgun icon + plasma projectile. Visual/catalog only \u2014 no Stage physics hooks in this PR.",
+  "source": {
+    "tool": "pixellab create_1_direction_object / list_objects",
+    "note": "2PL credit-burn fillers (~95% gens used) selected 2026-10-22; QC by PixelLab Asset Pipeline",
+    "handoff": "/workspace/zd-fill-props-burn95/"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "south",
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "prop-wood-crate",
+      "prop-wood-crate-alt",
+      "prop-oil-barrel",
+      "prop-oil-barrel-alt",
+      "prop-cardboard-box",
+      "prop-cardboard-box-alt",
+      "prop-traffic-light",
+      "prop-traffic-light-alt",
+      "prop-shopping-cart",
+      "prop-shopping-cart-alt",
+      "prop-bollard",
+      "prop-bollard-alt",
+      "prop-trash-bags",
+      "prop-trash-bags-alt",
+      "prop-sandbags",
+      "prop-sandbags-alt",
+      "prop-dumpster-green",
+      "prop-dumpster-green-alt",
+      "prop-parking-meter-alt",
+      "prop-parking-meter-alt2",
+      "prop-fire-hydrant-alt",
+      "prop-fire-hydrant-alt2",
+      "weapon-shotgun",
+      "weapon-shotgun-alt",
+      "proj-plasma",
+      "proj-plasma-alt"
+    ],
+    "thumb": "assets/library/previews/environment/street/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "prop-wood-crate",
+      "path": "assets/library/environment/street/prop-wood-crate.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Wooden shipping crate with FRAGILE stencil + corner brackets, 48\u00d748 campus TD prop.",
+      "extra": {
+        "pixellabObjectId": "b5f39fb0-64a2-4422-91bc-8df20692cd62",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-wood-crate-alt",
+      "path": "assets/library/environment/street/prop-wood-crate-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Wooden shipping crate alt grain/brace variant, 48\u00d748.",
+      "extra": {
+        "pixellabObjectId": "2a52db1e-ee09-4179-b289-1b4f58fa9773",
+        "role": "variant",
+        "prefer": "prop-wood-crate"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-oil-barrel",
+      "path": "assets/library/environment/street/prop-oil-barrel.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Rusty oil drum barrel, 48\u00d748. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "dbe60cfb-2e4c-4d12-8736-8a042768ebb7",
+        "role": "winner",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-oil-barrel-alt",
+      "path": "assets/library/environment/street/prop-oil-barrel-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Rusty oil drum barrel alternate, 48\u00d748.",
+      "extra": {
+        "pixellabObjectId": "15745a9b-974c-4768-bda5-f1940a2b477a",
+        "role": "variant",
+        "prefer": "prop-oil-barrel"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-cardboard-box",
+      "path": "assets/library/environment/street/prop-cardboard-box.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Cardboard shipping box, 32\u00d732 ground prop.",
+      "extra": {
+        "pixellabObjectId": "6146e719-53da-4959-8fc6-cf50d93f7ee0",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-cardboard-box-alt",
+      "path": "assets/library/environment/street/prop-cardboard-box-alt.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Cardboard shipping box alternate, 32\u00d732.",
+      "extra": {
+        "pixellabObjectId": "6bc0128b-d842-4048-9d54-f6c578cbfd8b",
+        "role": "variant",
+        "prefer": "prop-cardboard-box"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-traffic-light",
+      "path": "assets/library/environment/street/prop-traffic-light.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Traffic light on pole with pedestrian box, 48\u00d748. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "71391b9c-1cec-43d9-85fb-8e17ec962ad3",
+        "role": "winner",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-traffic-light-alt",
+      "path": "assets/library/environment/street/prop-traffic-light-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Traffic light alternate, 48\u00d748. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "42d13da9-397e-46f3-9e66-a4e274ced6f9",
+        "role": "variant",
+        "prefer": "prop-traffic-light",
+        "softFixed": "bottom-1px"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-shopping-cart",
+      "path": "assets/library/environment/street/prop-shopping-cart.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal shopping cart, 48\u00d748 campus TD prop.",
+      "extra": {
+        "pixellabObjectId": "a0f9afb7-9718-49f8-9d47-9973c3052bf2",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-shopping-cart-alt",
+      "path": "assets/library/environment/street/prop-shopping-cart-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal shopping cart alternate, 48\u00d748.",
+      "extra": {
+        "pixellabObjectId": "8d0bfd8e-db9f-44db-8503-cef5f2403094",
+        "role": "variant",
+        "prefer": "prop-shopping-cart"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-bollard",
+      "path": "assets/library/environment/street/prop-bollard.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal street bollard post, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "7cfdf3da-6526-4a8f-8881-f9fbc1468e7c",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-bollard-alt",
+      "path": "assets/library/environment/street/prop-bollard-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Metal street bollard alternate, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "1809f264-cf8b-4dfe-881c-6f65b4b28d93",
+        "role": "variant",
+        "prefer": "prop-bollard"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-trash-bags",
+      "path": "assets/library/environment/street/prop-trash-bags.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Black trash bags pile, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "250ed72e-5623-477e-991e-e08e9898f10f",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-trash-bags-alt",
+      "path": "assets/library/environment/street/prop-trash-bags-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Black trash bags pile alternate, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "0b62a2cd-676b-4428-9c6f-1d0da3c23956",
+        "role": "variant",
+        "prefer": "prop-trash-bags"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-sandbags",
+      "path": "assets/library/environment/street/prop-sandbags.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Sandbag barricade stack, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "c3955e83-1e13-4c4d-94a0-97f979f097da",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-sandbags-alt",
+      "path": "assets/library/environment/street/prop-sandbags-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Sandbag barricade stack alternate, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "2e5118e3-ee57-44f8-a503-1d695406d1cc",
+        "role": "variant",
+        "prefer": "prop-sandbags"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-dumpster-green",
+      "path": "assets/library/environment/street/prop-dumpster-green.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Green metal dumpster with graffiti + casters, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "53d9f5ac-08d0-4095-930c-be9e2ffbe07d",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-dumpster-green-alt",
+      "path": "assets/library/environment/street/prop-dumpster-green-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Green metal dumpster alternate, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "dabc1bda-7caa-4975-beee-03bdd04a23d6",
+        "role": "variant",
+        "prefer": "prop-dumpster-green"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-parking-meter-alt",
+      "path": "assets/library/environment/street/prop-parking-meter-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Gray parking meter (alt series), 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "6274cca1-cb84-418e-8464-071db0b03603",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-parking-meter-alt2",
+      "path": "assets/library/environment/street/prop-parking-meter-alt2.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Gray parking meter alt series variant 2, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "a45e48ec-03ea-4595-8fdd-d7ef919338ba",
+        "role": "variant",
+        "prefer": "prop-parking-meter-alt"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "prop-fire-hydrant-alt",
+      "path": "assets/library/environment/street/prop-fire-hydrant-alt.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Red fire hydrant (alt series), 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "67d1bac3-5f3a-4a79-9dc8-9e0fd2a8d64d",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-fire-hydrant-alt2",
+      "path": "assets/library/environment/street/prop-fire-hydrant-alt2.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Red fire hydrant alt series variant 2, 64\u00d764.",
+      "extra": {
+        "pixellabObjectId": "1af483cc-bcb5-43f6-a7ae-2ba90b31367f",
+        "role": "variant",
+        "prefer": "prop-fire-hydrant-alt"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "weapon-shotgun",
+      "path": "assets/library/environment/street/weapon-shotgun.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Pump shotgun weapon icon, 48\u00d748, center origin.",
+      "extra": {
+        "pixellabObjectId": "3151557b-e627-4c12-9e44-a1b3cfe1d810",
+        "role": "winner",
+        "kind": "weapon"
+      }
+    },
+    {
+      "key": "weapon-shotgun-alt",
+      "path": "assets/library/environment/street/weapon-shotgun-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Pump shotgun weapon icon alternate, 48\u00d748.",
+      "extra": {
+        "pixellabObjectId": "be2ea42e-2e07-4fcd-bd37-290d28bfa0ba",
+        "role": "variant",
+        "prefer": "weapon-shotgun",
+        "kind": "weapon"
+      },
+      "tags": [
+        "alternate"
+      ]
+    },
+    {
+      "key": "proj-plasma",
+      "path": "assets/library/environment/street/proj-plasma.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Cyan plasma bolt projectile, 32\u00d732, center origin.",
+      "extra": {
+        "pixellabObjectId": "f6efe814-51ad-466f-ab23-8c66423e9eca",
+        "role": "winner",
+        "kind": "projectile"
+      }
+    },
+    {
+      "key": "proj-plasma-alt",
+      "path": "assets/library/environment/street/proj-plasma-alt.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Cyan plasma bolt projectile alternate, 32\u00d732.",
+      "extra": {
+        "pixellabObjectId": "86860667-86a1-4506-ac11-0ed644d4277f",
+        "role": "variant",
+        "prefer": "proj-plasma",
+        "kind": "projectile"
+      },
+      "tags": [
+        "alternate"
+      ]
+    }
+  ]
+}
