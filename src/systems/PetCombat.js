@@ -6,7 +6,7 @@ import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { petSkillKey, petSkillSpec } from '../assets/petSkills.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
-import { clampPetFoot } from './footprints.js';
+import { clampPetFoot, petLaneDrop } from './footprints.js';
 import {
   barricadeXAtY,
   depthFromY,
@@ -525,11 +525,16 @@ export class PetCombat {
           return sprite.y;
         },
         footprintWidth: () => Math.abs(sprite.displayWidth || 0),
+        footprintHeight: () => Math.abs(sprite.displayHeight || 0),
         shift: (dx, dy) => {
+          const y0 = sprite.y;
           if (dx) sprite.x += dx;
           if (dy) sprite.y = clampPetFoot(sprite.y + dy);
           actor.x = sprite.x;
           actor.y = sprite.y;
+          // Grass refused the drop. The separator then slides on X.
+          if (dy && !dx && Math.abs(sprite.y - y0) < Math.abs(dy) * 0.5) return false;
+          return true;
         },
       });
     }
@@ -1747,11 +1752,11 @@ export class PetCombat {
       actor.latched = false;
       actor.latchId = threat.id;
     }
-    if (!actor.latched) {
-      const dest = this._aimPoint(actor, threat, player);
-      actor.destX = dest.x;
-      actor.destY = dest.y;
-    }
+    // Retarget every frame. A frozen latch walks the pet back onto a
+    // zombie that marched into the old stand.
+    const dest = this._aimPoint(actor, threat, player);
+    actor.destX = dest.x;
+    actor.destY = dest.y;
     const dx = actor.destX - sprite.x;
     const dy = actor.destY - sprite.y;
     const dist = Math.hypot(dx, dy);
@@ -1780,8 +1785,8 @@ export class PetCombat {
   }
 
   /**
-   * Hold point in front of the threat, on its lane. Latched so the pet
-   * does not kite once it arrives — zombies close and can bite.
+   * Hold in front of the threat and one step down-screen, so the pet
+   * sprite sits under the head and torso. Recomputed every frame.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie} threat
    * @param {{ x?: number, y?: number }|null} player
@@ -1789,7 +1794,10 @@ export class PetCombat {
   _aimPoint(actor, threat, player) {
     const stand = engageStand(actor.role.id);
     let x = threat.x + stand;
-    const y = clampGrass(threat.y);
+    const petH = Math.abs(actor.sprite?.displayHeight) || layoutPx(36);
+    const zH = Math.abs(threat.body?.displayHeight) || threat.footprintHeight?.() || layoutPx(52);
+    const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
+    const y = clampGrass(threat.y + petLaneDrop(petH, zH, meleeCap));
     const minX = threat.x + layoutPx(14);
     if (x < minX) x = minX;
     if (player && Number.isFinite(player.x)) {

@@ -10,8 +10,10 @@
  *
  * Opening player attack is 10 (~14.7 DPS if they tap L1 on the 680ms
  * water cadence) plus one pet normal attack (~14 DPS). Stage 1 waves
- * 3–4 stay light enough that taps alone can finish the 90s before the
- * wall breaks. Stage 2 wants the pet. Stage 3 is the tight clear.
+ * 3–4 are a short late pack: 3 then 4 bodies, and the last spawn is at
+ * 80s so the pack can die before the clock. Stage 2 wants the pet.
+ * Stage 3 is the tight clear. After 90s, leftover bites do not damage
+ * the wall.
  */
 
 /** @typedef {{ hp: number, speed: number, dps: number, weight?: number, variant?: string, skins: string[], gold: number }} EarlyArch */
@@ -22,8 +24,8 @@ export const EARLY_STAGE_WAVES = {
   1: [
     row(1, 0, 22, 4, 24, 26, 2, 8, ['office-worker-v2', 'office-worker-v2', 'delivery', 'chef']),
     row(2, 23, 44, 5, 36, 30, 3, 10, ['office-worker-v2', 'delivery', 'chef']),
-    row(3, 45, 66, 4, 36, 30, 3, 16, ['office-worker-v2', 'delivery', 'chef']),
-    row(4, 67, 90, 5, 44, 32, 3, 18, ['office-worker-v2', 'delivery', 'chef']),
+    row(3, 45, 64, 3, 30, 28, 2, 16, ['office-worker-v2', 'delivery', 'chef']),
+    row(4, 65, 80, 4, 36, 30, 3, 18, ['office-worker-v2', 'delivery', 'chef']),
   ],
   2: [
     row(1, 0, 20, 5, 36, 32, 4, 10, ['office-worker-v2', 'delivery', 'delivery', 'chef']),

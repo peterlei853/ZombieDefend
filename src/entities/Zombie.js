@@ -330,6 +330,12 @@ export class Zombie {
     return this.baseSize * this.scale * this.variantScale;
   }
 
+  /** Display height. Feet sit on `y`; the sprite extends upward. */
+  footprintHeight() {
+    if (this._isSprite && this.body) return Math.abs(this.body.displayHeight) || 0;
+    return this.baseSize * this.scale * this.variantScale;
+  }
+
   /**
    * Cell under 100×100 while the hurt window is open. March is exactly 0.
    * @returns {boolean}
@@ -920,6 +926,10 @@ export class Zombie {
    */
   contactDamage(deltaSec) {
     if (!this.alive || !this.atBarricade) return 0;
+    // The 90s clock is the survival test. Bodies already on the field
+    // still have to die before the win, but a bite after the clock does
+    // not chew the wall (no further spawns are queued past 90 either).
+    if (this.scene?.waveManager?.isTimeUp?.()) return 0;
     return this.dps * deltaSec;
   }
 

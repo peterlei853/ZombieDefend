@@ -8,11 +8,16 @@ import { grassYMax, grassYMin, layoutPx } from './DepthView.js';
  * apart. Enabling Arcade now would fight that stepper and the barricade
  * halt, so the separator stays a post-step push. Barricade HP is not read.
  *
- * Radius is half the display box plus a small pad, so pet and zombie
- * sprites do not sit inside each other. Spawn code also staggers X.
- * A hurt-locked body reports shift() === false and stays planted; the
- * other body takes the full push.
+ * Sprites are feet-origin. A circle at the soles ignores the body above
+ * them, so a pet can stand on a zombie's chest. Boxes use the full display
+ * height. A pet is dropped below the head and torso (the upper 64% of the
+ * zombie) instead of sharing that column. Same-kind pairs separate on the
+ * full box. A hurt-locked body reports shift() === false and stays planted;
+ * the other body takes the full push.
  */
+
+/** Share of the zombie sprite, measured from the crown, that is head and torso. */
+export const TORSO_FROM_TOP = 0.64;
 
 /** Cell (or display, if the cell is unknown) under this box cannot march while hurt. */
 export const HURT_LOCK_CELL = 100;
@@ -52,43 +57,136 @@ export function smallHurtLocksMove(monster) {
 }
 
 /**
- * @param {number} displayWidth
- * @param {number} [fallback]
+ * How far below a zombie's feet a pet's feet must sit so the pet sprite
+ * stays under the head and torso. `maxDrop` caps the lane so melee still
+ * reaches (canvas px). The uncapped drop is returned when maxDrop is omitted.
+ * @param {number} petHeight
+ * @param {number} zombieHeight
+ * @param {number} [maxDrop]
  */
-export function footprintRadius(displayWidth, fallback = 0) {
-  const w = Number(displayWidth);
-  const pad = layoutPx(4);
-  if (w > 8) return w * 0.5 + pad;
-  const fb = Number(fallback);
-  return Math.max(layoutPx(18), (fb > 0 ? fb : layoutPx(28)) * 0.5 + pad);
+export function petLaneDrop(petHeight, zombieHeight, maxDrop) {
+  const petH = Math.max(layoutPx(28), Number(petHeight) || 0);
+  const zH = Math.max(layoutPx(48), Number(zombieHeight) || 0);
+  const hipsFromFeet = zH * (1 - TORSO_FROM_TOP);
+  const drop = Math.max(layoutPx(18), petH - hipsFromFeet + layoutPx(8));
+  if (Number(maxDrop) > 0) return Math.min(maxDrop, drop);
+  return drop;
 }
 
 /**
- * @param {{ x: number, y: number, shift: (dx: number, dy: number) => void, displayWidth?: number, footprintWidth?: () => number, radius?: number }} a
- * @param {{ x: number, y: number, shift: (dx: number, dy: number) => void, displayWidth?: number, footprintWidth?: () => number, radius?: number }} b
+ * @param {{ footprintWidth?: () => number, footprintHeight?: () => number, displayWidth?: number, displayHeight?: number }} body
+ */
+function spriteSpan(body) {
+  const wRaw = typeof body.footprintWidth === 'function' ? body.footprintWidth() : body.displayWidth;
+  const hRaw = typeof body.footprintHeight === 'function' ? body.footprintHeight() : body.displayHeight;
+  const w = Number(wRaw);
+  const width = w > 8 ? w : layoutPx(28);
+  let height = Number(hRaw);
+  if (!(height > 8)) height = width;
+  return { w: width, h: height };
+}
+
+/**
+ * Feet-origin display box.
+ * @param {{ x: number, y: number }} body
+ */
+function spriteBox(body) {
+  const { w, h } = spriteSpan(body);
+  return {
+    l: body.x - w / 2,
+    r: body.x + w / 2,
+    t: body.y - h,
+    b: body.y,
+    w,
+    h,
+  };
+}
+
+/**
+ * Head and torso: the upper TORSO_FROM_TOP of the sprite, plus a pad.
+ * Legs below that line may share a column with a pet.
+ * @param {{ x: number, y: number }} zombie
+ * @param {number} pad
+ */
+function upperBody(zombie, pad) {
+  const box = spriteBox(zombie);
+  const torsoH = box.h * TORSO_FROM_TOP;
+  return {
+    l: box.l - pad,
+    r: box.r + pad,
+    t: box.t - pad,
+    b: box.t + torsoH + pad,
+  };
+}
+
+/**
+ * @param {{ x: number, y: number, shift: (dx: number, dy: number) => boolean|void }} body
+ * @param {number} dx
+ * @param {number} dy
+ */
+function nudge(body, dx, dy) {
+  return body.shift(dx, dy) !== false;
+}
+
+/**
+ * @param {{ x: number, y: number, shift: (dx: number, dy: number) => boolean|void }} a
+ * @param {{ x: number, y: number, shift: (dx: number, dy: number) => boolean|void }} b
+ */
+function pushAabb(a, b) {
+  const pad = layoutPx(4);
+  const A = spriteBox(a);
+  const B = spriteBox(b);
+  const overlapX = Math.min(A.r, B.r) - Math.max(A.l, B.l) + pad;
+  const overlapY = Math.min(A.b, B.b) - Math.max(A.t, B.t) + pad;
+  if (overlapX <= 0 || overlapY <= 0) return;
+  if (overlapX <= overlapY) {
+    const dir = b.x >= a.x ? 1 : -1;
+    const half = overlapX / 2;
+    const movedA = nudge(a, -dir * half, 0);
+    const movedB = nudge(b, dir * half, 0);
+    if (movedA && !movedB) nudge(a, -dir * half, 0);
+    else if (movedB && !movedA) nudge(b, dir * half, 0);
+    return;
+  }
+  const dir = b.y >= a.y ? 1 : -1;
+  const half = overlapY / 2;
+  const movedA = nudge(a, 0, -dir * half);
+  const movedB = nudge(b, 0, dir * half);
+  if (movedA && !movedB) nudge(a, 0, -dir * half);
+  else if (movedB && !movedA) nudge(b, 0, dir * half);
+}
+
+/**
+ * Drop the pet below the zombie's head and torso. If the grass clamp
+ * refuses that drop, slide the pet to the barricade side of the body.
+ * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => boolean|void }} pet
+ * @param {{ x: number, y: number, shift: (dx: number, dy: number) => boolean|void }} zombie
+ */
+function pushPetOffTorso(pet, zombie) {
+  const pad = layoutPx(6);
+  const petBox = spriteBox(pet);
+  const upper = upperBody(zombie, pad);
+  const overlapX = Math.min(petBox.r, upper.r) - Math.max(petBox.l, upper.l);
+  const overlapY = Math.min(petBox.b, upper.b) - Math.max(petBox.t, upper.t);
+  if (overlapX <= 0 || overlapY <= 0) return;
+  const drop = upper.b - petBox.t;
+  if (drop > 0.5 && nudge(pet, 0, drop)) return;
+  const dx = upper.r - petBox.l;
+  if (dx > 0.5 && !nudge(pet, dx, 0)) nudge(zombie, -dx, 0);
+}
+
+/**
+ * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => void }} a
+ * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => void }} b
  */
 function pushApart(a, b) {
-  const aw = typeof a.footprintWidth === 'function' ? a.footprintWidth() : a.displayWidth;
-  const bw = typeof b.footprintWidth === 'function' ? b.footprintWidth() : b.displayWidth;
-  const ra = Number.isFinite(a.radius) ? a.radius : footprintRadius(aw || 0);
-  const rb = Number.isFinite(b.radius) ? b.radius : footprintRadius(bw || 0);
-  let dx = b.x - a.x;
-  let dy = b.y - a.y;
-  const min = ra + rb;
-  let dist = Math.hypot(dx, dy);
-  if (dist >= min - 0.01) return;
-  if (dist < 0.01) {
-    dx = 1;
-    dy = 0.25;
-    dist = Math.hypot(dx, dy);
+  const aPet = a.kind === 'pet';
+  const bPet = b.kind === 'pet';
+  if (aPet !== bPet) {
+    pushPetOffTorso(aPet ? a : b, aPet ? b : a);
+    return;
   }
-  const push = (min - dist) / 2;
-  const nx = dx / dist;
-  const ny = dy / dist;
-  const movedA = a.shift(-nx * push, -ny * push) !== false;
-  const movedB = b.shift(nx * push, ny * push) !== false;
-  if (movedA && !movedB) a.shift(-nx * push, -ny * push);
-  else if (movedB && !movedA) b.shift(nx * push, ny * push);
+  pushAabb(a, b);
 }
 
 /**

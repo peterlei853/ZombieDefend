@@ -20,7 +20,8 @@ import {
   vocalClipKey,
   vocalClipKeys,
 } from '../src/data/vocalSfx.js';
-import { separateFootprints, smallHurtLocksMove } from '../src/systems/footprints.js';
+import { TORSO_FROM_TOP, petLaneDrop, separateFootprints, smallHurtLocksMove } from '../src/systems/footprints.js';
+import { layoutPx } from '../src/systems/DepthView.js';
 import { VocalAmbience } from '../src/systems/vocalAmbience.js';
 import { Zombie } from '../src/entities/Zombie.js';
 
@@ -44,7 +45,7 @@ assert(waveDefsForStage(4)[3].total === 48 && waveDefsForStage(5)[0].archetypes[
 assert(PLAYABLE_STAGE_CAP === 3, 'the clear loop is three stages');
 assert(rosterForStage(3).includes('nurse') && !rosterForStage(4).includes('chef'), 'nurse joins stage 3 only');
 
-const totals = { 1: 18, 2: 24, 3: 28 };
+const totals = { 1: 16, 2: 24, 3: 28 };
 for (const stage of [1, 2, 3]) {
   const rows = stageBalanceRows(stage);
   const count = rows.reduce((sum, row) => sum + row.count, 0);
@@ -56,8 +57,9 @@ assert(stageBalanceRows(1)[0].hp < stageBalanceRows(2)[0].hp, 'stage 2 opens har
 const s1 = stageBalanceRows(1);
 assert(s1[0].count === 4 && s1[0].hp === 24 && s1[0].dps === 2 && s1[0].gold === 8, 'stage 1 wave 1 stays the opener');
 assert(s1[1].count === 5 && s1[1].hp === 36 && s1[1].dps === 3, 'stage 1 wave 2 stays');
-assert(s1[2].count === 4 && s1[2].hp === 36 && s1[2].dps === 3 && s1[2].gold === 16, 'stage 1 wave 3 is eased');
-assert(s1[3].count === 5 && s1[3].hp === 44 && s1[3].speed === 32 && s1[3].dps === 3 && s1[3].gold === 18, 'stage 1 wave 4 is eased');
+assert(s1[2].count === 3 && s1[2].hp === 30 && s1[2].dps === 2 && s1[2].gold === 16, 'stage 1 wave 3 is eased');
+assert(s1[3].count === 4 && s1[3].hp === 36 && s1[3].speed === 30 && s1[3].dps === 3 && s1[3].gold === 18, 'stage 1 wave 4 is eased');
+assert(s1[3].window === '65–80s', 'stage 1 wave 4 finishes spawning before the clock');
 assert(playerCombatHudLabel() === 'ATK 10  CRIT 5%  CRITDMG +80%', 'HUD shows the crit gate');
 assert(stageBalanceRows(2)[3].hp < stageBalanceRows(3)[3].hp, 'stage 3 wave 4 is the heaviest early row');
 
@@ -147,6 +149,41 @@ const boxA = { x: 0, y: 0, displayWidth: 84, shift(dx, dy) { this.x += dx; this.
 const boxB = { x: 8, y: 0, displayWidth: 64, shift(dx, dy) { this.x += dx; this.y += dy; } };
 separateFootprints([boxA, boxB], { rounds: 8 });
 assert(Math.hypot(boxB.x - boxA.x, boxB.y - boxA.y) >= 74, 'a pet and a zombie box stay apart');
+
+const chef = {
+  x: 200,
+  y: 400,
+  displayWidth: 120,
+  displayHeight: 126,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+const phoenix = {
+  kind: 'pet',
+  x: 247,
+  y: 400,
+  displayWidth: 72,
+  displayHeight: 72,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+separateFootprints([chef, phoenix], { rounds: 4 });
+const torsoBottom = (chef.y - chef.displayHeight) + chef.displayHeight * TORSO_FROM_TOP;
+const petTop = phoenix.y - phoenix.displayHeight;
+assert(petTop >= torsoBottom - 0.5, `pet sprite stays under the torso (${petTop} vs ${torsoBottom})`);
+const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
+const drop = petLaneDrop(72, 126, meleeCap);
+assert(drop <= meleeCap && drop >= layoutPx(18), 'lane drop stays inside the melee window');
+assert(400 + drop - 72 >= 400 - 126 + 126 * TORSO_FROM_TOP - 0.5, 'aim drop clears the head and torso');
+
+const biter = {
+  alive: true,
+  atBarricade: true,
+  dps: 10,
+  scene: { waveManager: { isTimeUp: () => false } },
+};
+biter.contactDamage = Zombie.prototype.contactDamage;
+assert(biter.contactDamage(1) === 10, 'before 90s a barricade bite still chews');
+biter.scene.waveManager.isTimeUp = () => true;
+assert(biter.contactDamage(1) === 0, 'after 90s a barricade bite does not chew');
 
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const defenderSrc = readFileSync(new URL('../src/entities/Defender.js', import.meta.url), 'utf8');

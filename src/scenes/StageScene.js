@@ -1391,7 +1391,10 @@ export default class StageScene extends Phaser.Scene {
         barricadeDmg += dealt;
         z.addBarricadeDmg(dealt);
       }
-      if (z.consumeAttackBeat() && !z.petBiteTarget) attackBeats.push(z);
+      const beat = z.consumeAttackBeat();
+      // After the clock, contactDamage is already 0. Swallow the wall
+      // flash too so leftovers do not look like they are still eating the posts.
+      if (beat && !z.petBiteTarget && !this.waveManager?.isTimeUp?.()) attackBeats.push(z);
     }
     let destroyed = false;
     if (barricadeDmg > 0) {
