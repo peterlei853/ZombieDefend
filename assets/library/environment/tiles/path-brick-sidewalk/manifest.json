@@ -1,0 +1,501 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-brick-sidewalk",
+  "title": "Brick Sidewalk Path Tiles",
+  "titleZh": "紅磚人行道",
+  "description": "Worn red brick sidewalk over dusty dirt, 18 tiles at 32×32, v1.0. Square top-down path, edge connectivity (arity 4). Tiles 00–16 are placeable; tile 17 is stamp-only. The credit-burn tarball did not include this folder; the PNGs are the completed PixelLab tileset 140dd29a-1d0d-4419-a20d-b0f65d366fb3 named in the handoff. Catalog only. Fence and gold stay with the filler pass.",
+  "source": {
+    "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+    "kind": "paths",
+    "view": "low top-down",
+    "milestone": "m2-credit-burn"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ],
+    "facing": null,
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "path-brick-sidewalk-00",
+      "path-brick-sidewalk-01",
+      "path-brick-sidewalk-02",
+      "path-brick-sidewalk-03",
+      "path-brick-sidewalk-04",
+      "path-brick-sidewalk-05",
+      "path-brick-sidewalk-06",
+      "path-brick-sidewalk-07",
+      "path-brick-sidewalk-08",
+      "path-brick-sidewalk-09",
+      "path-brick-sidewalk-10",
+      "path-brick-sidewalk-11",
+      "path-brick-sidewalk-12",
+      "path-brick-sidewalk-13",
+      "path-brick-sidewalk-14",
+      "path-brick-sidewalk-15",
+      "path-brick-sidewalk-16",
+      "path-brick-sidewalk-17"
+    ],
+    "thumb": "assets/library/previews/environment/path-brick-sidewalk/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "path-brick-sidewalk-00",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 0,
+        "placementMask": 0,
+        "placementEdges": "none"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-01",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 1,
+        "placementMask": 0,
+        "placementEdges": "none"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-02",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 1 (N). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 2,
+        "placementMask": 1,
+        "placementEdges": "N"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-03",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 2 (E). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 3,
+        "placementMask": 2,
+        "placementEdges": "E"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-04",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 4 (S). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 4,
+        "placementMask": 4,
+        "placementEdges": "S"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-05",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 8 (W). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 5,
+        "placementMask": 8,
+        "placementEdges": "W"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-06",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 10 (EW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 6,
+        "placementMask": 10,
+        "placementEdges": "EW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-07",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 5 (NS). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 7,
+        "placementMask": 5,
+        "placementEdges": "NS"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-08",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 6 (ES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 8,
+        "placementMask": 6,
+        "placementEdges": "ES"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-09",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 12 (SW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 9,
+        "placementMask": 12,
+        "placementEdges": "SW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-10",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 3 (NE). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 10,
+        "placementMask": 3,
+        "placementEdges": "NE"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-11",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 9 (NW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 11,
+        "placementMask": 9,
+        "placementEdges": "NW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-12",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 14 (ESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 12,
+        "placementMask": 14,
+        "placementEdges": "ESW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-13",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 13 (NSW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 13,
+        "placementMask": 13,
+        "placementEdges": "NSW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-14",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 11 (NEW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 14,
+        "placementMask": 11,
+        "placementEdges": "NEW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-15",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 7 (NES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 15,
+        "placementMask": 7,
+        "placementEdges": "NES"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-16",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Edge-4 mask 15 (NESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 16,
+        "placementMask": 15,
+        "placementEdges": "NESW"
+      }
+    },
+    {
+      "key": "path-brick-sidewalk-17",
+      "path": "assets/library/environment/tiles/path-brick-sidewalk/path-brick-sidewalk-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "note": "v1.0. Stamp-only. No edge mask; not in the placeable list. No SFX key.",
+      "tags": [
+        "tile",
+        "path"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "pixellabTileId": "140dd29a-1d0d-4419-a20d-b0f65d366fb3",
+        "tileIndex": 17,
+        "stampOnly": true
+      }
+    }
+  ]
+}

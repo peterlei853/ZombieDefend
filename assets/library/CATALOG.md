@@ -7,15 +7,15 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 141 |
 | [Pets](#pets) | 17 | 124 |
-| [UI](#ui) | 1 | 51 |
-| [Zombies](#zombies) | 15 | 220 |
-| [Bosses](#bosses) | 4 | 39 |
-| [Shared FX](#fx) | 9 | 23 |
+| [UI](#ui) | 2 | 59 |
+| [Zombies](#zombies) | 19 | 236 |
+| [Bosses](#bosses) | 5 | 41 |
+| [Shared FX](#fx) | 14 | 43 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 20 |
-| [Backgrounds](#backgrounds) | 1 | 15 |
+| [Environment](#environment) | 3 | 38 |
+| [Backgrounds](#backgrounds) | 2 | 20 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **67** | **728** |
 
 <a id="hero"></a>
 ## Hero
@@ -578,6 +578,26 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-float-back-burst` | [ui-float-back-burst.png](ui/floats/ui-float-back-burst.png) | 106x39 | icon | Optional decorative Back! shout burst. |
 | `ui-float-back-burst-hd` | [ui-float-back-burst-hd.png](ui/floats/ui-float-back-burst-hd.png) | 212x78 | icon | 2× Back! burst. |
 
+### Milestone 2 UI Panels (里程碑 2 介面)
+
+<img src="ui/m2/ui-hp-bar-boss.png" alt="m2-ui preview" height="140">
+
+Eight Milestone 2 panels, v1.0. Cataloged beside the live HUD kit. None of these keys replace ui-hp-bar-player, ui-hp-bar-enemy, ui-float-go, or ui-float-back. SFX keys are notes only.
+
+- group `m2-ui` · 8 assets · frame 192x192, 256x320, 384x384, 512x192 · key prefix `ui-` · manifest [ui/m2/manifest.json](ui/m2/manifest.json)
+- previews: [ui-card-shop-item.png](ui/m2/ui-card-shop-item.png), [ui-btn-pet-go.png](ui/m2/ui-btn-pet-go.png), [ui-btn-pet-back.png](ui/m2/ui-btn-pet-back.png), [ui-dmg-normal.png](ui/m2/ui-dmg-normal.png), [ui-heal-number.png](ui/m2/ui-heal-number.png), [ui-banner-wave.png](ui/m2/ui-banner-wave.png), [ui-panel-settings.png](ui/m2/ui-panel-settings.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `ui-hp-bar-boss` | [ui-hp-bar-boss.png](ui/m2/ui-hp-bar-boss.png) | 512x192 | icon | v1.0. Boss HP panel. Does not replace ui-hp-bar-player, ui-hp-bar-enemy, or ui-hp-bar-barricade. No SFX key. |
+| `ui-card-shop-item` | [ui-card-shop-item.png](ui/m2/ui-card-shop-item.png) | 256x320 | icon | v1.0. Shop item card. New key; does not replace a live HUD texture. SFX `sfx-ui-shop` (index note only; no audio file). |
+| `ui-btn-pet-go` | [ui-btn-pet-go.png](ui/m2/ui-btn-pet-go.png) | 192x192 | icon | v1.0. Pet GO button. Does not replace ui-float-go. SFX `sfx-ui-click` (index note only; no audio file). |
+| `ui-btn-pet-back` | [ui-btn-pet-back.png](ui/m2/ui-btn-pet-back.png) | 192x192 | icon | v1.0. Pet Back button. Does not replace ui-float-back. SFX `sfx-ui-click` (index note only; no audio file). |
+| `ui-dmg-normal` | [ui-dmg-normal.png](ui/m2/ui-dmg-normal.png) | 192x192 | icon | v1.0. Damage number plate. PixelLab name ui-dmg-normal-number; catalog key is ui-dmg-normal. SFX `sfx-ui-dmg` (index note only; no audio file). |
+| `ui-heal-number` | [ui-heal-number.png](ui/m2/ui-heal-number.png) | 192x192 | icon | v1.0. Heal number plate. New key. SFX `sfx-ui-heal` (index note only; no audio file). |
+| `ui-banner-wave` | [ui-banner-wave.png](ui/m2/ui-banner-wave.png) | 512x192 | icon | v1.0. Wave banner. New key. SFX `sfx-ui-wave` (index note only; no audio file). |
+| `ui-panel-settings` | [ui-panel-settings.png](ui/m2/ui-panel-settings.png) | 384x384 | icon | v1.0. Settings panel. New key. SFX `sfx-ui-settings` (index note only; no audio file). |
+
 <a id="zombies"></a>
 ## Zombies
 
@@ -861,6 +881,66 @@ Unarmored phase after `zombie-riot-armor_break`, incl. dismantled_defeat death.
 | `zombie-riot-bare-hurt_shock` | 6 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `zombie-riot-bare-dismantled_defeat` | 8 | 64x64 | 10 | once | (0.5, 1.0) |  |
 
+### S4 Construction Zombie (工地丧尸)
+
+<img src="previews/zombies/s4-construction/preview.gif" alt="s4-construction preview" height="140">
+
+S4 Construction Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Hardhat and wrench stay readable on the attack strip. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.
+
+- group `s4-construction` · 4 assets · frame 88x88 · key prefix `zombie-s4-construction-` · manifest [enemies/zombies/s4/construction/manifest.json](enemies/zombies/s4/construction/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-s4-construction-walk` | 8 | 88x88 | 8 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 657a4e2f-ca2a-49c1-9a1f-de409730ecb3. SFX `sfx-zombie-s4-construction-growl` (index note only; no audio file). |
+| `zombie-s4-construction-attack` | 8 | 88x88 | 10 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group e98bd2d2-88c3-40d9-ace9-4a19e33bfa3e. SFX `sfx-zombie-s4-construction-hit` (index note only; no audio file). |
+| `zombie-s4-construction-hurt` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group aafeea67-1f63-4e86-80d9-921ad1a53586. SFX `sfx-zombie-s4-construction-hurt` (index note only; no audio file). |
+| `zombie-s4-construction-die` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 774802fb-8686-488c-a3ca-10b0c2292a54. SFX `sfx-zombie-s4-construction-death` (index note only; no audio file). |
+
+### S4 Delivery Zombie (外送丧尸 S4)
+
+<img src="previews/zombies/s4-delivery/preview.gif" alt="s4-delivery preview" height="140">
+
+S4 Delivery Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Separate from the live 84px delivery profession. Walk, attack, hurt, and die exported with no edge-clip flag. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.
+
+- group `s4-delivery` · 4 assets · frame 88x88 · key prefix `zombie-s4-delivery-` · manifest [enemies/zombies/s4/delivery/manifest.json](enemies/zombies/s4/delivery/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-s4-delivery-walk` | 8 | 88x88 | 8 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 2e18d315-37d3-43ec-84f9-9df20d9a0850. SFX `sfx-zombie-s4-delivery-growl` (index note only; no audio file). |
+| `zombie-s4-delivery-attack` | 8 | 88x88 | 10 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 507a3aec-aaa8-4a48-8d6d-b28a0f09101f. SFX `sfx-zombie-s4-delivery-hit` (index note only; no audio file). |
+| `zombie-s4-delivery-hurt` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group c3000661-1ec1-4902-acfa-3465d935faad. SFX `sfx-zombie-s4-delivery-hurt` (index note only; no audio file). |
+| `zombie-s4-delivery-die` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 45854a6f-0322-4360-a1d7-4719681ecf45. SFX `sfx-zombie-s4-delivery-death` (index note only; no audio file). |
+
+### S4 Salaryman Zombie (上班族丧尸 S4)
+
+<img src="previews/zombies/s4-salaryman/preview.gif" alt="s4-salaryman preview" height="140">
+
+S4 Salaryman Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Die strip shows the briefcase drop and collapse. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.
+
+- group `s4-salaryman` · 4 assets · frame 88x88 · key prefix `zombie-s4-salaryman-` · manifest [enemies/zombies/s4/salaryman/manifest.json](enemies/zombies/s4/salaryman/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-s4-salaryman-walk` | 8 | 88x88 | 8 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 5335ad43-b511-4d39-a496-63ec489370b5. SFX `sfx-zombie-s4-salaryman-growl` (index note only; no audio file). |
+| `zombie-s4-salaryman-attack` | 8 | 88x88 | 10 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 289837d9-625d-44ee-b5d5-7cfcef5d2181. SFX `sfx-zombie-s4-salaryman-hit` (index note only; no audio file). |
+| `zombie-s4-salaryman-hurt` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 8d929459-1719-4bd4-89ab-9241b9a75517. SFX `sfx-zombie-s4-salaryman-hurt` (index note only; no audio file). |
+| `zombie-s4-salaryman-die` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group a8174a05-c639-459e-82ed-64c2efa915c6. SFX `sfx-zombie-s4-salaryman-death` (index note only; no audio file). |
+
+### S4 Schoolgirl Zombie (女學生丧尸)
+
+<img src="previews/zombies/s4-schoolgirl/preview.gif" alt="s4-schoolgirl preview" height="140">
+
+S4 Schoolgirl Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Walk, attack, hurt, and die exported with no edge-clip flag. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.
+
+- group `s4-schoolgirl` · 4 assets · frame 88x88 · key prefix `zombie-s4-schoolgirl-` · manifest [enemies/zombies/s4/schoolgirl/manifest.json](enemies/zombies/s4/schoolgirl/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-s4-schoolgirl-walk` | 8 | 88x88 | 8 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 7f7ca8bd-26eb-44ae-996b-8d379642f2e4. SFX `sfx-zombie-s4-schoolgirl-growl` (index note only; no audio file). |
+| `zombie-s4-schoolgirl-attack` | 8 | 88x88 | 10 | loop | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group edbb1d86-6d88-493d-9f4c-3a1705809d35. SFX `sfx-zombie-s4-schoolgirl-hit` (index note only; no audio file). |
+| `zombie-s4-schoolgirl-hurt` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 5470d096-502f-4b80-b2d3-464a98160173. SFX `sfx-zombie-s4-schoolgirl-hurt` (index note only; no audio file). |
+| `zombie-s4-schoolgirl-die` | 8 | 88x88 | 10 | once | (0.5, 1.0) | v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group deef2486-351d-4004-b63f-306fa4e7b339. SFX `sfx-zombie-s4-schoolgirl-death` (index note only; no audio file). |
+
 ### Splitting Slime Zombie (分裂型史萊姆喪屍)
 
 <img src="previews/zombies/slime/preview.gif" alt="slime preview" height="140">
@@ -1023,6 +1103,19 @@ Skill FX strips for The Molten Giant, Balon. Origins and attach offsets are per 
 | `zombie-boss-lava-fx-meteor` | 6 | 64x128 | 12 | loop | (0.59375, 0.8125) | single meteor; the game moves it along travelDirection (down, slightly east) and spawns fx-meteor-impact where the rock meets the ground. spawn many during meteor_storm castFrames |
 | `zombie-boss-lava-fx-meteor-impact` | 8 | 96x64 | 12 | once | (0.5, 1.0) |  |
 
+### Milestone 2 Boss Skill FX (里程碑 2 首領技能特效)
+
+<img src="previews/bosses/m2-boss-fx/preview.gif" alt="m2-boss-fx preview" height="140">
+
+Balun and Balam skill stills from the Milestone 2 credit burn, v1.0. Each is a static 96×96 image, origin center. These keys do not replace zombie-boss-lava-fx-* or zombie-boss-steel-fx-*. SFX keys are notes only.
+
+- group `m2-boss-fx` · 2 assets · frame 96x96 · key prefix `vfx-boss-` · manifest [enemies/bosses/m2-skill-fx/manifest.json](enemies/bosses/m2-skill-fx/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-boss-balun-skill` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Angry balloon with a pink swirl aura. Completed object b6ff9068. Static 96×96. SFX `sfx-boss-balun-skill` (index note only; no audio file). |
+| `vfx-boss-balam-skill` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Selected completed object 401769bc. Review parent 7356bc0e was not exported. Static 96×96. SFX `sfx-boss-balam-skill` (index note only; no audio file). |
+
 ### The Cyber-Steel Behemoth, Balam (鋼鐵巨獸・巴拉姆)
 
 <img src="previews/bosses/steel-balam/preview.gif" alt="steel-balam preview" height="140">
@@ -1182,6 +1275,81 @@ v0.26 pet ultimate keyframes, 384×216, origin centre (0.5, 0.5). Each frame is 
 | `vfx-ult-lion` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
 | `vfx-ult-dragon` | 1 | 384x216 | – | static | (0.5, 0.5) | Single keyframe, cinematic overlay. Engine letterbox/fade 0.8–1.2s. Origin (0.5, 0.5). |
 
+### Bubble Weapon VFX (泡泡武器特效)
+
+<img src="previews/fx/m2-vfx-bubble/preview.gif" alt="m2-vfx-bubble preview" height="140">
+
+Bubble Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files. vfx-bubble-charge is the selected review winner (object 2bd29209-15f9-42ba-a537-94f5ae3a9309).
+
+- group `m2-vfx-bubble` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-bubble-` · manifest [vfx/weapons/bubble/manifest.json](vfx/weapons/bubble/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-bubble-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. PixelLab object f3cf1a57-950d-4939-a841-55bc9480eb31. SFX `sfx-weapon-bubble-shot` (index note only; no audio file). |
+| `vfx-bubble-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. Selected review winner. No explode anim yet; Stage can tween or scale. PixelLab object 2bd29209-15f9-42ba-a537-94f5ae3a9309. SFX `sfx-weapon-bubble-charge` (index note only; no audio file). |
+| `vfx-bubble-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object db572ab6-317f-4682-a3ce-7d32dcb47a19. SFX `sfx-weapon-bubble-aoe` (index note only; no audio file). |
+| `vfx-bubble-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 50fe5323-ce0c-44fc-9144-7a1a1ae2caaf. SFX `sfx-weapon-bubble-hit` (index note only; no audio file). |
+
+### Flame Weapon VFX (火焰武器特效)
+
+<img src="previews/fx/m2-vfx-flame/preview.gif" alt="m2-vfx-flame preview" height="140">
+
+Flame Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+
+- group `m2-vfx-flame` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-flame-` · manifest [vfx/weapons/flame/manifest.json](vfx/weapons/flame/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-flame-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live flame sheets. PixelLab object c8a68e24-12e4-4fa1-b1f9-e180890d5c9e. SFX `sfx-weapon-flame-shot` (index note only; no audio file). |
+| `vfx-flame-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 75a2591e-8657-4048-af3b-b22dc57efbb7. SFX `sfx-weapon-flame-charge` (index note only; no audio file). |
+| `vfx-flame-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object fba3ca31-56ec-406e-91af-18e1763420a8. SFX `sfx-weapon-flame-aoe` (index note only; no audio file). |
+| `vfx-flame-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 7e176c02-1ad7-490f-87ed-058bffc802e6. SFX `sfx-weapon-flame-hit` (index note only; no audio file). |
+
+### Freeze Weapon VFX (冰凍武器特效)
+
+<img src="previews/fx/m2-vfx-freeze/preview.gif" alt="m2-vfx-freeze preview" height="140">
+
+Freeze Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+
+- group `m2-vfx-freeze` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-freeze-` · manifest [vfx/weapons/freeze/manifest.json](vfx/weapons/freeze/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-freeze-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live frost sheets. PixelLab object 3b8d70ec-417e-4b2a-abbe-812c148d887b. SFX `sfx-weapon-freeze-shot` (index note only; no audio file). |
+| `vfx-freeze-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 8285f90e-0b5a-4700-9947-5f7f93b1fa27. SFX `sfx-weapon-freeze-charge` (index note only; no audio file). |
+| `vfx-freeze-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object 9233fcad-252d-4191-9fd8-a9310ed3274d. SFX `sfx-weapon-freeze-aoe` (index note only; no audio file). |
+| `vfx-freeze-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 95abeec6-5d95-4bc3-986b-071e72f3247a. SFX `sfx-weapon-freeze-hit` (index note only; no audio file). |
+
+### Rail Weapon VFX (軌道武器特效)
+
+<img src="previews/fx/m2-vfx-rail/preview.gif" alt="m2-vfx-rail preview" height="140">
+
+Rail Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+
+- group `m2-vfx-rail` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-rail-` · manifest [vfx/weapons/rail/manifest.json](vfx/weapons/rail/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-rail-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. Does not replace live lightning sheets. PixelLab object c84f6bc4-8815-4ac4-aeef-ef09ffec570c. SFX `sfx-weapon-rail-shot` (index note only; no audio file). |
+| `vfx-rail-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object 348bd457-3077-4ba8-8ba0-71e416a83497. SFX `sfx-weapon-rail-charge` (index note only; no audio file). |
+| `vfx-rail-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object 5673e5af-4414-4abb-8125-f2c1e2b18618. SFX `sfx-weapon-rail-aoe` (index note only; no audio file). |
+| `vfx-rail-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame hit. PixelLab object 511d1515-62ed-4a77-8c9c-f1af20b72407. SFX `sfx-weapon-rail-hit` (index note only; no audio file). |
+
+### Sling Weapon VFX (彈弓武器特效)
+
+<img src="previews/fx/m2-vfx-sling/preview.gif" alt="m2-vfx-sling preview" height="140">
+
+Sling Weapon VFX. Milestone 2 credit burn, v1.0. Projectile is an 8×64 strip. Charge, AOE, and hit are static 1-frame images (AOE 96×96). Does not replace live hero weapon sheets (fx-sling-pellet, frost, flame, bubble, lightning). Water was not part of this export. SFX keys are notes only; no audio files.
+
+- group `m2-vfx-sling` · 4 assets · frame 64x64, 96x96 · key prefix `vfx-sling-` · manifest [vfx/weapons/sling/manifest.json](vfx/weapons/sling/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `vfx-sling-projectile` | 8 | 64x64 | 12 | loop | (0.5, 0.5) | v1.0. 8-frame fly strip. PixelLab object 3e1374d0-c22d-42de-b51e-34ed55c0ba1e. SFX `sfx-weapon-sling-shot` (index note only; no audio file). |
+| `vfx-sling-charge` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Static 1-frame charge. No explode anim yet; Stage can tween or scale. PixelLab object d0bf4f5e-c8f0-4b97-a1ef-66cb225b34ef. SFX `sfx-weapon-sling-charge` (index note only; no audio file). |
+| `vfx-sling-aoe` | 1 | 96x96 | – | static | (0.5, 0.5) | v1.0. Static 1-frame AOE. No explode anim yet; Stage can tween or scale. PixelLab object ebf0a1e6-6bf0-4050-8321-6cc96d9d333e. SFX `sfx-weapon-sling-aoe` (index note only; no audio file). |
+| `vfx-sling-hit` | 1 | 64x64 | – | static | (0.5, 0.5) | v1.0. Yellow star impact. Selected from review 028c9cac (indices 6+12). Sibling 0a2bc026 was not the primary export. PixelLab object a158a499-2298-417c-ac22-249465ed1654. SFX `sfx-weapon-sling-hit` (index note only; no audio file). |
+
 <a id="pickups"></a>
 ## Pickups
 
@@ -1248,6 +1416,35 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
 
+### Brick Sidewalk Path Tiles (紅磚人行道)
+
+<img src="previews/environment/path-brick-sidewalk/preview.gif" alt="path-brick-sidewalk preview" height="140">
+
+Worn red brick sidewalk over dusty dirt, 18 tiles at 32×32, v1.0. Square top-down path, edge connectivity (arity 4). Tiles 00–16 are placeable; tile 17 is stamp-only. The credit-burn tarball did not include this folder; the PNGs are the completed PixelLab tileset 140dd29a-1d0d-4419-a20d-b0f65d366fb3 named in the handoff. Catalog only. Fence and gold stay with the filler pass.
+
+- group `path-brick-sidewalk` · 18 assets · frame 32x32 · key prefix `path-brick-sidewalk-` · manifest [environment/tiles/path-brick-sidewalk/manifest.json](environment/tiles/path-brick-sidewalk/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-brick-sidewalk-00` | [path-brick-sidewalk-00.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-00.png) | 32x32 | image | v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-01` | [path-brick-sidewalk-01.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-01.png) | 32x32 | image | v1.0. Edge-4 mask 0 (none). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-02` | [path-brick-sidewalk-02.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-02.png) | 32x32 | image | v1.0. Edge-4 mask 1 (N). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-03` | [path-brick-sidewalk-03.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-03.png) | 32x32 | image | v1.0. Edge-4 mask 2 (E). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-04` | [path-brick-sidewalk-04.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-04.png) | 32x32 | image | v1.0. Edge-4 mask 4 (S). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-05` | [path-brick-sidewalk-05.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-05.png) | 32x32 | image | v1.0. Edge-4 mask 8 (W). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-06` | [path-brick-sidewalk-06.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-06.png) | 32x32 | image | v1.0. Edge-4 mask 10 (EW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-07` | [path-brick-sidewalk-07.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-07.png) | 32x32 | image | v1.0. Edge-4 mask 5 (NS). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-08` | [path-brick-sidewalk-08.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-08.png) | 32x32 | image | v1.0. Edge-4 mask 6 (ES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-09` | [path-brick-sidewalk-09.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-09.png) | 32x32 | image | v1.0. Edge-4 mask 12 (SW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-10` | [path-brick-sidewalk-10.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-10.png) | 32x32 | image | v1.0. Edge-4 mask 3 (NE). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-11` | [path-brick-sidewalk-11.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-11.png) | 32x32 | image | v1.0. Edge-4 mask 9 (NW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-12` | [path-brick-sidewalk-12.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-12.png) | 32x32 | image | v1.0. Edge-4 mask 14 (ESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-13` | [path-brick-sidewalk-13.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-13.png) | 32x32 | image | v1.0. Edge-4 mask 13 (NSW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-14` | [path-brick-sidewalk-14.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-14.png) | 32x32 | image | v1.0. Edge-4 mask 11 (NEW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-15` | [path-brick-sidewalk-15.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-15.png) | 32x32 | image | v1.0. Edge-4 mask 7 (NES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-16` | [path-brick-sidewalk-16.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-16.png) | 32x32 | image | v1.0. Edge-4 mask 15 (NESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
+| `path-brick-sidewalk-17` | [path-brick-sidewalk-17.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-17.png) | 32x32 | image | v1.0. Stamp-only. No edge mask; not in the placeable list. No SFX key. |
+
 <a id="backgrounds"></a>
 ## Backgrounds
 
@@ -1277,6 +1474,23 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `bg-campus-night-full-bleed` | [bg-full-bleed.png](backgrounds/campus/layers-night/bg-full-bleed.png) | 1360x768 | background | 1360x768 flattened with mirrored 40/24px margins for camera shake — variant C (night). Place at (832-40, -24). |
 | `bg-campus-fire` | [fire-burning-block.png](backgrounds/campus/anim/fire-burning-block.png) | 170x126 | spritesheet | 8f @ 10fps loop. Seamless 8-frame fire loop for the burning block (9 windows + roof). Layers contain no baked flames; flattened variants have frame 0 baked in. |
 | `bg-campus-lamp` | [lamp-glow.png](backgrounds/campus/anim/lamp-glow.png) | 112x52 | spritesheet | 6f @ 6fps loop. Lamp flicker glow, 6 frames, additive blend (ADD). |
+
+### Milestone 2 Stage Backgrounds (里程碑 2 場景背景)
+
+<img src="backgrounds/m2/bg-night-street.png" alt="m2-backdrops preview" height="180">
+
+Five 320×180 stage plates from the Milestone 2 credit burn, v1.0. Includes the bonus moon street. These do not replace the 1280×720 campus plates. Fence and gold were not re-exported.
+
+- group `m2-backdrops` · 5 assets · frame 320x180 · key prefix `bg-` · manifest [backgrounds/m2/manifest.json](backgrounds/m2/manifest.json)
+- previews: [bg-night-street-moon.png](backgrounds/m2/bg-night-street-moon.png), [bg-rainy-market.png](backgrounds/m2/bg-rainy-market.png), [bg-subway.png](backgrounds/m2/bg-subway.png), [bg-rooftop-dusk.png](backgrounds/m2/bg-rooftop-dusk.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `bg-night-street` | [bg-night-street.png](backgrounds/m2/bg-night-street.png) | 320x180 | background | v1.0. Industrial night street with lamps. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
+| `bg-night-street-moon` | [bg-night-street-moon.png](backgrounds/m2/bg-night-street-moon.png) | 320x180 | background | v1.0. Bonus alt night street with a moon. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
+| `bg-rainy-market` | [bg-rainy-market.png](backgrounds/m2/bg-rainy-market.png) | 320x180 | background | v1.0. Rainy market alley. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
+| `bg-subway` | [bg-subway.png](backgrounds/m2/bg-subway.png) | 320x180 | background | v1.0. Subway tunnel with green lights. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
+| `bg-rooftop-dusk` | [bg-rooftop-dusk.png](backgrounds/m2/bg-rooftop-dusk.png) | 320x180 | background | v1.0. Rooftop dusk skyline. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
 
 <a id="concepts"></a>
 ## Concepts

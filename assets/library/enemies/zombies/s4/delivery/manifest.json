@@ -1,0 +1,101 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "s4-delivery",
+  "title": "S4 Delivery Zombie",
+  "titleZh": "外送丧尸 S4",
+  "description": "S4 Delivery Zombie. Milestone 2 credit burn, v1.0. 8-frame east strips, canvas 88×88 (PixelLab grew past the 64 request), origin (0.5, 1). Separate from the live 84px delivery profession. Walk, attack, hurt, and die exported with no edge-clip flag. Catalog-only: no S4 slot in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires spawn later and must set frame width and height to 88. SFX keys are notes only; this catalog has no audio files.",
+  "source": {
+    "pixellabCharacterId": "3b6a565d-7b3f-4ad0-a317-37ad3c303025",
+    "sourceFolder": "zd-credit-m2/delivery",
+    "milestone": "m2-credit-burn",
+    "note": "READY CLEAN 2026-10-22. Not added to the spawn table."
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 88,
+    "frameHeight": 88
+  },
+  "preview": {
+    "animate": [
+      "zombie-s4-delivery-walk",
+      "zombie-s4-delivery-attack",
+      "zombie-s4-delivery-hurt",
+      "zombie-s4-delivery-die"
+    ],
+    "thumb": "assets/library/previews/zombies/s4-delivery/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "zombie-s4-delivery-walk",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-walk.png",
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 2e18d315-37d3-43ec-84f9-9df20d9a0850. SFX `sfx-zombie-s4-delivery-growl` (index note only; no audio file).",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "2e18d315-37d3-43ec-84f9-9df20d9a0850",
+        "sfx": "sfx-zombie-s4-delivery-growl",
+        "wired": false
+      }
+    },
+    {
+      "key": "zombie-s4-delivery-attack",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-attack.png",
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "note": "v1.0. 8×88 east, origin (0.5, 1), loop. PixelLab group 507a3aec-aaa8-4a48-8d6d-b28a0f09101f. SFX `sfx-zombie-s4-delivery-hit` (index note only; no audio file).",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "507a3aec-aaa8-4a48-8d6d-b28a0f09101f",
+        "sfx": "sfx-zombie-s4-delivery-hit",
+        "wired": false
+      }
+    },
+    {
+      "key": "zombie-s4-delivery-hurt",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-hurt.png",
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group c3000661-1ec1-4902-acfa-3465d935faad. SFX `sfx-zombie-s4-delivery-hurt` (index note only; no audio file).",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "c3000661-1ec1-4902-acfa-3465d935faad",
+        "sfx": "sfx-zombie-s4-delivery-hurt",
+        "wired": false
+      }
+    },
+    {
+      "key": "zombie-s4-delivery-die",
+      "path": "assets/library/enemies/zombies/s4/delivery/strips/zombie-s4-delivery-die.png",
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0. 8×88 east, origin (0.5, 1), once. PixelLab group 45854a6f-0322-4360-a1d7-4719681ecf45. SFX `sfx-zombie-s4-delivery-death` (index note only; no audio file).",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "cell": "88x88",
+        "pixellabGroupId": "45854a6f-0322-4360-a1d7-4719681ecf45",
+        "sfx": "sfx-zombie-s4-delivery-death",
+        "wired": false
+      }
+    }
+  ]
+}

@@ -113,6 +113,18 @@ function textureFrameCount(tex) {
 }
 
 /**
+ * Milestone 2 S4 (construction, schoolgirl, delivery, salaryman) is catalog-only.
+ * Strips live under assets/library/enemies/zombies/s4/<slug>/strips/ as
+ * zombie-s4-<slug>-{walk,attack,hurt,die}. Canvas is 88×88 (PixelLab grew
+ * past the 64 request), origin (0.5, 1), facing east, 8 frames.
+ * No PIXELLAB_HOOK and no wave or spawn row names an S4 slot, so these ids
+ * are not added to ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires the
+ * load and spawn later and must use frame 88, not the 84px profession cell.
+ * The S4 delivery group is not the live `delivery` profession.
+ * Weapon VFX, including vfx-bubble-charge, stay catalog keys. They are not spawn hooks.
+ */
+
+/**
  * Library skins. `facing: 'east'` means the strip already walks toward the
  * right-hand barricade — do not setFlipX. Armored trashcan / riot have no
  * die strip; the break strip is the death. Slime-mini has no attack.

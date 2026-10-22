@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack), pickups, environment props (barricade and the v0.31 water mount), the campus battle background, and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups plus four catalog-only S4 groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack and the Milestone 2 weapon VFX), pickups, environment props (barricade and the v0.31 water mount) and the brick sidewalk tiles, the campus battle background plus five 320×180 stage plates, UI (live kit plus eight Milestone 2 panels), and chibi concept art.
 
 **Start here:**
 
@@ -29,9 +29,11 @@ assets/library/
 │   │     office-worker-v2, delivery, chef, nurse,
 │   │     trashcan, trashcan-bare, brute, cyborg, slime, slime-mini,
 │   │     riot, riot-bare, exploder, sprinter, clown
+│   │     s4/{construction,schoolgirl,delivery,salaryman}/  88×88 east, catalog-only
 │   └── bosses/<slug>/        manifest.json + strips/   (zombie-boss-<lava|steel>-*)
-│       └── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
-│         lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
+│       ├── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
+│       │     lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
+│       └── m2-skill-fx/      vfx-boss-balun-skill, vfx-boss-balam-skill (static 96×96)
 ├── fx/                       exploder blast at fx/manifest.json (zombie-exploder-blast)
 │   ├── brute-skill/          fx-brute-skill-shock (brute skill shock v3.3, dust/crack only, 4×3 grid, 225×131)
 │   ├── melee/                shared melee slashes (fx-slash-enemy-red, fx-slash-ally-white, fx-slash-dot)
@@ -45,13 +47,29 @@ assets/library/
 ├── pickups/                  manifest.json + coin / gems / loot pile (zombie-clown-*)
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
+├── environment/tiles/path-brick-sidewalk/  18× 32×32 worn brick path (path-brick-sidewalk-00 … 17)
+├── vfx/weapons/{sling,bubble,rail,freeze,flame}/  M2 projectile strips + charge/AOE/hit (bubble charge included)
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
+├── backgrounds/m2/           five 320×180 plates (bg-night-street, moon alt, rainy-market, subway, rooftop-dusk)
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
+│   └── m2/                   eight new panels; does not replace live HUD keys
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
 ```
 
 `previews/` is for documentation only. The game never loads it.
+
+## Milestone 2 credit burn (catalog-only)
+
+Ready-clean PixelLab export, version `v1.0` on every new key. Nothing here replaces a live HUD key, the campus plate, `fx-sling-pellet`, or the 84px profession strips. Fence damage and gold coin stay with the filler pass. Water VFX was not in this export.
+
+- **S4 zombies** — `enemies/zombies/s4/{construction,schoolgirl,delivery,salaryman}/`. Each has walk / attack / hurt / die, 8×88 east, origin `(0.5, 1)`. There is no S4 row in `ZOMBIE_LIBRARY_SKINS` or the wave pools. Gameplay adds the spawn hook and sets frame width and height to 88.
+- **Weapon VFX** — `vfx/weapons/{sling,bubble,rail,freeze,flame}/`. Projectile strips are 8×64. Charge, AOE, and hit images are static 1-frame (AOE is 96×96), including `vfx-bubble-charge`. These keys do not replace the live weapon sheets.
+- **Boss skill stills** — `vfx-boss-balun-skill` and `vfx-boss-balam-skill`, 96×96, under `enemies/bosses/m2-skill-fx/`.
+- **UI** — eight panels in `ui/m2/` (`ui-hp-bar-boss`, `ui-card-shop-item`, `ui-btn-pet-go`, `ui-btn-pet-back`, `ui-dmg-normal`, `ui-heal-number`, `ui-banner-wave`, `ui-panel-settings`). Live `ui-float-go` / `ui-float-back` and the enemy HP bar stay as they are.
+- **Backgrounds** — five 320×180 plates in `backgrounds/m2/`. `drawCampusBackdrop` still uses `bg-campus-*`.
+- **Tiles** — `path-brick-sidewalk-00` … `path-brick-sidewalk-17`, 32×32, edge-4 masks on 00–16. Tile 17 is stamp-only.
+- **SFX** — each asset's `note` and `extra.sfx` name the sound key. No audio files are in this catalog.
 
 ## Naming convention (keys)
 
