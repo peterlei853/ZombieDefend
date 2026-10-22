@@ -1,0 +1,201 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "campus",
+  "title": "Campus Street Props",
+  "titleZh": "校園街道道具",
+  "description": "Credit-burn filler street props for campus Stage décor: street lamps, trash bins, bus stops, manholes. Visual only — no Stage physics hooks in this PR.",
+  "source": {
+    "tool": "pixellab create_1_direction_object",
+    "note": "2PL credit-burn fillers selected 2026-10-22; QC by PixelLab Asset Pipeline",
+    "handoff": "/workspace/zd-fill-props-street/"
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "south",
+    "frames": 1
+  },
+  "preview": {
+    "animate": [
+      "prop-street-lamp",
+      "prop-street-lamp-double",
+      "prop-trash-bin",
+      "prop-trash-bin-alt",
+      "prop-bus-stop",
+      "prop-bus-stop-routes",
+      "prop-manhole",
+      "prop-manhole-alt"
+    ],
+    "thumb": "assets/library/previews/environment/campus/preview.gif",
+    "sheets": [],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "prop-street-lamp",
+      "path": "assets/library/environment/campus/prop-street-lamp.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Victorian single-head street lamp, warm glow, 64×64 campus TD prop.",
+      "extra": {
+        "pixellabObjectId": "16c0b36e-cc91-4949-bc18-ae46015938d6",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-street-lamp-double",
+      "path": "assets/library/environment/campus/prop-street-lamp-double.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "tags": [
+        "alternate"
+      ],
+      "description": "Double-arm twin-lantern street lamp variant, 64×64.",
+      "extra": {
+        "pixellabObjectId": "1b62f6d8-951c-49f2-aa11-bec35e9fd69f",
+        "role": "variant",
+        "prefer": "prop-street-lamp"
+      }
+    },
+    {
+      "key": "prop-trash-bin",
+      "path": "assets/library/environment/campus/prop-trash-bin.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Galvanized metal trash can (dented), 48×48. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "0a5f4a4e-c354-4860-8034-ee7db3fbd127",
+        "role": "winner",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-trash-bin-alt",
+      "path": "assets/library/environment/campus/prop-trash-bin-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "tags": [
+        "alternate"
+      ],
+      "description": "Cleaner galvanized trash can alternate, 48×48. Soft-fixed bottom edge.",
+      "extra": {
+        "pixellabObjectId": "bae14246-bcc7-47f5-9ca2-206f013ac558",
+        "role": "variant",
+        "prefer": "prop-trash-bin",
+        "softFixed": "bottom-1px"
+      }
+    },
+    {
+      "key": "prop-bus-stop",
+      "path": "assets/library/environment/campus/prop-bus-stop.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "description": "Bus stop sign with bus icon + mid-pole schedule board, 64×64.",
+      "extra": {
+        "pixellabObjectId": "de4fcf7e-9964-448d-9133-3926f60b6b18",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-bus-stop-routes",
+      "path": "assets/library/environment/campus/prop-bus-stop-routes.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 1,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "south",
+      "tags": [
+        "alternate"
+      ],
+      "description": "Bus stop sign with route-number board variant, 64×64.",
+      "extra": {
+        "pixellabObjectId": "e573f1db-a7af-4669-bc3a-176cc746eda3",
+        "role": "variant",
+        "prefer": "prop-bus-stop"
+      }
+    },
+    {
+      "key": "prop-manhole",
+      "path": "assets/library/environment/campus/prop-manhole.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "description": "Top-down iron manhole cover with pick-hole + waffle texture, 48×48.",
+      "extra": {
+        "pixellabObjectId": "ce1e62e0-1bee-42e3-9275-f99906de55b6",
+        "role": "winner"
+      }
+    },
+    {
+      "key": "prop-manhole-alt",
+      "path": "assets/library/environment/campus/prop-manhole-alt.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 1,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "facing": "south",
+      "tags": [
+        "alternate"
+      ],
+      "description": "Top-down iron manhole cover clean waffle alt, 48×48.",
+      "extra": {
+        "pixellabObjectId": "f3e7aade-9941-4a86-ba7f-cff4eb792002",
+        "role": "variant",
+        "prefer": "prop-manhole"
+      }
+    }
+  ]
+}

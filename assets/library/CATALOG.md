@@ -12,10 +12,10 @@
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 2 | 20 |
+| [Environment](#environment) | 3 | 28 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **55** | **667** |
 
 <a id="hero"></a>
 ## Hero
@@ -1218,6 +1218,25 @@ Tileable wooden picket barricade posts with clear gaps between stakes (bullets r
 |---|---|---|---|---|
 | `barricade-post` | [barricade-post.png](environment/barricade/barricade-post.png) | 32x64 | icon | Replace rectangle posts (0x6b4f35) via PIXELLAB_HOOK. Collision unchanged (left face). |
 | `barricade-post-damaged` | [barricade-post-damaged.png](environment/barricade/barricade-post-damaged.png) | 32x64 | icon | Optional HP-threshold swap; same origin and scale as barricade-post. |
+
+### Campus Street Props (校園街道道具)
+
+<img src="previews/environment/campus/preview.gif" alt="campus preview" height="140">
+
+Credit-burn filler street props for campus Stage décor: street lamps, trash bins, bus stops, manholes. Visual only — no Stage physics hooks in this PR.
+
+- group `campus` · 8 assets · frame 48x48, 64x64 · key prefix `prop-` · manifest [environment/campus/manifest.json](environment/campus/manifest.json)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `prop-street-lamp` | [prop-street-lamp.png](environment/campus/prop-street-lamp.png) | 64x64 | image | Victorian single-head street lamp, warm glow, 64×64 campus TD prop. |
+| `prop-street-lamp-double` | [prop-street-lamp-double.png](environment/campus/prop-street-lamp-double.png) | 64x64 | image | Double-arm twin-lantern street lamp variant, 64×64. |
+| `prop-trash-bin` | [prop-trash-bin.png](environment/campus/prop-trash-bin.png) | 48x48 | image | Galvanized metal trash can (dented), 48×48. Soft-fixed bottom edge. |
+| `prop-trash-bin-alt` | [prop-trash-bin-alt.png](environment/campus/prop-trash-bin-alt.png) | 48x48 | image | Cleaner galvanized trash can alternate, 48×48. Soft-fixed bottom edge. |
+| `prop-bus-stop` | [prop-bus-stop.png](environment/campus/prop-bus-stop.png) | 64x64 | image | Bus stop sign with bus icon + mid-pole schedule board, 64×64. |
+| `prop-bus-stop-routes` | [prop-bus-stop-routes.png](environment/campus/prop-bus-stop-routes.png) | 64x64 | image | Bus stop sign with route-number board variant, 64×64. |
+| `prop-manhole` | [prop-manhole.png](environment/campus/prop-manhole.png) | 48x48 | image | Top-down iron manhole cover with pick-hole + waffle texture, 48×48. |
+| `prop-manhole-alt` | [prop-manhole-alt.png](environment/campus/prop-manhole-alt.png) | 48x48 | image | Top-down iron manhole cover clean waffle alt, 48×48. |
 
 ### Weapon Mounts (武器架)
 
