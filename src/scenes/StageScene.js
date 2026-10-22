@@ -1332,8 +1332,10 @@ export default class StageScene extends Phaser.Scene {
 
     if (this._announcedWave == null) {
       this._announcedWave = wave;
+      this.audio?.playUiWave?.();
     } else if (wave !== this._announcedWave) {
       this._announcedWave = wave;
+      this.audio?.playUiWave?.();
       this._showBanner({
         icon: UI.wave,
         title: `WAVE ${wave}`,

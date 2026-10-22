@@ -151,8 +151,9 @@ export class PetCombat {
    * Plays `role.attack` once when that anim is loaded. Dragon's key is
    * the overhead slam (`pet-dragon-baby-attack`). Panda, lion, and
    * phoenix use the same path. A missing strip leaves the current body.
-   * Damage timing stays on MELEE. The melee fan and the existing
-   * pet-attack cue stay. Hurt is not touched.
+   * Damage timing stays on MELEE. The melee fan stays. Dragon plays
+   * `sfx-pet-dragon-attack` at windup and skips the generic pet-attack
+   * cue; other pets keep that cue. Hurt is not touched.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
    */
@@ -176,6 +177,7 @@ export class PetCombat {
     actor.meleeLeft = pets.WINDUP_MS;
     actor.state = 'melee';
     this._playBasicStrip(actor);
+    if (actor.role?.id === 'dragon') this.scene?.audio?.playDragonAttack?.();
     return true;
   }
 
@@ -1594,7 +1596,9 @@ export class PetCombat {
     if (!(actor.hp > 0) || actor.hp >= actor.maxHp) return;
     const ratio = GAME_CONFIG.PETS.OFF_FIELD_REGEN_RATIO;
     const gain = actor.maxHp * ratio * (dt / 1000);
+    const before = actor.hp;
     actor.hp = Math.min(actor.maxHp, actor.hp + gain);
+    if (actor.hp > before) this.scene?.audio?.playUiHeal?.();
     this._syncLowHp(actor);
   }
 
@@ -2032,8 +2036,10 @@ export class PetCombat {
       inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
     );
     this._showMeleeFan(actor);
-    this.scene?.audio?.playPetMeleeHit?.();
-    this.scene?.audio?.playPetBasicAttack?.();
+    if (actor.role?.id !== 'dragon') {
+      this.scene?.audio?.playPetMeleeHit?.();
+      this.scene?.audio?.playPetBasicAttack?.();
+    }
     const color = DAMAGE_COLORS[actor.role.id] || DAMAGE_COLORS.pet;
     return this._strikeAll(actor, hits, pets.DAMAGE, color, { knockback: true, critChance: 0.22 });
   }

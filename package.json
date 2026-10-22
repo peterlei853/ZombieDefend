@@ -22,6 +22,7 @@
     "check:v033": "node tools/check-v033.mjs",
     "check:v035": "node tools/check-v035.mjs",
     "check:v03627": "node tools/check-v03627.mjs",
+    "check:v03628": "node tools/check-v03628.mjs",
     "check:fx": "node tools/check-library-fx.mjs",
     "check:weapon-tryout": "node tools/check-weapon-tryout.mjs"
   },

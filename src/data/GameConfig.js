@@ -338,6 +338,13 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * keys do not replace the live HUD, campus plate, or boss FX. Gold,
  * saves, barricade HP, spawn counts, and combat damage stay put.
  * GitHub Pages publishes this tip from main.
+ * Credit-burn SFX play on Stage: weapon shot / charge / hit / aoe /
+ * aoe-explode for sling, bubble, rail (lightning), freeze (frost), and
+ * flame; dragon swing (`sfx-pet-dragon-attack`) on top of the slam strip;
+ * boss skill stings; S4 vocals when that skin id is on a body; UI click,
+ * shop, damage, heal, and wave; coin pickup; fence crack and break.
+ * Settings and item pickups stay catalog-only. Barricade HP and wave
+ * tables stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
