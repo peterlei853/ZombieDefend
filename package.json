@@ -11,6 +11,7 @@
     "check:pet-tryout": "node tools/check-pet-tryout.mjs",
     "check:pet-select": "node tools/check-pet-select.mjs",
     "check:bgm": "node tools/check-bgm.mjs",
+    "check:narration": "node tools/check-narration.mjs",
     "check:v026": "node tools/check-v026.mjs",
     "check:hero": "node tools/check-hero-deploy.mjs",
     "check:v028": "node tools/check-v028.mjs",

@@ -1,7 +1,9 @@
 import { APP_VERSION } from '../data/GameConfig.js';
+import { departLine } from '../data/narrationCopy.js';
 import { isOpeningPetId, PET_SELECT_ROSTER, spriteKeyForPet } from '../data/petSelectRoster.js';
 import { clampStage } from '../data/stageRoster.js';
 import { SoundManager } from '../systems/SoundManager.js';
+import { createNarrationToast } from '../ui/NarrationToast.js';
 import {
   FONT_HUD,
   FONT_TINY,
@@ -200,7 +202,14 @@ export default class PetSelectScene extends Phaser.Scene {
     };
     if (this.ownedWeapons) payload.ownedWeapons = this.ownedWeapons;
     if (this.upgrades) payload.upgrades = this.upgrades;
-    this.scene.start('StageScene', payload);
+    // Confirm toast, then the stage. Buttons are already consumed (`_left`).
+    // The banner does not take a hit target.
+    const line = departLine(id);
+    const toast = createNarrationToast(this, { y: this.scale.height / 2, style: 'banner' });
+    const wait = line && toast.say('depart', line) ? toast.msUntilIdle() : 0;
+    this.time.delayedCall(wait, () => {
+      this.scene.start('StageScene', payload);
+    });
   }
 
   _back() {

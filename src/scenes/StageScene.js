@@ -11,6 +11,12 @@ import {
 } from '../data/waves.js';
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, enemyFeelEnabled, forceDeathMode, forceHurtEnabled, forceTireEnabled, petHurtDebugRequested, petLowHpDebugRequested, showZombieHpEnabled } from '../data/GameConfig.js';
 import { playerCombatHudLabel, playerCombatStats } from '../data/playerCombat.js';
+import {
+  NARRATION,
+  nurseWaveFromDefs,
+  wallInDanger,
+  waveCallout,
+} from '../data/narrationCopy.js';
 import { clampStage } from '../data/stageRoster.js';
 import { readSelectedPetId, readSelectedPetSpriteKey } from '../data/SaveManager.js';
 import { PET_SELECT_ROSTER, isOpeningPetId, spriteKeyForPet } from '../data/petSelectRoster.js';
@@ -43,6 +49,7 @@ import {
   layoutPx,
 } from '../systems/DepthView.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
+import { createNarrationToast } from '../ui/NarrationToast.js';
 import { VirtualControls } from '../ui/VirtualControls.js';
 import {
   FONT_GOLD,
@@ -313,6 +320,13 @@ export default class StageScene extends Phaser.Scene {
       this.petEvolve?.resetStage();
     });
     this.audio.startStageBgm();
+
+    // Story barks stay off the feel booth and the solo enemy arena.
+    // The strip does not take a hit target and does not lock the lane.
+    this._narrationLive = !this.demoEnemyId && !this.enemyFeel;
+    this._narration = this._narrationLive ? createNarrationToast(this) : null;
+    this._nurseWave = this._narrationLive ? nurseWaveFromDefs(this.waveManager?.waveDefs) : null;
+    if (this._narration) this._narration.once('open', NARRATION.stageOpen);
   }
 
   /**
@@ -1320,10 +1334,13 @@ export default class StageScene extends Phaser.Scene {
       this._showBanner({
         icon: UI.wave,
         title: `WAVE ${wave}`,
-        zh: `第${wave}波`,
+        zh: this._narrationLive ? waveCallout(wave) : `第${wave}波`,
         hold: 2400,
         y: 230,
       });
+      if (this._nurseWave != null && wave === this._nurseWave) {
+        this._narration?.once('nurse', NARRATION.nurse);
+      }
     }
   }
 
@@ -1407,6 +1424,7 @@ export default class StageScene extends Phaser.Scene {
       this._onLose();
       return;
     }
+    this._noteWallDanger();
 
     // Defenders fire + hits. Pet gold includes baby-pet kills; burn gold is statusGold.
     if (this.defenders) {
@@ -1476,7 +1494,28 @@ export default class StageScene extends Phaser.Scene {
     const index = Math.max(0, PET_SELECT_ROSTER.findIndex((pet) => pet.id === this.selectedPetId));
     const idle = this.selectedPetSpriteKey || spriteKeyForPet(this.selectedPetId);
     this.defenders?.petCombat?.setBabyIdleKey?.(index, idle);
-    this.defenders?.summonPet(index, this.zombies);
+    const result = this.defenders?.summonPet(index, this.zombies);
+    this._notePetOrder(result);
+  }
+
+  /**
+   * First GO! this stage, and each Back!. Combat is unchanged.
+   * @param {{ ok?: boolean, reason?: string }|null|undefined} result
+   */
+  _notePetOrder(result) {
+    if (!this._narrationLive || !result?.ok) return;
+    if (result.reason === 'recall') {
+      this._narration?.say('back', NARRATION.back, { refresh: true });
+      return;
+    }
+    if (result.reason === 'ok') this._narration?.once('go', NARRATION.go);
+  }
+
+  /** Once, when the wall crosses the red fill and is still standing. */
+  _noteWallDanger() {
+    if (!this._narrationLive || !this.barricade) return;
+    if (!wallInDanger(this.barricade.hp, this.barricade.maxHp)) return;
+    this._narration?.once('wall', NARRATION.wall);
   }
 
   /**
@@ -1587,8 +1626,18 @@ export default class StageScene extends Phaser.Scene {
       depth: d + 3,
     });
 
+    // Tide line (and the stage-3 rumble) sit above the card. The shop
+    // waits out the toast. No clerk speaks on the next scene.
+    let hold = 1500;
+    if (this._narration) {
+      const lines = [NARRATION.tide];
+      if (this.stage === 3) lines.push(NARRATION.rumble);
+      this._narration.say('clear', lines, { style: 'banner', y: 118, depth: d + 30 });
+      hold = Math.max(hold, this._narration.msUntilIdle());
+    }
+
     // Victory bed plays through this hold, then Shop starts bgm-shop.
-    this.time.delayedCall(1500, () => {
+    this.time.delayedCall(hold, () => {
       overlay.destroy();
       this.scene.start('ShopScene', {
         stage: this.stage,
@@ -1609,6 +1658,8 @@ export default class StageScene extends Phaser.Scene {
     // purse this attempt was given (0 from Boot, or Shop gold after a win).
     this.registry.set('gold', this.runStartGold);
     this._clearBanner();
+    this._narration?.destroy();
+    this._narration = null;
 
     const d = HUD_DEPTH + 100;
     const cx = GAME_WIDTH / 2;
@@ -1626,7 +1677,7 @@ export default class StageScene extends Phaser.Scene {
       size: 32,
       depth: d + 3,
     });
-    addKitText(this, cx, cy - 42, '遊戲結束', {
+    addKitText(this, cx, cy - 42, NARRATION.gameOver, {
       system: true,
       size: 18,
       color: '#f6e7c2',
