@@ -189,6 +189,10 @@ function pushPetOffTorso(pet, zombie) {
   const room = zombie.y + meleeLaneCap() - pet.y;
   const drop = Math.min(upper.b - petBox.t, room);
   if (drop > 0.5 && nudge(pet, 0, drop)) return;
+  // Feet are already on the melee lane. A sideways slide parks the body
+  // past MELEE.RANGE, so the basic swing never starts and the attack
+  // strip stays on idle. The stand may share the legs.
+  if (!(room > 0.5)) return;
   const exitRight = upper.r - petBox.l;
   const exitLeft = petBox.r - upper.l;
   if (exitLeft <= exitRight) {

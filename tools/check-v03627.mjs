@@ -187,6 +187,26 @@ const farPet = {
 separateFootprints([farChef, farPet], { rounds: 4 });
 assert(farPet.x === 247 && farPet.y === 620, 'a pet crossing another lane is not pinned to the grass');
 const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
+const meleeRange = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+const meleeStand = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE * 0.7);
+const lanePet = {
+  kind: 'pet',
+  x: 400 + meleeStand,
+  y: 500 + meleeCap,
+  displayWidth: 77,
+  displayHeight: 77,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+const laneZombie = {
+  x: 400,
+  y: 500,
+  displayWidth: 126,
+  displayHeight: 126,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+separateFootprints([laneZombie, lanePet], { rounds: 6 });
+const standDx = lanePet.x - laneZombie.x;
+assert(standDx >= 0 && standDx <= meleeRange, `melee stand stays inside the forward box (${standDx} vs ${meleeRange})`);
 const drop = petLaneDrop(72, 126, meleeCap);
 assert(drop <= meleeCap && drop >= layoutPx(18), 'lane drop stays inside the melee window');
 assert(400 + drop - 72 >= 400 - 126 + 126 * TORSO_FROM_TOP - 0.5, 'aim drop clears the head and torso');
