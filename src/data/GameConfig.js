@@ -332,10 +332,16 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * use the locked Traditional Chinese lines and do not lock the lane.
  * Melee damage, gap, gold, saves, barricade HP, and spawn counts stay
  * put. GitHub Pages publishes this tip from main.
+ * v0.36.29: Milestone 2 credit-burn art is catalog-only (S4×4 at 88×88,
+ * weapon VFX including aoe-explode, boss stills, UI panels, backgrounds,
+ * brick path). S4 is not in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. The new
+ * keys do not replace the live HUD, campus plate, or boss FX. Gold,
+ * saves, barricade HP, spawn counts, and combat damage stay put.
+ * GitHub Pages publishes this tip from main.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.28';
+export const APP_VERSION = '0.36.29';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

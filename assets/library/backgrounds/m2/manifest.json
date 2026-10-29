@@ -1,0 +1,149 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "backgrounds",
+  "group": "m2-backdrops",
+  "title": "Milestone 2 Stage Backgrounds",
+  "titleZh": "里程碑 2 場景背景",
+  "description": "Five 320×180 stage plates from the Milestone 2 credit burn, v1.0. Includes the bonus moon street. These do not replace the 1280×720 campus plates. Fence and gold were not re-exported.",
+  "source": {
+    "sourceFolder": "zd-credit-m2/bg",
+    "milestone": "m2-credit-burn"
+  },
+  "defaults": {
+    "type": "background",
+    "facing": null,
+    "origin": [
+      0,
+      0
+    ],
+    "frames": 1
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/backgrounds/m2/bg-night-street.png",
+    "sheets": [
+      "assets/library/backgrounds/m2/bg-night-street-moon.png",
+      "assets/library/backgrounds/m2/bg-rainy-market.png",
+      "assets/library/backgrounds/m2/bg-subway.png",
+      "assets/library/backgrounds/m2/bg-rooftop-dusk.png"
+    ],
+    "extras": []
+  },
+  "assets": [
+    {
+      "key": "bg-night-street",
+      "path": "assets/library/backgrounds/m2/bg-night-street.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Industrial night street with lamps. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Industrial night street with lamps. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:cabc3449-f6e2-522c-a784-f2738e3df2bf"
+      }
+    },
+    {
+      "key": "bg-night-street-moon",
+      "path": "assets/library/backgrounds/m2/bg-night-street-moon.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Bonus alt night street with a moon. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Bonus alt night street with a moon. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:7d0f27dc-02a5-501d-ba39-08d58eb79e45"
+      }
+    },
+    {
+      "key": "bg-rainy-market",
+      "path": "assets/library/backgrounds/m2/bg-rainy-market.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Rainy market alley. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Rainy market alley. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:0de3b911-b772-5c13-9be7-89a2ddefa6c0"
+      }
+    },
+    {
+      "key": "bg-subway",
+      "path": "assets/library/backgrounds/m2/bg-subway.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Subway tunnel with green lights. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Subway tunnel with green lights. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:e2a7e9eb-d4cd-592f-a3c5-dc642743ebd3"
+      }
+    },
+    {
+      "key": "bg-rooftop-dusk",
+      "path": "assets/library/backgrounds/m2/bg-rooftop-dusk.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Rooftop dusk skyline. Native 320×180 stage plate, v1.0.",
+      "note": "v1.0. Rooftop dusk skyline. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key.",
+      "tags": [
+        "m2",
+        "stage-plate"
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "m2-credit-burn",
+        "galleryId": "gallery:13640c45-b3de-5d86-b4cb-d6be8733f572"
+      }
+    }
+  ]
+}
