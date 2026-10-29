@@ -166,9 +166,12 @@ const phoenix = {
   shift(dx, dy) { this.x += dx; this.y += dy; return true; },
 };
 separateFootprints([chef, phoenix], { rounds: 4 });
-const torsoBottom = (chef.y - chef.displayHeight) + chef.displayHeight * TORSO_FROM_TOP;
-const petTop = phoenix.y - phoenix.displayHeight;
-assert(petTop >= torsoBottom - 0.5, `pet sprite stays under the torso (${petTop} vs ${torsoBottom})`);
+const roadRange = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+const roadHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+const roadDx = phoenix.x - chef.x;
+const roadDy = phoenix.y - chef.y;
+assert(Math.abs(roadDy) <= 1, 'a pet on the road lane is not dropped to the grass');
+assert(roadDx >= 0 && roadDx <= roadRange && Math.abs(roadDy) <= roadHalf, `stand stays in the forward box (${roadDx}, ${roadDy})`);
 const farChef = {
   x: 200,
   y: 400,

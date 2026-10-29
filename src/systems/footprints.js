@@ -179,6 +179,12 @@ function pushAabb(a, b) {
  */
 function pushPetOffTorso(pet, zombie) {
   if (Math.abs(pet.y - zombie.y) > layoutPx(40)) return;
+  const laneDx = pet.x - zombie.x;
+  const yHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+  // East of the zombie and still on its road lane. A drop from here parks
+  // the pet on the grass edge, outside the forward box, so the swing never
+  // starts. Leave the approach and the stand alone.
+  if (laneDx >= -layoutPx(6) && Math.abs(pet.y - zombie.y) <= yHalf) return;
   // No extra pad here. The stand already sits layoutPx(8) below the torso,
   // and a pad on this test was shoving the pet sideways out of melee.
   const petBox = spriteBox(pet);

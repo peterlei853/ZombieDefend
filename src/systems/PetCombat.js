@@ -6,7 +6,7 @@ import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { petSkillKey, petSkillSpec } from '../assets/petSkills.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
-import { clampPetFoot, petLaneDrop } from './footprints.js';
+import { clampPetFoot } from './footprints.js';
 import {
   barricadeXAtY,
   depthFromY,
@@ -1791,10 +1791,15 @@ export class PetCombat {
     const dy = actor.destY - sprite.y;
     const dist = Math.hypot(dx, dy);
     const arrive = layoutPx(5);
-    if (dist <= arrive) {
+    // The stand point slides with the zombie, so a pet can sit inside
+    // MELEE.RANGE and still miss the 8px arrival check. Swing as soon as
+    // the forward box is true.
+    if (dist <= arrive || this._inMeleeReach(actor)) {
       actor.latched = true;
-      sprite.x = actor.destX;
-      sprite.y = actor.destY;
+      if (dist <= arrive) {
+        sprite.x = actor.destX;
+        sprite.y = actor.destY;
+      }
       actor.state = 'idle';
       if (!this._basicStripLive(actor)) playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
@@ -1815,8 +1820,23 @@ export class PetCombat {
   }
 
   /**
-   * Hold in front of the threat and one step down-screen, so the pet
-   * sprite sits under the head and torso. Recomputed every frame.
+   * True when a living zombie is inside this pet's melee box.
+   * @param {PetActor} actor
+   */
+  _inMeleeReach(actor) {
+    const sprite = actor?.sprite;
+    if (!sprite) return false;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    const range = layoutPx(pets.RANGE);
+    const yHalf = layoutPx(pets.Y_HALF);
+    return this._liveZombies.some(
+      (z) => z?.alive && z.body && inForwardBox(sprite.x, sprite.y, z.x, z.y, range, yHalf)
+    );
+  }
+
+  /**
+   * Hold on the threat's road lane, in front of it, inside MELEE.RANGE.
+   * Recomputed every frame.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie} threat
    * @param {{ x?: number, y?: number }|null} player
@@ -1824,9 +1844,10 @@ export class PetCombat {
   _aimPoint(actor, threat, player) {
     const stand = engageStand(actor.role.id);
     let x = threat.x + stand;
-    const petH = Math.abs(actor.sprite?.displayHeight) || layoutPx(36);
-    const zH = Math.abs(threat.body?.displayHeight) || threat.footprintHeight?.() || layoutPx(52);
-    const y = clampGrass(threat.y + petLaneDrop(petH, zH));
+    // Same road lane as the zombie. A drop toward the camera parks the pet
+    // on the grass edge with a gap wider than the swing, so tryBasic never
+    // sees them. The stand X is 0.7 of MELEE.RANGE, inside the forward box.
+    const y = clampGrass(threat.y);
     const minX = threat.x + layoutPx(14);
     if (x < minX) x = minX;
     if (player && Number.isFinite(player.x)) {

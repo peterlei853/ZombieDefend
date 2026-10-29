@@ -704,13 +704,19 @@ export const GAME_CONFIG = {
     },
     /** No living threat inside this field radius: walk behind the fence and sleep. */
     AGGRO_R: 96,
-    /** Basic melee box. Lengths are field px. Wind-up then recovery. */
+    /**
+     * Basic melee box. Lengths are field px. Wind-up then recovery.
+     * RANGE covers the distance where a zombie already stops to bite
+     * (body half plus BITE_RADIUS, about 66 field px on a near lane).
+     * 42 left that bite outside the box, so the pet froze on the grass
+     * edge and never started the swing.
+     */
     MELEE: {
       DAMAGE: 8,
       WINDUP_MS: 120,
       RECOVER_MS: 200,
       GAP_MS: 260,
-      RANGE: 42,
+      RANGE: 72,
       Y_HALF: 28,
       STEP_PX: 16,
       /** One-frame faint fan in front of the swing. Set false to hide it. */
