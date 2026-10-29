@@ -158,7 +158,11 @@ export class PetCombat {
    */
   tryBasic(actor, zombies) {
     if (this._attacksPaused()) return false;
-    if (!actor || actor.state === 'attack' || actor.meleePhase || actor.hurtLeft > 0) return false;
+    // A bite is applied before this tick and sets hurtLeft for the whole
+    // flinch. Gating on it meant contact never started the slam: the egg
+    // stayed up under the white/red fill. meleePhase and meleeGap still
+    // stop a second swing from restarting the strip.
+    if (!actor || actor.state === 'attack' || actor.meleePhase) return false;
     if (actor.meleeGap > 0) return false;
     const sprite = actor.sprite;
     if (!sprite?.active) return false;
@@ -1484,6 +1488,15 @@ export class PetCombat {
    */
   _applyHitLook(actor) {
     if (!actor.sprite?.active) return;
+    // Solid white/red hides the slam pose. Keep the fill off while the
+    // attack strip is up; a bite that is not a swing still paints.
+    if (actor.meleePhase || this._basicStripLive(actor)) {
+      if (actor.hitLook) {
+        actor.hitLook = '';
+        this._paintHit(actor, 'clear');
+      }
+      return;
+    }
     if (actor.hitPhase === 'white') {
       actor.hitLook = 'flash';
       this._paintHit(actor, 'flash');
@@ -1508,6 +1521,8 @@ export class PetCombat {
   _presentHurt(actor) {
     const sprite = actor.sprite;
     if (!sprite) return;
+    // The hurt strip was replacing the slam a few frames after it started.
+    if (actor.meleePhase || this._basicStripLive(actor)) return;
     if (actor.hitPhase === 'strip' && !actor.hurtStrip) {
       actor.hurtStrip = playOnce(sprite, actor.role.hurt, { restart: false });
       if (!actor.hurtStrip) this._finishHit(actor);
@@ -1719,7 +1734,12 @@ export class PetCombat {
       }
       if (!attacksPaused && actor.telegraph) this._ageTelegraph(actor, dt);
 
-      if (actor.hitPhase) {
+      // Bite damage lands before this tick. If that early-return stood,
+      // the slam never started and the egg sat under the white/red fill.
+      if (actor.hitPhase && !actor.meleePhase && !this._basicStripLive(actor) && !attacksPaused && actor.wakeLeft <= 0 && actor.state !== 'attack') {
+        this.tryBasic(actor, zombies);
+      }
+      if (actor.hitPhase && !actor.meleePhase && !this._basicStripLive(actor)) {
         this._presentHurt(actor);
         return gain;
       }
