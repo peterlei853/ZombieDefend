@@ -1,7 +1,9 @@
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
+import { DISASTER_SEEN_KEY, NARRATION } from '../data/narrationCopy.js';
 import { PLAYABLE_STAGE_CAP, STAGE_COUNT, stageFromQuery } from '../data/stageRoster.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
+import { createNarrationToast } from '../ui/NarrationToast.js';
 import {
   FONT_HUD,
   FONT_INK,
@@ -25,6 +27,10 @@ import {
 export default class TitleScene extends Phaser.Scene {
   constructor() {
     super('TitleScene');
+  }
+
+  init(data) {
+    this._nightClose = data?.nightClose === true;
   }
 
   create() {
@@ -145,6 +151,17 @@ export default class TitleScene extends Phaser.Scene {
       this.audio = null;
     });
     this.audio.startTitleBgm();
+
+    // Disaster once per page load. After stage 3 the shop sends nightClose
+    // instead, so the return home does not repeat the opening line.
+    // Neither toast takes a hit target, so START still clicks through.
+    this._narration = createNarrationToast(this, { y: 150, style: 'banner' });
+    if (this._nightClose) {
+      this._narration.say('night', NARRATION.nightClose);
+    } else if (!this.registry.get(DISASTER_SEEN_KEY)) {
+      this.registry.set(DISASTER_SEEN_KEY, true);
+      this._narration.say('disaster', NARRATION.disaster);
+    }
 
     this.input.keyboard?.once('keydown-ENTER', () => startStage(defaultStage));
     this.input.keyboard?.once('keydown-SPACE', () => startStage(defaultStage));

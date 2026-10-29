@@ -72,6 +72,7 @@ const FONT_GRID = {
 /**
  * Texture-pixel trough inside each empty frame.
  * Measured from the navy interior so the fill stays off the stone rim.
+ * Waves 1–2 keep these sheets. Enemy bars stay on this frame at every wave.
  */
 export const HP_FRAMES = {
   player: {
@@ -94,6 +95,50 @@ export const HP_FRAMES = {
     trough: { x: 16, y: 10, w: 86, h: 5 },
   },
 };
+
+/**
+ * Stage wave 3+ swaps the player and barricade frames for these panels.
+ * Each sheet is 384×192. The painted bar sits on the bottom; the rest is
+ * empty. `pivot` is the painted-bar center, in texture pixels, and stays
+ * on the same HUD point as the stock frame. Troughs were measured on these
+ * sheets (player gradient interior right of the heart; barricade dark trough
+ * right of the wall icon). Gold, banners, and the other wave3 panels are
+ * not HP frames, so they stay off this path. SFX tags are not generated.
+ */
+export const WAVE3_HUD_FROM = 3;
+
+export const HP_FRAMES_WAVE3 = {
+  player: {
+    frame: 'ui-hp-bar-player-wave3',
+    w: 384,
+    h: 192,
+    trough: { x: 110, y: 160, w: 192, h: 16 },
+    pivot: { x: 192, y: 169.5 },
+  },
+  barricade: {
+    frame: 'ui-hp-bar-barricade-wave3',
+    w: 384,
+    h: 192,
+    trough: { x: 104, y: 160, w: 174, h: 15 },
+    pivot: { x: 191.5, y: 166.5 },
+  },
+};
+
+/**
+ * Frame the Stage HUD should draw for this wave.
+ * Player and barricade use the 384×192 wave3 panels from wave 3 up.
+ * Enemy bars stay on the 118×24 frame.
+ * @param {'player'|'barricade'|'enemy'} kind
+ * @param {number} [wave]
+ */
+export function hpFrameSpec(kind, wave = 1) {
+  const key = kind === 'barricade' || kind === 'enemy' ? kind : 'player';
+  const n = Number(wave);
+  if ((key === 'player' || key === 'barricade') && Number.isFinite(n) && n >= WAVE3_HUD_FROM) {
+    return HP_FRAMES_WAVE3[key];
+  }
+  return HP_FRAMES[key];
+}
 
 /**
  * @param {string} text
@@ -482,10 +527,13 @@ export class KitHpBar {
   constructor(scene, kind, x, y, opts = {}) {
     this.scene = scene;
     this.kind = kind === 'barricade' || kind === 'enemy' ? kind : 'player';
-    this.spec = HP_FRAMES[this.kind];
+    this.wave = Number.isFinite(Number(opts.wave)) ? Number(opts.wave) : 1;
+    this.spec = this._specFor(this.wave);
     this.scale = opts.scale ?? 1;
     this.shown = opts.visible !== false;
     this.ratio = 1;
+    this.anchorX = x;
+    this.anchorY = y;
     this.x = x;
     this.y = y;
     const fillKey = hpFillKey(this.kind, 1);
@@ -521,6 +569,55 @@ export class KitHpBar {
     this.setPosition(x, y);
     this.setRatio(opts.ratio ?? 1);
     this.setVisible(this.shown);
+  }
+
+  /**
+   * Wave3 panels when the texture is in the cache. Otherwise the stock frame.
+   * @param {number} wave
+   */
+  _specFor(wave) {
+    const wanted = hpFrameSpec(this.kind, wave);
+    if (this.scene?.textures?.exists?.(wanted.frame)) return wanted;
+    const stock = HP_FRAMES[this.kind];
+    if (wanted.frame !== stock.frame && this.scene?.textures?.exists?.(stock.frame)) return stock;
+    return wanted;
+  }
+
+  /**
+   * Swap the player or barricade frame when the stage wave crosses 3.
+   * The ratio and the HUD anchor stay put. Enemy bars ignore the wave.
+   * @param {number} wave
+   */
+  setWave(wave) {
+    const n = Number(wave);
+    const nextWave = Number.isFinite(n) ? n : 1;
+    if (nextWave === this.wave && this.spec?.frame === this._specFor(nextWave).frame) return;
+    this.wave = nextWave;
+    if (!this.kit || !this.frame?.setTexture) return;
+    const next = this._specFor(nextWave);
+    if (next.frame === this.spec.frame) return;
+    if (!this.scene.textures.exists(next.frame)) return;
+    this.spec = next;
+    this.frame.setTexture(next.frame);
+    this.frame.setOrigin(0.5, 0.5);
+    this.frame.setScale(this.scale);
+    this.setRatio(this.ratio);
+    this.setPosition(this.anchorX, this.anchorY);
+    this.setVisible(this.shown);
+  }
+
+  /**
+   * Texture center that puts `pivot` on the HUD anchor.
+   * Stock frames have no pivot, so the anchor is the center.
+   */
+  _frameCenter() {
+    const pivot = this.spec.pivot;
+    if (!pivot) return { x: this.anchorX, y: this.anchorY };
+    const s = this.scale;
+    return {
+      x: this.anchorX + (this.spec.w / 2 - pivot.x) * s,
+      y: this.anchorY + (this.spec.h / 2 - pivot.y) * s,
+    };
   }
 
   get displayWidth() {
@@ -561,9 +658,12 @@ export class KitHpBar {
    * @param {number} y
    */
   setPosition(x, y) {
+    this.anchorX = x;
+    this.anchorY = y;
     this.x = x;
     this.y = y;
-    this.frame?.setPosition?.(x, y);
+    const center = this._frameCenter();
+    this.frame?.setPosition?.(center.x, center.y);
     this._layoutFill();
   }
 
@@ -615,13 +715,14 @@ export class KitHpBar {
   _layoutFill() {
     if (!this.fill) return;
     if (!this.kit) {
-      this.fill.setPosition(this.x - this.spec.w / 2, this.y);
+      this.fill.setPosition(this.anchorX - this.spec.w / 2, this.anchorY);
       return;
     }
+    const center = this._frameCenter();
     const s = this.scale;
     const trough = this.spec.trough;
-    const left = this.x - (this.spec.w * s) / 2 + trough.x * s;
-    const mid = this.y - (this.spec.h * s) / 2 + (trough.y + trough.h / 2) * s;
+    const left = center.x - (this.spec.w * s) / 2 + trough.x * s;
+    const mid = center.y - (this.spec.h * s) / 2 + (trough.y + trough.h / 2) * s;
     this.fill.setPosition(left, mid);
   }
 

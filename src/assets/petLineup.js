@@ -9,10 +9,15 @@ import {
 import { PET_SKILL_LOAD_KEYS } from './petSkills.js';
 
 /**
- * Baby bodies on the field. Idle / move / skill / hurt / sleep strips
- * (48×48, feet origin, face west). Sleep is the recall bed: sleep-start
- * once, then the sleep loop. Young and ancient idle strips stay on disk.
- * All twelve cast strips and their skill FX load with the stage.
+ * Baby bodies on the field. Idle / move / skill / sleep strips are
+ * 48×48, feet origin, face west. Hurt is the Wave2 remake: panda 8×48,
+ * lion 8×52, dragon and phoenix 8×64. Sleep is the recall bed:
+ * sleep-start once, then the sleep loop. Young and ancient idle strips
+ * stay on disk. All twelve cast strips and their skill FX load with
+ * the stage. `attack` is the Wave2 8-frame basic attack, preloaded
+ * beside `pet-*-baby-claw`. A basic swing plays `attack` when that
+ * anim is loaded. `pet-dragon-baby-attack` is the v1.1 overhead slam
+ * (8×64); the v1.0 subtle claw is replaced. Claw stays on disk.
  * Order is party order: far → near, and the HUD column top → bottom.
  * Pets are not spawned with the stage. The bar summons and recalls them.
  * `hudBar` is the 64×32 bar (head already composited on the left).
@@ -28,6 +33,8 @@ export const PET_LINEUP = [
     move: 'pet-phoenix-baby-move',
     skill: 'pet-phoenix-baby-skill',
     hurt: 'pet-phoenix-baby-hurt',
+    // PIXELLAB_HOOK: 8×64 attack beside pet-phoenix-baby-claw. Basic swing plays this key.
+    attack: 'pet-phoenix-baby-attack',
     sleepStart: 'pet-phoenix-baby-sleep-start',
     sleep: 'pet-phoenix-baby-sleep',
     projectile: 'fx-pet-phoenix-spark-feather',
@@ -46,6 +53,8 @@ export const PET_LINEUP = [
     move: 'pet-panda-baby-move',
     skill: 'pet-panda-baby-skill',
     hurt: 'pet-panda-baby-hurt',
+    // PIXELLAB_HOOK: 8×48 attack beside pet-panda-baby-claw. Basic swing plays this key.
+    attack: 'pet-panda-baby-attack',
     sleepStart: 'pet-panda-baby-sleep-start',
     sleep: 'pet-panda-baby-sleep',
     windup: 'fx-pet-panda-roll-dust',
@@ -64,6 +73,8 @@ export const PET_LINEUP = [
     move: 'pet-lion-baby-move',
     skill: 'pet-lion-baby-skill',
     hurt: 'pet-lion-baby-hurt',
+    // PIXELLAB_HOOK: 8×52 attack beside pet-lion-baby-claw. Basic swing plays this key.
+    attack: 'pet-lion-baby-attack',
     sleepStart: 'pet-lion-baby-sleep-start',
     sleep: 'pet-lion-baby-sleep',
     impact: 'fx-pet-lion-pounce-slash',
@@ -81,6 +92,8 @@ export const PET_LINEUP = [
     move: 'pet-dragon-baby-move',
     skill: 'pet-dragon-baby-skill',
     hurt: 'pet-dragon-baby-hurt',
+    // PIXELLAB_HOOK: 8×64 v1.1 overhead slam. Basic swing plays this key, not claw.
+    attack: 'pet-dragon-baby-attack',
     sleepStart: 'pet-dragon-baby-sleep-start',
     sleep: 'pet-dragon-baby-sleep',
     breath: 'fx-pet-dragon-smoke-breath',
@@ -111,6 +124,7 @@ export const PET_STAGE_KEYS = new Set([
       pet.move,
       pet.skill,
       pet.hurt,
+      pet.attack,
       pet.sleepStart,
       pet.sleep,
       pet.projectile,
@@ -138,8 +152,9 @@ export const PET_SAFE_OFFSET = layoutPx(14);
 
 /**
  * Stage load filter. Non-pet categories pass through. From `pets`, the
- * baby body strips, HUD icons, and all twelve cast strips plus skill FX
- * are queued. Young / ancient idle, move, and hurt stay unloaded.
+ * baby body strips (including the Wave2 attack keys), HUD icons, and all
+ * twelve cast strips plus skill FX are queued. Young / ancient idle,
+ * move, and hurt stay unloaded.
  * @param {{ category?: string, key?: string }} asset
  */
 export function stageLibraryFilter(asset) {

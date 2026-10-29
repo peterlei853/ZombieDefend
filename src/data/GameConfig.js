@@ -300,7 +300,10 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * hit01-normal / hit02-normal 50/50; contact is the impact cell on
  * that strip. Hurt plays hurt-normal and keeps the ×0.5 march.
  * HP ≥ 30 plays walk-normal. HP < 30 plays walk-tiremove at ×0.3.
- * Office hit02-normal is the ALIAS pull-weapon strip and still plays.
+ * Office hit02 plays `zombie-office-worker-v2-hit02` (16×84, slash on
+ * Phaser index 7). `hit02-normal` stays the pull-weapon alias and is
+ * not the bite. Chef's normal02 slot plays `zombie-chef-die2` (v2
+ * faceplant). Weights stay 10/45/45.
  * Crit is the existing pet crit roll. L3 is the charge tag already
  * on the water shot. Neither changes damage. Gold, saves, barricade
  * HP, spawn counts, and collision math stay put. The cell was already
@@ -322,10 +325,17 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * on the existing crit flag. Stage pets normal-attack only. GO! / Back!
  * deploys that saved pet. Barricade max HP stays 720. GitHub Pages
  * stays unpublished.
+ * v0.36.28: a pet basic attack plays `role.attack` when that anim is
+ * loaded. Dragon plays `pet-dragon-baby-attack` (overhead slam). Panda,
+ * lion, and phoenix use the same path. Hurt stays white, then red, then
+ * the hurt strip. Wave 3+ hangs the WAVE3 HUD panels. Narration toasts
+ * use the locked Traditional Chinese lines and do not lock the lane.
+ * Melee damage, gap, gold, saves, barricade HP, and spawn counts stay
+ * put. GitHub Pages publishes this tip from main.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.27';
+export const APP_VERSION = '0.36.28';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
@@ -696,13 +706,19 @@ export const GAME_CONFIG = {
     },
     /** No living threat inside this field radius: walk behind the fence and sleep. */
     AGGRO_R: 96,
-    /** Basic melee box. Lengths are field px. Wind-up then recovery. */
+    /**
+     * Basic melee box. Lengths are field px. Wind-up then recovery.
+     * RANGE covers the distance where a zombie already stops to bite
+     * (body half plus BITE_RADIUS, about 66 field px on a near lane).
+     * 42 left that bite outside the box, so the pet froze on the grass
+     * edge and never started the swing.
+     */
     MELEE: {
       DAMAGE: 8,
       WINDUP_MS: 120,
       RECOVER_MS: 200,
       GAP_MS: 260,
-      RANGE: 42,
+      RANGE: 72,
       Y_HALF: 28,
       STEP_PX: 16,
       /** One-frame faint fan in front of the swing. Set false to hide it. */

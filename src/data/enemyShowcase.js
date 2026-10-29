@@ -303,11 +303,14 @@ function listedAttackHitFrame(id) {
  * Legacy 8-frame bites stay on {@link ENEMY_ATTACK_HIT_FRAME}
  * (index 6; office feel 5; nurse feel 7). Those indexes do not
  * transfer onto these longer strips.
- * Office hit02 is the ALIAS pull-weapon strip; its strike is index 11.
+ * Office hit02 is the 16-frame true strip. The slash is 0-based cell 6,
+ * Phaser index 7. The pull-weapon alias stays index 11 if something
+ * still plays that key.
  * @type {Record<string, number>}
  */
 export const RULE_ATTACK_HIT_FRAME = {
   'zombie-office-worker-v2-hit01-normal': 7,
+  'zombie-office-worker-v2-hit02': 7,
   'zombie-office-worker-v2-hit02-normal': 11,
   'zombie-chef-hit01-normal': 8,
   'zombie-chef-hit02-normal': 10,

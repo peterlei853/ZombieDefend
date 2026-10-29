@@ -4,7 +4,7 @@
   "group": "phoenix-baby",
   "title": "Azure / 藍羽 — Baby",
   "titleZh": "藍羽·幼年",
-  "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+  "description": "Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-phoenix-baby-attack` is a new 8×64 attack beside claw; `pet-phoenix-baby-hurt` is replaced at 8×64.",
   "source": {
     "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
     "sourceFolder": "pets/phoenix/baby"
@@ -32,7 +32,9 @@
       "pet-phoenix-baby-skill",
       "pet-phoenix-baby-sleep",
       "pet-phoenix-baby-claw",
-      "pet-phoenix-baby-skill-aoe"
+      "pet-phoenix-baby-attack",
+      "pet-phoenix-baby-skill-aoe",
+      "pet-phoenix-baby-hurt"
     ],
     "thumb": "assets/library/previews/pets/phoenix-baby.gif"
   },
@@ -96,16 +98,27 @@
     {
       "key": "pet-phoenix-baby-hurt",
       "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-hurt.png",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "origin": [
         0.5,
         1.0
       ],
-      "facing": "west"
+      "facing": "west",
+      "note": "v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-phoenix-hurt (not generated).",
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
+        "pixellabAnimGroup": "4ee4127c-2fe2-44d8-8e83-ec3132a688f9",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "64x64",
+        "frames": 8,
+        "sfx": "sfx-pet-phoenix-hurt"
+      }
     },
     {
       "key": "pet-phoenix-baby-sleep-start",
@@ -168,6 +181,30 @@
       ],
       "facing": "west",
       "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw."
+    },
+    {
+      "key": "pet-phoenix-baby-attack",
+      "path": "assets/library/pets/phoenix/baby/strips/pet-phoenix-baby-attack.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-phoenix-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-phoenix-attack (not generated).",
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "2d2fb279-8485-430c-a6db-7dae1a9f042e",
+        "pixellabAnimGroup": "afd20583-0990-4a32-9069-83f1db96988d",
+        "cell": "64x64",
+        "sfx": "sfx-pet-phoenix-attack",
+        "alongside": "pet-phoenix-baby-claw",
+        "qc": "PASS"
+      }
     },
     {
       "key": "pet-phoenix-baby-skill-aoe",

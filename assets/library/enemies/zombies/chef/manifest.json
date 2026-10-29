@@ -4,7 +4,7 @@
   "group": "chef",
   "title": "Chef Zombie",
   "titleZh": "大廚丧尸",
-  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
+  "description": "Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, and die1 with Walk-normal, Hurt-normal (4), and Die-normal01. zombie-chef-die2 is v2.0 (8×84 faceplant with frying pan), distinct from the die1 kneel and from the v1.0 die-normal02 sheet. Stage's normal02 death slot plays zombie-chef-die2. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.",
   "source": {
     "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
     "sourceFolder": "new-zombies/chef",
@@ -87,13 +87,16 @@
       "frames": 8,
       "frameRate": 10,
       "loop": false,
-      "note": "v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key.",
+      "note": "v2.0 faceplant remake. 8×84 east, origin (0.5, 1). Distinct from die1 kneel and from the v1.0 `zombie-chef-die-normal02` sheet. Stage chef normal02 slot plays this key. SFX: sfx-zombie-chef-die2 (not generated).",
       "extra": {
-        "version": "v1.0",
-        "sameSheetAs": "zombie-chef-die-normal02",
+        "version": "v2.0",
+        "pixellabCharacterId": "102b6a71-f8d2-4ec4-933c-f17095b01ca9",
+        "pixellabAnimGroup": "71c1382f-7381-4f36-abbf-0a33ba9556f4",
         "pixellabAnim": "Die-normal02",
         "status": "OK",
-        "cell": "84x84"
+        "cell": "84x84",
+        "sfx": "sfx-zombie-chef-die2",
+        "replaces": "v1.0 shared sheet with zombie-chef-die-normal02"
       }
     },
     {
@@ -275,13 +278,13 @@
       "frames": 8,
       "frameRate": 10,
       "loop": false,
-      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet.",
+      "note": "v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02 kneel, kept on disk. Stage chef normal02 slot plays `zombie-chef-die2` (v2.0 faceplant) instead of this sheet.",
       "extra": {
         "version": "v1.0",
         "pixellabAnim": "Die-normal02",
-        "status": "OK",
+        "status": "KEPT",
         "cell": "84x84",
-        "legacyKey": "zombie-chef-die2"
+        "stagePlays": "zombie-chef-die2"
       }
     },
     {

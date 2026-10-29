@@ -24,7 +24,6 @@ import { APP_VERSION, GAME_CONFIG, HERO_REFERENCE_DPS, petHurtDebugRequested, pe
 import { BARRICADE_MAX_HP } from '../src/data/waves.js';
 import { getGoldByHP } from '../src/data/economy.js';
 import { barricadeXAtY, layoutPx, grassYMax, grassYMin } from '../src/systems/DepthView.js';
-import { petLaneDrop } from '../src/systems/footprints.js';
 import { barricadePressureHigh, pickPetCombatTarget } from '../src/systems/petTarget.js';
 import { PetCombat } from '../src/systems/PetCombat.js';
 import { ULT_MS } from '../src/systems/UltCutscene.js';
@@ -46,8 +45,8 @@ const hudSrc = readFileSync(new URL('../src/ui/PetPortraitHud.js', import.meta.u
 const stageSrc = readFileSync(new URL('../src/scenes/StageScene.js', import.meta.url), 'utf8');
 const titleSrc = readFileSync(new URL('../src/scenes/TitleScene.js', import.meta.url), 'utf8');
 
-assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'package and APP_VERSION are v0.36.27');
-assert(html.includes('v0.36.27'), 'document title is v0.36.27');
+assert(pkg.version === '0.36.28' && APP_VERSION === '0.36.28', 'package and APP_VERSION are v0.36.28');
+assert(html.includes('v0.36.28'), 'document title is v0.36.28');
 assert(pets.HP === 192 && BARRICADE_MAX_HP === 720, 'pet HP and barricade HP stay put');
 assert(getGoldByHP(40) === 10 && getGoldByHP(120) === 15, 'gold-by-HP stays put');
 
@@ -158,7 +157,7 @@ assert(combat.summon(0, player, [zombie]).ok, 'melee harness summons');
 const bodySprite = scene._sprites.find((sprite) => sprite.textureKey === 'pet-phoenix-baby-idle');
 const stand = layoutPx(pets.MELEE.RANGE * 0.7);
 bodySprite.x = zombie.x + stand;
-bodySprite.y = zombie.y + petLaneDrop(layoutPx(36), layoutPx(52));
+bodySprite.y = zombie.y;
 combat.update(400, [zombie], player);
 assert(combat.fxLog.includes('melee-fan'), 'melee impact draws the fan');
 assert(audio.melee === 1, 'melee hit plays pet-melee-hit');

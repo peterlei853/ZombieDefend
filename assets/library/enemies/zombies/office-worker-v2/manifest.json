@@ -4,11 +4,11 @@
   "group": "office-worker-v2",
   "title": "Office Worker Zombie v2",
   "titleZh": "上班族丧尸",
-  "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
+  "description": "84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. zombie-office-worker-v2-hit02 is the v1.0 true Hit02 (16×84, slash on cell 6). hit02-normal stays the v1.0 pull-weapon ALIAS (17×84) and is no longer the Stage bite. New keys: walk-tiremove (9), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.",
   "source": {
     "pixellabCharacterId": "f8f0ce35-4b64-4807-a4ec-e7177aac1284",
     "sourceFolder": "new-zombies/office-worker",
-    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas is 84×84. Keys are zombie-office-worker-v2-*. The earlier 64×64 zombie-office-* group was deprecated after v0.28 Accept. Rule-anim v1.0 (2026-10-20) east strips, cell 84×84 RGBA. Legacy walk/hurt/die1/die2 share the new Walk-normal, Hurt-normal, Die-normal01, and Die-normal02 sheets. The 8-frame attack strip stays so barricade contact is unchanged; hit01-normal is the new attack key.",
+    "note": "pixminimax east, style ref f8d7252e-2b88-4cad-bc27-5e8f9bc79a84. Canvas is 84×84. Keys are zombie-office-worker-v2-*. The earlier 64×64 zombie-office-* group was deprecated after v0.28 Accept. Rule-anim v1.0 (2026-10-20) east strips, cell 84×84 RGBA. Legacy walk/hurt/die1/die2 share the new Walk-normal, Hurt-normal, Die-normal01, and Die-normal02 sheets. The 8-frame attack strip stays so barricade contact is unchanged; hit01-normal is the new attack key. Wave1 credit-burn adds zombie-office-worker-v2-hit02 (16×84 east, PixelLab d6b99f46). Stage bite hit02 plays that key. hit02-normal remains the pull-weapon ALIAS.",
     "ruleExport": "2026-10-20",
     "ruleVersion": "v1.0"
   },
@@ -26,7 +26,7 @@
     "animate": [
       "zombie-office-worker-v2-walk-normal",
       "zombie-office-worker-v2-hit01-normal",
-      "zombie-office-worker-v2-hit02-normal",
+      "zombie-office-worker-v2-hit02",
       "zombie-office-worker-v2-hurt-normal",
       "zombie-office-worker-v2-die-normal01",
       "zombie-office-worker-v2-die-critical-hit"
@@ -243,12 +243,35 @@
       "frames": 17,
       "frameRate": 10,
       "loop": false,
-      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal.",
+      "note": "v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back. ALIAS kept on disk. Stage bites no longer play this key. The true Hit02 is `zombie-office-worker-v2-hit02` (16×84, slash on 0-based cell 6). SFX for the live bite: sfx-zombie-office-hit02 (not generated).",
       "extra": {
         "version": "v1.0",
         "pixellabAnim": "custom-Pull the weapon back (alias hit02)",
         "status": "ALIAS",
-        "cell": "84x84"
+        "cell": "84x84",
+        "supersededBy": "zombie-office-worker-v2-hit02"
+      }
+    },
+    {
+      "key": "zombie-office-worker-v2-hit02",
+      "path": "assets/library/enemies/zombies/office-worker-v2/strips/zombie-office-worker-v2-hit02.png",
+      "frameWidth": 84,
+      "frameHeight": 84,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": false,
+      "note": "v1.0 true Hit02. 16×84 east, origin (0.5, 1). Wind-up, white slash on 0-based cell 6 (Phaser index 7), then recovery. Replaces the Stage bite that used the hit02-normal pull-weapon ALIAS. SFX: sfx-zombie-office-hit02 (not generated).",
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "f8f0ce35-4b64-4807-a4ec-e7177aac1284",
+        "pixellabAnimGroup": "d6b99f46-f94f-4a02-8613-08135381fb01",
+        "pixellabAnim": "hit02",
+        "status": "OK",
+        "cell": "84x84",
+        "contactFrame": 6,
+        "phaserContactIndex": 7,
+        "sfx": "sfx-zombie-office-hit02",
+        "replacesAlias": "zombie-office-worker-v2-hit02-normal"
       }
     },
     {

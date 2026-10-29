@@ -6,16 +6,16 @@
 | Category | Groups | Assets |
 |---|---:|---:|
 | [Hero](#hero) | 3 | 141 |
-| [Pets](#pets) | 17 | 124 |
-| [UI](#ui) | 1 | 51 |
-| [Zombies](#zombies) | 15 | 220 |
+| [Pets](#pets) | 17 | 128 |
+| [UI](#ui) | 1 | 64 |
+| [Zombies](#zombies) | 15 | 221 |
 | [Bosses](#bosses) | 4 | 39 |
 | [Shared FX](#fx) | 9 | 23 |
 | [Pickups](#pickups) | 1 | 5 |
 | [Environment](#environment) | 2 | 20 |
 | [Backgrounds](#backgrounds) | 1 | 15 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **54** | **659** |
+| **Total** | **54** | **677** |
 
 <a id="hero"></a>
 ## Hero
@@ -219,20 +219,21 @@ Green Dragon. Ancient form (128px). Skill: Apocalyptic Flame / 末日烈焰. Fac
 
 <img src="previews/pets/dragon-baby.gif" alt="dragon-baby preview" height="140">
 
-Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
+Green Dragon. Baby form (48px). Skill: Smoke Breath / 煙霧吐息. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-dragon-baby-attack` is an 8×64 attack beside claw (v1.1 overhead slam, was v1.0 PASS_WARN); `pet-dragon-baby-hurt` is replaced at 8×64.
 
-- group `dragon-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
+- group `dragon-baby` · 10 assets · frame 48x48, 64x64, 64x96, 85x160, 96x96 · key prefix `pet-dragon-baby-` · manifest [pets/dragon/baby/manifest.json](pets/dragon/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `pet-dragon-baby-idle` | 6 | 48x48 | 6 | loop | (0.5, 1.0) |  |
 | `pet-dragon-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
 | `pet-dragon-baby-skill` | 8 | 48x48 | 10 | once | (0.5, 1.0) | fx: `fx-pet-dragon-smoke-breath` |
-| `pet-dragon-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+| `pet-dragon-baby-hurt` | 8 | 64x64 | 10 | once | (0.5, 1.0) | v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-dragon-hurt (not generated). |
 | `pet-dragon-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-dragon-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
 | `pet-dragon-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-dragon-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-dragon-baby-attack` | 8 | 64x64 | 12 | once | (0.5, 1.0) | v1.1 REPLACE remake. 8×64 west, origin (0.5, 1). Was v1.0 PASS_WARN subtle claw; now a BIG overhead slam (wind-up, arms overhead, slam, recovery). Same key and cell as v1.0. Cataloged beside `pet-dragon-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. Discarded anim group 92bdf771-5b92-4761-8e24-bdf06a743a44. SFX: sfx-pet-dragon-attack (not generated). |
 | `pet-dragon-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (green flame). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Jade / 翠火 — FX (翠火·特效)
@@ -289,20 +290,21 @@ Golden Lion 金獅. Ancient form (96px). Skill: Sunder Strike / 裂地猛擊. Fa
 
 <img src="previews/pets/lion-baby.gif" alt="lion-baby preview" height="140">
 
-Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
+Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-lion-baby-attack` is a new 8×52 attack beside claw; `pet-lion-baby-hurt` is replaced at 8×52.
 
-- group `lion-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-lion-baby-` · manifest [pets/lion/baby/manifest.json](pets/lion/baby/manifest.json)
+- group `lion-baby` · 10 assets · frame 48x48, 52x52, 64x96, 85x160, 96x96 · key prefix `pet-lion-baby-` · manifest [pets/lion/baby/manifest.json](pets/lion/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `pet-lion-baby-idle` | 8 | 48x48 | 8 | loop | (0.5, 1.0) |  |
 | `pet-lion-baby-move` | 6 | 48x48 | 12 | loop | (0.5, 1.0) |  |
 | `pet-lion-baby-skill` | 8 | 48x48 | 12 | once | (0.5, 1.0) | fx: `fx-pet-lion-pounce-slash` |
-| `pet-lion-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+| `pet-lion-baby-hurt` | 8 | 52x52 | 10 | once | (0.5, 1.0) | v2.0 hurt remake. 8×52 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-lion-hurt (not generated). |
 | `pet-lion-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-lion-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
 | `pet-lion-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-lion-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-lion-baby-attack` | 8 | 52x52 | 12 | once | (0.5, 1.0) | v1.0 basic attack. 8×52 west, origin (0.5, 1). Cataloged beside `pet-lion-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-lion-attack (not generated). |
 | `pet-lion-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (gold). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Leo / 雷歐 — FX (雷歐·特效)
@@ -358,20 +360,21 @@ Black Panda 墨熊貓. Ancient form (96px). Skill: Chi Blast / 氣功波. Faces 
 
 <img src="previews/pets/panda-baby.gif" alt="panda-baby preview" height="140">
 
-Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
+Black Panda 墨熊貓. Baby form (48px). Skill: Roll Raid / 滾動突襲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-panda-baby-attack` is a new 8×48 attack beside claw; `pet-panda-baby-hurt` is replaced at 8×48.
 
-- group `panda-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-panda-baby-` · manifest [pets/panda/baby/manifest.json](pets/panda/baby/manifest.json)
+- group `panda-baby` · 10 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-panda-baby-` · manifest [pets/panda/baby/manifest.json](pets/panda/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `pet-panda-baby-idle` | 6 | 48x48 | 8 | loop | (0.5, 1.0) |  |
 | `pet-panda-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
 | `pet-panda-baby-skill` | 8 | 48x48 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-roll-dust`, `fx-pet-panda-roll-impact` |
-| `pet-panda-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+| `pet-panda-baby-hurt` | 8 | 48x48 | 10 | once | (0.5, 1.0) | v2.0 hurt remake. 8×48 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-panda-hurt (not generated). |
 | `pet-panda-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-panda-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
 | `pet-panda-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-panda-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-panda-baby-attack` | 8 | 48x48 | 12 | once | (0.5, 1.0) | v1.0 basic attack. 8×48 west, origin (0.5, 1). Cataloged beside `pet-panda-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-panda-attack (not generated). |
 | `pet-panda-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (green chi). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Momo / 墨墨 — FX (墨墨·特效)
@@ -394,15 +397,15 @@ Standalone skill FX for Black Panda 墨熊貓. Travel west. Evolve FX included.
 
 <img src="previews/pets/panda-young.gif" alt="panda-young preview" height="140">
 
-Black Panda 墨熊貓. Young form (64px). Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
+Black Panda 墨熊貓. Young form (64px body). Skill strip v2.0 is 84×84 (was 64×64): bamboo staff wind-up then thrust, tip clear of the right edge. Skill: Bamboo Sweep / 竹林橫掃. Faces WEST. v0.35 additive: appearance/claw/skill-aoe/evolve-from-baby (catalog only).
 
-- group `panda-young` · 8 assets · frame 64x64, 64x96, 85x160, 96x96 · key prefix `pet-panda-young-` · manifest [pets/panda/young/manifest.json](pets/panda/young/manifest.json)
+- group `panda-young` · 8 assets · frame 64x64, 64x96, 84x84, 85x160, 96x96 · key prefix `pet-panda-young-` · manifest [pets/panda/young/manifest.json](pets/panda/young/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `pet-panda-young-idle` | 6 | 64x64 | 8 | loop | (0.5, 1.0) |  |
 | `pet-panda-young-move` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
-| `pet-panda-young-skill` | 8 | 64x64 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-bamboo-sweep` |
+| `pet-panda-young-skill` | 8 | 84x84 | 12 | once | (0.5, 1.0) | fx: `fx-pet-panda-bamboo-sweep` · v2.0 crop remake. 8×84 west, origin (0.5, 1). Canvas grew 64→84 so the staff tip is not cropped. Stage loads frameWidth/Height from this entry. SFX: sfx-pet-panda-skill (alias sfx-pet-panda-skill-staff; not generated). |
 | `pet-panda-young-hurt` | 4 | 64x64 | 10 | once | (0.5, 1.0) |  |
 | `pet-panda-young-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v0.35 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-panda-young-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v0.35 young basic-attack claw strip ~0.3s (256×96). Enlarging dark claw. |
@@ -428,20 +431,21 @@ Blue Phoenix 藍焰鳳凰. Ancient form (128px). Skill: Blazing Rebirth / 烈焰
 
 <img src="previews/pets/phoenix-baby.gif" alt="phoenix-baby preview" height="140">
 
-Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).
+Blue Phoenix 藍焰鳳凰. Baby form (48px). Skill: Spark Feather / 閃光羽落. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-phoenix-baby-attack` is a new 8×64 attack beside claw; `pet-phoenix-baby-hurt` is replaced at 8×64.
 
-- group `phoenix-baby` · 9 assets · frame 48x48, 64x96, 85x160, 96x96 · key prefix `pet-phoenix-baby-` · manifest [pets/phoenix/baby/manifest.json](pets/phoenix/baby/manifest.json)
+- group `phoenix-baby` · 10 assets · frame 48x48, 64x64, 64x96, 85x160, 96x96 · key prefix `pet-phoenix-baby-` · manifest [pets/phoenix/baby/manifest.json](pets/phoenix/baby/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
 | `pet-phoenix-baby-idle` | 6 | 48x48 | 8 | loop | (0.5, 1.0) |  |
 | `pet-phoenix-baby-move` | 6 | 48x48 | 10 | loop | (0.5, 1.0) |  |
 | `pet-phoenix-baby-skill` | 8 | 48x48 | 10 | once | (0.5, 1.0) | fx: `fx-pet-phoenix-spark-feather`, `fx-pet-phoenix-spark-feather-hit` |
-| `pet-phoenix-baby-hurt` | 4 | 48x48 | 10 | once | (0.5, 1.0) |  |
+| `pet-phoenix-baby-hurt` | 8 | 64x64 | 10 | once | (0.5, 1.0) | v2.0 hurt remake. 8×64 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-phoenix-hurt (not generated). |
 | `pet-phoenix-baby-sleep-start` | 4 | 48x48 | 8 | once | (0.5, 1.0) |  |
 | `pet-phoenix-baby-sleep` | 10 | 48x48 | 6 | start 0-3 once, loop 4-9 | (0.5, 1.0) |  |
 | `pet-phoenix-baby-appearance` | 1 | 96x96 | – | static | (0.5, 1.0) | v2 clearer standing legs still (PixelLab Pro Flash). Catalog only — not wired over idle yet. |
 | `pet-phoenix-baby-claw` | 4 | 64x96 | 12 | once | (0.5, 1.0) | v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw. |
+| `pet-phoenix-baby-attack` | 8 | 64x64 | 12 | once | (0.5, 1.0) | v1.0 basic attack. 8×64 west, origin (0.5, 1). Cataloged beside `pet-phoenix-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-phoenix-attack (not generated). |
 | `pet-phoenix-baby-skill-aoe` | 3 | 85x160 | 6 | loop | (0.5, 1.0) | v2 feet-centered ground AoE ring ~4 body-widths (cyan). Canvas trimmed to 255×160 (85×3). Additive; existing cast skill strip unchanged. |
 
 ### Azure / 藍羽 — FX (藍羽·特效)
@@ -519,9 +523,9 @@ Stage pet HUD pack. Heads 48x48 (v0.20.x). Bars 64x32 with head composited left 
 
 <img src="previews/ui/hud-kit/preview.png" alt="hud-kit preview" height="140">
 
-v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated.
+v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style matching title screen. Latin font atlases only (no CJK). Prefer ui-font-hud-bold-atlas-outlined and *-cream. Pet HUD stays under pets/ui. TTF companions: assets/library/ui/fonts/ui-font-hud-bold.ttf + ui-font-hud-tiny.ttf (not indexed as textures). Includes title splash ui-title-bg (688×384 native) + ui-title-bg-hd (1280×720 upscale) from 2-PixelLab Bot. v0.22.1: pet float GO!/Back! callouts under floats/. v0.22 Accept style fixes: stone enemy HP frame ui-hp-bar-enemy (118×24, origin 0.5,0.5) plus legacy ui-hp-bar-enemy-96 (96×32) and compact fills ui-hp-enemy-fill-{ok,mid,low} (72×8, origin 0,0.5); parchment/stone joystick ui-joystick-base (80×80), ui-joystick-base-96 (96×96), ui-joystick-knob and ui-joystick-knob-pressed (40×40), origin 0.5,0.5; clean title ui-title-bg-clean (688×384) and ui-title-bg-clean-hd (1280×720), origin 0.5,0.5, with no baked v0.21 footer and no NEW/LOAD/SCOREBOARD buttons. v0.26.1: digit cells 0–9 on the five HUD bitmap atlases redrawn so 0 (open ring), 1 (stem with top serif and base), and 6 (open top-right, holed bowl) stay distinct. Letters and punctuation unchanged. Grid stays 8×10. TTF companions not regenerated. Wave3 credit-burn panels live under ui/wave3/. Stage wave 3+ draws the 384×192 panels ui-hp-bar-player-wave3 and ui-hp-bar-barricade-wave3; waves 1–2 keep ui-hp-bar-player (248×36) and ui-hp-bar-barricade (251×45). Shop, title, pause, auth, banners, tip, pet select, gold chip, crit number, and the weapons row stay registered and are not drawn.
 
-- group `hud-kit` · 51 assets · frame 16x16, 32x32, 40x16, 40x40, 64x16, 64x80, 72x8, 73x33, 80x32, 80x80, 85x44, 96x32, 96x96, 106x39, 116x56, 118x24, 120x10, 128x16, 128x32, 128x160, 160x64, 170x88, 212x78, 234x148, 248x36, 251x45, 256x64, 512x192, 512x288, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
+- group `hud-kit` · 64 assets · frame 16x16, 32x32, 40x16, 40x40, 64x16, 64x80, 72x8, 73x33, 80x32, 80x80, 85x44, 96x32, 96x96, 106x39, 116x56, 118x24, 120x10, 128x16, 128x32, 128x160, 160x64, 170x88, 192x192, 212x78, 234x148, 248x36, 251x45, 256x64, 256x192, 384x192, 384x384, 512x192, 512x288, 512x384, 688x384, 1280x720 · key prefix `ui-` · manifest [ui/manifest.json](ui/manifest.json)
 - previews: [ui-kit-sheet.png](previews/ui/hud-kit/ui-kit-sheet.png), [ui-title-bg-preview.png](previews/ui/hud-kit/ui-title-bg-preview.png), [ui-float-go-back-sheet.png](previews/ui/hud-kit/ui-float-go-back-sheet.png)
 
 | Key | File | Size | Type | Notes |
@@ -577,6 +581,19 @@ v0.22.0 UI kit from 2-PixelLab Bot. Stone/parchment/cyan-glow/orange-gem style m
 | `ui-float-go-burst-hd` | [ui-float-go-burst-hd.png](ui/floats/ui-float-go-burst-hd.png) | 170x88 | icon | 2× GO! burst. |
 | `ui-float-back-burst` | [ui-float-back-burst.png](ui/floats/ui-float-back-burst.png) | 106x39 | icon | Optional decorative Back! shout burst. |
 | `ui-float-back-burst-hd` | [ui-float-back-burst-hd.png](ui/floats/ui-float-back-burst-hd.png) | 212x78 | icon | 2× Back! burst. |
+| `ui-hp-bar-player-wave3` | [ui-hp-bar-player.png](ui/wave3/ui-hp-bar-player.png) | 384x192 | icon | Wave3 credit-burn player HP panel, 384×192. Stage wave 3+ draws this panel in place of `ui-hp-bar-player` (248×36). The painted bar sits on the bottom of the sheet; the trough is measured here. Waves 1–2 keep the stock frame. SFX: none. |
+| `ui-hp-bar-barricade-wave3` | [ui-hp-bar-barricade.png](ui/wave3/ui-hp-bar-barricade.png) | 384x192 | icon | Wave3 credit-burn barricade HP panel, 384×192. Stage wave 3+ draws this panel in place of `ui-hp-bar-barricade` (251×45). The painted bar sits on the bottom of the sheet; the trough is measured here. Waves 1–2 keep the stock frame. SFX: none. |
+| `ui-dmg-crit-number` | [ui-dmg-crit-number.png](ui/wave3/ui-dmg-crit-number.png) | 192x192 | icon | Wave3 crit number pop, 192×192. Catalog-only. No stock key draws this yet. SFX: sfx-ui-crit (not generated). |
+| `ui-panel-shop` | [ui-panel-shop.png](ui/wave3/ui-panel-shop.png) | 512x384 | icon | Wave3 shop panel, 512×384. Catalog-only. No PIXELLAB_HOOK draws a shop panel yet. SFX: sfx-ui-shop (not generated). |
+| `ui-panel-title` | [ui-panel-title.png](ui/wave3/ui-panel-title.png) | 512x288 | icon | Wave3 title panel, 512×288. Catalog-only. TitleScene still draws `ui-title-bg-clean` (688×384). Sizes do not match, so this panel is not swapped in. SFX: none. |
+| `ui-panel-pause` | [ui-panel-pause.png](ui/wave3/ui-panel-pause.png) | 384x384 | icon | Wave3 pause panel, 384×384. Catalog-only. Live pause chrome is `ui-icon-pause`, not this panel. SFX: sfx-ui-pause (not generated). |
+| `ui-panel-auth` | [ui-panel-auth.png](ui/wave3/ui-panel-auth.png) | 384x384 | icon | Wave3 auth panel, 384×384. Catalog-only. No PIXELLAB_HOOK maps an auth panel. SFX: sfx-ui-auth (not generated). |
+| `ui-banner-stage-clear` | [ui-banner-stage-clear.png](ui/wave3/ui-banner-stage-clear.png) | 512x192 | icon | Wave3 Stage Clear banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-clear (not generated). |
+| `ui-banner-stage-fail` | [ui-banner-stage-fail.png](ui/wave3/ui-banner-stage-fail.png) | 512x192 | icon | Wave3 Stage Fail banner, 512×192. Catalog-only. No stock banner key. SFX: sfx-ui-stage-fail (not generated). |
+| `ui-tip-prompt` | [ui-tip-prompt.png](ui/wave3/ui-tip-prompt.png) | 384x192 | icon | Wave3 tip prompt, 384×192. Catalog-only. Tips still use `ui-toast-panel` / `ui-dialog-panel`. SFX: sfx-ui-tip (not generated). |
+| `ui-panel-pet-select` | [ui-panel-pet-select.png](ui/wave3/ui-panel-pet-select.png) | 512x384 | icon | Wave3 pet-select panel, 512×384. Catalog-only. PetSelectScene draws catalog heads on parchment buttons, not this panel. SFX: none. |
+| `ui-hud-gold` | [ui-hud-gold.png](ui/wave3/ui-hud-gold.png) | 256x192 | icon | Wave3 gold HUD chip, 256×192. Catalog-only. Gold text still uses `ui-font-hud-bold-atlas-gold`. SFX: sfx-ui-gold (not generated). |
+| `ui-icon-weapons-row` | [ui-icon-weapons-row.png](ui/wave3/ui-icon-weapons-row.png) | 512x192 | icon | Wave3 weapons icon row, 512×192. Catalog-only. Weapon icons stay `icon-*` on the hero. SFX: none. |
 
 <a id="zombies"></a>
 ## Zombies
@@ -613,7 +630,7 @@ Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: pri
 
 <img src="previews/zombies/chef/preview.gif" alt="chef preview" height="140">
 
-Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (4), Die-normal01, and Die-normal02. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.
+Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, and die1 with Walk-normal, Hurt-normal (4), and Die-normal01. zombie-chef-die2 is v2.0 (8×84 faceplant with frying pan), distinct from the die1 kneel and from the v1.0 die-normal02 sheet. Stage's normal02 death slot plays zombie-chef-die2. hit01-normal (16 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (8), hit02-normal (16), die-deathwalk (33), die-critical-hit (32), die-disappear (32). hurt_shock stays 8 frames. Cell stays 84×84.
 
 - group `chef` · 21 assets · frame 84x84 · key prefix `zombie-chef-` · manifest [enemies/zombies/chef/manifest.json](enemies/zombies/chef/manifest.json)
 
@@ -622,7 +639,7 @@ Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk
 | `zombie-chef-walk` | 8 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-walk-normal` (Walk-normal, 8 frames). Stage still plays this legacy key. |
 | `zombie-chef-run` | 8 | 84x84 | 12 | loop | (0.5, 1.0) |  |
 | `zombie-chef-die1` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-die-normal01` (Die-normal01, 8 frames). Stage still plays this legacy key. |
-| `zombie-chef-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-die-normal02` (Die-normal02, 8 frames). Stage still plays this legacy key. |
+| `zombie-chef-die2` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v2.0 faceplant remake. 8×84 east, origin (0.5, 1). Distinct from die1 kneel and from the v1.0 `zombie-chef-die-normal02` sheet. Stage chef normal02 slot plays this key. SFX: sfx-zombie-chef-die2 (not generated). |
 | `zombie-chef-attack` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-chef-bite` | 8 | 84x84 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-chef-hurt` | 4 | 84x84 | 10 | once | (0.5, 1.0) | v1.0. Same 84×84 sheet as `zombie-chef-hurt-normal` (Hurt-normal, 4 frames). Stage still plays this legacy key. |
@@ -636,7 +653,7 @@ Chef zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces walk
 | `zombie-chef-hit01-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-chef-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
 | `zombie-chef-hit02-normal` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 16×84 east, origin (0.5, 1). PixelLab hit02-normal. |
 | `zombie-chef-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal01. Legacy `zombie-chef-die1` points at this sheet. |
-| `zombie-chef-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02. Legacy `zombie-chef-die2` points at this sheet. |
+| `zombie-chef-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab Die-normal02 kneel, kept on disk. Stage chef normal02 slot plays `zombie-chef-die2` (v2.0 faceplant) instead of this sheet. |
 | `zombie-chef-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |
 | `zombie-chef-die-critical-hit` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-critical hit. |
 | `zombie-chef-die-disappear` | 32 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 32×84 east, origin (0.5, 1). PixelLab Die-disappear. |
@@ -786,9 +803,9 @@ Nurse zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces wal
 
 <img src="previews/zombies/office-worker-v2/preview.gif" alt="office-worker-v2 preview" height="140">
 
-84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. New keys: walk-tiremove (9), hit02-normal (ALIAS, custom pull-weapon, 17), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84; Gameplay may retune the hitbox if the padded pixels sit differently. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.
+84×84 salaryman zombie (east, origin 0.5, 1.0). Rule-anim v1.0 replaces walk, hurt, die1, and die2 with Walk-normal, Hurt-normal (5 frames), Die-normal01, and Die-normal02. hit01-normal (17 frames) is cataloged beside the previous 8-frame attack. zombie-office-worker-v2-hit02 is the v1.0 true Hit02 (16×84, slash on cell 6). hit02-normal stays the v1.0 pull-weapon ALIAS (17×84) and is no longer the Stage bite. New keys: walk-tiremove (9), die-deathwalk (33), die-critical-hit (33), die-disappear (33). Cell stays 84×84. hurt_shock stays 8 frames. The 64×64 zombie-office-* group stays removed.
 
-- group `office-worker-v2` · 21 assets · frame 84x84 · key prefix `zombie-office-worker-v2-` · manifest [enemies/zombies/office-worker-v2/manifest.json](enemies/zombies/office-worker-v2/manifest.json)
+- group `office-worker-v2` · 22 assets · frame 84x84 · key prefix `zombie-office-worker-v2-` · manifest [enemies/zombies/office-worker-v2/manifest.json](enemies/zombies/office-worker-v2/manifest.json)
 
 | Key | Frames | Size | FPS | Playback | Origin | Notes |
 |---|---:|---|---:|---|---|---|
@@ -807,7 +824,8 @@ Nurse zombie. 84×84 east strips, origin (0.5, 1.0). Rule-anim v1.0 replaces wal
 | `zombie-office-worker-v2-walk-tiremove` | 9 | 84x84 | 8 | loop | (0.5, 1.0) | v1.0 rule anim. 9×84 east, origin (0.5, 1). PixelLab Walk-TireMove. |
 | `zombie-office-worker-v2-hurt-normal` | 5 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 5×84 east, origin (0.5, 1). PixelLab Hurt-normal. Legacy `zombie-office-worker-v2-hurt` points at this sheet. |
 | `zombie-office-worker-v2-hit01-normal` | 17 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab hit01-normal. Live `zombie-office-worker-v2-attack` stays the previous 8-frame bite so the barricade contact index stays on that strip. |
-| `zombie-office-worker-v2-hit02-normal` | 17 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back (alias hit02). ALIAS: no PixelLab anim named hit02-normal. Strip is the unnamed custom pull-weapon (same action as hit02 on chef, delivery, and nurse). Catalog key stays hit02-normal. |
+| `zombie-office-worker-v2-hit02-normal` | 17 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 17×84 east, origin (0.5, 1). PixelLab custom-Pull the weapon back. ALIAS kept on disk. Stage bites no longer play this key. The true Hit02 is `zombie-office-worker-v2-hit02` (16×84, slash on 0-based cell 6). SFX for the live bite: sfx-zombie-office-hit02 (not generated). |
+| `zombie-office-worker-v2-hit02` | 16 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 true Hit02. 16×84 east, origin (0.5, 1). Wind-up, white slash on 0-based cell 6 (Phaser index 7), then recovery. Replaces the Stage bite that used the hit02-normal pull-weapon ALIAS. SFX: sfx-zombie-office-hit02 (not generated). |
 | `zombie-office-worker-v2-die-normal01` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal01. PixelLab name is `die-normal01` (lowercase). Legacy `zombie-office-worker-v2-die1` points at this sheet. |
 | `zombie-office-worker-v2-die-normal02` | 8 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 8×84 east, origin (0.5, 1). PixelLab die-normal 2. PixelLab name is `die-normal 2`; the strip file and key use die-normal02. Legacy `zombie-office-worker-v2-die2` points at this sheet. |
 | `zombie-office-worker-v2-die-deathwalk` | 33 | 84x84 | 10 | once | (0.5, 1.0) | v1.0 rule anim. 33×84 east, origin (0.5, 1). PixelLab Die-deathwalk. |

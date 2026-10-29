@@ -863,8 +863,9 @@ export class Zombie {
 
   /**
    * Bite strip for barricade and player contact.
-   * v0.36.25 profession skins roll hit01 / hit02 50/50, including office
-   * hit02 (ALIAS). Nurse attach stays a skill strip, not this bite.
+   * v0.36.25 profession skins roll hit01 / hit02 50/50. Office hit02 is
+   * the 16-frame true strip (slash on Phaser index 7), not the pull-weapon
+   * alias. Nurse attach stays a skill strip, not this bite.
    * Skins without ruleAnims keep attach, then the legacy attack key.
    * @returns {string|null}
    */

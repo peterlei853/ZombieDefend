@@ -33,7 +33,8 @@ assert(demo.includes('paintedBottom'), 'padded appearance and skill-aoe anchor o
 assert(demo.includes('groundRingScale'), 'skill-aoe scale tracks the pet body');
 assert(!demo.includes('360 /'), 'skill-aoe is not a 360px world sheet');
 assert(/setDepth\(11\)/.test(demo) && /setAlpha\(0\.72\)/.test(demo), 'evolve pillar sits behind the body');
-assert(demo.includes("tryoutStrip(this.petId, this.form, 'claw')"), 'try-out plays the claw strip');
+assert(demo.includes("tryoutStrip(this.petId, this.form, 'claw')"), 'try-out keeps the claw fallback');
+assert(demo.includes("tryoutStrip(this.petId, this.form, 'attack')"), 'try-out prefers the attack strip');
 assert(demo.includes('playPetMeleeHit') && demo.includes('playPetKnockback'), 'try-out plays melee and knockback cues');
 assert(demo.includes('petSkillKey') && demo.includes('petSkillSpec'), 'try-out uses the skill manifest');
 assert(demo.includes('evolve-from-baby') && demo.includes('playPetEvolve'), 'try-out plays the evolve strip and sting');

@@ -4,7 +4,7 @@
   "group": "lion-baby",
   "title": "Leo / 雷歐 — Baby",
   "titleZh": "雷歐·幼年",
-  "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport).",
+  "description": "Golden Lion 金獅. Baby form (48px). Skill: Cub Pounce / 幼獅飛撲. Faces WEST. Sleep: settle→loop behind barricade after recall; wake via idle/move on resummon (no teleport). Wave2: `pet-lion-baby-attack` is a new 8×52 attack beside claw; `pet-lion-baby-hurt` is replaced at 8×52.",
   "source": {
     "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
     "sourceFolder": "pets/lion/baby"
@@ -32,7 +32,9 @@
       "pet-lion-baby-skill",
       "pet-lion-baby-sleep",
       "pet-lion-baby-claw",
-      "pet-lion-baby-skill-aoe"
+      "pet-lion-baby-attack",
+      "pet-lion-baby-skill-aoe",
+      "pet-lion-baby-hurt"
     ],
     "thumb": "assets/library/previews/pets/lion-baby.gif"
   },
@@ -93,16 +95,27 @@
     {
       "key": "pet-lion-baby-hurt",
       "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-hurt.png",
-      "frameWidth": 48,
-      "frameHeight": 48,
-      "frames": 4,
+      "frameWidth": 52,
+      "frameHeight": 52,
+      "frames": 8,
       "frameRate": 10,
       "loop": false,
       "origin": [
         0.5,
         1.0
       ],
-      "facing": "west"
+      "facing": "west",
+      "note": "v2.0 hurt remake. 8×52 west, origin (0.5, 1). Was 4×48, 4 frames. Stage loads frameWidth/Height and frame count from this entry. SFX: sfx-pet-lion-hurt (not generated).",
+      "extra": {
+        "version": "v2.0",
+        "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
+        "pixellabAnimGroup": "c1180225-3df2-4f8c-8ccb-b4825913aacc",
+        "previous": "4×48",
+        "previousFrames": 4,
+        "cell": "52x52",
+        "frames": 8,
+        "sfx": "sfx-pet-lion-hurt"
+      }
     },
     {
       "key": "pet-lion-baby-sleep-start",
@@ -165,6 +178,30 @@
       ],
       "facing": "west",
       "note": "v2 basic-attack claw strip ~0.3s (256×96). Enlarging claw. Lion slash LEFT; dragon HAND claw."
+    },
+    {
+      "key": "pet-lion-baby-attack",
+      "path": "assets/library/pets/lion/baby/strips/pet-lion-baby-attack.png",
+      "frameWidth": 52,
+      "frameHeight": 52,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "west",
+      "note": "v1.0 basic attack. 8×52 west, origin (0.5, 1). Cataloged beside `pet-lion-baby-claw` (4f). Stage preloads this key and still plays the claw strip until Gameplay swaps. SFX: sfx-pet-lion-attack (not generated).",
+      "extra": {
+        "version": "v1.0",
+        "pixellabCharacterId": "2f283a39-d5d3-47ef-bd0e-67d135b76d61",
+        "pixellabAnimGroup": "451b616e-4c6d-42e2-86ce-ec46879ddaa8",
+        "cell": "52x52",
+        "sfx": "sfx-pet-lion-attack",
+        "alongside": "pet-lion-baby-claw",
+        "qc": "PASS"
+      }
     },
     {
       "key": "pet-lion-baby-skill-aoe",

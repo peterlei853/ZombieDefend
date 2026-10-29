@@ -33,7 +33,7 @@ function assert(cond, message) {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-assert(pkg.version === '0.36.27' && APP_VERSION === '0.36.27', 'version is 0.36.27');
+assert(pkg.version === '0.36.28' && APP_VERSION === '0.36.28', 'version is 0.36.28');
 assert(WALL === 720, 'barricade max HP stays 720');
 assert(GAME_CONFIG.PLAYER.ATTACK === 10, 'opening attack is 10');
 assert(GAME_CONFIG.PLAYER.CRIT_CHANCE === 0.05, 'crit chance is 5%');
@@ -166,9 +166,12 @@ const phoenix = {
   shift(dx, dy) { this.x += dx; this.y += dy; return true; },
 };
 separateFootprints([chef, phoenix], { rounds: 4 });
-const torsoBottom = (chef.y - chef.displayHeight) + chef.displayHeight * TORSO_FROM_TOP;
-const petTop = phoenix.y - phoenix.displayHeight;
-assert(petTop >= torsoBottom - 0.5, `pet sprite stays under the torso (${petTop} vs ${torsoBottom})`);
+const roadRange = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+const roadHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+const roadDx = phoenix.x - chef.x;
+const roadDy = phoenix.y - chef.y;
+assert(Math.abs(roadDy) <= 1, 'a pet on the road lane is not dropped to the grass');
+assert(roadDx >= 0 && roadDx <= roadRange && Math.abs(roadDy) <= roadHalf, `stand stays in the forward box (${roadDx}, ${roadDy})`);
 const farChef = {
   x: 200,
   y: 400,
@@ -187,6 +190,26 @@ const farPet = {
 separateFootprints([farChef, farPet], { rounds: 4 });
 assert(farPet.x === 247 && farPet.y === 620, 'a pet crossing another lane is not pinned to the grass');
 const meleeCap = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF) - layoutPx(2);
+const meleeRange = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+const meleeStand = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE * 0.7);
+const lanePet = {
+  kind: 'pet',
+  x: 400 + meleeStand,
+  y: 500 + meleeCap,
+  displayWidth: 77,
+  displayHeight: 77,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+const laneZombie = {
+  x: 400,
+  y: 500,
+  displayWidth: 126,
+  displayHeight: 126,
+  shift(dx, dy) { this.x += dx; this.y += dy; return true; },
+};
+separateFootprints([laneZombie, lanePet], { rounds: 6 });
+const standDx = lanePet.x - laneZombie.x;
+assert(standDx >= 0 && standDx <= meleeRange, `melee stand stays inside the forward box (${standDx} vs ${meleeRange})`);
 const drop = petLaneDrop(72, 126, meleeCap);
 assert(drop <= meleeCap && drop >= layoutPx(18), 'lane drop stays inside the melee window');
 assert(400 + drop - 72 >= 400 - 126 + 126 * TORSO_FROM_TOP - 0.5, 'aim drop clears the head and torso');

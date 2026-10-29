@@ -6,7 +6,7 @@ import { UltCutscene } from './UltCutscene.js';
 import { PET_ELEMENT_TINT, PET_LINEUP, petLineupSlots, petSleepDepth } from '../assets/petLineup.js';
 import { petSkillKey, petSkillSpec } from '../assets/petSkills.js';
 import { aimRotation, libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
-import { clampPetFoot, petLaneDrop } from './footprints.js';
+import { clampPetFoot } from './footprints.js';
 import {
   barricadeXAtY,
   depthFromY,
@@ -148,12 +148,21 @@ export class PetCombat {
 
   /**
    * Melee box in front of the pet. Wind-up, impact, recovery.
+   * Plays `role.attack` once when that anim is loaded. Dragon's key is
+   * the overhead slam (`pet-dragon-baby-attack`). Panda, lion, and
+   * phoenix use the same path. A missing strip leaves the current body.
+   * Damage timing stays on MELEE. The melee fan and the existing
+   * pet-attack cue stay. Hurt is not touched.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
    */
   tryBasic(actor, zombies) {
     if (this._attacksPaused()) return false;
-    if (!actor || actor.state === 'attack' || actor.meleePhase || actor.hurtLeft > 0) return false;
+    // A bite is applied before this tick and sets hurtLeft for the whole
+    // flinch. Gating on it meant contact never started the slam: the egg
+    // stayed up under the white/red fill. meleePhase and meleeGap still
+    // stop a second swing from restarting the strip.
+    if (!actor || actor.state === 'attack' || actor.meleePhase) return false;
     if (actor.meleeGap > 0) return false;
     const sprite = actor.sprite;
     if (!sprite?.active) return false;
@@ -166,7 +175,32 @@ export class PetCombat {
     actor.meleePhase = 'windup';
     actor.meleeLeft = pets.WINDUP_MS;
     actor.state = 'melee';
+    this._playBasicStrip(actor);
     return true;
+  }
+
+  /**
+   * One-shot basic strip. `role.attack` when the anim exists. Claw is
+   * not the stage swing.
+   * @param {PetActor} actor
+   * @returns {boolean}
+   */
+  _playBasicStrip(actor) {
+    const key = actor?.role?.attack;
+    if (!key) return false;
+    return playOnce(actor.sprite, key);
+  }
+
+  /**
+   * True while the basic strip is still advancing, so idle does not cut
+   * the slam during recovery. A finished or replaced anim is not live.
+   * @param {PetActor} actor
+   */
+  _basicStripLive(actor) {
+    const key = actor?.role?.attack;
+    const anims = actor?.sprite?.anims;
+    if (!key || !anims?.isPlaying) return false;
+    return anims.currentAnim?.key === key;
   }
 
   /**
@@ -1454,6 +1488,15 @@ export class PetCombat {
    */
   _applyHitLook(actor) {
     if (!actor.sprite?.active) return;
+    // Solid white/red hides the slam pose. Keep the fill off while the
+    // attack strip is up; a bite that is not a swing still paints.
+    if (actor.meleePhase || this._basicStripLive(actor)) {
+      if (actor.hitLook) {
+        actor.hitLook = '';
+        this._paintHit(actor, 'clear');
+      }
+      return;
+    }
     if (actor.hitPhase === 'white') {
       actor.hitLook = 'flash';
       this._paintHit(actor, 'flash');
@@ -1478,6 +1521,8 @@ export class PetCombat {
   _presentHurt(actor) {
     const sprite = actor.sprite;
     if (!sprite) return;
+    // The hurt strip was replacing the slam a few frames after it started.
+    if (actor.meleePhase || this._basicStripLive(actor)) return;
     if (actor.hitPhase === 'strip' && !actor.hurtStrip) {
       actor.hurtStrip = playOnce(sprite, actor.role.hurt, { restart: false });
       if (!actor.hurtStrip) this._finishHit(actor);
@@ -1689,7 +1734,12 @@ export class PetCombat {
       }
       if (!attacksPaused && actor.telegraph) this._ageTelegraph(actor, dt);
 
-      if (actor.hitPhase) {
+      // Bite damage lands before this tick. If that early-return stood,
+      // the slam never started and the egg sat under the white/red fill.
+      if (actor.hitPhase && !actor.meleePhase && !this._basicStripLive(actor) && !attacksPaused && actor.wakeLeft <= 0 && actor.state !== 'attack') {
+        this.tryBasic(actor, zombies);
+      }
+      if (actor.hitPhase && !actor.meleePhase && !this._basicStripLive(actor)) {
         this._presentHurt(actor);
         return gain;
       }
@@ -1761,12 +1811,17 @@ export class PetCombat {
     const dy = actor.destY - sprite.y;
     const dist = Math.hypot(dx, dy);
     const arrive = layoutPx(5);
-    if (dist <= arrive) {
+    // The stand point slides with the zombie, so a pet can sit inside
+    // MELEE.RANGE and still miss the 8px arrival check. Swing as soon as
+    // the forward box is true.
+    if (dist <= arrive || this._inMeleeReach(actor)) {
       actor.latched = true;
-      sprite.x = actor.destX;
-      sprite.y = actor.destY;
+      if (dist <= arrive) {
+        sprite.x = actor.destX;
+        sprite.y = actor.destY;
+      }
       actor.state = 'idle';
-      playLoop(sprite, this._babyIdleKey(actor));
+      if (!this._basicStripLive(actor)) playLoop(sprite, this._babyIdleKey(actor));
       faceLeft(sprite);
       this._place(actor);
       this.tryBasic(actor, this._liveZombies);
@@ -1785,8 +1840,23 @@ export class PetCombat {
   }
 
   /**
-   * Hold in front of the threat and one step down-screen, so the pet
-   * sprite sits under the head and torso. Recomputed every frame.
+   * True when a living zombie is inside this pet's melee box.
+   * @param {PetActor} actor
+   */
+  _inMeleeReach(actor) {
+    const sprite = actor?.sprite;
+    if (!sprite) return false;
+    const pets = GAME_CONFIG.PETS.MELEE;
+    const range = layoutPx(pets.RANGE);
+    const yHalf = layoutPx(pets.Y_HALF);
+    return this._liveZombies.some(
+      (z) => z?.alive && z.body && inForwardBox(sprite.x, sprite.y, z.x, z.y, range, yHalf)
+    );
+  }
+
+  /**
+   * Hold on the threat's road lane, in front of it, inside MELEE.RANGE.
+   * Recomputed every frame.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie} threat
    * @param {{ x?: number, y?: number }|null} player
@@ -1794,9 +1864,10 @@ export class PetCombat {
   _aimPoint(actor, threat, player) {
     const stand = engageStand(actor.role.id);
     let x = threat.x + stand;
-    const petH = Math.abs(actor.sprite?.displayHeight) || layoutPx(36);
-    const zH = Math.abs(threat.body?.displayHeight) || threat.footprintHeight?.() || layoutPx(52);
-    const y = clampGrass(threat.y + petLaneDrop(petH, zH));
+    // Same road lane as the zombie. A drop toward the camera parks the pet
+    // on the grass edge with a gap wider than the swing, so tryBasic never
+    // sees them. The stand X is 0.7 of MELEE.RANGE, inside the forward box.
+    const y = clampGrass(threat.y);
     const minX = threat.x + layoutPx(14);
     if (x < minX) x = minX;
     if (player && Number.isFinite(player.x)) {
@@ -1928,7 +1999,7 @@ export class PetCombat {
       actor.meleePhase = null;
       actor.state = 'idle';
       actor.meleeGap = pets.GAP_MS;
-      playLoop(actor.sprite, this._babyIdleKey(actor));
+      if (!this._basicStripLive(actor)) playLoop(actor.sprite, this._babyIdleKey(actor));
       break;
     }
     this._place(actor);
