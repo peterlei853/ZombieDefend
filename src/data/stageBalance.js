@@ -1,43 +1,48 @@
 /**
- * Stages 1–3 combat rows for the 3-loop test (v0.36.27).
+ * Stages 1–3 combat rows for the 3-loop test (v0.36.30).
  *
- * Stage 4+ keeps WAVE_DEFS. Barricade max HP is not in this file.
- * Pools are data: append a catalog id when a new early-stage monster
- * is wired. Do not treat today's four professions as a permanent lock.
+ * Stage 4+ keeps WAVE_DEFS. Barricade max HP is not in this file
+ * (1440 lives in waves.js). Pools are data: append a catalog id when a
+ * new early-stage monster is wired.
  *
- * Gold on a row overrides getGoldByHP for that spawn. The global table
- * still serves stage 4+.
+ * v0.36.30 multiplies every archetype hp by 1.4 and every wave total by
+ * 1.35, both rounded half-up. Speed, DPS, and the time windows stay.
+ * Gold on a row overrides getGoldByHP and is the previous payout × 1.4
+ * (half-up) so gold-per-HP does not fall. The global table still serves
+ * stage 4+.
  *
- * Opening player attack is 10 (~14.7 DPS if they tap L1 on the 680ms
- * water cadence) plus one pet normal attack (~14 DPS). Stage 1 waves
- * 3–4 are a short late pack: 3 then 4 bodies, and the last spawn is at
- * 80s so the pack can die before the clock. Stage 2 wants the pet.
- * Stage 3 is the tight clear. After 90s, leftover bites do not damage
- * the wall.
+ * Each wave's skins list keeps the profession mix and appends
+ * s4-construction and s4-schoolgirl so those two actually spawn.
+ *
+ * Opening player attack is 10 plus one pet normal attack. Stage 1's
+ * last spawn is still at 80s. Stage 3 stays the tight clear. After 90s,
+ * leftover bites do not damage the wall.
  */
 
 /** @typedef {{ hp: number, speed: number, dps: number, weight?: number, variant?: string, skins: string[], gold: number }} EarlyArch */
 /** @typedef {{ wave: number, startSec: number, endSec: number, total: number, archetypes: EarlyArch[] }} EarlyWave */
 
+const S4_SKINS = ['s4-construction', 's4-schoolgirl'];
+
 /** @type {Record<number, EarlyWave[]>} */
 export const EARLY_STAGE_WAVES = {
   1: [
-    row(1, 0, 22, 4, 24, 26, 2, 8, ['office-worker-v2', 'office-worker-v2', 'delivery', 'chef']),
-    row(2, 23, 44, 5, 36, 30, 3, 10, ['office-worker-v2', 'delivery', 'chef']),
-    row(3, 45, 64, 3, 30, 28, 2, 16, ['office-worker-v2', 'delivery', 'chef']),
-    row(4, 65, 80, 4, 36, 30, 3, 18, ['office-worker-v2', 'delivery', 'chef']),
+    row(1, 0, 22, 5, 34, 26, 2, 11, ['office-worker-v2', 'office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
+    row(2, 23, 44, 7, 50, 30, 3, 14, ['office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
+    row(3, 45, 64, 4, 42, 28, 2, 22, ['office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
+    row(4, 65, 80, 5, 50, 30, 3, 25, ['office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
   ],
   2: [
-    row(1, 0, 20, 5, 36, 32, 4, 10, ['office-worker-v2', 'delivery', 'delivery', 'chef']),
-    row(2, 21, 42, 6, 56, 36, 6, 12, ['office-worker-v2', 'delivery', 'chef']),
-    row(3, 43, 64, 6, 72, 40, 7, 16, ['delivery', 'chef', 'chef']),
-    row(4, 65, 90, 7, 88, 42, 8, 18, ['office-worker-v2', 'delivery', 'chef']),
+    row(1, 0, 20, 7, 50, 32, 4, 14, ['office-worker-v2', 'delivery', 'delivery', 'chef', ...S4_SKINS]),
+    row(2, 21, 42, 8, 78, 36, 6, 17, ['office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
+    row(3, 43, 64, 8, 101, 40, 7, 22, ['delivery', 'chef', 'chef', ...S4_SKINS]),
+    row(4, 65, 90, 9, 123, 42, 8, 25, ['office-worker-v2', 'delivery', 'chef', ...S4_SKINS]),
   ],
   3: [
-    row(1, 0, 20, 6, 48, 34, 5, 12, ['office-worker-v2', 'delivery', 'chef', 'nurse']),
-    row(2, 21, 42, 7, 72, 38, 7, 16, ['office-worker-v2', 'delivery', 'chef', 'nurse']),
-    row(3, 43, 64, 7, 96, 42, 9, 20, ['delivery', 'chef', 'nurse', 'nurse']),
-    row(4, 65, 90, 8, 120, 40, 11, 24, ['office-worker-v2', 'delivery', 'chef', 'nurse']),
+    row(1, 0, 20, 8, 67, 34, 5, 17, ['office-worker-v2', 'delivery', 'chef', 'nurse', ...S4_SKINS]),
+    row(2, 21, 42, 9, 101, 38, 7, 22, ['office-worker-v2', 'delivery', 'chef', 'nurse', ...S4_SKINS]),
+    row(3, 43, 64, 9, 134, 42, 9, 28, ['delivery', 'chef', 'nurse', 'nurse', ...S4_SKINS]),
+    row(4, 65, 90, 11, 168, 40, 11, 34, ['office-worker-v2', 'delivery', 'chef', 'nurse', ...S4_SKINS]),
   ],
 };
 
