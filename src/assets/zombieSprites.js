@@ -113,16 +113,24 @@ function textureFrameCount(tex) {
 }
 
 /**
- * Milestone 2 S4 (construction, schoolgirl, delivery, salaryman) is catalog-only.
- * Strips live under assets/library/enemies/zombies/s4/<slug>/strips/ as
- * zombie-s4-<slug>-{walk,attack,hurt,die}. Canvas is 88×88 (PixelLab grew
- * past the 64 request), origin (0.5, 1), facing east, 8 frames.
- * No PIXELLAB_HOOK and no wave or spawn row names an S4 slot, so these ids
- * are not added to ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. Gameplay wires the
- * load and spawn later and must use frame 88, not the 84px profession cell.
- * The S4 delivery group is not the live `delivery` profession.
- * Weapon VFX, including vfx-bubble-charge, stay catalog keys. They are not spawn hooks.
+ * Milestone 2 S4 strips live under assets/library/enemies/zombies/s4/<slug>/
+ * as zombie-s4-<slug>-{walk,attack,hurt,die}. Canvas is 88×88, origin (0.5, 1),
+ * facing east, 8 frames. Stage preload queues the zombies category from the
+ * asset index, so the slice size stays the index cell (88), not the 84px
+ * profession cell and not {@link ZOMBIE_FRAME_SIZE}.
+ * v0.36.30 wires `s4-construction` and `s4-schoolgirl` (manifest groups)
+ * into stages 1–3. They have walk / attack / hurt / die only: no ruleAnims,
+ * so hit01 / hit02 / deathwalk and the rest fall back to those four keys.
+ * There is no run strip; a runner asks for walk instead.
+ * `s4-salaryman` and `s4-delivery` stay catalog-only. The S4 delivery group
+ * is not the live `delivery` profession. No S4 audio is queued.
+ * Variant {@link SKIN_POOLS} stay the unskinned round-robin. Early waves
+ * name these ids themselves.
  */
+export const S4_FRAME_SIZE = 88;
+
+/** Spawn ids for the two wired S4 groups. Salaryman and s4-delivery are absent. */
+export const S4_EARLY_SKIN_IDS = ['s4-construction', 's4-schoolgirl'];
 
 /**
  * Library skins. `facing: 'east'` means the strip already walks toward the
@@ -151,6 +159,9 @@ export const ZOMBIE_LIBRARY_SKINS = {
     attach: 'zombie-nurse-attach',
     ruleAnims: true,
   }),
+  /** 88×88. Walk / attack / hurt / die only. Missing rule strips fall back. */
+  's4-construction': s4PartialSkin('s4-construction'),
+  's4-schoolgirl': s4PartialSkin('s4-schoolgirl'),
   clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
   cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
   slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
@@ -260,7 +271,7 @@ export function professionRuleAnims(prefix, overrides = null) {
 /**
  * @param {string} id
  * @param {string} prefix key prefix, e.g. `zombie-office-worker-v2`
- * @param {{ attack?: string|null, death?: string, hurt?: string, blast?: string, blastFx?: string, ruleAnims?: boolean, hit02Alias?: boolean, ruleAnimKeys?: object }} [extra]
+ * @param {{ attack?: string|null, death?: string, hurt?: string, run?: string|null, blast?: string, blastFx?: string, ruleAnims?: boolean, hit02Alias?: boolean, ruleAnimKeys?: object, frameWidth?: number, frameHeight?: number }} [extra]
  */
 function skin(id, prefix, extra = {}) {
   return {
@@ -272,10 +283,13 @@ function skin(id, prefix, extra = {}) {
     noHurtKnockback: extra.noHurtKnockback === true,
     /** True only when hit02 is still the pull-weapon ALIAS. Office is not. */
     hit02Alias: extra.hit02Alias === true,
+    /** Authored cell when the catalog grew past 64. Loader still slices from the index. */
+    frameWidth: extra.frameWidth || null,
+    frameHeight: extra.frameHeight || null,
     ruleAnims: extra.ruleAnims ? professionRuleAnims(prefix, extra.ruleAnimKeys || null) : null,
     actions: {
       walk: `${prefix}-walk`,
-      run: `${prefix}-run`,
+      run: Object.prototype.hasOwnProperty.call(extra, 'run') ? extra.run : `${prefix}-run`,
       attack: extra.attack === undefined ? `${prefix}-attack` : extra.attack,
       death: extra.death || `${prefix}-die1`,
       // PIXELLAB_HOOK: die1 shares Die-normal01. Chef die2 is the v2 faceplant
@@ -290,6 +304,23 @@ function skin(id, prefix, extra = {}) {
       attach: extra.attach || null,
     },
   };
+}
+
+/**
+ * S4 group with only walk / attack / hurt / die. Id matches the manifest
+ * `group` (`s4-construction`, `s4-schoolgirl`) and the catalog key prefix
+ * `zombie-<id>-*`. Die is `die`, not `die1`. No rule-anim map.
+ * @param {'s4-construction'|'s4-schoolgirl'} id
+ */
+function s4PartialSkin(id) {
+  const prefix = `zombie-${id}`;
+  return skin(id, prefix, {
+    run: null,
+    death: `${prefix}-die`,
+    deaths: [`${prefix}-die`],
+    frameWidth: S4_FRAME_SIZE,
+    frameHeight: S4_FRAME_SIZE,
+  });
 }
 
 /** Walk speed while a hurt strip is playing. Half of the march speed. v0.36.25 keeps this. */
