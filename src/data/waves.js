@@ -95,8 +95,11 @@ export const BARRICADE_X = 650;
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
 
-/** Starting barricade HP for Stage 1 (tuned for close win/lose on wave 4). */
-export const BARRICADE_MAX_HP = 720;
+/**
+ * Starting barricade HP. v0.36.30 doubles the previous 720 pool to 1440.
+ * After 90s, leftover bites still deal 0 wall damage.
+ */
+export const BARRICADE_MAX_HP = 1440;
 
 /**
  * Defender combat constants.
@@ -104,7 +107,8 @@ export const BARRICADE_MAX_HP = 720;
  * Baby pet attacks live in PetCombat.js. Legacy PLAYER_FIRE_RATE / TURRET_*
  * below are unused by the live system but kept for reference.
  * PLAYER_BULLET_DAMAGE re-exports handgun damage.
- * Do not change STAGE_DURATION / WAVE_DEFS HP / BARRICADE_MAX_HP / gold tables.
+ * Do not change STAGE_DURATION, WAVE_DEFS HP / counts, or the getGoldByHP table.
+ * BARRICADE_MAX_HP is 1440 as of v0.36.30. Early-stage rows live in stageBalance.js.
  */
 export const PLAYER_FIRE_RATE = 190;   // ms — superseded by GAME_CONFIG.WEAPONS.HANDGUN.FIRE_RATE
 export const PLAYER_BULLET_DAMAGE = GAME_CONFIG.WEAPONS.HANDGUN.DAMAGE;

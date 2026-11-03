@@ -42,10 +42,10 @@
 ## Catalog plan
 
 - Path convention (repo existing): `assets/audio/<key>.mp3` + `GAME_AUDIO` in `SoundManager.js`
-- Catalog only — no combat / Pages wire
+- Catalog landed first, then Stage playback shipped with v0.36.30
 - NEW PR off `main` (not #152 / #153)
 - Visual pairing notes: weapon shot/charge/aoe ↔ matching M2 weapon FX; `sfx-pet-dragon-attack` ↔ dragon slam `d14e7c3e` (#152)
 
 ## Demo
 
-**HOLD Pages** — demo first; do not ask Architect for Pages merge.
+Published on GitHub Pages with v0.36.30 (Stage playback included).

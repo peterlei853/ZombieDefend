@@ -337,18 +337,24 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * brick path). S4 is not in ZOMBIE_LIBRARY_SKINS or SKIN_POOLS. The new
  * keys do not replace the live HUD, campus plate, or boss FX. Gold,
  * saves, barricade HP, spawn counts, and combat damage stay put.
- * GitHub Pages publishes this tip from main.
- * Credit-burn SFX play on Stage: weapon shot / charge / hit / aoe /
- * aoe-explode for sling, bubble, rail (lightning), freeze (frost), and
- * flame; dragon swing (`sfx-pet-dragon-attack`) on top of the slam strip;
- * boss skill stings; S4 vocals when that skin id is on a body; UI click,
- * shop, damage, heal, and wave; coin pickup; fence crack and break.
- * Settings and item pickups stay catalog-only. Barricade HP and wave
- * tables stay put.
+ * GitHub Pages published that catalog tip from main.
+ * v0.36.30: stages 1–3 also spawn s4-construction and s4-schoolgirl
+ * (88×88, origin 0.5,1, walk/attack/hurt/die; missing rule anims fall
+ * back). Early archetype HP ×1.4 and wave totals ×1.35, half-up. Early
+ * gold ×1.4 so the farm does not fall behind the thicker bodies.
+ * Barricade max HP is 1440. Salaryman and s4-delivery stay unwired.
+ * Stage 4+ WAVE_DEFS, getGoldByHP, and the post-90s zero wall-damage
+ * bite stay. Credit-burn SFX play on Stage: weapon shot / charge / hit /
+ * aoe / aoe-explode for sling, bubble, rail (lightning), freeze (frost),
+ * and flame; dragon swing (`sfx-pet-dragon-attack`) on top of the slam
+ * strip; boss skill stings; S4 vocals when that skin id is on a body;
+ * UI click, shop, damage, heal, and wave; coin pickup; fence crack and
+ * break. Settings and item pickups stay catalog-only. GitHub Pages
+ * publishes this tip from main.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.29';
+export const APP_VERSION = '0.36.30';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

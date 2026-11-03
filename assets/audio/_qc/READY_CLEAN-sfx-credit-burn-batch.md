@@ -74,11 +74,11 @@
 ## Catalog plan
 
 - Path: `assets/audio/<key>.mp3` + register in `GAME_AUDIO` (`src/systems/SoundManager.js`) — same as #154
-- Catalog only — no combat / Pages wire
+- Catalog landed first, then Stage playback shipped with v0.36.30
 - Prefer **reply onto #154** agent (branch `asset/sfx-credit-burn-priority`, tip `06cc66b`) to append these 43 keys; else NEW PR off main
 - Do **NOT** stack on #152 / #153
 - QC sheet: `assets/audio/_qc/READY_CLEAN-sfx-credit-burn-batch.md`
 
 ## Demo
 
-**HOLD Pages** — demo first; do not ask Architect for Pages merge.
+Published on GitHub Pages with v0.36.30 (Stage playback included).

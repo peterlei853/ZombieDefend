@@ -3,9 +3,10 @@
  *
  * Five stages remain. The clear loop is stages 1–3 (`PLAYABLE_STAGE_CAP`).
  * Stages 4–5 stay on the roster and keep their single skin; the title
- * soft-gates those buttons. Stage 1–3 pools are lists, not a permanent
- * lock to four professions: append a catalog id when a new early monster
- * is wired. A missing strip falls back to `office-worker-v2` only.
+ * soft-gates those buttons. Stage 1–3 pools append catalog ids when a
+ * new early monster is wired. v0.36.30 adds `s4-construction` and
+ * `s4-schoolgirl` on stages 1–3. A missing strip falls back to
+ * `office-worker-v2` only.
  */
 
 /** How many main stages exist. Direct `?stage=` still accepts 1–5. */
@@ -31,10 +32,11 @@ export const STAGE_ROSTER = [
 ];
 
 /**
- * Stage 1 spawn pool. Types 1 / 2 / 3. Kept as the stage-1 alias.
+ * Stage 1 spawn pool. Types 1 / 2 / 3, plus the two wired S4 groups.
+ * Kept as the stage-1 alias.
  * @type {string[]}
  */
-export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef'];
+export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef', 's4-construction', 's4-schoolgirl'];
 
 /**
  * Early-stage pools. New catalog ids append here. Stage 4+ does not use this.
@@ -42,8 +44,8 @@ export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef'];
  */
 export const EARLY_STAGE_POOLS = {
   1: STAGE_1_MIX,
-  2: ['office-worker-v2', 'delivery', 'chef'],
-  3: ['office-worker-v2', 'delivery', 'chef', 'nurse'],
+  2: ['office-worker-v2', 'delivery', 'chef', 's4-construction', 's4-schoolgirl'],
+  3: ['office-worker-v2', 'delivery', 'chef', 'nurse', 's4-construction', 's4-schoolgirl'],
 };
 
 /**
