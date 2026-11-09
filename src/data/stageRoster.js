@@ -16,6 +16,16 @@ export const STAGE_COUNT = 5;
 export const PLAYABLE_STAGE_CAP = 5;
 
 /**
+ * True when the shop's bottom button advances to the next stage.
+ * Stage 4 offers Next into stage 5. Stage 5 returns to the title.
+ * @param {number} stage
+ */
+export function shopOffersNext(stage) {
+  const n = Math.floor(Number(stage) || 1);
+  return n < PLAYABLE_STAGE_CAP && n < STAGE_COUNT;
+}
+
+/**
  * Stage 1 → stage 5, in play order. Must stay the first five DEMO_ENEMY_IDS.
  * Stage 1's live pool is STAGE_1_MIX, not only the first id.
  * @type {string[]}

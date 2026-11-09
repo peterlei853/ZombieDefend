@@ -20,6 +20,7 @@ import {
   STAGE_1_MIX,
   STAGE_5_ESCORTS,
   rosterForStage,
+  shopOffersNext,
 } from '../src/data/stageRoster.js';
 import { BARRICADE_MAX_HP, WAVE_DEFS, waveDefsForStage } from '../src/data/waves.js';
 import {
@@ -36,6 +37,7 @@ import {
 } from '../src/systems/footprints.js';
 import { layoutPx } from '../src/systems/DepthView.js';
 import { GAME_CONFIG } from '../src/data/GameConfig.js';
+import { titleStageButtonFrames } from '../src/scenes/titleStageButtons.js';
 import { Zombie } from '../src/entities/Zombie.js';
 import { WaveManager } from '../src/systems/WaveManager.js';
 import { phaserIndexForCatalogFrame } from '../src/data/enemyShowcase.js';
@@ -119,6 +121,48 @@ const ahead = {
 separateFootprints([locked, ahead], { rounds: 4 });
 assert(locked.x === 0 && locked.y === 420, 'hurt-locked sole stays planted');
 assert(ahead.y !== 420 || ahead.x !== 8, 'the other sole takes the separation');
+assert(locked.x === 0 && locked.y === 420, 'fence gap does not move a hurt-locked sole');
+
+const fenceRear = {
+  kind: 'zombie',
+  id: 8,
+  x: layoutPx(700),
+  y: 400,
+  footprintWidth: () => 28,
+  footprintHeight: () => 84,
+  shift(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+    return true;
+  },
+};
+const fenceFront = {
+  kind: 'zombie',
+  id: 9,
+  x: layoutPx(700) + 12,
+  y: 400,
+  footprintWidth: () => 28,
+  footprintHeight: () => 84,
+  shift(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+    return true;
+  },
+};
+separateFootprints([fenceRear, fenceFront], { rounds: 6 });
+assert(fenceRear.x >= layoutPx(700) - 1, 'a fence pack is not shoved back down the road');
+assert(Math.abs(fenceRear.y - fenceFront.y) >= layoutPx(36) - 1, `fence pack splits lanes (${fenceRear.y} vs ${fenceFront.y})`);
+
+const slots = titleStageButtonFrames(1280, 720);
+assert(slots.frames.length === 5, 'title draws five stage buttons');
+assert(slots.frames.every((slot) => slot.gated === false), 'stages 1–5 are live, none say SOON');
+for (const slot of slots.frames) {
+  assert(slot.x - slot.w / 2 >= slots.inner.l - 0.5, `stage ${slot.stage} stays inside the parchment left`);
+  assert(slot.x + slot.w / 2 <= slots.inner.r + 0.5, `stage ${slot.stage} stays inside the parchment right`);
+  assert(slot.y >= slots.inner.t && slot.y <= slots.inner.b, `stage ${slot.stage} sits on the parchment`);
+}
+assert(shopOffersNext(4) === true, 'shop Next from stage 4 enters stage 5');
+assert(shopOffersNext(5) === false, 'shop after stage 5 returns to the title');
 
 const range = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
 const held = meleeStandPoint(500, 400, 500 - range + 8, 400);

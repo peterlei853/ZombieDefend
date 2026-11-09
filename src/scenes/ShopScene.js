@@ -14,9 +14,9 @@ import {
   SHOP_WEAPON_COST,
   tryShopAction,
 } from '../data/shopList.js';
-import { PLAYABLE_STAGE_CAP, STAGE_COUNT, clampStage } from '../data/stageRoster.js';
+import { PLAYABLE_STAGE_CAP, clampStage, shopOffersNext } from '../data/stageRoster.js';
 
-export { SHOP_UPGRADE_COST, SHOP_WEAPON_COST };
+export { SHOP_UPGRADE_COST, SHOP_WEAPON_COST, shopOffersNext };
 
 export default class ShopScene extends Phaser.Scene {
   constructor() {
@@ -70,7 +70,7 @@ export default class ShopScene extends Phaser.Scene {
    * stage sets nightClose so the title can speak the closing line.
    */
   continue() {
-    if (this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT) {
+    if (!shopOffersNext(this.stage)) {
       const nightClose = this.stage === PLAYABLE_STAGE_CAP;
       this.registry.set('stage', 1);
       this.scene.start('TitleScene', { nightClose });
@@ -228,7 +228,7 @@ export default class ShopScene extends Phaser.Scene {
     });
     this._refreshRows();
 
-    addParchmentButton(this, width / 2, 672, this.stage >= PLAYABLE_STAGE_CAP || this.stage >= STAGE_COUNT ? 'TITLE' : 'NEXT', () => {
+    addParchmentButton(this, width / 2, 672, shopOffersNext(this.stage) ? 'NEXT' : 'TITLE', () => {
       this.audio?.playUiClick();
       this.continue();
     }, { scale: 2, depth: 5 });

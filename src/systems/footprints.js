@@ -291,16 +291,32 @@ export function laneDodgeDir(rear, front, upRoom, downRoom, need) {
  * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} a
  * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} b
  */
+/** Canvas X past which a column is treated as packed against the fence. */
+const FENCE_PACK_X = layoutPx(560);
+/** Minimum sole-center gap for two marchers in one column. */
+const COLUMN_LANE_GAP = layoutPx(20);
+/** Wider gap once both bodies are in the fence pack, so sprites don't stack. */
+const FENCE_LANE_GAP = layoutPx(36);
+
+/**
+ * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} a
+ * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} b
+ */
 function pushMarchDodge(a, b) {
   const pad = layoutPx(2);
   const A = soleBox(a);
   const B = soleBox(b);
   const overlapX = Math.min(A.r, B.r) - Math.max(A.l, B.l) + pad;
   const overlapY = Math.min(A.b, B.b) - Math.max(A.t, B.t) + pad;
-  if (overlapX <= 0 || overlapY <= 0) return;
+  const column = overlapX > -layoutPx(8);
+  const dy = Math.abs(a.y - b.y);
+  const nearFence = a.x >= FENCE_PACK_X && b.x >= FENCE_PACK_X;
+  const minLane = nearFence ? FENCE_LANE_GAP : COLUMN_LANE_GAP;
+  const laneShort = column && dy + 0.5 < minLane;
+  if (!laneShort && (overlapX <= 0 || overlapY <= 0)) return;
   const rear = a.x <= b.x ? a : b;
   const front = rear === a ? b : a;
-  const need = overlapY;
+  const need = Math.max(overlapY > 0 ? overlapY : 0, laneShort ? minLane - dy : 0);
   const upRoom = rear.y - grassYMin();
   const downRoom = grassYMax() - rear.y;
   const dir = laneDodgeDir(rear, front, upRoom, downRoom, need);
