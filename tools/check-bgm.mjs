@@ -75,7 +75,7 @@ const NOT_THIS_PASS = [
   'heal',
   'pearl-pickup',
   // pet-summon and pet-recall are sandbox try-out clips. check-pet-tryout owns them.
-  'pet-death',
+  // pet-death is the pets ear pack. The live revive key is pet-revive, not pet-revive-ready.
   'pet-sleep',
   'pet-bark',
   'pet-attack',

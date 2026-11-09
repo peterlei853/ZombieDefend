@@ -1106,6 +1106,7 @@ export class WeaponSystem {
       const specific = this.scene?.audio?.playPriorityHit?.(weaponId);
       if (!specific && dealt > 0) this.scene.audio?.playHitImpact();
     }
+    if (weaponId === 'lightning' && dealt > 0) this.scene?.audio?.playElementHit?.('electric');
     const color = DAMAGE_COLORS[bullet?.weaponId] || DAMAGE_COLORS.handgun;
     showDamageText(this.scene, hx, hy, dealt, color, zombie.id);
     if (crit) showCritText(this.scene, hx, hy - layoutPx(12));

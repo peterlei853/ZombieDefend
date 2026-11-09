@@ -153,7 +153,9 @@ export class PetCombat {
    * phoenix use the same path. A missing strip leaves the current body.
    * Damage timing stays on MELEE. The melee fan stays. Dragon plays
    * `sfx-pet-dragon-attack` at windup and skips the generic pet-attack
-   * cue; other pets keep that cue. Hurt is not touched.
+   * cue. Lion, panda, and phoenix play their own attack clip the same
+   * way. A role with no attack clip keeps the generic cue. Hurt plays
+   * when the flinch starts.
    * @param {PetActor} actor
    * @param {import('../entities/Zombie.js').Zombie[]} [zombies]
    */
@@ -178,6 +180,7 @@ export class PetCombat {
     actor.state = 'melee';
     this._playBasicStrip(actor);
     if (actor.role?.id === 'dragon') this.scene?.audio?.playDragonAttack?.();
+    else this.scene?.audio?.playPetAttack?.(actor.role?.id);
     return true;
   }
 
@@ -1333,6 +1336,7 @@ export class PetCombat {
     actor.hurtStrip = false;
     actor.barFlashLeft = pets.HURT_BAR_MS;
     actor.hitSeq = (actor.hitSeq || 0) + 1;
+    this.scene?.audio?.playPetHurt?.(actor.role?.id);
     this._applyHitLook(actor);
   }
 
@@ -2036,7 +2040,7 @@ export class PetCombat {
       inForwardBox(sprite?.x ?? actor.x, sprite?.y ?? actor.y, z.x, z.y, range, yHalf)
     );
     this._showMeleeFan(actor);
-    if (actor.role?.id !== 'dragon') {
+    if (actor.role?.id !== 'dragon' && !this.scene?.audio?.hasPetAttackCue?.(actor.role?.id)) {
       this.scene?.audio?.playPetMeleeHit?.();
       this.scene?.audio?.playPetBasicAttack?.();
     }
@@ -2457,6 +2461,7 @@ export class PetCombat {
       orb.left = orb.cdMs;
     }
     this.castLog.push({ id: actor.role.id, orb: orbIndex });
+    if (orbIndex < 2) this.scene?.audio?.playPetSkill?.(actor.role?.id);
     if (orbIndex >= 2 && this._allowUlt(actor)) {
       this._presentForm3(actor);
       actor.form3Shown = true;

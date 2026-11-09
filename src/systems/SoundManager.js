@@ -270,6 +270,33 @@ export const GAME_AUDIO = [
   { key: 'sfx-fence-break', url: 'assets/audio/sfx-fence-break.mp3' },
   // v0.36.27 profession vocals + pet/UI gap-fill. See src/data/vocalSfx.js.
   ...gameplaySfxClips(),
+  // Pets / UI / leftovers ear pack. Juice regenerations overwrite the slash,
+  // fire, water, and handgun files already listed above. Leftover shotgun,
+  // swap, impact, barricade, and telegraph files overwrite those stubs too.
+  // Pause and auth preload only: this build has no pause panel and no auth screen.
+  { key: 'sfx-pet-lion-attack', url: 'assets/audio/sfx-pet-lion-attack.mp3' },
+  { key: 'sfx-pet-panda-attack', url: 'assets/audio/sfx-pet-panda-attack.mp3' },
+  { key: 'sfx-pet-phoenix-attack', url: 'assets/audio/sfx-pet-phoenix-attack.mp3' },
+  { key: 'sfx-pet-dragon-hurt', url: 'assets/audio/sfx-pet-dragon-hurt.mp3' },
+  { key: 'sfx-pet-lion-hurt', url: 'assets/audio/sfx-pet-lion-hurt.mp3' },
+  { key: 'sfx-pet-panda-hurt', url: 'assets/audio/sfx-pet-panda-hurt.mp3' },
+  { key: 'sfx-pet-phoenix-hurt', url: 'assets/audio/sfx-pet-phoenix-hurt.mp3' },
+  { key: 'sfx-pet-dragon-skill', url: 'assets/audio/sfx-pet-dragon-skill.mp3' },
+  { key: 'sfx-pet-lion-skill', url: 'assets/audio/sfx-pet-lion-skill.mp3' },
+  { key: 'sfx-pet-panda-skill', url: 'assets/audio/sfx-pet-panda-skill.mp3' },
+  { key: 'sfx-pet-phoenix-skill', url: 'assets/audio/sfx-pet-phoenix-skill.mp3' },
+  { key: 'pet-death', url: 'assets/audio/pet-death.mp3' },
+  { key: 'pet-revive', url: 'assets/audio/pet-revive.mp3' },
+  { key: 'sfx-ui-crit', url: 'assets/audio/sfx-ui-crit.mp3' },
+  { key: 'sfx-ui-pause', url: 'assets/audio/sfx-ui-pause.mp3' },
+  { key: 'sfx-ui-stage-clear', url: 'assets/audio/sfx-ui-stage-clear.mp3' },
+  { key: 'sfx-ui-stage-fail', url: 'assets/audio/sfx-ui-stage-fail.mp3' },
+  { key: 'sfx-ui-tip', url: 'assets/audio/sfx-ui-tip.mp3' },
+  { key: 'sfx-ui-gold', url: 'assets/audio/sfx-ui-gold.mp3' },
+  { key: 'sfx-ui-auth', url: 'assets/audio/sfx-ui-auth.mp3' },
+  { key: 'sfx-hit-electric', url: 'assets/audio/sfx-hit-electric.mp3' },
+  { key: 'sfx-zombie-chef-die2', url: 'assets/audio/sfx-zombie-chef-die2.mp3' },
+  { key: 'sfx-zombie-office-hit02', url: 'assets/audio/sfx-zombie-office-hit02.mp3' },
 ];
 
 const AUDIO_KEYS = new Set(GAME_AUDIO.map((clip) => clip.key));
@@ -349,6 +376,25 @@ const BOSS_SKILL_KEY = Object.freeze({
   'steel-balam': 'sfx-boss-balam-skill',
   balam: 'sfx-boss-balam-skill',
 });
+
+const PET_CUE_ROLES = new Set(['dragon', 'lion', 'panda', 'phoenix']);
+
+/**
+ * Role swing, flinch, or cast. Dragon's swing stays `sfx-pet-dragon-attack`.
+ * Lion, panda, and phoenix swings, and every role's hurt and skill, use
+ * `sfx-pet-<role>-<moment>`.
+ * @param {string|null|undefined} roleId
+ * @param {'attack'|'hurt'|'skill'} moment
+ * @returns {string|null}
+ */
+export function petRoleCueKey(roleId, moment) {
+  if (!roleId || !PET_CUE_ROLES.has(roleId)) return null;
+  if (moment !== 'attack' && moment !== 'hurt' && moment !== 'skill') return null;
+  const key = moment === 'attack' && roleId === 'dragon'
+    ? 'sfx-pet-dragon-attack'
+    : `sfx-pet-${roleId}-${moment}`;
+  return AUDIO_KEYS.has(key) ? key : null;
+}
 
 /** @param {string|null|undefined} id */
 export function bossSkillKey(id) {
@@ -659,6 +705,52 @@ export class SoundManager {
   }
 
   /**
+   * Lion, panda, or phoenix swing. Dragon stays on `playDragonAttack`.
+   * True when this role has its own attack clip.
+   * @param {string|null|undefined} roleId
+   * @returns {boolean}
+   */
+  playPetAttack(roleId) {
+    if (roleId === 'dragon') {
+      this.playDragonAttack();
+      return true;
+    }
+    const key = petRoleCueKey(roleId, 'attack');
+    if (!key) return false;
+    this._cue(key, 0.3, 200);
+    return true;
+  }
+
+  /** @param {string|null|undefined} roleId */
+  hasPetAttackCue(roleId) {
+    return !!petRoleCueKey(roleId, 'attack');
+  }
+
+  /**
+   * One flinch cry. The caller starts the hurt strip once per bite.
+   * @param {string|null|undefined} roleId
+   * @returns {boolean}
+   */
+  playPetHurt(roleId) {
+    const key = petRoleCueKey(roleId, 'hurt');
+    if (!key) return false;
+    this._cue(key, 0.28, 160);
+    return true;
+  }
+
+  /**
+   * Skill release for S1 and S2. The ult sting stays on `playUlt`.
+   * @param {string|null|undefined} roleId
+   * @returns {boolean}
+   */
+  playPetSkill(roleId) {
+    const key = petRoleCueKey(roleId, 'skill');
+    if (!key) return false;
+    this._cue(key, 0.3, 400);
+    return true;
+  }
+
+  /**
    * S4 growl / hit / hurt / death. True when this skin owns those clips,
    * including when the cooldown skips a repeat.
    * @param {string|null|undefined} skinId
@@ -695,6 +787,53 @@ export class SoundManager {
 
   playUiWave() {
     this._cue('sfx-ui-wave', 0.32, 400);
+  }
+
+  /** Crit floater. Quieter than the hit under it. */
+  playUiCrit() {
+    this._cue('sfx-ui-crit', 0.24, 160);
+  }
+
+  /** Stage-clear panel. The victory bed is separate and keeps looping. */
+  playUiStageClear() {
+    this._cue('sfx-ui-stage-clear', 0.32);
+  }
+
+  /** Fail panel. Sits under the game-over sting. */
+  playUiStageFail() {
+    this._cue('sfx-ui-stage-fail', 0.32);
+  }
+
+  /** Narration toast. Not the wave banner and not the clear card. */
+  playUiTip() {
+    this._cue('sfx-ui-tip', 0.26, 400);
+  }
+
+  /** Gold grant. Shares the coin gap so a pellet burst does not chatter. */
+  playUiGold() {
+    this._cue('sfx-ui-gold', 0.22, AUDIO_COOLDOWN_MS.coin);
+  }
+
+  /**
+   * Lightning body spark. Under the rail hit so the two can layer.
+   * Fire and water stay on the feel-booth cues.
+   * @param {string|null|undefined} element
+   * @returns {boolean}
+   */
+  playElementHit(element) {
+    if (element !== 'electric') return false;
+    this._cue('sfx-hit-electric', 0.22, AUDIO_COOLDOWN_MS.hit);
+    return true;
+  }
+
+  /** Chef faceplant (`zombie-chef-die2`). Replaces the profession death cry. */
+  playChefDie2() {
+    this._cue('sfx-zombie-chef-die2', 0.3, 0);
+  }
+
+  /** Office hit02 bite. The wall crunch stays on `playBarricadeHit`. */
+  playOfficeHit02() {
+    this._cue('sfx-zombie-office-hit02', 0.26, 140);
   }
 
   playFenceCrack() {
@@ -959,7 +1098,7 @@ export class SoundManager {
 
   /** Revive cooldown finished; the portrait is summonable again. */
   playPetReviveReady() {
-    this._cueOptional('pet-revive', AUDIO_VOLUME.ui);
+    this._cueOptional('pet-revive', 0.32);
   }
 
   /**

@@ -895,7 +895,10 @@ export class Zombie {
     this._stopWalkAnim();
     const attackKey = this._pickBiteKey();
     const played = !!(this._isSprite && this._animReady(attackKey));
-    if (played) this.body.play(attackKey);
+    if (played) {
+      this.body.play(attackKey);
+      if (attackKey === 'zombie-office-worker-v2-hit02') this.scene?.audio?.playOfficeHit02?.();
+    }
     this._armBarricadeBeat(played ? attackKey : null);
   }
 
@@ -954,8 +957,10 @@ export class Zombie {
     if (this.hp <= 0) {
       this.hp = 0;
       this.alive = false;
-      this._beginDeath(amount, hit);
+      const deathKey = this._beginDeath(amount, hit);
+      const chefDie2 = deathKey === 'zombie-chef-die2' && typeof this.scene?.audio?.playChefDie2 === 'function';
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'die');
+      else if (chefDie2) this.scene.audio.playChefDie2();
       else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'death')
         && !this.scene.audio?.playProfessionDeath?.(this.skin?.id)) this.scene.audio?.playZombieDeath();
       if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
@@ -1029,6 +1034,7 @@ export class Zombie {
     this._clearAttackContact();
     const attackKey = this._pickBiteKey();
     const played = attackKey ? this.playShowcaseStrip(attackKey) : false;
+    if (played && attackKey === 'zombie-office-worker-v2-hit02') this.scene?.audio?.playOfficeHit02?.();
     const ruleFrame = ruleAttackContactFrame(attackKey);
     const frame = ruleFrame != null ? ruleFrame : hitFrame;
     this._armAttackContact(played ? attackKey : null, frame, onContact);
@@ -1213,10 +1219,11 @@ export class Zombie {
   /**
    * @param {number} amount
    * @param {{ kind?: string, flashMs?: number }} hit
+   * @returns {string|null} library death strip, when one played
    */
   _beginDeath(amount, hit) {
     const body = this.body;
-    if (!body) return;
+    if (!body) return null;
     this._lastX = body.x;
     this._lastY = body.y;
     this.atBarricade = false;
@@ -1237,7 +1244,7 @@ export class Zombie {
         spawnBlood(this.scene, body.x, body.y);
       }
       this._playLibraryDeath(body, deathKey, overkill);
-      return;
+      return deathKey;
     }
 
     if (overkill) {
@@ -1250,7 +1257,7 @@ export class Zombie {
           this.body = null;
         }
       });
-      return;
+      return null;
     }
 
     this._recenterCorpse(body);
@@ -1260,6 +1267,7 @@ export class Zombie {
       body.play(legacyDeath);
     }
     this._arcCorpse(body);
+    return null;
   }
 
   /**
