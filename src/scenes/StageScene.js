@@ -31,6 +31,7 @@ import {
   feelSkillSelection,
   phaserIndexForCatalogFrame,
 } from '../data/enemyShowcase.js';
+import { playLivingEnemyCue, tickStageSkill } from '../systems/enemyStageSfx.js';
 import { FEEL_HIT_FLASH_MS, feelImpactDirX, playFeelImpact, playFeelWaveFx } from '../systems/feelImpact.js';
 import {
   WORLD_WIDTH,
@@ -823,7 +824,8 @@ export default class StageScene extends Phaser.Scene {
    * The brute smash spawns `fx-brute-skill-shock` on the smash hand at
    * `impactFrame` and, on the gameplay frame, hurts a hero, pet, or
    * barricade post whose pixels overlap that shock. Other strips keep
-   * the immediate chest puff. Wave combat has no skill-cast AI.
+   * the immediate chest puff. Stage boss casts play the strip and cue
+   * without this smash hit.
    * @param {Zombie} z
    * @param {string} animKey
    */
@@ -1416,7 +1418,12 @@ export default class StageScene extends Phaser.Scene {
       const beat = z.consumeAttackBeat();
       // After the clock, contactDamage is already 0. Swallow the wall
       // flash too so leftovers do not look like they are still eating the posts.
-      if (beat && !z.petBiteTarget && !this.waveManager?.isTimeUp?.()) attackBeats.push(z);
+      if (beat && !this.waveManager?.isTimeUp?.()) {
+        // Attack contact uses the catalog `hurt` cue. The wall still gets barricade-hit.
+        this._playStageEnemyCue(z, 'hurt');
+        if (!z.petBiteTarget) attackBeats.push(z);
+      }
+      if (!z.showcaseHold) this._tickStageSkill(z, this.time?.now ?? 0);
     }
     let destroyed = false;
     if (barricadeDmg > 0) {
@@ -1474,6 +1481,29 @@ export default class StageScene extends Phaser.Scene {
         this._onWin();
       }
     }
+  }
+
+  /**
+   * Catalog cue for a living body. False when that key is not in GAME_AUDIO.
+   * Does not play the shared hurt or death bed.
+   * @param {Zombie} z
+   * @param {string} cue
+   * @returns {boolean}
+   */
+  _playStageEnemyCue(z, cue) {
+    return playLivingEnemyCue(this.audio, z, cue);
+  }
+
+  /**
+   * Balun (`lava-balon`) and Balam skill strips. Each strip plays its cue
+   * (`skill-lava_slam`, `enrage`, …). S5 reuses Balun's id, so the same
+   * cues cover that boss. The cast does not apply feel-booth smash damage.
+   * Brute ground smash stays on the skill strip the feel booth already plays.
+   * @param {Zombie} z
+   * @param {number} now
+   */
+  _tickStageSkill(z, now) {
+    this._stageSkillState = tickStageSkill(this._stageSkillState, z, now, this.audio);
   }
 
   /**

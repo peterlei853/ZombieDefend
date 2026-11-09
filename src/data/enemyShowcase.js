@@ -18,7 +18,7 @@ export const ENEMY_SKILL_STRIPS = {
   chef: [],
   nurse: [{ anim: 'zombie-nurse-attach', cue: 'skill-attach' }],
   brute: [
-    { anim: 'zombie-brute-skill_ground_smash', cue: '' },
+    { anim: 'zombie-brute-skill_ground_smash', cue: 'skill-ground_smash' },
   ],
   riot: [{ anim: 'zombie-riot-armor_break', cue: 'skill-armor_break' }],
   trashcan: [{ anim: 'zombie-trashcan-break', cue: 'skill-break' }],
@@ -62,7 +62,7 @@ export const ENEMY_SFX_FILES = {
   delivery: ['hit', 'hurt', 'die'],
   chef: ['hit', 'hurt', 'die'],
   nurse: ['hit', 'hurt', 'die', 'skill-attach'],
-  brute: ['hit', 'hurt', 'die', 'skill-hurt_heavy', 'skill-part_break', 'skill-blasted_back', 'skill-defeated'],
+  brute: ['hit', 'hurt', 'die', 'skill-hurt_heavy', 'skill-part_break', 'skill-blasted_back', 'skill-defeated', 'skill-ground_smash'],
   riot: ['hit', 'hurt', 'die', 'skill-armor_break'],
   trashcan: ['hit', 'hurt', 'die', 'skill-break', 'skill-panic'],
   sprinter: ['hit', 'hurt', 'die', 'skill-blasted_back', 'skill-tumble', 'skill-comedic_ko'],

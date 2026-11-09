@@ -206,7 +206,7 @@ assert(enemySkillStrips('delivery').length === 0 && enemySkillStrips('chef').len
 assert(ENEMY_SKILL_STRIPS.nurse[0]?.cue === 'skill-attach', 'nurse skill is attach');
 assert(ENEMY_SKILL_STRIPS.brute.length === 1, 'brute key 3 has a single skill strip');
 assert(ENEMY_SKILL_STRIPS.brute[0]?.anim === BRUTE_SMASH_ANIM, 'brute key 3 is the ground smash');
-assert(!ENEMY_SKILL_STRIPS.brute[0]?.cue, 'ground smash has no packed cue');
+assert(ENEMY_SKILL_STRIPS.brute[0]?.cue === 'skill-ground_smash', 'ground smash cue is skill-ground_smash');
 assert(!ENEMY_SKILL_STRIPS.brute.some((row) => /hurt_heavy|part_break|blasted_back|defeated/.test(row.anim)), 'brute key 3 does not list hurt, break, blast, or defeat');
 const bruteCycle = [
   { anim: BRUTE_SMASH_ANIM, cue: '' },
@@ -222,14 +222,14 @@ assert(nursePick.row?.cue === 'skill-attach' && nursePick.cursor === 1, 'other k
 assert(enemySkillStrips('lava-balon').some((row) => row.cue === 'enrage'), 'lava enrage is in the skill cycle');
 assert(enemySkillStrips('steel-balam').some((row) => row.cue === 'skill-ground_smash'), 'steel smash is in the skill cycle');
 assert(enemySfxClips().some((clip) => clip.key === 'sfx-enemy-office-worker-v2-hit'), 'office hit clip is preloaded by key');
-assert(enemySfxClips().length === 72, 'pack is 72 clips');
+assert(enemySfxClips().length === 73, 'pack is 73 clips');
 for (const clip of enemySfxClips()) {
   const row = GAME_AUDIO.find((item) => item.key === clip.key);
   assert(row?.url === `assets/audio/${clip.key}.mp3`, `${clip.key} is cataloged in GAME_AUDIO`);
   assert(existsSync(new URL(`../assets/audio/${clip.key}.mp3`, import.meta.url)), `${clip.key} catalog file`);
   assert(clip.url.startsWith('assets/sfx/enemies/'), `${clip.key} playback path stays assets/sfx/enemies`);
 }
-assert(GAME_AUDIO.filter((clip) => clip.key.startsWith('sfx-enemy-')).length === 72, 'catalog adds the 72 showcase keys once');
+assert(GAME_AUDIO.filter((clip) => clip.key.startsWith('sfx-enemy-')).length === 73, 'catalog adds the 73 showcase keys once');
 const catalogQueued = [];
 preloadGameAudio({
   load: { audio(key, url) { catalogQueued.push({ key, url }); } },

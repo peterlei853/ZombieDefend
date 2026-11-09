@@ -24,6 +24,7 @@
     "check:v03627": "node tools/check-v03627.mjs",
     "check:v03628": "node tools/check-v03628.mjs",
     "check:v03630": "node tools/check-v03630.mjs",
+    "check:enemy-sfx": "node tools/check-enemy-stage-sfx.mjs",
     "check:fx": "node tools/check-library-fx.mjs",
     "check:weapon-tryout": "node tools/check-weapon-tryout.mjs"
   },

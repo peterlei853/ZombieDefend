@@ -153,6 +153,7 @@ export const GAME_AUDIO = [
   { key: 'sfx-enemy-brute-skill-part_break', url: 'assets/audio/sfx-enemy-brute-skill-part_break.mp3' },
   { key: 'sfx-enemy-brute-skill-blasted_back', url: 'assets/audio/sfx-enemy-brute-skill-blasted_back.mp3' },
   { key: 'sfx-enemy-brute-skill-defeated', url: 'assets/audio/sfx-enemy-brute-skill-defeated.mp3' },
+  { key: 'sfx-enemy-brute-skill-ground_smash', url: 'assets/audio/sfx-enemy-brute-skill-ground_smash.mp3' },
   { key: 'sfx-enemy-riot-hit', url: 'assets/audio/sfx-enemy-riot-hit.mp3' },
   { key: 'sfx-enemy-riot-hurt', url: 'assets/audio/sfx-enemy-riot-hurt.mp3' },
   { key: 'sfx-enemy-riot-die', url: 'assets/audio/sfx-enemy-riot-die.mp3' },
@@ -906,21 +907,27 @@ export class SoundManager {
   }
 
   /**
-   * Per-enemy showcase cue. `cue` is `hit`, `hurt`, `die`, `enrage`, or
-   * `skill-<name>`. Missing clips stay silent. Does not change BGM or
-   * the shared volume table. Normal waves keep playZombieHurt / playZombieDeath.
+   * Per-enemy cue. `cue` is `hit`, `hurt`, `die`, `enrage`, or `skill-<name>`.
+   * Feel-booth and stage both call this. Returns false when
+   * `sfx-enemy-<id>-<cue>` is not in GAME_AUDIO so the caller can keep
+   * the shared hurt / death bed, an S4 vocal, or a profession death a/b.
+   * A catalogued key returns true even when the cooldown skips a repeat.
+   * Skill cues still play the Balun / Balam sting. Does not change BGM
+   * or the shared volume table.
    * @param {string} id
    * @param {string} cue
+   * @returns {boolean}
    */
   playEnemyCue(id, cue) {
-    if (this._disposed || !id || !cue) return null;
-    if (typeof cue === 'string' && cue.startsWith('skill')) this._playBossSkillSting(id);
+    if (this._disposed || !id || !cue) return false;
     const key = enemySfxKey(id, cue);
-    if (!this._passCooldown(key, enemyCueCooldown(cue))) return null;
+    if (!AUDIO_KEYS.has(key)) return false;
+    if (typeof cue === 'string' && cue.startsWith('skill')) this._playBossSkillSting(id);
+    if (!this._passCooldown(key, enemyCueCooldown(cue))) return true;
     this._stopEnemyVoice();
     const node = this._playNowOrPending(key, enemyCueVolume(cue));
     if (node) this._enemyVoice = node;
-    return node;
+    return true;
   }
 
   playBarricadeHit() {

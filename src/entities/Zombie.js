@@ -149,6 +149,8 @@ export class Zombie {
     /** Eastward march used to lead a water shot. 0 while held or stopped. */
     this._marchVx = 0;
     this._showcaseToken = 0;
+    /** Stage skill strip that locomotion and the bite punch must not replace. */
+    this._skillLockKey = null;
 
     registerZombieAnims(scene);
     const catalogSkin = zombieSkinDef(cfg.skin);
@@ -540,11 +542,14 @@ export class Zombie {
       }
 
       if (this.atBarricade) {
-        this._attackCooldown -= deltaSec;
-        if (this._attackCooldown <= 0) {
-          this._attackCooldown += 1;
-          if (this._attackCooldown < 0) this._attackCooldown = 0;
-          this._playAttackPunch();
+        // A skill strip keeps the halt. Contact DPS still ticks every frame.
+        if (!this._skillStripPlaying()) {
+          this._attackCooldown -= deltaSec;
+          if (this._attackCooldown <= 0) {
+            this._attackCooldown += 1;
+            if (this._attackCooldown < 0) this._attackCooldown = 0;
+            this._playAttackPunch();
+          }
         }
       } else {
         this._syncLocomotion();
@@ -602,13 +607,15 @@ export class Zombie {
     if (dist <= reach) {
       this.petBiteTarget = pet;
       if (this._haltX == null) this._haltX = this.body.x;
-      this._attackCooldown -= deltaSec;
-      if (this._attackCooldown <= 0) {
-        this._attackCooldown += 1;
-        if (this._attackCooldown < 0) this._attackCooldown = 0;
-        this._playAttackPunch();
-      } else {
-        this._stopWalkAnim();
+      if (!this._skillStripPlaying()) {
+        this._attackCooldown -= deltaSec;
+        if (this._attackCooldown <= 0) {
+          this._attackCooldown += 1;
+          if (this._attackCooldown < 0) this._attackCooldown = 0;
+          this._playAttackPunch();
+        } else {
+          this._stopWalkAnim();
+        }
       }
       return;
     }
@@ -847,10 +854,34 @@ export class Zombie {
   }
 
   /**
+   * Stage skill strip. Walk and the bite punch leave it alone until it ends.
+   * Contact DPS does not read this.
+   * @param {string|null|undefined} key
+   */
+  holdSkillStrip(key) {
+    this._skillLockKey = key || null;
+  }
+
+  /**
+   * True while the locked skill strip is the anim on screen.
+   * A finished or replaced strip clears the lock.
+   * @returns {boolean}
+   */
+  _skillStripPlaying() {
+    const key = this._skillLockKey;
+    if (!key || !this._isSprite || !this.body?.anims) return false;
+    const current = this.body.anims.currentAnim?.key;
+    if (current === key && this.body.anims.isPlaying) return true;
+    this._skillLockKey = null;
+    return false;
+  }
+
+  /**
    * Keep the locomotion loop. No-op for rectangle placeholders and while biting.
    */
   _syncLocomotion() {
     if (!this._isSprite || !this.body?.anims || !this.alive || this.atBarricade) return;
+    if (this._skillStripPlaying()) return;
     const hurt = this._hurtAnimKey();
     const current = this.body.anims.currentAnim?.key;
     // A hit just started the hurt strip. Do not replace it with walk this frame.
@@ -955,8 +986,15 @@ export class Zombie {
       this.hp = 0;
       this.alive = false;
       this._beginDeath(amount, hit);
+      // Feel booth stays catalog-only. Stage plays the catalog die when
+      // that key exists, and still speaks an S4 or profession death line.
+      // No catalog key keeps the old chain, then the shared death bed.
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'die');
-      else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'death')
+      else if (this.scene.audio?.playEnemyCue?.(this.skin?.id, 'die')) {
+        if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'death')) {
+          this.scene.audio?.playProfessionDeath?.(this.skin?.id);
+        }
+      } else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'death')
         && !this.scene.audio?.playProfessionDeath?.(this.skin?.id)) this.scene.audio?.playZombieDeath();
       if (!scripted) this.scene.expOrbs?.onZombieDeath?.(this);
       return true;
@@ -964,7 +1002,9 @@ export class Zombie {
     this._playHitFlash(hit?.flashMs);
     if (amount > 0) {
       if (showcaseAudio) this.scene.audio?.playEnemyCue?.(this.skin.id, 'hit');
-      else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hit')) this.scene.audio?.playZombieHurt();
+      else if (this.scene.audio?.playEnemyCue?.(this.skin?.id, 'hit')) {
+        this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hit');
+      } else if (!this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hit')) this.scene.audio?.playZombieHurt();
       this.scene.audio?.playS4Vocal?.(this.skin?.id, 'hurt');
       // Stage hits play the catalog hurt strip. Feel-booth ranged hits
       // still opt in with hurtStrip so a baked crescent is not forced on.
