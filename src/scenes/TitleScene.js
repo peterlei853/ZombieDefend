@@ -1,6 +1,7 @@
 import { APP_VERSION, debugPetSkillEnabled, demoEnemyId, demoWeaponId, petHurtDebugRequested, petLowHpDebugRequested } from '../data/GameConfig.js';
 import { DISASTER_SEEN_KEY, NARRATION } from '../data/narrationCopy.js';
 import { PLAYABLE_STAGE_CAP, STAGE_COUNT, stageFromQuery } from '../data/stageRoster.js';
+import { titleStageButtonFrames } from './titleStageButtons.js';
 import { SoundManager } from '../systems/SoundManager.js';
 import { createLibraryAnims } from '../assets/libraryAssets.js';
 import { createNarrationToast } from '../ui/NarrationToast.js';
@@ -99,31 +100,28 @@ export default class TitleScene extends Phaser.Scene {
       this.scene.start('StageScene', payload);
     };
 
-    // One button per stage. Scale 1 keeps five 73px parchments inside the dialog.
-    const btnW = 73;
-    const gap = 12;
-    const rowY = cardY + 32;
-    const total = STAGE_COUNT * btnW + (STAGE_COUNT - 1) * gap;
-    let x = width / 2 - total / 2 + btnW / 2;
-    for (let stage = 1; stage <= STAGE_COUNT; stage += 1) {
-      const gated = stage > PLAYABLE_STAGE_CAP;
-      const button = addParchmentButton(this, x, rowY, String(stage), () => {
-        if (gated) return;
-        startStage(stage);
+    // Five live buttons, fitted to the dialog's inner parchment.
+    // Full-size 73px buttons ran past that inset, so stage 5 sat on the
+    // stone frame and read as the old SOON gate.
+    const slots = titleStageButtonFrames(width, height);
+    for (const slot of slots.frames) {
+      const button = addParchmentButton(this, slot.x, slot.y, String(slot.stage), () => {
+        if (slot.gated) return;
+        startStage(slot.stage);
       }, {
-        scale: 1,
+        scale: slot.scale,
+        fontSize: 14,
         depth: 4,
       });
-      if (gated) {
+      if (slot.gated) {
         button.bg?.setAlpha?.(0.4);
-        addKitText(this, x, rowY + 28, 'SOON', {
+        addKitText(this, slot.x, slot.y + 22, 'SOON', {
           font: FONT_TINY,
           size: 11,
           color: '#f6e7c2',
           depth: 5,
         });
       }
-      x += btnW + gap;
     }
 
     const startY = cardY + 96;
@@ -152,8 +150,8 @@ export default class TitleScene extends Phaser.Scene {
     });
     this.audio.startTitleBgm();
 
-    // Disaster once per page load. After stage 3 the shop sends nightClose
-    // instead, so the return home does not repeat the opening line.
+    // Disaster once per page load. After the last playable stage the shop
+    // sends nightClose, so the return home does not repeat the opening line.
     // Neither toast takes a hit target, so START still clicks through.
     this._narration = createNarrationToast(this, { y: 150, style: 'banner' });
     if (this._nightClose) {

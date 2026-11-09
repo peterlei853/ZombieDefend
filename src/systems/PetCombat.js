@@ -1820,7 +1820,9 @@ export class PetCombat {
     // the forward box is true.
     if (dist <= arrive || this._inMeleeReach(actor)) {
       actor.latched = true;
-      if (dist <= arrive) {
+      // A closer dest is the walk-in. Snap only when the stand is not
+      // deeper into the mob than the feet already are.
+      if (dist <= arrive && !(actor.destX < sprite.x - 0.5)) {
         sprite.x = actor.destX;
         sprite.y = actor.destY;
       }
@@ -1866,19 +1868,18 @@ export class PetCombat {
    * @param {{ x?: number, y?: number }|null} player
    */
   _aimPoint(actor, threat, player) {
-    const stand = engageStand(actor.role.id);
-    let x = threat.x + stand;
-    // Same road lane as the zombie. A drop toward the camera parks the pet
-    // on the grass edge with a gap wider than the swing, so tryBasic never
-    // sees them. The stand X is 0.7 of MELEE.RANGE, inside the forward box.
-    const y = clampGrass(threat.y);
-    const minX = threat.x + layoutPx(14);
-    if (x < minX) x = minX;
+    const sprite = actor.sprite;
+    const px = sprite?.x ?? actor.x;
+    const py = sprite?.y ?? actor.y;
+    const stand = meleeStandPoint(px, py, threat.x, threat.y);
+    // Already inside MELEE.RANGE: stay on this X. Do not walk into the pack.
+    if (stand.hold) return { x: px, y: clampGrass(py) };
+    let x = stand.x;
+    const y = clampGrass(stand.y);
     if (player && Number.isFinite(player.x)) {
       const cap = player.x - layoutPx(4);
-      if (x > cap) x = cap;
+      if (x > cap) x = Math.max(threat.x, cap);
     }
-    if (x < minX) x = minX;
     return { x, y };
   }
 
@@ -2015,12 +2016,10 @@ export class PetCombat {
    * @param {number} use
    * @param {number} windup
    */
-  _stepIn(actor, use, windup) {
-    const sprite = actor.sprite;
-    if (!sprite || !(windup > 0)) return;
-    const step = layoutPx(GAME_CONFIG.PETS.MELEE.STEP_PX) * (use / windup);
-    sprite.x -= step;
-    faceLeft(sprite);
+  _stepIn(actor, _use, _windup) {
+    // Planted swing. Dragon still plays role.attack. The hit stays MELEE.RANGE.
+    // Stepping in during the wind-up walked the pet into the pack.
+    faceLeft(actor?.sprite);
   }
 
   /**
@@ -3318,9 +3317,23 @@ export class PetCombat {
   }
 }
 
-/** @param {string} id */
-function engageStand(_id) {
-  return layoutPx(GAME_CONFIG.PETS.MELEE.RANGE * 0.7);
+/**
+ * Where a basic attack or slam stands.
+ * In the forward box already: hold the current feet.
+ * Otherwise the stand is the melee range in front of the target, not a closer shuffle.
+ * @param {number} petX
+ * @param {number} petY
+ * @param {number} threatX
+ * @param {number} threatY
+ * @returns {{ x: number, y: number, hold: boolean }}
+ */
+export function meleeStandPoint(petX, petY, threatX, threatY) {
+  const range = layoutPx(GAME_CONFIG.PETS.MELEE.RANGE);
+  const yHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+  if (inForwardBox(petX, petY, threatX, threatY, range, yHalf)) {
+    return { x: petX, y: petY, hold: true };
+  }
+  return { x: threatX + range, y: threatY, hold: false };
 }
 
 /**

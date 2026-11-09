@@ -2,7 +2,7 @@
  * Locked narration copy. No Phaser.
  * Run: node tools/check-narration.mjs
  *
- * Strings stay Traditional Chinese. Stage 4–5 stay SOON. Shop stays a list.
+ * Strings stay Traditional Chinese. Stages 1–5 are playable. Shop stays a list.
  */
 import { readFileSync } from 'node:fs';
 import { earlyWaveDefs } from '../src/data/stageBalance.js';
@@ -75,7 +75,7 @@ assert(wallInDanger(720, 720) === false, 'a full wall stays quiet');
 
 assert(NARRATION_HOLD_MS >= 2000 && NARRATION_HOLD_MS <= 3000, 'hold is about 2–3s');
 assert(NARRATION_FADE_MS > 0 && NARRATION_FADE_MS < 500, 'fade is short');
-assert(PLAYABLE_STAGE_CAP === 3, 'playable cap stays 3');
+assert(PLAYABLE_STAGE_CAP === 5, 'playable cap is 5');
 
 /**
  * Tiny scene stub. Banner art is missing, so the toast falls through to

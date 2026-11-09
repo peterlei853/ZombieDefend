@@ -1,12 +1,9 @@
 /**
- * Main-stage enemy roster (v0.36.27).
+ * Main-stage enemy roster (v0.36.31).
  *
- * Five stages remain. The clear loop is stages 1–3 (`PLAYABLE_STAGE_CAP`).
- * Stages 4–5 stay on the roster and keep their single skin; the title
- * soft-gates those buttons. Stage 1–3 pools append catalog ids when a
- * new early monster is wired. v0.36.30 adds `s4-construction` and
- * `s4-schoolgirl` on stages 1–3. A missing strip falls back to
- * `office-worker-v2` only.
+ * Five stages. The clear loop is stages 1–5 (`PLAYABLE_STAGE_CAP`).
+ * Stages 1–4 grow the skin pool. Stage 5 is the Balun boss stage.
+ * A missing strip falls back to `office-worker-v2` only.
  */
 
 /** How many main stages exist. Direct `?stage=` still accepts 1–5. */
@@ -14,9 +11,19 @@ export const STAGE_COUNT = 5;
 
 /**
  * Title buttons and the shop Next loop stop here.
- * Stages above this still have wave data. They are not the 3-loop test.
+ * v0.36.31 opens stage 4 and the stage 5 boss for the demo.
  */
-export const PLAYABLE_STAGE_CAP = 3;
+export const PLAYABLE_STAGE_CAP = 5;
+
+/**
+ * True when the shop's bottom button advances to the next stage.
+ * Stage 4 offers Next into stage 5. Stage 5 returns to the title.
+ * @param {number} stage
+ */
+export function shopOffersNext(stage) {
+  const n = Math.floor(Number(stage) || 1);
+  return n < PLAYABLE_STAGE_CAP && n < STAGE_COUNT;
+}
 
 /**
  * Stage 1 → stage 5, in play order. Must stay the first five DEMO_ENEMY_IDS.
@@ -32,20 +39,45 @@ export const STAGE_ROSTER = [
 ];
 
 /**
- * Stage 1 spawn pool. Types 1 / 2 / 3, plus the two wired S4 groups.
- * Kept as the stage-1 alias.
+ * Stage 1 spawn pool. Professions 1–3, the two early S4 groups, and slime.
+ * Kept as the stage-1 alias. Later stages append; they do not drop these.
  * @type {string[]}
  */
-export const STAGE_1_MIX = ['office-worker-v2', 'delivery', 'chef', 's4-construction', 's4-schoolgirl'];
+export const STAGE_1_MIX = [
+  'office-worker-v2',
+  'delivery',
+  'chef',
+  's4-construction',
+  's4-schoolgirl',
+  'slime',
+];
+
+/** Stage 2 adds a runner and the exploder. Nurse stays off until stage 3. */
+const STAGE_2_MIX = [...STAGE_1_MIX, 'sprinter', 'exploder'];
+
+/** Stage 3 adds the nurse line plus cyborg and trashcan. */
+const STAGE_3_MIX = [...STAGE_2_MIX, 'nurse', 'cyborg', 'trashcan'];
+
+/** Stage 4 adds riot and the wired salaryman. Harder than stage 3. */
+const STAGE_4_MIX = [...STAGE_3_MIX, 'riot', 's4-salaryman'];
 
 /**
- * Early-stage pools. New catalog ids append here. Stage 4+ does not use this.
+ * Stage 5 escorts. No nurse, so the stage-3 nurse line does not repeat.
+ * The boss itself is named on the boss wave, not rolled from this list.
+ * @type {string[]}
+ */
+export const STAGE_5_ESCORTS = ['sprinter', 'riot', 'trashcan', 'cyborg', 'exploder', 'slime', 's4-construction'];
+
+/**
+ * Pools by stage. Each stage is the previous mix plus new skins.
  * @type {Record<number, string[]>}
  */
 export const EARLY_STAGE_POOLS = {
   1: STAGE_1_MIX,
-  2: ['office-worker-v2', 'delivery', 'chef', 's4-construction', 's4-schoolgirl'],
-  3: ['office-worker-v2', 'delivery', 'chef', 'nurse', 's4-construction', 's4-schoolgirl'],
+  2: STAGE_2_MIX,
+  3: STAGE_3_MIX,
+  4: STAGE_4_MIX,
+  5: ['lava-balon', ...STAGE_5_ESCORTS],
 };
 
 /**
@@ -72,7 +104,7 @@ export function skinForStage(stage) {
 
 /**
  * Skin ids this stage may spawn.
- * Stages 1–3 roll {@link EARLY_STAGE_POOLS}. Stages 4–5 stay one id.
+ * Stages 1–5 roll {@link EARLY_STAGE_POOLS}.
  * @param {number} stage
  * @returns {string[]}
  */

@@ -119,24 +119,27 @@ function textureFrameCount(tex) {
  * asset index, so the slice size stays the index cell (88), not the 84px
  * profession cell and not {@link ZOMBIE_FRAME_SIZE}.
  * v0.36.30 wires `s4-construction` and `s4-schoolgirl` (manifest groups)
- * into stages 1–3. They have walk / attack / hurt / die only: no ruleAnims,
- * so hit01 / hit02 / deathwalk and the rest fall back to those four keys.
- * There is no run strip; a runner asks for walk instead.
- * `s4-salaryman` and `s4-delivery` stay catalog-only. The S4 delivery group
- * is not the live `delivery` profession. No S4 audio is queued.
+ * into stages 1–3. v0.36.31 wires `s4-salaryman` the same way (walk /
+ * attack / hurt / die, 88×88, no ruleAnims) onto stage 4. They have no
+ * run strip; a runner asks for walk instead.
+ * `s4-delivery` stays catalog-only. The S4 delivery group is not the
+ * live `delivery` profession. No S4 audio is queued.
  * Variant {@link SKIN_POOLS} stay the unskinned round-robin. Early waves
  * name these ids themselves.
  */
 export const S4_FRAME_SIZE = 88;
 
-/** Spawn ids for the two wired S4 groups. Salaryman and s4-delivery are absent. */
+/** Spawn ids for the two v0.36.30 S4 groups. Salaryman joined in v0.36.31. */
 export const S4_EARLY_SKIN_IDS = ['s4-construction', 's4-schoolgirl'];
+
+/** Stage 4 salaryman. Same four-strip wiring as construction / schoolgirl. */
+export const S4_SALARYMAN_ID = 's4-salaryman';
 
 /**
  * Library skins. `facing: 'east'` means the strip already walks toward the
  * right-hand barricade — do not setFlipX. Armored trashcan / riot have no
  * die strip; the break strip is the death. Slime-mini has no attack.
- * Bosses are listed but not pooled: no wave row spawns them.
+ * lava-balon is the stage 5 boss. steel-balam stays off the wave pools.
  * @type {Record<string, { id: string, facing: 'east'|'west', actions: Record<string, string|null>, blastFx?: string }>}
  */
 export const ZOMBIE_LIBRARY_SKINS = {
@@ -162,6 +165,7 @@ export const ZOMBIE_LIBRARY_SKINS = {
   /** 88×88. Walk / attack / hurt / die only. Missing rule strips fall back. */
   's4-construction': s4PartialSkin('s4-construction'),
   's4-schoolgirl': s4PartialSkin('s4-schoolgirl'),
+  's4-salaryman': s4PartialSkin('s4-salaryman'),
   clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
   cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
   slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
@@ -191,8 +195,8 @@ export const ZOMBIE_LIBRARY_SKINS = {
 };
 
 /**
- * Not spawned. Stage waves only emit walker / runner / tank.
- * Keys are ready for a later boss row: walk + attack + die, facing east, 128px.
+ * Stage 5 spawns lava-balon. Steel stays catalogued for the feel booth.
+ * Keys are walk + attack + die, facing east, 128px, plus Balun's skill strips.
  */
 export const ZOMBIE_BOSS_SKINS = {
   'lava-balon': {
@@ -205,6 +209,34 @@ export const ZOMBIE_BOSS_SKINS = {
       hurt: 'zombie-boss-lava-hurt',
       death: 'zombie-boss-lava-die1',
     },
+    /**
+     * Combat rotation. `impactFrame` is the catalog cell (0-based).
+     * PIXELLAB_HOOK: zombie-boss-lava-lava_slam / volcanic_breath / meteor_storm
+     * and fx-slam / fx-breath / fx-meteor.
+     */
+    bossSkills: [
+      {
+        anim: 'zombie-boss-lava-lava_slam',
+        cue: 'skill-lava_slam',
+        fx: 'zombie-boss-lava-fx-slam',
+        impactFrame: 7,
+        holdSec: 1.2,
+      },
+      {
+        anim: 'zombie-boss-lava-volcanic_breath',
+        cue: 'skill-volcanic_breath',
+        fx: 'zombie-boss-lava-fx-breath',
+        impactFrame: 4,
+        holdSec: 1.2,
+      },
+      {
+        anim: 'zombie-boss-lava-meteor_storm',
+        cue: 'skill-meteor_storm',
+        fx: 'zombie-boss-lava-fx-meteor',
+        impactFrame: 2,
+        holdSec: 1.2,
+      },
+    ],
   },
   'steel-balam': {
     id: 'steel-balam',
@@ -308,9 +340,9 @@ function skin(id, prefix, extra = {}) {
 
 /**
  * S4 group with only walk / attack / hurt / die. Id matches the manifest
- * `group` (`s4-construction`, `s4-schoolgirl`) and the catalog key prefix
- * `zombie-<id>-*`. Die is `die`, not `die1`. No rule-anim map.
- * @param {'s4-construction'|'s4-schoolgirl'} id
+ * `group` and the catalog key prefix `zombie-<id>-*`. Die is `die`, not
+ * `die1`. No rule-anim map.
+ * @param {'s4-construction'|'s4-schoolgirl'|'s4-salaryman'} id
  */
 function s4PartialSkin(id) {
   const prefix = `zombie-${id}`;
