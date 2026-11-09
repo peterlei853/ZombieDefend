@@ -1376,6 +1376,7 @@ export default class StageScene extends Phaser.Scene {
         this.gold += petGain.gold;
         this.registry.set('gold', this.gold);
         this.audio?.playCoin();
+        this.audio?.playUiGold?.();
       }
       this._refreshHud();
       this.petHud?.update(rawMs);
@@ -1451,6 +1452,7 @@ export default class StageScene extends Phaser.Scene {
       this.gold += gold;
       this.registry.set('gold', this.gold);
       this.audio?.playCoin();
+      this.audio?.playUiGold?.();
     }
     this.expOrbs?.update(deltaMs, this.defenders.fieldPets());
     this._separateFeet();
@@ -1600,6 +1602,7 @@ export default class StageScene extends Phaser.Scene {
     if (this.ended) return;
     this.ended = true;
     this.audio?.playVictory();
+    this.audio?.playUiStageClear?.();
     this.registry.set('gold', this.gold);
     this._clearBanner();
 
@@ -1659,6 +1662,7 @@ export default class StageScene extends Phaser.Scene {
     if (this.ended) return;
     this.ended = true;
     this.audio?.playGameOver();
+    this.audio?.playUiStageFail?.();
     // Failed attempt does not keep kill gold. The next run starts at the
     // purse this attempt was given (0 from Boot, or Shop gold after a win).
     this.registry.set('gold', this.runStartGold);

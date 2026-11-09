@@ -254,6 +254,7 @@ export function showCritText(scene, x, y) {
     })
     .setOrigin(0.5, 0.5)
     .setDepth(HUD_DEPTH + 42);
+  scene.audio?.playUiCrit?.();
   const juice = GAME_CONFIG.JUICE;
   scene.tweens?.add?.({
     targets: text,

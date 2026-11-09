@@ -351,6 +351,12 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * UI click, shop, damage, heal, and wave; coin pickup; fence crack and
  * break. Settings and item pickups stay catalog-only. GitHub Pages
  * publishes this tip from main.
+ * Ear pack: pet attack / hurt / skill / death / revive, crit floater,
+ * gold grant, narration tip, stage clear and fail, lightning spark,
+ * office hit02, and chef die2. Regenerated slash, fire, water, handgun,
+ * shotgun, swap, impact, barricade, and telegraph files replace the
+ * stubs on the cues that already play them. Pause and auth stay
+ * catalog-only. Visible version stays 0.36.30 until the Drop.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */

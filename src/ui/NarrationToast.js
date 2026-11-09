@@ -116,6 +116,7 @@ class NarrationToast {
       return;
     }
     this._currentId = item.id;
+    if (item.id !== 'clear') this.scene?.audio?.playUiTip?.();
     const style = item.style || this.style;
     const y = item.y ?? this.y;
     const depth = item.depth ?? this.depth;
