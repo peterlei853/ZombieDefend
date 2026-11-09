@@ -66,7 +66,7 @@ import {
 } from '../ui/uiKit.js';
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
-import { createLibraryAnims, preloadLibrary } from '../assets/libraryAssets.js';
+import { createLibraryAnims, preloadLibrary, stageLibraryCategories } from '../assets/libraryAssets.js';
 import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
@@ -208,7 +208,10 @@ export default class StageScene extends Phaser.Scene {
   preload() {
     // BootScene loads these first; this covers a direct Stage start / retry
     // after a cache miss without re-queueing keys that already exist.
-    preloadLibrary(this);
+    // Stage 5 needs Balun's sheets. A normal stage still skips bosses.
+    const categories = stageLibraryCategories();
+    if (this.stage >= 5 && !categories.includes('bosses')) categories.push('bosses');
+    preloadLibrary(this, { categories });
     preloadPlayerAssets(this);
     preloadZombieAssets(this);
     // Ear-preview charge cues ride this queue with the rest of the stage beds.

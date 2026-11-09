@@ -152,8 +152,8 @@ export default class TitleScene extends Phaser.Scene {
     });
     this.audio.startTitleBgm();
 
-    // Disaster once per page load. After stage 3 the shop sends nightClose
-    // instead, so the return home does not repeat the opening line.
+    // Disaster once per page load. After the last playable stage the shop
+    // sends nightClose, so the return home does not repeat the opening line.
     // Neither toast takes a hit target, so START still clicks through.
     this._narration = createNarrationToast(this, { y: 150, style: 'banner' });
     if (this._nightClose) {

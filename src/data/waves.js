@@ -1,6 +1,6 @@
 import { GAME_CONFIG } from './GameConfig.js';
 import { earlyWaveDefs } from './stageBalance.js';
-import { PLAYABLE_STAGE_CAP, rosterForStage } from './stageRoster.js';
+import { rosterForStage } from './stageRoster.js';
 
 /**
  * Stage 1 wave schedule (timer 0–90s).
@@ -71,13 +71,13 @@ export const WAVE_DEFS = [
 ];
 
 /**
- * Stages 1–3 use the rising table in stageBalance.js.
- * Stage 4+ stamps the legacy WAVE_DEFS rows (HP / speed / DPS / counts unchanged).
+ * Stages 1–5 use stageBalance.js. Anything past that stamps WAVE_DEFS.
  * @param {number} stage
  */
 export function waveDefsForStage(stage) {
   const n = Math.max(1, Math.floor(Number(stage) || 1));
-  if (n <= PLAYABLE_STAGE_CAP) return earlyWaveDefs(n);
+  const early = earlyWaveDefs(n);
+  if (early.length) return early;
   const skins = rosterForStage(n);
   return WAVE_DEFS.map((def) => ({
     ...def,

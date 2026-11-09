@@ -32,8 +32,9 @@ import {
 import { depthFromY, displayScaleFromY, grassYMax, grassYMin, LAYOUT_SCALE, layoutPx } from '../systems/DepthView.js';
 import { petReachableBeforeFence } from '../systems/petAggro.js';
 import { beginHitlag, spawnBlood, spawnFragments } from '../systems/combatJuice.js';
-import { attackContactFrame, ruleAttackContactFrame } from '../data/enemyShowcase.js';
-import { smallHurtLocksMove } from '../systems/footprints.js';
+import { attackContactFrame, phaserIndexForCatalogFrame, ruleAttackContactFrame } from '../data/enemyShowcase.js';
+import { playLibraryFx } from '../assets/libraryAssets.js';
+import { BOSS_FEET_WIDTH_RATIO, feetWidthFromDisplay, smallHurtLocksMove } from '../systems/footprints.js';
 import { DAMAGE_COLORS, showDamageText } from '../ui/damageText.js';
 import { KitHpBar } from '../ui/uiKit.js';
 
@@ -80,6 +81,7 @@ export class Zombie {
    */
   constructor(scene, cfg) {
     this.scene = scene;
+    this.kind = 'zombie';
     this.id = ++_zombieId;
     this.maxHp = cfg.hp;
     this.hp = cfg.hp;
@@ -158,6 +160,14 @@ export class Zombie {
     // Copied before a missing walk sheet clears `skin`, so a brute
     // placeholder still refuses the hurt shove.
     this.noHurtKnockback = !!(catalogSkin?.noHurtKnockback || this.skin?.noHurtKnockback);
+    this._skillCd = this.skin?.bossSkills?.length ? 2.2 : 0;
+    this._skillLock = 0;
+    this._skillCursor = 0;
+    this._skillBlocker = null;
+    this._skillBurst = 0;
+    this._skillsFired = 0;
+    this._lastSkillAnim = null;
+    this._lastSkillFx = null;
     const libraryWalk = zombieActionKey(this.skin, this.variant, 'walk');
     const legacyWalk = zombieSheetKey(this.variant, 'walk');
     const libraryReady = !!(
@@ -324,10 +334,16 @@ export class Zombie {
     this._syncBars();
   }
 
-  /** Display width used as the occupied footprint. */
+  /**
+   * Leg / sole width. The sprite canvas (often 64–88, boss 128) is wider
+   * than the feet, and using it as the body box kept packs in single file.
+   */
   footprintWidth() {
-    if (this._isSprite && this.body) return Math.abs(this.body.displayWidth) || 0;
-    return this.baseSize * this.scale * this.variantScale;
+    const full = this._isSprite && this.body
+      ? Math.abs(this.body.displayWidth) || 0
+      : this.baseSize * this.scale * this.variantScale;
+    const ratio = this.skin?.bossSkills ? BOSS_FEET_WIDTH_RATIO : undefined;
+    return feetWidthFromDisplay(full, ratio);
   }
 
   /** Display height. Feet sit on `y`; the sprite extends upward. */
@@ -511,12 +527,20 @@ export class Zombie {
       }
     }
 
+    if (this._tickBossCast(deltaSec)) {
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
+
     const chase = this._petToChase(pet, contactX);
-    if (chase) {
-      this._chasePet(deltaSec, chase, contactX);
-    } else {
-      this.petBiteTarget = null;
-      if (!this.atBarricade) {
+    if (chase && this._chasePet(deltaSec, chase, contactX)) {
+      this._applyDepth();
+      this._syncBars();
+      return;
+    }
+    this.petBiteTarget = null;
+    if (!this.atBarricade) {
         // Wave speed is field px/s. LAYOUT_SCALE keeps time-to-contact on the wider canvas.
         // Professions use the HP 30 tire gate. Everyone else uses CRIT_SPEED_MULT.
         // A locked hurt cell contributes exactly 0, not the ×0.5 residual.
@@ -549,7 +573,6 @@ export class Zombie {
       } else {
         this._syncLocomotion();
       }
-    }
 
     this._applyDepth();
     this._syncBars();
@@ -563,10 +586,18 @@ export class Zombie {
   _petToChase(pet, contactX) {
     if (!pet) return null;
     const halt = contactX - this.displayHalf;
-    const radius = Number.isFinite(pet.radius) ? pet.radius : layoutPx(GAME_CONFIG.PETS.BITE_RADIUS);
-    const reach = this.displayHalf + radius;
+    const reach = this._standHitReach(pet);
     if (!petReachableBeforeFence(pet, halt, reach)) return null;
     return pet;
+  }
+
+  /**
+   * Bite reach, or the pet's melee stand, whichever is longer.
+   * A pet that stopped at MELEE.RANGE is already close enough to hit.
+   * @param {{ radius?: number }} pet
+   */
+  _standHitReach(pet) {
+    return Math.max(this._biteReach(pet), layoutPx(GAME_CONFIG.PETS.MELEE.RANGE));
   }
 
   /**
@@ -578,20 +609,25 @@ export class Zombie {
   }
 
   /**
-   * Steer toward the pet and bite it. X never passes the barricade halt.
+   * Stand and bite. Does not walk toward the pet.
+   * Returns true when this frame is spent standing (in range, or hurt-locked).
+   * Returns false when the pet is still out of reach so the march continues.
    * @param {number} deltaSec
    * @param {{ x: number, y: number, radius?: number }} pet
    * @param {number} contactX
+   * @returns {boolean}
    */
   _chasePet(deltaSec, pet, contactX) {
     if (this.hurtMarchLocked()) {
       this._marchVx = 0;
-      return;
+      return true;
     }
-    const reach = this._biteReach(pet);
     const dx = pet.x - this.body.x;
     const dy = pet.y - this.body.y;
     const dist = Math.hypot(dx, dy);
+    const yHalf = layoutPx(GAME_CONFIG.PETS.MELEE.Y_HALF);
+    const inRange = dist <= this._standHitReach(pet) + 0.5 && Math.abs(dy) <= yHalf;
+    if (!inRange) return false;
     if (this.atBarricade) {
       this.atBarricade = false;
       this._haltX = null;
@@ -599,37 +635,121 @@ export class Zombie {
       this._clearAttackContact();
       this.scene?.tweens?.killTweensOf?.(this.body);
     }
-    if (dist <= reach) {
-      this.petBiteTarget = pet;
-      if (this._haltX == null) this._haltX = this.body.x;
-      this._attackCooldown -= deltaSec;
-      if (this._attackCooldown <= 0) {
-        this._attackCooldown += 1;
-        if (this._attackCooldown < 0) this._attackCooldown = 0;
-        this._playAttackPunch();
-      } else {
-        this._stopWalkAnim();
-      }
-      return;
-    }
-    this.petBiteTarget = null;
-    this._haltX = null;
-    this.scene?.tweens?.killTweensOf?.(this.body);
-    const speed = this._marchSpeed();
-    const step = speed * LAYOUT_SCALE * deltaSec;
-    if (dist > 0.001) {
-      this.body.x += (dx / dist) * step;
-      this.body.y += (dy / dist) * step;
-      this._marchVx = (dx / dist) * speed * LAYOUT_SCALE;
-    }
     const halt = contactX - this.displayHalf;
-    if (this.body.x > halt) this.body.x = halt;
-    const yMin = grassYMin();
-    const yMax = grassYMax();
-    if (this.body.y < yMin) this.body.y = yMin;
-    if (this.body.y > yMax) this.body.y = yMax;
-    this.laneY = this.body.y;
-    this._syncLocomotion();
+    if (Number.isFinite(halt) && this.body.x > halt) this.body.x = halt;
+    this.petBiteTarget = pet;
+    this._marchVx = 0;
+    if (this._haltX == null) this._haltX = this.body.x;
+    this._attackCooldown -= deltaSec;
+    if (this._attackCooldown <= 0) {
+      this._attackCooldown += 1;
+      if (this._attackCooldown < 0) this._attackCooldown = 0;
+      this._playAttackPunch();
+    } else {
+      this._stopWalkAnim();
+    }
+    return true;
+  }
+
+  /**
+   * Balun's slam / breath / meteor. While a strip is playing the body
+   * stays planted. A missing strip records `_skillBlocker` and does not lock.
+   * @param {number} deltaSec
+   * @returns {boolean} true when the march should wait
+   */
+  _tickBossCast(deltaSec) {
+    const skills = this.skin?.bossSkills;
+    if (!this.alive || !Array.isArray(skills) || !skills.length) return false;
+    if (this.hurtMarchLocked()) return false;
+    const dt = Number.isFinite(deltaSec) ? deltaSec : 0;
+    if (this._skillLock > 0) {
+      this._skillLock = Math.max(0, this._skillLock - dt);
+      this._marchVx = 0;
+      return true;
+    }
+    this._skillCd = Math.max(0, (this._skillCd || 0) - dt);
+    if (this._skillCd > 0) return false;
+    const skill = skills[(this._skillCursor || 0) % skills.length];
+    this._skillCursor = (this._skillCursor || 0) + 1;
+    if (!this._castBossSkill(skill)) {
+      this._skillCd = 1.5;
+      return false;
+    }
+    this._skillCd = 4.8;
+    this._skillLock = Number(skill.holdSec) > 0 ? Number(skill.holdSec) : 1.2;
+    this._marchVx = 0;
+    return true;
+  }
+
+  /**
+   * @param {{ anim?: string, cue?: string, fx?: string, impactFrame?: number }} skill
+   * @returns {boolean}
+   */
+  _castBossSkill(skill) {
+    if (!skill?.anim || !this._animReady(skill.anim)) {
+      this._skillBlocker = `boss skill cannot fire: ${skill?.anim || 'missing anim'}`;
+      return false;
+    }
+    const played = this.playShowcaseStrip(skill.anim);
+    if (!played) {
+      this._skillBlocker = `boss skill cannot fire: ${skill.anim}`;
+      return false;
+    }
+    this._skillBlocker = null;
+    this._skillsFired = (this._skillsFired || 0) + 1;
+    this._lastSkillAnim = skill.anim;
+    if (skill.cue) this.scene?.audio?.playEnemyCue?.(this.skin?.id, skill.cue);
+    const hit = phaserIndexForCatalogFrame(skill.impactFrame);
+    if (hit == null) {
+      this._bossSkillImpact(skill);
+      return true;
+    }
+    this.armShowcaseMarks(skill.anim, [{
+      index: hit,
+      fn: () => this._bossSkillImpact(skill),
+    }]);
+    return true;
+  }
+
+  /**
+   * Impact cell. Plays the catalog FX and queues half a second of contact DPS.
+   * @param {{ anim?: string, fx?: string }} skill
+   */
+  _bossSkillImpact(skill) {
+    this._lastSkillFx = skill?.fx || null;
+    this._skillsImpacted = (this._skillsImpacted || 0) + 1;
+    const burst = Number(this.dps) > 0 ? this.dps * 0.5 : 0;
+    const nearWall = this.atBarricade || this._bossNearWall();
+    if (burst > 0 && (this.petBiteTarget || nearWall)) {
+      this._skillBurst = (this._skillBurst || 0) + burst;
+    }
+    const scene = this.scene;
+    if (scene && skill?.fx && this.body) {
+      playLibraryFx(scene, this.body.x, this.body.y, skill.fx, {
+        depth: (this.body.depth || 0) + 2,
+        scale: Math.abs(this.body.scaleX || 1),
+      });
+    }
+    scene?.events?.emit?.('boss-skill', {
+      id: this.skin?.id || null,
+      anim: skill?.anim || null,
+      fx: skill?.fx || null,
+    });
+  }
+
+  /** True when the boss is close enough for a skill to reach the posts. */
+  _bossNearWall() {
+    const barricade = this.scene?.barricade;
+    if (!barricade || typeof barricade.contactXAt !== 'function' || !this.body) return false;
+    const halt = barricade.contactXAt(this.body.y);
+    return this.body.x >= halt - layoutPx(90);
+  }
+
+  /** One-shot skill chip. Cleared even when the bite itself is zero. */
+  _takeSkillBurst() {
+    const burst = Number(this._skillBurst) > 0 ? this._skillBurst : 0;
+    this._skillBurst = 0;
+    return burst;
   }
 
   /**
@@ -639,7 +759,7 @@ export class Zombie {
    */
   petContactDamage(deltaSec) {
     if (!this.alive || !this.petBiteTarget) return 0;
-    return this.dps * deltaSec;
+    return this.dps * deltaSec + this._takeSkillBurst();
   }
 
   /**
@@ -926,12 +1046,17 @@ export class Zombie {
    * @returns {number} damage dealt this frame
    */
   contactDamage(deltaSec) {
-    if (!this.alive || !this.atBarricade) return 0;
+    if (!this.alive) return 0;
     // The 90s clock is the survival test. Bodies already on the field
     // still have to die before the win, but a bite after the clock does
     // not chew the wall (no further spawns are queued past 90 either).
-    if (this.scene?.waveManager?.isTimeUp?.()) return 0;
-    return this.dps * deltaSec;
+    if (this.scene?.waveManager?.isTimeUp?.()) {
+      this._skillBurst = 0;
+      return 0;
+    }
+    const burst = this.petBiteTarget ? 0 : this._takeSkillBurst();
+    if (!this.atBarricade) return burst;
+    return this.dps * deltaSec + burst;
   }
 
   /**

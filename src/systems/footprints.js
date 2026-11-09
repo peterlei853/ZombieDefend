@@ -25,8 +25,41 @@ import { grassYMax, grassYMin, layoutPx } from './DepthView.js';
  */
 export const TORSO_FROM_TOP = 0.72;
 
+/**
+ * Share of the on-screen sprite width that is the legs.
+ * Walk frame 0, bottom 28% opaque span: office-worker-v2 median 22/84,
+ * sprinter 17/64, construction 16/88. 0.28 matches the profession legs
+ * and stays well under the 64–88 canvas, so a pack can stand closer
+ * without two pairs of feet occupying the same sole.
+ */
+export const FEET_WIDTH_RATIO = 0.28;
+
+/**
+ * Balun's 128px cell. The bottom 12% sole is about 47px (0.37).
+ * 0.40 keeps the boss feet honest without using the whole canvas.
+ */
+export const BOSS_FEET_WIDTH_RATIO = 0.4;
+
+/**
+ * Lower-leg band for zombie-versus-zombie soles. Lane centers are ~60px
+ * apart, so a short sole lets a neighbor lane pass without a body-height
+ * shove. Pet torso tests still use the full sprite height.
+ */
+export const FEET_HEIGHT_RATIO = 0.2;
+
 /** Cell (or display, if the cell is unknown) under this box cannot march while hurt. */
 export const HURT_LOCK_CELL = 100;
+
+/**
+ * @param {number} displayWidth
+ * @param {number} [ratio]
+ */
+export function feetWidthFromDisplay(displayWidth, ratio = FEET_WIDTH_RATIO) {
+  const full = Math.abs(Number(displayWidth) || 0);
+  if (!(full > 8)) return full;
+  const band = Number(ratio) > 0 ? Number(ratio) : FEET_WIDTH_RATIO;
+  return Math.max(layoutPx(8), full * band);
+}
 
 /**
  * Authored cell when the texture frame is loaded. Profession rule sheets
@@ -209,6 +242,85 @@ function pushPetOffTorso(pet, zombie) {
 }
 
 /**
+ * Feet-only box. Width is whatever `footprintWidth` reported (the leg
+ * band on a zombie). Height is the lower leg, not the canvas.
+ * @param {{ x: number, y: number }} body
+ */
+function soleBox(body) {
+  const { w, h } = spriteSpan(body);
+  const soleH = Math.max(layoutPx(10), h * FEET_HEIGHT_RATIO);
+  return {
+    l: body.x - w / 2,
+    r: body.x + w / 2,
+    t: body.y - soleH,
+    b: body.y,
+    w,
+    h: soleH,
+  };
+}
+
+/**
+ * Which way a rear marcher steps off a blocked lane.
+ * Negative is up the screen (smaller Y, toward the horizon).
+ * Both grass edges can take the step: split away from the front body,
+ * or by a stable parity when the two soles share a Y.
+ * @param {{ x: number, y: number, id?: number }} rear
+ * @param {{ x: number, y: number }} front
+ * @param {number} upRoom
+ * @param {number} downRoom
+ * @param {number} need
+ */
+export function laneDodgeDir(rear, front, upRoom, downRoom, need) {
+  const upOk = upRoom >= need * 0.5;
+  const downOk = downRoom >= need * 0.5;
+  if (upOk && downOk) {
+    if (Math.abs(rear.y - front.y) >= 1) return rear.y <= front.y ? -1 : 1;
+    const parity = Math.abs(Math.round(Number(rear.id) || rear.x || 0));
+    return parity % 2 === 0 ? -1 : 1;
+  }
+  if (upRoom >= downRoom) return -1;
+  return 1;
+}
+
+/**
+ * Two marchers whose soles overlap. The rear body (smaller X, further
+ * from the right-hand fence) steps up or down the road instead of being
+ * pushed back down the march. A hurt-locked `shift` returns false and
+ * the other sole takes that Y step. X separation is only the fallback
+ * when the grass has no room left, so the no-overlap rule still holds.
+ * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} a
+ * @param {{ x: number, y: number, kind?: string, id?: number, shift: (dx: number, dy: number) => boolean|void }} b
+ */
+function pushMarchDodge(a, b) {
+  const pad = layoutPx(2);
+  const A = soleBox(a);
+  const B = soleBox(b);
+  const overlapX = Math.min(A.r, B.r) - Math.max(A.l, B.l) + pad;
+  const overlapY = Math.min(A.b, B.b) - Math.max(A.t, B.t) + pad;
+  if (overlapX <= 0 || overlapY <= 0) return;
+  const rear = a.x <= b.x ? a : b;
+  const front = rear === a ? b : a;
+  const need = overlapY;
+  const upRoom = rear.y - grassYMin();
+  const downRoom = grassYMax() - rear.y;
+  const dir = laneDodgeDir(rear, front, upRoom, downRoom, need);
+  const room = dir < 0 ? upRoom : downRoom;
+  const push = Math.min(need, Math.max(0, room));
+  if (push > 0.5 && nudge(rear, 0, dir * push)) return;
+  const frontUp = front.y - grassYMin();
+  const frontDown = grassYMax() - front.y;
+  const frontRoom = dir < 0 ? frontDown : frontUp;
+  const frontPush = Math.min(need, Math.max(0, frontRoom));
+  if (frontPush > 0.5 && nudge(front, 0, -dir * frontPush)) return;
+  const dirX = front.x >= rear.x ? 1 : -1;
+  const half = overlapX / 2;
+  const movedRear = nudge(rear, -dirX * half, 0);
+  const movedFront = nudge(front, dirX * half, 0);
+  if (movedRear && !movedFront) nudge(rear, -dirX * half, 0);
+  else if (movedFront && !movedRear) nudge(front, dirX * half, 0);
+}
+
+/**
  * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => void }} a
  * @param {{ x: number, y: number, kind?: string, shift: (dx: number, dy: number) => void }} b
  */
@@ -217,6 +329,10 @@ function pushApart(a, b) {
   const bPet = b.kind === 'pet';
   if (aPet !== bPet) {
     pushPetOffTorso(aPet ? a : b, aPet ? b : a);
+    return;
+  }
+  if (!aPet && a.kind === 'zombie' && b.kind === 'zombie') {
+    pushMarchDodge(a, b);
     return;
   }
   pushAabb(a, b);

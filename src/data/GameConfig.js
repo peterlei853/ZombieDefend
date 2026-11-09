@@ -351,10 +351,14 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * UI click, shop, damage, heal, and wave; coin pickup; fence crack and
  * break. Settings and item pickups stay catalog-only. GitHub Pages
  * publishes this tip from main.
+ * v0.36.31: feet boxes use the leg band, rear marchers lane-dodge,
+ * pets and engaged zombies stand and attack, stages 1–4 grow the
+ * skin pool, stage 4 has its own wave table, stage 5 spawns Balun.
+ * Barricade max HP stays 1440. getGoldByHP stays. GitHub Pages holds.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.30';
+export const APP_VERSION = '0.36.31';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted
