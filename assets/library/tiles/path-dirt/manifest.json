@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-dirt",
+  "title": "Packed dirt trail with gravel",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Recommended dirt/gravel trail for campus edges.",
+  "source": {
+    "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-dirt-00",
+      "path": "assets/library/tiles/path-dirt/path-dirt-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 0,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-01",
+      "path": "assets/library/tiles/path-dirt/path-dirt-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 1,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-02",
+      "path": "assets/library/tiles/path-dirt/path-dirt-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 2,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-03",
+      "path": "assets/library/tiles/path-dirt/path-dirt-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 3,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-04",
+      "path": "assets/library/tiles/path-dirt/path-dirt-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 4,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-05",
+      "path": "assets/library/tiles/path-dirt/path-dirt-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 5,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-06",
+      "path": "assets/library/tiles/path-dirt/path-dirt-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 6,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-07",
+      "path": "assets/library/tiles/path-dirt/path-dirt-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 7,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-08",
+      "path": "assets/library/tiles/path-dirt/path-dirt-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 8,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-09",
+      "path": "assets/library/tiles/path-dirt/path-dirt-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 9,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-10",
+      "path": "assets/library/tiles/path-dirt/path-dirt-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 10,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-11",
+      "path": "assets/library/tiles/path-dirt/path-dirt-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 11,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-12",
+      "path": "assets/library/tiles/path-dirt/path-dirt-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 12,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-13",
+      "path": "assets/library/tiles/path-dirt/path-dirt-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 13,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-14",
+      "path": "assets/library/tiles/path-dirt/path-dirt-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 14,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-15",
+      "path": "assets/library/tiles/path-dirt/path-dirt-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 15,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-16",
+      "path": "assets/library/tiles/path-dirt/path-dirt-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 16,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-dirt-17",
+      "path": "assets/library/tiles/path-dirt/path-dirt-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "bc133cb0-008a-4edd-89d1-1462afe36cd3",
+        "tileIndex": 17,
+        "originalName": "packed_dirt_trail_with_gravel_edges_over_brown_ear_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Recommended dirt/gravel trail for campus edges.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-dirt/path-dirt-00.png",
+    "sheets": [
+      "assets/library/tiles/path-dirt/path-dirt-01.png",
+      "assets/library/tiles/path-dirt/path-dirt-02.png",
+      "assets/library/tiles/path-dirt/path-dirt-03.png",
+      "assets/library/tiles/path-dirt/path-dirt-04.png",
+      "assets/library/tiles/path-dirt/path-dirt-05.png",
+      "assets/library/tiles/path-dirt/path-dirt-06.png"
+    ],
+    "extras": []
+  }
+}

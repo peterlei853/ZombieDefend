@@ -7,15 +7,15 @@
 |---|---:|---:|
 | [Hero](#hero) | 3 | 141 |
 | [Pets](#pets) | 17 | 128 |
-| [UI](#ui) | 2 | 72 |
-| [Zombies](#zombies) | 19 | 237 |
+| [UI](#ui) | 3 | 99 |
+| [Zombies](#zombies) | 21 | 277 |
 | [Bosses](#bosses) | 5 | 41 |
 | [Shared FX](#fx) | 14 | 48 |
 | [Pickups](#pickups) | 1 | 5 |
-| [Environment](#environment) | 3 | 38 |
-| [Backgrounds](#backgrounds) | 2 | 20 |
+| [Environment](#environment) | 22 | 475 |
+| [Backgrounds](#backgrounds) | 3 | 55 |
 | [Concepts](#concepts) | 1 | 21 |
-| **Total** | **67** | **751** |
+| **Total** | **90** | **1290** |
 
 <a id="hero"></a>
 ## Hero
@@ -615,6 +615,45 @@ Eight Milestone 2 panels, v1.0. Cataloged beside the live HUD kit. None of these
 | `ui-banner-wave` | [ui-banner-wave.png](ui/m2/ui-banner-wave.png) | 512x192 | icon | v1.0. Wave banner. New key. SFX `sfx-ui-wave` (index note only; no audio file). |
 | `ui-panel-settings` | [ui-panel-settings.png](ui/m2/ui-panel-settings.png) | 384x384 | icon | v1.0. Settings panel. New key. SFX `sfx-ui-settings` (index note only; no audio file). |
 
+### Extra completed UI panels (NONE in live catalog)
+
+<img src="ui/ruku/ui-ammo-counter.png" alt="ruku-panels preview" height="140">
+
+27 NONE-flagged UI panels from the 2026-11-17 入庫, v1.0. Origin (0.5, 0.5). Does not re-enter ALIAS/ID UI and does not replace live HUD keys. Stage hooks only the screens that already exist; the rest stay cataloged.
+
+- group `ruku-panels` · 27 assets · frame 192x192, 256x192, 256x256, 320x256, 384x192, 384x256, 384x288, 384x320, 384x384, 512x192 · manifest [ui/ruku/manifest.json](ui/ruku/manifest.json)
+- previews: [ui-weapons.png](ui/ruku/ui-weapons.png), [ui-ammo.png](ui/ruku/ui-ammo.png), [ui-combo.png](ui/ruku/ui-combo.png), [ui-achievements.png](ui/ruku/ui-achievements.png), [ui-daily.png](ui/ruku/ui-daily.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `ui-ammo-counter` | [ui-ammo-counter.png](ui/ruku/ui-ammo-counter.png) | 192x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-weapons` | [ui-weapons.png](ui/ruku/ui-weapons.png) | 384x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-ammo` | [ui-ammo.png](ui/ruku/ui-ammo.png) | 192x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-combo` | [ui-combo.png](ui/ruku/ui-combo.png) | 256x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-achievements` | [ui-achievements.png](ui/ruku/ui-achievements.png) | 384x320 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-daily` | [ui-daily.png](ui/ruku/ui-daily.png) | 320x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-tutorial` | [ui-tutorial.png](ui/ruku/ui-tutorial.png) | 384x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-radar` | [ui-radar.png](ui/ruku/ui-radar.png) | 192x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-map` | [ui-map.png](ui/ruku/ui-map.png) | 384x384 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-loadout` | [ui-loadout.png](ui/ruku/ui-loadout.png) | 384x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-inventory` | [ui-inventory.png](ui/ruku/ui-inventory.png) | 384x384 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `zd-dmg-frame-panel` | [zd-dmg-frame-panel.png](ui/ruku/zd-dmg-frame-panel.png) | 192x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-tower-upgrade` | [ui-tower-upgrade.png](ui/ruku/ui-tower-upgrade.png) | 384x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-killstreak` | [ui-killstreak.png](ui/ruku/ui-killstreak.png) | 256x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-ability-cooldown` | [ui-ability-cooldown.png](ui/ruku/ui-ability-cooldown.png) | 256x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-icons-status-effects` | [ui-icons-status-effects.png](ui/ruku/ui-icons-status-effects.png) | 512x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-weapon-loadout-panel` | [ui-weapon-loadout-panel.png](ui/ruku/ui-weapon-loadout-panel.png) | 512x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-icons-damage-types` | [ui-icons-damage-types.png](ui/ruku/ui-icons-damage-types.png) | 512x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-loading-spinner` | [ui-loading-spinner.png](ui/ruku/ui-loading-spinner.png) | 192x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-stars-rating` | [ui-stars-rating.png](ui/ruku/ui-stars-rating.png) | 384x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-banner-boss-warning` | [ui-banner-boss-warning.png](ui/ruku/ui-banner-boss-warning.png) | 512x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-panel-inventory` | [ui-panel-inventory.png](ui/ruku/ui-panel-inventory.png) | 384x384 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-dialog-quit` | [ui-dialog-quit.png](ui/ruku/ui-dialog-quit.png) | 384x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-settings-toggles` | [ui-settings-toggles.png](ui/ruku/ui-settings-toggles.png) | 384x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-banner-boss-intro` | [ui-banner-boss-intro.png](ui/ruku/ui-banner-boss-intro.png) | 512x192 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-dialog-confirm` | [ui-dialog-confirm.png](ui/ruku/ui-dialog-confirm.png) | 384x256 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+| `ui-btn-strip` | [ui-btn-strip.png](ui/ruku/ui-btn-strip.png) | 384x288 | icon | v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement. |
+
 <a id="zombies"></a>
 ## Zombies
 
@@ -645,6 +684,45 @@ Large mini-boss. Body strips stay 96×96. Brute skill v2.1 ground smash 132: pri
 | `zombie-brute-blasted_back` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-defeated` | 8 | 96x96 | 10 | once | (0.5, 1.0) |  |
 | `zombie-brute-skill_ground_smash` | 17 | 132x132 | 10 | once | (0.5, 1.0) | fx: `fx-brute-skill-shock` · impactPoint [0, 0] · Brute skill v2.1 ground smash 132 (yfix v1-feet-to-bottom). Primary key matches the file; alias zombie-brute-skill. 17×132 horizontal strip (2244×132), east, origin (0.5, 1) feet, 10 fps, once. Content feet sit on the canvas bottom of every frame (padB=0), matching the 96×96 body strips. Art pixels are unchanged; each frame is only shifted down (f0–6 and f14–16 by 20px, f13 by 18px, impact f7–12 by 11/8/7/5/5/5px). Visual fist contact is 0-based frames 7–12 (densest ground pixels on 8–9); start fx-brute-skill-shock v3.3 (225×131, dust/crack only, no baked character) at impactFrame 8 so anchor (62, 80) sits on the fist (east +46 forward / 8 up from the feet; flipX mirrors X). Handoff damage hit is ~80% of the strip: 0-based frame 13. Walk / attack / hurt unchanged. Alternate slam sheet is not cataloged. |
+
+### Building Robot Zombie (建築機械喪屍)
+
+<img src="previews/zombies/building-robot/preview.gif" alt="building-robot preview" height="140">
+
+Skill zombie with riveted metal skull plate, green goggles and a robotic claw arm. Distinct from S4 construction (which only has 4 anims). 8-dir rotations; game anims are east-only.
+
+- group `building-robot` · 28 assets · frame 92x92 · key prefix `zombie-building-robot-` · manifest [enemies/zombies/building-robot/manifest.json](enemies/zombies/building-robot/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-building-robot-idle` | 1 | 92x92 | 1 | static | (0.5, 1.0) | Idle east rotation padded from native canvas onto animation cell, feet-aligned. No resize. |
+| `zombie-building-robot-hurt-normal` | 4 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-fall` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die1` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-skill` | 40 | 92x92 | 12 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-run` | 8 | 92x92 | 12 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-walk-tired` | 8 | 92x92 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hurt-spark` | 6 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die-critical-hit` | 32 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-fall-back` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-bite` | 8 | 92x92 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-idle-itch` | 8 | 92x92 | 6 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hit02` | 16 | 92x92 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-walk-normal` | 8 | 92x92 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die1-back` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die-normal01` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-attack2` | 8 | 92x92 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hit01` | 16 | 92x92 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hurt` | 4 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hurt-spark2` | 6 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die-disappear` | 32 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die2` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-walk` | 8 | 92x92 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die-deathwalk` | 33 | 92x92 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hurt-shock` | 6 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-hurt-burn` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-die-normal02` | 8 | 92x92 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-building-robot-attack` | 8 | 92x92 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east. |
 
 ### Chef Zombie (大廚丧尸)
 
@@ -785,6 +863,29 @@ Self-destructing zombie. `zombie-exploder-explode` is the body animation; spawn 
 | `zombie-exploder-hurt_shock` | 8 | 64x64 | 12 | loop | (0.5, 1.0) |  |
 | `zombie-exploder-hurt_terrified` | 6 | 64x64 | 10 | loop | (0.5, 1.0) |  |
 | `zombie-exploder-explode` | 12 | 64x64 | 10 | once | (0.5, 1.0) |  |
+
+### Giant mech-zombie (巨型機甲喪屍)
+
+<img src="previews/zombies/mech-giant/preview.gif" alt="mech-giant preview" height="140">
+
+Large 180×180 mech-zombie including Skill-Joinin01. 4-dir rotations; game anims are east-only.
+
+- group `mech-giant` · 12 assets · frame 200x200 · key prefix `zombie-mech-giant-` · manifest [enemies/zombies/mech-giant/manifest.json](enemies/zombies/mech-giant/manifest.json)
+
+| Key | Frames | Size | FPS | Playback | Origin | Notes |
+|---|---:|---|---:|---|---|---|
+| `zombie-mech-giant-idle` | 1 | 200x200 | 1 | static | (0.5, 1.0) | Idle east rotation padded from native canvas onto animation cell, feet-aligned. No resize. |
+| `zombie-mech-giant-walk-normal` | 8 | 200x200 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-hit01` | 16 | 200x200 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-walk-tired` | 8 | 200x200 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-die-critical-hit` | 32 | 200x200 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-die-normal01` | 8 | 200x200 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-die-disappear` | 32 | 200x200 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-skill` | 32 | 200x200 | 12 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-die-normal02` | 8 | 200x200 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-hurt-normal` | 4 | 200x200 | 10 | once | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-die-deathwalk` | 33 | 200x200 | 8 | loop | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
+| `zombie-mech-giant-hit02` | 16 | 200x200 | 10 | loop | (0.5, 1.0) | v1.0. Shipped cell is 200x200 (padded, not resized). Feet origin (0.5, 1), east. |
 
 ### Nurse Zombie (護士丧尸)
 
@@ -1439,6 +1540,69 @@ Empty steel cradles for the front-float guns. No gun or girl is baked in. Accent
 | `prop-flame-mount-hi-vis` | [prop-flame-mount-hi-vis.png](environment/props/prop-flame-mount-hi-vis.png) | 64x64 | image | Optional high-contrast alternate. Swap in if prop-flame-mount reads faint on the wooden barricade. Same feet origin (32, 60) and cradle pixel (32, 12). Prefer the primary unless contrast QA asks for this. |
 | `prop-flame-mount-front-alt` | [prop-flame-mount-front-alt.png](environment/props/prop-flame-mount-front-alt.png) | 64x64 | image | Secondary front dual-post alt. Same feet origin (32, 60) and cradle height. Prefer prop-flame-mount (side Y-fork) for the gun cradle. |
 
+### Street / campus fill props
+
+<img src="environment/street/prop-bench.png" alt="street preview" height="140">
+
+51 street and campus props, one version each, v1.0. Decorative only. Upright origin (0.5, 1.0). Floor decals prop-manhole and prop-street-grate use (0.5, 0.5). Campus fence prop-fence-intact / dmg-1 / dmg-2 is 128×96 and is a separate series from 96×96 fence-damage-none|mid|heavy. prop-dumpster and prop-dumpster-green are both kept.
+
+- group `street` · 51 assets · frame 32x32, 48x48, 48x96, 64x64, 64x80, 80x64, 96x96, 128x96 · manifest [environment/street/manifest.json](environment/street/manifest.json)
+- previews: [fence-damage-none.png](environment/street/fence-damage-none.png), [prop-dumpster.png](environment/street/prop-dumpster.png), [prop-dumpster-green.png](environment/street/prop-dumpster-green.png), [prop-fence-intact.png](environment/street/prop-fence-intact.png), [prop-manhole.png](environment/street/prop-manhole.png), [prop-street-grate.png](environment/street/prop-street-grate.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `fence-damage-heavy` | [fence-damage-heavy.png](environment/street/fence-damage-heavy.png) | 96x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `fence-damage-mid` | [fence-damage-mid.png](environment/street/fence-damage-mid.png) | 96x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `fence-damage-none` | [fence-damage-none.png](environment/street/fence-damage-none.png) | 96x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-barrel` | [prop-barrel.png](environment/street/prop-barrel.png) | 64x80 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-barricade` | [prop-barricade.png](environment/street/prop-barricade.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-bench` | [prop-bench.png](environment/street/prop-bench.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-bike-rack` | [prop-bike-rack.png](environment/street/prop-bike-rack.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-bollard` | [prop-bollard.png](environment/street/prop-bollard.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-bus-stop` | [prop-bus-stop.png](environment/street/prop-bus-stop.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-car-wrecked` | [prop-car-wrecked.png](environment/street/prop-car-wrecked.png) | 96x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-cardboard-box` | [prop-cardboard-box.png](environment/street/prop-cardboard-box.png) | 32x32 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-cardboard-pile` | [prop-cardboard-pile.png](environment/street/prop-cardboard-pile.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-chain-gate` | [prop-chain-gate.png](environment/street/prop-chain-gate.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-construction-barrier` | [prop-construction-barrier.png](environment/street/prop-construction-barrier.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-crate` | [prop-crate.png](environment/street/prop-crate.png) | 80x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-crate-stack` | [prop-crate-stack.png](environment/street/prop-crate-stack.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-dumpster` | [prop-dumpster.png](environment/street/prop-dumpster.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-dumpster-green` | [prop-dumpster-green.png](environment/street/prop-dumpster-green.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-fence-dmg-1` | [prop-fence-dmg-1.png](environment/street/prop-fence-dmg-1.png) | 128x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-fence-dmg-2` | [prop-fence-dmg-2.png](environment/street/prop-fence-dmg-2.png) | 128x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-fence-intact` | [prop-fence-intact.png](environment/street/prop-fence-intact.png) | 128x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-fire-extinguisher` | [prop-fire-extinguisher.png](environment/street/prop-fire-extinguisher.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-fire-hydrant` | [prop-fire-hydrant.png](environment/street/prop-fire-hydrant.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-gas-pump` | [prop-gas-pump.png](environment/street/prop-gas-pump.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-jersey-barrier` | [prop-jersey-barrier.png](environment/street/prop-jersey-barrier.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-mailbox` | [prop-mailbox.png](environment/street/prop-mailbox.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-manhole` | [prop-manhole.png](environment/street/prop-manhole.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 0.5). No collision, gold, or save behavior. |
+| `prop-metal-locker` | [prop-metal-locker.png](environment/street/prop-metal-locker.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-news-kiosk` | [prop-news-kiosk.png](environment/street/prop-news-kiosk.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-newspaper-box` | [prop-newspaper-box.png](environment/street/prop-newspaper-box.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-newsstand` | [prop-newsstand.png](environment/street/prop-newsstand.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-oil-barrel` | [prop-oil-barrel.png](environment/street/prop-oil-barrel.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-pallet` | [prop-pallet.png](environment/street/prop-pallet.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-parking-meter` | [prop-parking-meter.png](environment/street/prop-parking-meter.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-payphone` | [prop-payphone.png](environment/street/prop-payphone.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-phone-booth` | [prop-phone-booth.png](environment/street/prop-phone-booth.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-sandbags` | [prop-sandbags.png](environment/street/prop-sandbags.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-shopping-cart` | [prop-shopping-cart.png](environment/street/prop-shopping-cart.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-street-grate` | [prop-street-grate.png](environment/street/prop-street-grate.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 0.5). No collision, gold, or save behavior. |
+| `prop-street-lamp` | [prop-street-lamp.png](environment/street/prop-street-lamp.png) | 48x96 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-street-light` | [prop-street-light.png](environment/street/prop-street-light.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-street-sign` | [prop-street-sign.png](environment/street/prop-street-sign.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-tire-stack` | [prop-tire-stack.png](environment/street/prop-tire-stack.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-traffic-barrel` | [prop-traffic-barrel.png](environment/street/prop-traffic-barrel.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-traffic-cone` | [prop-traffic-cone.png](environment/street/prop-traffic-cone.png) | 32x32 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-traffic-light` | [prop-traffic-light.png](environment/street/prop-traffic-light.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-trash-bags` | [prop-trash-bags.png](environment/street/prop-trash-bags.png) | 64x64 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-trash-can` | [prop-trash-can.png](environment/street/prop-trash-can.png) | 64x80 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-vending` | [prop-vending.png](environment/street/prop-vending.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-water-cooler` | [prop-water-cooler.png](environment/street/prop-water-cooler.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+| `prop-wood-crate` | [prop-wood-crate.png](environment/street/prop-wood-crate.png) | 48x48 | image | v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior. |
+
 ### Brick Sidewalk Path Tiles (紅磚人行道)
 
 <img src="previews/environment/path-brick-sidewalk/preview.gif" alt="path-brick-sidewalk preview" height="140">
@@ -1467,6 +1631,608 @@ Worn red brick sidewalk over dusty dirt, 18 tiles at 32×32, v1.0. Square top-do
 | `path-brick-sidewalk-15` | [path-brick-sidewalk-15.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-15.png) | 32x32 | image | v1.0. Edge-4 mask 7 (NES). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
 | `path-brick-sidewalk-16` | [path-brick-sidewalk-16.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-16.png) | 32x32 | image | v1.0. Edge-4 mask 15 (NESW). A set bit means the brick path continues across that edge. bit0=N bit1=E bit2=S bit3=W. No SFX key. |
 | `path-brick-sidewalk-17` | [path-brick-sidewalk-17.png](environment/tiles/path-brick-sidewalk/path-brick-sidewalk-17.png) | 32x32 | image | v1.0. Stamp-only. No edge mask; not in the placeable list. No SFX key. |
+
+### Cracked gray asphalt road path
+
+<img src="tiles/path-asphalt/path-asphalt-00.png" alt="path-asphalt preview" height="140">
+
+Gray cracked asphalt; use if you want no yellow lines.
+
+- group `path-asphalt` · 18 assets · frame 32x32 · key prefix `path-asphalt-` · manifest [tiles/path-asphalt/manifest.json](tiles/path-asphalt/manifest.json)
+- previews: [path-asphalt-01.png](tiles/path-asphalt/path-asphalt-01.png), [path-asphalt-02.png](tiles/path-asphalt/path-asphalt-02.png), [path-asphalt-03.png](tiles/path-asphalt/path-asphalt-03.png), [path-asphalt-04.png](tiles/path-asphalt/path-asphalt-04.png), [path-asphalt-05.png](tiles/path-asphalt/path-asphalt-05.png), [path-asphalt-06.png](tiles/path-asphalt/path-asphalt-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-00` | [path-asphalt-00.png](tiles/path-asphalt/path-asphalt-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-01` | [path-asphalt-01.png](tiles/path-asphalt/path-asphalt-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-02` | [path-asphalt-02.png](tiles/path-asphalt/path-asphalt-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-03` | [path-asphalt-03.png](tiles/path-asphalt/path-asphalt-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-04` | [path-asphalt-04.png](tiles/path-asphalt/path-asphalt-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-05` | [path-asphalt-05.png](tiles/path-asphalt/path-asphalt-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-06` | [path-asphalt-06.png](tiles/path-asphalt/path-asphalt-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-07` | [path-asphalt-07.png](tiles/path-asphalt/path-asphalt-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-08` | [path-asphalt-08.png](tiles/path-asphalt/path-asphalt-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-09` | [path-asphalt-09.png](tiles/path-asphalt/path-asphalt-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-10` | [path-asphalt-10.png](tiles/path-asphalt/path-asphalt-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-11` | [path-asphalt-11.png](tiles/path-asphalt/path-asphalt-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-12` | [path-asphalt-12.png](tiles/path-asphalt/path-asphalt-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-13` | [path-asphalt-13.png](tiles/path-asphalt/path-asphalt-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-14` | [path-asphalt-14.png](tiles/path-asphalt/path-asphalt-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-15` | [path-asphalt-15.png](tiles/path-asphalt/path-asphalt-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-16` | [path-asphalt-16.png](tiles/path-asphalt/path-asphalt-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-17` | [path-asphalt-17.png](tiles/path-asphalt/path-asphalt-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Dark asphalt road with yellow
+
+<img src="tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-00.png" alt="path-asphalt-dark-yellow preview" height="140">
+
+Near-dupe of path-asphalt-dark-yellow-v2; this set recommended of the two if you want dark asphalt.
+
+- group `path-asphalt-dark-yellow` · 18 assets · frame 32x32 · key prefix `path-asphalt-dark-yellow-` · manifest [tiles/path-asphalt-dark-yellow/manifest.json](tiles/path-asphalt-dark-yellow/manifest.json)
+- previews: [path-asphalt-dark-yellow-01.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-01.png), [path-asphalt-dark-yellow-02.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-02.png), [path-asphalt-dark-yellow-03.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-03.png), [path-asphalt-dark-yellow-04.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-04.png), [path-asphalt-dark-yellow-05.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-05.png), [path-asphalt-dark-yellow-06.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-dark-yellow-00` | [path-asphalt-dark-yellow-00.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-01` | [path-asphalt-dark-yellow-01.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-02` | [path-asphalt-dark-yellow-02.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-03` | [path-asphalt-dark-yellow-03.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-04` | [path-asphalt-dark-yellow-04.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-05` | [path-asphalt-dark-yellow-05.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-06` | [path-asphalt-dark-yellow-06.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-07` | [path-asphalt-dark-yellow-07.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-08` | [path-asphalt-dark-yellow-08.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-09` | [path-asphalt-dark-yellow-09.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-10` | [path-asphalt-dark-yellow-10.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-11` | [path-asphalt-dark-yellow-11.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-12` | [path-asphalt-dark-yellow-12.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-13` | [path-asphalt-dark-yellow-13.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-14` | [path-asphalt-dark-yellow-14.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-15` | [path-asphalt-dark-yellow-15.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-16` | [path-asphalt-dark-yellow-16.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-17` | [path-asphalt-dark-yellow-17.png](tiles/path-asphalt-dark-yellow/path-asphalt-dark-yellow-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Dark asphalt road with yellow (variant)
+
+<img src="tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-00.png" alt="path-asphalt-dark-yellow-v2 preview" height="140">
+
+Near-dupe of path-asphalt-dark-yellow.
+
+- group `path-asphalt-dark-yellow-v2` · 18 assets · frame 32x32 · key prefix `path-asphalt-dark-yellow-v2-` · manifest [tiles/path-asphalt-dark-yellow-v2/manifest.json](tiles/path-asphalt-dark-yellow-v2/manifest.json)
+- previews: [path-asphalt-dark-yellow-v2-01.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-01.png), [path-asphalt-dark-yellow-v2-02.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-02.png), [path-asphalt-dark-yellow-v2-03.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-03.png), [path-asphalt-dark-yellow-v2-04.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-04.png), [path-asphalt-dark-yellow-v2-05.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-05.png), [path-asphalt-dark-yellow-v2-06.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-dark-yellow-v2-00` | [path-asphalt-dark-yellow-v2-00.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-01` | [path-asphalt-dark-yellow-v2-01.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-02` | [path-asphalt-dark-yellow-v2-02.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-03` | [path-asphalt-dark-yellow-v2-03.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-04` | [path-asphalt-dark-yellow-v2-04.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-05` | [path-asphalt-dark-yellow-v2-05.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-06` | [path-asphalt-dark-yellow-v2-06.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-07` | [path-asphalt-dark-yellow-v2-07.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-08` | [path-asphalt-dark-yellow-v2-08.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-09` | [path-asphalt-dark-yellow-v2-09.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-10` | [path-asphalt-dark-yellow-v2-10.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-11` | [path-asphalt-dark-yellow-v2-11.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-12` | [path-asphalt-dark-yellow-v2-12.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-13` | [path-asphalt-dark-yellow-v2-13.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-14` | [path-asphalt-dark-yellow-v2-14.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-15` | [path-asphalt-dark-yellow-v2-15.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-16` | [path-asphalt-dark-yellow-v2-16.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-dark-yellow-v2-17` | [path-asphalt-dark-yellow-v2-17.png](tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Worn asphalt road cracked gray
+
+<img src="tiles/path-asphalt-worn/path-asphalt-worn-00.png" alt="path-asphalt-worn preview" height="140">
+
+Worn gray asphalt variant.
+
+- group `path-asphalt-worn` · 18 assets · frame 32x32 · key prefix `path-asphalt-worn-` · manifest [tiles/path-asphalt-worn/manifest.json](tiles/path-asphalt-worn/manifest.json)
+- previews: [path-asphalt-worn-01.png](tiles/path-asphalt-worn/path-asphalt-worn-01.png), [path-asphalt-worn-02.png](tiles/path-asphalt-worn/path-asphalt-worn-02.png), [path-asphalt-worn-03.png](tiles/path-asphalt-worn/path-asphalt-worn-03.png), [path-asphalt-worn-04.png](tiles/path-asphalt-worn/path-asphalt-worn-04.png), [path-asphalt-worn-05.png](tiles/path-asphalt-worn/path-asphalt-worn-05.png), [path-asphalt-worn-06.png](tiles/path-asphalt-worn/path-asphalt-worn-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-worn-00` | [path-asphalt-worn-00.png](tiles/path-asphalt-worn/path-asphalt-worn-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-01` | [path-asphalt-worn-01.png](tiles/path-asphalt-worn/path-asphalt-worn-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-02` | [path-asphalt-worn-02.png](tiles/path-asphalt-worn/path-asphalt-worn-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-03` | [path-asphalt-worn-03.png](tiles/path-asphalt-worn/path-asphalt-worn-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-04` | [path-asphalt-worn-04.png](tiles/path-asphalt-worn/path-asphalt-worn-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-05` | [path-asphalt-worn-05.png](tiles/path-asphalt-worn/path-asphalt-worn-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-06` | [path-asphalt-worn-06.png](tiles/path-asphalt-worn/path-asphalt-worn-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-07` | [path-asphalt-worn-07.png](tiles/path-asphalt-worn/path-asphalt-worn-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-08` | [path-asphalt-worn-08.png](tiles/path-asphalt-worn/path-asphalt-worn-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-09` | [path-asphalt-worn-09.png](tiles/path-asphalt-worn/path-asphalt-worn-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-10` | [path-asphalt-worn-10.png](tiles/path-asphalt-worn/path-asphalt-worn-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-11` | [path-asphalt-worn-11.png](tiles/path-asphalt-worn/path-asphalt-worn-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-12` | [path-asphalt-worn-12.png](tiles/path-asphalt-worn/path-asphalt-worn-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-13` | [path-asphalt-worn-13.png](tiles/path-asphalt-worn/path-asphalt-worn-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-14` | [path-asphalt-worn-14.png](tiles/path-asphalt-worn/path-asphalt-worn-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-15` | [path-asphalt-worn-15.png](tiles/path-asphalt-worn/path-asphalt-worn-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-16` | [path-asphalt-worn-16.png](tiles/path-asphalt-worn/path-asphalt-worn-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-worn-17` | [path-asphalt-worn-17.png](tiles/path-asphalt-worn/path-asphalt-worn-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Cracked asphalt street with yellow
+
+<img src="tiles/path-asphalt-yellow/path-asphalt-yellow-00.png" alt="path-asphalt-yellow preview" height="140">
+
+Recommended asphalt (yellow markings, readable).
+
+- group `path-asphalt-yellow` · 18 assets · frame 32x32 · key prefix `path-asphalt-yellow-` · manifest [tiles/path-asphalt-yellow/manifest.json](tiles/path-asphalt-yellow/manifest.json)
+- previews: [path-asphalt-yellow-01.png](tiles/path-asphalt-yellow/path-asphalt-yellow-01.png), [path-asphalt-yellow-02.png](tiles/path-asphalt-yellow/path-asphalt-yellow-02.png), [path-asphalt-yellow-03.png](tiles/path-asphalt-yellow/path-asphalt-yellow-03.png), [path-asphalt-yellow-04.png](tiles/path-asphalt-yellow/path-asphalt-yellow-04.png), [path-asphalt-yellow-05.png](tiles/path-asphalt-yellow/path-asphalt-yellow-05.png), [path-asphalt-yellow-06.png](tiles/path-asphalt-yellow/path-asphalt-yellow-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-asphalt-yellow-00` | [path-asphalt-yellow-00.png](tiles/path-asphalt-yellow/path-asphalt-yellow-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-01` | [path-asphalt-yellow-01.png](tiles/path-asphalt-yellow/path-asphalt-yellow-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-02` | [path-asphalt-yellow-02.png](tiles/path-asphalt-yellow/path-asphalt-yellow-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-03` | [path-asphalt-yellow-03.png](tiles/path-asphalt-yellow/path-asphalt-yellow-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-04` | [path-asphalt-yellow-04.png](tiles/path-asphalt-yellow/path-asphalt-yellow-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-05` | [path-asphalt-yellow-05.png](tiles/path-asphalt-yellow/path-asphalt-yellow-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-06` | [path-asphalt-yellow-06.png](tiles/path-asphalt-yellow/path-asphalt-yellow-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-07` | [path-asphalt-yellow-07.png](tiles/path-asphalt-yellow/path-asphalt-yellow-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-08` | [path-asphalt-yellow-08.png](tiles/path-asphalt-yellow/path-asphalt-yellow-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-09` | [path-asphalt-yellow-09.png](tiles/path-asphalt-yellow/path-asphalt-yellow-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-10` | [path-asphalt-yellow-10.png](tiles/path-asphalt-yellow/path-asphalt-yellow-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-11` | [path-asphalt-yellow-11.png](tiles/path-asphalt-yellow/path-asphalt-yellow-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-12` | [path-asphalt-yellow-12.png](tiles/path-asphalt-yellow/path-asphalt-yellow-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-13` | [path-asphalt-yellow-13.png](tiles/path-asphalt-yellow/path-asphalt-yellow-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-14` | [path-asphalt-yellow-14.png](tiles/path-asphalt-yellow/path-asphalt-yellow-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-15` | [path-asphalt-yellow-15.png](tiles/path-asphalt-yellow/path-asphalt-yellow-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-16` | [path-asphalt-yellow-16.png](tiles/path-asphalt-yellow/path-asphalt-yellow-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-asphalt-yellow-17` | [path-asphalt-yellow-17.png](tiles/path-asphalt-yellow/path-asphalt-yellow-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Worn red brick sidewalk (2nd set)
+
+<img src="tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-00.png" alt="path-brick-sidewalk-v2 preview" height="140">
+
+Second brick sidewalk; live catalog already has path-brick-sidewalk from 140dd29a. Keep as v2 variant — prefer live set unless this reads cleaner on Stage.
+
+- group `path-brick-sidewalk-v2` · 18 assets · frame 32x32 · key prefix `path-brick-sidewalk-v2-` · manifest [tiles/path-brick-sidewalk-v2/manifest.json](tiles/path-brick-sidewalk-v2/manifest.json)
+- previews: [path-brick-sidewalk-v2-01.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-01.png), [path-brick-sidewalk-v2-02.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-02.png), [path-brick-sidewalk-v2-03.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-03.png), [path-brick-sidewalk-v2-04.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-04.png), [path-brick-sidewalk-v2-05.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-05.png), [path-brick-sidewalk-v2-06.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-brick-sidewalk-v2-00` | [path-brick-sidewalk-v2-00.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-01` | [path-brick-sidewalk-v2-01.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-02` | [path-brick-sidewalk-v2-02.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-03` | [path-brick-sidewalk-v2-03.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-04` | [path-brick-sidewalk-v2-04.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-05` | [path-brick-sidewalk-v2-05.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-06` | [path-brick-sidewalk-v2-06.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-07` | [path-brick-sidewalk-v2-07.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-08` | [path-brick-sidewalk-v2-08.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-09` | [path-brick-sidewalk-v2-09.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-10` | [path-brick-sidewalk-v2-10.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-11` | [path-brick-sidewalk-v2-11.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-12` | [path-brick-sidewalk-v2-12.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-13` | [path-brick-sidewalk-v2-13.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-14` | [path-brick-sidewalk-v2-14.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-15` | [path-brick-sidewalk-v2-15.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-16` | [path-brick-sidewalk-v2-16.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-brick-sidewalk-v2-17` | [path-brick-sidewalk-v2-17.png](tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### [ZD-fill] campus grass path
+
+<img src="tiles/path-campus/path-campus-00.png" alt="path-campus preview" height="140">
+
+Primary Stage campus fill. 18×32×32.
+
+- group `path-campus` · 18 assets · frame 32x32 · key prefix `path-campus-` · manifest [tiles/path-campus/manifest.json](tiles/path-campus/manifest.json)
+- previews: [path-campus-01.png](tiles/path-campus/path-campus-01.png), [path-campus-02.png](tiles/path-campus/path-campus-02.png), [path-campus-03.png](tiles/path-campus/path-campus-03.png), [path-campus-04.png](tiles/path-campus/path-campus-04.png), [path-campus-05.png](tiles/path-campus/path-campus-05.png), [path-campus-06.png](tiles/path-campus/path-campus-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-campus-00` | [path-campus-00.png](tiles/path-campus/path-campus-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-01` | [path-campus-01.png](tiles/path-campus/path-campus-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-02` | [path-campus-02.png](tiles/path-campus/path-campus-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-03` | [path-campus-03.png](tiles/path-campus/path-campus-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-04` | [path-campus-04.png](tiles/path-campus/path-campus-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-05` | [path-campus-05.png](tiles/path-campus/path-campus-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-06` | [path-campus-06.png](tiles/path-campus/path-campus-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-07` | [path-campus-07.png](tiles/path-campus/path-campus-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-08` | [path-campus-08.png](tiles/path-campus/path-campus-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-09` | [path-campus-09.png](tiles/path-campus/path-campus-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-10` | [path-campus-10.png](tiles/path-campus/path-campus-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-11` | [path-campus-11.png](tiles/path-campus/path-campus-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-12` | [path-campus-12.png](tiles/path-campus/path-campus-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-13` | [path-campus-13.png](tiles/path-campus/path-campus-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-14` | [path-campus-14.png](tiles/path-campus/path-campus-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-15` | [path-campus-15.png](tiles/path-campus/path-campus-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-16` | [path-campus-16.png](tiles/path-campus/path-campus-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-17` | [path-campus-17.png](tiles/path-campus/path-campus-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Campus lawn grass with worn path
+
+<img src="tiles/path-campus-lawn/path-campus-lawn-00.png" alt="path-campus-lawn preview" height="140">
+
+Companion lawn/worn-dirt path for campus.
+
+- group `path-campus-lawn` · 18 assets · frame 32x32 · key prefix `path-campus-lawn-` · manifest [tiles/path-campus-lawn/manifest.json](tiles/path-campus-lawn/manifest.json)
+- previews: [path-campus-lawn-01.png](tiles/path-campus-lawn/path-campus-lawn-01.png), [path-campus-lawn-02.png](tiles/path-campus-lawn/path-campus-lawn-02.png), [path-campus-lawn-03.png](tiles/path-campus-lawn/path-campus-lawn-03.png), [path-campus-lawn-04.png](tiles/path-campus-lawn/path-campus-lawn-04.png), [path-campus-lawn-05.png](tiles/path-campus-lawn/path-campus-lawn-05.png), [path-campus-lawn-06.png](tiles/path-campus-lawn/path-campus-lawn-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-campus-lawn-00` | [path-campus-lawn-00.png](tiles/path-campus-lawn/path-campus-lawn-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-01` | [path-campus-lawn-01.png](tiles/path-campus-lawn/path-campus-lawn-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-02` | [path-campus-lawn-02.png](tiles/path-campus-lawn/path-campus-lawn-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-03` | [path-campus-lawn-03.png](tiles/path-campus-lawn/path-campus-lawn-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-04` | [path-campus-lawn-04.png](tiles/path-campus-lawn/path-campus-lawn-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-05` | [path-campus-lawn-05.png](tiles/path-campus-lawn/path-campus-lawn-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-06` | [path-campus-lawn-06.png](tiles/path-campus-lawn/path-campus-lawn-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-07` | [path-campus-lawn-07.png](tiles/path-campus-lawn/path-campus-lawn-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-08` | [path-campus-lawn-08.png](tiles/path-campus-lawn/path-campus-lawn-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-09` | [path-campus-lawn-09.png](tiles/path-campus-lawn/path-campus-lawn-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-10` | [path-campus-lawn-10.png](tiles/path-campus-lawn/path-campus-lawn-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-11` | [path-campus-lawn-11.png](tiles/path-campus-lawn/path-campus-lawn-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-12` | [path-campus-lawn-12.png](tiles/path-campus-lawn/path-campus-lawn-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-13` | [path-campus-lawn-13.png](tiles/path-campus-lawn/path-campus-lawn-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-14` | [path-campus-lawn-14.png](tiles/path-campus-lawn/path-campus-lawn-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-15` | [path-campus-lawn-15.png](tiles/path-campus-lawn/path-campus-lawn-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-16` | [path-campus-lawn-16.png](tiles/path-campus-lawn/path-campus-lawn-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-campus-lawn-17` | [path-campus-lawn-17.png](tiles/path-campus-lawn/path-campus-lawn-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Worn cobblestone alley path
+
+<img src="tiles/path-cobble-alley/path-cobble-alley-00.png" alt="path-cobble-alley preview" height="140">
+
+Alley cobble; street set recommended for main roads.
+
+- group `path-cobble-alley` · 18 assets · frame 32x32 · key prefix `path-cobble-alley-` · manifest [tiles/path-cobble-alley/manifest.json](tiles/path-cobble-alley/manifest.json)
+- previews: [path-cobble-alley-01.png](tiles/path-cobble-alley/path-cobble-alley-01.png), [path-cobble-alley-02.png](tiles/path-cobble-alley/path-cobble-alley-02.png), [path-cobble-alley-03.png](tiles/path-cobble-alley/path-cobble-alley-03.png), [path-cobble-alley-04.png](tiles/path-cobble-alley/path-cobble-alley-04.png), [path-cobble-alley-05.png](tiles/path-cobble-alley/path-cobble-alley-05.png), [path-cobble-alley-06.png](tiles/path-cobble-alley/path-cobble-alley-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-cobble-alley-00` | [path-cobble-alley-00.png](tiles/path-cobble-alley/path-cobble-alley-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-01` | [path-cobble-alley-01.png](tiles/path-cobble-alley/path-cobble-alley-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-02` | [path-cobble-alley-02.png](tiles/path-cobble-alley/path-cobble-alley-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-03` | [path-cobble-alley-03.png](tiles/path-cobble-alley/path-cobble-alley-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-04` | [path-cobble-alley-04.png](tiles/path-cobble-alley/path-cobble-alley-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-05` | [path-cobble-alley-05.png](tiles/path-cobble-alley/path-cobble-alley-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-06` | [path-cobble-alley-06.png](tiles/path-cobble-alley/path-cobble-alley-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-07` | [path-cobble-alley-07.png](tiles/path-cobble-alley/path-cobble-alley-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-08` | [path-cobble-alley-08.png](tiles/path-cobble-alley/path-cobble-alley-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-09` | [path-cobble-alley-09.png](tiles/path-cobble-alley/path-cobble-alley-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-10` | [path-cobble-alley-10.png](tiles/path-cobble-alley/path-cobble-alley-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-11` | [path-cobble-alley-11.png](tiles/path-cobble-alley/path-cobble-alley-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-12` | [path-cobble-alley-12.png](tiles/path-cobble-alley/path-cobble-alley-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-13` | [path-cobble-alley-13.png](tiles/path-cobble-alley/path-cobble-alley-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-14` | [path-cobble-alley-14.png](tiles/path-cobble-alley/path-cobble-alley-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-15` | [path-cobble-alley-15.png](tiles/path-cobble-alley/path-cobble-alley-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-16` | [path-cobble-alley-16.png](tiles/path-cobble-alley/path-cobble-alley-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-alley-17` | [path-cobble-alley-17.png](tiles/path-cobble-alley/path-cobble-alley-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Gray cobblestone street path
+
+<img src="tiles/path-cobble-gray/path-cobble-gray-00.png" alt="path-cobble-gray preview" height="140">
+
+Gray cobble variant.
+
+- group `path-cobble-gray` · 18 assets · frame 32x32 · key prefix `path-cobble-gray-` · manifest [tiles/path-cobble-gray/manifest.json](tiles/path-cobble-gray/manifest.json)
+- previews: [path-cobble-gray-01.png](tiles/path-cobble-gray/path-cobble-gray-01.png), [path-cobble-gray-02.png](tiles/path-cobble-gray/path-cobble-gray-02.png), [path-cobble-gray-03.png](tiles/path-cobble-gray/path-cobble-gray-03.png), [path-cobble-gray-04.png](tiles/path-cobble-gray/path-cobble-gray-04.png), [path-cobble-gray-05.png](tiles/path-cobble-gray/path-cobble-gray-05.png), [path-cobble-gray-06.png](tiles/path-cobble-gray/path-cobble-gray-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-cobble-gray-00` | [path-cobble-gray-00.png](tiles/path-cobble-gray/path-cobble-gray-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-01` | [path-cobble-gray-01.png](tiles/path-cobble-gray/path-cobble-gray-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-02` | [path-cobble-gray-02.png](tiles/path-cobble-gray/path-cobble-gray-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-03` | [path-cobble-gray-03.png](tiles/path-cobble-gray/path-cobble-gray-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-04` | [path-cobble-gray-04.png](tiles/path-cobble-gray/path-cobble-gray-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-05` | [path-cobble-gray-05.png](tiles/path-cobble-gray/path-cobble-gray-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-06` | [path-cobble-gray-06.png](tiles/path-cobble-gray/path-cobble-gray-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-07` | [path-cobble-gray-07.png](tiles/path-cobble-gray/path-cobble-gray-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-08` | [path-cobble-gray-08.png](tiles/path-cobble-gray/path-cobble-gray-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-09` | [path-cobble-gray-09.png](tiles/path-cobble-gray/path-cobble-gray-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-10` | [path-cobble-gray-10.png](tiles/path-cobble-gray/path-cobble-gray-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-11` | [path-cobble-gray-11.png](tiles/path-cobble-gray/path-cobble-gray-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-12` | [path-cobble-gray-12.png](tiles/path-cobble-gray/path-cobble-gray-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-13` | [path-cobble-gray-13.png](tiles/path-cobble-gray/path-cobble-gray-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-14` | [path-cobble-gray-14.png](tiles/path-cobble-gray/path-cobble-gray-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-15` | [path-cobble-gray-15.png](tiles/path-cobble-gray/path-cobble-gray-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-16` | [path-cobble-gray-16.png](tiles/path-cobble-gray/path-cobble-gray-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-gray-17` | [path-cobble-gray-17.png](tiles/path-cobble-gray/path-cobble-gray-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Worn cobblestone street path
+
+<img src="tiles/path-cobble-street/path-cobble-street-00.png" alt="path-cobble-street preview" height="140">
+
+Recommended cobble for street/campus plazas.
+
+- group `path-cobble-street` · 18 assets · frame 32x32 · key prefix `path-cobble-street-` · manifest [tiles/path-cobble-street/manifest.json](tiles/path-cobble-street/manifest.json)
+- previews: [path-cobble-street-01.png](tiles/path-cobble-street/path-cobble-street-01.png), [path-cobble-street-02.png](tiles/path-cobble-street/path-cobble-street-02.png), [path-cobble-street-03.png](tiles/path-cobble-street/path-cobble-street-03.png), [path-cobble-street-04.png](tiles/path-cobble-street/path-cobble-street-04.png), [path-cobble-street-05.png](tiles/path-cobble-street/path-cobble-street-05.png), [path-cobble-street-06.png](tiles/path-cobble-street/path-cobble-street-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-cobble-street-00` | [path-cobble-street-00.png](tiles/path-cobble-street/path-cobble-street-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-01` | [path-cobble-street-01.png](tiles/path-cobble-street/path-cobble-street-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-02` | [path-cobble-street-02.png](tiles/path-cobble-street/path-cobble-street-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-03` | [path-cobble-street-03.png](tiles/path-cobble-street/path-cobble-street-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-04` | [path-cobble-street-04.png](tiles/path-cobble-street/path-cobble-street-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-05` | [path-cobble-street-05.png](tiles/path-cobble-street/path-cobble-street-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-06` | [path-cobble-street-06.png](tiles/path-cobble-street/path-cobble-street-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-07` | [path-cobble-street-07.png](tiles/path-cobble-street/path-cobble-street-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-08` | [path-cobble-street-08.png](tiles/path-cobble-street/path-cobble-street-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-09` | [path-cobble-street-09.png](tiles/path-cobble-street/path-cobble-street-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-10` | [path-cobble-street-10.png](tiles/path-cobble-street/path-cobble-street-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-11` | [path-cobble-street-11.png](tiles/path-cobble-street/path-cobble-street-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-12` | [path-cobble-street-12.png](tiles/path-cobble-street/path-cobble-street-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-13` | [path-cobble-street-13.png](tiles/path-cobble-street/path-cobble-street-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-14` | [path-cobble-street-14.png](tiles/path-cobble-street/path-cobble-street-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-15` | [path-cobble-street-15.png](tiles/path-cobble-street/path-cobble-street-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-16` | [path-cobble-street-16.png](tiles/path-cobble-street/path-cobble-street-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-cobble-street-17` | [path-cobble-street-17.png](tiles/path-cobble-street/path-cobble-street-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Cracked concrete sidewalk
+
+<img src="tiles/path-concrete-sidewalk/path-concrete-sidewalk-00.png" alt="path-concrete-sidewalk preview" height="140">
+
+Recommended sidewalk (concrete).
+
+- group `path-concrete-sidewalk` · 18 assets · frame 32x32 · key prefix `path-concrete-sidewalk-` · manifest [tiles/path-concrete-sidewalk/manifest.json](tiles/path-concrete-sidewalk/manifest.json)
+- previews: [path-concrete-sidewalk-01.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-01.png), [path-concrete-sidewalk-02.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-02.png), [path-concrete-sidewalk-03.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-03.png), [path-concrete-sidewalk-04.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-04.png), [path-concrete-sidewalk-05.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-05.png), [path-concrete-sidewalk-06.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-concrete-sidewalk-00` | [path-concrete-sidewalk-00.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-01` | [path-concrete-sidewalk-01.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-02` | [path-concrete-sidewalk-02.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-03` | [path-concrete-sidewalk-03.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-04` | [path-concrete-sidewalk-04.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-05` | [path-concrete-sidewalk-05.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-06` | [path-concrete-sidewalk-06.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-07` | [path-concrete-sidewalk-07.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-08` | [path-concrete-sidewalk-08.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-09` | [path-concrete-sidewalk-09.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-10` | [path-concrete-sidewalk-10.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-11` | [path-concrete-sidewalk-11.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-12` | [path-concrete-sidewalk-12.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-13` | [path-concrete-sidewalk-13.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-14` | [path-concrete-sidewalk-14.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-15` | [path-concrete-sidewalk-15.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-16` | [path-concrete-sidewalk-16.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-concrete-sidewalk-17` | [path-concrete-sidewalk-17.png](tiles/path-concrete-sidewalk/path-concrete-sidewalk-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Packed dirt trail with gravel
+
+<img src="tiles/path-dirt/path-dirt-00.png" alt="path-dirt preview" height="140">
+
+Recommended dirt/gravel trail for campus edges.
+
+- group `path-dirt` · 18 assets · frame 32x32 · key prefix `path-dirt-` · manifest [tiles/path-dirt/manifest.json](tiles/path-dirt/manifest.json)
+- previews: [path-dirt-01.png](tiles/path-dirt/path-dirt-01.png), [path-dirt-02.png](tiles/path-dirt/path-dirt-02.png), [path-dirt-03.png](tiles/path-dirt/path-dirt-03.png), [path-dirt-04.png](tiles/path-dirt/path-dirt-04.png), [path-dirt-05.png](tiles/path-dirt/path-dirt-05.png), [path-dirt-06.png](tiles/path-dirt/path-dirt-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-dirt-00` | [path-dirt-00.png](tiles/path-dirt/path-dirt-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-01` | [path-dirt-01.png](tiles/path-dirt/path-dirt-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-02` | [path-dirt-02.png](tiles/path-dirt/path-dirt-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-03` | [path-dirt-03.png](tiles/path-dirt/path-dirt-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-04` | [path-dirt-04.png](tiles/path-dirt/path-dirt-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-05` | [path-dirt-05.png](tiles/path-dirt/path-dirt-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-06` | [path-dirt-06.png](tiles/path-dirt/path-dirt-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-07` | [path-dirt-07.png](tiles/path-dirt/path-dirt-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-08` | [path-dirt-08.png](tiles/path-dirt/path-dirt-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-09` | [path-dirt-09.png](tiles/path-dirt/path-dirt-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-10` | [path-dirt-10.png](tiles/path-dirt/path-dirt-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-11` | [path-dirt-11.png](tiles/path-dirt/path-dirt-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-12` | [path-dirt-12.png](tiles/path-dirt/path-dirt-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-13` | [path-dirt-13.png](tiles/path-dirt/path-dirt-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-14` | [path-dirt-14.png](tiles/path-dirt/path-dirt-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-15` | [path-dirt-15.png](tiles/path-dirt/path-dirt-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-16` | [path-dirt-16.png](tiles/path-dirt/path-dirt-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-dirt-17` | [path-dirt-17.png](tiles/path-dirt/path-dirt-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Gravel dirt path over dry grass
+
+<img src="tiles/path-gravel-a/path-gravel-a-00.png" alt="path-gravel-a preview" height="140">
+
+Near-variant of path-dirt / path-gravel-b.
+
+- group `path-gravel-a` · 18 assets · frame 32x32 · key prefix `path-gravel-a-` · manifest [tiles/path-gravel-a/manifest.json](tiles/path-gravel-a/manifest.json)
+- previews: [path-gravel-a-01.png](tiles/path-gravel-a/path-gravel-a-01.png), [path-gravel-a-02.png](tiles/path-gravel-a/path-gravel-a-02.png), [path-gravel-a-03.png](tiles/path-gravel-a/path-gravel-a-03.png), [path-gravel-a-04.png](tiles/path-gravel-a/path-gravel-a-04.png), [path-gravel-a-05.png](tiles/path-gravel-a/path-gravel-a-05.png), [path-gravel-a-06.png](tiles/path-gravel-a/path-gravel-a-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-gravel-a-00` | [path-gravel-a-00.png](tiles/path-gravel-a/path-gravel-a-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-01` | [path-gravel-a-01.png](tiles/path-gravel-a/path-gravel-a-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-02` | [path-gravel-a-02.png](tiles/path-gravel-a/path-gravel-a-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-03` | [path-gravel-a-03.png](tiles/path-gravel-a/path-gravel-a-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-04` | [path-gravel-a-04.png](tiles/path-gravel-a/path-gravel-a-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-05` | [path-gravel-a-05.png](tiles/path-gravel-a/path-gravel-a-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-06` | [path-gravel-a-06.png](tiles/path-gravel-a/path-gravel-a-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-07` | [path-gravel-a-07.png](tiles/path-gravel-a/path-gravel-a-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-08` | [path-gravel-a-08.png](tiles/path-gravel-a/path-gravel-a-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-09` | [path-gravel-a-09.png](tiles/path-gravel-a/path-gravel-a-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-10` | [path-gravel-a-10.png](tiles/path-gravel-a/path-gravel-a-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-11` | [path-gravel-a-11.png](tiles/path-gravel-a/path-gravel-a-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-12` | [path-gravel-a-12.png](tiles/path-gravel-a/path-gravel-a-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-13` | [path-gravel-a-13.png](tiles/path-gravel-a/path-gravel-a-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-14` | [path-gravel-a-14.png](tiles/path-gravel-a/path-gravel-a-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-15` | [path-gravel-a-15.png](tiles/path-gravel-a/path-gravel-a-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-16` | [path-gravel-a-16.png](tiles/path-gravel-a/path-gravel-a-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-a-17` | [path-gravel-a-17.png](tiles/path-gravel-a/path-gravel-a-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Gravel dirt path over dry grass (variant)
+
+<img src="tiles/path-gravel-b/path-gravel-b-00.png" alt="path-gravel-b preview" height="140">
+
+Near-variant of path-gravel-a.
+
+- group `path-gravel-b` · 18 assets · frame 32x32 · key prefix `path-gravel-b-` · manifest [tiles/path-gravel-b/manifest.json](tiles/path-gravel-b/manifest.json)
+- previews: [path-gravel-b-01.png](tiles/path-gravel-b/path-gravel-b-01.png), [path-gravel-b-02.png](tiles/path-gravel-b/path-gravel-b-02.png), [path-gravel-b-03.png](tiles/path-gravel-b/path-gravel-b-03.png), [path-gravel-b-04.png](tiles/path-gravel-b/path-gravel-b-04.png), [path-gravel-b-05.png](tiles/path-gravel-b/path-gravel-b-05.png), [path-gravel-b-06.png](tiles/path-gravel-b/path-gravel-b-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-gravel-b-00` | [path-gravel-b-00.png](tiles/path-gravel-b/path-gravel-b-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-01` | [path-gravel-b-01.png](tiles/path-gravel-b/path-gravel-b-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-02` | [path-gravel-b-02.png](tiles/path-gravel-b/path-gravel-b-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-03` | [path-gravel-b-03.png](tiles/path-gravel-b/path-gravel-b-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-04` | [path-gravel-b-04.png](tiles/path-gravel-b/path-gravel-b-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-05` | [path-gravel-b-05.png](tiles/path-gravel-b/path-gravel-b-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-06` | [path-gravel-b-06.png](tiles/path-gravel-b/path-gravel-b-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-07` | [path-gravel-b-07.png](tiles/path-gravel-b/path-gravel-b-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-08` | [path-gravel-b-08.png](tiles/path-gravel-b/path-gravel-b-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-09` | [path-gravel-b-09.png](tiles/path-gravel-b/path-gravel-b-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-10` | [path-gravel-b-10.png](tiles/path-gravel-b/path-gravel-b-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-11` | [path-gravel-b-11.png](tiles/path-gravel-b/path-gravel-b-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-12` | [path-gravel-b-12.png](tiles/path-gravel-b/path-gravel-b-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-13` | [path-gravel-b-13.png](tiles/path-gravel-b/path-gravel-b-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-14` | [path-gravel-b-14.png](tiles/path-gravel-b/path-gravel-b-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-15` | [path-gravel-b-15.png](tiles/path-gravel-b/path-gravel-b-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-16` | [path-gravel-b-16.png](tiles/path-gravel-b/path-gravel-b-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-gravel-b-17` | [path-gravel-b-17.png](tiles/path-gravel-b/path-gravel-b-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Industrial metal grate floor
+
+<img src="tiles/path-metal-grate-floor/path-metal-grate-floor-00.png" alt="path-metal-grate-floor preview" height="140">
+
+Floor variant; use for interiors, walkway set preferred for paths.
+
+- group `path-metal-grate-floor` · 18 assets · frame 32x32 · key prefix `path-metal-grate-floor-` · manifest [tiles/path-metal-grate-floor/manifest.json](tiles/path-metal-grate-floor/manifest.json)
+- previews: [path-metal-grate-floor-01.png](tiles/path-metal-grate-floor/path-metal-grate-floor-01.png), [path-metal-grate-floor-02.png](tiles/path-metal-grate-floor/path-metal-grate-floor-02.png), [path-metal-grate-floor-03.png](tiles/path-metal-grate-floor/path-metal-grate-floor-03.png), [path-metal-grate-floor-04.png](tiles/path-metal-grate-floor/path-metal-grate-floor-04.png), [path-metal-grate-floor-05.png](tiles/path-metal-grate-floor/path-metal-grate-floor-05.png), [path-metal-grate-floor-06.png](tiles/path-metal-grate-floor/path-metal-grate-floor-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-metal-grate-floor-00` | [path-metal-grate-floor-00.png](tiles/path-metal-grate-floor/path-metal-grate-floor-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-01` | [path-metal-grate-floor-01.png](tiles/path-metal-grate-floor/path-metal-grate-floor-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-02` | [path-metal-grate-floor-02.png](tiles/path-metal-grate-floor/path-metal-grate-floor-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-03` | [path-metal-grate-floor-03.png](tiles/path-metal-grate-floor/path-metal-grate-floor-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-04` | [path-metal-grate-floor-04.png](tiles/path-metal-grate-floor/path-metal-grate-floor-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-05` | [path-metal-grate-floor-05.png](tiles/path-metal-grate-floor/path-metal-grate-floor-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-06` | [path-metal-grate-floor-06.png](tiles/path-metal-grate-floor/path-metal-grate-floor-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-07` | [path-metal-grate-floor-07.png](tiles/path-metal-grate-floor/path-metal-grate-floor-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-08` | [path-metal-grate-floor-08.png](tiles/path-metal-grate-floor/path-metal-grate-floor-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-09` | [path-metal-grate-floor-09.png](tiles/path-metal-grate-floor/path-metal-grate-floor-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-10` | [path-metal-grate-floor-10.png](tiles/path-metal-grate-floor/path-metal-grate-floor-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-11` | [path-metal-grate-floor-11.png](tiles/path-metal-grate-floor/path-metal-grate-floor-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-12` | [path-metal-grate-floor-12.png](tiles/path-metal-grate-floor/path-metal-grate-floor-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-13` | [path-metal-grate-floor-13.png](tiles/path-metal-grate-floor/path-metal-grate-floor-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-14` | [path-metal-grate-floor-14.png](tiles/path-metal-grate-floor/path-metal-grate-floor-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-15` | [path-metal-grate-floor-15.png](tiles/path-metal-grate-floor/path-metal-grate-floor-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-16` | [path-metal-grate-floor-16.png](tiles/path-metal-grate-floor/path-metal-grate-floor-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-floor-17` | [path-metal-grate-floor-17.png](tiles/path-metal-grate-floor/path-metal-grate-floor-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Industrial metal grate walkway
+
+<img src="tiles/path-metal-grate-walkway/path-metal-grate-walkway-00.png" alt="path-metal-grate-walkway preview" height="140">
+
+Recommended grate for walkways.
+
+- group `path-metal-grate-walkway` · 18 assets · frame 32x32 · key prefix `path-metal-grate-walkway-` · manifest [tiles/path-metal-grate-walkway/manifest.json](tiles/path-metal-grate-walkway/manifest.json)
+- previews: [path-metal-grate-walkway-01.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-01.png), [path-metal-grate-walkway-02.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-02.png), [path-metal-grate-walkway-03.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-03.png), [path-metal-grate-walkway-04.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-04.png), [path-metal-grate-walkway-05.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-05.png), [path-metal-grate-walkway-06.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `path-metal-grate-walkway-00` | [path-metal-grate-walkway-00.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-00.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-01` | [path-metal-grate-walkway-01.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-01.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-02` | [path-metal-grate-walkway-02.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-02.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-03` | [path-metal-grate-walkway-03.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-03.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-04` | [path-metal-grate-walkway-04.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-04.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-05` | [path-metal-grate-walkway-05.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-05.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-06` | [path-metal-grate-walkway-06.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-06.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-07` | [path-metal-grate-walkway-07.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-07.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-08` | [path-metal-grate-walkway-08.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-08.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-09` | [path-metal-grate-walkway-09.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-09.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-10` | [path-metal-grate-walkway-10.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-10.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-11` | [path-metal-grate-walkway-11.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-11.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-12` | [path-metal-grate-walkway-12.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-12.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-13` | [path-metal-grate-walkway-13.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-13.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-14` | [path-metal-grate-walkway-14.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-14.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-15` | [path-metal-grate-walkway-15.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-15.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-16` | [path-metal-grate-walkway-16.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-16.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+| `path-metal-grate-walkway-17` | [path-metal-grate-walkway-17.png](tiles/path-metal-grate-walkway/path-metal-grate-walkway-17.png) | 32x32 | image | v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets. |
+
+### Abandoned brick apartment wall
+
+<img src="tiles/wall-brick-apartment/wall-brick-apartment-00.png" alt="wall-brick-apartment preview" height="140">
+
+Wall tileset (not a path). Mixed tile sizes — see manifest. For building façades, not floor fill.
+
+- group `wall-brick-apartment` · 80 assets · frame 52x87 · key prefix `wall-brick-apartment-` · manifest [tiles/wall-brick-apartment/manifest.json](tiles/wall-brick-apartment/manifest.json)
+- previews: [wall-brick-apartment-01.png](tiles/wall-brick-apartment/wall-brick-apartment-01.png), [wall-brick-apartment-02.png](tiles/wall-brick-apartment/wall-brick-apartment-02.png), [wall-brick-apartment-03.png](tiles/wall-brick-apartment/wall-brick-apartment-03.png), [wall-brick-apartment-04.png](tiles/wall-brick-apartment/wall-brick-apartment-04.png), [wall-brick-apartment-05.png](tiles/wall-brick-apartment/wall-brick-apartment-05.png), [wall-brick-apartment-06.png](tiles/wall-brick-apartment/wall-brick-apartment-06.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `wall-brick-apartment-00` | [wall-brick-apartment-00.png](tiles/wall-brick-apartment/wall-brick-apartment-00.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-01` | [wall-brick-apartment-01.png](tiles/wall-brick-apartment/wall-brick-apartment-01.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-02` | [wall-brick-apartment-02.png](tiles/wall-brick-apartment/wall-brick-apartment-02.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-03` | [wall-brick-apartment-03.png](tiles/wall-brick-apartment/wall-brick-apartment-03.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-04` | [wall-brick-apartment-04.png](tiles/wall-brick-apartment/wall-brick-apartment-04.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-05` | [wall-brick-apartment-05.png](tiles/wall-brick-apartment/wall-brick-apartment-05.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-06` | [wall-brick-apartment-06.png](tiles/wall-brick-apartment/wall-brick-apartment-06.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-07` | [wall-brick-apartment-07.png](tiles/wall-brick-apartment/wall-brick-apartment-07.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-08` | [wall-brick-apartment-08.png](tiles/wall-brick-apartment/wall-brick-apartment-08.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-09` | [wall-brick-apartment-09.png](tiles/wall-brick-apartment/wall-brick-apartment-09.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-10` | [wall-brick-apartment-10.png](tiles/wall-brick-apartment/wall-brick-apartment-10.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-11` | [wall-brick-apartment-11.png](tiles/wall-brick-apartment/wall-brick-apartment-11.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-12` | [wall-brick-apartment-12.png](tiles/wall-brick-apartment/wall-brick-apartment-12.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-13` | [wall-brick-apartment-13.png](tiles/wall-brick-apartment/wall-brick-apartment-13.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-14` | [wall-brick-apartment-14.png](tiles/wall-brick-apartment/wall-brick-apartment-14.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-15` | [wall-brick-apartment-15.png](tiles/wall-brick-apartment/wall-brick-apartment-15.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-16` | [wall-brick-apartment-16.png](tiles/wall-brick-apartment/wall-brick-apartment-16.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-17` | [wall-brick-apartment-17.png](tiles/wall-brick-apartment/wall-brick-apartment-17.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-18` | [wall-brick-apartment-18.png](tiles/wall-brick-apartment/wall-brick-apartment-18.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-19` | [wall-brick-apartment-19.png](tiles/wall-brick-apartment/wall-brick-apartment-19.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-20` | [wall-brick-apartment-20.png](tiles/wall-brick-apartment/wall-brick-apartment-20.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-21` | [wall-brick-apartment-21.png](tiles/wall-brick-apartment/wall-brick-apartment-21.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-22` | [wall-brick-apartment-22.png](tiles/wall-brick-apartment/wall-brick-apartment-22.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-23` | [wall-brick-apartment-23.png](tiles/wall-brick-apartment/wall-brick-apartment-23.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-24` | [wall-brick-apartment-24.png](tiles/wall-brick-apartment/wall-brick-apartment-24.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-25` | [wall-brick-apartment-25.png](tiles/wall-brick-apartment/wall-brick-apartment-25.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-26` | [wall-brick-apartment-26.png](tiles/wall-brick-apartment/wall-brick-apartment-26.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-27` | [wall-brick-apartment-27.png](tiles/wall-brick-apartment/wall-brick-apartment-27.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-28` | [wall-brick-apartment-28.png](tiles/wall-brick-apartment/wall-brick-apartment-28.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-29` | [wall-brick-apartment-29.png](tiles/wall-brick-apartment/wall-brick-apartment-29.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-30` | [wall-brick-apartment-30.png](tiles/wall-brick-apartment/wall-brick-apartment-30.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-31` | [wall-brick-apartment-31.png](tiles/wall-brick-apartment/wall-brick-apartment-31.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-32` | [wall-brick-apartment-32.png](tiles/wall-brick-apartment/wall-brick-apartment-32.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-33` | [wall-brick-apartment-33.png](tiles/wall-brick-apartment/wall-brick-apartment-33.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-34` | [wall-brick-apartment-34.png](tiles/wall-brick-apartment/wall-brick-apartment-34.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-35` | [wall-brick-apartment-35.png](tiles/wall-brick-apartment/wall-brick-apartment-35.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-36` | [wall-brick-apartment-36.png](tiles/wall-brick-apartment/wall-brick-apartment-36.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-37` | [wall-brick-apartment-37.png](tiles/wall-brick-apartment/wall-brick-apartment-37.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-38` | [wall-brick-apartment-38.png](tiles/wall-brick-apartment/wall-brick-apartment-38.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-39` | [wall-brick-apartment-39.png](tiles/wall-brick-apartment/wall-brick-apartment-39.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-40` | [wall-brick-apartment-40.png](tiles/wall-brick-apartment/wall-brick-apartment-40.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-41` | [wall-brick-apartment-41.png](tiles/wall-brick-apartment/wall-brick-apartment-41.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-42` | [wall-brick-apartment-42.png](tiles/wall-brick-apartment/wall-brick-apartment-42.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-43` | [wall-brick-apartment-43.png](tiles/wall-brick-apartment/wall-brick-apartment-43.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-44` | [wall-brick-apartment-44.png](tiles/wall-brick-apartment/wall-brick-apartment-44.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-45` | [wall-brick-apartment-45.png](tiles/wall-brick-apartment/wall-brick-apartment-45.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-46` | [wall-brick-apartment-46.png](tiles/wall-brick-apartment/wall-brick-apartment-46.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-47` | [wall-brick-apartment-47.png](tiles/wall-brick-apartment/wall-brick-apartment-47.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-48` | [wall-brick-apartment-48.png](tiles/wall-brick-apartment/wall-brick-apartment-48.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-49` | [wall-brick-apartment-49.png](tiles/wall-brick-apartment/wall-brick-apartment-49.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-50` | [wall-brick-apartment-50.png](tiles/wall-brick-apartment/wall-brick-apartment-50.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-51` | [wall-brick-apartment-51.png](tiles/wall-brick-apartment/wall-brick-apartment-51.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-52` | [wall-brick-apartment-52.png](tiles/wall-brick-apartment/wall-brick-apartment-52.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-53` | [wall-brick-apartment-53.png](tiles/wall-brick-apartment/wall-brick-apartment-53.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-54` | [wall-brick-apartment-54.png](tiles/wall-brick-apartment/wall-brick-apartment-54.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-55` | [wall-brick-apartment-55.png](tiles/wall-brick-apartment/wall-brick-apartment-55.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-56` | [wall-brick-apartment-56.png](tiles/wall-brick-apartment/wall-brick-apartment-56.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-57` | [wall-brick-apartment-57.png](tiles/wall-brick-apartment/wall-brick-apartment-57.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-58` | [wall-brick-apartment-58.png](tiles/wall-brick-apartment/wall-brick-apartment-58.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-59` | [wall-brick-apartment-59.png](tiles/wall-brick-apartment/wall-brick-apartment-59.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-60` | [wall-brick-apartment-60.png](tiles/wall-brick-apartment/wall-brick-apartment-60.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-61` | [wall-brick-apartment-61.png](tiles/wall-brick-apartment/wall-brick-apartment-61.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-62` | [wall-brick-apartment-62.png](tiles/wall-brick-apartment/wall-brick-apartment-62.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-63` | [wall-brick-apartment-63.png](tiles/wall-brick-apartment/wall-brick-apartment-63.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-64` | [wall-brick-apartment-64.png](tiles/wall-brick-apartment/wall-brick-apartment-64.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-65` | [wall-brick-apartment-65.png](tiles/wall-brick-apartment/wall-brick-apartment-65.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-66` | [wall-brick-apartment-66.png](tiles/wall-brick-apartment/wall-brick-apartment-66.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-67` | [wall-brick-apartment-67.png](tiles/wall-brick-apartment/wall-brick-apartment-67.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-68` | [wall-brick-apartment-68.png](tiles/wall-brick-apartment/wall-brick-apartment-68.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-69` | [wall-brick-apartment-69.png](tiles/wall-brick-apartment/wall-brick-apartment-69.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-70` | [wall-brick-apartment-70.png](tiles/wall-brick-apartment/wall-brick-apartment-70.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-71` | [wall-brick-apartment-71.png](tiles/wall-brick-apartment/wall-brick-apartment-71.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-72` | [wall-brick-apartment-72.png](tiles/wall-brick-apartment/wall-brick-apartment-72.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-73` | [wall-brick-apartment-73.png](tiles/wall-brick-apartment/wall-brick-apartment-73.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-74` | [wall-brick-apartment-74.png](tiles/wall-brick-apartment/wall-brick-apartment-74.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-75` | [wall-brick-apartment-75.png](tiles/wall-brick-apartment/wall-brick-apartment-75.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-76` | [wall-brick-apartment-76.png](tiles/wall-brick-apartment/wall-brick-apartment-76.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-77` | [wall-brick-apartment-77.png](tiles/wall-brick-apartment/wall-brick-apartment-77.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-78` | [wall-brick-apartment-78.png](tiles/wall-brick-apartment/wall-brick-apartment-78.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
+| `wall-brick-apartment-79` | [wall-brick-apartment-79.png](tiles/wall-brick-apartment/wall-brick-apartment-79.png) | 52x87 | image | v1.0. Façade tile, not a floor path. Origin (0, 0). |
 
 <a id="backgrounds"></a>
 ## Backgrounds
@@ -1514,6 +2280,53 @@ Five 320×180 stage plates from the Milestone 2 credit burn, v1.0. Includes the 
 | `bg-rainy-market` | [bg-rainy-market.png](backgrounds/m2/bg-rainy-market.png) | 320x180 | background | v1.0. Rainy market alley. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
 | `bg-subway` | [bg-subway.png](backgrounds/m2/bg-subway.png) | 320x180 | background | v1.0. Subway tunnel with green lights. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
 | `bg-rooftop-dusk` | [bg-rooftop-dusk.png](backgrounds/m2/bg-rooftop-dusk.png) | 320x180 | background | v1.0. Rooftop dusk skyline. Does not replace bg-campus-*. drawCampusBackdrop still uses the campus plates. No SFX key. |
+
+### M2 leftover 320×180 stage backgrounds (35; does not replace the five already cataloged)
+
+<img src="backgrounds/m2-ruku/bg-m2-campus-night.png" alt="m2-ruku preview" height="180">
+
+35 leftover 320×180 M2 plates, v1.0, keys bg-m2-*. Origin (0, 0). Additional Stage backdrop options. Does not replace bg-night-street, bg-night-street-moon, bg-rainy-market, bg-subway, or bg-rooftop-dusk, and does not replace the campus plates.
+
+- group `m2-ruku` · 35 assets · frame 320x180 · key prefix `bg-m2-` · manifest [backgrounds/m2-ruku/manifest.json](backgrounds/m2-ruku/manifest.json)
+- previews: [bg-m2-rooftop-night.png](backgrounds/m2-ruku/bg-m2-rooftop-night.png), [bg-m2-night-apartments.png](backgrounds/m2-ruku/bg-m2-night-apartments.png), [bg-m2-gas-station.png](backgrounds/m2-ruku/bg-m2-gas-station.png), [bg-m2-school-hallway.png](backgrounds/m2-ruku/bg-m2-school-hallway.png)
+
+| Key | File | Size | Type | Notes |
+|---|---|---|---|---|
+| `bg-m2-factory` | [bg-m2-factory.png](backgrounds/m2-ruku/bg-m2-factory.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-rainy-alley` | [bg-m2-rainy-alley.png](backgrounds/m2-ruku/bg-m2-rainy-alley.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-parking-garage` | [bg-m2-parking-garage.png](backgrounds/m2-ruku/bg-m2-parking-garage.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-subway-platform` | [bg-m2-subway-platform.png](backgrounds/m2-ruku/bg-m2-subway-platform.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-sewer-tunnel` | [bg-m2-sewer-tunnel.png](backgrounds/m2-ruku/bg-m2-sewer-tunnel.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-rooftop-skyline` | [bg-m2-rooftop-skyline.png](backgrounds/m2-ruku/bg-m2-rooftop-skyline.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-hospital-corridor` | [bg-m2-hospital-corridor.png](backgrounds/m2-ruku/bg-m2-hospital-corridor.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-warehouse` | [bg-m2-warehouse.png](backgrounds/m2-ruku/bg-m2-warehouse.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-neon-alley` | [bg-m2-neon-alley.png](backgrounds/m2-ruku/bg-m2-neon-alley.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-parking-garage-dark` | [bg-m2-parking-garage-dark.png](backgrounds/m2-ruku/bg-m2-parking-garage-dark.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-subway-platform-alt` | [bg-m2-subway-platform-alt.png](backgrounds/m2-ruku/bg-m2-subway-platform-alt.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-rooftop-dusk-towers` | [bg-m2-rooftop-dusk-towers.png](backgrounds/m2-ruku/bg-m2-rooftop-dusk-towers.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-shopping-mall` | [bg-m2-shopping-mall.png](backgrounds/m2-ruku/bg-m2-shopping-mall.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-sewer-canal` | [bg-m2-sewer-canal.png](backgrounds/m2-ruku/bg-m2-sewer-canal.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-rooftop-night` | [bg-m2-rooftop-night.png](backgrounds/m2-ruku/bg-m2-rooftop-night.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-foggy-cemetery` | [bg-m2-foggy-cemetery.png](backgrounds/m2-ruku/bg-m2-foggy-cemetery.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-hospital-lobby` | [bg-m2-hospital-lobby.png](backgrounds/m2-ruku/bg-m2-hospital-lobby.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-parking-garage-yellow` | [bg-m2-parking-garage-yellow.png](backgrounds/m2-ruku/bg-m2-parking-garage-yellow.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-subway-graffiti` | [bg-m2-subway-graffiti.png](backgrounds/m2-ruku/bg-m2-subway-graffiti.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-neon-puddle-alley` | [bg-m2-neon-puddle-alley.png](backgrounds/m2-ruku/bg-m2-neon-puddle-alley.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-mall-escalators` | [bg-m2-mall-escalators.png](backgrounds/m2-ruku/bg-m2-mall-escalators.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-night-apartments` | [bg-m2-night-apartments.png](backgrounds/m2-ruku/bg-m2-night-apartments.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-storage-cellar` | [bg-m2-storage-cellar.png](backgrounds/m2-ruku/bg-m2-storage-cellar.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-park-promenade` | [bg-m2-park-promenade.png](backgrounds/m2-ruku/bg-m2-park-promenade.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-sunset-pier` | [bg-m2-sunset-pier.png](backgrounds/m2-ruku/bg-m2-sunset-pier.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-residential-street` | [bg-m2-residential-street.png](backgrounds/m2-ruku/bg-m2-residential-street.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-overpass-graffiti` | [bg-m2-overpass-graffiti.png](backgrounds/m2-ruku/bg-m2-overpass-graffiti.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-convenience-store` | [bg-m2-convenience-store.png](backgrounds/m2-ruku/bg-m2-convenience-store.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-gas-station` | [bg-m2-gas-station.png](backgrounds/m2-ruku/bg-m2-gas-station.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-school-hallway` | [bg-m2-school-hallway.png](backgrounds/m2-ruku/bg-m2-school-hallway.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-locker-room` | [bg-m2-locker-room.png](backgrounds/m2-ruku/bg-m2-locker-room.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-crane-skyline` | [bg-m2-crane-skyline.png](backgrounds/m2-ruku/bg-m2-crane-skyline.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-campus-night` | [bg-m2-campus-night.png](backgrounds/m2-ruku/bg-m2-campus-night.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-park-sunset` | [bg-m2-park-sunset.png](backgrounds/m2-ruku/bg-m2-park-sunset.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
+| `bg-m2-hospital-ward` | [bg-m2-hospital-ward.png](backgrounds/m2-ruku/bg-m2-hospital-ward.png) | 320x180 | background | v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*. |
 
 <a id="concepts"></a>
 ## Concepts

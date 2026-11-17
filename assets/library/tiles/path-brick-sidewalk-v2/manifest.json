@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-brick-sidewalk-v2",
+  "title": "Worn red brick sidewalk (2nd set)",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Second brick sidewalk; live catalog already has path-brick-sidewalk from 140dd29a. Keep as v2 variant — prefer live set unless this reads cleaner on Stage.",
+  "source": {
+    "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-brick-sidewalk-v2-00",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 0,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-01",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 1,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-02",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 2,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-03",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 3,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-04",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 4,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-05",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 5,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-06",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 6,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-07",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 7,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-08",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 8,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-09",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 9,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-10",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 10,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-11",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 11,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-12",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 12,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-13",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 13,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-14",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 14,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-15",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 15,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-16",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 16,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-brick-sidewalk-v2-17",
+      "path": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "d0601a41-5b88-4ce5-abfd-7c890fa97e51",
+        "tileIndex": 17,
+        "originalName": "worn_red_brick_sidewalk_over_cracked_asphalt_city_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Second brick sidewalk; live catalog already has path-brick-sidewalk from 140dd29a. Keep as v2 variant — prefer live set unless this reads cleaner on Stage.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-00.png",
+    "sheets": [
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-01.png",
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-02.png",
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-03.png",
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-04.png",
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-05.png",
+      "assets/library/tiles/path-brick-sidewalk-v2/path-brick-sidewalk-v2-06.png"
+    ],
+    "extras": []
+  }
+}

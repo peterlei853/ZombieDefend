@@ -1,0 +1,685 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "zombies",
+  "group": "building-robot",
+  "title": "Building Robot Zombie",
+  "titleZh": "建築機械喪屍",
+  "description": "Skill zombie with riveted metal skull plate, green goggles and a robotic claw arm. Distinct from S4 construction (which only has 4 anims). 8-dir rotations; game anims are east-only.",
+  "version": "v1.0",
+  "source": {
+    "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+    "pixellabName": "Zombie08-skill",
+    "pixellabGroupId": "d4eece2e-ce25-4b45-9c99-e21c53b0e2d4",
+    "exportDate": "2026-11-17T13:31:01.813165"
+  },
+  "defaults": {
+    "type": "spritesheet",
+    "origin": [
+      0.5,
+      1.0
+    ],
+    "facing": "east",
+    "frameWidth": 92,
+    "frameHeight": 92,
+    "note": "Animation frames export at 92x92 (PixelLab padded beyond the rotation canvas). Idle rotation native size was 64px; packed idle is padded to 92x92."
+  },
+  "stageHint": "Stage 4–5 roster",
+  "assets": [
+    {
+      "key": "zombie-building-robot-idle",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-idle.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 1,
+      "frameRate": 1,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "note": "Idle east rotation padded from native canvas onto animation cell, feet-aligned. No resize.",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Idle-east-rotation",
+        "cell": "92x92",
+        "paddedIdle": true
+      }
+    },
+    {
+      "key": "zombie-building-robot-hurt-normal",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt-normal.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Hurt-normal",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-fall",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-fall.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "fall",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die1",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die1.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "die1",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-skill",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-skill.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 40,
+      "frameRate": 12,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Skill-buildingRobotZombie",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-run",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-run.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 12,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "run",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-walk-tired",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-walk-tired.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Walk-TireMove",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hurt-spark",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt-spark.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hurt_spark_base",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die-critical-hit",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die-critical-hit.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Die-critical_hit",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-fall-back",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-fall-back.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "fall_back",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-bite",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-bite.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "bite",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-idle-itch",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-idle-itch.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 6,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "idle_itch",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hit02",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hit02.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hit02-normal",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-walk-normal",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-walk-normal.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Walk-normal",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die1-back",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die1-back.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "die1_back",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die-normal01",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die-normal01.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Die-normal01",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-attack2",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-attack2.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "attack2",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hit01",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hit01.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 16,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hit01-normal",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hurt",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 4,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hurt",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hurt-spark2",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt-spark2.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hurt_spark_base2",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die-disappear",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die-disappear.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 32,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Die-disappear",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die2",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die2.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "die2",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-walk",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-walk.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "walk",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die-deathwalk",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die-deathwalk.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 33,
+      "frameRate": 8,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Die-deathwalk",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hurt-shock",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt-shock.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 6,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hurt_shock_base",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-hurt-burn",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-hurt-burn.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "hurt_burn_base",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-die-normal02",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-die-normal02.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": false,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "Die-normal02",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    },
+    {
+      "key": "zombie-building-robot-attack",
+      "path": "assets/library/enemies/zombies/building-robot/strips/zombie-building-robot-attack.png",
+      "frameWidth": 92,
+      "frameHeight": 92,
+      "frames": 8,
+      "frameRate": 10,
+      "loop": true,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "facing": "east",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabCharacterId": "5eb6957f-1d75-451c-883d-2c7a4a4f0504",
+        "pixellabAnimation": "attack",
+        "cell": "92x92",
+        "paddedIdle": true
+      },
+      "note": "v1.0. Shipped cell is 92x92 (padded, not resized). Feet origin (0.5, 1), east."
+    }
+  ],
+  "preview": {
+    "animate": [
+      "zombie-building-robot-walk",
+      "zombie-building-robot-attack",
+      "zombie-building-robot-hurt",
+      "zombie-building-robot-die1",
+      "zombie-building-robot-skill"
+    ],
+    "thumb": "assets/library/previews/zombies/building-robot/preview.gif",
+    "sheets": [],
+    "extras": []
+  }
+}

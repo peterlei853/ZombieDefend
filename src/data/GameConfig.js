@@ -355,10 +355,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * pets and engaged zombies stand and attack, stages 1–4 grow the
  * skin pool, stage 4 has its own wave table, stage 5 spawns Balun.
  * Barricade max HP stays 1440. getGoldByHP stays. GitHub Pages holds.
+ * v0.36.32: Nov 17 入庫 is cataloged and wired. Building Robot joins
+ * stages 4–5. Giant mech-zombie joins the stage 5 escort row. Both
+ * reuse the existing S4 row and S5 escort row. Skill strips do not
+ * cast damage. Gold, saves, barricade HP, spawn counts, and combat
+ * damage stay put. GitHub Pages publishes this tip from main.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.31';
+export const APP_VERSION = '0.36.32';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

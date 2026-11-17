@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-gravel-a",
+  "title": "Gravel dirt path over dry grass",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Near-variant of path-dirt / path-gravel-b.",
+  "source": {
+    "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-gravel-a-00",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 0,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-01",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 1,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-02",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 2,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-03",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 3,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-04",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 4,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-05",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 5,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-06",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 6,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-07",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 7,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-08",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 8,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-09",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 9,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-10",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 10,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-11",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 11,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-12",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 12,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-13",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 13,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-14",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 14,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-15",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 15,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-16",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 16,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-a-17",
+      "path": "assets/library/tiles/path-gravel-a/path-gravel-a-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "9f5a1147-5084-420e-8a75-f7b3ca6f9adf",
+        "tileIndex": 17,
+        "originalName": "gravel_dirt_path_over_dry_grass_wasteland_ground_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Near-variant of path-dirt / path-gravel-b.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-gravel-a/path-gravel-a-00.png",
+    "sheets": [
+      "assets/library/tiles/path-gravel-a/path-gravel-a-01.png",
+      "assets/library/tiles/path-gravel-a/path-gravel-a-02.png",
+      "assets/library/tiles/path-gravel-a/path-gravel-a-03.png",
+      "assets/library/tiles/path-gravel-a/path-gravel-a-04.png",
+      "assets/library/tiles/path-gravel-a/path-gravel-a-05.png",
+      "assets/library/tiles/path-gravel-a/path-gravel-a-06.png"
+    ],
+    "extras": []
+  }
+}

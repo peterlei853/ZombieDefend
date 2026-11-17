@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-campus",
+  "title": "[ZD-fill] campus grass path",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Primary Stage campus fill. 18×32×32.",
+  "source": {
+    "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-campus-00",
+      "path": "assets/library/tiles/path-campus/path-campus-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 0,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-01",
+      "path": "assets/library/tiles/path-campus/path-campus-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 1,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-02",
+      "path": "assets/library/tiles/path-campus/path-campus-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 2,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-03",
+      "path": "assets/library/tiles/path-campus/path-campus-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 3,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-04",
+      "path": "assets/library/tiles/path-campus/path-campus-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 4,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-05",
+      "path": "assets/library/tiles/path-campus/path-campus-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 5,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-06",
+      "path": "assets/library/tiles/path-campus/path-campus-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 6,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-07",
+      "path": "assets/library/tiles/path-campus/path-campus-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 7,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-08",
+      "path": "assets/library/tiles/path-campus/path-campus-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 8,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-09",
+      "path": "assets/library/tiles/path-campus/path-campus-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 9,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-10",
+      "path": "assets/library/tiles/path-campus/path-campus-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 10,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-11",
+      "path": "assets/library/tiles/path-campus/path-campus-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 11,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-12",
+      "path": "assets/library/tiles/path-campus/path-campus-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 12,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-13",
+      "path": "assets/library/tiles/path-campus/path-campus-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 13,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-14",
+      "path": "assets/library/tiles/path-campus/path-campus-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 14,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-15",
+      "path": "assets/library/tiles/path-campus/path-campus-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 15,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-16",
+      "path": "assets/library/tiles/path-campus/path-campus-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 16,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-17",
+      "path": "assets/library/tiles/path-campus/path-campus-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6051f7c2-57dd-4536-960a-ddec122b83f4",
+        "tileIndex": 17,
+        "originalName": "ZD-fill_tiles-path-campus_green_campus_grass_g_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Primary Stage campus fill. 18×32×32.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-campus/path-campus-00.png",
+    "sheets": [
+      "assets/library/tiles/path-campus/path-campus-01.png",
+      "assets/library/tiles/path-campus/path-campus-02.png",
+      "assets/library/tiles/path-campus/path-campus-03.png",
+      "assets/library/tiles/path-campus/path-campus-04.png",
+      "assets/library/tiles/path-campus/path-campus-05.png",
+      "assets/library/tiles/path-campus/path-campus-06.png"
+    ],
+    "extras": []
+  }
+}

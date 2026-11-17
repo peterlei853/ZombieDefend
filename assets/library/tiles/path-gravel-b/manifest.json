@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-gravel-b",
+  "title": "Gravel dirt path over dry grass (variant)",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Near-variant of path-gravel-a.",
+  "source": {
+    "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-gravel-b-00",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 0,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-01",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 1,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-02",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 2,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-03",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 3,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-04",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 4,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-05",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 5,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-06",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 6,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-07",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 7,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-08",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 8,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-09",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 9,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-10",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 10,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-11",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 11,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-12",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 12,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-13",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 13,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-14",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 14,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-15",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 15,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-16",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 16,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-gravel-b-17",
+      "path": "assets/library/tiles/path-gravel-b/path-gravel-b-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "68bba535-e577-4a28-92e2-bdf01bc1ed4c",
+        "tileIndex": 17,
+        "originalName": "gravel_dirt_path_over_dry_grass_patches_pixel_art_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Near-variant of path-gravel-a.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-gravel-b/path-gravel-b-00.png",
+    "sheets": [
+      "assets/library/tiles/path-gravel-b/path-gravel-b-01.png",
+      "assets/library/tiles/path-gravel-b/path-gravel-b-02.png",
+      "assets/library/tiles/path-gravel-b/path-gravel-b-03.png",
+      "assets/library/tiles/path-gravel-b/path-gravel-b-04.png",
+      "assets/library/tiles/path-gravel-b/path-gravel-b-05.png",
+      "assets/library/tiles/path-gravel-b/path-gravel-b-06.png"
+    ],
+    "extras": []
+  }
+}

@@ -16,8 +16,8 @@ const INDEX_URL = 'assets/library/asset-index.json';
  * `pets` is narrowed by stageLibraryFilter to the baby bodies, HUD icons,
  * and the twelve cast strips plus their skill FX.
  * `environment` is the barricade fence posts.
- * `zombies` includes s4-construction and s4-schoolgirl. Those index rows
- * are already 88×88; this loader does not resize them.
+ * `zombies` includes the S4 groups plus building-robot (92×92) and
+ * mech-giant (200×200). This loader does not resize those cells.
  */
 export const STAGE_LIBRARY_CATEGORIES = [
   'hero',

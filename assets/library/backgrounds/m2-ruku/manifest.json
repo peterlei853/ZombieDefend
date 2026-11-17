@@ -1,0 +1,700 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "backgrounds",
+  "group": "m2-ruku",
+  "title": "M2 leftover 320×180 stage backgrounds (35; does not replace the five already cataloged)",
+  "version": "v1.0",
+  "defaults": {
+    "type": "background",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "skippedAlreadyInCatalog": [
+    "bg-night-street",
+    "bg-night-street-moon",
+    "bg-rainy-market",
+    "bg-subway",
+    "bg-rooftop-dusk"
+  ],
+  "assets": [
+    {
+      "key": "bg-m2-factory",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-factory.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned factory interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:2ef615b7-521e-5dfb-a4ab-d700ceecc311"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-rainy-alley",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-rainy-alley.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Rainy dark alley night",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:243ab49e-121a-5384-8a04-132990f1e13f"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-parking-garage",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-parking-garage.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned parking garage interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:aebcf9c5-884b-510e-abf8-5b2188db5b87"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-subway-platform",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-subway-platform.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned subway platform",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:3f03e6d8-6ec8-57cb-bd8d-ff64d13627c2"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-sewer-tunnel",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-sewer-tunnel.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Dark sewer tunnel interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:80221ab7-161a-5f96-9c5f-5fae791a5106"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-rooftop-skyline",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-rooftop-skyline.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night city rooftop skyline",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:2e1f6955-9a3b-552f-8a97-0951243428d8"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-hospital-corridor",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-hospital-corridor.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned hospital corridor",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:eaeb8aa3-bf09-5a2e-9c3c-ea5246f48b0f"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-warehouse",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-warehouse.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned warehouse interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:91ff7c34-9ad4-5705-a886-46eda97502e9"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-neon-alley",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-neon-alley.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Dark alley night neon signs",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:3a46b4bb-5d5e-5453-a39b-89978cd87cb7"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-parking-garage-dark",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-parking-garage-dark.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Dark parking garage interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:e99cd72a-34df-5afc-bb9d-c3062f992bb8"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-subway-platform-alt",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-subway-platform-alt.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned subway platform (variant)",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:ed4c8b8d-fa10-563d-b895-de68e267dc99"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-rooftop-dusk-towers",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-rooftop-dusk-towers.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "City rooftop dusk with water towers",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:5e723a91-3c72-515f-8e9b-5be56cfd59b3"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-shopping-mall",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-shopping-mall.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned shopping mall interior",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:e7b9a76d-d6ce-58ed-a2c5-7e7bef496567"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-sewer-canal",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-sewer-canal.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Dark sewer tunnel / canal",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:5d0455df-dbb1-5d31-aaea-7e31fdf8789c"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-rooftop-night",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-rooftop-night.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "City rooftop night",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:f00eafe2-81cc-5882-b44e-d6e62a9e0701"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-foggy-cemetery",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-foggy-cemetery.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Foggy cemetery tombstones",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:85d84483-ee5c-52b3-af87-8b8fb633745b"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-hospital-lobby",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-hospital-lobby.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned hospital lobby",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:bca68c8a-edef-5385-bdd9-23332ad01581"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-parking-garage-yellow",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-parking-garage-yellow.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Parking garage yellow columns",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:0c5dacfe-3430-5919-8258-78644a0b67b4"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-subway-graffiti",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-subway-graffiti.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Abandoned subway tunnel graffiti",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:19dde468-9d40-5e28-9603-456e6271b8c1"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-neon-puddle-alley",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-neon-puddle-alley.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Dark alley neon signs puddles",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:e95ac770-4c2e-59da-8b57-459d54554f15"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-mall-escalators",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-mall-escalators.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Mall atrium with escalators",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:e60d6f80-24ee-513c-9910-09f41a198189"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-night-apartments",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-night-apartments.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night apartment block balconies",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:633a5eab-c132-5d59-818f-1ea8df1e812a"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-storage-cellar",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-storage-cellar.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Stone storage room barrels and crates",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:3665ba64-6e78-5a50-97a7-e8e10d343f83"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-park-promenade",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-park-promenade.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night park fence benches and lamp",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:6c4fc6f1-f202-5076-a321-ad81f848e6b0"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-sunset-pier",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-sunset-pier.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Sunset pier / beach boardwalk",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:597f37fe-56a9-5fb2-9c81-758028f8ab9a"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-residential-street",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-residential-street.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Residential street dusk lamps",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:7ec3ecfb-235f-5123-8112-e5d9190c7876"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-overpass-graffiti",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-overpass-graffiti.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Chain-link fence under overpass, ZOMBIE graffiti",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:de7044b1-7a5f-53a4-9cb4-bb219ae09a20"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-convenience-store",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-convenience-store.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night convenience store and vending machines",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:42613fda-bc4b-591a-b57c-fa1949d950d3"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-gas-station",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-gas-station.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night gas station canopy",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:967372ec-b916-53ac-a64f-fcd79a489f76"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-school-hallway",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-school-hallway.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "School hallway lockers",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:3ebb04f2-9826-5dda-b353-e76cbcd03e4a"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-locker-room",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-locker-room.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Locker room / school office",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:908e43a8-2b5c-5316-84b5-13f12459b237"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-crane-skyline",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-crane-skyline.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Night construction cranes over skyline",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:dd65c74c-1e03-5ede-956b-eab5547f70f4"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-campus-night",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-campus-night.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Campus / school building night behind fence",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:81a16e47-f39f-588e-85d6-342293db9690"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-park-sunset",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-park-sunset.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Park benches sunset skyline",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:0a7ea658-be27-5b37-9a96-7e940ef9ab28"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    },
+    {
+      "key": "bg-m2-hospital-ward",
+      "path": "assets/library/backgrounds/m2-ruku/bg-m2-hospital-ward.png",
+      "type": "background",
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "origin": [
+        0,
+        0
+      ],
+      "description": "Hospital ward green lighting",
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "galleryId": "gallery:2dbd45fa-e083-514a-ba17-4935c17e987f"
+      },
+      "frames": 1,
+      "note": "v1.0. Extra 320×180 plate. Does not replace the five cataloged M2 backdrops or bg-campus-*."
+    }
+  ],
+  "description": "35 leftover 320×180 M2 plates, v1.0, keys bg-m2-*. Origin (0, 0). Additional Stage backdrop options. Does not replace bg-night-street, bg-night-street-moon, bg-rainy-market, bg-subway, or bg-rooftop-dusk, and does not replace the campus plates.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/backgrounds/m2-ruku/bg-m2-campus-night.png",
+    "sheets": [
+      "assets/library/backgrounds/m2-ruku/bg-m2-rooftop-night.png",
+      "assets/library/backgrounds/m2-ruku/bg-m2-night-apartments.png",
+      "assets/library/backgrounds/m2-ruku/bg-m2-gas-station.png",
+      "assets/library/backgrounds/m2-ruku/bg-m2-school-hallway.png"
+    ],
+    "extras": []
+  }
+}

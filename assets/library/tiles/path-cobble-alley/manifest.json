@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-cobble-alley",
+  "title": "Worn cobblestone alley path",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Alley cobble; street set recommended for main roads.",
+  "source": {
+    "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-cobble-alley-00",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 0,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-01",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 1,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-02",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 2,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-03",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 3,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-04",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 4,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-05",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 5,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-06",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 6,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-07",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 7,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-08",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 8,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-09",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 9,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-10",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 10,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-11",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 11,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-12",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 12,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-13",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 13,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-14",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 14,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-15",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 15,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-16",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 16,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-alley-17",
+      "path": "assets/library/tiles/path-cobble-alley/path-cobble-alley-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "0ff4e0b7-0197-465e-b6d4-9907db5b66ac",
+        "tileIndex": 17,
+        "originalName": "worn_cobblestone_alley_path_over_dark_dirt_ground_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Alley cobble; street set recommended for main roads.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-cobble-alley/path-cobble-alley-00.png",
+    "sheets": [
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-01.png",
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-02.png",
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-03.png",
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-04.png",
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-05.png",
+      "assets/library/tiles/path-cobble-alley/path-cobble-alley-06.png"
+    ],
+    "extras": []
+  }
+}

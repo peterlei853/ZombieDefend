@@ -1,8 +1,11 @@
 /**
- * Main-stage enemy roster (v0.36.31).
+ * Main-stage enemy roster (v0.36.32).
  *
  * Five stages. The clear loop is stages 1–5 (`PLAYABLE_STAGE_CAP`).
  * Stages 1–4 grow the skin pool. Stage 5 is the Balun boss stage.
+ * Building Robot joins stages 4–5. Giant mech-zombie joins the stage 5
+ * escorts. Their HP, speed, contact DPS, and gold are the existing row
+ * in stageBalance.js (a placeholder mix). Gameplay should confirm it.
  * A missing strip falls back to `office-worker-v2` only.
  */
 
@@ -58,15 +61,30 @@ const STAGE_2_MIX = [...STAGE_1_MIX, 'sprinter', 'exploder'];
 /** Stage 3 adds the nurse line plus cyborg and trashcan. */
 const STAGE_3_MIX = [...STAGE_2_MIX, 'nurse', 'cyborg', 'trashcan'];
 
-/** Stage 4 adds riot and the wired salaryman. Harder than stage 3. */
-const STAGE_4_MIX = [...STAGE_3_MIX, 'riot', 's4-salaryman'];
+/**
+ * Stage 4 adds riot, the wired salaryman, and Building Robot.
+ * Harder than stage 3. Robot HP/DPS/gold stay this stage's existing row.
+ */
+const STAGE_4_MIX = [...STAGE_3_MIX, 'riot', 's4-salaryman', 'building-robot'];
 
 /**
  * Stage 5 escorts. No nurse, so the stage-3 nurse line does not repeat.
+ * Building Robot repeats here. Giant mech-zombie is the late escort and
+ * uses this same escort row (placeholder numbers, not a new formula).
  * The boss itself is named on the boss wave, not rolled from this list.
  * @type {string[]}
  */
-export const STAGE_5_ESCORTS = ['sprinter', 'riot', 'trashcan', 'cyborg', 'exploder', 'slime', 's4-construction'];
+export const STAGE_5_ESCORTS = [
+  'sprinter',
+  'riot',
+  'trashcan',
+  'cyborg',
+  'exploder',
+  'slime',
+  's4-construction',
+  'building-robot',
+  'mech-giant',
+];
 
 /**
  * Pools by stage. Each stage is the previous mix plus new skins.

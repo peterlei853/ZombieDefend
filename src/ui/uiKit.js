@@ -24,6 +24,22 @@ export const FONT_TINY_INK = 'ui-font-hud-tiny-atlas';
 /** Dark brown multiply for the black atlases on a light parchment inset. */
 export const INK_TINT = 0x2a2118;
 
+/**
+ * Nov 17 入庫 panels. Only bossIntro is drawn (stage 5 boss callout).
+ * PIXELLAB_HOOK: inventory, settings, confirm, and quit have no screen yet.
+ * Do not swap them onto the shop list or the win/lose card.
+ */
+export const RUKU_UI = {
+  bossIntro: 'ui-banner-boss-intro',
+  bossWarning: 'ui-banner-boss-warning',
+  inventory: 'ui-inventory',
+  inventoryPanel: 'ui-panel-inventory',
+  loadout: 'ui-weapon-loadout-panel',
+  settings: 'ui-settings-toggles',
+  confirm: 'ui-dialog-confirm',
+  quit: 'ui-dialog-quit',
+};
+
 export const UI = {
   dialog: 'ui-dialog-panel',
   toast: 'ui-toast-panel',

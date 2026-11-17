@@ -1,0 +1,515 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "ui",
+  "group": "ruku-panels",
+  "title": "Extra completed UI panels (NONE in live catalog)",
+  "version": "v1.0",
+  "defaults": {
+    "type": "icon",
+    "origin": [
+      0.5,
+      0.5
+    ]
+  },
+  "assets": [
+    {
+      "key": "ui-ammo-counter",
+      "path": "assets/library/ui/ruku/ui-ammo-counter.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "9ac37797-0e18-48df-ac01-f308b33c33cc"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-weapons",
+      "path": "assets/library/ui/ruku/ui-weapons.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "4672ff21-a741-4099-b160-1658dc7e64b3"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-ammo",
+      "path": "assets/library/ui/ruku/ui-ammo.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "cdbb518d-306e-4f6a-8863-3922e850f7c9"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-combo",
+      "path": "assets/library/ui/ruku/ui-combo.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "56a22cfd-d553-45cf-a2dc-6648007a6f63"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-achievements",
+      "path": "assets/library/ui/ruku/ui-achievements.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 320,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "bf3fd905-d5b0-49e6-8444-b621eb3b0434"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-daily",
+      "path": "assets/library/ui/ruku/ui-daily.png",
+      "type": "icon",
+      "frameWidth": 320,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "8c02128a-dfd1-4254-b511-f74769b4619e"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-tutorial",
+      "path": "assets/library/ui/ruku/ui-tutorial.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "bbc54ca4-30c9-43f3-be51-8dbf5a690135"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-radar",
+      "path": "assets/library/ui/ruku/ui-radar.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "ff57469e-a645-4509-aefc-99fa50e87b82"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-map",
+      "path": "assets/library/ui/ruku/ui-map.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "c5dfee19-600b-4212-81e2-9b74d20000b1"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-loadout",
+      "path": "assets/library/ui/ruku/ui-loadout.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "8c7b8d73-7dc4-4292-bd44-4bb1feb8cb0c"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-inventory",
+      "path": "assets/library/ui/ruku/ui-inventory.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "bb834625-08a8-4cfe-9f9d-7718d90e134f"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "zd-dmg-frame-panel",
+      "path": "assets/library/ui/ruku/zd-dmg-frame-panel.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "f12d7767-abb1-4df5-a25a-bed9d1c64661"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-tower-upgrade",
+      "path": "assets/library/ui/ruku/ui-tower-upgrade.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "1f2e6b2d-a487-4f8b-96d6-be437c732129"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-killstreak",
+      "path": "assets/library/ui/ruku/ui-killstreak.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "6b83b065-f6bb-417c-8394-f9031921cf3d"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-ability-cooldown",
+      "path": "assets/library/ui/ruku/ui-ability-cooldown.png",
+      "type": "icon",
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "35fde337-a08d-400b-9b2f-6178ba4131af"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-icons-status-effects",
+      "path": "assets/library/ui/ruku/ui-icons-status-effects.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "e976c16e-e77c-4264-b965-0958e3c3b10b"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-weapon-loadout-panel",
+      "path": "assets/library/ui/ruku/ui-weapon-loadout-panel.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "115b7ff7-6b9e-4b2e-872e-6a1c481564e9"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-icons-damage-types",
+      "path": "assets/library/ui/ruku/ui-icons-damage-types.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "676b313a-8017-4072-8c8c-9e5e2d07474e"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-loading-spinner",
+      "path": "assets/library/ui/ruku/ui-loading-spinner.png",
+      "type": "icon",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "06eb7d03-0863-4c40-948d-399507b7918c"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-stars-rating",
+      "path": "assets/library/ui/ruku/ui-stars-rating.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "29cd6f2e-2429-4c60-b684-c56383c0554b"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-banner-boss-warning",
+      "path": "assets/library/ui/ruku/ui-banner-boss-warning.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "f2d457e0-9b99-410c-816b-d26857865d86"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-panel-inventory",
+      "path": "assets/library/ui/ruku/ui-panel-inventory.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 384,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "ff44c076-13a4-45c3-aa74-426752df34a0"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-dialog-quit",
+      "path": "assets/library/ui/ruku/ui-dialog-quit.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "96c702e5-d058-48a0-889d-b38b951f92f4"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-settings-toggles",
+      "path": "assets/library/ui/ruku/ui-settings-toggles.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "29ec1b33-69d1-4ec9-ae2c-8f2a6a51a5cc"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-banner-boss-intro",
+      "path": "assets/library/ui/ruku/ui-banner-boss-intro.png",
+      "type": "icon",
+      "frameWidth": 512,
+      "frameHeight": 192,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "5fa1bd35-bf74-4d70-8ed6-d7c23dbff775"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-dialog-confirm",
+      "path": "assets/library/ui/ruku/ui-dialog-confirm.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 256,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "610bdd1e-8b91-44d7-8499-a04541d50b67"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    },
+    {
+      "key": "ui-btn-strip",
+      "path": "assets/library/ui/ruku/ui-btn-strip.png",
+      "type": "icon",
+      "frameWidth": 384,
+      "frameHeight": 288,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabUiAssetId": "6cd35ef2-7c7e-40c8-9318-cee3fcb05626"
+      },
+      "frames": 1,
+      "note": "v1.0. Catalog panel. Origin (0.5, 0.5). Not a live HUD replacement."
+    }
+  ],
+  "description": "27 NONE-flagged UI panels from the 2026-11-17 入庫, v1.0. Origin (0.5, 0.5). Does not re-enter ALIAS/ID UI and does not replace live HUD keys. Stage hooks only the screens that already exist; the rest stay cataloged.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/ui/ruku/ui-ammo-counter.png",
+    "sheets": [
+      "assets/library/ui/ruku/ui-weapons.png",
+      "assets/library/ui/ruku/ui-ammo.png",
+      "assets/library/ui/ruku/ui-combo.png",
+      "assets/library/ui/ruku/ui-achievements.png",
+      "assets/library/ui/ruku/ui-daily.png"
+    ],
+    "extras": []
+  }
+}

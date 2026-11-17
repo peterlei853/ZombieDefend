@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-campus-lawn",
+  "title": "Campus lawn grass with worn path",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Companion lawn/worn-dirt path for campus.",
+  "source": {
+    "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-campus-lawn-00",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 0,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-01",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 1,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-02",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 2,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-03",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 3,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-04",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 4,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-05",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 5,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-06",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 6,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-07",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 7,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-08",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 8,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-09",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 9,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-10",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 10,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-11",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 11,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-12",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 12,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-13",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 13,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-14",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 14,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-15",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 15,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-16",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 16,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-campus-lawn-17",
+      "path": "assets/library/tiles/path-campus-lawn/path-campus-lawn-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "7d72b4b0-1dac-435f-8a60-a3786cb8a15c",
+        "tileIndex": 17,
+        "originalName": "campus_lawn_grass_with_a_worn_dirt_walking_path_c_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Companion lawn/worn-dirt path for campus.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-campus-lawn/path-campus-lawn-00.png",
+    "sheets": [
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-01.png",
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-02.png",
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-03.png",
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-04.png",
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-05.png",
+      "assets/library/tiles/path-campus-lawn/path-campus-lawn-06.png"
+    ],
+    "extras": []
+  }
+}

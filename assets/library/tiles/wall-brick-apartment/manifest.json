@@ -1,0 +1,1639 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "wall-brick-apartment",
+  "title": "Abandoned brick apartment wall",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Wall tileset (not a path). Mixed tile sizes — see manifest. For building façades, not floor fill.",
+  "source": {
+    "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30"
+  },
+  "tileCount": 80,
+  "sizes": {
+    "52x87": 80
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "wall-brick-apartment-00",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-00.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 0,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-01",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-01.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 1,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-02",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-02.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 2,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-03",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-03.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 3,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-04",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-04.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 4,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-05",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-05.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 5,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-06",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-06.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 6,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-07",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-07.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 7,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-08",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-08.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 8,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-09",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-09.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 9,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-10",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-10.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 10,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-11",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-11.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 11,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-12",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-12.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 12,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-13",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-13.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 13,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-14",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-14.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 14,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-15",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-15.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 15,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-16",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-16.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 16,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-17",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-17.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 17,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-18",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-18.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 18,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_18.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-19",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-19.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 19,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_19.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-20",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-20.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 20,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_20.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-21",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-21.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 21,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_21.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-22",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-22.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 22,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_22.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-23",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-23.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 23,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_23.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-24",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-24.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 24,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_24.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-25",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-25.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 25,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_25.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-26",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-26.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 26,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_26.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-27",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-27.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 27,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_27.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-28",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-28.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 28,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_28.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-29",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-29.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 29,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_29.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-30",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-30.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 30,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_30.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-31",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-31.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 31,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_31.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-32",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-32.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 32,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_32.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-33",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-33.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 33,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_33.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-34",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-34.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 34,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_34.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-35",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-35.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 35,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_35.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-36",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-36.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 36,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_36.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-37",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-37.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 37,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_37.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-38",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-38.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 38,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_38.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-39",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-39.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 39,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_39.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-40",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-40.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 40,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_40.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-41",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-41.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 41,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_41.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-42",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-42.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 42,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_42.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-43",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-43.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 43,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_43.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-44",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-44.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 44,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_44.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-45",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-45.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 45,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_45.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-46",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-46.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 46,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_46.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-47",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-47.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 47,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_47.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-48",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-48.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 48,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_48.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-49",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-49.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 49,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_49.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-50",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-50.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 50,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_50.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-51",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-51.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 51,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_51.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-52",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-52.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 52,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_52.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-53",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-53.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 53,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_53.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-54",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-54.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 54,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_54.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-55",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-55.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 55,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_55.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-56",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-56.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 56,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_56.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-57",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-57.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 57,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_57.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-58",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-58.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 58,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_58.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-59",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-59.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 59,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_59.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-60",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-60.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 60,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_60.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-61",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-61.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 61,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_61.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-62",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-62.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 62,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_62.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-63",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-63.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 63,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_63.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-64",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-64.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 64,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_64.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-65",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-65.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 65,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_65.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-66",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-66.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 66,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_66.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-67",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-67.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 67,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_67.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-68",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-68.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 68,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_68.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-69",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-69.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 69,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_69.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-70",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-70.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 70,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_70.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-71",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-71.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 71,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_71.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-72",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-72.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 72,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_72.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-73",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-73.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 73,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_73.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-74",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-74.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 74,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_74.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-75",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-75.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 75,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_75.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-76",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-76.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 76,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_76.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-77",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-77.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 77,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_77.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-78",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-78.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 78,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_78.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    },
+    {
+      "key": "wall-brick-apartment-79",
+      "path": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-79.png",
+      "type": "image",
+      "frameWidth": 52,
+      "frameHeight": 87,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6b0606f6-deef-4e6f-b4fb-c1191fccce30",
+        "tileIndex": 79,
+        "originalName": "abandoned_brick_apartment_walls_boarded_windows_zo_79.png"
+      },
+      "frames": 1,
+      "note": "v1.0. Façade tile, not a floor path. Origin (0, 0)."
+    }
+  ],
+  "description": "Wall tileset (not a path). Mixed tile sizes — see manifest. For building façades, not floor fill.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-00.png",
+    "sheets": [
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-01.png",
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-02.png",
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-03.png",
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-04.png",
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-05.png",
+      "assets/library/tiles/wall-brick-apartment/wall-brick-apartment-06.png"
+    ],
+    "extras": []
+  }
+}

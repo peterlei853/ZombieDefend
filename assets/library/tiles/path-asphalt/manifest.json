@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-asphalt",
+  "title": "Cracked gray asphalt road path",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Gray cracked asphalt; use if you want no yellow lines.",
+  "source": {
+    "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-asphalt-00",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 0,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-01",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 1,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-02",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 2,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-03",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 3,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-04",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 4,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-05",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 5,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-06",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 6,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-07",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 7,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-08",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 8,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-09",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 9,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-10",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 10,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-11",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 11,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-12",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 12,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-13",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 13,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-14",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 14,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-15",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 15,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-16",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 16,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-17",
+      "path": "assets/library/tiles/path-asphalt/path-asphalt-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "3f12ead9-06fd-4e85-aeb2-ff06ae33d5ed",
+        "tileIndex": 17,
+        "originalName": "cracked_gray_asphalt_road_path_over_dark_campus_di_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Gray cracked asphalt; use if you want no yellow lines.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-asphalt/path-asphalt-00.png",
+    "sheets": [
+      "assets/library/tiles/path-asphalt/path-asphalt-01.png",
+      "assets/library/tiles/path-asphalt/path-asphalt-02.png",
+      "assets/library/tiles/path-asphalt/path-asphalt-03.png",
+      "assets/library/tiles/path-asphalt/path-asphalt-04.png",
+      "assets/library/tiles/path-asphalt/path-asphalt-05.png",
+      "assets/library/tiles/path-asphalt/path-asphalt-06.png"
+    ],
+    "extras": []
+  }
+}
