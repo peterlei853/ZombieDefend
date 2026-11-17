@@ -360,10 +360,15 @@ import { OWNED_WEAPON_ORDER, WEAPON_TRAITS } from '../assets/heroDeploy.js';
  * reuse the existing S4 row and S5 escort row. Skill strips do not
  * cast damage. Gold, saves, barricade HP, spawn counts, and combat
  * damage stay put. GitHub Pages publishes this tip from main.
+ * v0.36.33: stage 4 pins one Building Robot in wave 2 (spawn 6 of 12,
+ * about 31s). Stage 5 pins one Building Robot in the opening escort
+ * trio (spawn 2 of 3, about 8s), before Balun. The other spawns keep
+ * the equal mix, including mech-giant on the stage 5 escorts. Gold,
+ * saves, barricade HP, Robot and mech rows, and spawn counts stay put.
  */
 
 /** Title, stage HUD, and package.json stay on this string together. */
-export const APP_VERSION = '0.36.32';
+export const APP_VERSION = '0.36.33';
 
 /**
  * Six stage-1 guns, direct hits only. Splash, chain, and burn are omitted

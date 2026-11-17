@@ -1,12 +1,14 @@
 /**
- * Main-stage enemy roster (v0.36.32).
+ * Main-stage enemy roster (v0.36.33).
  *
  * Five stages. The clear loop is stages 1–5 (`PLAYABLE_STAGE_CAP`).
  * Stages 1–4 grow the skin pool. Stage 5 is the Balun boss stage.
- * Building Robot joins stages 4–5. Giant mech-zombie joins the stage 5
- * escorts. Their HP, speed, contact DPS, and gold are the existing row
- * in stageBalance.js (a placeholder mix). Gameplay should confirm it.
- * A missing strip falls back to `office-worker-v2` only.
+ * Building Robot (`building-robot`) is one equal entry on stages 4–5.
+ * Giant mech-zombie (`mech-giant`) is one equal entry on the stage 5
+ * escorts. v0.36.33 does not add a second copy of either id here.
+ * The short-run guarantee is a single pinned spawn in stageBalance.js,
+ * not a heavier weight in this list. HP, speed, contact DPS, and gold
+ * stay the existing row. A missing strip falls back to `office-worker-v2` only.
  */
 
 /** How many main stages exist. Direct `?stage=` still accepts 1–5. */

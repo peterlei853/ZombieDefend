@@ -2,6 +2,16 @@ import { rosterForStage } from '../data/stageRoster.js';
 import { STAGE_DURATION, waveDefsForStage } from '../data/waves.js';
 
 /**
+ * Nominal spawn time before jitter. WaveManager uses this for every body.
+ * @param {{ startSec: number, endSec: number, total: number }} def
+ * @param {number} index 0-based index inside the wave
+ */
+export function waveSpawnNominalSec(def, index) {
+  const span = Math.max(0.05, def.endSec - def.startSec);
+  return def.startSec + ((index + 0.5) / def.total) * span;
+}
+
+/**
  * Spreads spawn events across each wave window and tracks remaining-to-spawn.
  * StageScene owns living zombies; WaveManager only schedules spawn intents.
  */
@@ -33,20 +43,37 @@ export class WaveManager {
     this.queue = [];
     for (const def of this.waveDefs) {
       const span = Math.max(0.05, def.endSec - def.startSec);
+      const pin = this._pinIndex(def);
       for (let i = 0; i < def.total; i++) {
         // Spread evenly; slight jitter so packs aren't perfectly synced
-        const t = def.startSec + ((i + 0.5) / def.total) * span;
+        const t = waveSpawnNominalSec(def, i);
         const jitter = (Math.random() - 0.5) * (span / def.total) * 0.6;
         const time = Math.min(def.endSec - 0.01, Math.max(def.startSec, t + jitter));
+        const archetype = this._pickArchetype(def.archetypes);
+        // One pinned slot. HP, speed, DPS, and gold stay on the rolled row.
+        if (i === pin) archetype.skin = def.guaranteeSkin;
         this.queue.push({
           time,
           wave: def.wave,
-          archetype: this._pickArchetype(def.archetypes),
+          archetype,
         });
       }
     }
     this.queue.sort((a, b) => a.time - b.time);
     this.totalPlanned = this.queue.length;
+  }
+
+  /**
+   * 0-based spawn to force, or -1 when this wave has no pin.
+   * A missing index uses the middle spawn. An index outside the wave is ignored.
+   * @param {{ total?: number, guaranteeSkin?: string|null, guaranteeIndex?: number|null }} def
+   */
+  _pinIndex(def) {
+    if (!def?.guaranteeSkin || !(def.total > 0)) return -1;
+    const raw = def.guaranteeIndex;
+    const index = Number.isFinite(raw) ? Math.floor(Number(raw)) : Math.floor((def.total - 1) / 2);
+    if (index < 0 || index >= def.total) return -1;
+    return index;
   }
 
   _pickArchetype(archetypes) {
