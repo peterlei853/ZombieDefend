@@ -1,0 +1,2019 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "street",
+  "title": "Street / campus fill props",
+  "version": "v1.0",
+  "defaultsUpright": {
+    "origin": [
+      0.5,
+      1.0
+    ]
+  },
+  "defaultsDecal": {
+    "origin": [
+      0.5,
+      0.5
+    ],
+    "keys": [
+      "prop-manhole",
+      "prop-street-grate"
+    ]
+  },
+  "assets": [
+    {
+      "key": "fence-damage-heavy",
+      "path": "assets/library/environment/street/fence-damage-heavy.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "e896e6ec-ec9f-40f9-be4f-bd518e3a5781",
+        "pixellabName": "pixel art wooden barricad...",
+        "tags": [
+          "fence-damage-heavy"
+        ],
+        "originalKey": "fence-damage-heavy"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 44.98,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 3306,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "e896e6ec-ec9f-40f9-be4f-bd518e3a5781"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "fence-damage-mid",
+      "path": "assets/library/environment/street/fence-damage-mid.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "97b6613d-ba8e-430a-b6a0-06fbe2b03e34",
+        "pixellabName": "pixel art wooden barricad...",
+        "tags": [
+          "fence-damage-mid"
+        ],
+        "originalKey": "fence-damage-mid"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 50.36,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 3940,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "97b6613d-ba8e-430a-b6a0-06fbe2b03e34"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "fence-damage-none",
+      "path": "assets/library/environment/street/fence-damage-none.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "14d01b8f-98ab-42df-9b11-65d8344c7c10",
+        "pixellabName": "pixel art wooden barricad...",
+        "tags": [
+          "fence-damage-none"
+        ],
+        "originalKey": "fence-damage-none"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 52.37,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 4594,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "14d01b8f-98ab-42df-9b11-65d8344c7c10"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-barrel",
+      "path": "assets/library/environment/street/prop-barrel.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "858a7729-4aeb-484f-9b64-5a62c8c30bd8",
+        "pixellabName": "[ZD-fill] prop-barrel — w...",
+        "tags": [],
+        "originalKey": "prop-barrel"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 55.41,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 3454,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "858a7729-4aeb-484f-9b64-5a62c8c30bd8"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-barricade",
+      "path": "assets/library/environment/street/prop-barricade.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "f20299ee-760a-4709-beca-bb5c148d61d6",
+        "pixellabName": "pixel art wooden police b...",
+        "tags": [
+          "prop-barricade"
+        ],
+        "originalKey": "prop-barricade"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 47.27,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1606,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "f20299ee-760a-4709-beca-bb5c148d61d6"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-bench",
+      "path": "assets/library/environment/street/prop-bench.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "c3dca9e9-a1a2-4a39-b6fc-edee73952ea5",
+        "pixellabName": "pixel art wooden park ben...",
+        "tags": [
+          "prop-bench"
+        ],
+        "originalKey": "prop-bench"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 48.37,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1609,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "c3dca9e9-a1a2-4a39-b6fc-edee73952ea5"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-bike-rack",
+      "path": "assets/library/environment/street/prop-bike-rack.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "8cec0c29-90b7-492a-b2ec-231bcea6951e",
+        "pixellabName": "pixel art metal bike rack...",
+        "tags": [
+          "prop-bike-rack"
+        ],
+        "originalKey": "prop-bike-rack"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 51.14,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 992,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "8cec0c29-90b7-492a-b2ec-231bcea6951e"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-bollard",
+      "path": "assets/library/environment/street/prop-bollard.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "1809f264-cf8b-4dfe-881c-6f65b4b28d93",
+        "pixellabName": "pixel art metal street bo...",
+        "tags": [
+          "prop-bollard"
+        ],
+        "originalKey": "prop-bollard"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 36.97,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1161,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "1809f264-cf8b-4dfe-881c-6f65b4b28d93"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-bus-stop",
+      "path": "assets/library/environment/street/prop-bus-stop.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "49d93a4b-869d-4492-b1e9-3c64387793c8",
+        "pixellabName": "pixel art bus stop sign p...",
+        "tags": [
+          "prop-bus-stop"
+        ],
+        "originalKey": "prop-bus-stop"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 50.7,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1819,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "49d93a4b-869d-4492-b1e9-3c64387793c8"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-car-wrecked",
+      "path": "assets/library/environment/street/prop-car-wrecked.png",
+      "type": "image",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "bc40f8a4-e476-4cb6-883b-7538486de2b4",
+        "pixellabName": "pixel art wrecked abandon...",
+        "tags": [
+          "prop-car-wrecked"
+        ],
+        "originalKey": "prop-car-wrecked"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 32.58,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2110,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "bc40f8a4-e476-4cb6-883b-7538486de2b4"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-cardboard-box",
+      "path": "assets/library/environment/street/prop-cardboard-box.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "6bc0128b-d842-4048-9d54-f6c578cbfd8b",
+        "pixellabName": "pixel art cardboard shipp...",
+        "tags": [
+          "prop-cardboard-box"
+        ],
+        "originalKey": "prop-cardboard-box"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 59.11,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 718,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "6bc0128b-d842-4048-9d54-f6c578cbfd8b"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-cardboard-pile",
+      "path": "assets/library/environment/street/prop-cardboard-pile.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "9053683c-c169-4fca-a24e-7f702c293d8c",
+        "pixellabName": "pixel art pile of cardboa...",
+        "tags": [
+          "prop-cardboard-pile"
+        ],
+        "originalKey": "prop-cardboard-pile"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.01,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1139,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "9053683c-c169-4fca-a24e-7f702c293d8c"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-chain-gate",
+      "path": "assets/library/environment/street/prop-chain-gate.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "4f848c13-deba-4922-bc77-1240dec81e3c",
+        "pixellabName": "pixel art chain-link fenc...",
+        "tags": [
+          "prop-chain-gate"
+        ],
+        "originalKey": "prop-chain-gate"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": -61.97,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1862,
+        "orphans": 58
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "4f848c13-deba-4922-bc77-1240dec81e3c"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-construction-barrier",
+      "path": "assets/library/environment/street/prop-construction-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "e052beb4-b446-47e4-9f46-665332a61abb",
+        "pixellabName": "pixel art orange white st...",
+        "tags": [
+          "prop-construction-barrier"
+        ],
+        "originalKey": "prop-construction-barrier"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 59.68,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2221,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "e052beb4-b446-47e4-9f46-665332a61abb"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-crate",
+      "path": "assets/library/environment/street/prop-crate.png",
+      "type": "image",
+      "frameWidth": 80,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "c1edc5a8-ef70-4de7-9d49-f357a9b02963",
+        "pixellabName": "[ZD-fill] prop-crate — wo...",
+        "tags": [],
+        "originalKey": "prop-crate"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 54.47,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2862,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "c1edc5a8-ef70-4de7-9d49-f357a9b02963"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-crate-stack",
+      "path": "assets/library/environment/street/prop-crate-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "1575cde6-350b-421b-890a-cc71b4f9b3f5",
+        "pixellabName": "pixel art stacked wooden ...",
+        "tags": [
+          "prop-crate-stack"
+        ],
+        "originalKey": "prop-crate-stack"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 63.51,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2336,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "1575cde6-350b-421b-890a-cc71b4f9b3f5"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-dumpster",
+      "path": "assets/library/environment/street/prop-dumpster.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "6da74840-34df-416f-ab3d-400b8bc24f49",
+        "pixellabName": "pixel art green metal dum...",
+        "tags": [
+          "prop-dumpster"
+        ],
+        "originalKey": "prop-dumpster"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.27,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2406,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "6da74840-34df-416f-ab3d-400b8bc24f49"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-dumpster-green",
+      "path": "assets/library/environment/street/prop-dumpster-green.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "53d9f5ac-08d0-4095-930c-be9e2ffbe07d",
+        "pixellabName": "pixel art green metal dum...",
+        "tags": [
+          "prop-dumpster-green"
+        ],
+        "originalKey": "prop-dumpster-green"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 63.12,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2226,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "53d9f5ac-08d0-4095-930c-be9e2ffbe07d"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-fence-dmg-1",
+      "path": "assets/library/environment/street/prop-fence-dmg-1.png",
+      "type": "image",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "7b6ed647-2249-4b3f-9f92-1a73a7fca8a3",
+        "pixellabName": "[ZD-fill] prop-fence-dmg-...",
+        "tags": [],
+        "originalKey": "prop-fence-dmg-1"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.38,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 6909,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "7b6ed647-2249-4b3f-9f92-1a73a7fca8a3"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-fence-dmg-2",
+      "path": "assets/library/environment/street/prop-fence-dmg-2.png",
+      "type": "image",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "17067535-c407-4845-81b8-5a9704bb1538",
+        "pixellabName": "[ZD-fill] prop-fence-dmg-...",
+        "tags": [],
+        "originalKey": "prop-fence-dmg-2"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 48.25,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 5709,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "17067535-c407-4845-81b8-5a9704bb1538"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-fence-intact",
+      "path": "assets/library/environment/street/prop-fence-intact.png",
+      "type": "image",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "892afc1d-401d-481d-b140-90a2f06e4a23",
+        "pixellabName": "[ZD-fill] prop-fence-inta...",
+        "tags": [],
+        "originalKey": "prop-fence-intact"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 57.06,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 7418,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "892afc1d-401d-481d-b140-90a2f06e4a23"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-fire-extinguisher",
+      "path": "assets/library/environment/street/prop-fire-extinguisher.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "d5086de4-93ee-4ffc-868f-5dd971e953bd",
+        "pixellabName": "pixel art red fire exting...",
+        "tags": [
+          "prop-fire-extinguisher"
+        ],
+        "originalKey": "prop-fire-extinguisher"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 45.65,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 849,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "d5086de4-93ee-4ffc-868f-5dd971e953bd"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-fire-hydrant",
+      "path": "assets/library/environment/street/prop-fire-hydrant.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "86c613d1-7897-4b67-a8a6-3a8d84a360a1",
+        "pixellabName": "pixel art red fire hydran...",
+        "tags": [
+          "prop-fire-hydrant"
+        ],
+        "originalKey": "prop-fire-hydrant"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 45.69,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 846,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "86c613d1-7897-4b67-a8a6-3a8d84a360a1"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-gas-pump",
+      "path": "assets/library/environment/street/prop-gas-pump.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "3faa9813-8291-48b3-8ca0-ef9950ece12a",
+        "pixellabName": "pixel art vintage gas pum...",
+        "tags": [
+          "prop-gas-pump"
+        ],
+        "originalKey": "prop-gas-pump"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 54.36,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1723,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "3faa9813-8291-48b3-8ca0-ef9950ece12a"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-jersey-barrier",
+      "path": "assets/library/environment/street/prop-jersey-barrier.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "c5ee3b5f-4eec-4dd5-85ce-e64d46d0c03f",
+        "pixellabName": "pixel art concrete jersey...",
+        "tags": [
+          "prop-jersey-barrier"
+        ],
+        "originalKey": "prop-jersey-barrier"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 49.93,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1776,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "c5ee3b5f-4eec-4dd5-85ce-e64d46d0c03f"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-mailbox",
+      "path": "assets/library/environment/street/prop-mailbox.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "cc60ea24-cfe6-464d-94e2-a3a67d530bfe",
+        "pixellabName": "pixel art blue US mailbox...",
+        "tags": [
+          "prop-mailbox"
+        ],
+        "originalKey": "prop-mailbox"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 59.25,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1317,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "cc60ea24-cfe6-464d-94e2-a3a67d530bfe"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-manhole",
+      "path": "assets/library/environment/street/prop-manhole.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "source": {
+        "pixellabObjectId": "f3e7aade-9941-4a86-ba7f-cff4eb792002",
+        "pixellabName": "pixel art round iron manh...",
+        "tags": [
+          "prop-manhole"
+        ],
+        "originalKey": "prop-manhole"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 65.64,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1424,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "f3e7aade-9941-4a86-ba7f-cff4eb792002"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 0.5). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-metal-locker",
+      "path": "assets/library/environment/street/prop-metal-locker.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "98d34ade-78b7-4473-a857-5c7f55efa70e",
+        "pixellabName": "pixel art tall metal lock...",
+        "tags": [
+          "prop-metal-locker"
+        ],
+        "originalKey": "prop-metal-locker"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 47.06,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": true,
+        "opaque": 1690,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "98d34ade-78b7-4473-a857-5c7f55efa70e"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-news-kiosk",
+      "path": "assets/library/environment/street/prop-news-kiosk.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "7154a7ca-f7da-42c3-8465-477597501928",
+        "pixellabName": "pixel art blue newspaper ...",
+        "tags": [
+          "prop-news-kiosk"
+        ],
+        "originalKey": "prop-news-kiosk"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 64.12,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2805,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "7154a7ca-f7da-42c3-8465-477597501928"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-newspaper-box",
+      "path": "assets/library/environment/street/prop-newspaper-box.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "ab1d5d9e-18a9-445d-9bdc-051761a99ccc",
+        "pixellabName": "pixel art blue metal news...",
+        "tags": [
+          "prop-newspaper-box"
+        ],
+        "originalKey": "prop-newspaper-box"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 53.12,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 11,
+          "bottom": 0
+        },
+        "softFixedBottom": true,
+        "opaque": 1281,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "ab1d5d9e-18a9-445d-9bdc-051761a99ccc"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-newsstand",
+      "path": "assets/library/environment/street/prop-newsstand.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "a3b74252-716e-42cb-97f2-a8cea0d68951",
+        "pixellabName": "pixel art newspaper stand...",
+        "tags": [
+          "prop-newsstand"
+        ],
+        "originalKey": "prop-newsstand"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.71,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2913,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "a3b74252-716e-42cb-97f2-a8cea0d68951"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-oil-barrel",
+      "path": "assets/library/environment/street/prop-oil-barrel.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "15745a9b-974c-4768-bda5-f1940a2b477a",
+        "pixellabName": "pixel art rusty oil drum ...",
+        "tags": [
+          "prop-oil-barrel"
+        ],
+        "originalKey": "prop-oil-barrel"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 58.72,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1296,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "15745a9b-974c-4768-bda5-f1940a2b477a"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-pallet",
+      "path": "assets/library/environment/street/prop-pallet.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "3302a1bc-ae9f-4153-92c2-2482051c4839",
+        "pixellabName": "pixel art wooden shipping...",
+        "tags": [
+          "prop-pallet"
+        ],
+        "originalKey": "prop-pallet"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 65.3,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 3339,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "3302a1bc-ae9f-4153-92c2-2482051c4839"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-parking-meter",
+      "path": "assets/library/environment/street/prop-parking-meter.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "86154a8c-179a-46d2-a3ff-c11749c0d84b",
+        "pixellabName": "pixel art old parking met...",
+        "tags": [
+          "prop-parking-meter"
+        ],
+        "originalKey": "prop-parking-meter"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 32.69,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": true,
+        "opaque": 662,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "86154a8c-179a-46d2-a3ff-c11749c0d84b"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-payphone",
+      "path": "assets/library/environment/street/prop-payphone.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "645c9d0f-4fea-4342-a473-8599f5707722",
+        "pixellabName": "pixel art wall-mounted pa...",
+        "tags": [
+          "prop-payphone"
+        ],
+        "originalKey": "prop-payphone"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 55.42,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1038,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "645c9d0f-4fea-4342-a473-8599f5707722"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-phone-booth",
+      "path": "assets/library/environment/street/prop-phone-booth.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "a27648b9-c9c9-4512-9fd2-243cb30a4430",
+        "pixellabName": "pixel art red phone booth...",
+        "tags": [
+          "prop-phone-booth"
+        ],
+        "originalKey": "prop-phone-booth"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 57.03,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2162,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "a27648b9-c9c9-4512-9fd2-243cb30a4430"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-sandbags",
+      "path": "assets/library/environment/street/prop-sandbags.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "2e5118e3-ee57-44f8-a503-1d695406d1cc",
+        "pixellabName": "pixel art sandbag barrica...",
+        "tags": [
+          "prop-sandbags"
+        ],
+        "originalKey": "prop-sandbags"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 51.74,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1869,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "2e5118e3-ee57-44f8-a503-1d695406d1cc"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-shopping-cart",
+      "path": "assets/library/environment/street/prop-shopping-cart.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "8d0bfd8e-db9f-44db-8503-cef5f2403094",
+        "pixellabName": "pixel art metal shopping ...",
+        "tags": [
+          "prop-shopping-cart"
+        ],
+        "originalKey": "prop-shopping-cart"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 55.79,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1109,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "8d0bfd8e-db9f-44db-8503-cef5f2403094"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-street-grate",
+      "path": "assets/library/environment/street/prop-street-grate.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        0.5
+      ],
+      "source": {
+        "pixellabObjectId": "76a81a1a-f552-4041-b147-1ae9cf1e5a08",
+        "pixellabName": "pixel art metal storm dra...",
+        "tags": [
+          "prop-street-grate"
+        ],
+        "originalKey": "prop-street-grate"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 69.09,
+        "clips": {
+          "left": 13,
+          "right": 13,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1548,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "76a81a1a-f552-4041-b147-1ae9cf1e5a08"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 0.5). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-street-lamp",
+      "path": "assets/library/environment/street/prop-street-lamp.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 96,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "728ede45-34eb-4dc9-8309-947769b46780",
+        "pixellabName": "[ZD-fill] prop-street-lam...",
+        "tags": [],
+        "originalKey": "prop-street-lamp-zd"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 22.11,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 547,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "728ede45-34eb-4dc9-8309-947769b46780"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-street-light",
+      "path": "assets/library/environment/street/prop-street-light.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "04a10392-5ca8-4ad5-abf3-3479848bfb33",
+        "pixellabName": "pixel art tall street lam...",
+        "tags": [
+          "prop-street-light"
+        ],
+        "originalKey": "prop-street-light"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 26.23,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 586,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "04a10392-5ca8-4ad5-abf3-3479848bfb33"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-street-sign",
+      "path": "assets/library/environment/street/prop-street-sign.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "6914b3e5-e84f-4fba-a9c3-f2f8a16ecc06",
+        "pixellabName": "pixel art stop sign red o...",
+        "tags": [
+          "prop-street-sign"
+        ],
+        "originalKey": "prop-street-sign"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 36.17,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": true,
+        "opaque": 728,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "6914b3e5-e84f-4fba-a9c3-f2f8a16ecc06"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-tire-stack",
+      "path": "assets/library/environment/street/prop-tire-stack.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "49236a9c-8405-4993-add6-deded1df4170",
+        "pixellabName": "pixel art stack of black ...",
+        "tags": [
+          "prop-tire-stack"
+        ],
+        "originalKey": "prop-tire-stack"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.76,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 2085,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "49236a9c-8405-4993-add6-deded1df4170"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-traffic-barrel",
+      "path": "assets/library/environment/street/prop-traffic-barrel.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "b5a675e8-0de8-4b50-9ad0-5786968f0d57",
+        "pixellabName": "pixel art orange white st...",
+        "tags": [
+          "prop-traffic-barrel"
+        ],
+        "originalKey": "prop-traffic-barrel"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 52.65,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1006,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "b5a675e8-0de8-4b50-9ad0-5786968f0d57"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-traffic-cone",
+      "path": "assets/library/environment/street/prop-traffic-cone.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "d77988a6-e0c9-4cea-9ed1-72291961e1ee",
+        "pixellabName": "pixel art orange traffic ...",
+        "tags": [
+          "prop-traffic-cone"
+        ],
+        "originalKey": "prop-traffic-cone"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 47.49,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 396,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "d77988a6-e0c9-4cea-9ed1-72291961e1ee"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-traffic-light",
+      "path": "assets/library/environment/street/prop-traffic-light.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "42d13da9-397e-46f3-9e66-a4e274ced6f9",
+        "pixellabName": "pixel art traffic light s...",
+        "tags": [
+          "prop-traffic-light"
+        ],
+        "originalKey": "prop-traffic-light"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 27.31,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": true,
+        "opaque": 526,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "42d13da9-397e-46f3-9e66-a4e274ced6f9"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-trash-bags",
+      "path": "assets/library/environment/street/prop-trash-bags.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "0b62a2cd-676b-4428-9c6f-1d0da3c23956",
+        "pixellabName": "pixel art black trash bag...",
+        "tags": [
+          "prop-trash-bags"
+        ],
+        "originalKey": "prop-trash-bags"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 52.22,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1839,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "0b62a2cd-676b-4428-9c6f-1d0da3c23956"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-trash-can",
+      "path": "assets/library/environment/street/prop-trash-can.png",
+      "type": "image",
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "b5958713-e616-47f8-86ce-09ee4fd41dcc",
+        "pixellabName": "[ZD-fill] prop-trash-bin ...",
+        "tags": [],
+        "originalKey": "prop-trash-bin"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 56.18,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 3007,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "b5958713-e616-47f8-86ce-09ee4fd41dcc"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-vending",
+      "path": "assets/library/environment/street/prop-vending.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "bbedf1cb-9dc6-4615-a309-d42b636c3e3b",
+        "pixellabName": "pixel art soda vending ma...",
+        "tags": [
+          "prop-vending"
+        ],
+        "originalKey": "prop-vending"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 59.33,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1470,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "bbedf1cb-9dc6-4615-a309-d42b636c3e3b"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-water-cooler",
+      "path": "assets/library/environment/street/prop-water-cooler.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "244db84d-28f8-49d1-915f-f81b141c6644",
+        "pixellabName": "pixel art office water co...",
+        "tags": [
+          "prop-water-cooler"
+        ],
+        "originalKey": "prop-water-cooler"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 47.64,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 943,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "244db84d-28f8-49d1-915f-f81b141c6644"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    },
+    {
+      "key": "prop-wood-crate",
+      "path": "assets/library/environment/street/prop-wood-crate.png",
+      "type": "image",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "origin": [
+        0.5,
+        1.0
+      ],
+      "source": {
+        "pixellabObjectId": "2a52db1e-ee09-4179-b289-1b4f58fa9773",
+        "pixellabName": "pixel art wooden shipping...",
+        "tags": [
+          "prop-wood-crate"
+        ],
+        "originalKey": "prop-wood-crate"
+      },
+      "version": "v1.0",
+      "qc": {
+        "score": 60.27,
+        "clips": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "softFixedBottom": false,
+        "opaque": 1632,
+        "orphans": 0
+      },
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabObjectId": "2a52db1e-ee09-4179-b289-1b4f58fa9773"
+      },
+      "frames": 1,
+      "note": "v1.0. Decorative street prop. Origin (0.5, 1.0). No collision, gold, or save behavior."
+    }
+  ],
+  "description": "51 street and campus props, one version each, v1.0. Decorative only. Upright origin (0.5, 1.0). Floor decals prop-manhole and prop-street-grate use (0.5, 0.5). Campus fence prop-fence-intact / dmg-1 / dmg-2 is 128×96 and is a separate series from 96×96 fence-damage-none|mid|heavy. prop-dumpster and prop-dumpster-green are both kept.",
+  "defaults": {
+    "type": "image",
+    "frames": 1,
+    "facing": null
+  },
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/environment/street/prop-bench.png",
+    "sheets": [
+      "assets/library/environment/street/fence-damage-none.png",
+      "assets/library/environment/street/prop-dumpster.png",
+      "assets/library/environment/street/prop-dumpster-green.png",
+      "assets/library/environment/street/prop-fence-intact.png",
+      "assets/library/environment/street/prop-manhole.png",
+      "assets/library/environment/street/prop-street-grate.png"
+    ],
+    "extras": []
+  }
+}

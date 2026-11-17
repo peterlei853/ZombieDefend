@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-asphalt-dark-yellow-v2",
+  "title": "Dark asphalt road with yellow (variant)",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Near-dupe of path-asphalt-dark-yellow.",
+  "source": {
+    "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-asphalt-dark-yellow-v2-00",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 0,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-01",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 1,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-02",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 2,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-03",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 3,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-04",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 4,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-05",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 5,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-06",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 6,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-07",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 7,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-08",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 8,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-09",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 9,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-10",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 10,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-11",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 11,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-12",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 12,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-13",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 13,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-14",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 14,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-15",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 15,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-16",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 16,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-dark-yellow-v2-17",
+      "path": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "2fc3cc48-cc02-41b8-8c62-7c092d705ef2",
+        "tileIndex": 17,
+        "originalName": "dark_asphalt_road_with_yellow_dashed_center_line_o_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Near-dupe of path-asphalt-dark-yellow.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-00.png",
+    "sheets": [
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-01.png",
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-02.png",
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-03.png",
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-04.png",
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-05.png",
+      "assets/library/tiles/path-asphalt-dark-yellow-v2/path-asphalt-dark-yellow-v2-06.png"
+    ],
+    "extras": []
+  }
+}

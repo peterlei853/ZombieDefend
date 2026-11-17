@@ -442,14 +442,14 @@ def build_index(groups, assets):
     idx['conventions'] = OrderedDict([
         ('strips', 'horizontal; frame i at x = i*frameWidth, y = 0 (unless "grid" is given)'),
         ('origin', 'Phaser setOrigin(x, y) fractions of one frame'),
-        ('zombies', '64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse rule-anim v1.0 cells 84x84, S4 construction/schoolgirl/delivery/salaryman catalog-only 88x88, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east'),
+        ('zombies', '64x64 (brute body 96x96, brute skill ground smash 132x132 v2.1 feet on canvas bottom padB=0, office-worker-v2/delivery/chef/nurse rule-anim v1.0 cells 84x84, S4 construction/schoolgirl/delivery/salaryman 88x88, building-robot 92x92 padded from a 64 idle rotation, mech-giant 200x200 padded from a 180 idle rotation, slime split / sprinter blasted_back+tumble 96x64), origin (0.5, 1.0) feet, facing east. Do not resize the padded 92/200 cells'),
         ('bosses', '128x128, origin (0.5, 1.0), facing east; skill FX attach offsets are px from the boss origin, y up negative'),
         ('pets', 'Chibi pets facing west; baby 48 / young 64 / ancient 96 (phoenix+dragon ancient 128); origin (0.5,1); skill = cast strip + standalone FX'),
         ('hero', '92x92, origin (0.5, 76/92 = 0.8261) feet at y=76, facing west unless key ends in -walk-east/-north/-south'),
         ('fx', 'origin per key; hero FX point west, boss FX east'),
         ('loop', 'loop=true: whole strip repeats. loopFrom/loopTo (inclusive, 0-based): play [0,loopFrom) once, repeat [loopFrom..loopTo] while sustained, then (loopTo..end] once'),
-        ('environment', 'barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Empty 64x64 steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange. Origin (0.5, 0.9375) feet at y=60, cradle at (32, 12). Gun floats separately'),
-        ('backgrounds', '1280x720, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6'),
+        ('environment', 'barricade posts 32x64, origin (0.5, 1.0) feet, gappy stakes (visual); collision stays code-driven. Empty 64x64 steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange. Origin (0.5, 0.9375) feet at y=60, cradle at (32, 12). Gun floats separately. 2026-11-17 path tiles are 32x32 origin (0, 0); wall-brick-apartment is 80 façades at 52x87. Street props are upright (0.5, 1.0) except prop-manhole and prop-street-grate (0.5, 0.5). Decorative only'),
+        ('backgrounds', '1280x720 campus plates, origin (0,0), top-left at world (832, 0) = fixed camera scrollX; depths far 3, fire 3.5, ground 4, mid 5, lamp 6. Five 320x180 M2 plates stay. bg-m2-* are extra 320x180 options and do not replace those five'),
         ('concepts', 'concept art only; not game-ready'),
     ])
     idx['counts'] = OrderedDict(total=len(assets), byCategory=counts, byType=OrderedDict(sorted(by_type.items())))

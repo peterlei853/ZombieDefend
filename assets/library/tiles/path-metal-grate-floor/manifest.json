@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-metal-grate-floor",
+  "title": "Industrial metal grate floor",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Floor variant; use for interiors, walkway set preferred for paths.",
+  "source": {
+    "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-metal-grate-floor-00",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 0,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-01",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 1,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-02",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 2,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-03",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 3,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-04",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 4,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-05",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 5,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-06",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 6,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-07",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 7,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-08",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 8,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-09",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 9,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-10",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 10,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-11",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 11,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-12",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 12,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-13",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 13,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-14",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 14,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-15",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 15,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-16",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 16,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-floor-17",
+      "path": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "60b75750-15b7-41d2-95ed-bfbf4d585c1b",
+        "tileIndex": 17,
+        "originalName": "industrial_metal_grate_floor_dirty_steel_urban_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Floor variant; use for interiors, walkway set preferred for paths.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-00.png",
+    "sheets": [
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-01.png",
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-02.png",
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-03.png",
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-04.png",
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-05.png",
+      "assets/library/tiles/path-metal-grate-floor/path-metal-grate-floor-06.png"
+    ],
+    "extras": []
+  }
+}

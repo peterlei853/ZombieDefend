@@ -122,6 +122,10 @@ function textureFrameCount(tex) {
  * into stages 1–3. v0.36.31 wires `s4-salaryman` the same way (walk /
  * attack / hurt / die, 88×88, no ruleAnims) onto stage 4. They have no
  * run strip; a runner asks for walk instead.
+ * Nov 17 入庫 wires `building-robot` (92×92, stages 4–5) and
+ * `mech-giant` (200×200, stage 5 escorts) the same way: walk, attack or
+ * hit01, hurt, die, plus a skill strip that is registered but not a
+ * boss-skill damage cast. Cells stay padded. Do not resize them.
  * `s4-delivery` stays catalog-only. The S4 delivery group is not the
  * live `delivery` profession. No S4 audio is queued.
  * Variant {@link SKIN_POOLS} stay the unskinned round-robin. Early waves
@@ -134,6 +138,13 @@ export const S4_EARLY_SKIN_IDS = ['s4-construction', 's4-schoolgirl'];
 
 /** Stage 4 salaryman. Same four-strip wiring as construction / schoolgirl. */
 export const S4_SALARYMAN_ID = 's4-salaryman';
+
+/** Nov 17 Building Robot. 92×92 padded cell, stages 4–5. */
+export const BUILDING_ROBOT_ID = 'building-robot';
+export const BUILDING_ROBOT_CELL = 92;
+/** Nov 17 Giant mech-zombie. 200×200 padded cell, stage 5 escorts. */
+export const MECH_GIANT_ID = 'mech-giant';
+export const MECH_GIANT_CELL = 200;
 
 /**
  * Library skins. `facing: 'east'` means the strip already walks toward the
@@ -166,6 +177,37 @@ export const ZOMBIE_LIBRARY_SKINS = {
   's4-construction': s4PartialSkin('s4-construction'),
   's4-schoolgirl': s4PartialSkin('s4-schoolgirl'),
   's4-salaryman': s4PartialSkin('s4-salaryman'),
+  /**
+   * 92×92 padded cell (idle rotation was 64×64). Feet origin (0.5, 1).
+   * PIXELLAB_HOOK: walk / attack / hurt / die1. Skill is skillAnim, not bossSkills.
+   * hit01 is the 16-frame alternate bite; Stage plays the 8-frame attack.
+   */
+  'building-robot': rukuRosterSkin(BUILDING_ROBOT_ID, {
+    prefix: 'zombie-building-robot',
+    cell: BUILDING_ROBOT_CELL,
+    walk: 'zombie-building-robot-walk',
+    run: 'zombie-building-robot-run',
+    attack: 'zombie-building-robot-attack',
+    hurt: 'zombie-building-robot-hurt',
+    death: 'zombie-building-robot-die1',
+    skill: 'zombie-building-robot-skill',
+  }),
+  /**
+   * 200×200 padded cell (idle rotation was 180×180). No attack strip.
+   * PIXELLAB_HOOK: walk-normal / hit01 / hurt-normal / die-normal01.
+   * Skill-Joinin01 is skillAnim (32 frames, once). Not a damage cast.
+   * HP and contact DPS are the stage 5 escort row until Gameplay confirms them.
+   */
+  'mech-giant': rukuRosterSkin(MECH_GIANT_ID, {
+    prefix: 'zombie-mech-giant',
+    cell: MECH_GIANT_CELL,
+    walk: 'zombie-mech-giant-walk-normal',
+    run: null,
+    attack: 'zombie-mech-giant-hit01',
+    hurt: 'zombie-mech-giant-hurt-normal',
+    death: 'zombie-mech-giant-die-normal01',
+    skill: 'zombie-mech-giant-skill',
+  }),
   clown: skin('clown', 'zombie-clown', { death: 'zombie-clown-die1' }),
   cyborg: skin('cyborg', 'zombie-cyborg', { death: 'zombie-cyborg-die1' }),
   slime: skin('slime', 'zombie-slime', { death: 'zombie-slime-die1' }),
@@ -353,6 +395,30 @@ function s4PartialSkin(id) {
     frameWidth: S4_FRAME_SIZE,
     frameHeight: S4_FRAME_SIZE,
   });
+}
+
+/**
+ * Nov 17 roster body. Same four-slot pattern as S4, with an explicit walk
+ * key (mech has no `walk` strip) and a skill strip that stays off the
+ * boss-skill damage path.
+ * @param {string} id
+ * @param {{ prefix: string, cell: number, walk: string, run: string|null, attack: string, hurt: string, death: string, skill: string }} spec
+ */
+function rukuRosterSkin(id, spec) {
+  const body = skin(id, spec.prefix, {
+    run: spec.run,
+    attack: spec.attack,
+    hurt: spec.hurt,
+    death: spec.death,
+    deaths: [spec.death],
+    frameWidth: spec.cell,
+    frameHeight: spec.cell,
+  });
+  body.actions.walk = spec.walk;
+  // PIXELLAB_HOOK: createLibraryAnims registers this strip with the library.
+  // bossSkills would queue a damage burst. Gameplay picks the moment to play it.
+  body.skillAnim = spec.skill;
+  return body;
 }
 
 /** Walk speed while a hurt strip is playing. Half of the march speed. v0.36.25 keeps this. */

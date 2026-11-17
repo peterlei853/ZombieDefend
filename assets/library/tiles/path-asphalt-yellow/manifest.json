@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-asphalt-yellow",
+  "title": "Cracked asphalt street with yellow",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Recommended asphalt (yellow markings, readable).",
+  "source": {
+    "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-asphalt-yellow-00",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 0,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-01",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 1,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-02",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 2,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-03",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 3,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-04",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 4,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-05",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 5,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-06",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 6,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-07",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 7,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-08",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 8,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-09",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 9,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-10",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 10,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-11",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 11,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-12",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 12,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-13",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 13,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-14",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 14,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-15",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 15,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-16",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 16,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-asphalt-yellow-17",
+      "path": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "029578e6-6970-498c-b63a-ee8c3f0c37a6",
+        "tileIndex": 17,
+        "originalName": "cracked_asphalt_street_with_yellow_dashed_center_l_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Recommended asphalt (yellow markings, readable).",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-00.png",
+    "sheets": [
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-01.png",
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-02.png",
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-03.png",
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-04.png",
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-05.png",
+      "assets/library/tiles/path-asphalt-yellow/path-asphalt-yellow-06.png"
+    ],
+    "extras": []
+  }
+}

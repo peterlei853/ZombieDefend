@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-cobble-street",
+  "title": "Worn cobblestone street path",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Recommended cobble for street/campus plazas.",
+  "source": {
+    "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-cobble-street-00",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 0,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-01",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 1,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-02",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 2,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-03",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 3,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-04",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 4,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-05",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 5,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-06",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 6,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-07",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 7,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-08",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 8,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-09",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 9,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-10",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 10,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-11",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 11,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-12",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 12,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-13",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 13,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-14",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 14,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-15",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 15,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-16",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 16,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-street-17",
+      "path": "assets/library/tiles/path-cobble-street/path-cobble-street-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "df330a51-70a0-49d4-b5aa-1d8230873f12",
+        "tileIndex": 17,
+        "originalName": "worn_cobblestone_street_path_moss_cracks_gray_ston_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Recommended cobble for street/campus plazas.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-cobble-street/path-cobble-street-00.png",
+    "sheets": [
+      "assets/library/tiles/path-cobble-street/path-cobble-street-01.png",
+      "assets/library/tiles/path-cobble-street/path-cobble-street-02.png",
+      "assets/library/tiles/path-cobble-street/path-cobble-street-03.png",
+      "assets/library/tiles/path-cobble-street/path-cobble-street-04.png",
+      "assets/library/tiles/path-cobble-street/path-cobble-street-05.png",
+      "assets/library/tiles/path-cobble-street/path-cobble-street-06.png"
+    ],
+    "extras": []
+  }
+}

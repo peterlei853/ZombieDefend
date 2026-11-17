@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-cobble-gray",
+  "title": "Gray cobblestone street path",
+  "version": "v1.0",
+  "recommendedForStageCampus": false,
+  "notes": "Gray cobble variant.",
+  "source": {
+    "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-cobble-gray-00",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 0,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-01",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 1,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-02",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 2,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-03",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 3,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-04",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 4,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-05",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 5,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-06",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 6,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-07",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 7,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-08",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 8,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-09",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 9,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-10",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 10,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-11",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 11,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-12",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 12,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-13",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 13,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-14",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 14,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-15",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 15,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-16",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 16,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-cobble-gray-17",
+      "path": "assets/library/tiles/path-cobble-gray/path-cobble-gray-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "ef85c886-792d-4170-a5de-124fd23e59b0",
+        "tileIndex": 17,
+        "originalName": "gray_cobblestone_street_path_over_dark_dirt_pixel_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Gray cobble variant.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-cobble-gray/path-cobble-gray-00.png",
+    "sheets": [
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-01.png",
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-02.png",
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-03.png",
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-04.png",
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-05.png",
+      "assets/library/tiles/path-cobble-gray/path-cobble-gray-06.png"
+    ],
+    "extras": []
+  }
+}

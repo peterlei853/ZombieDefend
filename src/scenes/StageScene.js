@@ -57,6 +57,7 @@ import {
   FONT_INK,
   FONT_TINY,
   INK_TINT,
+  RUKU_UI,
   UI,
   KitHpBar,
   addKitImage,
@@ -67,7 +68,8 @@ import {
 import { preloadPlayerAssets, registerPlayerAnims } from '../assets/playerSprites.js';
 import { preloadZombieAssets, registerZombieAnims } from '../assets/zombieSprites.js';
 import { createLibraryAnims, preloadLibrary, stageLibraryCategories } from '../assets/libraryAssets.js';
-import { drawCampusBackdrop } from '../assets/stageBackdrop.js';
+import { drawCampusFill } from '../assets/campusFill.js';
+import { drawCampusBackdrop, drawExtraM2Sky } from '../assets/stageBackdrop.js';
 import { tickHitlag } from '../systems/combatJuice.js';
 import { preloadGameAudio, SoundManager } from '../systems/SoundManager.js';
 import { libraryAsset, playLibraryFx } from '../assets/libraryAssets.js';
@@ -1182,6 +1184,12 @@ export default class StageScene extends Phaser.Scene {
     }
 
     drawCampusBackdrop(this);
+    // PIXELLAB_HOOK: extra bg-m2-* sky. Campus ground layers stay.
+    // Does not replace the five cataloged M2 plates.
+    drawExtraM2Sky(this, this.stage);
+    // PIXELLAB_HOOK: recommended campus paths, façades, and street props.
+    // Decorative. No collision, gold, or save behavior.
+    drawCampusFill(this);
   }
 
   _buildHud() {
@@ -1339,12 +1347,16 @@ export default class StageScene extends Phaser.Scene {
     } else if (wave !== this._announcedWave) {
       this._announcedWave = wave;
       this.audio?.playUiWave?.();
+      const bossCall = this.stage === 5 && wave === 2 && this.textures.exists(RUKU_UI.bossIntro);
       this._showBanner({
         icon: UI.wave,
         title: `WAVE ${wave}`,
         zh: this._narrationLive ? waveCallout(wave) : `第${wave}波`,
         hold: 2400,
         y: 230,
+        // PIXELLAB_HOOK: ui-banner-boss-intro on the stage 5 boss wave.
+        // ui-banner-boss-warning stays cataloged. Other waves keep ui-toast-panel.
+        panel: bossCall ? RUKU_UI.bossIntro : undefined,
       });
       if (this._nurseWave != null && wave === this._nurseWave) {
         this._narration?.once('nurse', NARRATION.nurse);
@@ -1613,6 +1625,7 @@ export default class StageScene extends Phaser.Scene {
       this.add.rectangle(cx, cy, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.55).setDepth(d)
     );
     addKitImage(this, cx, cy, UI.dialog, { depth: d + 1 });
+    // PIXELLAB_HOOK: ui-dialog-confirm is cataloged. This card stays ui-dialog-panel.
     // Navy header: outlined Latin. The ready icon is a dark glyph, so it
     // sits on the parchment body beside the gold line.
     addKitText(this, cx, cy - 72, 'STAGE CLEAR', {
@@ -1678,6 +1691,7 @@ export default class StageScene extends Phaser.Scene {
       this.add.rectangle(cx, cy, GAME_WIDTH, GAME_HEIGHT, 0x1a0000, 0.7).setDepth(d)
     );
     addKitImage(this, cx, cy, UI.dialog, { depth: d + 1 });
+    // PIXELLAB_HOOK: ui-dialog-quit is cataloged. This card stays ui-dialog-panel.
     // Header is navy, so outlined Latin and cream Chinese live there.
     // The parchment body only has room for one line plus the scale-2 button.
     this._pairIconText(cx, cy - 76, UI.gameover, 'GAME OVER', {

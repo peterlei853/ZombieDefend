@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-concrete-sidewalk",
+  "title": "Cracked concrete sidewalk",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Recommended sidewalk (concrete).",
+  "source": {
+    "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-concrete-sidewalk-00",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 0,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-01",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 1,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-02",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 2,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-03",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 3,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-04",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 4,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-05",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 5,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-06",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 6,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-07",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 7,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-08",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 8,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-09",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 9,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-10",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 10,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-11",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 11,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-12",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 12,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-13",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 13,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-14",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 14,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-15",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 15,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-16",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 16,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-concrete-sidewalk-17",
+      "path": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6425135f-a1b3-4175-b129-f220b8e93d2f",
+        "tileIndex": 17,
+        "originalName": "cracked_concrete_sidewalk_urban_pavement_gray_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Recommended sidewalk (concrete).",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-00.png",
+    "sheets": [
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-01.png",
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-02.png",
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-03.png",
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-04.png",
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-05.png",
+      "assets/library/tiles/path-concrete-sidewalk/path-concrete-sidewalk-06.png"
+    ],
+    "extras": []
+  }
+}

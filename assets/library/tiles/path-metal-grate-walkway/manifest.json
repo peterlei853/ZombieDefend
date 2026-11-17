@@ -1,0 +1,399 @@
+{
+  "schema": "zombiedefend-asset-group/1",
+  "category": "environment",
+  "group": "path-metal-grate-walkway",
+  "title": "Industrial metal grate walkway",
+  "version": "v1.0",
+  "recommendedForStageCampus": true,
+  "notes": "Recommended grate for walkways.",
+  "source": {
+    "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065"
+  },
+  "tileCount": 18,
+  "sizes": {
+    "32x32": 18
+  },
+  "defaults": {
+    "type": "image",
+    "origin": [
+      0,
+      0
+    ]
+  },
+  "assets": [
+    {
+      "key": "path-metal-grate-walkway-00",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-00.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 0,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_0.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-01",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-01.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 1,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_1.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-02",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-02.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 2,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_2.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-03",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-03.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 3,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_3.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-04",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-04.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 4,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_4.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-05",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-05.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 5,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_5.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-06",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-06.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 6,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_6.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-07",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-07.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 7,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_7.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-08",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-08.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 8,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_8.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-09",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-09.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 9,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_9.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-10",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-10.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 10,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_10.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-11",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-11.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 11,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_11.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-12",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-12.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 12,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_12.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-13",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-13.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 13,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_13.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-14",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-14.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 14,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_14.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-15",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-15.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 15,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_15.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-16",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-16.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 16,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_16.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    },
+    {
+      "key": "path-metal-grate-walkway-17",
+      "path": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-17.png",
+      "type": "image",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "origin": [
+        0,
+        0
+      ],
+      "extra": {
+        "version": "v1.0",
+        "milestone": "ruku-2026-11-17",
+        "pixellabTileId": "6e5fb675-f67c-438c-bcf9-40bef1795065",
+        "tileIndex": 17,
+        "originalName": "industrial_metal_grate_walkway_with_rivets_over_da_17.png"
+      },
+      "frames": 1,
+      "note": "v1.0. 32×32 path tile. Origin (0, 0). Near-duplicate sets stay cataloged; Stage fill uses the recommended campus sets."
+    }
+  ],
+  "description": "Recommended grate for walkways.",
+  "preview": {
+    "animate": [],
+    "thumb": "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-00.png",
+    "sheets": [
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-01.png",
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-02.png",
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-03.png",
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-04.png",
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-05.png",
+      "assets/library/tiles/path-metal-grate-walkway/path-metal-grate-walkway-06.png"
+    ],
+    "extras": []
+  }
+}

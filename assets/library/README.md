@@ -1,6 +1,6 @@
 # ZombieDefend Asset Library (`assets/library/`)
 
-A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups plus four catalog-only S4 groups, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack and the Milestone 2 weapon VFX), pickups, environment props (barricade and the v0.31 water mount) and the brick sidewalk tiles, the campus battle background plus five 320×180 stage plates, UI (live kit plus eight Milestone 2 panels), and chibi concept art.
+A categorized, game-ready sprite library for ZombieDefend (Phaser 3): the hero, 15 zombie groups plus four S4 groups and the 2026-11-17 Building Robot and Giant mech-zombie, 2 bosses with skill FX, shared FX (including the v0.26 overnight VFX pack and the Milestone 2 weapon VFX), pickups, environment props (barricade, the v0.31 water mount, and 51 street props) and path tiles (the brick sidewalk plus 17 path sets and an apartment façade wall), the campus battle background plus five 320×180 stage plates and 35 extra `bg-m2-*` plates, UI (live kit, eight Milestone 2 panels, and 27 入庫 panels), and chibi concept art.
 
 **Start here:**
 
@@ -29,7 +29,9 @@ assets/library/
 │   │     office-worker-v2, delivery, chef, nurse,
 │   │     trashcan, trashcan-bare, brute, cyborg, slime, slime-mini,
 │   │     riot, riot-bare, exploder, sprinter, clown
-│   │     s4/{construction,schoolgirl,delivery,salaryman}/  88×88 east, catalog-only
+│   │     s4/{construction,schoolgirl,delivery,salaryman}/  88×88 east
+│   │     building-robot/   28 east strips, cell 92×92 (padded; do not resize)
+│   │     mech-giant/       12 east strips, cell 200×200 (padded; do not resize)
 │   └── bosses/<slug>/        manifest.json + strips/   (zombie-boss-<lava|steel>-*)
 │       ├── fx/               manifest.json + skill FX  (zombie-boss-<lava|steel>-fx-*)
 │       │     lava-balon (Balon, the Molten Giant), steel-balam (Balam, the Cyber-Steel Behemoth)
@@ -48,11 +50,16 @@ assets/library/
 ├── environment/barricade/    manifest.json + barricade-post(-damaged).png
 ├── environment/props/        empty steel cradles: water cyan, sling amber, bubble magenta, lightning yellow, frost ice, flame orange
 ├── environment/tiles/path-brick-sidewalk/  18× 32×32 worn brick path (path-brick-sidewalk-00 … 17)
+├── environment/street/       51 props (prop-*, fence-damage-*) — decorative, v1.0
+├── tiles/                    17 path sets (32×32) + wall-brick-apartment (80× 52×87 façades)
+├── ruku-2026-11-17.md        Nov 17 入庫 notes (counts, skips, Stage wire)
 ├── vfx/weapons/{sling,bubble,rail,freeze,flame}/  M2 projectile strips + charge/AOE/hit + aoe-explode (8×96)
 ├── backgrounds/campus/       manifest.json, variant-A/B/C.png, layers/, layers-night/, anim/
 ├── backgrounds/m2/           five 320×180 plates (bg-night-street, moon alt, rainy-market, subway, rooftop-dusk)
+├── backgrounds/m2-ruku/      35 extra 320×180 plates (bg-m2-*); does not replace the five above
 ├── ui/                          manifest.json + fonts/ bars/ panels/ toasts/ buttons/ icons/ controls/ title/ floats/ (ui-*)
-│   └── m2/                   eight new panels; does not replace live HUD keys
+│   ├── m2/                   eight new panels; does not replace live HUD keys
+│   └── ruku/                 27 NONE panels (ui-ammo-counter, …); does not re-enter ALIAS/ID UI
 ├── concepts/zombie-chibi-drafts/  manifest.json, 20 concept PNGs, contact-sheet.png, index.md
 └── previews/<category>/<group>/   preview.gif (card thumbnail) + sheets (≤1600 px, ≤1.5 MB each)
 ```
@@ -70,6 +77,17 @@ Ready-clean PixelLab export, version `v1.0` on every new key. Nothing here repla
 - **Backgrounds** — five 320×180 plates in `backgrounds/m2/`. `drawCampusBackdrop` still uses `bg-campus-*`.
 - **Tiles** — `path-brick-sidewalk-00` … `path-brick-sidewalk-17`, 32×32, edge-4 masks on 00–16. Tile 17 is stamp-only.
 - **SFX** — each asset's `note` and `extra.sfx` name the sound key. No audio files are in this catalog.
+
+## Nov 17 入庫 (catalog + Stage wire)
+
+Ready-clean PixelLab export, version `v1.0` on every new key. See [`ruku-2026-11-17.md`](ruku-2026-11-17.md). Nothing here replaces `path-brick-sidewalk` (`140dd29a`), the five M2 plates, or a live HUD key. Rotation extras were not stored (the library does not keep them for other characters). East strips only.
+
+- **Building Robot Zombie** — `enemies/zombies/building-robot/`, 28 strips, cell **92×92** (PixelLab idle rotations are 64×64; the shipped idle is padded, not resized). Feet `(0.5, 1)`, east. Distinct from S4 construction. Stage 4–5 roster. Hooks: `zombie-building-robot-walk`, `-attack`, `-hurt`, `-die1`, `-skill` (40 frames @ 12 fps, once).
+- **Giant mech-zombie** — `enemies/zombies/mech-giant/`, 12 strips, cell **200×200** (idle rotations are 180×180; shipped strips including idle are padded). Same feet origin. Stage 5 escort. Hooks: `zombie-mech-giant-walk-normal`, `-hit01`, `-hurt-normal`, `-die-normal01`, `-skill` (Skill-Joinin01, 32 frames @ 12 fps, once). HP, contact DPS, gold, and wave counts stay on the existing escort row. Gameplay should confirm the mix.
+- **Tiles** — 17 path sets under `tiles/`, 18×32×32, origin `(0, 0)`, plus `wall-brick-apartment` (80 façades, 52×87). Stage fill starts with `path-campus`, `path-campus-lawn`, `path-concrete-sidewalk`, `path-asphalt-yellow`, `path-cobble-street`, `path-dirt`, and `path-metal-grate-walkway`. Near-duplicate sets stay versioned in the catalog.
+- **Street props** — 51 types in `environment/street/`. Upright `(0.5, 1)`. `prop-manhole` and `prop-street-grate` are `(0.5, 0.5)`. Campus fence `prop-fence-intact` / `dmg-1` / `dmg-2` is 128×96 and is separate from 96×96 `fence-damage-*`. Both dumpsters are kept. Decorative placement only.
+- **UI** — 27 panels in `ui/ruku/`, origin `(0.5, 0.5)`. The stage 5 boss callout can use `ui-banner-boss-intro`. Inventory, settings, confirm, and quit stay cataloged until those screens exist.
+- **Backgrounds** — 35 plates in `backgrounds/m2-ruku/`. An outdoor sky cycle sits above the horizon. Campus ground layers and the five already-cataloged plates stay.
 
 ## Naming convention (keys)
 

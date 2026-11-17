@@ -152,6 +152,9 @@ export default class ShopScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    // PIXELLAB_HOOK: ui-inventory, ui-panel-inventory, ui-loadout, and
+    // ui-weapon-loadout-panel are cataloged. This list still uses the campus plate.
+    // ui-settings-toggles has no settings screen yet.
     if (this.textures.exists('bg-campus-night-full')) {
       this.add.image(0, 0, 'bg-campus-night-full').setOrigin(0, 0);
     } else {

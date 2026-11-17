@@ -1,4 +1,18 @@
-import { WORLD_SHIFT_X } from '../systems/DepthView.js';
+import { GAME_WIDTH } from '../data/waves.js';
+import { HORIZON_Y, WORLD_SHIFT_X } from '../systems/DepthView.js';
+
+/**
+ * Outdoor plates from the Nov 17 leftover set. Interiors stay cataloged.
+ * The cycle does not include the five already-cataloged M2 plates.
+ * PIXELLAB_HOOK: bg-m2-* — extra sky options, not a campus replacement.
+ */
+export const M2_SKY_CYCLE = Object.freeze([
+  'bg-m2-campus-night',
+  'bg-m2-residential-street',
+  'bg-m2-night-apartments',
+  'bg-m2-crane-skyline',
+  'bg-m2-rooftop-night',
+]);
 
 /**
  * Campus plate for the fixed camera (scrollX = WORLD_SHIFT_X).
@@ -33,5 +47,27 @@ export function drawCampusBackdrop(scene) {
     lamp.setBlendMode(Phaser.BlendModes.ADD);
     lamp.play('bg-campus-lamp');
   }
+  return true;
+}
+
+/**
+ * One extra 320×180 plate in the sky band, chosen by stage.
+ * Campus ground layers (depth 4 and 5) stay on top of this strip.
+ * Does not replace bg-campus-* or the five cataloged M2 plates.
+ * @param {Phaser.Scene} scene
+ * @param {number} [stage]
+ * @returns {boolean}
+ */
+export function drawExtraM2Sky(scene, stage) {
+  if (!scene?.add?.image || !scene.textures?.exists) return false;
+  const ready = M2_SKY_CYCLE.filter((key) => scene.textures.exists(key));
+  if (!ready.length) return false;
+  const n = Math.max(1, Math.floor(Number(stage) || 1));
+  const key = ready[(n - 1) % ready.length];
+  scene.add
+    .image(WORLD_SHIFT_X, 0, key)
+    .setOrigin(0, 0)
+    .setDepth(3.2)
+    .setDisplaySize(GAME_WIDTH, HORIZON_Y);
   return true;
 }

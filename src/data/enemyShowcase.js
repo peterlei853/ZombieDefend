@@ -39,6 +39,10 @@ export const ENEMY_SKILL_STRIPS = {
     { anim: 'zombie-clown-hurt_loot', cue: 'skill-hurt_loot' },
     { anim: 'zombie-clown-loot_explode', cue: 'skill-loot_explode' },
   ],
+  // PIXELLAB_HOOK: Nov 17 skill strips. Empty cue — no audio file is queued.
+  // These are not bossSkills and do not add a damage burst.
+  'building-robot': [{ anim: 'zombie-building-robot-skill', cue: '' }],
+  'mech-giant': [{ anim: 'zombie-mech-giant-skill', cue: '' }],
   'lava-balon': [
     { anim: 'zombie-boss-lava-lava_slam', cue: 'skill-lava_slam' },
     { anim: 'zombie-boss-lava-volcanic_breath', cue: 'skill-volcanic_breath' },

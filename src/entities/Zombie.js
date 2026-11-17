@@ -224,7 +224,8 @@ export class Zombie {
    */
   _createSprite(scene, x, y, walkKey) {
     const sprite = scene.add.sprite(x, y, walkKey, 0);
-    // Lane Y is the sole. Origin stays (0.5, 1) for 64px and brute 96px frames.
+    // Lane Y is the sole. Origin stays (0.5, 1) for 64px, brute 96px,
+    // building-robot 92px, and mech-giant 200px. The padded cells are not resized.
     sprite.setOrigin(ZOMBIE_ORIGIN_X, ZOMBIE_ORIGIN_Y);
     sprite.setScale(this.scale);
     // East library art already faces the barricade. West legacy art is mirrored.
