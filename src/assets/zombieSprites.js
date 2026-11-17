@@ -126,6 +126,8 @@ function textureFrameCount(tex) {
  * `mech-giant` (200×200, stage 5 escorts) the same way: walk, attack or
  * hit01, hurt, die, plus a skill strip that is registered but not a
  * boss-skill damage cast. Cells stay padded. Do not resize them.
+ * v0.36.33 keeps this id (`building-robot`, not an s4-robot alias) and
+ * pins one spawn of it. The pin lives in stageBalance.js.
  * `s4-delivery` stays catalog-only. The S4 delivery group is not the
  * live `delivery` profession. No S4 audio is queued.
  * Variant {@link SKIN_POOLS} stay the unskinned round-robin. Early waves

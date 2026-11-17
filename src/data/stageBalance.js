@@ -1,5 +1,5 @@
 /**
- * Stages 1–5 combat rows (v0.36.31).
+ * Stages 1–5 combat rows (v0.36.33).
  *
  * Barricade max HP is not in this file (1440 lives in waves.js).
  * getGoldByHP is unchanged. Gold on a row is explicit.
@@ -12,8 +12,39 @@
  * is tighter than stage 3. Stage 5 is Balun: one boss at 20× the stage 4
  * wave-4 walker HP and 3× that walker's contact DPS, plus thin escorts.
  * After 90s, leftover bites do not damage the wall.
+ *
+ * v0.36.33 does not retune those rows. Stage 4 and the stage 5 escorts
+ * still roll an equal skin list. One spawn in each of those schedules is
+ * pinned to Building Robot so a short run cannot miss it. The pin
+ * replaces the skin id only. HP, speed, contact DPS, gold, and the
+ * spawn count stay the row's numbers.
  */
+import { BUILDING_ROBOT_ID } from '../assets/zombieSprites.js';
 import { EARLY_STAGE_POOLS, STAGE_5_ESCORTS } from './stageRoster.js';
+
+/**
+ * Stage 4 wave 2, spawn 6 of 12 (0-based index 5).
+ * Nominal time is 30.625s inside the 21–42s window, so a death at the
+ * wave 3 flip (~43s) has already seen this body. The other 11 spawns
+ * in the wave, and every other stage 4 wave, keep the equal 14-skin roll.
+ */
+export const STAGE4_ROBOT_PIN = Object.freeze({
+  wave: 2,
+  index: 5,
+  skin: BUILDING_ROBOT_ID,
+});
+
+/**
+ * Stage 5 opening escort, spawn 2 of 3 (0-based index 1).
+ * Nominal time is 8s inside the 0–16s window, before Balun at 17s.
+ * The other two opening escorts and the later escort waves keep the
+ * equal 9-skin roll, which still includes mech-giant.
+ */
+export const STAGE5_ROBOT_PIN = Object.freeze({
+  wave: 1,
+  index: 1,
+  skin: BUILDING_ROBOT_ID,
+});
 
 /** Stage 4 wave 4 walker. Balun's HP and contact DPS are scaled from this. */
 export const STAGE5_BOSS_BASELINE = Object.freeze({ hp: 235, dps: 14 });
@@ -24,7 +55,7 @@ export const STAGE5_BOSS_HP = STAGE5_BOSS_BASELINE.hp * STAGE5_BOSS_HP_MULT;
 export const STAGE5_BOSS_DPS = STAGE5_BOSS_BASELINE.dps * STAGE5_BOSS_DPS_MULT;
 
 /** @typedef {{ hp: number, speed: number, dps: number, weight?: number, variant?: string, skins: string[], gold: number }} EarlyArch */
-/** @typedef {{ wave: number, startSec: number, endSec: number, total: number, archetypes: EarlyArch[] }} EarlyWave */
+/** @typedef {{ wave: number, startSec: number, endSec: number, total: number, guaranteeSkin?: string|null, guaranteeIndex?: number|null, archetypes: EarlyArch[] }} EarlyWave */
 
 const S1 = EARLY_STAGE_POOLS[1];
 const S2 = EARLY_STAGE_POOLS[2];
@@ -54,30 +85,18 @@ export const EARLY_STAGE_WAVES = {
   ],
   4: [
     row(1, 0, 20, 11, 94, 36, 7, 24, S4),
-    row(2, 21, 42, 12, 141, 40, 9, 31, S4),
+    row(2, 21, 42, 12, 141, 40, 9, 31, S4, STAGE4_ROBOT_PIN),
     row(3, 43, 64, 12, 188, 44, 12, 39, S4),
     row(4, 65, 90, 15, STAGE5_BOSS_BASELINE.hp, 42, STAGE5_BOSS_BASELINE.dps, 48, S4),
   ],
   5: [
-    row(1, 0, 16, 3, 94, 36, 7, 24, S5),
+    row(1, 0, 16, 3, 94, 36, 7, 24, S5, STAGE5_ROBOT_PIN),
     bossRow(2, 17, 55, 28),
     row(3, 40, 62, 3, 141, 40, 9, 31, S5),
     row(4, 63, 88, 2, 188, 42, 12, 39, S5),
   ],
 };
 
-/**
- * @param {number} wave
- * @param {number} startSec
- * @param {number} endSec
- * @param {number} total
- * @param {number} hp
- * @param {number} speed
- * @param {number} dps
- * @param {number} gold
- * @param {string[]} skins
- * @returns {EarlyWave}
- */
 /**
  * Pool plus extra copies so a profession still shows up inside a long mix.
  * @param {string[]} pool
@@ -87,12 +106,29 @@ function weightPool(pool, extra) {
   return pool.concat(extra);
 }
 
-function row(wave, startSec, endSec, total, hp, speed, dps, gold, skins) {
+/**
+ * One walker row. `pin` names a single spawn whose skin is forced.
+ * The pin does not add a body and does not change this row's numbers.
+ * @param {number} wave
+ * @param {number} startSec
+ * @param {number} endSec
+ * @param {number} total
+ * @param {number} hp
+ * @param {number} speed
+ * @param {number} dps
+ * @param {number} gold
+ * @param {string[]} skins
+ * @param {{ wave?: number, index: number, skin: string }|null} [pin]
+ * @returns {EarlyWave}
+ */
+function row(wave, startSec, endSec, total, hp, speed, dps, gold, skins, pin = null) {
   return {
     wave,
     startSec,
     endSec,
     total,
+    guaranteeSkin: pin ? pin.skin : null,
+    guaranteeIndex: pin ? pin.index : null,
     archetypes: [
       {
         hp,
@@ -149,6 +185,8 @@ export function earlyWaveDefs(stage) {
     startSec: def.startSec,
     endSec: def.endSec,
     total: def.total,
+    guaranteeSkin: def.guaranteeSkin || null,
+    guaranteeIndex: Number.isFinite(def.guaranteeIndex) ? def.guaranteeIndex : null,
     archetypes: def.archetypes.map((arch) => ({
       ...arch,
       skins: arch.skins.slice(),
